@@ -252,7 +252,7 @@ The first thing an AI agent should do at session start is discover where
 context lives:
 
 ```bash
-ctx system bootstrap
+ctx bootstrap
 ```
 
 This prints the resolved context directory, the files in it, and the
@@ -390,7 +390,7 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 | `ctx site`                | Site management commands                        |
 | `ctx config`              | Manage runtime configuration profiles           |
 | `ctx system`              | System diagnostics and hook commands            |
-| `ctx system backup`       | Back up context and Claude data to tar.gz / SMB |
+| `ctx backup`       | Back up context and Claude data to tar.gz / SMB |
 | `ctx completion`          | Generate shell autocompletion scripts           |
 
 !!! tip "Rule of Thumb"

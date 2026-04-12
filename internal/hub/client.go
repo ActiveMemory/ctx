@@ -9,6 +9,7 @@ package hub
 import (
 	"context"
 
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -58,7 +59,7 @@ func (c *Client) Register(
 	resp := &RegisterResponse{}
 	callErr := c.conn.Invoke(
 		ctx,
-		"/ctx.hub.v1.CtxHub/Register",
+		cfgHub.PathRegister,
 		&RegisterRequest{
 			AdminToken:  adminToken,
 			ProjectName: projectName,
@@ -84,7 +85,7 @@ func (c *Client) Publish(
 	resp := &PublishResponse{}
 	callErr := c.conn.Invoke(
 		c.authedCtx(ctx),
-		"/ctx.hub.v1.CtxHub/Publish",
+		cfgHub.PathPublish,
 		&PublishRequest{Entries: entries},
 		resp,
 	)
@@ -109,7 +110,7 @@ func (c *Client) Sync(
 	stream, streamErr := c.conn.NewStream(
 		c.authedCtx(ctx),
 		&grpc.StreamDesc{ServerStreams: true},
-		"/ctx.hub.v1.CtxHub/Sync",
+		cfgHub.PathSync,
 	)
 	if streamErr != nil {
 		return nil, streamErr
@@ -129,7 +130,7 @@ func (c *Client) Sync(
 	for {
 		msg := &EntryMsg{}
 		if recvErr := stream.RecvMsg(msg); recvErr != nil {
-			if isEOF(recvErr) {
+			if eof(recvErr) {
 				break
 			}
 			return nil, recvErr
@@ -160,7 +161,7 @@ func (c *Client) Listen(
 	stream, streamErr := c.conn.NewStream(
 		c.authedCtx(ctx),
 		&grpc.StreamDesc{ServerStreams: true},
-		"/ctx.hub.v1.CtxHub/Listen",
+		cfgHub.PathListen,
 	)
 	if streamErr != nil {
 		return streamErr
@@ -179,7 +180,7 @@ func (c *Client) Listen(
 	for {
 		msg := &EntryMsg{}
 		if recvErr := stream.RecvMsg(msg); recvErr != nil {
-			if isEOF(recvErr) {
+			if eof(recvErr) {
 				return nil
 			}
 			return recvErr
@@ -204,7 +205,7 @@ func (c *Client) Status(
 	resp := &StatusResponse{}
 	callErr := c.conn.Invoke(
 		c.authedCtx(ctx),
-		"/ctx.hub.v1.CtxHub/Status",
+		cfgHub.PathStatus,
 		&struct{}{},
 		resp,
 	)

@@ -24,7 +24,7 @@ hook config, and session history*), but assembling it manually is tedious.
 
 ```bash
 ctx doctor                   # structural health check
-ctx system events --last 20  # recent hook activity
+ctx event --last 20  # recent hook activity
 # or ask: "something seems off, can you diagnose?"
 ```
 
@@ -34,7 +34,7 @@ ctx system events --last 20  # recent hook activity
 |----------------------------|-------------|--------------------------------------|
 | `ctx doctor`               | CLI command | Structural health report             |
 | `ctx doctor --json`        | CLI command | Machine-readable health report       |
-| `ctx system events`        | CLI command | Query local event log                |
+| `ctx event`        | CLI command | Query local event log                |
 | `/ctx-doctor`              | Skill       | Agent-driven diagnosis with analysis |
 
 ---
@@ -100,7 +100,7 @@ Something seems off, can you diagnose?
 The agent follows a triage sequence:
 
 1. **Baseline**: runs `ctx doctor --json` for structural health
-2. **Events**: runs `ctx system events --json --last 100` (if event logging enabled)
+2. **Events**: runs `ctx event --json --last 100` (if event logging enabled)
 3. **Correlate**: connects findings across both sources
 4. **Present**: structured findings with evidence
 5. **Suggest**: actionable next steps (but doesn't auto-fix)
@@ -110,24 +110,24 @@ structural checks and notes what you'd gain by enabling it.
 
 ### Raw Event Inspection
 
-For power users: `ctx system events` with filters gives direct access to the
+For power users: `ctx event` with filters gives direct access to the
 event log.
 
 ```bash
 # Last 50 events (default)
-ctx system events
+ctx event
 
 # Events from a specific session
-ctx system events --session eb1dc9cd-0163-4853-89d0-785fbfaae3a6
+ctx event --session eb1dc9cd-0163-4853-89d0-785fbfaae3a6
 
 # Only QA reminder events
-ctx system events --hook qa-reminder
+ctx event --hook qa-reminder
 
 # Raw JSONL for jq processing
-ctx system events --json | jq '.message'
+ctx event --json | jq '.message'
 
 # Include rotated (older) events
-ctx system events --all --last 100
+ctx event --all --last 100
 ```
 
 Filters use AND logic: `--hook qa-reminder --session abc123` returns only
@@ -174,7 +174,7 @@ grep "check-persistence" ~/.claude/plugins/ctx/hooks.json
 echo '{"session_id":"test"}' | ctx system check-persistence
 
 # 4. Check event log for the hook (if enabled)
-ctx system events --hook check-persistence
+ctx event --hook check-persistence
 ```
 
 **Common causes**:
@@ -184,7 +184,7 @@ ctx system events --hook check-persistence
 * **Throttle active**: most hooks fire once per day: check
   `.context/state/` for daily marker files
 * **Hook silenced**: a custom message override may be an empty file:
-  check `ctx system message list` for overrides
+  check `ctx message list` for overrides
 
 ### "*Too many nudges*"
 
@@ -195,10 +195,10 @@ persistence reminders, and QA gates fire constantly.
 
 ```bash
 # Check how often hooks fired recently
-ctx system events --last 50
+ctx event --last 50
 
 # Count fires per hook
-ctx system events --json | jq -r '.detail.hook // "unknown"' \
+ctx event --json | jq -r '.detail.hook // "unknown"' \
   | sort | uniq -c | sort -rn
 ```
 
@@ -206,7 +206,7 @@ ctx system events --json | jq -r '.detail.hook // "unknown"' \
 
 * **QA reminder is noisy by design**: it fires on every `Edit` call with no
   throttle. This is intentional. If it's too much, silence it with an empty
-  override: `ctx system message edit qa-reminder gate`, then empty the file
+  override: `ctx message edit qa-reminder gate`, then empty the file
 * **Long session**: context checkpoint fires with increasing frequency after
   prompt 15. This is the system telling you the session is getting long:
   consider wrapping up
@@ -259,7 +259,7 @@ contrary to `CONSTITUTION.md` rules.
 ctx doctor --json | jq '.results[] | select(.name == "context_size")'
 
 # Check if context is actually being loaded
-ctx system events --hook context-load-gate
+ctx event --hook context-load-gate
 
 ```
 
@@ -317,7 +317,7 @@ files accurate as your codebase evolves.
 * [Webhook Notifications](webhook-notifications.md): push notifications for
   hook activity
 * [`ctx doctor` CLI](../cli/doctor.md): full command reference
-* [`ctx system events` CLI](../cli/system.md#ctx-system-events): event log
+* [`ctx event` CLI](../cli/system.md#ctx-system-events): event log
   query reference
 * [`/ctx-doctor` skill](../reference/skills.md#ctx-doctor): agent-driven
   diagnosis

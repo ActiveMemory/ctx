@@ -84,63 +84,54 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	flagbind.StringFlagP(
-		c, &priority,
-		cFlag.Priority, cFlag.ShortPriority,
-		flag.DescKeyAddPriority,
+	flagbind.BindStringFlagsP(c,
+		[]*string{
+			&priority, &section, &fromFile, &context,
+			&rationale, &lesson, &application,
+		},
+		[]string{
+			cFlag.Priority, cFlag.Section, cFlag.File, cFlag.Context,
+			cFlag.Rationale, cFlag.Lesson, cFlag.Application,
+		},
+		[]string{
+			cFlag.ShortPriority, cFlag.ShortSection,
+			cFlag.ShortFile, cFlag.ShortContext,
+			cFlag.ShortRationale, cFlag.ShortLesson,
+			cFlag.ShortApplication,
+		},
+		[]string{
+			flag.DescKeyAddPriority, flag.DescKeyAddSection,
+			flag.DescKeyAddFile, flag.DescKeyAddContext,
+			flag.DescKeyAddRationale, flag.DescKeyAddLesson,
+			flag.DescKeyAddApplication,
+		},
 	)
-	_ = c.RegisterFlagCompletionFunc(
-		cFlag.Priority, func(_ *cobra.Command, _ []string, _ string) (
-			[]string, cobra.ShellCompDirective,
-		) {
-			return entry.Priorities, cobra.ShellCompDirectiveNoFileComp
-		})
-	flagbind.StringFlagP(
-		c, &section,
-		cFlag.Section, cFlag.ShortSection,
-		flag.DescKeyAddSection,
-	)
-	flagbind.StringFlagP(
-		c, &fromFile,
-		cFlag.File, cFlag.ShortFile,
-		flag.DescKeyAddFile,
-	)
-	flagbind.StringFlagP(
-		c, &context,
-		cFlag.Context, cFlag.ShortContext, flag.DescKeyAddContext,
-	)
-	flagbind.StringFlagP(
-		c, &rationale,
-		cFlag.Rationale, cFlag.ShortRationale, flag.DescKeyAddRationale,
-	)
-	flagbind.StringFlag(
-		c, &consequence,
-		cFlag.Consequence, flag.DescKeyAddConsequence,
-	)
-	flagbind.StringFlagP(
-		c, &lesson,
-		cFlag.Lesson, cFlag.ShortLesson, flag.DescKeyAddLesson,
-	)
-	flagbind.StringFlagP(
-		c, &application,
-		cFlag.Application, cFlag.ShortApplication, flag.DescKeyAddApplication,
-	)
-	flagbind.StringFlag(
-		c, &sessionID,
-		cFlag.SessionID, flag.DescKeyAddSessionID,
-	)
-	flagbind.StringFlag(
-		c, &branch,
-		cFlag.Branch, flag.DescKeyAddBranch,
-	)
-	flagbind.StringFlag(
-		c, &commit,
-		cFlag.Commit, flag.DescKeyAddCommit,
+	flagbind.BindStringFlags(c,
+		[]*string{
+			&consequence, &sessionID, &branch, &commit,
+		},
+		[]string{
+			cFlag.Consequence, cFlag.SessionID,
+			cFlag.Branch, cFlag.Commit,
+		},
+		[]string{
+			flag.DescKeyAddConsequence,
+			flag.DescKeyAddSessionID,
+			flag.DescKeyAddBranch, flag.DescKeyAddCommit,
+		},
 	)
 	flagbind.BoolFlag(
 		c, &share,
 		cFlag.Share, flag.DescKeyAddShare,
 	)
+
+	_ = c.RegisterFlagCompletionFunc(
+		cFlag.Priority, func(
+			_ *cobra.Command, _ []string, _ string,
+		) ([]string, cobra.ShellCompDirective) {
+			return entry.Priorities,
+				cobra.ShellCompDirectiveNoFileComp
+		})
 
 	return c
 }

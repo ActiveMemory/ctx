@@ -8,7 +8,13 @@ package hub
 
 import stdio "io"
 
-// isEOF reports whether err is io.EOF.
-func isEOF(err error) bool {
+// eof reports whether err is io.EOF.
+//
+// Parameters:
+//   - err: error to check
+//
+// Returns:
+//   - bool: true if err is io.EOF
+func eof(err error) bool {
 	return err == stdio.EOF
 }

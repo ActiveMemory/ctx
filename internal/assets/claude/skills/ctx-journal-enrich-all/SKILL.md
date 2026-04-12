@@ -27,7 +27,7 @@ the journal directory has no `.md` files at all, or if there are
 them first.
 
 ```bash
-CTX_DIR=$(ctx system bootstrap -q)
+CTX_DIR=$(ctx bootstrap -q)
 JOURNAL_DIR="$CTX_DIR/journal"
 
 # Check if any .md files exist
@@ -56,7 +56,7 @@ List all journal entries that lack enrichment using the state file:
 
 ```bash
 # List .md files in journal dir and check state
-CTX_DIR=$(ctx system bootstrap -q)
+CTX_DIR=$(ctx bootstrap -q)
 for f in "$CTX_DIR/journal/"*.md; do
   name=$(basename "$f")
   ctx system mark-journal --check "$name" enriched || echo "$f"
@@ -183,7 +183,7 @@ patterns, then inserts frontmatter and marks state automatically.
 1. Build a file list of eligible entries (non-multipart, 20+ lines,
    missing `type:` and `outcome:` fields):
    ```bash
-   CTX_DIR=$(ctx system bootstrap -q)
+   CTX_DIR=$(ctx bootstrap -q)
    for f in "$CTX_DIR"/journal/*.md; do
      [ -f "$f" ] || continue
      has_type=$(head -30 "$f" | grep -c '^type:' || true)

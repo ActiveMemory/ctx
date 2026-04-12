@@ -227,6 +227,102 @@ func PluginLocalEnabled(
 		settingsPath))
 }
 
+// ClaudeAbsent prints the guidance shown when the `claude`
+// binary is not on PATH. Walks the user through installing
+// Claude Code first, then the ctx plugin.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func ClaudeAbsent(cmd *cobra.Command) {
+	cmd.Println(desc.Text(text.DescKeyWriteInitClaudeAbsent))
+}
+
+// ClaudePluginMissing prints the guidance shown when
+// `claude` is present but the ctx plugin is not installed.
+// Walks the user through the dev-symlink install flow with
+// user-scope guidance to avoid the local-install enablement
+// gotcha.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func ClaudePluginMissing(cmd *cobra.Command) {
+	cmd.Println(desc.Text(
+		text.DescKeyWriteInitClaudePluginMissing))
+}
+
+// ClaudeReady prints the multi-line confirmation for the
+// init post-script when Claude Code and the ctx plugin are
+// both detected and enabled. Displays scope, version,
+// source type, clone path, and enablement flags so the user
+// can quickly see which clone feeds their plugin.
+//
+// Callers should fall back to [ClaudeReadyMinimal] if
+// [claude_check.Details] couldn't parse plugin metadata.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - scope: installation scope (e.g. "user")
+//   - version: plugin version with short git SHA
+//   - source: marketplace source type
+//     (e.g. "directory (hot-reload)")
+//   - clonePath: filesystem path to the source clone
+//   - enabled: enablement summary
+//     (e.g. "global + project")
+func ClaudeReady(
+	cmd *cobra.Command,
+	scope, version, source, clonePath, enabled string,
+) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitClaudeReady),
+		scope, version, source, clonePath, enabled,
+	))
+}
+
+// ClaudeReadyMinimal prints the fallback one-line
+// confirmation used when [claude_check.Details] couldn't
+// parse plugin metadata from the Claude Code plugin
+// registry files. Never fails.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func ClaudeReadyMinimal(cmd *cobra.Command) {
+	cmd.Println(desc.Text(
+		text.DescKeyWriteInitClaudeReadyMinimal))
+}
+
+// SetupClaudeReady prints the `ctx setup claude-code`
+// success block with the detailed plugin metadata. Tells
+// the user the plugin is installed and enabled, shows the
+// scope/version/source/clone path/enablement, and
+// redirects them to run `ctx init` in a project.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - scope: installation scope
+//   - version: plugin version with short git SHA
+//   - source: marketplace source type
+//   - clonePath: filesystem path to the source clone
+//   - enabled: enablement summary
+func SetupClaudeReady(
+	cmd *cobra.Command,
+	scope, version, source, clonePath, enabled string,
+) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSetupClaudeReady),
+		scope, version, source, clonePath, enabled,
+	))
+}
+
+// SetupClaudeReadyMinimal prints the fallback setup
+// success block when plugin metadata can't be parsed.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func SetupClaudeReadyMinimal(cmd *cobra.Command) {
+	cmd.Println(desc.Text(
+		text.DescKeyWriteSetupClaudeReadyMinimal))
+}
+
 // SkippedDir reports a directory skipped because it exists.
 //
 // Parameters:

@@ -8,22 +8,22 @@ package text
 
 // DescKeys for resource checks.
 const (
-	// DescKeyCheckResourcesBoxTitle is the text key for check resources box title
+	// DescKeyCheckResourceBoxTitle is the text key for check resource box title
 	// messages.
-	DescKeyCheckResourcesBoxTitle = "check-resources.box-title"
-	// DescKeyCheckResourcesFallbackLow is the text key for check resources
+	DescKeyCheckResourceBoxTitle = "check-resource.box-title"
+	// DescKeyCheckResourceFallbackLow is the text key for check resource
 	// fallback low messages.
-	DescKeyCheckResourcesFallbackLow = "check-resources.fallback-low"
-	// DescKeyCheckResourcesFallbackPersist is the text key for check resources
+	DescKeyCheckResourceFallbackLow = "check-resource.fallback-low"
+	// DescKeyCheckResourceFallbackPersist is the text key for check resource
 	// fallback persist messages.
-	DescKeyCheckResourcesFallbackPersist = "check-resources.fallback-persist"
-	// DescKeyCheckResourcesFallbackEnd is the text key for check resources
+	DescKeyCheckResourceFallbackPersist = "check-resource.fallback-persist"
+	// DescKeyCheckResourceFallbackEnd is the text key for check resource
 	// fallback end messages.
-	DescKeyCheckResourcesFallbackEnd = "check-resources.fallback-end"
-	// DescKeyCheckResourcesRelayMessage is the text key for check resources relay
+	DescKeyCheckResourceFallbackEnd = "check-resource.fallback-end"
+	// DescKeyCheckResourceRelayMessage is the text key for check resource relay
 	// message messages.
-	DescKeyCheckResourcesRelayMessage = "check-resources.relay-message"
-	// DescKeyCheckResourcesRelayPrefix is the text key for check resources relay
+	DescKeyCheckResourceRelayMessage = "check-resource.relay-message"
+	// DescKeyCheckResourceRelayPrefix is the text key for check resource relay
 	// prefix messages.
-	DescKeyCheckResourcesRelayPrefix = "check-resources.relay-prefix"
+	DescKeyCheckResourceRelayPrefix = "check-resource.relay-prefix"
 )

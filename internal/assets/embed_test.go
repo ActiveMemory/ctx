@@ -435,7 +435,7 @@ func TestListHookMessages(t *testing.T) {
 	wantHooks := []string{
 		"qa-reminder",
 		"check-context-size",
-		"block-dangerous-commands",
+		"block-dangerous-command",
 	}
 	for _, exp := range wantHooks {
 		if !hookSet[exp] {

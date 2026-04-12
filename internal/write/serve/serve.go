@@ -11,6 +11,9 @@ import (
 	"net"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
 // HubStarted prints the hub server address.
@@ -19,7 +22,9 @@ import (
 //   - cmd: Cobra command for output
 //   - addr: network address the server is listening on
 func HubStarted(cmd *cobra.Command, addr net.Addr) {
-	cmd.Println("Hub started on", addr)
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteServeHubStarted), addr,
+	))
 }
 
 // AdminToken prints the generated admin token.
@@ -28,7 +33,9 @@ func HubStarted(cmd *cobra.Command, addr net.Addr) {
 //   - cmd: Cobra command for output
 //   - token: the generated admin token
 func AdminToken(cmd *cobra.Command, token string) {
-	cmd.Println("Admin token (save this):", token)
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteServeAdminToken), token,
+	))
 }
 
 // Daemonized confirms the hub started in background.
@@ -37,7 +44,9 @@ func AdminToken(cmd *cobra.Command, token string) {
 //   - cmd: Cobra command for output
 //   - pid: process ID of the daemon
 func Daemonized(cmd *cobra.Command, pid int) {
-	cmd.Println(fmt.Sprintf("Hub running in background (PID %d)", pid))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteServeHubBackground), pid,
+	))
 }
 
 // Stopped confirms the hub daemon was killed.
@@ -46,5 +55,7 @@ func Daemonized(cmd *cobra.Command, pid int) {
 //   - cmd: Cobra command for output
 //   - pid: process ID that was stopped
 func Stopped(cmd *cobra.Command, pid int) {
-	cmd.Println(fmt.Sprintf("Hub stopped (PID %d)", pid))
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteServeHubStopped), pid,
+	))
 }

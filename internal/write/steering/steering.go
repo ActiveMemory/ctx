@@ -25,6 +25,18 @@ func Created(cmd *cobra.Command, path string) {
 		desc.Text(text.DescKeyWriteSteeringCreated), path))
 }
 
+// AddModeHint prints a one-line hint explaining the
+// default inclusion mode set by `ctx steering add`. Shown
+// right after the Created line so the user immediately
+// learns the vocabulary they just opted into.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func AddModeHint(cmd *cobra.Command) {
+	cmd.Println(desc.Text(
+		text.DescKeyWriteSteeringAddModeHint))
+}
+
 // Skipped prints that a steering file was skipped because it exists.
 //
 // Parameters:

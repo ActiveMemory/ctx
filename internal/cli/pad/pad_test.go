@@ -659,7 +659,7 @@ func TestCmd_HasSubcommands(t *testing.T) {
 		"show N", "add TEXT", "rm ID [ID...]",
 		"edit N [TEXT]", "mv N M", "resolve",
 		"normalize",
-		"import FILE", "export [DIR]", "tags",
+		"import FILE", "export [DIR]", "tag",
 	} {
 		if !names[expected] {
 			t.Errorf("missing subcommand %q", expected)
@@ -3097,7 +3097,7 @@ func TestTags_ListAll(t *testing.T) {
 		}
 	}
 
-	out, err := runCmd(newPadCmd("tags"))
+	out, err := runCmd(newPadCmd("tag"))
 	if err != nil {
 		t.Fatalf("tags error: %v", err)
 	}
@@ -3115,7 +3115,7 @@ func TestTags_ListAll(t *testing.T) {
 func TestTags_Empty(t *testing.T) {
 	setupPlaintext(t)
 
-	out, err := runCmd(newPadCmd("tags"))
+	out, err := runCmd(newPadCmd("tag"))
 	if err != nil {
 		t.Fatalf("tags error: %v", err)
 	}
@@ -3131,7 +3131,7 @@ func TestTags_NoTagEntries(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	out, err := runCmd(newPadCmd("tags"))
+	out, err := runCmd(newPadCmd("tag"))
 	if err != nil {
 		t.Fatalf("tags error: %v", err)
 	}
@@ -3153,7 +3153,7 @@ func TestTags_JSON(t *testing.T) {
 		}
 	}
 
-	out, err := runCmd(newPadCmd("tags", "--json"))
+	out, err := runCmd(newPadCmd("tag", "--json"))
 	if err != nil {
 		t.Fatalf("tags json error: %v", err)
 	}
@@ -3178,7 +3178,7 @@ func TestTags_Alphabetical(t *testing.T) {
 		}
 	}
 
-	out, err := runCmd(newPadCmd("tags"))
+	out, err := runCmd(newPadCmd("tag"))
 	if err != nil {
 		t.Fatalf("tags error: %v", err)
 	}

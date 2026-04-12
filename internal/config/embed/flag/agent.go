@@ -18,6 +18,6 @@ const (
 	DescKeyAgentSession = "agent.session"
 	// DescKeyAgentSkill is the description key for the agent skill flag.
 	DescKeyAgentSkill = "agent.skill"
-	// DescKeyAgentIncludeShared is the description key for --include-shared.
-	DescKeyAgentIncludeShared = "agent.include-shared"
+	// DescKeyAgentIncludeHub is the description key for --include-hub.
+	DescKeyAgentIncludeHub = "agent.include-hub"
 )

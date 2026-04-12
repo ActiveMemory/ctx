@@ -161,22 +161,20 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	flagbind.StringFlag(c, &appendText,
-		cFlag.Append, flag.DescKeyPadEditAppend,
+	flagbind.BindStringFlags(c,
+		[]*string{&appendText, &prependText, &labelText},
+		[]string{cFlag.Append, cFlag.Prepend, cFlag.Label},
+		[]string{
+			flag.DescKeyPadEditAppend,
+			flag.DescKeyPadEditPrepend,
+			flag.DescKeyPadEditLabel,
+		},
 	)
-	flagbind.StringFlag(c, &prependText,
-		cFlag.Prepend, flag.DescKeyPadEditPrepend,
-	)
-	flagbind.StringFlagP(c, &filePath,
-		cFlag.File, cFlag.ShortFile,
-		flag.DescKeyPadEditFile,
-	)
-	flagbind.StringFlag(c, &labelText,
-		cFlag.Label, flag.DescKeyPadEditLabel,
-	)
-	flagbind.StringFlagP(c, &tagName,
-		cFlag.Tag, cFlag.ShortTag,
-		flag.DescKeyPadEditTag,
+	flagbind.BindStringFlagsP(c,
+		[]*string{&filePath, &tagName},
+		[]string{cFlag.File, cFlag.Tag},
+		[]string{cFlag.ShortFile, cFlag.ShortTag},
+		[]string{flag.DescKeyPadEditFile, flag.DescKeyPadEditTag},
 	)
 
 	return c

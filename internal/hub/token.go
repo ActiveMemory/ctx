@@ -10,23 +10,21 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	errHub "github.com/ActiveMemory/ctx/internal/err/hub"
 )
 
-const (
-	// tokenBytes is the number of random bytes in a token.
-	tokenBytes = 32
-
-	// adminTokenPrefix distinguishes admin tokens.
-	adminTokenPrefix = "ctx_adm_" //nolint:gosec // prefix, not a credential
-
-	// clientTokenPrefix distinguishes client tokens.
-	clientTokenPrefix = "ctx_cli_" //nolint:gosec // prefix, not a credential
-)
-
-// generateToken creates a prefixed hex-encoded random token.
+// generateToken creates a prefixed hex-encoded random
+// token.
+//
+// Parameters:
+//   - prefix: token prefix (admin or client)
+//
+// Returns:
+//   - string: prefixed hex-encoded token
+//   - error: non-nil if random generation fails
 func generateToken(prefix string) (string, error) {
-	b := make([]byte, tokenBytes)
+	b := make([]byte, cfgHub.TokenBytes)
 	if _, randErr := rand.Read(b); randErr != nil {
 		return "", errHub.GenerateToken(randErr)
 	}

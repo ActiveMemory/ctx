@@ -50,11 +50,6 @@ const (
 	Skill    = "skill"
 )
 
-// Connect command flag names.
-const (
-	AdminAuth = "admin-auth"
-)
-
 // Shared flag names used across commands.
 const (
 	After           = "after"
@@ -76,7 +71,7 @@ const (
 	DryRun          = "dry-run"
 	Event           = "event"
 	External        = "external"
-	IncludeShared   = "include-shared"
+	IncludeHub      = "include-hub"
 	Fix             = "fix"
 	Force           = "force"
 	Full            = "full"
@@ -94,6 +89,7 @@ const (
 	Message         = "message"
 	Minimal         = "minimal"
 	NoPluginEnable  = "no-plugin-enable"
+	NoSteeringInit  = "no-steering-init"
 	Out             = "out"
 	Output          = "output"
 	Path            = "path"
@@ -109,9 +105,7 @@ const (
 	Port            = "port"
 	Serve           = "serve"
 	Share           = "share"
-	Shared          = "shared"
 	Show            = "show"
-	Stop            = "stop"
 	SessionID       = "session-id"
 	Skills          = "skills"
 	Tag             = "tag"

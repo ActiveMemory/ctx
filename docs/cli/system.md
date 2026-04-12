@@ -9,392 +9,40 @@ title: System
 icon: lucide/settings
 ---
 
+![ctx](../images/ctx-banner.png)
+
+
 ### `ctx system`
 
-System diagnostics and hook commands.
+Hidden parent command that hosts Claude Code hook plumbing and a small
+set of session-lifecycle plumbing subcommands used by skills and editor
+integrations. The parent is registered without a visible group in
+`ctx --help`; run `ctx system --help` to see its subcommands.
 
 ```bash
 ctx system <subcommand>
 ```
 
-The parent command shows available subcommands. Hidden plumbing subcommands
-(`ctx system mark-journal`, `ctx system mark-wrapped-up`) are used by skills
-and automation. Hidden hook
-subcommands (`ctx system check-*`) are used by the Claude Code plugin.
-
-See [AI Tools](../operations/integrations.md#plugin-hooks) for details.
-
-#### `ctx system backup`
-
-Create timestamped tar.gz archives of project context and/or global Claude
-Code data. Optionally copies archives to an SMB share via GVFS.
-
-```bash
-ctx system backup [flags]
-```
-
-**Scopes**:
-
-| Scope     | What it includes                                     |
-|-----------|------------------------------------------------------|
-| `project` | `.context/`, `.claude/`, `ideas/`, `~/.bashrc`      |
-| `global`  | `~/.claude/` (excludes `todos/`)                     |
-| `all`     | Both project and global (default)                    |
-
-**Flags**:
-
-| Flag              | Description                              |
-|-------------------|------------------------------------------|
-| `--scope <scope>` | Backup scope: project, global, or all    |
-| `--json`          | Output results as JSON                   |
-
-**Environment**:
-
-| Variable               | Description                                        |
-|------------------------|----------------------------------------------------|
-| `CTX_BACKUP_SMB_URL`   | SMB share URL (e.g. `smb://host/share`)           |
-| `CTX_BACKUP_SMB_SUBDIR`| Subdirectory on share (default: `ctx-sessions`)    |
-
-**Examples**:
-
-```bash
-ctx system backup                       # Back up everything (default: all)
-ctx system backup --scope project       # Project context only
-ctx system backup --scope global        # Global Claude data only
-ctx system backup --scope all --json    # Both, JSON output
-```
-
-Archives are saved to `/tmp/` with timestamped names. When `CTX_BACKUP_SMB_URL`
-is configured, archives are also copied to the SMB share. Project backups touch
-`~/.local/state/ctx-last-backup` for the `check-backup-age` hook.
-
-#### `ctx system bootstrap`
-
-Print context location and rules for AI agents. This is the recommended first
-command for AI agents to run at session start: It tells them where the context
-directory is and how to use it.
-
-```bash
-ctx system bootstrap [flags]
-```
-
-**Flags**:
-
-| Flag            | Description                          |
-|-----------------|--------------------------------------|
-| `-q`, `--quiet` | Output only the context directory path |
-| `--json`        | Output in JSON format                |
-
-**Quiet output**:
-
-```bash
-ctx system bootstrap -q
-# .context
-```
-
-**Text output**:
-
-```
-ctx bootstrap
-=============
-
-context_dir: .context
-
-Files:
-  CONSTITUTION.md, TASKS.md, DECISIONS.md, LEARNINGS.md,
-  CONVENTIONS.md, ARCHITECTURE.md, GLOSSARY.md
-
-Rules:
-  1. Use context_dir above for ALL file reads/writes
-  2. Never say "I don't have memory": context IS your memory
-  3. Read files silently, present as recall (not search)
-  4. Persist learnings/decisions before session ends
-  5. Run `ctx agent` for content summaries
-  6. Run `ctx status` for context health
-```
-
-**JSON output**:
-
-```json
-{
-  "context_dir": ".context",
-  "files": ["CONSTITUTION.md", "TASKS.md", ...],
-  "rules": ["Use context_dir above for ALL file reads/writes", ...]
-}
-```
-
-**Examples**:
-
-```bash
-ctx system bootstrap                          # Text output
-ctx system bootstrap -q                       # Just the path
-ctx system bootstrap --json                   # JSON output
-ctx system bootstrap --json | jq .context_dir # Extract context path
-```
-
-**Why it exists**: When users configure an external context directory via
-`.ctxrc` (`context_dir: /mnt/nas/.context`), the AI agent needs to know where
-context lives. Bootstrap resolves the configured path and communicates it to
-the agent at session start. Every nudge also includes a context directory
-footer for reinforcement.
-
-#### `ctx system resources`
-
-Show system resource usage with threshold-based alerts.
-
-```bash
-ctx system resources [flags]
-```
-
-Displays memory, swap, disk, and CPU load with two severity tiers:
-
-| Resource   | WARNING      | DANGER       |
-|------------|--------------|--------------|
-| Memory     | >= 80% used  | >= 90% used  |
-| Swap       | >= 50% used  | >= 75% used  |
-| Disk (cwd) | >= 85% full  | >= 95% full  |
-| Load (1m)  | >= 0.8x CPUs | >= 1.5x CPUs |
-
-**Flags**:
-
-| Flag     | Description           |
-|----------|-----------------------|
-| `--json` | Output in JSON format |
-
-**Examples**:
-
-```bash
-ctx system resources               # Text output with status indicators
-ctx system resources --json        # Machine-readable JSON
-ctx system resources --json | jq '.alerts'   # Extract alerts only
-```
-
-**Text output**:
-
-```
-System Resources
-====================
-
-Memory:    4.2 / 16.0 GB (26%)                     ✓ ok
-Swap:      0.0 /  8.0 GB (0%)                      ✓ ok
-Disk:    180.2 / 500.0 GB (36%)                     ✓ ok
-Load:     0.52 / 0.41 / 0.38  (8 CPUs, ratio 0.07) ✓ ok
-
-All clear: no resource warnings.
-```
-
-When resources breach thresholds, alerts are listed below the summary:
-
-```
-Alerts:
-  ✖ Memory 92% used (14.7 / 16.0 GB)
-  ✖ Swap 78% used (6.2 / 8.0 GB)
-  ✖ Load 1.56x CPU count
-```
-
-**Platform support**: Full metrics on Linux and macOS. Windows shows
-disk only; memory and load report as unsupported.
-
-#### `ctx system message`
-
-Manage hook message templates. Hook messages control what text hooks emit.
-The hook logic (when to fire, counting, state tracking) is universal; the
-messages are opinions that can be customized per-project.
-
-```bash
-ctx system message <subcommand>
-```
-
-**Subcommands**:
-
-| Subcommand | Args               | Flags    | Description                                              |
-|------------|--------------------|----------|----------------------------------------------------------|
-| `list`     | *(none)*           | `--json` | Show all hook messages with category and override status |
-| `show`     | `<hook> <variant>` | *(none)* | Print the effective message template with source         |
-| `edit`     | `<hook> <variant>` | *(none)* | Copy embedded default to `.context/` for editing         |
-| `reset`    | `<hook> <variant>` | *(none)* | Delete user override, revert to embedded default         |
-
-**Examples**:
-
-```bash
-ctx system message list                      # Table of all 24 messages
-ctx system message list --json               # Machine-readable JSON
-ctx system message show qa-reminder gate     # View the QA gate template
-ctx system message edit qa-reminder gate     # Copy default to .context/ for editing
-ctx system message reset qa-reminder gate    # Delete override, revert to default
-```
-
-Override files are placed at `.context/hooks/messages/{hook}/{variant}.txt`.
-An empty override file silences the message while preserving the hook's logic.
-
-See the [Customizing Hook Messages](../recipes/customizing-hook-messages.md)
-recipe for detailed examples.
-
-#### `ctx system events`
-
-Query the local hook event log. Reads events from `.context/state/events.jsonl`
-and outputs them in human-readable or raw JSONL format. Requires `event_log: true`
-in `.ctxrc`.
-
-```bash
-ctx system events [flags]
-```
-
-**Flags**:
-
-| Flag        | Short | Type   | Default | Description                                  |
-|-------------|-------|--------|---------|----------------------------------------------|
-| `--hook`    | `-k`  | string | *(all)* | Filter by hook name                          |
-| `--session` | `-s`  | string | *(all)* | Filter by session ID                         |
-| `--event`   | `-e`  | string | *(all)* | Filter by event type (relay, nudge)          |
-| `--last`    | `-n`  | int    | `50`    | Show last N events                           |
-| `--json`    | `-j`  | bool   | `false` | Output raw JSONL (for piping to `jq`)        |
-| `--all`     | `-a`  | bool   | `false` | Include rotated log file (`events.1.jsonl`)  |
-
-All filter flags use intersection (AND) logic.
-
-**Text output**:
-
-```
-2026-02-27 22:39:31  relay  qa-reminder          QA gate reminder emitted
-2026-02-27 22:41:56  relay  qa-reminder          QA gate reminder emitted
-2026-02-28 00:48:18  relay  context-load-gate    injected 6 files (~9367 tokens)
-```
-
-Columns: timestamp (*local timezone*), event type, hook name, message (*truncated
-to terminal width*).
-
-**JSON output** (`--json`):
-
-Each line is a standalone JSON object identical to the webhook payload format:
-
-```json
-// converted to multi-line for convenience:
-{"event":"relay","message":"qa-reminder: QA gate reminder emitted","detail":
-{"hook":"qa-reminder","variant":"gate"},"session_id":"eb1dc9cd-...",
-  "timestamp":"2026-02-27T22:39:31Z","project":"ctx"}
-```
-
-**Examples**:
-
-```bash
-# Last 50 events (default)
-ctx system events
-
-# Events from a specific session
-ctx system events --session eb1dc9cd-0163-4853-89d0-785fbfaae3a6
-
-# Only QA reminder events
-ctx system events --hook qa-reminder
-
-# Raw JSONL for jq processing
-ctx system events --json | jq '.message'
-
-# How many context-load-gate fires today
-ctx system events --hook context-load-gate --json \
-  | jq -r '.timestamp' | grep "$(date +%Y-%m-%d)" | wc -l
-
-# Include rotated events
-ctx system events --all --last 100
-```
-
-**Why it exists**: System hooks fire invisibly. When something goes wrong (*"why
-didn't my hook fire?"*), the event log provides a local, queryable record of
-what hooks fired, when, and how often. Event logging is opt-in via
-`event_log: true` in `.ctxrc` to avoid surprises for existing users.
-
-**See also**: [Troubleshooting](../recipes/troubleshooting.md),
-[Auditing System Hooks](../recipes/system-hooks-audit.md),
-[`ctx doctor`](doctor.md#ctx-doctor)
-
-#### `ctx system stats`
-
-Show per-session token usage statistics. Reads stats JSONL files from
-`.context/state/stats-*.jsonl`, written automatically by the `check-context-size`
-hook on every prompt.
-
-```bash
-ctx system stats [flags]
-```
-
-**Flags**:
-
-| Flag        | Short | Type   | Default | Description                                  |
-|-------------|-------|--------|---------|----------------------------------------------|
-| `--follow`  | `-f`  | bool   | `false` | Stream new entries as they arrive             |
-| `--session` | `-s`  | string | *(all)* | Filter by session ID (prefix match)          |
-| `--last`    | `-n`  | int    | `20`    | Show last N entries                          |
-| `--json`    | `-j`  | bool   | `false` | Output raw JSONL (for piping to `jq`)        |
-
-**Text output**:
-
-```
-TIME                 SESSION   PROMPT    TOKENS  PCT  EVENT
--------------------  --------  ------  --------  ----  ------------
-2026-03-05 10:00:05  abc12345       1      5k    2%  silent
-2026-03-05 10:01:12  abc12345       2     12k    6%  silent
-2026-03-05 10:15:30  abc12345      20     45k   22%  checkpoint
-```
-
-**Events**: `silent`, `checkpoint`, `window-warning`, `suppressed` (wrap-up active),
-`billing` (threshold exceeded).
-
-**Examples**:
-
-```bash
-# Recent stats across all sessions
-ctx system stats
-
-# Stream live token usage (like tail -f)
-ctx system stats --follow
-
-# Filter to current session
-ctx system stats --session abc12345
-
-# Raw JSONL for analysis
-ctx system stats --json | jq '.pct'
-
-# Monitor a long session in another terminal
-ctx system stats --follow --session abc12345
-```
-
-**See also**: [Auditing System Hooks](../recipes/system-hooks-audit.md)
-
-#### `ctx system prune`
-
-Clean stale per-session state files from `.context/state/`. Session hooks
-write tombstone files (context-check, heartbeat, persistence-nudge, etc.)
-that accumulate ~6-8 files per session with no automatic cleanup.
-
-```bash
-ctx system prune [flags]
-```
-
-**Flags**:
-
-| Flag     | Type | Default | Description                              |
-|----------|------|---------|------------------------------------------|
-| `--days` | int  | `7`     | Prune files older than this many days    |
-| `--dry-run` | bool | `false` | Show what would be pruned without deleting |
-
-Files are identified as session-scoped by UUID suffix (e.g.
-`heartbeat-a1b2c3d4-...`). Global files without UUIDs (`events.jsonl`,
-`memory-import.json`, etc.) are always preserved.
-
-!!! note "Safe to run anytime"
-    The worst outcome of pruning is a hook re-firing its nudge in the
-    next session. No context files, decisions, or learnings are stored
-    in the state directory.
-
-**Examples**:
-
-```bash
-ctx system prune                # Prune files older than 7 days
-ctx system prune --days 3       # More aggressive cleanup
-ctx system prune --dry-run      # Preview what would be removed
-```
-
----
+!!! note "Commands previously under `ctx system`"
+    Seven user-facing maintenance commands used to live under
+    `ctx system`:
+
+    - `ctx system backup` → **`ctx backup`**
+    - `ctx system bootstrap` → **`ctx bootstrap`**
+    - `ctx system events` → **`ctx event`**
+    - `ctx system message` → **`ctx message`**
+    - `ctx system prune` → **`ctx prune`**
+    - `ctx system resources` → **`ctx resource`**
+    - `ctx system stats` → **`ctx stats`**
+
+    They've been promoted to top-level commands. Update any scripts or
+    personal docs that reference the old paths. See the release notes
+    for the rename list.
+
+## Plumbing subcommands
+
+These are not hook handlers — they're called by skills and editor
+integrations during the session lifecycle. Safe to run manually.
 
 #### `ctx system mark-journal`
 
@@ -435,3 +83,45 @@ ctx system mark-wrapped-up
 
 No flags, no arguments. Idempotent: running it again updates the
 marker timestamp.
+
+#### `ctx system pause` / `ctx system resume`
+
+Session-scoped hook suppression. `ctx system pause` writes a marker
+file that causes hook plumbing to no-op for the current session;
+`ctx system resume` removes it. These are the hook-plumbing
+counterparts to the top-level `ctx pause` / `ctx resume` commands
+(which call them internally).
+
+Read the session ID from stdin JSON (same as hooks) or pass
+`--session-id`.
+
+#### `ctx system session-event`
+
+Records a session lifecycle event (start or end) to the event log.
+Called by editor integrations when a workspace is opened or closed.
+
+```bash
+ctx system session-event --type start --caller vscode
+ctx system session-event --type end --caller vscode
+```
+
+## Hook subcommands
+
+Hidden Claude Code hook handlers implementing the hook contract: read
+JSON from stdin, perform logic, emit output on stdout, exit 0. Block
+commands output JSON with a `decision` field.
+
+UserPromptSubmit hooks: `context-load-gate`, `check-context-size`,
+`check-persistence`, `check-ceremony`, `check-journal`, `check-version`,
+`check-resource`, `check-knowledge`, `check-map-staleness`,
+`check-memory-drift`, `check-reminder`, `check-freshness`,
+`check-hub-sync`, `check-backup-age`, `check-skill-discovery`,
+`heartbeat`.
+
+PreToolUse hooks: `block-non-path-ctx`, `block-dangerous-command`,
+`qa-reminder`, `specs-nudge`.
+
+PostToolUse hooks: `post-commit`, `check-task-completion`.
+
+See [AI Tools](../operations/integrations.md#plugin-hooks) for
+registration details and the Claude Code plugin integration.

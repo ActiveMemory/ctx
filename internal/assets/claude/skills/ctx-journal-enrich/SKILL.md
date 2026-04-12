@@ -38,7 +38,7 @@ The user specifies a journal entry by partial match:
 
 Find matching files in the journal directory:
 ```bash
-ls "$(ctx system bootstrap -q)/journal/"*.md | grep -i "<pattern>"
+ls "$(ctx bootstrap -q)/journal/"*.md | grep -i "<pattern>"
 ```
 
 If multiple matches, show them and ask which one.
@@ -48,7 +48,7 @@ an `enriched` date:
 
 ```bash
 # List unenriched entries using state file
-CTX_DIR=$(ctx system bootstrap -q)
+CTX_DIR=$(ctx bootstrap -q)
 for f in "$CTX_DIR/journal/"*.md; do
   name=$(basename "$f")
   ctx system mark-journal --check "$name" enriched || echo "$f"

@@ -7,6 +7,8 @@
 
 title: Reviewing Session Changes
 ---
+![ctx](../images/ctx-banner.png)
+
 
 ## What Changed While You Were Away?
 

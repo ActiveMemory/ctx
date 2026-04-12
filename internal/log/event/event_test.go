@@ -218,7 +218,7 @@ func TestQuery_FilterHook(t *testing.T) {
 	Append("relay", "context load", "s1",
 		entity.NewTemplateRef("context-load-gate", "inject", nil))
 	Append("nudge", "ceremonies", "s1",
-		entity.NewTemplateRef("check-ceremonies", "both", nil))
+		entity.NewTemplateRef("check-ceremony", "both", nil))
 
 	events, queryErr := Query(entity.EventQueryOpts{Hook: "qa-reminder"})
 	if queryErr != nil {

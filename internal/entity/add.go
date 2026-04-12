@@ -52,7 +52,7 @@ type EntryParams struct {
 //   - Consequence: Consequence flag for decisions
 //   - Lesson: Lesson flag for learnings
 //   - Application: Application flag for learnings
-//   - Share: Also publish to the shared hub
+//   - Share: Also publish to the ctx Hub
 type AddConfig struct {
 	Priority    string
 	Section     string

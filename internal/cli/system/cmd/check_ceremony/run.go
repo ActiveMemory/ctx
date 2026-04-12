@@ -74,9 +74,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	ref := notify.NewTemplateRef(hook.CheckCeremonies, variant, nil)
+	ref := notify.NewTemplateRef(hook.CheckCeremony, variant, nil)
 	nudge.EmitAndRelay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
-		hook.CheckCeremonies, desc.Text(text.DescKeyCeremonyRelayMessage)),
+		hook.CheckCeremony, desc.Text(text.DescKeyCeremonyRelayMessage)),
 		input.SessionID, ref,
 	)
 	internalIo.TouchFile(remindedFile)

@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package hub implements the shared context hub server and client.
+// Package hub implements the ctx Hub server and client.
 //
 // The hub is a gRPC service that aggregates published entries
 // (decisions, learnings, conventions) from multiple ctx instances

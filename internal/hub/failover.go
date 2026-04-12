@@ -9,11 +9,12 @@ package hub
 import (
 	"context"
 
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-// NewFailoverClient creates a client that tries peers in
+// newFailoverClient creates a client that tries peers in
 // order until one succeeds. Fails fast on auth errors
 // since the token is the same for all peers.
 //
@@ -24,7 +25,7 @@ import (
 // Returns:
 //   - *Client: connected client to the first reachable peer
 //   - error: non-nil if no peer is reachable
-func NewFailoverClient(
+func newFailoverClient(
 	peers []string, bearerToken string,
 ) (*Client, error) {
 	var lastErr error
@@ -48,7 +49,7 @@ func NewFailoverClient(
 			addBearerMD(
 				context.Background(), bearerToken,
 			),
-			"/ctx.hub.v1.CtxHub/Status",
+			cfgHub.PathStatus,
 			&struct{}{},
 			resp,
 		)
@@ -57,7 +58,7 @@ func NewFailoverClient(
 
 			// Fail fast on auth errors — same token
 			// won't work on other peers either.
-			if isAuthErr(callErr) {
+			if authErr(callErr) {
 				return nil, callErr
 			}
 

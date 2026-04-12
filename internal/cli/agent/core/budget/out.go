@@ -36,11 +36,11 @@ func OutputAgentJSON(
 	budget int,
 	steeringBodies []string,
 	skillBody string,
-	sharedBodies []string,
+	hubBodies []string,
 ) error {
 	pkt := AssemblePacket(
 		ctx, budget, steeringBodies,
-		skillBody, sharedBodies,
+		skillBody, hubBodies,
 	)
 
 	packet := packet{
@@ -56,7 +56,7 @@ func OutputAgentJSON(
 		Summaries:    pkt.Summaries,
 		Steering:     pkt.Steering,
 		Skill:        pkt.Skill,
-		Shared:       pkt.Shared,
+		Hub:          pkt.Hub,
 		Instruction:  pkt.Instruction,
 	}
 
@@ -87,11 +87,11 @@ func OutputAgentMarkdown(
 	budget int,
 	steeringBodies []string,
 	skillBody string,
-	sharedBodies []string,
+	hubBodies []string,
 ) error {
 	pkt := AssemblePacket(
 		ctx, budget, steeringBodies,
-		skillBody, sharedBodies,
+		skillBody, hubBodies,
 	)
 	writeAgent.Packet(cmd, RenderMarkdownPacket(pkt))
 	return nil

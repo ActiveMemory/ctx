@@ -383,13 +383,13 @@ The override takes priority over the embedded default compiled into the
 `ctx` binary. An empty file silences the message while preserving the
 hook's logic (counting, state tracking, cooldowns).
 
-Use `ctx system message` to discover and manage overrides:
+Use `ctx message` to discover and manage overrides:
 
 ```bash
-ctx system message list                      # see all messages
-ctx system message show qa-reminder gate     # view the current template
-ctx system message edit qa-reminder gate     # copy default for editing
-ctx system message reset qa-reminder gate    # revert to default
+ctx message list                      # see all messages
+ctx message show qa-reminder gate     # view the current template
+ctx message edit qa-reminder gate     # copy default for editing
+ctx message reset qa-reminder gate    # revert to default
 ```
 
 See [Customizing Hook Messages](../recipes/customizing-hook-messages.md)
@@ -401,13 +401,13 @@ configurations.
 ## Agent Bootstrapping
 
 AI agents need to know the resolved context directory at session start.
-The `ctx system bootstrap` command prints the context path, file list, and
+The `ctx bootstrap` command prints the context path, file list, and
 operating rules in both text and JSON formats:
 
 ```bash
-ctx system bootstrap          # text output for agents
-ctx system bootstrap -q       # just the context directory path
-ctx system bootstrap --json   # structured output for automation
+ctx bootstrap          # text output for agents
+ctx bootstrap -q       # just the context directory path
+ctx bootstrap --json   # structured output for automation
 ```
 
 The `CLAUDE.md` template instructs the agent to run this as its first action.

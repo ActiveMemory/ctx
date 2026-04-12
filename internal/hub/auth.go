@@ -6,6 +6,8 @@
 
 package hub
 
+import cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+
 // GenerateAdminToken creates a new admin token.
 //
 // The token is a hex-encoded 32-byte random value prefixed
@@ -16,7 +18,7 @@ package hub
 //   - string: the admin token
 //   - error: non-nil if the system random source fails
 func GenerateAdminToken() (string, error) {
-	return generateToken(adminTokenPrefix)
+	return generateToken(cfgHub.AdminTokenPrefix)
 }
 
 // GenerateClientToken creates a new client token.
@@ -29,5 +31,5 @@ func GenerateAdminToken() (string, error) {
 //   - string: the client token
 //   - error: non-nil if the system random source fails
 func GenerateClientToken() (string, error) {
-	return generateToken(clientTokenPrefix)
+	return generateToken(cfgHub.ClientTokenPrefix)
 }

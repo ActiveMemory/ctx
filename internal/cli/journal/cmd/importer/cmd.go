@@ -36,19 +36,21 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	flagbind.BoolFlag(
-		c, &opts.All,
-		cFlag.All, flag.DescKeyJournalImportAll,
-	)
-	flagbind.BoolFlag(
-		c, &opts.AllProjects,
-		cFlag.AllProjects,
-		flag.DescKeyJournalImportAllProjects,
-	)
-	flagbind.BoolFlag(
-		c, &opts.Regenerate,
-		cFlag.Regenerate,
-		flag.DescKeyJournalImportRegenerate,
+	flagbind.BindBoolFlags(c,
+		[]*bool{
+			&opts.All, &opts.AllProjects,
+			&opts.Regenerate, &opts.DryRun,
+		},
+		[]string{
+			cFlag.All, cFlag.AllProjects,
+			cFlag.Regenerate, cFlag.DryRun,
+		},
+		[]string{
+			flag.DescKeyJournalImportAll,
+			flag.DescKeyJournalImportAllProjects,
+			flag.DescKeyJournalImportRegenerate,
+			flag.DescKeyJournalImportDryRun,
+		},
 	)
 	flagbind.BoolFlagDefault(
 		c, &opts.KeepFrontmatter,
@@ -59,10 +61,6 @@ func Cmd() *cobra.Command {
 		c, &opts.Yes,
 		cFlag.Yes, cFlag.ShortYes,
 		flag.DescKeyJournalImportYes,
-	)
-	flagbind.BoolFlag(
-		c, &opts.DryRun,
-		cFlag.DryRun, flag.DescKeyJournalImportDryRun,
 	)
 
 	return c

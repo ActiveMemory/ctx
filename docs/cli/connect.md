@@ -11,14 +11,34 @@ icon: lucide/link
 
 ## `ctx connect`
 
-Connect to a shared context hub for cross-project knowledge sharing.
-Projects publish decisions, learnings, and conventions to a centralized
-hub; other projects receive them alongside local context.
+Connect a project to a `ctx` Hub for cross-project
+knowledge sharing. Projects publish decisions, learnings,
+conventions, and tasks to a hub; other subscribed projects receive
+them alongside local context.
+
+!!! tip "New to the hub?"
+    Start with the
+    [`ctx` Hub overview](../recipes/hub-overview.md) for
+    the mental model (what the hub is, who it's for, what it is
+    **not**), then walk through
+    [Getting Started](../recipes/hub-getting-started.md).
+    This page is a command reference, not an introduction.
+
+**The unit of identity is a project, not a user.** Registering a
+directory with `ctx connect register` binds a per-project client
+token in `.context/.connect.enc`. Two developers on the same
+project either share that file over a trusted channel, or each
+register under a different project name.
+
+**Only structured entries flow through the hub** — `decision`,
+`learning`, `convention`, `task`. Session journals, scratchpad
+contents, and other local state stay on the machine that created
+them.
 
 ### `ctx connect register`
 
-One-time registration with a shared hub. Requires the hub address and
-admin token (printed by `ctx serve --shared` on first run).
+One-time registration with a hub. Requires the hub address and
+admin token (printed by `ctx hub start` on first run).
 
 ```bash
 ctx connect register localhost:9900 --token ctx_adm_7f3a...
@@ -40,7 +60,7 @@ ctx connect subscribe decision learning convention
 ### `ctx connect sync`
 
 Pull matching entries from the hub and write them to
-`.context/shared/` as markdown files with origin tags and date
+`.context/hub/` as markdown files with origin tags and date
 headers. Tracks last-seen sequence for incremental sync.
 
 ```bash
@@ -58,7 +78,7 @@ ctx connect publish decision "Use UTC timestamps everywhere"
 ### `ctx connect listen`
 
 Stream new entries from the hub in real-time. Writes to
-`.context/shared/` as entries arrive. Press Ctrl-C to stop.
+`.context/hub/` as entries arrive. Press Ctrl-C to stop.
 
 ```bash
 ctx connect listen
@@ -95,10 +115,10 @@ throttled). No manual `ctx connect sync` needed.
 
 ## Shared files
 
-Entries from the hub are stored in `.context/shared/`:
+Entries from the hub are stored in `.context/hub/`:
 
 ```
-.context/shared/
+.context/hub/
   decisions.md      # Shared decisions with origin tags
   learnings.md      # Shared learnings
   conventions.md    # Shared conventions
@@ -113,7 +133,7 @@ mixed with local context files.
 Include shared knowledge in agent context packets:
 
 ```bash
-ctx agent --include-shared
+ctx agent --include-hub
 ```
 
 Shared entries are included as Tier 8 in the budget-aware

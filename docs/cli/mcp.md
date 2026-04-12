@@ -9,6 +9,8 @@ title: MCP Server
 icon: lucide/plug
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx mcp`
 
 Run ctx as a [Model Context Protocol](https://modelcontextprotocol.io)
@@ -29,14 +31,25 @@ custom hooks or integrations:
 
 Start the MCP server. This command reads JSON-RPC 2.0 requests from
 stdin and writes responses to stdout. It is intended to be launched
-by MCP clients, not run directly.
-
-```
-ctx mcp serve
-```
+by MCP clients (Claude Desktop, Cursor, VS Code Copilot), **not run
+directly from a shell**. See [Configuration](#configuration) below
+for how each host launches it.
 
 **Flags:** None. The server uses the configured context directory
 (from `--context-dir`, `CTX_DIR`, `.ctxrc`, or the default `.context`).
+
+**Examples**:
+
+```bash
+# Normal invocation (by an MCP client via stdio transport)
+ctx mcp serve
+
+# Pin a context directory for a specific workspace
+ctx --context-dir /path/to/project/.context mcp serve
+
+# Verify the binary starts without a client attached (Ctrl-C to exit)
+ctx mcp serve < /dev/null
+```
 
 ---
 

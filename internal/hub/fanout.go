@@ -10,6 +10,9 @@ package hub
 const fanOutBuffer = 64
 
 // newFanOut creates a fan-out broadcaster.
+//
+// Returns:
+//   - *fanOut: initialized broadcaster with no subscribers
 func newFanOut() *fanOut {
 	return &fanOut{
 		subs: make(map[chan []Entry]struct{}),
@@ -18,6 +21,9 @@ func newFanOut() *fanOut {
 
 // subscribe returns a channel that receives broadcast
 // entries. Call unsubscribe when done.
+//
+// Returns:
+//   - chan []Entry: channel delivering broadcast entries
 func (f *fanOut) subscribe() chan []Entry {
 	f.mu.Lock()
 	defer f.mu.Unlock()
@@ -28,6 +34,9 @@ func (f *fanOut) subscribe() chan []Entry {
 }
 
 // unsubscribe removes and closes a listener channel.
+//
+// Parameters:
+//   - ch: channel previously returned by subscribe
 func (f *fanOut) unsubscribe(ch chan []Entry) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
@@ -39,6 +48,9 @@ func (f *fanOut) unsubscribe(ch chan []Entry) {
 // broadcast sends entries to all active listeners.
 // Non-blocking: slow listeners get disconnected to prevent
 // unbounded buffering.
+//
+// Parameters:
+//   - entries: entries to deliver to all subscribers
 func (f *fanOut) broadcast(entries []Entry) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
@@ -56,6 +68,9 @@ func (f *fanOut) broadcast(entries []Entry) {
 }
 
 // count returns the number of active listeners.
+//
+// Returns:
+//   - uint32: number of active subscriber channels
 func (f *fanOut) count() uint32 {
 	f.mu.Lock()
 	defer f.mu.Unlock()

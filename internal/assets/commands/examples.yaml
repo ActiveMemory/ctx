@@ -105,11 +105,46 @@ drift:
       ctx drift
       ctx drift --json
 
+fmt:
+  short: |2-
+      ctx fmt                # Rewrap all .context/ files
+      ctx fmt --check        # CI-safe: exit 1 if anything changes
+      ctx fmt --width 100    # Rewrap to a custom line width
+
 guide:
   short: |2-
       ctx guide
       ctx guide --skills
       ctx guide --commands
+
+hub:
+  short: |2-
+      ctx hub start
+      ctx hub status
+      ctx hub stop
+
+hub.start:
+  short: |2-
+      ctx hub start                              # Foreground, port 9900
+      ctx hub start --port 8080                  # Custom port
+      ctx hub start --daemon                     # Background, writes hub.pid
+      ctx hub start --peers host2:9900,host3:9900  # Raft cluster member
+
+hub.stop:
+  short: |2-
+      ctx hub stop
+      ctx hub stop --data-dir /srv/ctx-hub
+
+hub.status:
+  short: '  ctx hub status'
+
+hub.peer:
+  short: |2-
+      ctx hub peer add host2:9900
+      ctx hub peer remove host2:9900
+
+hub.stepdown:
+  short: '  ctx hub stepdown'
 
 initialize:
   short: |2-
@@ -133,6 +168,11 @@ journal.lock:
   short: |2-
       ctx journal lock abc12345
       ctx journal lock --all
+
+journal.schema:
+  short: |2-
+      ctx journal schema check
+      ctx journal schema dump
 
 journal.obsidian:
   short: |2-
@@ -263,6 +303,11 @@ pad.show:
       ctx pad show 3
       ctx pad show 3 --out ./recovered.md
 
+pad.tag:
+  short: |2-
+      ctx pad tag
+      ctx pad tag --json
+
 pause:
   short: '  ctx pause'
 
@@ -297,13 +342,16 @@ remind.dismiss:
 remind.list:
   short: '  ctx remind list'
 
+remind.normalize:
+  short: '  ctx remind normalize'
+
 resume:
   short: '  ctx resume'
 
 serve:
   short: |2-
-      ctx serve
-      ctx serve ./docs
+      ctx serve                           # Serve journal site
+      ctx serve ./docs                    # Serve a specific directory
 
 setup:
   short: |2-
@@ -375,35 +423,37 @@ sync:
 
 system:
   short: |2-
-      ctx system bootstrap
-      ctx system backup
-      ctx system resources
+      ctx system --help         # list hidden hook plumbing
+      ctx system mark-wrapped-up
 
-system.backup:
+backup:
   short: |2-
-      ctx system backup
-      ctx system backup --scope project
+      ctx backup
+      ctx backup --scope project
 
-system.blockdangerouscommands:
-  short: '  ctx system block-dangerous-commands'
+system.blockdangerouscommand:
+  short: '  ctx system block-dangerous-command'
 
 system.blocknonpathctx:
   short: '  ctx system block-non-path-ctx'
 
-system.bootstrap:
-  short: '  ctx system bootstrap'
+bootstrap:
+  short: '  ctx bootstrap'
 
 system.checkbackupage:
   short: '  ctx system check-backup-age'
 
-system.checkceremonies:
-  short: '  ctx system check-ceremonies'
+system.checkceremony:
+  short: '  ctx system check-ceremony'
 
 system.checkcontextsize:
   short: '  ctx system check-context-size'
 
 system.checkfreshness:
   short: '  ctx system check-freshness'
+
+system.checkhubsync:
+  short: '  ctx system check-hub-sync'
 
 system.checkjournal:
   short: '  ctx system check-journal'
@@ -420,11 +470,11 @@ system.checkmemorydrift:
 system.checkpersistence:
   short: '  ctx system check-persistence'
 
-system.checkreminders:
-  short: '  ctx system check-reminders'
+system.checkreminder:
+  short: '  ctx system check-reminder'
 
-system.checkresources:
-  short: '  ctx system check-resources'
+system.checkresource:
+  short: '  ctx system check-resource'
 
 system.checkskilldiscovery:
   short: '  ctx system check-skill-discovery'
@@ -438,11 +488,11 @@ system.checkversion:
 system.contextloadgate:
   short: '  ctx system context-load-gate'
 
-system.events:
+event:
   short: |2-
-      ctx system events
-      ctx system events --hook check-context-size --last 10
-      ctx system events --json
+      ctx event
+      ctx event --hook check-context-size --last 10
+      ctx event --json
 
 system.heartbeat:
   short: '  ctx system heartbeat'
@@ -455,22 +505,22 @@ system.markjournal:
 system.markwrappedup:
   short: '  ctx system mark-wrapped-up'
 
-system.message:
+message:
   short: |2-
-      ctx system message list
-      ctx system message show check-context-size checkpoint
+      ctx message list
+      ctx message show check-context-size checkpoint
 
-system.message.edit:
-  short: '  ctx system message edit check-context-size checkpoint'
+message.edit:
+  short: '  ctx message edit check-context-size checkpoint'
 
-system.message.list:
-  short: '  ctx system message list'
+message.list:
+  short: '  ctx message list'
 
-system.message.reset:
-  short: '  ctx system message reset check-context-size checkpoint'
+message.reset:
+  short: '  ctx message reset check-context-size checkpoint'
 
-system.message.show:
-  short: '  ctx system message show check-context-size checkpoint'
+message.show:
+  short: '  ctx message show check-context-size checkpoint'
 
 system.pause:
   short: '  ctx system pause --session-id $PPID'
@@ -478,17 +528,17 @@ system.pause:
 system.postcommit:
   short: '  ctx system post-commit'
 
-system.prune:
+prune:
   short: |2-
-      ctx system prune
-      ctx system prune --days 3
-      ctx system prune --dry-run
+      ctx prune
+      ctx prune --days 3
+      ctx prune --dry-run
 
 system.qareminder:
   short: '  ctx system qa-reminder'
 
-system.resources:
-  short: '  ctx system resources'
+resource:
+  short: '  ctx resource'
 
 system.resume:
   short: '  ctx system resume --session-id $PPID'
@@ -501,11 +551,11 @@ system.sessionevent:
 system.specsnudge:
   short: '  ctx system specs-nudge'
 
-system.stats:
+stats:
   short: |2-
-      ctx system stats
-      ctx system stats --follow
-      ctx system stats --session abc123
+      ctx stats
+      ctx stats --follow
+      ctx stats --session abc123
 
 task:
   short: |2-

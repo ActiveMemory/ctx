@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package check_hub_sync provides the check-hub-sync hook
-// for automatic shared hub synchronization on session start.
+// for automatic ctx Hub synchronization on session start.
 //
 // Key exports: [Cmd].
 // See source files for implementation details.

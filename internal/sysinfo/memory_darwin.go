@@ -12,40 +12,9 @@ import (
 	"strconv"
 	"strings"
 
+	cfgSysinfo "github.com/ActiveMemory/ctx/internal/config/sysinfo"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	execSysinfo "github.com/ActiveMemory/ctx/internal/exec/sysinfo"
-)
-
-// sysctl key and flag constants for macOS memory queries.
-const (
-	// flagNoNewline suppresses the key name in sysctl output.
-	flagNoNewline = "-n"
-	// keyHWMemsize is the sysctl key for total physical memory.
-	keyHWMemsize = "hw.memsize"
-	// keyVMSwapUsage is the sysctl key for swap usage.
-	keyVMSwapUsage = "vm.swapusage"
-)
-
-// vm_stat output parsing constants.
-const (
-	// markerPageSize is the sentinel substring in vm_stat
-	// output that precedes the page size value.
-	markerPageSize = "page size of"
-	// labelPagesFree is the vm_stat line label for free pages.
-	labelPagesFree = "Pages free"
-	// labelPagesInactive is the vm_stat line label for
-	// inactive pages.
-	labelPagesInactive = "Pages inactive"
-)
-
-// Swap usage parsing constants.
-const (
-	// suffixMB is the megabyte suffix in sysctl swap output.
-	suffixMB = "M"
-	// labelTotal is the swap usage field name for total swap.
-	labelTotal = "total"
-	// labelUsed is the swap usage field name for used swap.
-	labelUsed = "used"
 )
 
 // defaultPageSize is the default memory page size on Apple
@@ -65,7 +34,9 @@ const bytesPerKB = 1024
 //   - MemInfo: Physical and swap memory statistics
 func collectMemory() MemInfo {
 	// Total physical memory
-	out, memErr := execSysinfo.Sysctl(flagNoNewline, keyHWMemsize)
+	out, memErr := execSysinfo.Sysctl(
+		cfgSysinfo.FlagNoNewline, cfgSysinfo.KeyHWMemsize,
+	)
 	if memErr != nil {
 		return MemInfo{Supported: false}
 	}
@@ -85,7 +56,9 @@ func collectMemory() MemInfo {
 
 	// Swap via sysctl
 	var swapTotal, swapUsed uint64
-	out, swapErr := execSysinfo.Sysctl(flagNoNewline, keyVMSwapUsage)
+	out, swapErr := execSysinfo.Sysctl(
+		cfgSysinfo.FlagNoNewline, cfgSysinfo.KeyVMSwapUsage,
+	)
 	if swapErr == nil {
 		swapTotal, swapUsed = parseSwapUsage(string(out))
 	}
@@ -116,7 +89,7 @@ func parseVMStat(output string, totalBytes uint64) uint64 {
 	pages := make(map[string]uint64)
 
 	for _, line := range strings.Split(output, token.NewlineLF) {
-		if strings.Contains(line, markerPageSize) {
+		if strings.Contains(line, cfgSysinfo.MarkerPageSize) {
 			for _, word := range strings.Fields(line) {
 				n, parseErr := strconv.ParseUint(word, 10, 64)
 				if parseErr == nil && n > 0 {
@@ -140,7 +113,8 @@ func parseVMStat(output string, totalBytes uint64) uint64 {
 		}
 	}
 
-	freeBytes := (pages[labelPagesFree] + pages[labelPagesInactive]) * pageSize
+	freeBytes := (pages[cfgSysinfo.LabelPagesFree] +
+		pages[cfgSysinfo.LabelPagesInactive]) * pageSize
 	if freeBytes >= totalBytes {
 		return 0
 	}
@@ -163,7 +137,9 @@ func parseVMStat(output string, totalBytes uint64) uint64 {
 //   - used: Used swap space in bytes
 func parseSwapUsage(output string) (total, used uint64) {
 	parseMB := func(s string) uint64 {
-		s = strings.TrimSuffix(strings.TrimSpace(s), suffixMB)
+		s = strings.TrimSuffix(
+			strings.TrimSpace(s), cfgSysinfo.SuffixMB,
+		)
 		f, parseErr := strconv.ParseFloat(s, 64)
 		if parseErr != nil {
 			return 0
@@ -175,9 +151,9 @@ func parseSwapUsage(output string) (total, used uint64) {
 	for i, f := range fields {
 		if f == token.KeyValueSep && i > 0 && i+1 < len(fields) {
 			switch fields[i-1] {
-			case labelTotal:
+			case cfgSysinfo.LabelTotal:
 				total = parseMB(fields[i+1])
-			case labelUsed:
+			case cfgSysinfo.LabelUsed:
 				used = parseMB(fields[i+1])
 			}
 		}

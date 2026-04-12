@@ -10,6 +10,7 @@ import (
 	"crypto/subtle"
 	"encoding/json"
 
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errHub "github.com/ActiveMemory/ctx/internal/err/hub"
 	"github.com/ActiveMemory/ctx/internal/io"
@@ -28,7 +29,7 @@ import (
 //   - *Store: initialized store
 //   - error: non-nil if directory or file loading fails
 func NewStore(dir string) (*Store, error) {
-	if mkErr := io.SafeMkdirAll(dir, dirPerm); mkErr != nil {
+	if mkErr := io.SafeMkdirAll(dir, fs.PermKeyDir); mkErr != nil {
 		return nil, mkErr
 	}
 

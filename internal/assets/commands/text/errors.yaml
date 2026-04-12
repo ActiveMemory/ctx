@@ -207,7 +207,7 @@ err.hook.marshal-input:
 err.hook.not-found:
   short: 'hook not found: %s'
 err.hook.override-exists:
-  short: "override already exists at %s\nEdit it directly or use `ctx system message reset %s %s` first"
+  short: "override already exists at %s\nEdit it directly or use `ctx message reset %s %s` first"
 err.hook.remove-override:
   short: 'failed to remove override %s: %w'
 err.hook.resolve-hooks-dir:
@@ -223,9 +223,9 @@ err.hook.stat-path:
 err.hook.timeout:
   short: 'timeout after %s'
 err.hook.unknown-hook:
-  short: "unknown hook: %s\nRun `ctx system message list` to see available hooks"
+  short: "unknown hook: %s\nRun `ctx message list` to see available hooks"
 err.hook.unknown-variant:
-  short: "unknown variant %q for hook %q\nRun `ctx system message list` to see available variants"
+  short: "unknown variant %q for hook %q\nRun `ctx message list` to see available variants"
 err.hook.write-override:
   short: 'failed to write override %s: %w'
 err.hook.write-script:
@@ -572,6 +572,20 @@ err.validation.parse-file:
   short: 'failed to parse %s: %w'
 err.validation.working-directory:
   short: 'failed to get working directory: %w'
+err.hub.generate-token:
+  short: 'generate token: %w'
+err.hub.internal:
+  short: 'internal: %w'
+err.hub.duplicate-project:
+  short: 'project already registered: %q'
+err.hub.invalid-peer-action:
+  short: "action must be 'add' or 'remove', got %q"
+err.serve.no-running-hub:
+  short: 'no running hub: %w'
+err.serve.invalid-pid:
+  short: 'invalid PID file: %w'
+err.serve.kill-failed:
+  short: 'kill %d: %w'
 err.parser.missing-open-delim:
   short: missing opening frontmatter delimiter (---)
 err.parser.missing-close-delim:

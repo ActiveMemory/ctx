@@ -33,10 +33,11 @@ func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyRemind)
 
 	c := &cobra.Command{
-		Use:   cmd.UseRemind,
-		Short: short,
-		Long:  long,
-		Args:  cobra.ArbitraryArgs,
+		Use:     cmd.UseRemind,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyRemind),
+		Args:    cobra.ArbitraryArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				return add.Run(cmd, args[0], afterFlag)

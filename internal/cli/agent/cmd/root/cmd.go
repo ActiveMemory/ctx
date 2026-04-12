@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	coreShared "github.com/ActiveMemory/ctx/internal/cli/agent/core/shared"
+	coreHub "github.com/ActiveMemory/ctx/internal/cli/agent/core/hub"
 	coreSteering "github.com/ActiveMemory/ctx/internal/cli/agent/core/steering"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
@@ -73,10 +73,10 @@ func Cmd() *cobra.Command {
 				skillBody = sk
 			}
 
-			// Tier 8: Load shared hub entries.
+			// Tier 8: Load ctx Hub entries.
 			var sharedBodies []string
 			if includeShare {
-				sharedBodies = coreShared.LoadBodies()
+				sharedBodies = coreHub.LoadBodies()
 			}
 
 			return Run(
@@ -111,8 +111,8 @@ func Cmd() *cobra.Command {
 	)
 	flagbind.BoolFlag(
 		c, &includeShare,
-		cFlag.IncludeShared,
-		flag.DescKeyAgentIncludeShared,
+		cFlag.IncludeHub,
+		flag.DescKeyAgentIncludeHub,
 	)
 
 	return c

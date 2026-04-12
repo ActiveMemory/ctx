@@ -9,69 +9,57 @@ title: Serve
 icon: lucide/server
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx serve`
 
-Serve a journal site locally, or start the shared context hub.
+Serve a static site locally via [zensical](https://pypi.org/project/zensical/).
 
-### Static site (default)
-
-```bash
-ctx serve                    # Serve .context/journal/site/
-ctx serve ./my-site          # Serve a specific directory
-```
-
-### Shared context hub
-
-Start a gRPC hub server for cross-project knowledge sharing.
+With no argument, serves the journal site at
+`.context/journal-site`. With a directory argument, serves
+that directory if it contains a `zensical.toml`.
 
 ```bash
-ctx serve --shared                          # Start on default port 9900
-ctx serve --shared --port 8080              # Custom port
-ctx serve --shared --data-dir /path/to/data # Custom data directory
+ctx serve                             # Serve .context/journal-site
+ctx serve ./my-site                   # Serve a specific directory
+ctx serve ./docs                      # Serve any zensical site
 ```
 
-On first run, generates an admin token and prints it to stdout.
-Save this token — it's needed for `ctx connect register`.
+!!! info "This command does NOT start a hub"
+    `ctx serve` is purely for static-site serving. To run a
+    `ctx` Hub for cross-project knowledge sharing, use
+    [`ctx hub start`](hub.md). That command lives in its
+    own group because the hub is a gRPC server, not a
+    static site.
 
-**Default data directory:** `~/.ctx/hub-data/`
-
-### Daemon mode
-
-Run the hub as a background process:
+**Requires zensical to be installed**:
 
 ```bash
-ctx serve --shared --daemon          # Start in background
-ctx serve --stop                     # Stop the running daemon
+pipx install zensical
 ```
 
-The daemon writes a PID file to `<data-dir>/hub.pid`.
+### Arguments
 
-### Cluster mode
+| Argument     | Description                                      |
+|--------------|--------------------------------------------------|
+| `[directory]` | Directory containing a `zensical.toml` to serve |
 
-For high availability, run multiple hubs with Raft leader election:
+When omitted, serves `.context/journal-site` by default — the
+directory produced by `ctx journal site`.
+
+**Examples**:
 
 ```bash
-ctx serve --shared --port 9900 --peers host2:9901,host3:9901
+ctx serve                         # Default: serve .context/journal-site
+ctx serve ./my-site               # Serve a specific directory
+ctx serve ./docs                  # Serve any zensical site
 ```
 
-Raft is used only for leader election. Data replication uses
-sequence-based gRPC sync (append-only, no conflicts).
+### See also
 
-### Validation
-
-The hub validates all published entries:
-- **Type** must be `decision`, `learning`, `convention`, or `task`
-- **ID** and **Origin** are required (non-empty)
-- **Content** max 1MB (text-only — decisions, learnings, conventions)
-- **Duplicate registration** is rejected (one token per project)
-
-### Flags
-
-| Flag | Description |
-|------|-------------|
-| `--shared` | Start the shared context hub |
-| `--port` | Hub listen port (default 9900) |
-| `--data-dir` | Hub data directory (default ~/.ctx/hub-data/) |
-| `--daemon` | Run hub in the background |
-| `--stop` | Stop a running hub daemon |
-| `--peers` | Comma-separated peer addresses for cluster mode |
+- [`ctx journal`](journal.md) — generate the journal site
+  that `ctx serve` displays.
+- [`ctx hub start`](hub.md) — for running a `ctx` Hub
+  server, not a static site.
+- [Browsing and enriching past sessions](../recipes/session-archaeology.md)
+  — the recipe that combines `ctx journal` and `ctx serve`.

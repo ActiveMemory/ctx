@@ -40,6 +40,14 @@ const (
 	PriorityLow    = "low"
 )
 
+// AllowedTypes is the set of entry types accepted by the hub.
+var AllowedTypes = map[string]bool{
+	Decision:   true,
+	Learning:   true,
+	Convention: true,
+	Task:       true,
+}
+
 // Priorities lists all valid priority levels for shell completion.
 var Priorities = []string{PriorityHigh, PriorityMedium, PriorityLow}
 

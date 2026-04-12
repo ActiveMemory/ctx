@@ -6,35 +6,35 @@
 
 package cmd
 
-// Use strings and DescKeys for the connect command group.
+// Use strings and DescKeys for the connection command group.
 const (
-	// UseConnect is the cobra Use string for connect.
-	UseConnect = "connect"
-	// UseConnectRegister is the Use string for register.
-	UseConnectRegister = "register <hub-address>"
-	// UseConnectSubscribe is the Use string for subscribe.
-	UseConnectSubscribe = "subscribe <types...>"
-	// UseConnectSync is the Use string for sync.
-	UseConnectSync = "sync"
-	// UseConnectPublish is the Use string for publish.
-	UseConnectPublish = "publish"
-	// UseConnectListen is the Use string for listen.
-	UseConnectListen = "listen"
-	// UseConnectStatus is the Use string for status.
-	UseConnectStatus = "status"
+	// UseConnection is the cobra Use string for connection.
+	UseConnection = "connection"
+	// UseConnectionRegister is the Use string for register.
+	UseConnectionRegister = "register <hub-address>"
+	// UseConnectionSubscribe is the Use string for subscribe.
+	UseConnectionSubscribe = "subscribe <types...>"
+	// UseConnectionSync is the Use string for sync.
+	UseConnectionSync = "sync"
+	// UseConnectionPublish is the Use string for publish.
+	UseConnectionPublish = "publish"
+	// UseConnectionListen is the Use string for listen.
+	UseConnectionListen = "listen"
+	// UseConnectionStatus is the Use string for status.
+	UseConnectionStatus = "status"
 
-	// DescKeyConnect is the desc key for the connect command.
-	DescKeyConnect = "connect"
-	// DescKeyConnectRegister is the desc key for register.
-	DescKeyConnectRegister = "connect.register"
-	// DescKeyConnectSubscribe is the desc key for subscribe.
-	DescKeyConnectSubscribe = "connect.subscribe"
-	// DescKeyConnectSync is the desc key for sync.
-	DescKeyConnectSync = "connect.sync"
-	// DescKeyConnectPublish is the desc key for publish.
-	DescKeyConnectPublish = "connect.publish"
-	// DescKeyConnectListen is the desc key for listen.
-	DescKeyConnectListen = "connect.listen"
-	// DescKeyConnectStatus is the desc key for status.
-	DescKeyConnectStatus = "connect.status"
+	// DescKeyConnection is the desc key for the connection command.
+	DescKeyConnection = "connection"
+	// DescKeyConnectionRegister is the desc key for register.
+	DescKeyConnectionRegister = "connection.register"
+	// DescKeyConnectionSubscribe is the desc key for subscribe.
+	DescKeyConnectionSubscribe = "connection.subscribe"
+	// DescKeyConnectionSync is the desc key for sync.
+	DescKeyConnectionSync = "connection.sync"
+	// DescKeyConnectionPublish is the desc key for publish.
+	DescKeyConnectionPublish = "connection.publish"
+	// DescKeyConnectionListen is the desc key for listen.
+	DescKeyConnectionListen = "connection.listen"
+	// DescKeyConnectionStatus is the desc key for status.
+	DescKeyConnectionStatus = "connection.status"
 )

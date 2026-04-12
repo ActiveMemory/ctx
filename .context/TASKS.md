@@ -27,6 +27,34 @@ TASK STATUS LABELS:
 
 ### Misc
 
+- [ ] Move `ctx bootstrap` back to `ctx system bootstrap` (hidden). Bootstrap is agent-only plumbing — no human types it interactively. It was incorrectly promoted to top-level in the namespace cleanup. Move the package back to `internal/cli/system/cmd/bootstrap/`, restore `UseSystemBootstrap`/`DescKeySystemBootstrap` constants, re-add `Hidden: true`, update CLAUDE.md templates and skills back to `ctx system bootstrap`, remove from `docs/cli/bootstrap.md` and `docs/cli/index.md` Diagnostics group, remove from `zensical.toml` nav. Spec: specs/cli-namespace-cleanup.md #priority:high #added:2026-04-11
+
+- [ ] Rename `ctx stats` to `ctx usage`. "Stats for what?" — the current name lost its anchor when promoted from `ctx system stats`. `ctx usage` communicates intent: "show me my token usage." `ctx session stats` was considered but rejected as premature — a parent with one child is worse than a flat command. Revisit when `ctx session` has 2+ children. Spec: specs/cli-namespace-cleanup.md #priority:medium #added:2026-04-11
+
+- [ ] Rename `ctx resource` to `ctx sysinfo`. Without the `system` prefix, "resource" sounds like it manages project resources (files, assets, infrastructure). It's actually a system-health snapshot: memory, swap, disk, CPU load. `sysinfo` matches the internal package name (`internal/sysinfo`) and is unambiguous. `health` was considered but rejected — too similar to `ctx doctor` and `ctx doctor health` reads wrong. Same rename pattern. Spec: specs/cli-namespace-cleanup.md #priority:medium #added:2026-04-11
+
+- [ ] Deprecate or remove `ctx dep`. Utility is marginal: agents rarely need a flat dependency inventory to make decisions, and `go list -m all` / `npm ls` already cover the use case. Doesn't clear the "would I miss it if it vanished?" bar. Removal is a one-command delete + doc cleanup. #priority:low #added:2026-04-11
+
+- [ ] Introduce `ctx hook` parent command — consolidate hook-related user-facing commands under a single namespace: `ctx hook message list/show/edit/reset` (currently `ctx message`), `ctx hook notify` (currently `ctx notify`), `ctx hook pause` / `ctx hook resume` (currently top-level `ctx pause` / `ctx resume`). "What are we pausing?" — hooks. The current top-level `pause` loses that context. Clarifies the `ctx trigger` vs `ctx hook` distinction: `trigger` = user-authored scripts, `hook` = plugin-shipped machinery + its user-facing controls. Future children: `ctx hook status` (which hooks fired recently), `ctx hook test` (dry-run), `ctx hook event` (currently `ctx event`). Same rename pattern as previous namespace cleanups. Spec: specs/cli-namespace-cleanup.md #priority:medium #added:2026-04-11
+
+### Runbooks
+
+- [ ] Create `hack/runbooks/release-checklist.md` — canonical pre-release sequence: run codebase-audit, docs-semantic-audit, sanitize-permissions, `make test`, bump version, generate release notes, tag, push. Today this lives in the operator's head + scattered across docs/operations/. Cross-link with `_ctx-release` skill. #priority:high #added:2026-04-11
+
+- [ ] Create `hack/runbooks/breaking-migration.md` — template for users upgrading across breaking CLI renames. What commands changed, how to regenerate CLAUDE.md (`ctx init --force`), how to update personal scripts and hook configs. One instance per breaking release, or a generic template with a per-release appendix. #priority:medium #added:2026-04-11
+
+- [ ] Create `hack/runbooks/hub-deployment.md` — linear runbook for setting up a ctx Hub for a team: generate admin token, distribute, register clients, verify sync, configure TLS (when H-01/H-02 land). Consolidates pieces currently scattered across hub recipes. #priority:medium #added:2026-04-11
+
+- [ ] Create `hack/runbooks/new-contributor.md` — onboarding sequence: clone → `ctx init` → `make build && sudo make install` → verify hooks (`claude mcp list`) → run first session → verify context persistence. Currently scattered across README, contributing.md, and setup docs. #priority:medium #added:2026-04-11
+
+- [ ] Create `hack/runbooks/plugin-release.md` — plugin-specific release procedure: update hooks.json, bump version, test against fresh Claude Code install, publish to marketplace, verify `claude mcp list` shows updated version. Not covered by the general release checklist. #priority:low #added:2026-04-11
+
+### Misc
+
+- [ ] Human: Do a documentation audit for AI-generated artifacts. #important #not-urgent
+
+- [ ] Human: test `ctx init` on a fresh ubuntu install.
+
 - [ ] Improve hub failover client: distinguish auth errors (Unauthenticated/PermissionDenied) from connection errors. Fail fast on auth failures instead of cycling through all peers with the same invalid token. #priority:low #added:2026-04-08-194612
 
 - [ ] Add file locking to ctx connect sync state to prevent concurrent sync races. Two sync processes (hook + manual) can both load the same LastSequence, process the same entries, and write duplicate content to .context/shared/. #priority:medium #added:2026-04-08-194557
@@ -1022,50 +1050,846 @@ Not a fit (keep in `ctx`):
   contract (query, context, impact). Spec:
   `ideas/spec-mcp-warm-up-ceremony.md` #added:2026-03-25-120000
 
-- [x] HUB-1: Define hub.proto — gRPC service definition with Register, Publish, Sync, Listen, Status RPCs. Generate Go code. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113020 #done:2026-04-06
+- [x] HUB-1: Define hub.proto — gRPC service definition with Register, Publish, Sync, Listen, Status RPCs. Generate Go code. Spec: specs/context-hub.md #priority:high #added:2026-04-06-113020 #done:2026-04-06
 
 - [x] HUB-2: Implement internal/hub/store.go — JSONL append-only entry storage with sequence assignment, type filtering, and since-sequence queries. Spec: specs/hub_implementation.md #priority:high #added:2026-04-06-113021 #done:2026-04-06
 
-- [x] HUB-3: Implement internal/hub/auth.go — admin token generation on first run, client token issuance via Register RPC, gRPC interceptor for Bearer token validation. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113022 #done:2026-04-06
+- [x] HUB-3: Implement internal/hub/auth.go — admin token generation on first run, client token issuance via Register RPC, gRPC interceptor for Bearer token validation. Spec: specs/context-hub.md #priority:high #added:2026-04-06-113022 #done:2026-04-06
 
-- [x] HUB-4: Implement internal/hub/server.go — gRPC server with Register, Publish, Sync RPCs. Wire auth interceptor, JSONL store, TLS support. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113024 #done:2026-04-06
+- [x] HUB-4: Implement internal/hub/server.go — gRPC server with Register, Publish, Sync RPCs. Wire auth interceptor, JSONL store, TLS support. Spec: specs/context-hub.md #priority:high #added:2026-04-06-113024 #done:2026-04-06
 
-- [x] HUB-5: Implement ctx serve --shared CLI command — starts gRPC hub server on specified port, generates admin token on first run, supports --tls-cert/--tls-key flags. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113030 #done:2026-04-06
+- [x] HUB-5: Implement ctx serve --shared CLI command — starts gRPC hub server on specified port, generates admin token on first run, supports --tls-cert/--tls-key flags. Spec: specs/context-hub.md #priority:high #added:2026-04-06-113030 #done:2026-04-06
 
-- [x] HUB-6: Implement internal/hub/client.go — gRPC client with Register, Sync, Publish, Listen methods. Connection config encrypted storage via internal/crypto (same pattern as notify). Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113032 #done:2026-04-06
+- [x] HUB-6: Implement internal/hub/client.go — gRPC client with Register, Sync, Publish, Listen methods. Connection config encrypted storage via internal/crypto (same pattern as notify). Spec: specs/context-hub.md #priority:high #added:2026-04-06-113032 #done:2026-04-06
 
-- [x] HUB-7: Implement ctx connect register — one-time registration with hub, stores encrypted connection config in .context/.connect.enc. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-113033 #done:2026-04-06
+- [x] HUB-7: Implement ctx connect register — one-time registration with hub, stores encrypted connection config in .context/.connect.enc. Spec: specs/context-hub.md #priority:high #added:2026-04-06-113033 #done:2026-04-06
 
-- [x] HUB-8: Implement ctx connect subscribe — set entry type filters (decisions, learnings, conventions), persist in local connection config. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113035 #done:2026-04-07
+- [x] HUB-8: Implement ctx connect subscribe — set entry type filters (decisions, learnings, conventions), persist in local connection config. Spec: specs/context-hub.md #priority:medium #added:2026-04-06-113035 #done:2026-04-07
 
-- [x] HUB-9: Implement ctx connect sync — initial full pull of matching entries from hub, write to .context/shared/ as markdown files with origin tags, record last-seen sequence in .sync-state.json. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113041 #done:2026-04-07
+- [x] HUB-9: Implement ctx connect sync — initial full pull of matching entries from hub, write to .context/shared/ as markdown files with origin tags, record last-seen sequence in .sync-state.json. Spec: specs/context-hub.md #priority:medium #added:2026-04-06-113041 #done:2026-04-07
 
-- [x] HUB-10: Implement ctx connect publish and --share flag — push local entries to hub. Add --share flag to ctx add so entries go to local file AND hub simultaneously. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113043 #done:2026-04-07
+- [x] HUB-10: Implement ctx connect publish and --share flag — push local entries to hub. Add --share flag to ctx add so entries go to local file AND hub simultaneously. Spec: specs/context-hub.md #priority:medium #added:2026-04-06-113043 #done:2026-04-07
 
-- [x] HUB-11: Implement Listen RPC with fan-out — server-streaming RPC that pushes new entries to connected clients in real-time. ctx connect listen with auto-reconnect on disconnect. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113044 #done:2026-04-07
+- [x] HUB-11: Implement Listen RPC with fan-out — server-streaming RPC that pushes new entries to connected clients in real-time. ctx connect listen with auto-reconnect on disconnect. Spec: specs/context-hub.md #priority:medium #added:2026-04-06-113044 #done:2026-04-07
 
-- [x] HUB-12: Implement ctx connect status — show server address, connection state, last sync time, subscription config, entry counts by type. Includes hub-side Status RPC. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113046 #done:2026-04-07
+- [x] HUB-12: Implement ctx connect status — show server address, connection state, last sync time, subscription config, entry counts by type. Includes hub-side Status RPC. Spec: specs/context-hub.md #priority:medium #added:2026-04-06-113046 #done:2026-04-07
 
-- [x] HUB-13: Implement ctx agent --include-shared — add Tier 8 budget for shared knowledge in agent packet assembly. Shared entries from .context/shared/ included when --include-shared flag is passed. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113053 #done:2026-04-07
+- [x] HUB-13: Implement ctx agent --include-shared — add Tier 8 budget for shared knowledge in agent packet assembly. Shared entries from .context/shared/ included when --include-shared flag is passed. Spec: specs/context-hub.md #priority:medium #added:2026-04-06-113053 #done:2026-04-07
 
-- [x] HUB-14: Implement --daemon flag for ctx serve --shared — background process with PID file, --stop to kill, graceful shutdown. Required for federation. Spec: specs/shared-hub-federation.md #priority:medium #added:2026-04-06-113054
+- [x] HUB-14: Implement --daemon flag for ctx serve --shared — background process with PID file, --stop to kill, graceful shutdown. Required for federation. Spec: specs/hub-federation.md #priority:medium #added:2026-04-06-113054
 
-- [x] HUB-15: Integrate hashicorp/raft for leader election — Raft-lite: use Raft ONLY for master election, not data consensus. --peers flag for cluster membership. Single-node mode auto-elects. Spec: specs/shared-hub-federation.md #priority:medium #added:2026-04-06-113056
+- [x] HUB-15: Integrate hashicorp/raft for leader election — Raft-lite: use Raft ONLY for master election, not data consensus. --peers flag for cluster membership. Single-node mode auto-elects. Spec: specs/hub-federation.md #priority:medium #added:2026-04-06-113056
 
-- [x] HUB-16: Implement master-to-follower replication — master pushes entries to followers via gRPC stream. Followers catch up via sequence-based sync on reconnect. Spec: specs/shared-hub-federation.md #priority:medium #added:2026-04-06-113058
+- [x] HUB-16: Implement master-to-follower replication — master pushes entries to followers via gRPC stream. Followers catch up via sequence-based sync on reconnect. Spec: specs/hub-federation.md #priority:medium #added:2026-04-06-113058
 
-- [x] HUB-17: Implement client failover — clients maintain ordered peer list, auto-reconnect to new master on connection failure. Follower redirects client to current master address. Spec: specs/shared-hub-federation.md #priority:medium #added:2026-04-06-113104
+- [x] HUB-17: Implement client failover — clients maintain ordered peer list, auto-reconnect to new master on connection failure. Follower redirects client to current master address. Spec: specs/hub-federation.md #priority:medium #added:2026-04-06-113104
 
-- [x] HUB-18: Implement ctx hub status/peer/stepdown — cluster status display (role, peers, sync state, entries, uptime), runtime peer add/remove, graceful leadership transfer. Spec: specs/shared-hub-federation.md #priority:low #added:2026-04-06-113106
+- [x] HUB-18: Implement ctx hub status/peer/stepdown — cluster status display (role, peers, sync state, entries, uptime), runtime peer add/remove, graceful leadership transfer. Spec: specs/hub-federation.md #priority:low #added:2026-04-06-113106
 
 - [x] HUB-19: Update compliance test — add internal/hub/ to allowed-net-import list alongside internal/notify/. Core packages remain network-free. Spec: specs/hub_implementation.md #priority:high #added:2026-04-06-113107
 
-- [x] HUB-20: End-to-end integration test — spin up hub, register 2 clients, publish from one, verify sync on other. Test --share flag, Listen stream, and reconnect behavior. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-113109
+- [x] HUB-20: End-to-end integration test — spin up hub, register 2 clients, publish from one, verify sync on other. Test --share flag, Listen stream, and reconnect behavior. Spec: specs/context-hub.md #priority:medium #added:2026-04-06-113109
 
-- [x] HUB-2a: Implement hub client registry and meta persistence — clients.json for registered client tokens/project names, meta.json for sequence counter and hub metadata. Separate from entries.jsonl. Spec: specs/shared-context-hub.md #priority:high #added:2026-04-06-114131
+- [x] HUB-2a: Implement hub client registry and meta persistence — clients.json for registered client tokens/project names, meta.json for sequence counter and hub metadata. Separate from entries.jsonl. Spec: specs/context-hub.md #priority:high #added:2026-04-06-114131
 
-- [x] HUB-9a: Implement shared file renderer — convert Entry objects to markdown with origin tags and date headers, create/append to .context/shared/*.md files. Reused by both ctx connect sync and ctx connect listen. Spec: specs/shared-context-hub.md #priority:medium #added:2026-04-06-114131
+- [x] HUB-9a: Implement shared file renderer — convert Entry objects to markdown with origin tags and date headers, create/append to .context/shared/*.md files. Reused by both ctx connect sync and ctx connect listen. Spec: specs/context-hub.md #priority:medium #added:2026-04-06-114131
 
 - [x] HUB-21: Unit tests for internal/hub/ — store (append, query, rotation), auth (token generation, validation, interceptor), client (connect, reconnect), renderer (markdown output). Each package tested independently. Spec: specs/hub_implementation.md #priority:medium #added:2026-04-06-114131
 
-- [x] HUB-22: Documentation — create docs/cli/connect.md and docs/cli/serve.md for new commands, update docs/cli/agent.md for --include-shared flag and --shared-budget option. Spec: specs/shared-context-hub.md #priority:low #added:2026-04-06-114131
+- [x] HUB-22: Documentation — create docs/cli/connect.md and docs/cli/serve.md for new commands, update docs/cli/agent.md for --include-shared flag and --shared-budget option. Spec: specs/context-hub.md #priority:low #added:2026-04-06-114131
+
+### Phase: ctx Hub follow-ups (PR #60)
+
+**Context**: PR #60 `feat: ctx Hub for cross-project knowledge
+sharing` (parlakisik) merged despite open review feedback from @bilersan and
+a pending review request. Author is heads-down on his Ph.D.; these tasks
+capture the cleanup and documentation debt we accepted by merging.
+PR: https://github.com/ActiveMemory/ctx/pull/60
+Review with findings: https://github.com/ActiveMemory/ctx/pull/60#pullrequestreview-PRR_kwDOQ9VoNc7ze3nA
+
+#### Build / platform
+
+- [x] Fix Windows build: `internal/exec/daemon/daemon.go` uses
+  `syscall.SysProcAttr{Setsid: true}` (Unix-only). Split into
+  `daemon.go` (platform-agnostic), `detach_unix.go` (`//go:build !windows`,
+  `Setsid`), `detach_windows.go` (`//go:build windows`,
+  `CREATE_NEW_PROCESS_GROUP | HideWindow`). Verified with
+  `GOOS=windows go build ./...`. #priority:high #added:2026-04-11 #pr:60
+  #done:2026-04-11
+- [ ] Add Windows job to CI so this class of regression is caught at PR time,
+  not by reviewers running local builds. #priority:high #added:2026-04-11 #pr:60
+- [ ] Triage the 16 package-level test failures @bilersan reported on Windows
+  — classify as platform-specific vs genuine bugs. #added:2026-04-11 #pr:60
+
+#### Convention drift
+
+- [x] Fix 38 `types.go` convention violations introduced by `internal/hub`
+  and related packages. Resolved upstream in commit `9efe1a94 fix: reconcile
+  hub code with main's audit tests after rebase` — `make audit` now reports
+  "All checks passed!" on Linux, and `make lint` is 0 issues.
+  #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
+- [ ] Audit `internal/hub`, `internal/cli/connect`, `internal/cli/hub`,
+  `internal/cli/serve` against CONVENTIONS.md (godoc format, import aliases,
+  error wrapping, package layout). #added:2026-04-11 #pr:60
+- [ ] Run `/ctx-code-review` over the hub subsystem for edge cases missed in
+  the merge: token rotation, connection-config migration, Raft leader
+  handoff failure modes, sync cursor corruption recovery. #added:2026-04-11
+  #pr:60
+
+#### User-facing docs (cornerstone — scope first)
+
+- [x] Enumerate all doc surfaces touched by the hub: `docs/cli/connect.md`,
+  `docs/cli/hub.md`, `docs/cli/serve.md`, `docs/cli/init-status.md`,
+  `docs/cli/index.md` already existed from the PR but the three new CLI
+  pages were NOT wired into `zensical.toml` nav — fixed. Added three new
+  recipes, two operations docs, and one security doc; wired all into nav.
+  #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Write a **Getting Started: Shared Hub** recipe: single-node hub on
+  localhost, register first project, publish a decision, sync from a second
+  project, `ctx agent --include-shared`. Written to
+  `docs/recipes/hub-getting-started.md` and wired into nav.
+  #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Write a **Multi-machine hub** recipe: `ctx serve --shared --daemon`
+  on a LAN host, firewall/port guidance, bearer token provisioning,
+  `.connect.enc` distribution, `ctx connect register` from clients.
+  Written to `docs/recipes/hub-multi-machine.md`, wired into nav.
+  #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Write a **High-availability cluster** recipe: Raft peers with
+  `--peers`, `ctx hub peer add/remove`, `ctx hub stepdown`, failure-mode
+  walkthrough (leader loss, split brain, recovery). Written to
+  `docs/recipes/hub-cluster.md`, wired into nav.
+  #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Write a **Security model** doc: bearer token lifecycle, AES-256-GCM
+  `.connect.enc` at-rest, constant-time comparison, 1 MB content cap, type
+  allowlist. Threat model and operational hardening checklist. Written to
+  `docs/security/hub.md`, wired into nav. #priority:high
+  #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Write an **Operations** doc: starting/stopping the daemon, log
+  locations, `ctx serve --stop`, `ctx hub status`, JSONL store layout,
+  backup/restore of the append-only log, systemd unit, log rotation.
+  Written to `docs/operations/hub.md`, wired into nav.
+  #added:2026-04-11 #pr:60 #done:2026-04-11
+- [ ] Document the auto-sync-on-session-start hook: what it does, how to
+  opt out, interaction with existing UserPromptSubmit hooks, performance
+  impact on large hubs. Partially covered in connect.md (`check-hub-sync`
+  mention); a dedicated section is still owed. #added:2026-04-11 #pr:60
+- [x] Document `ctx add --share` and `ctx agent --include-shared` — already
+  covered in `docs/cli/connect.md` (`--share`) and `docs/cli/init-status.md`
+  (`--include-shared` flag + Tier 8 explanation); playbook update deferred
+  until a dedicated "shared knowledge in agent packets" section is written.
+  #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
+- [ ] Add an **architecture** section to `ARCHITECTURE.md` /
+  `DETAILED_DESIGN.md` covering: JSONL append-only store, JSON-over-gRPC
+  codec (no protoc), fan-out broadcaster, Raft-lite (election only, data
+  via gRPC sync), sequence-based replication. #added:2026-04-11 #pr:60
+- [x] Add a **failure analysis** page for the hub: what happens on network
+  partition, disk full, corrupted JSONL, token rotation during active
+  streams, clock skew between peers. Written to
+  `docs/operations/hub-failure-modes.md`, wired into nav. Covers
+  reminder [7]. #added:2026-04-11 #pr:60 #done:2026-04-11
+- [ ] Record a DECISION explaining why we merged PR #60 with known Windows
+  breakage and convention drift — trade-off, author context, mitigation
+  plan (this task group). #added:2026-04-11 #pr:60
+- [ ] Update CONVENTIONS.md if any new patterns from the hub are worth
+  canonicalizing (gRPC handler layout, JSONL store access, bearer-token
+  middleware). #added:2026-04-11 #pr:60
+
+#### Framing and mental model (2026-04-11 follow-up)
+
+- [x] Write `docs/recipes/hub-overview.md` — mental model in one
+  paragraph, what flows / what does not flow, two explicit user stories
+  (personal cross-project brain vs small trusted team), "when not to
+  use it" section. Wired as the first entry in the ctx Hub
+  nav section. #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Rewrite the opening of `docs/recipes/hub-getting-started.md`
+  to plant stakes ("what you'll get out of this recipe", "what this
+  recipe does not cover") and point at the overview before any commands.
+  #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Add a "read the overview first" signpost to the top of
+  `hub-multi-machine.md` and `hub-cluster.md`, naming
+  each recipe as Story 2 (trusted team) shape. #added:2026-04-11 #pr:60
+  #done:2026-04-11
+- [x] Give `docs/cli/connect.md` a real "what is this" intro — unit of
+  identity is a project not a user, only four entry types flow, link
+  to the recipes. #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Give `docs/cli/hub.md` a real "who needs this page" intro —
+  operator commands only, link to `ctx connect` for clients and to the
+  overview for the mental model. #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Give `docs/operations/hub.md` an operator-cheat-sheet
+  intro (four entry types, project identity, append-only model) and
+  link to the overview. #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Fix factual error in `docs/security/hub.md`:
+  `clients.json` stores client tokens **plaintext**, not hashed.
+  Replaced the "hashed" claim with a prominent warning admonition,
+  listed filesystem-level mitigations, and referenced the follow-up
+  task for hashing / keyring storage. Updated
+  `docs/operations/hub-failure-modes.md` compromise scenarios
+  to match (including a new "Compromised hub host" entry). Also
+  documented that `Origin` is self-asserted on publish, so attribution
+  cannot be trusted after token compromise. #priority:high
+  #added:2026-04-11 #pr:60 #done:2026-04-11
+
+#### Design follow-ups surfaced by the brainstorm (2026-04-11)
+
+- [ ] Decide the product story: "personal cross-project brain",
+  "small trusted team", or both — then align the overview, recipes,
+  and CONTRIBUTING guidance to match. #priority:high #added:2026-04-11
+  #pr:60
+- [ ] Server-enforce `Origin` on publish: reject entries whose
+  `Origin` does not match the authenticated client's `ProjectName`.
+  Closes a spoofing vector and eliminates accidental mislabeling.
+  Small change in `internal/hub/handler.go publish()`.
+  #priority:high #added:2026-04-11 #pr:60
+- [ ] Hash `clients.json` tokens or move them behind the local
+  keyring (reuse `internal/crypto`). Removes the plaintext-token
+  footgun documented in the security page.
+  #priority:high #added:2026-04-11 #pr:60
+- [x] Decide the fate of `Entry.Author`: keep, drop, or promote to
+  a real identity field. **Decided**: server-authoritative. The
+  server stamps Author from the authenticated identity source on
+  every publish; client input is ignored. Pre-registry: stamp with
+  `ClientInfo.ProjectName`. Registry MVP: stamp with
+  `users.json.user_id`. PKI stretch: stamp with signed-claim `sub`.
+  See `.context/DECISIONS.md` [2026-04-11-180000]. Implementation
+  tasks land under H-22 in the security audit phase.
+  #added:2026-04-11 #pr:60 #done:2026-04-11
+- [ ] Explore journal-entry → `learning` export path: the density
+  users expect from "shared context" lives in enriched journal
+  entries, not in manually written `ctx add learning`. Would let
+  the hub surface the lessons agents already recorded in sessions
+  without actually replicating journals. #added:2026-04-11 #pr:60
+
+#### Phase: Hub identity layer for public-internet usage (2026-04-11)
+
+**Context**: The current hub has no concept of user identity.
+Tokens identify **projects**, not humans. `Origin` is
+self-asserted on publish. `clients.json` stores tokens in
+plaintext. For the "personal" and "small trusted team" stories
+(overview.md Stories 1 and 2) this is acceptable — the trust
+model is "everyone holding a token is friendly."
+
+For public-internet usage (the "Story 3" shape we explicitly
+declared out of scope in the overview) these become real gaps:
+no per-user attribution, no way to revoke individual humans, no
+audit trail that proves who published what, and `clients.json`
+compromise equals total hub compromise.
+
+**Near-term MVP**: a pre-seeded identity registry owned by the
+sysadmin. Instead of dynamic token issuance via admin token,
+the hub reads a `users.json` file the sysadmin hand-edits, and
+client registration validates against that pre-seeded list.
+This is simpler than OAuth/OIDC, doesn't require a separate
+identity service, and matches how internal services at small
+orgs usually start before adopting an SSO.
+
+**Eventual design requirements** (decision record TBD):
+
+- Per-human identity, not per-project
+- Tokens tied to a user ID, not a project name
+- Server-enforced `Origin` matches the authenticated user (or
+  a user's declared project list, with server validation)
+- Revocation by removing a user row from the registry and
+  forcing token rotation
+- Hashed token storage at rest
+- Optional: attribution-bearing audit log distinct from
+  `entries.jsonl`
+
+The following tasks feed into this track (they already exist
+in the "Design follow-ups surfaced by the brainstorm" section
+above; do not duplicate here):
+
+- Server-enforce `Origin` on publish (blocks spoofing)
+- Hash `clients.json` tokens (blocks plaintext compromise)
+- Decide the fate of `Entry.Author` (promote, drop, or keep
+  unauthenticated)
+
+Tasks unique to this phase:
+
+- [ ] Write a spec for the sysadmin-curated identity registry:
+  filename, format, schema, bootstrap flow, revocation
+  procedure, migration path from today's `clients.json`.
+  `specs/hub-identity-registry.md`. Must resolve:
+
+  - **Token issuance**: out-of-band on the server
+    (`ctx hub users add` prints the plaintext token once
+    on stdout; only a hash is persisted).
+  - **Client pickup**: user receives the token out-of-band
+    and runs `ctx connect register <host> --token
+    ctx_cli_... --project <name>`; hub validates against
+    the registry.
+  - **TTL decision** (pick one, document in the spec):
+    * **Option A** (recommended): no TTL, manual revocation
+      only. `ctx hub users remove <id>` is the only
+      expiry path. Matches today's `clients.json`
+      semantics, zero surprise breakage on migration.
+    * **Option B**: optional `expires_at` per user row.
+      Tokens without it are valid forever (Option A
+      behavior); tokens with it are rejected after the
+      timestamp. Ship as an additive follow-up.
+    * **Option C** (explicitly rejected): rolling
+      expiry based on `last_used_at`. Garbage-collects
+      dormant tokens but breaks users who take long
+      vacations. Not worth the support cost.
+  - **Revocation procedure**: sysadmin edits `users.json`,
+    signals the hub to reload, affected tokens fail
+    immediately on next RPC.
+  - **Migration from `clients.json`**: one-shot converter
+    that reads today's `clients.json`, prompts the
+    sysadmin for a `user_id` per row, and writes
+    `users.json`. Leave `clients.json` in place as a
+    read fallback during migration, delete once
+    everyone is on the new path.
+
+  #priority:high #added:2026-04-11 #pr:60
+- [ ] Implement `users.json` format: `{user_id: {project_ids:
+  [...], token_hash: "...", created_at: "...", notes: "..."}}`.
+  Read on hub start and on each Register RPC. Hot-reload via
+  SIGHUP or file watcher. #added:2026-04-11 #pr:60
+- [ ] Change `Register` RPC semantics: instead of minting a
+  new client token from the admin token, look up the
+  requested `ProjectName` in `users.json`. Reject if not
+  pre-seeded. Return the pre-hashed token only if the caller
+  presents an initial-provisioning credential the sysadmin
+  seeded alongside the registry row. #added:2026-04-11 #pr:60
+- [ ] Add `ctx hub users` subcommand group for sysadmin
+  operations: `add`, `remove`, `rotate`, `list`. These edit
+  `users.json` directly and signal the running hub to
+  reload. #added:2026-04-11 #pr:60
+- [ ] Add per-user audit log (`audits.jsonl` beside
+  `entries.jsonl`). Each RPC records user_id, method, result
+  status, timestamp. Separate from `entries.jsonl` so it can
+  be retained on a different schedule. #added:2026-04-11
+  #pr:60
+- [ ] Write `docs/security/hub-identity.md` explaining the
+  registry-based identity model, the threat model it closes,
+  the threats it still doesn't close, and the operational
+  procedures (seed the registry, rotate a token, revoke a
+  user). #added:2026-04-11 #pr:60
+- [ ] Decide whether to ship the identity layer as a
+  **breaking change** (existing `clients.json` deployments
+  must migrate) or as an **opt-in flag** (`ctx hub start
+  --identity users.json`). Document in the spec above.
+  #added:2026-04-11 #pr:60
+- [ ] Update the hub overview and team recipe to name the
+  identity registry as the "upgrade path to larger teams"
+  story: "once your team grows past ~10 people or you need
+  auditable attribution, enable the identity registry." The
+  current overview treats Story 3 as unsupported — with the
+  registry this becomes Story 2.5: "small trusted team with
+  real attribution." #added:2026-04-11 #pr:60
+- [ ] Stretch: OIDC/OAuth bridge. Once the registry layer is
+  stable, consider adding an optional provider bridge so
+  `users.json` can be auto-populated from an external
+  identity source (Google Workspace, GitHub orgs, etc.). Not
+  a near-term priority — registry-only covers the first
+  order of magnitude of users. #added:2026-04-11 #pr:60
+- [ ] Stretch: signed-claim / PKI authentication. The
+  sysadmin-registry MVP and the OIDC bridge are both
+  **bearer token** models — possession of the token bytes
+  is identity. This is fine for trusted orgs but has
+  well-known replay/rotation/identity limits for true
+  public-internet usage.
+
+  The next tier up is **asymmetric / signed-claim** auth:
+  sysadmin holds a private signing key, issues short-lived
+  claims `{user, project, expiry}` signed with that key,
+  clients present the signed claim on each RPC, server
+  verifies with the public key. Benefits:
+
+  - Private key never leaves the sysadmin's machine.
+  - Claims expire in minutes → revocation is automatic.
+  - Each claim carries identity cryptographically.
+  - No per-RPC registry lookup — signature verification
+    is cheap.
+
+  Reference designs to evaluate: JWT (RS256/ES256/EdDSA),
+  mTLS client certificates, SPIFFE/SPIRE workload
+  identities. Decision driver: does ctx ever want to run
+  as a real public-internet service, or does "trusted
+  team" always remain the upper bound?
+
+  This is the Story 3 → true multi-tenant upgrade. Not a
+  near-term priority; captured here so the registry-first
+  MVP doesn't get confused for a final-state solution.
+  #added:2026-04-11 #pr:60
+
+#### Phase: "dependency-free" claim cleanup (2026-04-11)
+
+**Context**: The design-invariant list in marketing and
+reference docs historically included "dependency-free"
+as one of five properties (alongside local-first,
+file-based, CLI-driven, developer-controlled). This was
+accurate when ctx was a single Go binary with no
+external services. PR #60 (hub), the zensical
+integration (`ctx serve`), the Claude Code plugin +
+MCP, and future networked features make the blanket
+claim false.
+
+**Replacement framing (adopted 2026-04-11)**:
+"**single-binary core**". The context persistence path
+(`init`, `add`, `agent`, `status`, `drift`, `load`,
+`sync`, `compact`, `task`, `decision`, `learning`, and
+siblings) remains a single Go binary with no required
+runtime dependencies. Optional integrations — `ctx
+trace` (needs `git`), `ctx serve` (needs `zensical`),
+`ctx` Hub (needs a running hub), Claude Code plugin
+(needs `claude`) — are opt-in and each declares its
+dependency explicitly.
+
+This framing is load-bearing: it communicates the
+design intent (nothing you don't opt into) without
+claiming a literal falsehood.
+
+- [x] Update `docs/reference/comparison.md` bullet list
+  from "dependency-free" to "single-binary core" with
+  an explicit list of optional integrations and their
+  dependencies. #added:2026-04-11 #done:2026-04-11
+- [x] Update `docs/thesis/index.md:73` (the five-property
+  claim) from "zero runtime dependencies" to "a
+  single-binary core with zero required runtime
+  dependencies for the persistence path".
+  #added:2026-04-11 #done:2026-04-11
+- [-] `docs/thesis/index.md:412` (the primitive
+  comparison table saying "Document: Zero-dependency:
+  Yes"): left intact. The claim is about the document
+  primitive itself (markdown files have no runtime
+  deps), not about ctx as an implementation. Accurate.
+  #added:2026-04-11 #skipped:primitive-claim-is-correct
+- [ ] Add a design-invariants reference note: the
+  blanket claim "dependency-free" MUST NOT be
+  reintroduced in new docs. Any new framing should use
+  "single-binary core" or name the specific path
+  (e.g., "persistence path", "agent packet assembly").
+  #priority:medium #added:2026-04-11
+- [ ] Pre-release re-sweep: before each minor release,
+  grep `docs/`, `README.md`, and any blog drafts for
+  `dependency-free|dependency free|zero dependencies|
+  no dependencies` and verify each occurrence is
+  scoped to a path that is still dependency-free. Add
+  to the release runbook. #priority:medium
+  #added:2026-04-11
+- [ ] Update `docs/reference/design-invariants.md` to
+  explicitly list "single-binary core" as an invariant
+  with the scope definition, so future doc authors
+  have a canonical source to reference instead of
+  re-deriving the phrase. #priority:medium
+  #added:2026-04-11
+
+#### Phase: Hub security audit (2026-04-11)
+
+**Context**: Full security audit of the hub subsystem,
+completed during the PR #60 follow-up brainstorm as a
+precondition for any public-internet deployment. 30
+findings total — 5 Critical, 12 High, 7 Medium, 4 Low, 2
+Info — covering transport security, identity,
+attribution, DoS surface, Raft cluster integrity, and
+storage integrity.
+
+The audit lives at `specs/hub-security-audit.md` and is
+the canonical reference for the rest of the hub security
+work. Each finding has a concrete remediation,
+complexity estimate, and cross-reference to existing
+tasks where applicable. The spec also contains
+recommendations grouped by timeline (do-now / short /
+medium / long).
+
+**Per-story verdicts from the audit**:
+
+- **Story 1** (personal cross-project brain, localhost):
+  acceptable as-is. No adversary in scope.
+- **Story 2** (small trusted team on LAN): acceptable
+  with documented caveats — LAN private, hub host
+  hardened, admin token held only by the sysadmin. The
+  `hub-team.md` recipe already names these.
+- **Story 3** (public-internet / multi-user): **UNSAFE**.
+  Do not deploy. Five critical findings apply, several
+  high-severity findings compound catastrophically
+  without transport security, and the Raft cluster is
+  a remote unauthenticated DoS surface.
+
+**This phase tracks the findings as actionable work**.
+Individual findings are numbered H-01 through H-30 in
+the spec; this task list references them by number and
+links back to the spec for detail.
+
+- [ ] Read and internalize
+  [`specs/hub-security-audit.md`](../specs/hub-security-audit.md)
+  before starting any hub-security implementation.
+  The spec is the single source of truth for findings,
+  severity, and remediation patterns. #priority:high
+  #added:2026-04-11 #pr:60
+
+**Do-now track** (prerequisites for non-localhost deployments):
+
+- [ ] **H-01** Add server-side TLS: `--tls-cert` and
+  `--tls-key` flags on `ctx hub start`, wire into
+  `grpc.NewServer` via `grpc.Creds`. Keep plaintext
+  default for Story 1. #priority:critical
+  #added:2026-04-11 #pr:60 #audit:H-01
+- [ ] **H-02** Add client-side TLS: accept `grpc://`
+  and `grpcs://` schemes in `hub_addr`. Update
+  `NewClient`, `replicateOnce`, `NewFailoverClient` to
+  switch credentials per scheme. Optional `--ca-cert`
+  for self-signed. Update
+  `docs/recipes/hub-multi-machine.md` to document both
+  forms (the current nginx-reverse-proxy recommendation
+  is un-implementable until this ships). #priority:critical
+  #added:2026-04-11 #pr:60 #audit:H-02
+- [ ] **H-04** Server-enforce `Origin` on publish:
+  `validateBearer` attaches `ClientInfo` to context;
+  `handler.go publish()` overwrites `pe.Origin` with
+  the authenticated `ClientInfo.ProjectName` before
+  store. Add a test that a client authenticated as
+  `alpha` cannot publish as `beta`. #priority:high
+  #added:2026-04-11 #pr:60 #audit:H-04
+- [ ] **H-15** Fix `appendFile` in `internal/hub/persist.go`
+  to use real `O_APPEND` instead of read-all-rewrite.
+  Closes both a performance bug (O(N²) publishes) and
+  a data-loss risk (partial write can truncate history).
+  #priority:high #added:2026-04-11 #pr:60 #audit:H-15
+
+**Short-term track** (Story 2 hardening):
+
+- [ ] **H-03** Hash `clients.json` tokens with argon2id.
+  One-shot migration reads old file, hashes each token,
+  rewrites. Plaintext token only passes through memory
+  at registration time; disk only stores hashes.
+  Already referenced in the design-follow-ups section
+  above; this entry ties it to the audit. #priority:high
+  #added:2026-04-11 #pr:60 #audit:H-03
+- [ ] **H-08** Per-token Publish rate limiting using
+  `golang.org/x/time/rate`. Starting target: 10 entries/sec
+  per token, 100 burst. Return `ResourceExhausted` with
+  Retry-After hint. #priority:high #added:2026-04-11 #pr:60
+  #audit:H-08
+- [ ] **H-09** Per-token Listen stream cap (suggested
+  limit: 4 concurrent streams per token, 256 total).
+  Track in the `fanOut` struct; reject further subscribes
+  with `ResourceExhausted`. #priority:high
+  #added:2026-04-11 #pr:60 #audit:H-09
+- [ ] **H-17** Cap `PublishRequest.Entries` at 32 per
+  request; reject larger batches with
+  `InvalidArgument`. Document the limit. #priority:high
+  #added:2026-04-11 #pr:60 #audit:H-17
+- [ ] **H-18** Add `audits.jsonl` as a per-RPC audit log
+  distinct from `entries.jsonl`. Records
+  `{ts, method, user, project, status, entry_count}`
+  per call, including authentication failures. Exposed
+  via `ctx hub status --audit`. Independent rotation
+  cadence. Already referenced in the identity-layer
+  phase; this entry ties it to the audit. #priority:high
+  #added:2026-04-11 #pr:60 #audit:H-18
+- [ ] **H-19** Implement real revocation: `ctx hub users
+  remove <id>` edits the registry and signals the hub
+  to reload via `fsnotify`. Revoked tokens fail
+  immediately on next RPC. Revocation events logged to
+  `audits.jsonl`. Merged with the Hub identity layer
+  phase implementation. #priority:high #added:2026-04-11
+  #pr:60 #audit:H-19
+- [x] **H-22 (decide)** Decide `Entry.Author` fate.
+  **Decided** 2026-04-11: server-authoritative — stamp
+  from the authenticated identity source, ignore client
+  input. See `.context/DECISIONS.md` [2026-04-11-180000].
+  #added:2026-04-11 #pr:60 #audit:H-22 #done:2026-04-11
+- [ ] **H-22 (implement)** Implement server-authoritative
+  `Entry.Author`. Identical mechanism to H-04 (Origin
+  enforcement): `validateBearer` attaches `ClientInfo`
+  to the gRPC context; `handler.go publish()` reads
+  `ClientInfo` and stamps `entries[i].Author` from the
+  server-known identity before calling `store.Append`.
+  Pre-registry the stamping source is
+  `ClientInfo.ProjectName`; after the registry MVP the
+  source becomes `users.json` row's `user_id`; after
+  the PKI stretch it becomes the signed-claim `sub`.
+  Same commit as H-04 is fine — they share the
+  `authFromContext` plumbing. Add a test that a client
+  authenticated as project `alpha` cannot publish an
+  entry whose stored `Author` differs from `alpha`.
+  Audit client-side callers in `ctx connect publish`
+  and `ctx add --share` for any that populate
+  `pe.Author` from local config and remove them (or
+  document them as ignored). #priority:high
+  #added:2026-04-11 #pr:60 #audit:H-22
+- [x] **H-22 (meta type + wire + validation)** Schema
+  update landed on the `feature/ctx-hub-next` branch:
+
+  - `EntryMeta` struct defined in
+    `internal/hub/types.go` with fields `DisplayName`,
+    `Host`, `Tool`, `Via` (all optional strings).
+  - `Entry.Author`, `PublishEntry.Author`,
+    `EntryMsg.Author` all **removed**. Replaced with
+    `Meta EntryMeta` on each of the three structs.
+  - `handler.go publish()` copies `pe.Meta` into
+    `entries[i].Meta` verbatim.
+  - `message.go entryToMsg()` copies `e.Meta` into the
+    wire `EntryMsg.Meta`.
+  - `sync_helper.go replicateOnce()` copies
+    `msg.Meta` into the replicated `Entry.Meta`.
+  - `entry_validate.go` enforces:
+    `maxMetaFieldLen = 256` per field,
+    `maxMetaTotalLen = 2048` total, no C0 control
+    characters (newline, carriage return, NUL, DEL,
+    bell, etc.) except horizontal tab.
+  - `internal/hub/entry_validate_test.go` added with
+    six regression tests: empty accepted, round-trip,
+    field oversize rejected, total at cap accepted,
+    each control char rejected (nul/lf/cr/bell/del),
+    tab allowed.
+  - JSON wire key is `"meta"` on all three structs.
+    Pre-existing `entries.jsonl` entries with `author`
+    fields load cleanly (JSON ignores unknown fields)
+    and silently lose the hint — acceptable on the
+    feature branch with no production data.
+
+  Still open as follow-up tasks below (H-22 a through
+  e). #priority:high #added:2026-04-11 #pr:60
+  #audit:H-22 #done:2026-04-11
+- [ ] **H-22a (server-authoritative Origin stamping)**
+  Implement H-04-style server-enforcement for
+  `Entry.Origin`: `validateBearer` attaches
+  `ClientInfo` to the gRPC context;
+  `handler.go publish()` reads `ClientInfo` and
+  overwrites `entries[i].Origin` with
+  `ClientInfo.ProjectName` before `store.Append`.
+  Client's `pe.Origin` becomes advisory and is
+  ignored. This is the actual security property
+  the Author→Meta split was enabling — the
+  schema change made room for it but the
+  enforcement still needs to land. Add a test:
+  client authenticated as `alpha` cannot publish
+  an entry whose stored Origin is `beta`.
+  #priority:high #added:2026-04-11 #pr:60 #audit:H-22
+- [ ] **H-22b (renderer labels Meta as advisory)**
+  Update `internal/cli/connect/core/render/` (and any
+  other place that writes fanned-out entries to
+  `.context/hub/*.md`) so `Meta`-sourced values are
+  labeled as "client label" or "client-reported" in
+  prose. The word "Origin" is reserved for the
+  server-authoritative project name. Example output:
+
+  ```markdown
+  ## [2026-04-11] Use UTC timestamps everywhere
+  **Origin**: alpha (client label: Alice via ctx@0.8.1)
+  ```
+
+  Add a test verifying that a Meta.DisplayName of
+  `"bob"` does NOT cause the rendered output to show
+  `Origin: bob`. #priority:high #added:2026-04-11
+  #pr:60 #audit:H-22
+- [ ] **H-22c (client publish path supports Meta)**
+  Update `ctx connect publish` (and `ctx add --share`
+  if it reaches the hub) to accept `--display-name`,
+  `--host`, `--tool`, `--via` flags (or a single
+  `--meta key=val` repeatable flag — implementation
+  choice). Defaults: `--tool=ctx@<version>`,
+  `--host=<hostname>`, `--via=` left empty,
+  `--display-name=` left empty. Document in
+  `docs/cli/connect.md`. #priority:medium
+  #added:2026-04-11 #pr:60 #audit:H-22
+- [ ] **H-22d (docs: `Meta` is advisory)** Add a
+  prominent note to `docs/cli/connect.md`,
+  `docs/security/hub.md`, and
+  `docs/recipes/hub-overview.md` explaining that
+  `Meta` fields are client-reported hints, not
+  attribution. Cross-reference the decision record
+  [2026-04-11-180000]. #added:2026-04-11 #pr:60
+  #audit:H-22
+- [ ] **H-22e (audit spec update)** Update
+  `specs/hub-security-audit.md` H-22 finding to
+  reflect the landed schema change: the "decide"
+  phase is done, the "meta type" phase is done, the
+  remaining work is the Origin stamping (a), the
+  renderer labels (b), and the client-side plumbing
+  (c). Also note the six regression tests as "partial
+  coverage" of the finding. #added:2026-04-11 #pr:60
+  #audit:H-22
+- [ ] **H-30** gRPC server hardening: `KeepaliveEnforcementPolicy`,
+  `KeepaliveParams`, `MaxConcurrentStreams`, total
+  concurrent connection limit at the listener level.
+  #priority:medium #added:2026-04-11 #pr:60 #audit:H-30
+
+**Medium-term track** (correctness + cluster integrity):
+
+- [ ] **H-12** Deterministic Raft bootstrap: single
+  `--bootstrap` node calls `BootstrapCluster`, others
+  join via `AddVoter`. Persist a `bootstrapped` flag
+  in the raft data dir to avoid double-bootstrapping
+  on restart. #priority:medium #added:2026-04-11 #pr:60
+  #audit:H-12
+- [ ] **H-13** Follower-side replication validation:
+  call `validateEntry` on every entry received from
+  master before appending. Defense-in-depth against a
+  compromised master (which becomes possible under any
+  Raft transport compromise — see H-10/H-11).
+  #priority:medium #added:2026-04-11 #pr:60 #audit:H-13
+- [ ] **H-14** Preserve master sequence on replication:
+  add `masterSequence` field to Entry, followers
+  remember master-assigned sequences alongside local
+  ones. Clients cursor by master sequence so failover
+  doesn't re-replicate the entire log. #priority:medium
+  #added:2026-04-11 #pr:60 #audit:H-14
+- [ ] **H-24** `ctx hub redact <seq>` subcommand: mark
+  the entry in `entries_redacted.jsonl`, broadcast a
+  redaction notice via Listen, filter on queries, log
+  to `audits.jsonl`. #priority:medium #added:2026-04-11
+  #pr:60 #audit:H-24
+- [ ] **H-29** Bounded in-memory entry cache: LRU over
+  `entries.jsonl` with a persistent offset index
+  (`entries.idx`). O(log N) seeks without full-file
+  reads. Secondary: entries.jsonl rotation at threshold.
+  #priority:medium #added:2026-04-11 #pr:60 #audit:H-29
+
+**Long-term track** (Story 3 enablement):
+
+- [ ] **H-10 + H-11** Authenticated + encrypted Raft
+  transport. Replace `raft.NewTCPTransport` with a
+  TLS-wrapped transport using mTLS between cluster
+  peers. Peer certs issued from a cluster CA managed
+  by the sysadmin. Precondition for any non-localhost
+  multi-node deployment. #priority:critical
+  #added:2026-04-11 #pr:60 #audit:H-10,H-11
+- [ ] **H-28** Decouple Raft bind port from gRPC port.
+  Accept a dedicated `--raft-bind` flag; default to a
+  random high port or refuse to start. Makes port
+  scanning less productive. #priority:low
+  #added:2026-04-11 #pr:60 #audit:H-28
+- [ ] Signed-entry mode: publishing clients sign their
+  entries with a per-client signing key; followers
+  verify on replication. Eliminates the "trust the
+  master" assumption even if H-10 fails. Merged with
+  the PKI stretch task in the Hub identity layer
+  phase. #added:2026-04-11 #pr:60 #audit:H-13
+
+**Low-priority polish** (defense-in-depth):
+
+- [ ] **H-16** Escape / fence `Content` when the
+  client-side renderer writes to `.context/hub/*.md`.
+  Wrap every entry in explicit markers
+  (`<!-- BEGIN ENTRY seq=... -->`) so malicious
+  triple-dash patterns can't inject fake frontmatter.
+  #added:2026-04-11 #pr:60 #audit:H-16
+- [ ] **H-20** Strict constant-time token validation:
+  iterate all `ClientInfo` entries and OR the results
+  of `subtle.ConstantTimeCompare` instead of a map
+  lookup followed by a constant-time compare. Rolled
+  into the H-03 hashing work. #added:2026-04-11 #pr:60
+  #audit:H-20
+- [ ] **H-21** Require exact `Bearer ` prefix in the
+  `authorization` header; reject otherwise with
+  `Unauthenticated`. Trivial one-line tightening.
+  #added:2026-04-11 #pr:60 #audit:H-21
+- [ ] **H-23** Offer passphrase-derived admin token
+  storage (argon2id) instead of plaintext `admin.token`
+  on disk. Optional; document in
+  `docs/operations/hub.md`. #added:2026-04-11 #pr:60
+  #audit:H-23
+- [ ] **H-25** Collapse auth error messages to a single
+  generic `Unauthenticated` reason ("authentication
+  required"). Log the specific reason server-side
+  only. #added:2026-04-11 #pr:60 #audit:H-25
+
+**Informational (no action needed)**:
+
+- H-26: daemon re-exec flag — already fixed earlier in
+  this session as part of the `ctx serve --hub` → `ctx
+  hub start` split. Recorded in the audit for audit-
+  trail completeness.
+- H-27: mTLS / asymmetric auth discussion — covered by
+  the PKI stretch task in the Hub identity layer
+  phase. No separate task needed.
+
+**Out of scope for this audit** (tracked elsewhere):
+
+- Supply chain (Go module pinning, CVE monitoring,
+  reproducible builds)
+- Build integrity (signed binaries, transparency log)
+- Third-party library CVEs (`hashicorp/raft`, `grpc`,
+  `raft-boltdb`)
+- AI-agent misbehavior (accidental secret publishing
+  via `--share` — covered by the "secret-leak runbook"
+  task in the PR #60 follow-up section above)
+- Per-project read ACLs (still out of scope even after
+  the identity layer MVP)
+
+#### Rename "Shared Context Hub" → "`ctx` Hub" (2026-04-11)
+
+Brainstorm outcome: "shared" was overloaded (shared memory,
+shared journal, shared state) and actively primed the wrong
+mental model in docs. `ctx` Hub is the canonical name; `Hub` is
+used alone in nav and operator contexts where surrounding text
+disambiguates.
+
+- [x] Rename nav entries: Recipes subsection "Shared Context Hub"
+  → "Hub"; add `docs/home/hub.md` as a home-level intro; split
+  Operations section into `Hub` / `Operating ctx` / `Maintainers`
+  subsections. `zensical.toml` updated. #added:2026-04-11 #pr:60
+  #done:2026-04-11
+- [x] Create `docs/home/hub.md` — home-level introduction, names
+  the two user stories, lists what flows vs what does not,
+  points readers at recipes/overview for the five-minute
+  walkthrough. #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Rewrite `docs/operations/index.md` with three audience-keyed
+  sections (Hub / Operating ctx / Maintainers). Matches the new
+  nav structure. #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Rename doc files: `docs/recipes/shared-hub-*.md` →
+  `docs/recipes/hub-*.md`, `docs/operations/shared-hub*.md` →
+  `docs/operations/hub*.md`, `docs/security/shared-hub.md` →
+  `docs/security/hub.md`. Updated all internal cross-links.
+  #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Rename spec files: `specs/shared-context-hub.md` →
+  `specs/context-hub.md`, `specs/shared-hub-federation.md` →
+  `specs/hub-federation.md`. Updated prose and cross-refs in
+  remaining spec files (`hub_implementation.md`,
+  `task-allocation.md`, `hub-federation.md`). #added:2026-04-11
+  #pr:60 #done:2026-04-11
+- [x] Rename Go packages: `internal/cli/agent/core/shared` →
+  `internal/cli/agent/core/hub`; `internal/cli/serve/core/shared`
+  → `internal/cli/serve/core/hub`. Resolved the package-name
+  collision with `internal/hub` by aliasing the inner import to
+  `hublib` in the two files that need both. Updated audit-test
+  exempt lists (`magic_strings_test.go`, `magic_values_test.go`)
+  to match. #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Rename Go constants and flag definitions:
+  `cFlag.Shared` → `cFlag.Hub`, `cFlag.IncludeShared` →
+  `cFlag.IncludeHub`, `DescKeyServeShared` → `DescKeyServeHub`,
+  `DescKeyAgentIncludeShared` → `DescKeyAgentIncludeHub`.
+  YAML keys in `flags.yaml` and `commands.yaml` updated to
+  match. #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Rename CLI flags: `ctx serve --shared` → `ctx serve --hub`,
+  `ctx agent --include-shared` → `ctx agent --include-hub`.
+  `ctx add --share` kept (verb form is still correct).
+  #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Rename on-disk directory: `.context/shared/` →
+  `.context/hub/`. Updated constants (`sharedDir` → `hubDir` in
+  `agent/core/hub/load.go` and `connect/core/render/render.go`),
+  path literals in `connect/core/sync/state.go`, and all test
+  fixtures in `connect/core/render/render_test.go`.
+  #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Rename `packet.Shared` / `AssembledPacket.Shared` struct
+  field → `Hub`, with matching json tag. Updated
+  `assemble.go`, `out.go`, `render.go`, `types.go` in
+  `internal/cli/agent/core/budget`. Tier 8 comment updated.
+  #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Fix a bug surfaced by the rename: `internal/cli/serve/core/hub/daemon.go`
+  was spawning child processes with the stale flag
+  `ctx serve --shared` — now correctly passes `--hub`. Without
+  this fix, `ctx serve --hub --daemon` would have failed silently
+  on the re-exec. #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Fix stuttery function name flagged by audit:
+  `hub.hubDir()` → `hub.defaultDataDir()` in
+  `internal/cli/serve/core/hub/setup.go`. #added:2026-04-11
+  #pr:60 #done:2026-04-11
+- [x] Prose sweep across all hub docs: "Shared Context Hub" →
+  "`ctx` Hub", "shared hub" → "hub", `--shared` → `--hub`,
+  `.context/shared/` → `.context/hub/`. Covered
+  `docs/home/`, `docs/recipes/`, `docs/operations/`,
+  `docs/security/`, `docs/cli/`. #added:2026-04-11 #pr:60
+  #done:2026-04-11
+- [x] Verify all nav targets exist after rename. All sixteen
+  hub-related paths referenced in `zensical.toml` resolve to
+  real files. #added:2026-04-11 #pr:60 #done:2026-04-11
+- [x] Full QA gate: `go build ./...` (Linux),
+  `GOOS=windows go build ./...`, `make lint` (0 issues),
+  `make test` (0 failures including the audit exempt-list
+  update and the `gofmt` round-trip on `serve/cmd/root/cmd.go`).
+  #added:2026-04-11 #pr:60 #done:2026-04-11

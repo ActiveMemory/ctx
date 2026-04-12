@@ -16,10 +16,12 @@ import (
 	raftboltdb "github.com/hashicorp/raft-boltdb/v2"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
-// Cluster wraps a Raft node for leader election only.
+// NewCluster creates a Raft cluster node for leader
+// election only.
 //
 // Raft is NOT used for data consensus — entries are
 // replicated via sequence-based gRPC sync. Raft only
@@ -40,7 +42,7 @@ func NewCluster(
 	dataDir string,
 	peers []string,
 ) (*Cluster, error) {
-	raftDir := filepath.Join(dataDir, "raft")
+	raftDir := filepath.Join(dataDir, cfgHub.RaftDir)
 	if mkErr := io.SafeMkdirAll(
 		raftDir, fs.PermKeyDir,
 	); mkErr != nil {
@@ -52,7 +54,7 @@ func NewCluster(
 	cfg.LogOutput = os.Stderr
 
 	addr, resolveErr := net.ResolveTCPAddr(
-		"tcp", bindAddr,
+		cfgHub.RaftTransport, bindAddr,
 	)
 	if resolveErr != nil {
 		return nil, resolveErr
@@ -67,7 +69,7 @@ func NewCluster(
 	}
 
 	logStore, logErr := raftboltdb.NewBoltStore(
-		filepath.Join(raftDir, "log.db"),
+		filepath.Join(raftDir, cfgHub.RaftLogDB),
 	)
 	if logErr != nil {
 		return nil, logErr

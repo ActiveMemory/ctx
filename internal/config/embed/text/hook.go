@@ -12,8 +12,6 @@ const (
 	DescKeyHookAider = "hook.aider"
 	// DescKeyHookAgents is the text key for hook agents messages.
 	DescKeyHookAgents = "hook.agents"
-	// DescKeyHookClaude is the text key for hook claude messages.
-	DescKeyHookClaude = "hook.claude"
 	// DescKeyHookCopilot is the text key for hook copilot messages.
 	DescKeyHookCopilot = "hook.copilot"
 	// DescKeyHookCopilotCLI is the text key for hook copilot cli messages.

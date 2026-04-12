@@ -109,7 +109,7 @@ ctx/
 ├── docs/               # Documentation site source
 ├── editors/            # Editor extensions (VS Code)
 ├── examples/           # Example configurations
-├── hack/               # Build scripts and runbooks
+├── hack/               # Build scripts and [runbooks](../operations/index.md#runbooks)
 ├── specs/              # Feature specifications
 └── .context/           # ctx's own context (dogfooding)
 ```
@@ -273,9 +273,9 @@ See [Configuration](configuration.md) for the full `.ctxrc` option reference.
 Back up project context and global Claude Code data with:
 
 ```bash
-ctx system backup                    # both project + global (default)
-ctx system backup --scope project    # .context/, .claude/, ideas/ only
-ctx system backup --scope global     # ~/.claude/ only
+ctx backup                    # both project + global (default)
+ctx backup --scope project    # .context/, .claude/, ideas/ only
+ctx backup --scope global     # ~/.claude/ only
 ```
 
 Archives are saved to `/tmp/`. When `CTX_BACKUP_SMB_URL` is configured,
