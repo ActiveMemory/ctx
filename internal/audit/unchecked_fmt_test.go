@@ -3,7 +3,7 @@
 // `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
-//
+
 // ================================================================
 // STOP — Read internal/audit/README.md before editing this file.
 //
