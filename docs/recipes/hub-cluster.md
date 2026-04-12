@@ -9,6 +9,8 @@ title: HA cluster
 icon: lucide/layers
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # `ctx` Hub: High-availability cluster
 
 Run **multiple** hub nodes with Raft-based leader election for
@@ -109,7 +111,7 @@ uptime:     3h42m
 When registering a client, give it the **full peer list**:
 
 ```bash
-ctx connect register hub-a.lan:9900 \
+ctx connection register hub-a.lan:9900 \
   --token ctx_adm_... \
   --peers hub-b.lan:9900,hub-c.lan:9900
 ```

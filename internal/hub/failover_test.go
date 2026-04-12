@@ -42,11 +42,11 @@ func TestFailoverClient_FirstPeerWorks(t *testing.T) {
 	_ = regClient.Close()
 
 	// Failover client with the reachable peer first.
-	client, foErr := NewFailoverClient(
+	client, foErr := newFailoverClient(
 		[]string{addr}, resp.ClientToken,
 	)
 	if foErr != nil {
-		t.Fatalf("NewFailoverClient: %v", foErr)
+		t.Fatalf("newFailoverClient: %v", foErr)
 	}
 	defer func() { _ = client.Close() }()
 
@@ -81,7 +81,7 @@ func TestFailoverClient_SkipsBadPeer(t *testing.T) {
 	_ = regClient.Close()
 
 	// First peer is unreachable, second is good.
-	client, foErr := NewFailoverClient(
+	client, foErr := newFailoverClient(
 		[]string{"127.0.0.1:1", addr},
 		resp.ClientToken,
 	)
@@ -94,7 +94,7 @@ func TestFailoverClient_SkipsBadPeer(t *testing.T) {
 // TestFailoverClient_AllBad verifies error when no peer is
 // reachable.
 func TestFailoverClient_AllBad(t *testing.T) {
-	_, foErr := NewFailoverClient(
+	_, foErr := newFailoverClient(
 		[]string{"127.0.0.1:1", "127.0.0.1:2"},
 		"bad-token",
 	)

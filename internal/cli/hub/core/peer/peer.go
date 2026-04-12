@@ -9,6 +9,7 @@ package peer
 import (
 	"github.com/spf13/cobra"
 
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	errHub "github.com/ActiveMemory/ctx/internal/err/hub"
 	writeHub "github.com/ActiveMemory/ctx/internal/write/hub"
 )
@@ -26,9 +27,9 @@ func Run(cmd *cobra.Command, args []string) error {
 	addr := args[1]
 
 	switch action {
-	case "add":
+	case cfgHub.ActionAdd:
 		writeHub.PeerAdded(cmd, addr)
-	case "remove":
+	case cfgHub.ActionRemove:
 		writeHub.PeerRemoved(cmd, addr)
 	default:
 		return errHub.InvalidPeerAction(action)

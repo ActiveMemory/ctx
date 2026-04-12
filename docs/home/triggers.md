@@ -11,7 +11,7 @@ icon: lucide/zap
 
 ![ctx](../images/ctx-banner.png)
 
-## Lifecycle triggers
+## Lifecycle Triggers
 
 Some things can't be expressed as a rule you want the AI to
 follow. Sometimes you want something to **happen**: block a
@@ -27,7 +27,7 @@ JSON response on stdout. They can **allow**, **block**, or
 **inject context** into the pipeline depending on the event
 type.
 
-## Trigger types
+## Trigger Types
 
 | Type            | Fires when                          | Use case                               |
 |-----------------|-------------------------------------|----------------------------------------|

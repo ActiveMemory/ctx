@@ -9,6 +9,8 @@ title: Multi-machine
 icon: lucide/network
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # `ctx` Hub: Multi-machine
 
 Run the hub on a **LAN host** and connect from project directories
@@ -28,14 +30,14 @@ tasks — **not** journals, scratchpad, or raw context files).
 +------------------+        +------------------+
 | workstation A    |        | workstation B    |
 |  ~/projects/x    |        |  ~/projects/y    |
-|  ctx connect     |        |  ctx connect     |
+|  ctx connection  |        |  ctx connection  |
 +---------+--------+        +---------+--------+
           |                           |
           +-----------+   +-----------+
                       v   v
               +-------------------+
               | LAN host "nexus"  |
-              | ctx hub start|
+              | ctx hub start     |
               | --daemon          |
               | :9900             |
               +-------------------+
@@ -103,16 +105,16 @@ On workstation `A`:
 
 ```bash
 cd ~/projects/x
-ctx connect register nexus.local:9900 --token ctx_adm_...
-ctx connect subscribe decision learning convention
+ctx connection register nexus.local:9900 --token ctx_adm_...
+ctx connection subscribe decision learning convention
 ```
 
 On workstation `B`:
 
 ```bash
 cd ~/projects/y
-ctx connect register nexus.local:9900 --token ctx_adm_...
-ctx connect subscribe decision learning convention
+ctx connection register nexus.local:9900 --token ctx_adm_...
+ctx connection subscribe decision learning convention
 ```
 
 Each registration exchanges the admin token for a **per-project
@@ -125,10 +127,10 @@ ctx uses for notification credentials.
 From either workstation:
 
 ```bash
-ctx connect status
+ctx connection status
 ```
 
-You should see the hub address, role (`leader` for single-node),
+You should see the ctx Hub address, role (`leader` for single-node),
 subscription filters, and the sequence number you're synced to.
 
 ## TLS (recommended)
@@ -151,7 +153,7 @@ server {
 }
 ```
 
-Point `ctx connect register` at the public hostname and port 443.
+Point `ctx connection register` at the public hostname and port 443.
 
 ## Handling daemon restarts
 

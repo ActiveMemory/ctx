@@ -9,6 +9,8 @@ title: Guide
 icon: lucide/book-open
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx guide`
 
 Quick-reference cheat sheet for common ctx commands and skills.

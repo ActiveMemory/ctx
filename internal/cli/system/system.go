@@ -10,10 +10,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/parent"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/backup"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_dangerous_command"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_non_path_ctx"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_backup_age"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_ceremony"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_context_size"
@@ -25,50 +23,39 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_memory_drift"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_persistence"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_reminder"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_resources"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_resource"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_skill_discovery"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_task_completion"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_version"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/context_load_gate"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/events"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/heartbeat"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/mark_journal"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/mark_wrapped_up"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/pause"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/post_commit"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/prune"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/qa_reminder"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resources"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resume"
 	sessEvent "github.com/ActiveMemory/ctx/internal/cli/system/cmd/session_event"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/specs_nudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/stats"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
 // Cmd returns the "ctx system" parent command.
 //
-// Visible subcommands:
-//   - resources: Display system resource usage with threshold alerts
-//   - message: Manage hook message templates (list/show/edit/reset)
+// Hosts hidden Claude Code hook plumbing only. User-facing
+// maintenance commands (backup, bootstrap, event, message, prune,
+// resource, stats) have been promoted to top-level commands and
+// are registered separately in internal/bootstrap/group.go.
 //
-// Hidden plumbing subcommands (used by skills and automation):
-//   - mark-journal: Update journal processing state
-//   - mark-wrapped-up: Suppress checkpoint nudges after wrap-up
-//
-// Hidden hook subcommands implement Claude Code hook logic as native Go
+// Hook subcommands implement Claude Code hook logic as native Go
 // binaries and are not intended for direct user invocation.
 //
 // Returns:
-//   - *cobra.Command: Parent command with resource display,
-//     plumbing, and hook subcommands
+//   - *cobra.Command: Parent command with hook plumbing subcommands
 func Cmd() *cobra.Command {
 	return parent.Cmd(cmd.DescKeySystem, cmd.UseSystem,
-		backup.Cmd(),
 		block_dangerous_command.Cmd(),
 		block_non_path_ctx.Cmd(),
-		bootstrap.Cmd(),
 		check_backup_age.Cmd(),
 		check_ceremony.Cmd(),
 		check_context_size.Cmd(),
@@ -81,23 +68,18 @@ func Cmd() *cobra.Command {
 		check_persistence.Cmd(),
 		check_skill_discovery.Cmd(),
 		check_reminder.Cmd(),
-		check_resources.Cmd(),
+		check_resource.Cmd(),
 		check_task_completion.Cmd(),
 		check_version.Cmd(),
 		context_load_gate.Cmd(),
-		events.Cmd(),
 		heartbeat.Cmd(),
 		mark_journal.Cmd(),
 		mark_wrapped_up.Cmd(),
-		message.Cmd(),
 		pause.Cmd(),
 		post_commit.Cmd(),
-		prune.Cmd(),
 		qa_reminder.Cmd(),
-		resources.Cmd(),
 		resume.Cmd(),
 		sessEvent.Cmd(),
 		specs_nudge.Cmd(),
-		stats.Cmd(),
 	)
 }

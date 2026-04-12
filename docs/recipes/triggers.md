@@ -9,6 +9,8 @@ title: Authoring Lifecycle Triggers
 icon: lucide/zap
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # Authoring Lifecycle Triggers
 
 Triggers are **executable shell scripts** that fire at

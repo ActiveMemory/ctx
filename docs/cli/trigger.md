@@ -9,6 +9,8 @@ title: Trigger
 icon: lucide/zap
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx trigger`
 
 Manage **lifecycle triggers**: executable scripts that fire at
@@ -123,6 +125,8 @@ it with `ctx trigger enable` after reviewing the contents.
 List all discovered triggers, grouped by trigger type, with
 their enabled/disabled status.
 
+**Examples**:
+
 ```bash
 ctx trigger list
 ```
@@ -161,7 +165,7 @@ Searches every trigger-type directory for a script matching
 ctx trigger enable <name>
 ```
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx trigger enable inject-context
@@ -178,7 +182,7 @@ Searches every trigger-type directory for a script matching
 ctx trigger disable <name>
 ```
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx trigger disable inject-context

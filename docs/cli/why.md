@@ -9,6 +9,8 @@ title: Why
 icon: lucide/help-circle
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx why`
 
 Read `ctx`'s philosophy documents directly in the terminal.
@@ -25,7 +27,7 @@ ctx why [DOCUMENT]
 | `about`      | About `ctx`: what it is and why it exists    |
 | `invariants` | Design invariants: properties that must hold |
 
-**Usage**:
+**Examples**:
 
 ```bash
 # Interactive numbered menu

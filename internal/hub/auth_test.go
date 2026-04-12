@@ -9,6 +9,8 @@ package hub
 import (
 	"strings"
 	"testing"
+
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 )
 
 func TestGenerateAdminToken(t *testing.T) {
@@ -16,8 +18,8 @@ func TestGenerateAdminToken(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GenerateAdminToken: %v", err)
 	}
-	if !strings.HasPrefix(tok, adminTokenPrefix) {
-		t.Errorf("admin token should start with %q, got %q", adminTokenPrefix, tok)
+	if !strings.HasPrefix(tok, cfgHub.AdminTokenPrefix) {
+		t.Errorf("admin token should start with %q, got %q", cfgHub.AdminTokenPrefix, tok)
 	}
 	// prefix (8) + 64 hex chars = 72
 	if len(tok) != 72 {
@@ -30,8 +32,8 @@ func TestGenerateClientToken(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GenerateClientToken: %v", err)
 	}
-	if !strings.HasPrefix(tok, clientTokenPrefix) {
-		t.Errorf("client token should start with %q, got %q", clientTokenPrefix, tok)
+	if !strings.HasPrefix(tok, cfgHub.ClientTokenPrefix) {
+		t.Errorf("client token should start with %q, got %q", cfgHub.ClientTokenPrefix, tok)
 	}
 	// prefix (8) + 64 hex chars = 72
 	if len(tok) != 72 {

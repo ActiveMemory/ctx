@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://ctx.ist/recipes/troubleshooting/">
       
       
-        <link rel="prev" href="../context-health/">
+        <link rel="prev" href="../configuration-profiles/">
       
       
         <link rel="next" href="../claude-code-permissions/">
@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -983,6 +983,8 @@
       
         
       
+        
+      
     
     
     
@@ -1045,6 +1047,36 @@
     
   
     Detecting and Fixing Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration-profiles/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sliders-horizontal" viewBox="0 0 24 24"><path d="M10 5H3M12 19H3M14 3v4M16 17v4M21 12h-9M21 19h-5M21 5h-7M8 10v4M8 12H3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Profiles
   
 
     
@@ -2173,7 +2205,7 @@ hook config, and session history</em>), but assembling it manually is tedious.</
 <p><strong>How do you figure out what's wrong and fix it?</strong></p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>doctor<span class="w">                   </span><span class="c1"># structural health check</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--last<span class="w"> </span><span class="m">20</span><span class="w">  </span><span class="c1"># recent hook activity</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>event<span class="w"> </span>--last<span class="w"> </span><span class="m">20</span><span class="w">  </span><span class="c1"># recent hook activity</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># or ask: &quot;something seems off, can you diagnose?&quot;</span>
 </span></code></pre></div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -2197,7 +2229,7 @@ hook config, and session history</em>), but assembling it manually is tedious.</
 <td>Machine-readable health report</td>
 </tr>
 <tr>
-<td><code>ctx system events</code></td>
+<td><code>ctx event</code></td>
 <td>CLI command</td>
 <td>Query local event log</td>
 </tr>
@@ -2255,7 +2287,7 @@ Ask naturally or invoke directly:</p>
 <p>The agent follows a triage sequence:</p>
 <ol>
 <li><strong>Baseline</strong>: runs <code>ctx doctor --json</code> for structural health</li>
-<li><strong>Events</strong>: runs <code>ctx system events --json --last 100</code> (if event logging enabled)</li>
+<li><strong>Events</strong>: runs <code>ctx event --json --last 100</code> (if event logging enabled)</li>
 <li><strong>Correlate</strong>: connects findings across both sources</li>
 <li><strong>Present</strong>: structured findings with evidence</li>
 <li><strong>Suggest</strong>: actionable next steps (but doesn't auto-fix)</li>
@@ -2263,22 +2295,22 @@ Ask naturally or invoke directly:</p>
 <p>The skill degrades gracefully: without event logging enabled, it still runs
 structural checks and notes what you'd gain by enabling it.</p>
 <h3 id="raw-event-inspection">Raw Event Inspection<a class="headerlink" href="#raw-event-inspection" title="Permanent link">&para;</a></h3>
-<p>For power users: <code>ctx system events</code> with filters gives direct access to the
+<p>For power users: <code>ctx event</code> with filters gives direct access to the
 event log.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Last 50 events (default)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>event
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Events from a specific session</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--session<span class="w"> </span>eb1dc9cd-0163-4853-89d0-785fbfaae3a6
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ctx<span class="w"> </span>event<span class="w"> </span>--session<span class="w"> </span>eb1dc9cd-0163-4853-89d0-785fbfaae3a6
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Only QA reminder events</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>qa-reminder
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ctx<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>qa-reminder
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
 </span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Raw JSONL for jq processing</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.message&#39;</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ctx<span class="w"> </span>event<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.message&#39;</span>
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
 </span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Include rotated (older) events</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--all<span class="w"> </span>--last<span class="w"> </span><span class="m">100</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ctx<span class="w"> </span>event<span class="w"> </span>--all<span class="w"> </span>--last<span class="w"> </span><span class="m">100</span>
 </span></code></pre></div>
 <p>Filters use AND logic: <code>--hook qa-reminder --session abc123</code> returns only
 QA reminder events from that specific session.</p>
@@ -2310,7 +2342,7 @@ for the expected hook.</p>
 </span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;session_id&quot;:&quot;test&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>system<span class="w"> </span>check-persistence
 </span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
 </span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 4. Check event log for the hook (if enabled)</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>check-persistence
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ctx<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>check-persistence
 </span></code></pre></div>
 <p><strong>Common causes</strong>:</p>
 <ul>
@@ -2319,24 +2351,24 @@ for the expected hook.</p>
 <li><strong>Throttle active</strong>: most hooks fire once per day: check
   <code>.context/state/</code> for daily marker files</li>
 <li><strong>Hook silenced</strong>: a custom message override may be an empty file:
-  check <code>ctx system message list</code> for overrides</li>
+  check <code>ctx message list</code> for overrides</li>
 </ul>
 <h3 id="too-many-nudges">"<em>Too many nudges</em>"<a class="headerlink" href="#too-many-nudges" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: The agent is overwhelmed with hook output. Context checkpoints,
 persistence reminders, and QA gates fire constantly.</p>
 <p><strong>Diagnosis</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check how often hooks fired recently</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--last<span class="w"> </span><span class="m">50</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>event<span class="w"> </span>--last<span class="w"> </span><span class="m">50</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Count fires per hook</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.detail.hook // &quot;unknown&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>event<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.detail.hook // &quot;unknown&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
 </span></code></pre></div>
 <p><strong>Common causes</strong>:</p>
 <ul>
 <li><strong>QA reminder is noisy by design</strong>: it fires on every <code>Edit</code> call with no
   throttle. This is intentional. If it's too much, silence it with an empty
-  override: <code>ctx system message edit qa-reminder gate</code>, then empty the file</li>
+  override: <code>ctx message edit qa-reminder gate</code>, then empty the file</li>
 <li><strong>Long session</strong>: context checkpoint fires with increasing frequency after
   prompt 15. This is the system telling you the session is getting long:
   consider wrapping up</li>
@@ -2380,7 +2412,7 @@ contrary to <code>CONSTITUTION.md</code> rules.</p>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>doctor<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select(.name == &quot;context_size&quot;)&#39;</span>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check if context is actually being loaded</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>context-load-gate
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>context-load-gate
 </span></code></pre></div>
 <p><strong>Common causes</strong>:</p>
 <ul>
@@ -2431,7 +2463,7 @@ files accurate as your codebase evolves.</p>
 <li><a href="../webhook-notifications/">Webhook Notifications</a>: push notifications for
   hook activity</li>
 <li><a href="../../cli/doctor/"><code>ctx doctor</code> CLI</a>: full command reference</li>
-<li><a href="../../cli/system/#ctx-system-events"><code>ctx system events</code> CLI</a>: event log
+<li><a href="../../cli/system/#ctx-system-events"><code>ctx event</code> CLI</a>: event log
   query reference</li>
 <li><a href="../../reference/skills/#ctx-doctor"><code>/ctx-doctor</code> skill</a>: agent-driven
   diagnosis</li>
@@ -2478,7 +2510,7 @@ files accurate as your codebase evolves.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../context-health/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Detecting and Fixing Drift">
+          <a href="../configuration-profiles/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configuration Profiles">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -2488,7 +2520,7 @@ files accurate as your codebase evolves.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Detecting and Fixing Drift
+                Configuration Profiles
               </div>
             </div>
           </a>
@@ -2584,7 +2616,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

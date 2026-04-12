@@ -51,4 +51,7 @@ const (
 	// DescKeyWriteProvenanceLine is the text key for the
 	// combined provenance output line.
 	DescKeyWriteProvenanceLine = "write.provenance-line"
+	// DescKeyWriteProvenanceContext is the text key for the optional
+	// context-free percentage suffix appended to the provenance line.
+	DescKeyWriteProvenanceContext = "write.provenance-context"
 )

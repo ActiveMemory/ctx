@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -970,6 +970,8 @@
   
     
     
+      
+        
       
         
       
@@ -2054,6 +2056,7 @@
   
 
 
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h1 id="personal-cross-project-brain">Personal cross-project brain<a class="headerlink" href="#personal-cross-project-brain" title="Permanent link">&para;</a></h1>
 <p>This recipe shows <strong>how one developer uses a <code>ctx</code> Hub
 across their own projects day-to-day</strong> — the "Story 1"
@@ -2072,7 +2075,7 @@ running and you've registered at least two projects.</p>
    convention and capture it with <code>ctx add --share</code>.</li>
 <li><strong>Subscribe</strong> — every project you care about is
    subscribed to the types you want delivered (set once
-   with <code>ctx connect subscribe</code>).</li>
+   with <code>ctx connection subscribe</code>).</li>
 <li><strong>Load</strong> — your agent picks up shared entries on next
    session start via the auto-sync hook, or explicitly
    via <code>ctx agent --include-hub</code>.</li>
@@ -2122,14 +2125,14 @@ Go service you'll ever write, not just this one. So:</p>
 <ol>
 <li>Writes the learning to <code>api/.context/LEARNINGS.md</code>
    locally (as a normal <code>ctx add learning</code> would).</li>
-<li>Publishes the same entry to the hub, which stores it
+<li>Publishes the same entry to the ctx Hub, which stores it
    in the append-only JSONL and fans it out to every
    subscribed client.</li>
 </ol>
 <p>Within seconds, <code>cli/.context/hub/learnings.md</code> and
 <code>dotfiles/.context/hub/learnings.md</code> both contain a copy
-of this learning (the <code>ctx connect listen</code> daemon picks
-it up from the hub's Listen stream).</p>
+of this learning (the <code>ctx connection listen</code> daemon picks
+it up from the ctx Hub's Listen stream).</p>
 <h3 id="1200-you-switch-to-cli">12:00 — You switch to <code>cli</code><a class="headerlink" href="#1200-you-switch-to-cli" title="Permanent link">&para;</a></h3>
 <p><code>cd ~/projects/cli</code>, open a new session. The agent
 packet for <code>cli</code> now includes <strong>the learning you just
@@ -2155,7 +2158,7 @@ Claude Code session in either project gets the
 convention injected into the steering-adjacent slot of
 the agent packet.</p>
 <h3 id="1630-end-of-day">16:30 — End of day<a class="headerlink" href="#1630-end-of-day" title="Permanent link">&para;</a></h3>
-<p>You didn't run <code>ctx connect sync</code> once. You didn't
+<p>You didn't run <code>ctx connection sync</code> once. You didn't
 <code>git push</code> anything between projects. You didn't
 remember to tell your agent about the retry-loop gotcha
 in the new project. The hub did all of it for you.</p>
@@ -2188,7 +2191,7 @@ todos.</strong> The four subscribable types are <code>decision</code>,
 project-local; subscribing makes every hub-shared task
 from every project show up in every other project's
 agent packet. That's probably not what you want. Skip
-<code>task</code> in <code>ctx connect subscribe</code> unless you have a
+<code>task</code> in <code>ctx connection subscribe</code> unless you have a
 specific reason.</p>
 <p><strong>Run the hub as a user-level daemon</strong> so you don't have
 to remember to start it. On Linux with systemd:</p>
@@ -2234,7 +2237,7 @@ rotation, failure recovery, and HA, see
   and when not to.</li>
 <li><a href="../hub-team/">Team knowledge bus</a> — the multi-human
   companion recipe.</li>
-<li><a href="../../cli/connect/"><code>ctx connect</code></a> — the client-side
+<li><a href="../../cli/connection/"><code>ctx connect</code></a> — the client-side
   commands used above (<code>subscribe</code>, <code>publish</code>, <code>sync</code>,
   <code>listen</code>, <code>status</code>).</li>
 <li><a href="../../cli/context/"><code>ctx add</code></a> — the <code>--share</code> flag
@@ -2390,7 +2393,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

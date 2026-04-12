@@ -9,6 +9,8 @@ title: Init and Status
 icon: lucide/rocket
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ### `ctx init`
 
 Initialize a new `.context/` directory with template files.
@@ -118,14 +120,14 @@ in priority tiers:
    against the active prompt
 7. **Skill**: named skill content (from `--skill`)
 8. **Hub**: entries from `.context/hub/` (with `--include-hub`,
-   see [`ctx connect`](connect.md))
+   see [`ctx connect`](connection.md))
 
 Decisions and learnings are ranked by a combined score (how recent + how
 relevant to your current tasks). High-scoring entries are included with
 their full body. Entries that don't fit get title-only summaries in an
 "Also Noted" section. Superseded entries are excluded.
 
-**Output sections**:
+**Output Sections**:
 
 | Section          | Source            | Selection                             |
 |------------------|-------------------|---------------------------------------|

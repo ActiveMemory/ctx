@@ -13,23 +13,32 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	errHub "github.com/ActiveMemory/ctx/internal/err/hub"
 )
 
 // register handles the Register RPC.
+//
+// Parameters:
+//   - ctx: request context (unused)
+//   - req: registration request with admin token
+//
+// Returns:
+//   - *RegisterResponse: client ID and token
+//   - error: non-nil if auth or registration fails
 func (s *Server) register(
 	_ context.Context, req *RegisterRequest,
 ) (*RegisterResponse, error) {
 	if req.AdminToken != s.adminToken {
 		return nil, status.Error(
 			codes.PermissionDenied,
-			"invalid admin token",
+			cfgHub.ErrInvalidAdminToken,
 		)
 	}
 	if req.ProjectName == "" {
 		return nil, status.Error(
 			codes.InvalidArgument,
-			"project_name required",
+			cfgHub.ErrProjectNameRequired,
 		)
 	}
 
@@ -59,6 +68,14 @@ func (s *Server) register(
 }
 
 // publish handles the Publish RPC.
+//
+// Parameters:
+//   - ctx: request context (unused)
+//   - req: publish request with entries
+//
+// Returns:
+//   - *PublishResponse: assigned sequence numbers
+//   - error: non-nil if validation or append fails
 func (s *Server) publish(
 	_ context.Context, req *PublishRequest,
 ) (*PublishResponse, error) {
@@ -98,6 +115,13 @@ func (s *Server) publish(
 }
 
 // syncEntries handles the Sync RPC (server-streaming).
+//
+// Parameters:
+//   - req: sync request with type filter and sequence
+//   - send: callback to send each entry to the client
+//
+// Returns:
+//   - error: non-nil if send fails
 func (s *Server) syncEntries(
 	req *SyncRequest, send func(*EntryMsg) error,
 ) error {
@@ -115,6 +139,14 @@ func (s *Server) syncEntries(
 }
 
 // listenEntries handles the Listen RPC (long-lived stream).
+//
+// Parameters:
+//   - req: listen request with type filter and sequence
+//   - send: callback to send each entry to the client
+//   - ctx: context for cancellation
+//
+// Returns:
+//   - error: non-nil if send fails
 func (s *Server) listenEntries(
 	req *ListenRequest,
 	send func(*EntryMsg) error,
@@ -160,6 +192,13 @@ func (s *Server) listenEntries(
 }
 
 // hubStatus handles the Status RPC.
+//
+// Parameters:
+//   - ctx: request context (unused)
+//
+// Returns:
+//   - *StatusResponse: hub statistics
+//   - error: always nil
 func (s *Server) hubStatus(
 	_ context.Context,
 ) (*StatusResponse, error) {

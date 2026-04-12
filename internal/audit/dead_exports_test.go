@@ -3,6 +3,18 @@
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
+//
+// ================================================================
+// STOP — Read internal/audit/README.md before editing this file.
+//
+// These tests enforce project conventions. The codebase is clean:
+// all checks pass with zero violations, zero exceptions.
+//
+// If a test fails after your change, fix the code under test.
+// Do NOT add allowlist entries, bump grandfathered counters, or
+// weaken checks. Exceptions require a dedicated PR with
+// justification for every entry. See README.md for the full policy.
+// ================================================================
 
 package audit
 
@@ -47,16 +59,6 @@ var linuxOnlyExports = map[string]bool{
 	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldCached":       true,
 	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldSwapTotal":    true,
 	"github.com/ActiveMemory/ctx/internal/config/sysinfo.FieldSwapFree":     true,
-}
-
-// hubPendingIntegration lists exported symbols in hub/
-// packages that are not yet referenced cross-package
-// because integration is incomplete. Remove entries as
-// callers are wired up.
-var hubPendingIntegration = map[string]bool{
-	"github.com/ActiveMemory/ctx/internal/hub.NewFailoverClient": true,
-	"github.com/ActiveMemory/ctx/internal/hub.StartReplication":  true,
-	"github.com/ActiveMemory/ctx/internal/config/flag.AdminAuth": true,
 }
 
 func TestNoDeadExports(t *testing.T) {
@@ -164,11 +166,6 @@ func TestNoDeadExports(t *testing.T) {
 	// Phase 3b: remove Linux-only exports (used from
 	// _linux.go files not loaded on this platform).
 	for key := range linuxOnlyExports {
-		delete(defs, key)
-	}
-
-	// Phase 3c: remove hub exports pending integration.
-	for key := range hubPendingIntegration {
 		delete(defs, key)
 	}
 

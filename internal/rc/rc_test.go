@@ -147,9 +147,13 @@ func TestGetContextDir_CLIOverride(t *testing.T) {
 	OverrideContextDir("cli-context")
 	defer Reset()
 
-	dir := ContextDir()
-	if dir != "cli-context" {
-		t.Errorf("ContextDir() = %q, want %q (CLI override)", dir, "cli-context")
+	got := ContextDir()
+	// Contract: ContextDir() always returns an absolute path.
+	// A relative CLI override is resolved against the current working
+	// directory.
+	wantAbs, _ := filepath.Abs("cli-context")
+	if got != wantAbs {
+		t.Errorf("ContextDir() = %q, want %q (CLI override)", got, wantAbs)
 	}
 }
 
@@ -467,8 +471,20 @@ func TestContextDir_NoOverride(t *testing.T) {
 	Reset()
 
 	got := ContextDir()
-	if got != dir.Context {
-		t.Errorf("ContextDir() = %q, want %q", got, dir.Context)
+
+	// Contract: when no .context/ exists upward, ContextDir() falls
+	// back to filepath.Join(cwd, dir.Context) as an absolute path.
+	wantResolved, _ := filepath.EvalSymlinks(tempDir)
+	gotParent, _ := filepath.EvalSymlinks(filepath.Dir(got))
+
+	if gotParent != wantResolved {
+		t.Errorf("ContextDir() parent = %q, want %q", gotParent, wantResolved)
+	}
+	if filepath.Base(got) != dir.Context {
+		t.Errorf(
+			"ContextDir() base = %q, want %q",
+			filepath.Base(got), dir.Context,
+		)
 	}
 }
 
@@ -858,5 +874,86 @@ func TestHooksEnabled_ExplicitFalse(t *testing.T) {
 
 	if HooksEnabled() {
 		t.Error("HooksEnabled() = true, want false")
+	}
+}
+
+func TestContextDir_UpwardWalkFromSubdir(t *testing.T) {
+	tempDir := t.TempDir()
+
+	// Project root layout:
+	//   <tempDir>/project/.context/
+	//   <tempDir>/project/deep/nested/
+	projectRoot := filepath.Join(tempDir, "project")
+	contextPath := filepath.Join(projectRoot, dir.Context)
+	deepSubdir := filepath.Join(projectRoot, "deep", "nested")
+
+	if mkErr := os.MkdirAll(contextPath, 0700); mkErr != nil {
+		t.Fatalf("mkdir context: %v", mkErr)
+	}
+	if mkErr := os.MkdirAll(deepSubdir, 0700); mkErr != nil {
+		t.Fatalf("mkdir deep: %v", mkErr)
+	}
+
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(deepSubdir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	got := ContextDir()
+
+	// Resolve symlinks so /tmp vs /private/tmp on macOS compares equal.
+	wantResolved, _ := filepath.EvalSymlinks(contextPath)
+	gotResolved, _ := filepath.EvalSymlinks(got)
+
+	if gotResolved != wantResolved {
+		t.Errorf(
+			"ContextDir() from subdir = %q, want %q",
+			gotResolved, wantResolved,
+		)
+	}
+
+	// Explicit regression guard: the returned path must NOT be the
+	// stray-dir fallback that the bug would have produced.
+	strayPath := filepath.Join(deepSubdir, dir.Context)
+	strayResolved, _ := filepath.EvalSymlinks(filepath.Dir(strayPath))
+	if gotResolved == filepath.Join(strayResolved, dir.Context) {
+		t.Errorf(
+			"ContextDir() resolved to stray subdir path %q — "+
+				"upward walk regressed",
+			got,
+		)
+	}
+}
+
+func TestContextDir_FallbackWhenNotFound(t *testing.T) {
+	tempDir := t.TempDir()
+
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	got := ContextDir()
+
+	// Fallback path: filepath.Join(cwd, dir.Context), absolute.
+	wantResolved, _ := filepath.EvalSymlinks(tempDir)
+	gotDir, _ := filepath.EvalSymlinks(filepath.Dir(got))
+
+	if gotDir != wantResolved {
+		t.Errorf(
+			"ContextDir() fallback parent = %q, want %q",
+			gotDir, wantResolved,
+		)
+	}
+	if filepath.Base(got) != dir.Context {
+		t.Errorf(
+			"ContextDir() fallback base = %q, want %q",
+			filepath.Base(got), dir.Context,
+		)
+	}
+	if !filepath.IsAbs(got) {
+		t.Errorf("ContextDir() fallback %q is not absolute", got)
 	}
 }

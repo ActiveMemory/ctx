@@ -9,6 +9,8 @@ title: Hub Security Model
 icon: lucide/shield
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # `ctx` Hub: Security model
 
 What the hub defends against, what it **does not** defend against,

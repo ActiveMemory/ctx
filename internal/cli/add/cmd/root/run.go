@@ -15,7 +15,7 @@ import (
 	coreEntry "github.com/ActiveMemory/ctx/internal/cli/add/core/entry"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/example"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/extract"
-	corePub "github.com/ActiveMemory/ctx/internal/cli/connect/core/publish"
+	corePub "github.com/ActiveMemory/ctx/internal/cli/connection/core/publish"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"

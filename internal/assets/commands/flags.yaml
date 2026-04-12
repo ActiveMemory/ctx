@@ -178,7 +178,7 @@ pad.show.out:
   short: write blob content to a file
 pad.tag:
   short: filter entries by tag (prefix with ~ to exclude)
-pad.tags.json:
+pad.tag.json:
   short: output tags as JSON
 pause.session-id:
   short: Session ID (overrides stdin)
@@ -218,52 +218,52 @@ steering.sync.all:
   short: Sync to all supported tool formats
 sync.dry-run:
   short: Show what would change without modifying
-system.backup.json:
+backup.json:
   short: Output results as JSON
-system.backup.scope:
+backup.scope:
   short: 'Backup scope: project, global, or all'
-system.bootstrap.json:
+bootstrap.json:
   short: Output in JSON format
-system.bootstrap.quiet:
+bootstrap.quiet:
   short: Output only the context directory path
-system.events.all:
+event.all:
   short: Include rotated log file
-system.events.event:
+event.event:
   short: Filter by event type
-system.events.hook:
+event.hook:
   short: Filter by hook name
-system.events.json:
+event.json:
   short: Output raw JSONL
-system.events.last:
+event.last:
   short: Show last N events
-system.events.session:
+event.session:
   short: Filter by session ID
+message.json:
+  short: Output in JSON format
+prune.days:
+  short: Prune files older than this many days
+prune.dry-run:
+  short: Show what would be pruned without deleting
+resource.json:
+  short: Output in JSON format
+stats.follow:
+  short: Stream new entries as they arrive
+stats.json:
+  short: Output raw JSONL
+stats.last:
+  short: Show last N entries
+stats.session:
+  short: Filter by session ID (prefix match)
 system.markjournal.check:
   short: Check if stage is set (exit 1 if not)
-system.message.json:
-  short: Output in JSON format
 system.pause.session-id:
   short: Session ID (overrides stdin)
-system.prune.days:
-  short: Prune files older than this many days
-system.prune.dry-run:
-  short: Show what would be pruned without deleting
-system.resources.json:
-  short: Output in JSON format
 system.resume.session-id:
   short: Session ID (overrides stdin)
 system.sessionevent.caller:
   short: Calling editor (e.g., vscode)
 system.sessionevent.type:
   short: 'Event type: start or end'
-system.stats.follow:
-  short: Stream new entries as they arrive
-system.stats.json:
-  short: Output raw JSONL
-system.stats.last:
-  short: Show last N entries
-system.stats.session:
-  short: Filter by session ID (prefix match)
 trace.collect.record:
   short: Record context refs for a post-commit hash
 trace.file.last:
@@ -278,7 +278,7 @@ task.archive.dry-run:
   short: Preview changes without modifying files
 tool:
   short: 'Override active AI tool (e.g., claude, cursor, cline, kiro, codex)'
-connect.admin-auth:
+connection.token:
   short: Admin credential from hub startup
 hub.start.daemon:
   short: Run the hub server in the background

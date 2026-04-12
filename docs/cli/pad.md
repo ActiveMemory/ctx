@@ -9,6 +9,8 @@ title: Scratchpad
 icon: lucide/notebook-pen
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx pad`
 
 Encrypted scratchpad for sensitive one-liners that travel with
@@ -96,6 +98,8 @@ ctx pad rm 3-5
 Reassign entry IDs as a contiguous sequence 1..N, closing any
 gaps left by deletions.
 
+**Examples**:
+
 ```bash
 ctx pad normalize
 ```
@@ -146,9 +150,18 @@ ctx pad mv <from> <to>
 - `from`: Source position (1-based)
 - `to`: Destination position (1-based)
 
+**Examples**:
+
+```bash
+ctx pad mv 3 1      # promote entry 3 to the top
+ctx pad mv 1 5      # bury entry 1 to position 5
+```
+
 ### `ctx pad resolve`
 
 Show both sides of a merge conflict in the encrypted scratchpad.
+
+**Examples**:
 
 ```bash
 ctx pad resolve

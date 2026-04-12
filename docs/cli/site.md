@@ -9,6 +9,8 @@ title: Site
 icon: lucide/globe
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx site`
 
 Site management commands for the ctx.ist static site.

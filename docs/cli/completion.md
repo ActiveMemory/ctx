@@ -9,6 +9,8 @@ title: Completion
 icon: lucide/keyboard
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx completion`
 
 Generate shell autocompletion scripts.
@@ -25,6 +27,15 @@ ctx completion <shell>
 | `zsh`        | `ctx completion zsh`        |
 | `fish`       | `ctx completion fish`       |
 | `powershell` | `ctx completion powershell` |
+
+**Examples**:
+
+```bash
+ctx completion bash > /etc/bash_completion.d/ctx
+ctx completion zsh  > "${fpath[1]}/_ctx"
+ctx completion fish > ~/.config/fish/completions/ctx.fish
+ctx completion powershell | Out-String | Invoke-Expression
+```
 
 ### Installation
 

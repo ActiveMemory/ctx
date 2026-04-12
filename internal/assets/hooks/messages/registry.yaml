@@ -2,22 +2,22 @@
 # Each entry maps to a template at <hook>/<variant>.txt.
 # Fields: hook, variant, category, description, vars (optional).
 
-- hook: block-dangerous-commands
+- hook: block-dangerous-command
   variant: cp-to-bin
   category: ctx-specific
   description: Block copying binaries to bin directories
 
-- hook: block-dangerous-commands
+- hook: block-dangerous-command
   variant: install-to-local-bin
   category: ctx-specific
   description: Block copying binaries to ~/.local/bin
 
-- hook: block-dangerous-commands
+- hook: block-dangerous-command
   variant: mid-git-push
   category: ctx-specific
   description: Block git push without user approval
 
-- hook: block-dangerous-commands
+- hook: block-dangerous-command
   variant: mid-sudo
   category: ctx-specific
   description: Block sudo usage
@@ -49,17 +49,17 @@
   description: Technology constant freshness warning
   vars: [StaleFiles]
 
-- hook: check-ceremonies
+- hook: check-ceremony
   variant: both
   category: customizable
   description: Both ceremonies missing nudge
 
-- hook: check-ceremonies
+- hook: check-ceremony
   variant: remember
   category: customizable
   description: Start-of-session ceremony nudge
 
-- hook: check-ceremonies
+- hook: check-ceremony
   variant: wrapup
   category: customizable
   description: End-of-session ceremony nudge
@@ -133,13 +133,13 @@
   description: Context persistence nudge
   vars: [PromptsSinceNudge]
 
-- hook: check-reminders
+- hook: check-reminder
   variant: reminders
   category: ctx-specific
   description: Pending reminders relay
   vars: [ReminderList]
 
-- hook: check-resources
+- hook: check-resource
   variant: alert
   category: ctx-specific
   description: System resource pressure alert

@@ -9,6 +9,8 @@ title: Watch
 icon: lucide/eye
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx watch`
 
 Watch for AI output and auto-apply context updates.

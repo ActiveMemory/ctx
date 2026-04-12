@@ -8,6 +8,7 @@
 package rc
 
 import (
+	"path/filepath"
 	"sync"
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -54,19 +55,34 @@ func RC() *CtxRC {
 	return rc
 }
 
-// ContextDir returns the configured context directory.
+// ContextDir returns the configured context directory as an absolute path.
 //
-// Priority: CLI override > env var > .ctxrc > default.
+// Resolution order:
+//  1. CLI override (rcOverrideDir): returned as absolute, no walk.
+//  2. Configured absolute path (.ctxrc or env var): returned as-is.
+//  3. Upward walk from CWD: the first ancestor containing an existing
+//     directory whose basename matches the configured name wins.
+//  4. Fallback: filepath.Join(cwd, configuredName) as absolute. Preserves
+//     ctx init's ability to create a new context directory at CWD.
+//
+// The walk allows commands and hooks invoked from project subdirectories
+// to resolve the project-root context dir instead of creating stray state
+// files inside the subdirectory. The walk result is cached for the life
+// of the process; tests can call Reset to invalidate the cache.
 //
 // Returns:
-//   - string: The context directory path (e.g., ".context")
+//   - string: Absolute path to the context directory
 func ContextDir() string {
 	rcMu.RLock()
-	defer rcMu.RUnlock()
-	if rcOverrideDir != "" {
-		return rcOverrideDir
+	override := rcOverrideDir
+	rcMu.RUnlock()
+	if override != "" {
+		if abs, err := filepath.Abs(override); err == nil {
+			return abs
+		}
+		return override
 	}
-	return RC().ContextDir
+	return walkForContextDir(RC().ContextDir)
 }
 
 // TokenBudget returns the configured default token budget.

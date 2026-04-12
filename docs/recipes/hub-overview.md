@@ -9,6 +9,8 @@ title: Overview
 icon: lucide/compass
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # `ctx` Hub: Overview
 
 Start here before the other hub recipes. This page answers *what*
@@ -57,7 +59,7 @@ This is the part new users get wrong most often:
 - **Local context files** as a whole — `TASKS.md`,
   `DECISIONS.md`, `LEARNINGS.md`, `CONVENTIONS.md` — are **not**
   mirrored wholesale. Only entries you explicitly `--share`, or
-  publish later with `ctx connect publish`, cross the boundary.
+  publish later with `ctx connection publish`, cross the boundary.
 - **Anything under `.context/` that isn't one of the four entry
   types above.** Configuration, state, logs, memory, journal
   metadata — all local.
@@ -144,7 +146,7 @@ if you need redundancy.
 ## Identity: projects, not users
 
 The hub has **no concept of users.** Its unit of identity is the
-*project*. `ctx connect register` binds a hub token to a project
+*project*. `ctx connection register` binds a hub token to a project
 directory, not to a person. Two developers working on the same
 project share either:
 
@@ -179,9 +181,9 @@ need "who wrote this," the hub is the wrong tool.
 Once a project is registered and subscribed, entries arrive by
 three mechanisms:
 
-1. **`ctx connect sync`** — an on-demand pull, replays
+1. **`ctx connection sync`** — an on-demand pull, replays
    everything new since the last sequence you saw.
-2. **`ctx connect listen`** — a long-lived gRPC stream that
+2. **`ctx connection listen`** — a long-lived gRPC stream that
    writes new entries to `.context/hub/` as they arrive.
 3. **`check-hub-sync` hook** — runs at session start, daily
    throttled, so most users never call `sync` manually.
@@ -203,4 +205,4 @@ the end of the pipeline.
 | Operating a hub in production                     | [Operations](../operations/hub.md)               |
 | Assessing the security posture                    | [Security model](../security/hub.md)             |
 | Debugging a hub in trouble                        | [Failure modes](../operations/hub-failure-modes.md) |
-| Just reading the commands                         | [`ctx connect`](../cli/connect.md), [`ctx serve`](../cli/serve.md), [`ctx hub`](../cli/hub.md) |
+| Just reading the commands                         | [`ctx connect`](../cli/connection.md), [`ctx serve`](../cli/serve.md), [`ctx hub`](../cli/hub.md) |

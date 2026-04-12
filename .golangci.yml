@@ -37,7 +37,7 @@ linters:
       # TextDescKey constants are i18n keys, not credentials
       - linters: [gosec]
         text: "G101"
-        path: "internal/config/embed/text/text\\.go"
+        path: "internal/config/embed/text/"
 
 run:
   timeout: 5m

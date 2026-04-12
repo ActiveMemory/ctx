@@ -30,8 +30,8 @@ Or ask your agent: *"Are our hooks running?"*
 | Tool                     | Type          | Purpose                                  |
 |--------------------------|---------------|------------------------------------------|
 | `ctx system <hook>`      | CLI command   | Run a system hook manually               |
-| `ctx system resources`   | CLI command   | Show system resource status              |
-| `ctx system stats`       | CLI command   | Stream or dump per-session token stats   |
+| `ctx resource`   | CLI command   | Show system resource status              |
+| `ctx stats`       | CLI command   | Stream or dump per-session token stats   |
 | `ctx notify setup`       | CLI command   | Configure webhook for audit trail        |
 | `ctx notify test`        | CLI command   | Verify webhook delivery                  |
 | `.ctxrc` `notify.events` | Configuration | Subscribe to `relay` for full hook audit |
@@ -82,7 +82,7 @@ agent to persist context before the window fills up.
 ```
 
 **Stats**: Every prompt records token usage to `.context/state/stats-{session}.jsonl`.
-Monitor live with `ctx system stats --follow` or query with `ctx system stats --json`.
+Monitor live with `ctx stats --follow` or query with `ctx stats --json`.
 Stats are recorded even during wrap-up suppression (event: `suppressed`).
 
 **Billing guard**: When `billing_token_warn` is set in `.ctxrc`, a one-shot warning
@@ -371,13 +371,13 @@ event_log: true
 ```
 
 Once enabled, every hook that fires writes an entry to
-`.context/state/events.jsonl`. Query it with `ctx system events`:
+`.context/state/events.jsonl`. Query it with `ctx event`:
 
 ```bash
-ctx system events                    # last 50 events
-ctx system events --hook qa-reminder # filter by hook
-ctx system events --session <id>     # filter by session
-ctx system events --json | jq '.'    # raw JSONL for processing
+ctx event                    # last 50 events
+ctx event --hook qa-reminder # filter by hook
+ctx event --session <id>     # filter by session
+ctx event --json | jq '.'    # raw JSONL for processing
 ```
 
 The event log is local, queryable, and doesn't require any external service.

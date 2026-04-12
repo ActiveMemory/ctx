@@ -9,14 +9,14 @@ package hook
 // Hook name constants: used for Load, NewTemplateRef, notify.Send,
 // and log.Append to avoid magic strings.
 const (
-	// BlockDangerousCommands is the hook name for blocking dangerous commands.
-	BlockDangerousCommands = "block-dangerous-commands"
+	// BlockDangerousCommand is the hook name for blocking dangerous commands.
+	BlockDangerousCommand = "block-dangerous-command"
 	// BlockNonPathCtx is the hook name for blocking non-PATH ctx invocations.
 	BlockNonPathCtx = "block-non-path-ctx"
 	// CheckBackupAge is the hook name for backup staleness checks.
 	CheckBackupAge = "check-backup-age"
-	// CheckCeremonies is the hook name for ceremony usage checks.
-	CheckCeremonies = "check-ceremonies"
+	// CheckCeremony is the hook name for ceremony usage checks.
+	CheckCeremony = "check-ceremony"
 	// CheckContextSize is the hook name for context window size checks.
 	CheckContextSize = "check-context-size"
 	// CheckFreshness is the hook name for technology constant freshness checks.
@@ -31,10 +31,10 @@ const (
 	CheckMemoryDrift = "check-memory-drift"
 	// CheckPersistence is the hook name for context persistence nudges.
 	CheckPersistence = "check-persistence"
-	// CheckReminders is the hook name for session reminder checks.
-	CheckReminders = "check-reminders"
-	// CheckResources is the hook name for resource usage checks.
-	CheckResources = "check-resources"
+	// CheckReminder is the hook name for session reminder checks.
+	CheckReminder = "check-reminder"
+	// CheckResource is the hook name for resource usage checks.
+	CheckResource = "check-resource"
 	// CheckTaskCompletion is the hook name for task completion nudges.
 	CheckTaskCompletion = "check-task-completion"
 	// CheckVersion is the hook name for version mismatch checks.

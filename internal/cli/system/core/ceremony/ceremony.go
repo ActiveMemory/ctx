@@ -118,7 +118,7 @@ func Emit(remember, wrapUp bool) (msg, variant string) {
 	boxTitle := desc.Text(boxTitleKey)
 	fallback := desc.Text(fallbackKey)
 
-	content := message.Load(hook.CheckCeremonies, variant, nil, fallback)
+	content := message.Load(hook.CheckCeremony, variant, nil, fallback)
 	if content == "" {
 		return "", variant
 	}

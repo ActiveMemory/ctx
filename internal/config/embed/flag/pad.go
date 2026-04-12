@@ -35,6 +35,6 @@ const (
 	DescKeyPadEditTag = "pad.edit.tag"
 	// DescKeyPadTag is the description key for the pad tag filter flag.
 	DescKeyPadTag = "pad.tag"
-	// DescKeyPadTagsJSON is the description key for the pad tags json flag.
-	DescKeyPadTagsJSON = "pad.tags.json"
+	// DescKeyPadTagJSON is the description key for the pad tag json flag.
+	DescKeyPadTagJSON = "pad.tag.json"
 )

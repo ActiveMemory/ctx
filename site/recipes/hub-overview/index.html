@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -970,6 +970,8 @@
   
     
     
+      
+        
       
         
       
@@ -2032,6 +2034,7 @@
   
 
 
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h1 id="ctx-hub-overview"><code>ctx</code> Hub: Overview<a class="headerlink" href="#ctx-hub-overview" title="Permanent link">&para;</a></h1>
 <p>Start here before the other hub recipes. This page answers <em>what</em>
 the hub is, <em>who</em> it's for, <em>why</em> you'd run one, and —
@@ -2090,7 +2093,7 @@ never rewritten.</p>
 <li><strong>Local context files</strong> as a whole — <code>TASKS.md</code>,
   <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, <code>CONVENTIONS.md</code> — are <strong>not</strong>
   mirrored wholesale. Only entries you explicitly <code>--share</code>, or
-  publish later with <code>ctx connect publish</code>, cross the boundary.</li>
+  publish later with <code>ctx connection publish</code>, cross the boundary.</li>
 <li><strong>Anything under <code>.context/</code> that isn't one of the four entry
   types above.</strong> Configuration, state, logs, memory, journal
   metadata — all local.</li>
@@ -2162,7 +2165,7 @@ day-to-day team workflow, then <a href="../hub-cluster/">HA cluster</a>
 if you need redundancy.</p>
 <h2 id="identity-projects-not-users">Identity: projects, not users<a class="headerlink" href="#identity-projects-not-users" title="Permanent link">&para;</a></h2>
 <p>The hub has <strong>no concept of users.</strong> Its unit of identity is the
-<em>project</em>. <code>ctx connect register</code> binds a hub token to a project
+<em>project</em>. <code>ctx connection register</code> binds a hub token to a project
 directory, not to a person. Two developers working on the same
 project share either:</p>
 <ul>
@@ -2195,9 +2198,9 @@ need "who wrote this," the hub is the wrong tool.</p>
 <p>Once a project is registered and subscribed, entries arrive by
 three mechanisms:</p>
 <ol>
-<li><strong><code>ctx connect sync</code></strong> — an on-demand pull, replays
+<li><strong><code>ctx connection sync</code></strong> — an on-demand pull, replays
    everything new since the last sequence you saw.</li>
-<li><strong><code>ctx connect listen</code></strong> — a long-lived gRPC stream that
+<li><strong><code>ctx connection listen</code></strong> — a long-lived gRPC stream that
    writes new entries to <code>.context/hub/</code> as they arrive.</li>
 <li><strong><code>check-hub-sync</code> hook</strong> — runs at session start, daily
    throttled, so most users never call <code>sync</code> manually.</li>
@@ -2249,7 +2252,7 @@ the end of the pipeline.</p>
 </tr>
 <tr>
 <td>Just reading the commands</td>
-<td><a href="../../cli/connect/"><code>ctx connect</code></a>, <a href="../../cli/serve/"><code>ctx serve</code></a>, <a href="../../cli/hub/"><code>ctx hub</code></a></td>
+<td><a href="../../cli/connection/"><code>ctx connect</code></a>, <a href="../../cli/serve/"><code>ctx serve</code></a>, <a href="../../cli/hub/"><code>ctx hub</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2401,7 +2404,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

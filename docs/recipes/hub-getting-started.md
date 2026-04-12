@@ -9,6 +9,8 @@ title: Getting Started
 icon: lucide/share-2
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # `ctx` Hub: Getting Started
 
 Stand up a **single-node** `ctx` Hub on localhost, register
@@ -27,7 +29,7 @@ other — all in under five minutes.
 By the end, you will have:
 
 1. A local hub process running on port `9900`.
-2. Two project directories both registered with the hub.
+2. Two project directories both registered with the ctx Hub.
 3. A decision published from project `alpha` that appears
    automatically in project `beta`'s `.context/hub/` and in
    `ctx agent --include-hub` output.
@@ -78,7 +80,7 @@ can recover it later. Treat it like a password.
 
 ```bash
 cd ~/projects/alpha
-ctx connect register localhost:9900 --token ctx_adm_7f3a1c2d...
+ctx connection register localhost:9900 --token ctx_adm_7f3a1c2d...
 ```
 
 This stores an **encrypted** connection config in
@@ -89,7 +91,7 @@ in the project.
 ## Step 3 — Choose what to receive
 
 ```bash
-ctx connect subscribe decision learning convention
+ctx connection subscribe decision learning convention
 ```
 
 Only the entry types you subscribe to will be delivered by `sync`
@@ -97,7 +99,7 @@ and `listen`.
 
 ## Step 4 — Publish a decision
 
-Either use `ctx add --share` to write locally *and* push to the hub:
+Either use `ctx add --share` to write locally *and* push to the ctx Hub:
 
 ```bash
 ctx add decision "Use UTC timestamps everywhere" --share \
@@ -109,16 +111,16 @@ ctx add decision "Use UTC timestamps everywhere" --share \
 Or publish an existing entry directly:
 
 ```bash
-ctx connect publish decision "Use UTC timestamps everywhere"
+ctx connection publish decision "Use UTC timestamps everywhere"
 ```
 
 ## Step 5 — Register a second project and sync
 
 ```bash
 cd ~/projects/beta
-ctx connect register localhost:9900 --token ctx_adm_7f3a1c2d...
-ctx connect subscribe decision learning convention
-ctx connect sync
+ctx connection register localhost:9900 --token ctx_adm_7f3a1c2d...
+ctx connection subscribe decision learning convention
+ctx connection sync
 ```
 
 The decision from `alpha` now appears in
@@ -130,7 +132,7 @@ and timestamp.
 Instead of re-running `sync`, stream new entries as they land:
 
 ```bash
-ctx connect listen
+ctx connection listen
 ```
 
 Leave this running in a terminal; every `--share` publish from any
@@ -152,7 +154,7 @@ assembly, scored by recency and type relevance.
 
 After `register`, the `check-hub-sync` hook pulls new entries at the
 start of each session (daily throttled). Most users never need to
-call `ctx connect sync` manually.
+call `ctx connection sync` manually.
 
 ## Where to go next
 
@@ -164,5 +166,5 @@ call `ctx connect sync` manually.
   backup, log rotation, JSONL store layout.
 - **[Hub security model](../security/hub.md)**: token
   lifecycle, encryption at rest, threat model.
-- **[`ctx connect` reference](../cli/connect.md)** and
+- **[`ctx connect` reference](../cli/connection.md)** and
   **[`ctx hub start` reference](../cli/serve.md)**.

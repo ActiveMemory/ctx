@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -1435,7 +1435,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../connect/" class="md-nav__link">
+      <a href="../connection/" class="md-nav__link">
         
   
   
@@ -1571,6 +1571,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1624,6 +1632,12 @@
   
     
     
+      
+        
+      
+        
+      
+        
       
         
       
@@ -2167,6 +2181,7 @@
 
   <h1>Steering</h1>
 
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="ctx-steering"><code>ctx steering</code><a class="headerlink" href="#ctx-steering" title="Permanent link">&para;</a></h2>
 <p>Manage <strong>steering files</strong>: persistent behavioral rules for AI
 coding assistants.</p>
@@ -2239,6 +2254,7 @@ the file; list specific tool names to scope it.</p>
 <h3 id="ctx-steering-init"><code>ctx steering init</code><a class="headerlink" href="#ctx-steering-init" title="Permanent link">&para;</a></h3>
 <p>Create a starter set of steering files in <code>.context/steering/</code>
 to use as a scaffolding baseline.</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>init
 </span></code></pre></div>
 <h3 id="ctx-steering-add"><code>ctx steering add</code><a class="headerlink" href="#ctx-steering-add" title="Permanent link">&para;</a></h3>
@@ -2249,7 +2265,7 @@ to use as a scaffolding baseline.</p>
 <ul>
 <li><code>name</code>: Steering file name (without <code>.md</code> extension)</li>
 </ul>
-<p><strong>Example</strong>:</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>add<span class="w"> </span>security
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Created .context/steering/security.md</span>
 </span></code></pre></div>
@@ -2258,6 +2274,7 @@ by default. Edit the frontmatter to change behavior.</p>
 <h3 id="ctx-steering-list"><code>ctx steering list</code><a class="headerlink" href="#ctx-steering-list" title="Permanent link">&para;</a></h3>
 <p>List all steering files with their inclusion mode, priority,
 and tool scoping.</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>list
 </span></code></pre></div>
 <h3 id="ctx-steering-preview"><code>ctx steering preview</code><a class="headerlink" href="#ctx-steering-preview" title="Permanent link">&para;</a></h3>
@@ -2266,7 +2283,7 @@ prompt. Useful for validating <code>auto</code>-inclusion descriptions
 against realistic prompts.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="o">[</span>prompt<span class="o">]</span>
 </span></code></pre></div>
-<p><strong>Example</strong>:</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="s2">&quot;create a REST API endpoint&quot;</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Steering files matching prompt &quot;create a REST API endpoint&quot;:</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">#   api-standards        inclusion=auto     priority=20  tools=all</span>
@@ -2277,6 +2294,7 @@ against realistic prompts.</p>
 have a <strong>built-in rules primitive</strong>. Not every tool needs
 this — Claude Code and Codex use a different delivery
 mechanism (see below).</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>sync
 </span></code></pre></div>
 <p><strong>Which tools are sync targets?</strong></p>
@@ -2548,7 +2566,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

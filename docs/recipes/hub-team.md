@@ -9,6 +9,8 @@ title: Team knowledge bus
 icon: lucide/users
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # Team knowledge bus
 
 This recipe shows **how a small trusted team uses a `ctx`
@@ -27,7 +29,7 @@ without ceremony.
   [Multi-machine setup](hub-multi-machine.md) for the
   deployment guide.
 - Each team member has `ctx` installed and has
-  `ctx connect register`-ed their working projects with
+  `ctx connection register`-ed their working projects with
   the hub.
 
 ## Trust model — read this first
@@ -167,7 +169,7 @@ him for the header pattern instead of defaulting to
 Dave notices that his PR auto-formatted some error
 messages to end with periods. He recalls the team
 convention is "no trailing period" but can't remember
-where it was documented. He runs `ctx connect status`,
+where it was documented. He runs `ctx connection status`,
 sees the hub is healthy, greps his local
 `.context/hub/conventions.md`, and finds:
 

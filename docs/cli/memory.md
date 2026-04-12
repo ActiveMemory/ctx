@@ -9,6 +9,8 @@ title: Memory
 icon: lucide/brain
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx memory`
 
 Bridge Claude Code's auto memory (MEMORY.md) into `.context/`.
@@ -44,7 +46,7 @@ ctx memory sync [flags]
 | 0    | Synced successfully                        |
 | 1    | MEMORY.md not found (auto memory inactive) |
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx memory sync
@@ -73,7 +75,7 @@ ctx memory status
 | 1    | MEMORY.md not found                           |
 | 2    | Drift detected (MEMORY.md changed since sync) |
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx memory status
@@ -96,7 +98,7 @@ Show what changed in MEMORY.md since last sync.
 ctx memory diff
 ```
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx memory diff
@@ -128,7 +130,7 @@ content outside the markers is preserved.
 | `--budget`  | Line budget for published content        | `80`    |
 | `--dry-run` | Show what would be published             |         |
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx memory publish --dry-run
@@ -149,6 +151,8 @@ ctx memory publish --budget 40  # Tighter budget
 
 Remove the ctx-managed marker block from MEMORY.md, preserving
 Claude-owned content.
+
+**Examples**:
 
 ```bash
 ctx memory unpublish
@@ -186,7 +190,7 @@ Deduplication prevents re-importing the same entry across runs.
 |-------------|------------------------------------------------|
 | `--dry-run` | Show classification plan without writing       |
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx memory import --dry-run

@@ -30,3 +30,16 @@ const LabelAllTools = "all"
 // DefaultPriority is the default injection priority for
 // steering files when omitted from frontmatter.
 const DefaultPriority = 50
+
+// Foundation steering file names used by ctx steering init
+// and ctx init to scaffold the starter set.
+const (
+	// NameProduct is the file name for the product context file.
+	NameProduct = "product"
+	// NameTech is the file name for the technology stack file.
+	NameTech = "tech"
+	// NameStructure is the file name for the project structure file.
+	NameStructure = "structure"
+	// NameWorkflow is the file name for the development workflow file.
+	NameWorkflow = "workflow"
+)

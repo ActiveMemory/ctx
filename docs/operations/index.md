@@ -15,7 +15,7 @@ Guides for **installing**, **upgrading**, **integrating**, and
 Operator guides for running a `ctx` Hub — the gRPC server that
 fans out structured entries across projects. If you're a client
 connecting to a Hub someone else runs, see
-[`ctx connect`](../cli/connect.md) and the
+[`ctx connect`](../cli/connection.md) and the
 [Hub recipes](../recipes/hub-overview.md) instead.
 
 ### [Hub Operations](hub.md)
@@ -66,3 +66,26 @@ Runbooks for people shipping `ctx` itself.
 
 Step-by-step runbook for maintainers: bump version, generate
 release notes, run the release script, and verify the result.
+
+---
+
+## Runbooks
+
+Step-by-step procedures in `hack/runbooks/`. Run these
+regularly — they catch problems that linters and tests cannot.
+
+| Runbook | Purpose | When to run |
+|---------|---------|-------------|
+| [Codebase audit](../../hack/runbooks/codebase-audit.md) | AST audits, magic strings, dead code, doc alignment | Before release, quarterly |
+| [Docs semantic audit](../../hack/runbooks/docs-semantic-audit.md) | Narrative gaps, weak pages, structural problems | Before release, after adding pages |
+| [Sanitize permissions](../../hack/runbooks/sanitize-permissions.md) | Clean `.claude/settings.local.json` of over-broad grants | After heavy permission granting |
+
+**Recommended cadence**:
+
+- **Before every release**: codebase audit + docs semantic audit
+- **Monthly**: sanitize permissions
+- **Quarterly**: full sweep of all three
+
+The `_ctx-release` skill runs the codebase audit automatically
+as part of its pre-release checks. The other two are manual —
+add them to your release checklist.

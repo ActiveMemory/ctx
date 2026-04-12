@@ -11,6 +11,7 @@ import (
 	"sync"
 	"time"
 
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	"github.com/hashicorp/raft"
 	"google.golang.org/grpc"
 )
@@ -293,7 +294,7 @@ type Cluster struct {
 type jsonCodec struct{}
 
 // codecName is the gRPC content-subtype for the JSON codec.
-const codecName = "json"
+const codecName = cfgHub.StructTagJSON
 
 // Marshal encodes v as JSON.
 //
@@ -322,5 +323,5 @@ func (jsonCodec) Unmarshal(data []byte, v any) error {
 // Name returns the codec content-subtype.
 //
 // Returns:
-//   - string: "json"
+//   - string: cfgHub.StructTagJSON
 func (jsonCodec) Name() string { return codecName }

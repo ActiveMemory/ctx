@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -1446,7 +1446,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../connect/" class="md-nav__link">
+      <a href="../connection/" class="md-nav__link">
         
   
   
@@ -1582,6 +1582,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1635,6 +1643,12 @@
   
     
     
+      
+        
+      
+        
+      
+        
       
         
       
@@ -2189,6 +2203,7 @@
 
   <h1>Trigger</h1>
 
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="ctx-trigger"><code>ctx trigger</code><a class="headerlink" href="#ctx-trigger" title="Permanent link">&para;</a></h2>
 <p>Manage <strong>lifecycle triggers</strong>: executable scripts that fire at
 specific events during an AI session. Triggers can block tool
@@ -2303,6 +2318,7 @@ it with <code>ctx trigger enable</code> after reviewing the contents.</p>
 <h3 id="ctx-trigger-list"><code>ctx trigger list</code><a class="headerlink" href="#ctx-trigger-list" title="Permanent link">&para;</a></h3>
 <p>List all discovered triggers, grouped by trigger type, with
 their enabled/disabled status.</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>trigger<span class="w"> </span>list
 </span></code></pre></div>
 <h3 id="ctx-trigger-test"><code>ctx trigger test</code><a class="headerlink" href="#ctx-trigger-test" title="Permanent link">&para;</a></h3>
@@ -2340,7 +2356,7 @@ Searches every trigger-type directory for a script matching
 <code>&lt;name&gt;</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>trigger<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;name&gt;
 </span></code></pre></div>
-<p><strong>Example</strong>:</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>trigger<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>inject-context
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Enabled .context/hooks/session-start/inject-context.sh</span>
 </span></code></pre></div>
@@ -2350,7 +2366,7 @@ Searches every trigger-type directory for a script matching
 <code>&lt;name&gt;</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>trigger<span class="w"> </span>disable<span class="w"> </span>&lt;name&gt;
 </span></code></pre></div>
-<p><strong>Example</strong>:</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>trigger<span class="w"> </span>disable<span class="w"> </span>inject-context
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Disabled .context/hooks/session-start/inject-context.sh</span>
 </span></code></pre></div>
@@ -2548,7 +2564,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

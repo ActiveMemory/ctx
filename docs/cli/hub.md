@@ -9,6 +9,8 @@ title: Hub
 icon: lucide/network
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx hub`
 
 Operator commands for a **`ctx` Hub** — the gRPC server that
@@ -21,13 +23,15 @@ leadership before maintenance.
     You only need `ctx hub` if you are **running** a hub
     server or cluster. For client-side operations (register,
     subscribe, sync, publish, listen), see
-    [`ctx connect`](connect.md). For the mental model behind
+    [`ctx connect`](connection.md). For the mental model behind
     the hub as a whole, read the
     [`ctx` Hub overview](../recipes/hub-overview.md).
 
 ### `ctx hub start`
 
 Start the hub gRPC server.
+
+**Examples**:
 
 ```bash
 ctx hub start                           # Foreground, default port 9900
@@ -37,7 +41,7 @@ ctx hub start --data-dir /srv/ctx-hub   # Custom data directory
 
 On first run, generates an **admin token** and prints it to
 stdout. Save this token — it's required for
-[`ctx connect register`](connect.md#ctx-connect-register) in
+[`ctx connection register`](connection.md#ctx-connect-register) in
 client projects. Subsequent runs reuse the stored token from
 `<data-dir>/admin.token`.
 
@@ -93,6 +97,8 @@ The hub validates every published entry before accepting it:
 
 Stop a running hub daemon.
 
+**Examples**:
+
 ```bash
 ctx hub stop                            # Stop using default data dir
 ctx hub stop --data-dir /srv/ctx-hub    # Custom data directory
@@ -108,6 +114,8 @@ Safe to rerun — if no daemon is running, returns a
 Show cluster status: role, peers, sync state, entry count,
 and uptime.
 
+**Examples**:
+
 ```bash
 ctx hub status
 ```
@@ -117,6 +125,8 @@ ctx hub status
 Add or remove peers from the cluster at runtime. Useful for
 scaling up or replacing a decommissioned node without
 restarting the leader.
+
+**Examples**:
 
 ```bash
 ctx hub peer add host2:9901
@@ -130,13 +140,15 @@ new election among the remaining followers before the current
 leader steps down. Use before taking the leader offline for
 maintenance.
 
+**Examples**:
+
 ```bash
 ctx hub stepdown
 ```
 
 ### See also
 
-- [`ctx connect`](connect.md) — client-side commands
+- [`ctx connect`](connection.md) — client-side commands
   (register, subscribe, sync, publish, listen)
 - [`ctx` Hub overview](../recipes/hub-overview.md) — mental
   model and user stories

@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -943,6 +943,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="File Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#outside-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outside .context/
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1315,6 +1332,34 @@
         
           <li class="md-nav__item">
   <a href="#customizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        steering/
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="steering&#x2f;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#customizing_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Customizing
@@ -2042,6 +2087,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="File Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#outside-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outside .context/
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2429,6 +2491,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#steering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        steering/
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="steering&#x2f;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#customizing_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#parsing-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2534,6 +2624,9 @@
 <p>Each context file in <code>.context/</code> serves a specific purpose. </p>
 <p>Files are designed to be human-readable, AI-parseable, and token-efficient.</p>
 <h2 id="file-overview">File Overview<a class="headerlink" href="#file-overview" title="Permanent link">&para;</a></h2>
+<p>The core context files live directly under <code>.context/</code>. They are the
+substrate <code>ctx</code> reads in priority order when assembling the agent
+context packet:</p>
 <table>
 <thead>
 <tr>
@@ -2583,28 +2676,36 @@
 <td>Instructions for AI tools</td>
 <td>8 (lowest)</td>
 </tr>
-<tr>
-<td><code>templates/</code></td>
-<td>Entry format templates for <code>ctx add</code></td>
-<td>(optional)</td>
-</tr>
-<tr>
-<td><code>steering/</code></td>
-<td>Behavioral rules with YAML frontmatter</td>
-<td>(optional)</td>
-</tr>
-<tr>
-<td><code>hooks/</code></td>
-<td>Lifecycle hook scripts</td>
-<td>(optional)</td>
-</tr>
-<tr>
-<td><code>skills/</code></td>
-<td>Reusable instruction bundles</td>
-<td>(optional)</td>
-</tr>
 </tbody>
 </table>
+<p>Two subdirectories under <code>.context/</code> are <strong>implementation details</strong> that
+are user-editable but not part of the priority read order:</p>
+<ul>
+<li><strong><code>.context/templates/</code></strong> — format templates for <code>ctx add decision</code>
+  and <code>ctx add learning</code>. See <a href="#templates">templates</a> below.</li>
+<li><strong><code>.context/steering/</code></strong> — behavioral rules with YAML frontmatter
+  that get synced into each AI tool's native config. See
+  <a href="#steering">steering</a> below, and the full
+  <a href="../steering/">Steering files</a> page for the design and workflow.</li>
+</ul>
+<h3 id="outside-context">Outside <code>.context/</code><a class="headerlink" href="#outside-context" title="Permanent link">&para;</a></h3>
+<p>Two other moving parts are often confused with context files but are
+<strong>not</strong> under <code>.context/</code>:</p>
+<ul>
+<li><strong>Skills</strong> live in <code>.claude/skills/</code> (project-local) or are provided
+  by the installed <code>ctx</code> plugin. A typical project doesn't see the
+  plugin's skills at all — they ride with the plugin and are owned by
+  its update cycle. See <a href="../../cli/skill/"><code>ctx skill</code></a> and
+  <a href="../../reference/skills/">Skills reference</a>.</li>
+<li><strong>Hooks</strong> are Claude Code <code>PreToolUse</code>/<code>PostToolUse</code>/
+  <code>UserPromptSubmit</code> entries configured in <code>.claude/settings.json</code> or
+  shipped by a plugin. The <code>ctx</code> plugin registers its own hooks
+  automatically; <strong>a typical project does not author hooks by hand</strong>,
+  and any local edits to plugin-owned hook files will be overridden
+  on the next plugin update. If you need to customize behavior, edit
+  your own project settings, not the plugin's files. See
+  <a href="../../recipes/hook-sequence-diagrams/">Hook sequence diagrams</a>.</li>
+</ul>
 <h2 id="read-order-rationale">Read Order Rationale<a class="headerlink" href="#read-order-rationale" title="Permanent link">&para;</a></h2>
 <p>The priority order follows a logical progression for AI tools:</p>
 <ol>
@@ -3021,6 +3122,8 @@ and update context.</p>
 for full documentation.</p>
 <hr />
 <h2 id="templates"><code>templates/</code><a class="headerlink" href="#templates" title="Permanent link">&para;</a></h2>
+<p><strong>Location</strong>: <code>.context/templates/</code>.
+<strong>Status</strong>: implementation detail, user-editable.</p>
 <p><strong>Purpose</strong>: Format templates for <code>ctx add decision</code> and <code>ctx add learning</code>.
 These control the structure of new entries appended to DECISIONS.md and
 LEARNINGS.md.</p>
@@ -3035,6 +3138,37 @@ next <code>ctx add</code> command. For example, to add a "References" section to
 all new decisions, edit <code>.context/templates/decision.md</code>.</p>
 <p>Templates are committed to git, so customizations are shared with the
 team.</p>
+<hr />
+<h2 id="steering"><code>steering/</code><a class="headerlink" href="#steering" title="Permanent link">&para;</a></h2>
+<p><strong>Location</strong>: <code>.context/steering/</code>.
+<strong>Status</strong>: implementation detail, user-editable.</p>
+<p><strong>Purpose</strong>: Behavioral rules with YAML frontmatter that tell an AI
+assistant <em>how to behave</em> when a specific kind of prompt arrives.
+Unlike the core context files (which describe <em>what</em> the project is),
+steering files describe <em>what to do</em> and ride alongside the prompt
+through the AI tool's native rule pipeline (Claude Code, Cursor, Kiro,
+Cline). <code>ctx</code> matches steering files to prompts and syncs them out to
+each tool's config.</p>
+<p><code>ctx init</code> scaffolds four foundation files:</p>
+<ul>
+<li><code>product.md</code> — who this project serves and why</li>
+<li><code>tech.md</code> — the technology stack and its constraints</li>
+<li><code>structure.md</code> — how the code is organized</li>
+<li><code>workflow.md</code> — how work moves through the system</li>
+</ul>
+<p>Each file carries YAML frontmatter describing <strong>when</strong> it applies
+(always, matching prompts, or manually referenced) and <strong>what</strong> tool
+scope it covers. The foundation files use <code>inclusion: always</code> by default
+so every session picks them up.</p>
+<h3 id="customizing_1">Customizing<a class="headerlink" href="#customizing_1" title="Permanent link">&para;</a></h3>
+<p>Edit the files directly. Add your own steering files with <code>ctx steering
+add</code>, preview the match set with <code>ctx steering preview</code>, and run
+<code>ctx steering sync</code> to push them into each AI tool's config after
+changes. Steering files are committed to git, so they're shared with
+the team.</p>
+<p>For the design rationale, the full inclusion/priority model, and the
+end-to-end sync workflow, see the dedicated
+<a href="../steering/">Steering files</a> page.</p>
 <hr />
 <h2 id="parsing-rules">Parsing Rules<a class="headerlink" href="#parsing-rules" title="Permanent link">&para;</a></h2>
 <p>All context files follow these conventions:</p>
@@ -3211,7 +3345,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

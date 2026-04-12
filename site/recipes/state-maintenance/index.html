@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -32,7 +32,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -1175,9 +1175,9 @@ hundreds of files from long-dead sessions.</p>
 reason about state, and stale global tombstones can suppress nudges across
 sessions entirely.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>--dry-run<span class="w">     </span><span class="c1"># preview what would be removed</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>prune<span class="w">               </span><span class="c1"># prune files older than 7 days</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>--days<span class="w"> </span><span class="m">1</span><span class="w">      </span><span class="c1"># more aggressive: keep only today</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>prune<span class="w"> </span>--dry-run<span class="w">     </span><span class="c1"># preview what would be removed</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>prune<span class="w">               </span><span class="c1"># prune files older than 7 days</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>prune<span class="w"> </span>--days<span class="w"> </span><span class="m">1</span><span class="w">      </span><span class="c1"># more aggressive: keep only today</span>
 </span></code></pre></div>
 <h2 id="commands-used">Commands Used<a class="headerlink" href="#commands-used" title="Permanent link">&para;</a></h2>
 <table>
@@ -1190,7 +1190,7 @@ sessions entirely.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>ctx system prune</code></td>
+<td><code>ctx prune</code></td>
 <td>Command</td>
 <td>Remove old per-session state files</td>
 </tr>
@@ -1209,14 +1209,14 @@ suppress repeat nudges. Safe to prune once the session ends. Examples:</p>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>heartbeat-11e94c1d-1639-4c04-bf77-63dcf1f50ec7
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>persistence-nudge-11e94c1d-1639-4c04-bf77-63dcf1f50ec7
 </span></code></pre></div>
-<p><strong>Global</strong> (no UUID): Persist across sessions. <code>ctx system prune</code> preserves
+<p><strong>Global</strong> (no UUID): Persist across sessions. <code>ctx prune</code> preserves
 these automatically. Some are legitimate state (<code>events.jsonl</code>,
 <code>memory-import.json</code>); others may be stale tombstones that need manual
 review.</p>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-preview">Step 1: Preview<a class="headerlink" href="#step-1-preview" title="Permanent link">&para;</a></h3>
 <p>Always dry-run first to see what would be removed:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>--dry-run
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>prune<span class="w"> </span>--dry-run
 </span></code></pre></div>
 <p>The output shows each file, its age, and a summary:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>  would prune: context-check-abc123... (age: 3d)
@@ -1226,9 +1226,9 @@ review.</p>
 </span></code></pre></div>
 <h3 id="step-2-prune">Step 2: Prune<a class="headerlink" href="#step-2-prune" title="Permanent link">&para;</a></h3>
 <p>Choose an age threshold. The default is 7 days:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>prune<span class="w">               </span><span class="c1"># older than 7 days</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>--days<span class="w"> </span><span class="m">3</span><span class="w">      </span><span class="c1"># older than 3 days</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>--days<span class="w"> </span><span class="m">1</span><span class="w">      </span><span class="c1"># older than 1 day (aggressive)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>prune<span class="w">               </span><span class="c1"># older than 7 days</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>prune<span class="w"> </span>--days<span class="w"> </span><span class="m">3</span><span class="w">      </span><span class="c1"># older than 3 days</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ctx<span class="w"> </span>prune<span class="w"> </span>--days<span class="w"> </span><span class="m">1</span><span class="w">      </span><span class="c1"># older than 1 day (aggressive)</span>
 </span></code></pre></div>
 <h3 id="step-3-review-global-files">Step 3: Review Global Files<a class="headerlink" href="#step-3-review-global-files" title="Permanent link">&para;</a></h3>
 <p>After pruning, check what <code>prune</code> preserved:</p>
@@ -1252,7 +1252,7 @@ review.</p>
 </span></code></pre></div>
 <h2 id="when-to-prune">When to Prune<a class="headerlink" href="#when-to-prune" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Weekly</strong>: <code>ctx system prune</code> with default 7-day threshold</li>
+<li><strong>Weekly</strong>: <code>ctx prune</code> with default 7-day threshold</li>
 <li><strong>After heavy parallel work</strong>: Multiple concurrent sessions create
   many tombstones. Prune with <code>--days 1</code> afterward.</li>
 <li><strong>When state directory exceeds ~100 files</strong>: A sign that pruning
@@ -1275,7 +1275,7 @@ UUIDs so <code>prune</code> preserves them. Delete manually.</p>
 <li><a href="../troubleshooting/">Troubleshooting</a>: diagnostic workflow using
   <code>ctx doctor</code> and event logs</li>
 <li><a href="../../cli/system/">CLI Reference: system</a>: full flag documentation
-  for <code>ctx system prune</code> and related commands</li>
+  for <code>ctx prune</code> and related commands</li>
 </ul>
 
 
@@ -1387,7 +1387,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

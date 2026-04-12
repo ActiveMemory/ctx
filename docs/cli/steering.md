@@ -9,6 +9,8 @@ title: Steering
 icon: lucide/compass
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx steering`
 
 Manage **steering files**: persistent behavioral rules for AI
@@ -77,6 +79,8 @@ the file; list specific tool names to scope it.
 Create a starter set of steering files in `.context/steering/`
 to use as a scaffolding baseline.
 
+**Examples**:
+
 ```bash
 ctx steering init
 ```
@@ -93,7 +97,7 @@ ctx steering add <name>
 
 - `name`: Steering file name (without `.md` extension)
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx steering add security
@@ -107,6 +111,8 @@ by default. Edit the frontmatter to change behavior.
 
 List all steering files with their inclusion mode, priority,
 and tool scoping.
+
+**Examples**:
 
 ```bash
 ctx steering list
@@ -122,7 +128,7 @@ against realistic prompts.
 ctx steering preview [prompt]
 ```
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx steering preview "create a REST API endpoint"
@@ -137,6 +143,8 @@ Sync steering files to tool-native formats for tools that
 have a **built-in rules primitive**. Not every tool needs
 this — Claude Code and Codex use a different delivery
 mechanism (see below).
+
+**Examples**:
 
 ```bash
 ctx steering sync

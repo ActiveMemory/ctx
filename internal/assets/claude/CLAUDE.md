@@ -10,7 +10,7 @@ This project uses Context (`ctx`) for context persistence across sessions.
 
 ## On Session Start
 
-1. **Run `ctx system bootstrap`**: CRITICAL, not optional.
+1. **Run `ctx bootstrap`**: CRITICAL, not optional.
    This tells you where the context directory is. If it fails or returns
    no context_dir, STOP and warn the user.
 2. **Read AGENT_PLAYBOOK.md** from the context directory: it explains
@@ -57,7 +57,7 @@ ctx status
 | LEARNINGS.md    | Gotchas, tips, lessons learned         |
 | CONVENTIONS.md  | Code patterns and standards            |
 
-All files live in the context directory reported by `ctx system bootstrap`.
+All files live in the context directory reported by `ctx bootstrap`.
 
 ## Hook Authority
 

@@ -9,6 +9,8 @@ title: Dependency graph
 icon: lucide/git-fork
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx dep`
 
 Generate a dependency graph from source code.

@@ -15,15 +15,14 @@ import (
 
 	"github.com/spf13/cobra"
 
+	cfgFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	errServe "github.com/ActiveMemory/ctx/internal/err/serve"
 	execDaemon "github.com/ActiveMemory/ctx/internal/exec/daemon"
 	"github.com/ActiveMemory/ctx/internal/io"
 	writeServe "github.com/ActiveMemory/ctx/internal/write/serve"
 )
-
-// pidFile is the PID file name within the data directory.
-const pidFile = "hub.pid"
 
 // RunDaemon starts the hub server as a background process.
 //
@@ -54,9 +53,9 @@ func RunDaemon(
 	}
 
 	args := []string{
-		"hub", "start",
-		"--port", strconv.Itoa(port),
-		"--data-dir", dataDir,
+		cfgHub.ArgHub, cfgHub.ArgStart,
+		cfgHub.FmtFlagPrefix + cfgFlag.Port, strconv.Itoa(port),
+		cfgHub.FmtFlagPrefix + cfgFlag.DataDir, dataDir,
 	}
 
 	pid, startErr := execDaemon.Start(binPath, args)
@@ -64,7 +63,7 @@ func RunDaemon(
 		return startErr
 	}
 
-	pidPath := filepath.Join(dataDir, pidFile)
+	pidPath := filepath.Join(dataDir, cfgHub.FilePID)
 	if writeErr := io.SafeWriteFile(
 		pidPath,
 		[]byte(strconv.Itoa(pid)),
@@ -94,7 +93,7 @@ func Stop(cmd *cobra.Command, dataDir string) error {
 		dataDir = defaultDir
 	}
 
-	pidPath := filepath.Join(dataDir, pidFile)
+	pidPath := filepath.Join(dataDir, cfgHub.FilePID)
 	data, readErr := io.SafeReadUserFile(pidPath)
 	if readErr != nil {
 		return errServe.NoRunningHub(readErr)

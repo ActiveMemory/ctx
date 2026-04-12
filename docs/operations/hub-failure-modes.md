@@ -9,6 +9,8 @@ title: Hub Failure Modes
 icon: lucide/alert-triangle
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # `ctx` Hub: Failure modes
 
 What can go wrong, what the system does about it, and what you
@@ -25,7 +27,7 @@ should do. Complementary to
 
 ### Client loses connection mid-stream
 
-**What happens:** `ctx connect listen` detects the EOF, waits
+**What happens:** `ctx connection listen` detects the EOF, waits
 with exponential backoff, and reconnects. On reconnect it passes
 its last-seen sequence; the hub replays everything newer.
 
@@ -44,7 +46,7 @@ followers catch up via sequence-based sync automatically.
 ### Partition — split brain (no quorum)
 
 **What happens:** no node holds a majority, so no leader is
-elected. All nodes become read-only. `ctx connect publish` and
+elected. All nodes become read-only. `ctx connection publish` and
 `ctx add --share` fail with a "no leader" error; local writes
 still succeed.
 
@@ -58,7 +60,7 @@ from the survivors with `ctx hub peer remove` for the dead nodes.
 a warning and exits non-zero on the share leg only. `--share` is
 best-effort; it never blocks local context updates.
 
-**What you should do:** run `ctx connect publish` later to
+**What you should do:** run `ctx connection publish` later to
 backfill, or rely on another `--share` for the same entry ID.
 The hub deduplicates by entry ID.
 
@@ -111,7 +113,7 @@ a new leader within a few seconds. Writes the old leader accepted
 warning in [the cluster recipe](../recipes/hub-cluster.md).
 
 **What you should do:** if you need stronger durability, run
-`ctx connect listen` on a dedicated "collector" project that
+`ctx connection listen` on a dedicated "collector" project that
 persists entries locally as a write-ahead backup.
 
 ### Split-brain after rejoin
@@ -122,7 +124,7 @@ writes are discarded, and the majority's log is authoritative.
 **What you should do:** nothing automatic. If you know the
 minority had important writes, grep for them in
 `<data-dir>/entries.jsonl.rejected` (written by the reconciliation
-pass) and replay them with `ctx connect publish`.
+pass) and replay them with `ctx connection publish`.
 
 ## Auth and tokens
 

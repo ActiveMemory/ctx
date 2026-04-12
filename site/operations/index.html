@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -1331,6 +1331,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1407,7 +1418,7 @@
 <p>Operator guides for running a <code>ctx</code> Hub — the gRPC server that
 fans out structured entries across projects. If you're a client
 connecting to a Hub someone else runs, see
-<a href="../cli/connect/"><code>ctx connect</code></a> and the
+<a href="../cli/connection/"><code>ctx connect</code></a> and the
 <a href="../recipes/hub-overview/">Hub recipes</a> instead.</p>
 <h3 id="hub-operations"><a href="hub/">Hub Operations</a><a class="headerlink" href="#hub-operations" title="Permanent link">&para;</a></h3>
 <p>Data directory layout, daemon management, systemd unit,
@@ -1438,6 +1449,45 @@ with <code>ctx</code> providing persistent memory between iterations.</p>
 <h3 id="cutting-a-release"><a href="release/">Cutting a Release</a><a class="headerlink" href="#cutting-a-release" title="Permanent link">&para;</a></h3>
 <p>Step-by-step runbook for maintainers: bump version, generate
 release notes, run the release script, and verify the result.</p>
+<hr />
+<h2 id="runbooks">Runbooks<a class="headerlink" href="#runbooks" title="Permanent link">&para;</a></h2>
+<p>Step-by-step procedures in <code>hack/runbooks/</code>. Run these
+regularly — they catch problems that linters and tests cannot.</p>
+<table>
+<thead>
+<tr>
+<th>Runbook</th>
+<th>Purpose</th>
+<th>When to run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../hack/runbooks/codebase-audit/">Codebase audit</a></td>
+<td>AST audits, magic strings, dead code, doc alignment</td>
+<td>Before release, quarterly</td>
+</tr>
+<tr>
+<td><a href="../../hack/runbooks/docs-semantic-audit/">Docs semantic audit</a></td>
+<td>Narrative gaps, weak pages, structural problems</td>
+<td>Before release, after adding pages</td>
+</tr>
+<tr>
+<td><a href="../../hack/runbooks/sanitize-permissions/">Sanitize permissions</a></td>
+<td>Clean <code>.claude/settings.local.json</code> of over-broad grants</td>
+<td>After heavy permission granting</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommended cadence</strong>:</p>
+<ul>
+<li><strong>Before every release</strong>: codebase audit + docs semantic audit</li>
+<li><strong>Monthly</strong>: sanitize permissions</li>
+<li><strong>Quarterly</strong>: full sweep of all three</li>
+</ul>
+<p>The <code>_ctx-release</code> skill runs the codebase audit automatically
+as part of its pre-release checks. The other two are manual —
+add them to your release checklist.</p>
 
 
 
@@ -1586,7 +1636,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

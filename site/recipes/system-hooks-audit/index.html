@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -1600,6 +1600,8 @@
       
         
       
+        
+      
     
     
     
@@ -2652,12 +2654,12 @@ and get alerted when they go silent?</strong></p>
 <td>Run a system hook manually</td>
 </tr>
 <tr>
-<td><code>ctx system resources</code></td>
+<td><code>ctx resource</code></td>
 <td>CLI command</td>
 <td>Show system resource status</td>
 </tr>
 <tr>
-<td><code>ctx system stats</code></td>
+<td><code>ctx stats</code></td>
 <td>CLI command</td>
 <td>Stream or dump per-session token stats</td>
 </tr>
@@ -2734,7 +2736,7 @@ agent to persist context before the window fills up.</p>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>└──────────────────────────────────────────────────
 </span></code></pre></div>
 <p><strong>Stats</strong>: Every prompt records token usage to <code>.context/state/stats-{session}.jsonl</code>.
-Monitor live with <code>ctx system stats --follow</code> or query with <code>ctx system stats --json</code>.
+Monitor live with <code>ctx stats --follow</code> or query with <code>ctx stats --json</code>.
 Stats are recorded even during wrap-up suppression (event: <code>suppressed</code>).</p>
 <p><strong>Billing guard</strong>: When <code>billing_token_warn</code> is set in <code>.ctxrc</code>, a one-shot warning
 fires if session tokens exceed the threshold. This warning is independent of all
@@ -2930,11 +2932,11 @@ a self-contained record of hook activity:</p>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nt">event_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span></code></pre></div>
 <p>Once enabled, every hook that fires writes an entry to
-<code>.context/state/events.jsonl</code>. Query it with <code>ctx system events</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w">                    </span><span class="c1"># last 50 events</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--session<span class="w"> </span>&lt;id&gt;<span class="w">     </span><span class="c1"># filter by session</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w">    </span><span class="c1"># raw JSONL for processing</span>
+<code>.context/state/events.jsonl</code>. Query it with <code>ctx event</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>event<span class="w">                    </span><span class="c1"># last 50 events</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ctx<span class="w"> </span>event<span class="w"> </span>--session<span class="w"> </span>&lt;id&gt;<span class="w">     </span><span class="c1"># filter by session</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ctx<span class="w"> </span>event<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w">    </span><span class="c1"># raw JSONL for processing</span>
 </span></code></pre></div>
 <p>The event log is local, queryable, and doesn't require any external service.
 For a full diagnostic workflow combining event logs with structural health
@@ -3311,7 +3313,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

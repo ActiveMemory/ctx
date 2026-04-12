@@ -1,0 +1,12 @@
+Your last 3 sessions didn't use /ctx-remember or
+/ctx-wrap-up.
+
+Start sessions with:  /ctx-remember
+  → Loads context, shows active tasks, picks up
+    where you left off. No re-explaining needed.
+
+End sessions with:    /ctx-wrap-up
+  → Captures learnings and decisions so the next
+    session starts informed, not from scratch.
+
+These take seconds and save minutes.

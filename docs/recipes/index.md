@@ -185,8 +185,8 @@ Customize what hooks **say** without changing what they **do**. Override
 the QA gate for Python (`pytest` instead of `make lint`), silence noisy
 ceremony nudges, or tailor post-commit instructions for your stack.
 
-**Uses**: `ctx system message list`, `ctx system message show`,
-`ctx system message edit`, `ctx system message reset`
+**Uses**: `ctx message list`, `ctx message show`,
+`ctx message edit`, `ctx message reset`
 
 ---
 
@@ -223,6 +223,16 @@ Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.
 
 ---
 
+### [Configuration Profiles](configuration-profiles.md)
+
+Switch between **dev** and **base** runtime configurations without
+editing `.ctxrc` by hand. Verbose logging and webhooks for debugging,
+clean defaults for normal sessions.
+
+**Uses**: `ctx config switch`, `ctx config status`, `/ctx-config`
+
+---
+
 ## Maintenance
 
 ### [Detecting and Fixing Drift](context-health.md)
@@ -242,7 +252,7 @@ Clean up session tombstones from `.context/state/`. Prune old
 per-session files, identify stale global markers, and keep the
 state directory lean.
 
-**Uses**: `ctx system prune`
+**Uses**: `ctx prune`
 
 ---
 
@@ -252,7 +262,7 @@ Diagnose hook failures, noisy nudges, stale context, and configuration
 issues. Start with `ctx doctor` for a structural health check, then
 use `/ctx-doctor` for agent-driven analysis of event patterns.
 
-**Uses**: `ctx doctor`, `ctx system events`, `/ctx-doctor`
+**Uses**: `ctx doctor`, `ctx event`, `/ctx-doctor`
 
 ---
 
@@ -419,8 +429,8 @@ Stand up a single-node hub on localhost, register two projects,
 publish a decision from one, and watch it appear in the other.
 End-to-end in under five minutes.
 
-**Uses**: `ctx hub start`, `ctx connect register`,
-`ctx connect subscribe`, `ctx connect sync`, `ctx connect listen`,
+**Uses**: `ctx hub start`, `ctx connection register`,
+`ctx connection subscribe`, `ctx connection sync`, `ctx connection listen`,
 `ctx add --share`, `ctx agent --include-hub`
 
 ---
@@ -434,7 +444,7 @@ Walks through a realistic day of using the hub as passive
 infrastructure — no manual `sync`, no `git push`, no
 ceremony.
 
-**Uses**: `ctx add --share`, `ctx connect subscribe`,
+**Uses**: `ctx add --share`, `ctx connection subscribe`,
 `ctx agent --include-hub`
 
 ---
@@ -448,8 +458,8 @@ what belongs on the hub vs. local, token management, and
 the social rules that make a shared knowledge stream
 stay signal-rich.
 
-**Uses**: `ctx add --share`, `ctx connect status`,
-`ctx connect subscribe`, `ctx hub status`
+**Uses**: `ctx add --share`, `ctx connection status`,
+`ctx connection subscribe`, `ctx hub status`
 
 ---
 
@@ -460,7 +470,7 @@ directories on other workstations. Firewall guidance, TLS via a
 reverse proxy, and safe daemon restart semantics.
 
 **Uses**: `ctx hub start --daemon`, `ctx hub stop`,
-`ctx connect register`, `ctx connect status`
+`ctx connection register`, `ctx connection status`
 
 ---
 

@@ -9,6 +9,8 @@ title: Hub Operations
 icon: lucide/settings
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # `ctx` Hub: Operations
 
 Running the ctx `ctx` Hub in production. This page is
@@ -185,7 +187,7 @@ For cluster deployments, watch for:
   offsets. Sustained lag > 100 sequences on a follower is worth
   investigating.
 - **`entries.jsonl` growth rate** — sudden spikes often indicate a
-  misbehaving `ctx connect listen` reconnect loop.
+  misbehaving `ctx connection listen` reconnect loop.
 
 ## Upgrading
 

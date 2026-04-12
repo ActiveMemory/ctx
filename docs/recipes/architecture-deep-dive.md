@@ -8,6 +8,8 @@
 title: Architecture Deep Dive
 icon: lucide/layers
 ---
+![ctx](../images/ctx-banner.png)
+
 
 ## The Problem
 

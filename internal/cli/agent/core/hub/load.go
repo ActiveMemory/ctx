@@ -12,12 +12,10 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
-
-// hubDir is the subdirectory for ctx Hub entries.
-const hubDir = "hub"
 
 // LoadBodies reads all markdown files from .context/hub/
 // and returns their contents as strings.
@@ -28,7 +26,7 @@ const hubDir = "hub"
 // Returns:
 //   - []string: file contents, one per shared file
 func LoadBodies() []string {
-	dir := filepath.Join(rc.ContextDir(), hubDir)
+	dir := filepath.Join(rc.ContextDir(), cfgHub.DirHub)
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {
 		return nil

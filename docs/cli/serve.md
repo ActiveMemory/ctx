@@ -9,6 +9,8 @@ title: Serve
 icon: lucide/server
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx serve`
 
 Serve a static site locally via [zensical](https://pypi.org/project/zensical/).
@@ -44,6 +46,14 @@ pipx install zensical
 
 When omitted, serves `.context/journal-site` by default — the
 directory produced by `ctx journal site`.
+
+**Examples**:
+
+```bash
+ctx serve                         # Default: serve .context/journal-site
+ctx serve ./my-site               # Serve a specific directory
+ctx serve ./docs                  # Serve any zensical site
+```
 
 ### See also
 

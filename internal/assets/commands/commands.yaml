@@ -99,61 +99,61 @@ compact:
       ctx compact                  # Clean up context, move completed tasks
       ctx compact --archive        # Also archive old tasks, decisions, and learnings
   short: Archive completed tasks and clean up context
-connect:
+connection:
   long: |-
     Connect to a ctx Hub for cross-project
     knowledge sharing.
   short: Connect to a ctx Hub
-connect.subscribe:
+connection.subscribe:
   long: |-
-    Set which entry types to receive from the hub.
+    Set which entry types to receive from the ctx Hub.
 
     Examples:
-      ctx connect subscribe decision learning
-      ctx connect subscribe decision learning convention
-  short: Set hub subscription types
-connect.sync:
+      ctx connection subscribe decision learning
+      ctx connection subscribe decision learning convention
+  short: Set ctx Hub subscription types
+connection.sync:
   long: |-
-    Pull matching entries from the hub and write them to
+    Pull matching entries from the ctx Hub and write them to
     .context/hub/ as markdown files with origin tags.
     Tracks last-seen sequence for incremental sync.
 
     Examples:
-      ctx connect sync
-  short: Sync entries from the hub
-connect.publish:
+      ctx connection sync
+  short: Sync entries from the ctx Hub
+connection.publish:
   long: |-
     Push local context entries to the ctx Hub.
 
     Examples:
-      ctx connect publish
-  short: Publish local entries to the hub
-connect.listen:
+      ctx connection publish
+  short: Publish local entries to the ctx Hub
+connection.listen:
   long: |-
-    Stream new entries from the hub in real-time.
+    Stream new entries from the ctx Hub in real-time.
     Auto-writes to .context/hub/ as entries arrive.
     Press Ctrl-C to stop.
 
     Examples:
-      ctx connect listen
-  short: Stream entries from the hub in real-time
-connect.status:
+      ctx connection listen
+  short: Stream entries from the ctx Hub in real-time
+connection.status:
   long: |-
-    Show hub connection state and entry statistics.
+    Show ctx Hub connection state and entry statistics.
 
     Examples:
-      ctx connect status
+      ctx connection status
   short: Show hub connection status
-connect.register:
+connection.register:
   long: |-
     Register this project with a ctx Hub.
-    Requires the hub address and admin token.
+    Requires the ctx Hub address and admin token.
 
     On success, stores an encrypted connection config in
     .context/.connect.enc for future RPCs.
 
     Examples:
-      ctx connect register localhost:9900 --token ctx_adm_...
+      ctx connection register localhost:9900 --token ctx_adm_...
   short: Register with a ctx Hub
 complete:
   long: |-
@@ -325,7 +325,7 @@ hub:
 
     See `ctx hub <subcommand> --help` for details. For client-side
     setup (register, subscribe, sync, listen, publish), see
-    `ctx connect --help`.
+    `ctx connection --help`.
   short: Operate a ctx Hub server or cluster
 hub.start:
   long: |-
@@ -333,7 +333,7 @@ hub.start:
 
     On first run, generates an admin token and prints it to
     stdout — save this token; it's required for
-    `ctx connect register` in client projects.
+    `ctx connection register` in client projects.
 
     With --daemon, forks to the background and writes a PID
     file to <data-dir>/hub.pid for later shutdown via
@@ -786,7 +786,7 @@ pad.show:
       ctx pad show 3 --out ./recovered.md
       ctx pad edit 1 --append "$(ctx pad show 3)"
   short: Output raw text of an entry by number
-pad.tags:
+pad.tag:
   long: |-
     List every tag found across scratchpad entries, sorted
     alphabetically, with the count of entries that use it.
@@ -1064,37 +1064,34 @@ sync:
   short: Reconcile context with codebase
 system:
   long: |-
-    System diagnostics and hook commands.
+    Hook plumbing namespace. Hosts Claude Code hook logic as native
+    Go binaries and a small set of session-lifecycle plumbing
+    commands used by skills and editor integrations.
 
-    Subcommands:
-      backup               Backup context and Claude data
-      resources            Show system resource usage (memory, swap, disk, load)
-      bootstrap            Print context location for AI agents
-      message              Manage hook message templates (list/show/edit/reset)
-
-      stats                Show session token usage stats
+    User-facing maintenance commands (backup, bootstrap, event,
+    message, prune, resource, stats) have been promoted to
+    top-level commands. Run `ctx --help` to see them.
 
     Plumbing subcommands (used by skills and automation):
       mark-journal         Update journal processing state
       mark-wrapped-up      Suppress checkpoint nudges after wrap-up
       pause                Pause context hooks for this session
       resume               Resume context hooks for this session
-      prune                Clean stale per-session state files
-      events               Query the local hook event log
+      session-event        Record a session start or end event
 
     Hook subcommands (Claude Code plugin - safe to run manually):
       context-load-gate           Context file read directive (PreToolUse)
       check-context-size          Context size checkpoint
-      check-ceremonies            Session ceremony adoption nudge
+      check-ceremony              Session ceremony adoption nudge
       check-persistence           Context persistence nudge
       check-journal               Journal maintenance reminder
-      check-resources             Resource pressure warning (DANGER only)
+      check-resource              Resource pressure warning (DANGER only)
       check-knowledge             Knowledge file growth nudge
-      check-reminders             Pending reminders relay
+      check-reminder              Pending reminders relay
       check-version               Version update nudge
       check-map-staleness         Architecture map staleness nudge
       block-non-path-ctx          Block non-PATH ctx invocations
-      block-dangerous-commands    Block dangerous command patterns (project-local)
+      block-dangerous-command     Block dangerous command patterns (project-local)
       check-backup-age            Backup staleness check (project-local)
       check-task-completion       Task completion nudge after edits
       post-commit                 Post-commit context capture nudge
@@ -1102,8 +1099,8 @@ system:
       specs-nudge                 Plan-to-specs directory nudge (PreToolUse)
       check-memory-drift          Memory drift nudge (MEMORY.md changed)
       heartbeat                   Session heartbeat webhook (no stdout)
-  short: System diagnostics and hook commands
-system.backup:
+  short: Hook plumbing (hidden) — promoted commands moved to top-level
+backup:
   long: |-
     Create timestamped tar.gz archives of project context and/or global
     Claude Code data. Optionally copies archives to an SMB share.
@@ -1117,7 +1114,7 @@ system.backup:
       CTX_BACKUP_SMB_URL    - SMB share URL (e.g. smb://host/share)
       CTX_BACKUP_SMB_SUBDIR - Subdirectory on share (default: ctx-sessions)
   short: Backup context and Claude data
-system.blockdangerouscommands:
+system.blockdangerouscommand:
   long: |-
     Regex safety net for commands that the deny-list cannot express.
     Catches mid-command sudo, mid-command git push, and binary installs
@@ -1137,7 +1134,7 @@ system.blocknonpathctx:
     Output: {"decision":"block","reason":"..."} or silent
     Silent when: command doesn't invoke ctx via a non-PATH route
   short: Block non-PATH ctx invocations
-system.bootstrap:
+bootstrap:
   short: Print context location for AI agents
 system.checkbackupage:
   long: |-
@@ -1153,7 +1150,7 @@ system.checkbackupage:
     Output: VERBATIM relay with warning box, silent otherwise
     Silent when: backup is fresh, or already checked today
   short: Backup staleness check hook
-system.checkceremonies:
+system.checkceremony:
   long: |-
     Scans the last 3 journal entries for /ctx-remember and /ctx-wrap-up
     usage. If either is missing, emits a VERBATIM relay nudge encouraging
@@ -1269,9 +1266,9 @@ system.checkskilldiscovery:
     Output: skill tip block (once), silent thereafter
     Silent when: guard file exists for this session
   short: Skill discovery nudge hook
-system.checkreminders:
+system.checkreminder:
   short: Surface pending reminders at session start
-system.checkresources:
+system.checkresource:
   long: |-
     Collects system resource metrics (memory, swap, disk, load) and outputs
     a VERBATIM relay warning when any resource hits DANGER severity.
@@ -1280,7 +1277,7 @@ system.checkresources:
       Memory DANGER: >= 90% used    Swap DANGER: >= 75% used
       Disk DANGER:   >= 95% full    Load DANGER: >= 1.5x CPUs
 
-    For full resource stats at any severity, use: ctx system resources
+    For full resource stats at any severity, use: ctx resource
 
     Hook event: UserPromptSubmit
     Output: VERBATIM relay (DANGER only), silent otherwise
@@ -1320,7 +1317,7 @@ system.contextloadgate:
     Output: JSON HookResponse (additionalContext) on first tool use, silent otherwise
     Silent when: marker exists for session_id, or context not initialized
   short: Auto-inject project context on first tool use
-system.events:
+event:
   long: |-
     Query the local event log (requires event_log: true in .ctxrc).
 
@@ -1374,7 +1371,7 @@ system.markwrappedup:
 
     This is a plumbing command - use /ctx-wrap-up instead.
   short: Suppress checkpoint nudges after wrap-up
-system.message:
+message:
   long: |-
     Manage hook message templates.
 
@@ -1388,13 +1385,13 @@ system.message:
       edit     Copy the embedded default to .context/ for editing
       reset    Delete a user override and revert to embedded default
   short: Manage hook message templates
-system.message.edit:
+message.edit:
   short: Copy the embedded default to .context/ for editing
-system.message.list:
+message.list:
   short: Show all hook messages with category and override status
-system.message.reset:
+message.reset:
   short: Delete a user override and revert to embedded default
-system.message.show:
+message.show:
   short: Print the effective message template for a hook/variant
 system.pause:
   long: |-
@@ -1413,7 +1410,7 @@ system.postcommit:
     Output: agent directive after git commits, silent otherwise
     Silent when: command is not a git commit, or is an amend
   short: Post-commit context capture nudge
-system.prune:
+prune:
   long: |-
     Remove per-session state files from .context/state/ that are
     older than the specified age. Session state files are identified by
@@ -1423,9 +1420,9 @@ system.prune:
     are always preserved.
 
     Examples:
-      ctx system prune              # Prune files older than 7 days
-      ctx system prune --days 3     # Prune files older than 3 days
-      ctx system prune --dry-run    # Show what would be pruned
+      ctx prune              # Prune files older than 7 days
+      ctx prune --days 3     # Prune files older than 3 days
+      ctx prune --dry-run    # Show what would be pruned
   short: Clean stale per-session state files
 system.qareminder:
   long: |-
@@ -1437,7 +1434,7 @@ system.qareminder:
     Output: agent directive (when command contains "git" and .context/ is initialized)
     Silent when: .context/ not initialized or command does not contain "git"
   short: QA reminder hook
-system.resources:
+resource:
   short: Show system resource usage (memory, swap, disk, load)
 system.resume:
   long: |-
@@ -1464,7 +1461,7 @@ system.specsnudge:
     Output: agent directive (always, when .context/ is initialized)
     Silent when: .context/ not initialized
   short: Plan-to-specs directory nudge
-system.stats:
+stats:
   long: |-
     Display per-session token usage statistics from stats JSONL files.
 

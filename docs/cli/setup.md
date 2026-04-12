@@ -9,6 +9,8 @@ title: Setup
 icon: lucide/toy-brick
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx setup`
 
 Generate AI tool integration configuration.

@@ -257,7 +257,7 @@ func ClaudePluginMissing(cmd *cobra.Command) {
 // can quickly see which clone feeds their plugin.
 //
 // Callers should fall back to [ClaudeReadyMinimal] if
-// [claudecheck.Details] couldn't parse plugin metadata.
+// [claude_check.Details] couldn't parse plugin metadata.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -279,7 +279,7 @@ func ClaudeReady(
 }
 
 // ClaudeReadyMinimal prints the fallback one-line
-// confirmation used when [claudecheck.Details] couldn't
+// confirmation used when [claude_check.Details] couldn't
 // parse plugin metadata from the Claude Code plugin
 // registry files. Never fails.
 //

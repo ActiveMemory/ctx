@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -970,6 +970,8 @@
   
     
     
+      
+        
       
         
       
@@ -2064,6 +2066,7 @@
   
 
 
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h1 id="ctx-hub-getting-started"><code>ctx</code> Hub: Getting Started<a class="headerlink" href="#ctx-hub-getting-started" title="Permanent link">&para;</a></h1>
 <p>Stand up a <strong>single-node</strong> <code>ctx</code> Hub on localhost, register
 two projects, publish a decision from one, and see it appear in the
@@ -2080,7 +2083,7 @@ This recipe assumes you already know you want the feature.</p>
 <p>By the end, you will have:</p>
 <ol>
 <li>A local hub process running on port <code>9900</code>.</li>
-<li>Two project directories both registered with the hub.</li>
+<li>Two project directories both registered with the ctx Hub.</li>
 <li>A decision published from project <code>alpha</code> that appears
    automatically in project <code>beta</code>'s <code>.context/hub/</code> and in
    <code>ctx agent --include-hub</code> output.</li>
@@ -2120,39 +2123,39 @@ stdout. Copy it — you'll need it for each project registration:</p>
 can recover it later. Treat it like a password.</p>
 <h2 id="step-2-register-the-first-project">Step 2 — Register the first project<a class="headerlink" href="#step-2-register-the-first-project" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/alpha
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>connect<span class="w"> </span>register<span class="w"> </span>localhost:9900<span class="w"> </span>--token<span class="w"> </span>ctx_adm_7f3a1c2d...
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>localhost:9900<span class="w"> </span>--token<span class="w"> </span>ctx_adm_7f3a1c2d...
 </span></code></pre></div>
 <p>This stores an <strong>encrypted</strong> connection config in
 <code>.context/.connect.enc</code>. The admin token is exchanged for a
 per-project client token; the admin token itself is never persisted
 in the project.</p>
 <h2 id="step-3-choose-what-to-receive">Step 3 — Choose what to receive<a class="headerlink" href="#step-3-choose-what-to-receive" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>connect<span class="w"> </span>subscribe<span class="w"> </span>decision<span class="w"> </span>learning<span class="w"> </span>convention
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>subscribe<span class="w"> </span>decision<span class="w"> </span>learning<span class="w"> </span>convention
 </span></code></pre></div>
 <p>Only the entry types you subscribe to will be delivered by <code>sync</code>
 and <code>listen</code>.</p>
 <h2 id="step-4-publish-a-decision">Step 4 — Publish a decision<a class="headerlink" href="#step-4-publish-a-decision" title="Permanent link">&para;</a></h2>
-<p>Either use <code>ctx add --share</code> to write locally <em>and</em> push to the hub:</p>
+<p>Either use <code>ctx add --share</code> to write locally <em>and</em> push to the ctx Hub:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use UTC timestamps everywhere&quot;</span><span class="w"> </span>--share<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;We had timezone drift between the API and journal&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;Single source of truth avoids conversion bugs&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">&quot;The UI does conversion at render time&quot;</span>
 </span></code></pre></div>
 <p>Or publish an existing entry directly:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>connect<span class="w"> </span>publish<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use UTC timestamps everywhere&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>publish<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use UTC timestamps everywhere&quot;</span>
 </span></code></pre></div>
 <h2 id="step-5-register-a-second-project-and-sync">Step 5 — Register a second project and sync<a class="headerlink" href="#step-5-register-a-second-project-and-sync" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/beta
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>connect<span class="w"> </span>register<span class="w"> </span>localhost:9900<span class="w"> </span>--token<span class="w"> </span>ctx_adm_7f3a1c2d...
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>connect<span class="w"> </span>subscribe<span class="w"> </span>decision<span class="w"> </span>learning<span class="w"> </span>convention
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ctx<span class="w"> </span>connect<span class="w"> </span>sync
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>localhost:9900<span class="w"> </span>--token<span class="w"> </span>ctx_adm_7f3a1c2d...
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>connection<span class="w"> </span>subscribe<span class="w"> </span>decision<span class="w"> </span>learning<span class="w"> </span>convention
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ctx<span class="w"> </span>connection<span class="w"> </span>sync
 </span></code></pre></div>
 <p>The decision from <code>alpha</code> now appears in
 <code>~/projects/beta/.context/hub/decisions.md</code> with an origin tag
 and timestamp.</p>
 <h2 id="step-6-watch-entries-arrive-live">Step 6 — Watch entries arrive live<a class="headerlink" href="#step-6-watch-entries-arrive-live" title="Permanent link">&para;</a></h2>
 <p>Instead of re-running <code>sync</code>, stream new entries as they land:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>connect<span class="w"> </span>listen
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>listen
 </span></code></pre></div>
 <p>Leave this running in a terminal; every <code>--share</code> publish from any
 registered project will appear in <code>.context/hub/</code> immediately.</p>
@@ -2166,7 +2169,7 @@ assembly, scored by recency and type relevance.</p>
 <h2 id="auto-sync-on-session-start">Auto-sync on session start<a class="headerlink" href="#auto-sync-on-session-start" title="Permanent link">&para;</a></h2>
 <p>After <code>register</code>, the <code>check-hub-sync</code> hook pulls new entries at the
 start of each session (daily throttled). Most users never need to
-call <code>ctx connect sync</code> manually.</p>
+call <code>ctx connection sync</code> manually.</p>
 <h2 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong><a href="../hub-multi-machine/">Multi-machine hub</a></strong>: run the hub
@@ -2177,7 +2180,7 @@ call <code>ctx connect sync</code> manually.</p>
   backup, log rotation, JSONL store layout.</li>
 <li><strong><a href="../../security/hub/">Hub security model</a></strong>: token
   lifecycle, encryption at rest, threat model.</li>
-<li><strong><a href="../../cli/connect/"><code>ctx connect</code> reference</a></strong> and
+<li><strong><a href="../../cli/connection/"><code>ctx connect</code> reference</a></strong> and
   <strong><a href="../../cli/serve/"><code>ctx hub start</code> reference</a></strong>.</li>
 </ul>
 
@@ -2328,7 +2331,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

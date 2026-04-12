@@ -6,8 +6,8 @@
 
 package flag
 
-// DescKeys for the connect command group flags.
+// DescKeys for the connection command group flags.
 const (
-	// DescKeyConnectToken is the text key for connect register --token.
-	DescKeyConnectToken = "connect.admin-auth"
+	// DescKeyConnectionToken is the text key for connection register --token.
+	DescKeyConnectionToken = "connection.token"
 )

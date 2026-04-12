@@ -89,5 +89,5 @@ everyone holding a client token is friendly. Don't stand up
   and [Hub Failure Modes](../operations/hub-failure-modes.md).
 - **Security posture:** [Hub Security Model](../security/hub.md).
 - **Command reference:** [`ctx serve`](../cli/serve.md),
-  [`ctx connect`](../cli/connect.md),
+  [`ctx connect`](../cli/connection.md),
   [`ctx hub`](../cli/hub.md).

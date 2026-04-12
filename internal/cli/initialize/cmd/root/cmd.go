@@ -60,20 +60,27 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	flagbind.BoolFlagP(c, &force,
-		cFlag.Force, cFlag.ShortForce,
-		flag.DescKeyInitializeForce)
-	flagbind.BoolFlagP(c, &minimal,
-		cFlag.Minimal, cFlag.ShortMinimal,
-		flag.DescKeyInitializeMinimal)
-	flagbind.BoolFlag(c, &merge,
-		cFlag.Merge, flag.DescKeyInitializeMerge)
-	flagbind.BoolFlag(c, &noPluginEnable,
-		cFlag.NoPluginEnable,
-		flag.DescKeyInitializeNoPluginEnable)
-	flagbind.BoolFlag(c, &noSteeringInit,
-		cFlag.NoSteeringInit,
-		flag.DescKeyInitializeNoSteeringInit)
+	flagbind.BindBoolFlagsP(c,
+		[]*bool{&force, &minimal},
+		[]string{cFlag.Force, cFlag.Minimal},
+		[]string{cFlag.ShortForce, cFlag.ShortMinimal},
+		[]string{
+			flag.DescKeyInitializeForce,
+			flag.DescKeyInitializeMinimal,
+		},
+	)
+	flagbind.BindBoolFlags(c,
+		[]*bool{&merge, &noPluginEnable, &noSteeringInit},
+		[]string{
+			cFlag.Merge, cFlag.NoPluginEnable,
+			cFlag.NoSteeringInit,
+		},
+		[]string{
+			flag.DescKeyInitializeMerge,
+			flag.DescKeyInitializeNoPluginEnable,
+			flag.DescKeyInitializeNoSteeringInit,
+		},
+	)
 	flagbind.StringFlag(c, &caller, cFlag.Caller, flag.DescKeyInitializeCaller)
 
 	return c

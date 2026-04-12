@@ -110,7 +110,7 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 
 	// ctx Hub entries
 	if len(pkt.Hub) > 0 {
-		sb.WriteString("## ctx Hub" + nl)
+		sb.WriteString(desc.Text(text.DescKeyWriteAgentSectionHub) + nl)
 		for _, s := range pkt.Hub {
 			sb.WriteString(s + nl + nl)
 		}

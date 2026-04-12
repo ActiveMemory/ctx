@@ -56,16 +56,17 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	flagbind.StringFlagP(
-		c, &event, cFlag.Event,
-		cFlag.ShortEvent, flag.DescKeyNotifyEvent,
+	flagbind.BindStringFlagsP(c,
+		[]*string{&event, &sessionID},
+		[]string{cFlag.Event, cFlag.SessionID},
+		[]string{cFlag.ShortEvent, cFlag.ShortSessionID},
+		[]string{flag.DescKeyNotifyEvent, flag.DescKeyNotifySessionId},
 	)
-	flagbind.StringFlagP(
-		c, &sessionID, cFlag.SessionID,
-		cFlag.ShortSessionID, flag.DescKeyNotifySessionId,
+	flagbind.BindStringFlags(c,
+		[]*string{&hook, &variant},
+		[]string{cFlag.Hook, cFlag.Variant},
+		[]string{flag.DescKeyNotifyHook, flag.DescKeyNotifyVariant},
 	)
-	flagbind.StringFlag(c, &hook, cFlag.Hook, flag.DescKeyNotifyHook)
-	flagbind.StringFlag(c, &variant, cFlag.Variant, flag.DescKeyNotifyVariant)
 
 	c.AddCommand(setup.Cmd())
 	c.AddCommand(test.Cmd())

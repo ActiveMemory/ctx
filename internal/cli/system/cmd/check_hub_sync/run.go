@@ -15,12 +15,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/hubsync"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
-
-// throttleID is the daily throttle marker filename.
-const throttleID = "hub-sync"
 
 // Run executes the check-hub-sync hook logic.
 //
@@ -49,7 +47,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	markerPath := filepath.Join(
-		state.Dir(), throttleID,
+		state.Dir(), cfgHub.ThrottleHubSync,
 	)
 	if check.DailyThrottled(markerPath) {
 		return nil

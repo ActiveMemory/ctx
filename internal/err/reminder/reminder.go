@@ -40,8 +40,6 @@ func Parse(cause error) error {
 	)
 }
 
-// InvalidID returns an error for an unparseable ID string.
-//
 // NotFound returns an error when no reminder matches the given ID.
 //
 // Parameters:

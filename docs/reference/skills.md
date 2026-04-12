@@ -386,12 +386,12 @@ positive observations.
 ### `/ctx-doctor`
 
 Troubleshoot ctx behavior. Runs structural health checks via `ctx doctor`,
-analyzes event log patterns via `ctx system events`, and presents findings
+analyzes event log patterns via `ctx event`, and presents findings
 with suggested actions. The CLI provides the structural baseline; the agent
 adds semantic analysis of event patterns and correlations.
 
-**Wraps**: `ctx doctor --json`, `ctx system events --json --last 100`,
-`ctx remind list`, `ctx system message list`, reads `.ctxrc`
+**Wraps**: `ctx doctor --json`, `ctx event --json --last 100`,
+`ctx remind list`, `ctx message list`, reads `.ctxrc`
 
 **Trigger phrases**: "diagnose", "troubleshoot", "doctor", "health check",
 "why didn't my hook fire?", "hooks seem broken", "something seems off"
@@ -402,7 +402,7 @@ works but with reduced capability. It runs structural checks and notes:
 
 **See also**: [Troubleshooting](../recipes/troubleshooting.md),
 [`ctx doctor` CLI](../cli/doctor.md#ctx-doctor),
-[`ctx system events` CLI](../cli/system.md#ctx-system-events)
+[`ctx event` CLI](../cli/system.md#ctx-system-events)
 
 ---
 

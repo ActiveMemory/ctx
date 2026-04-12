@@ -9,6 +9,8 @@ title: Notify
 icon: lucide/bell
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx notify`
 
 Send fire-and-forget webhook notifications from skills, loops,
@@ -45,6 +47,8 @@ Configure the webhook URL interactively. The URL is encrypted
 with AES-256-GCM using the encryption key and stored in
 `.context/.notify.enc`.
 
+**Examples**:
+
 ```bash
 ctx notify setup
 ```
@@ -55,6 +59,8 @@ lives outside the project and is never committed.
 ### `ctx notify test`
 
 Send a test notification and report the HTTP response status.
+
+**Examples**:
 
 ```bash
 ctx notify test

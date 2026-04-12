@@ -77,6 +77,7 @@ nav = [
     ]},
     { "Maintenance" = [
       "recipes/context-health.md",
+      "recipes/configuration-profiles.md",
       "recipes/troubleshooting.md",
       "recipes/claude-code-permissions.md",
       "recipes/permission-snapshots.md",
@@ -127,7 +128,7 @@ nav = [
       "cli/mcp.md",
       "cli/notify.md",
       "cli/loop.md",
-      "cli/connect.md",
+      "cli/connection.md",
       "cli/hub.md",
       "cli/serve.md",
       "cli/site.md",
@@ -136,9 +137,16 @@ nav = [
       "cli/doctor.md",
       "cli/dep.md",
       "cli/trace.md",
+      "cli/bootstrap.md",
+      "cli/event.md",
+      "cli/resource.md",
+      "cli/stats.md",
     ]},
     { "Runtime" = [
       "cli/config.md",
+      "cli/backup.md",
+      "cli/prune.md",
+      "cli/message.md",
       "cli/system.md",
     ]},
     { "Shell" = [

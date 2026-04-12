@@ -9,6 +9,8 @@ title: Change
 icon: lucide/diff
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx change`
 
 Show what changed in context files and code since your last

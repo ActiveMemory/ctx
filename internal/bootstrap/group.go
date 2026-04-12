@@ -9,14 +9,17 @@ package bootstrap
 import (
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
+	"github.com/ActiveMemory/ctx/internal/cli/backup"
+	cliBootstrap "github.com/ActiveMemory/ctx/internal/cli/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/cli/change"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
-	"github.com/ActiveMemory/ctx/internal/cli/connect"
+	"github.com/ActiveMemory/ctx/internal/cli/connection"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/dep"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
+	"github.com/ActiveMemory/ctx/internal/cli/event"
 	ctxFmt "github.com/ActiveMemory/ctx/internal/cli/fmt"
 	"github.com/ActiveMemory/ctx/internal/cli/guide"
 	cliHub "github.com/ActiveMemory/ctx/internal/cli/hub"
@@ -27,17 +30,21 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
 	"github.com/ActiveMemory/ctx/internal/cli/mcp"
 	"github.com/ActiveMemory/ctx/internal/cli/memory"
+	"github.com/ActiveMemory/ctx/internal/cli/message"
 	"github.com/ActiveMemory/ctx/internal/cli/notify"
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/pause"
 	"github.com/ActiveMemory/ctx/internal/cli/permission"
+	"github.com/ActiveMemory/ctx/internal/cli/prune"
 	"github.com/ActiveMemory/ctx/internal/cli/reindex"
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
+	"github.com/ActiveMemory/ctx/internal/cli/resource"
 	"github.com/ActiveMemory/ctx/internal/cli/resume"
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
 	"github.com/ActiveMemory/ctx/internal/cli/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/site"
 	"github.com/ActiveMemory/ctx/internal/cli/skill"
+	"github.com/ActiveMemory/ctx/internal/cli/stats"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
 	"github.com/ActiveMemory/ctx/internal/cli/steering"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
@@ -129,6 +136,9 @@ func runtimeCmds() []registration {
 		{permission.Cmd, embedCmd.GroupRuntime},
 		{pause.Cmd, embedCmd.GroupRuntime},
 		{resume.Cmd, embedCmd.GroupRuntime},
+		{backup.Cmd, embedCmd.GroupRuntime},
+		{prune.Cmd, embedCmd.GroupRuntime},
+		{message.Cmd, embedCmd.GroupRuntime},
 	}
 }
 
@@ -148,7 +158,7 @@ func integrations() []registration {
 		{trigger.Cmd, embedCmd.GroupIntegration},
 		{serve.Cmd, embedCmd.GroupIntegration},
 		{cliHub.Cmd, embedCmd.GroupIntegration},
-		{connect.Cmd, embedCmd.GroupIntegration},
+		{connection.Cmd, embedCmd.GroupIntegration},
 		{mcp.Cmd, embedCmd.GroupIntegration},
 		{watch.Cmd, embedCmd.GroupIntegration},
 		{notify.Cmd, embedCmd.GroupIntegration},
@@ -167,6 +177,10 @@ func diagnostics() []registration {
 		{dep.Cmd, embedCmd.GroupDiagnostics},
 		{why.Cmd, embedCmd.GroupDiagnostics},
 		{trace.Cmd, embedCmd.GroupDiagnostics},
+		{cliBootstrap.Cmd, embedCmd.GroupDiagnostics},
+		{event.Cmd, embedCmd.GroupDiagnostics},
+		{resource.Cmd, embedCmd.GroupDiagnostics},
+		{stats.Cmd, embedCmd.GroupDiagnostics},
 	}
 }
 

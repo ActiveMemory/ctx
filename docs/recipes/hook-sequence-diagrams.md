@@ -8,6 +8,8 @@
 title: Hook Sequence Diagrams
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## Hook Lifecycle
 
 This page documents the **ctx system hooks** — the built-in

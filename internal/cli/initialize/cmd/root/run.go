@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
 	coreClaude "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/claudecheck"
+	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude_check"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	coreMerge "github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
 	corePad "github.com/ActiveMemory/ctx/internal/cli/initialize/core/pad"
@@ -243,7 +243,7 @@ func Run(
 	// Honors --no-plugin-enable: if plugin detection was
 	// suppressed, skip the hint too.
 	if !noPluginEnable {
-		claudecheck.InitHint(cmd)
+		coreCC.InitHint(cmd)
 	}
 
 	return nil

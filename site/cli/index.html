@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -1069,6 +1069,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1122,6 +1130,12 @@
   
     
     
+      
+        
+      
+        
+      
+        
       
         
       
@@ -1486,10 +1500,98 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Getting Started
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Artifacts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sessions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integrations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shell
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hidden" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hidden
       
     </span>
   </a>
@@ -1599,7 +1701,7 @@
 
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
 <h2 id="ctx-cli"><code>ctx</code> CLI<a class="headerlink" href="#ctx-cli" title="Permanent link">&para;</a></h2>
-<p>This is a complete reference for all <code>ctx</code> commands.</p>
+<p>Complete reference for all <code>ctx</code> commands, grouped by function.</p>
 <h2 id="global-options">Global Options<a class="headerlink" href="#global-options" title="Permanent link">&para;</a></h2>
 <p>All commands support these flags:</p>
 <table>
@@ -1637,11 +1739,9 @@ created by <code>ctx init</code>. Running a command without one produces:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx: not initialized - run &quot;ctx init&quot; first
 </span></code></pre></div>
 <p>Commands that work before initialization: <code>ctx init</code>, <code>ctx setup</code>,
-<code>ctx doctor</code>, and grouping commands that only show help (e.g. <code>ctx</code>
-with no subcommand, <code>ctx system</code>). Hidden hook commands have their
-own guards and no-op gracefully.</p>
+<code>ctx doctor</code>, and grouping commands that only show help.</p>
 <!-- drift-check: ctx --help | grep -c '  [a-z]' -->
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
+<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1659,24 +1759,43 @@ own guards and no-op gracefully.</p>
 <td>Show context summary (files, tokens, drift)</td>
 </tr>
 <tr>
-<td><a href="init-status/#ctx-agent"><code>ctx agent</code></a></td>
-<td>Print token-budgeted context packet for AI consumption</td>
+<td><a href="guide/#ctx-guide"><code>ctx guide</code></a></td>
+<td>Quick-reference cheat sheet</td>
+</tr>
+</tbody>
+</table>
+<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="context/#ctx-add"><code>ctx add</code></a></td>
+<td>Add a task, decision, learning, or convention</td>
 </tr>
 <tr>
 <td><a href="init-status/#ctx-load"><code>ctx load</code></a></td>
 <td>Output assembled context in read order</td>
 </tr>
 <tr>
-<td><a href="context/#ctx-add"><code>ctx add</code></a></td>
-<td>Add a task, decision, learning, or convention</td>
+<td><a href="init-status/#ctx-agent"><code>ctx agent</code></a></td>
+<td>Print token-budgeted context packet for AI consumption</td>
 </tr>
 <tr>
-<td><a href="context/#ctx-drift"><code>ctx drift</code></a></td>
-<td>Detect stale paths, secrets, missing files</td>
+<td><a href="skill/#ctx-skill"><code>ctx skill</code></a></td>
+<td>Manage reusable instruction bundles</td>
 </tr>
 <tr>
 <td><a href="context/#ctx-sync"><code>ctx sync</code></a></td>
 <td>Reconcile context with codebase state</td>
+</tr>
+<tr>
+<td><a href="context/#ctx-drift"><code>ctx drift</code></a></td>
+<td>Detect stale paths, secrets, missing files</td>
 </tr>
 <tr>
 <td><a href="context/#ctx-compact"><code>ctx compact</code></a></td>
@@ -1686,18 +1805,17 @@ own guards and no-op gracefully.</p>
 <td><a href="context/#ctx-fmt"><code>ctx fmt</code></a></td>
 <td>Format context files to 80-char line width</td>
 </tr>
+</tbody>
+</table>
+<h2 id="artifacts">Artifacts<a class="headerlink" href="#artifacts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
 <tr>
-<td><a href="context/#ctx-task"><code>ctx task</code></a></td>
-<td>Task completion, archival, and snapshots</td>
+<th>Command</th>
+<th>Description</th>
 </tr>
-<tr>
-<td><a href="context/#ctx-permission"><code>ctx permission</code></a></td>
-<td>Permission snapshots (golden image)</td>
-</tr>
-<tr>
-<td><a href="context/#ctx-reindex"><code>ctx reindex</code></a></td>
-<td>Regenerate indices for <code>DECISIONS.md</code> and <code>LEARNINGS.md</code></td>
-</tr>
+</thead>
+<tbody>
 <tr>
 <td><a href="context/#ctx-decision"><code>ctx decision</code></a></td>
 <td>Manage <code>DECISIONS.md</code> (reindex)</td>
@@ -1707,84 +1825,54 @@ own guards and no-op gracefully.</p>
 <td>Manage <code>LEARNINGS.md</code> (reindex)</td>
 </tr>
 <tr>
+<td><a href="context/#ctx-task"><code>ctx task</code></a></td>
+<td>Task completion, archival, and snapshots</td>
+</tr>
+<tr>
+<td><a href="context/#ctx-reindex"><code>ctx reindex</code></a></td>
+<td>Regenerate indices for <code>DECISIONS.md</code> and <code>LEARNINGS.md</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="sessions">Sessions<a class="headerlink" href="#sessions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td><a href="journal/#ctx-journal"><code>ctx journal</code></a></td>
 <td>Browse, import, enrich, and lock session history</td>
-</tr>
-<tr>
-<td><a href="serve/#ctx-serve"><code>ctx serve</code></a></td>
-<td>Serve a static site locally via zensical</td>
-</tr>
-<tr>
-<td><a href="watch/#ctx-watch"><code>ctx watch</code></a></td>
-<td>Auto-apply context updates from AI output</td>
-</tr>
-<tr>
-<td><a href="setup/#ctx-setup"><code>ctx setup</code></a></td>
-<td>Generate AI tool integration configs</td>
-</tr>
-<tr>
-<td><a href="loop/#ctx-loop"><code>ctx loop</code></a></td>
-<td>Generate autonomous loop script</td>
 </tr>
 <tr>
 <td><a href="memory/#ctx-memory"><code>ctx memory</code></a></td>
 <td>Bridge Claude Code auto memory into <code>.context/</code></td>
 </tr>
 <tr>
-<td><a href="notify/#ctx-notify"><code>ctx notify</code></a></td>
-<td>Send webhook notifications</td>
-</tr>
-<tr>
-<td><a href="change/#ctx-change"><code>ctx change</code></a></td>
-<td>Show what changed since last session</td>
-</tr>
-<tr>
-<td><a href="dep/#ctx-dep"><code>ctx dep</code></a></td>
-<td>Show package dependency graph</td>
+<td><a href="remind/#ctx-remind"><code>ctx remind</code></a></td>
+<td>Session-scoped reminders that surface at session start</td>
 </tr>
 <tr>
 <td><a href="pad/#ctx-pad"><code>ctx pad</code></a></td>
 <td>Encrypted scratchpad for sensitive one-liners</td>
 </tr>
+</tbody>
+</table>
+<h2 id="integrations">Integrations<a class="headerlink" href="#integrations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
 <tr>
-<td><a href="remind/#ctx-remind"><code>ctx remind</code></a></td>
-<td>Session-scoped reminders that surface at session start</td>
+<th>Command</th>
+<th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
-<td><a href="pause/#ctx-pause"><code>ctx pause</code></a></td>
-<td>Pause context hooks for this session</td>
-</tr>
-<tr>
-<td><a href="resume/#ctx-resume"><code>ctx resume</code></a></td>
-<td>Resume context hooks after a pause</td>
-</tr>
-<tr>
-<td><a href="completion/#ctx-completion"><code>ctx completion</code></a></td>
-<td>Generate shell autocompletion scripts</td>
-</tr>
-<tr>
-<td><a href="guide/#ctx-guide"><code>ctx guide</code></a></td>
-<td>Quick-reference cheat sheet</td>
-</tr>
-<tr>
-<td><a href="why/#ctx-why"><code>ctx why</code></a></td>
-<td>Read the philosophy behind <code>ctx</code></td>
-</tr>
-<tr>
-<td><a href="site/#ctx-site"><code>ctx site</code></a></td>
-<td>Site management (feed generation)</td>
-</tr>
-<tr>
-<td><a href="trace/#ctx-trace"><code>ctx trace</code></a></td>
-<td>Show context behind git commits</td>
-</tr>
-<tr>
-<td><a href="doctor/#ctx-doctor"><code>ctx doctor</code></a></td>
-<td>Structural health check (hooks, drift, config)</td>
-</tr>
-<tr>
-<td><a href="mcp/#ctx-mcp"><code>ctx mcp</code></a></td>
-<td>MCP server for AI tool integration (stdin/stdout)</td>
+<td><a href="setup/#ctx-setup"><code>ctx setup</code></a></td>
+<td>Generate AI tool integration configs</td>
 </tr>
 <tr>
 <td><a href="steering/#ctx-steering"><code>ctx steering</code></a></td>
@@ -1795,24 +1883,152 @@ own guards and no-op gracefully.</p>
 <td>Manage lifecycle triggers (scripts for automation)</td>
 </tr>
 <tr>
-<td><a href="skill/#ctx-skill"><code>ctx skill</code></a></td>
-<td>Manage reusable instruction bundles</td>
+<td><a href="serve/#ctx-serve"><code>ctx serve</code></a></td>
+<td>Serve a static site locally via zensical</td>
 </tr>
+<tr>
+<td><a href="hub/#ctx-hub"><code>ctx hub</code></a></td>
+<td>Operate a ctx Hub server or cluster</td>
+</tr>
+<tr>
+<td><a href="connection/#ctx-connection"><code>ctx connection</code></a></td>
+<td>Connect to a ctx Hub</td>
+</tr>
+<tr>
+<td><a href="mcp/#ctx-mcp"><code>ctx mcp</code></a></td>
+<td>MCP server for AI tool integration (stdin/stdout)</td>
+</tr>
+<tr>
+<td><a href="watch/#ctx-watch"><code>ctx watch</code></a></td>
+<td>Auto-apply context updates from AI output</td>
+</tr>
+<tr>
+<td><a href="notify/#ctx-notify"><code>ctx notify</code></a></td>
+<td>Send webhook notifications</td>
+</tr>
+<tr>
+<td><a href="loop/#ctx-loop"><code>ctx loop</code></a></td>
+<td>Generate autonomous loop script</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diagnostics">Diagnostics<a class="headerlink" href="#diagnostics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="doctor/#ctx-doctor"><code>ctx doctor</code></a></td>
+<td>Structural health check (hooks, drift, config)</td>
+</tr>
+<tr>
+<td><a href="change/#ctx-change"><code>ctx change</code></a></td>
+<td>Show what changed since last session</td>
+</tr>
+<tr>
+<td><a href="dep/#ctx-dep"><code>ctx dep</code></a></td>
+<td>Show package dependency graph</td>
+</tr>
+<tr>
+<td><a href="why/#ctx-why"><code>ctx why</code></a></td>
+<td>Read the philosophy behind <code>ctx</code></td>
+</tr>
+<tr>
+<td><a href="trace/#ctx-trace"><code>ctx trace</code></a></td>
+<td>Show context behind git commits</td>
+</tr>
+<tr>
+<td><a href="bootstrap/#ctx-bootstrap"><code>ctx bootstrap</code></a></td>
+<td>Print context location for AI agents</td>
+</tr>
+<tr>
+<td><a href="event/#ctx-event"><code>ctx event</code></a></td>
+<td>Query the local hook event log</td>
+</tr>
+<tr>
+<td><a href="resource/#ctx-resource"><code>ctx resource</code></a></td>
+<td>Show system resource usage (memory, swap, disk, load)</td>
+</tr>
+<tr>
+<td><a href="stats/#ctx-stats"><code>ctx stats</code></a></td>
+<td>Show session token usage stats</td>
+</tr>
+</tbody>
+</table>
+<h2 id="runtime">Runtime<a class="headerlink" href="#runtime" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><a href="config/#ctx-config"><code>ctx config</code></a></td>
 <td>Manage runtime configuration profiles</td>
 </tr>
 <tr>
-<td><a href="connect/#ctx-connect"><code>ctx connect</code></a></td>
-<td>Connect to a <code>ctx</code> Hub</td>
+<td><a href="context/#ctx-permission"><code>ctx permission</code></a></td>
+<td>Permission snapshots (golden image)</td>
 </tr>
 <tr>
-<td><a href="hub/#ctx-hub"><code>ctx hub</code></a></td>
-<td>Operate a <code>ctx</code> Hub server or cluster</td>
+<td><a href="pause/#ctx-pause"><code>ctx pause</code></a></td>
+<td>Pause context hooks for this session</td>
+</tr>
+<tr>
+<td><a href="resume/#ctx-resume"><code>ctx resume</code></a></td>
+<td>Resume context hooks after a pause</td>
+</tr>
+<tr>
+<td><a href="backup/#ctx-backup"><code>ctx backup</code></a></td>
+<td>Back up context and Claude data to tar.gz / SMB</td>
+</tr>
+<tr>
+<td><a href="prune/#ctx-prune"><code>ctx prune</code></a></td>
+<td>Clean stale per-session state files</td>
+</tr>
+<tr>
+<td><a href="message/#ctx-message"><code>ctx message</code></a></td>
+<td>Manage hook message templates</td>
+</tr>
+</tbody>
+</table>
+<h2 id="shell">Shell<a class="headerlink" href="#shell" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="completion/#ctx-completion"><code>ctx completion</code></a></td>
+<td>Generate shell autocompletion scripts</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hidden">Hidden<a class="headerlink" href="#hidden" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="site/#ctx-site"><code>ctx site</code></a></td>
+<td>Site management (feed generation)</td>
 </tr>
 <tr>
 <td><a href="system/#ctx-system"><code>ctx system</code></a></td>
-<td>System diagnostics and internal hook commands</td>
+<td>Hook plumbing (not user-facing)</td>
 </tr>
 </tbody>
 </table>
@@ -2244,7 +2460,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

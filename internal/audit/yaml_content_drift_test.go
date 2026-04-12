@@ -3,6 +3,18 @@
 // `.,'\\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
+//
+// ================================================================
+// STOP — Read internal/audit/README.md before editing this file.
+//
+// These tests enforce project conventions. The codebase is clean:
+// all checks pass with zero violations, zero exceptions.
+//
+// If a test fails after your change, fix the code under test.
+// Do NOT add allowlist entries, bump grandfathered counters, or
+// weaken checks. Exceptions require a dedicated PR with
+// justification for every entry. See README.md for the full policy.
+// ================================================================
 
 package audit
 

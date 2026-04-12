@@ -9,6 +9,8 @@ title: Skill
 icon: lucide/sparkles
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx skill`
 
 Manage reusable instruction bundles that can be installed into
@@ -35,7 +37,7 @@ ctx skill install <source>
 
 - `source`: Path to a directory containing `SKILL.md`
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx skill install ./my-skills/code-review
@@ -46,6 +48,8 @@ ctx skill install ./my-skills/code-review
 
 List all installed skills.
 
+**Examples**:
+
 ```bash
 ctx skill list
 ```
@@ -54,12 +58,14 @@ ctx skill list
 
 Remove an installed skill.
 
-```bash
-ctx skill remove <name>
-```
-
 **Arguments**:
 
 - `name`: Skill name to remove
+
+**Examples**:
+
+```bash
+ctx skill remove code-review
+```
 
 **See also**: [Building Project Skills recipe](../recipes/building-skills.md).

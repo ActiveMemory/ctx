@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -970,6 +970,8 @@
   
     
     
+      
+        
       
         
       
@@ -1998,6 +2000,7 @@
   
 
 
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h1 id="ctx-hub-high-availability-cluster"><code>ctx</code> Hub: High-availability cluster<a class="headerlink" href="#ctx-hub-high-availability-cluster" title="Permanent link">&para;</a></h1>
 <p>Run <strong>multiple</strong> hub nodes with Raft-based leader election for
 redundancy. Any follower can take over if the leader dies.</p>
@@ -2070,7 +2073,7 @@ it doubles failure probability without providing quorum.</p>
 </span></code></pre></div>
 <h2 id="step-4-register-clients-with-failover-peers">Step 4 — Register clients with failover peers<a class="headerlink" href="#step-4-register-clients-with-failover-peers" title="Permanent link">&para;</a></h2>
 <p>When registering a client, give it the <strong>full peer list</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>connect<span class="w"> </span>register<span class="w"> </span>hub-a.lan:9900<span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>hub-a.lan:9900<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--token<span class="w"> </span>ctx_adm_...<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--peers<span class="w"> </span>hub-b.lan:9900,hub-c.lan:9900
 </span></code></pre></div>
@@ -2280,7 +2283,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

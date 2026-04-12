@@ -9,6 +9,8 @@ title: Personal cross-project brain
 icon: lucide/brain
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # Personal cross-project brain
 
 This recipe shows **how one developer uses a `ctx` Hub
@@ -31,7 +33,7 @@ Every day, the same three verbs matter:
    convention and capture it with `ctx add --share`.
 2. **Subscribe** — every project you care about is
    subscribed to the types you want delivered (set once
-   with `ctx connect subscribe`).
+   with `ctx connection subscribe`).
 3. **Load** — your agent picks up shared entries on next
    session start via the auto-sync hook, or explicitly
    via `ctx agent --include-hub`.
@@ -90,14 +92,14 @@ The `--share` flag does two things:
 
 1. Writes the learning to `api/.context/LEARNINGS.md`
    locally (as a normal `ctx add learning` would).
-2. Publishes the same entry to the hub, which stores it
+2. Publishes the same entry to the ctx Hub, which stores it
    in the append-only JSONL and fans it out to every
    subscribed client.
 
 Within seconds, `cli/.context/hub/learnings.md` and
 `dotfiles/.context/hub/learnings.md` both contain a copy
-of this learning (the `ctx connect listen` daemon picks
-it up from the hub's Listen stream).
+of this learning (the `ctx connection listen` daemon picks
+it up from the ctx Hub's Listen stream).
 
 ### 12:00 — You switch to `cli`
 
@@ -133,7 +135,7 @@ the agent packet.
 
 ### 16:30 — End of day
 
-You didn't run `ctx connect sync` once. You didn't
+You didn't run `ctx connection sync` once. You didn't
 `git push` anything between projects. You didn't
 remember to tell your agent about the retry-loop gotcha
 in the new project. The hub did all of it for you.
@@ -174,7 +176,7 @@ todos.** The four subscribable types are `decision`,
 project-local; subscribing makes every hub-shared task
 from every project show up in every other project's
 agent packet. That's probably not what you want. Skip
-`task` in `ctx connect subscribe` unless you have a
+`task` in `ctx connection subscribe` unless you have a
 specific reason.
 
 **Run the hub as a user-level daemon** so you don't have
@@ -232,7 +234,7 @@ rotation, failure recovery, and HA, see
   and when not to.
 - [Team knowledge bus](hub-team.md) — the multi-human
   companion recipe.
-- [`ctx connect`](../cli/connect.md) — the client-side
+- [`ctx connect`](../cli/connection.md) — the client-side
   commands used above (`subscribe`, `publish`, `sync`,
   `listen`, `status`).
 - [`ctx add`](../cli/context.md) — the `--share` flag

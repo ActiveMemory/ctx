@@ -59,7 +59,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		},
 	)
 
-	// Route cobra's built-in help and completion into the
+	// Route Cobra's built-in help and completion into the
 	// narrow Shell group. These are the only commands that
 	// live there — everything else has a domain group.
 	cmd.SetHelpCommandGroupID(embedCmd.GroupShell)

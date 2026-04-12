@@ -27,6 +27,30 @@ TASK STATUS LABELS:
 
 ### Misc
 
+- [ ] Move `ctx bootstrap` back to `ctx system bootstrap` (hidden). Bootstrap is agent-only plumbing — no human types it interactively. It was incorrectly promoted to top-level in the namespace cleanup. Move the package back to `internal/cli/system/cmd/bootstrap/`, restore `UseSystemBootstrap`/`DescKeySystemBootstrap` constants, re-add `Hidden: true`, update CLAUDE.md templates and skills back to `ctx system bootstrap`, remove from `docs/cli/bootstrap.md` and `docs/cli/index.md` Diagnostics group, remove from `zensical.toml` nav. Spec: specs/cli-namespace-cleanup.md #priority:high #added:2026-04-11
+
+- [ ] Rename `ctx stats` to `ctx usage`. "Stats for what?" — the current name lost its anchor when promoted from `ctx system stats`. `ctx usage` communicates intent: "show me my token usage." `ctx session stats` was considered but rejected as premature — a parent with one child is worse than a flat command. Revisit when `ctx session` has 2+ children. Spec: specs/cli-namespace-cleanup.md #priority:medium #added:2026-04-11
+
+- [ ] Rename `ctx resource` to `ctx sysinfo`. Without the `system` prefix, "resource" sounds like it manages project resources (files, assets, infrastructure). It's actually a system-health snapshot: memory, swap, disk, CPU load. `sysinfo` matches the internal package name (`internal/sysinfo`) and is unambiguous. `health` was considered but rejected — too similar to `ctx doctor` and `ctx doctor health` reads wrong. Same rename pattern. Spec: specs/cli-namespace-cleanup.md #priority:medium #added:2026-04-11
+
+- [ ] Deprecate or remove `ctx dep`. Utility is marginal: agents rarely need a flat dependency inventory to make decisions, and `go list -m all` / `npm ls` already cover the use case. Doesn't clear the "would I miss it if it vanished?" bar. Removal is a one-command delete + doc cleanup. #priority:low #added:2026-04-11
+
+- [ ] Introduce `ctx hook` parent command — consolidate hook-related user-facing commands under a single namespace: `ctx hook message list/show/edit/reset` (currently `ctx message`), `ctx hook notify` (currently `ctx notify`), `ctx hook pause` / `ctx hook resume` (currently top-level `ctx pause` / `ctx resume`). "What are we pausing?" — hooks. The current top-level `pause` loses that context. Clarifies the `ctx trigger` vs `ctx hook` distinction: `trigger` = user-authored scripts, `hook` = plugin-shipped machinery + its user-facing controls. Future children: `ctx hook status` (which hooks fired recently), `ctx hook test` (dry-run), `ctx hook event` (currently `ctx event`). Same rename pattern as previous namespace cleanups. Spec: specs/cli-namespace-cleanup.md #priority:medium #added:2026-04-11
+
+### Runbooks
+
+- [ ] Create `hack/runbooks/release-checklist.md` — canonical pre-release sequence: run codebase-audit, docs-semantic-audit, sanitize-permissions, `make test`, bump version, generate release notes, tag, push. Today this lives in the operator's head + scattered across docs/operations/. Cross-link with `_ctx-release` skill. #priority:high #added:2026-04-11
+
+- [ ] Create `hack/runbooks/breaking-migration.md` — template for users upgrading across breaking CLI renames. What commands changed, how to regenerate CLAUDE.md (`ctx init --force`), how to update personal scripts and hook configs. One instance per breaking release, or a generic template with a per-release appendix. #priority:medium #added:2026-04-11
+
+- [ ] Create `hack/runbooks/hub-deployment.md` — linear runbook for setting up a ctx Hub for a team: generate admin token, distribute, register clients, verify sync, configure TLS (when H-01/H-02 land). Consolidates pieces currently scattered across hub recipes. #priority:medium #added:2026-04-11
+
+- [ ] Create `hack/runbooks/new-contributor.md` — onboarding sequence: clone → `ctx init` → `make build && sudo make install` → verify hooks (`claude mcp list`) → run first session → verify context persistence. Currently scattered across README, contributing.md, and setup docs. #priority:medium #added:2026-04-11
+
+- [ ] Create `hack/runbooks/plugin-release.md` — plugin-specific release procedure: update hooks.json, bump version, test against fresh Claude Code install, publish to marketplace, verify `claude mcp list` shows updated version. Not covered by the general release checklist. #priority:low #added:2026-04-11
+
+### Misc
+
 - [ ] Human: Do a documentation audit for AI-generated artifacts. #important #not-urgent
 
 - [ ] Human: test `ctx init` on a fresh ubuntu install.

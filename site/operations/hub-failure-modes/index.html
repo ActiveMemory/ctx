@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -1919,6 +1919,7 @@
   
 
 
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h1 id="ctx-hub-failure-modes"><code>ctx</code> Hub: Failure modes<a class="headerlink" href="#ctx-hub-failure-modes" title="Permanent link">&para;</a></h1>
 <p>What can go wrong, what the system does about it, and what you
 should do. Complementary to
@@ -1932,7 +1933,7 @@ informs every failure-mode decision below.</p>
 </div>
 <h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
 <h3 id="client-loses-connection-mid-stream">Client loses connection mid-stream<a class="headerlink" href="#client-loses-connection-mid-stream" title="Permanent link">&para;</a></h3>
-<p><strong>What happens:</strong> <code>ctx connect listen</code> detects the EOF, waits
+<p><strong>What happens:</strong> <code>ctx connection listen</code> detects the EOF, waits
 with exponential backoff, and reconnects. On reconnect it passes
 its last-seen sequence; the hub replays everything newer.</p>
 <p><strong>What you should do:</strong> nothing. If reconnects are looping, check
@@ -1945,7 +1946,7 @@ that cannot accept writes (Raft quorum lost).</p>
 followers catch up via sequence-based sync automatically.</p>
 <h3 id="partition-split-brain-no-quorum">Partition — split brain (no quorum)<a class="headerlink" href="#partition-split-brain-no-quorum" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> no node holds a majority, so no leader is
-elected. All nodes become read-only. <code>ctx connect publish</code> and
+elected. All nodes become read-only. <code>ctx connection publish</code> and
 <code>ctx add --share</code> fail with a "no leader" error; local writes
 still succeed.</p>
 <p><strong>What you should do:</strong> fix the network. If the partition is
@@ -1955,7 +1956,7 @@ from the survivors with <code>ctx hub peer remove</code> for the dead nodes.</p>
 <p><strong>What happens:</strong> the local write succeeds; the share step prints
 a warning and exits non-zero on the share leg only. <code>--share</code> is
 best-effort; it never blocks local context updates.</p>
-<p><strong>What you should do:</strong> run <code>ctx connect publish</code> later to
+<p><strong>What you should do:</strong> run <code>ctx connection publish</code> later to
 backfill, or rely on another <code>--share</code> for the same entry ID.
 The hub deduplicates by entry ID.</p>
 <h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
@@ -1992,7 +1993,7 @@ a new leader within a few seconds. Writes the old leader accepted
 <strong>but had not yet replicated</strong> can be lost — see the Raft-lite
 warning in <a href="../../recipes/hub-cluster/">the cluster recipe</a>.</p>
 <p><strong>What you should do:</strong> if you need stronger durability, run
-<code>ctx connect listen</code> on a dedicated "collector" project that
+<code>ctx connection listen</code> on a dedicated "collector" project that
 persists entries locally as a write-ahead backup.</p>
 <h3 id="split-brain-after-rejoin">Split-brain after rejoin<a class="headerlink" href="#split-brain-after-rejoin" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> Raft reconciles: the minority side's uncommitted
@@ -2000,7 +2001,7 @@ writes are discarded, and the majority's log is authoritative.</p>
 <p><strong>What you should do:</strong> nothing automatic. If you know the
 minority had important writes, grep for them in
 <code>&lt;data-dir&gt;/entries.jsonl.rejected</code> (written by the reconciliation
-pass) and replay them with <code>ctx connect publish</code>.</p>
+pass) and replay them with <code>ctx connection publish</code>.</p>
 <h2 id="auth-and-tokens">Auth and tokens<a class="headerlink" href="#auth-and-tokens" title="Permanent link">&para;</a></h2>
 <h3 id="lost-admin-token">Lost admin token<a class="headerlink" href="#lost-admin-token" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> you cannot register new projects.</p>
@@ -2237,7 +2238,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

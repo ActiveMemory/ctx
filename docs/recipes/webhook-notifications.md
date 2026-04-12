@@ -229,8 +229,8 @@ JSONL file (`.context/state/events.jsonl`) that you can query without any
 external service:
 
 ```bash
-ctx system events --last 20          # recent hook activity
-ctx system events --hook qa-reminder # filter by hook
+ctx event --last 20          # recent hook activity
+ctx event --hook qa-reminder # filter by hook
 ```
 
 Webhooks and event logging are independent: you can use either, both, or

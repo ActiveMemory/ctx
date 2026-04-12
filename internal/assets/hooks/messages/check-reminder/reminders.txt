@@ -1,0 +1,3 @@
+{{.ReminderList}}
+Dismiss: ctx remind dismiss <id>
+Dismiss all: ctx remind dismiss --all

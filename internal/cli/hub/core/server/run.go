@@ -13,6 +13,8 @@ import (
 
 	"github.com/spf13/cobra"
 
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/hub"
 	writeServe "github.com/ActiveMemory/ctx/internal/write/serve"
 )
@@ -29,7 +31,7 @@ func ParsePeers(s string) []string {
 	if s == "" {
 		return nil
 	}
-	return strings.Split(s, ",")
+	return strings.Split(s, token.Comma)
 }
 
 // DefaultPort returns the default hub listen port.
@@ -80,9 +82,9 @@ func Run(
 
 	// Start Raft cluster if peers are configured.
 	if len(peers) > 0 {
-		bindAddr := fmt.Sprintf(":%d", port+1)
+		bindAddr := fmt.Sprintf(cfgHub.FmtPort, port+1)
 		cluster, clusterErr := hub.NewCluster(
-			fmt.Sprintf(":%d", port),
+			fmt.Sprintf(cfgHub.FmtPort, port),
 			bindAddr, dataDir, peers,
 		)
 		if clusterErr != nil {
@@ -91,8 +93,8 @@ func Run(
 		srv.SetCluster(cluster)
 	}
 
-	addr := fmt.Sprintf(":%d", port)
-	lis, lisErr := net.Listen("tcp", addr)
+	addr := fmt.Sprintf(cfgHub.FmtPort, port)
+	lis, lisErr := net.Listen(cfgHub.RaftTransport, addr)
 	if lisErr != nil {
 		return lisErr
 	}

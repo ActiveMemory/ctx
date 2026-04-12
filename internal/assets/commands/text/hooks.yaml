@@ -10,7 +10,7 @@ backup.relay-message:
 backup.relay-prefix:
   short: 'IMPORTANT: Relay this backup warning to the user VERBATIM before answering their question.'
 backup.run-hint:
-  short: 'Run: ctx system backup'
+  short: 'Run: ctx backup'
 backup.smb-not-mounted:
   short: SMB share (%s) is not mounted.
 backup.smb-unavailable:
@@ -260,29 +260,29 @@ check-persistence.state-format:
     last_mtime=%d
 check-persistence.suppressed-log-format:
   short: 'persistence: suppressed (pct=%d%% < %d%% min), count=%d'
-check-reminders.box-title:
+check-reminder.box-title:
   short: Reminders
-check-reminders.dismiss-all-hint:
+check-reminder.dismiss-all-hint:
   short: 'Dismiss all: ctx remind dismiss --all'
-check-reminders.dismiss-hint:
+check-reminder.dismiss-hint:
   short: 'Dismiss: ctx remind dismiss <id>'
-check-reminders.item-format:
+check-reminder.item-format:
   short: ' [%d] %s'
-check-reminders.nudge-format:
+check-reminder.nudge-format:
   short: You have %d pending reminders
-check-reminders.relay-prefix:
+check-reminder.relay-prefix:
   short: 'IMPORTANT: Relay these reminders to the user VERBATIM before answering their question.'
-check-resources.box-title:
+check-resource.box-title:
   short: Resource Alert
-check-resources.fallback-end:
+check-resource.fallback-end:
   short: and consider ending this session.
-check-resources.fallback-low:
+check-resource.fallback-low:
   short: System resources are critically low.
-check-resources.fallback-persist:
+check-resource.fallback-persist:
   short: Persist unsaved context NOW with /ctx-wrap-up
-check-resources.relay-message:
+check-resource.relay-message:
   short: System resources critically low
-check-resources.relay-prefix:
+check-resource.relay-prefix:
   short: 'IMPORTANT: Relay this resource warning to the user VERBATIM.'
 check-task-completion.fallback:
   short: If you completed a task, mark it [x] in TASKS.md.

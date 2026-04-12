@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/claudecheck"
+	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude_check"
 	coreAgents "github.com/ActiveMemory/ctx/internal/cli/setup/core/agents"
 	coreCline "github.com/ActiveMemory/ctx/internal/cli/setup/core/cline"
 	coreCopilot "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot"
@@ -56,7 +56,7 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 		writeSetup.Content(cmd, string(content))
 
 	case cfgHook.ToolClaudeCode, cfgHook.ToolClaude:
-		claudecheck.SetupHint(cmd)
+		coreCC.SetupHint(cmd)
 
 	case cfgHook.ToolCursor:
 		if writeFile {

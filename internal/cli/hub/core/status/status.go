@@ -11,7 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	connectCfg "github.com/ActiveMemory/ctx/internal/cli/connect/core/config"
+	connectCfg "github.com/ActiveMemory/ctx/internal/cli/connection/core/config"
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	"github.com/ActiveMemory/ctx/internal/hub"
 	writeHub "github.com/ActiveMemory/ctx/internal/write/hub"
 )
@@ -45,9 +46,9 @@ func Run(cmd *cobra.Command, _ []string) error {
 		return statusErr
 	}
 
-	role := "Follower"
+	role := cfgHub.RoleFollower
 	if resp.ConnectedClients > 0 {
-		role = "Active"
+		role = cfgHub.RoleActive
 	}
 
 	writeHub.ClusterStatus(

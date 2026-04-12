@@ -19,6 +19,10 @@ Files are designed to be human-readable, AI-parseable, and token-efficient.
 
 ## File Overview
 
+The core context files live directly under `.context/`. They are the
+substrate `ctx` reads in priority order when assembling the agent
+context packet:
+
 | File                | Purpose                                    | Priority    |
 |---------------------|--------------------------------------------|-------------|
 | `CONSTITUTION.md`   | Hard rules that must **NEVER** be violated | 1 (highest) |
@@ -29,10 +33,35 @@ Files are designed to be human-readable, AI-parseable, and token-efficient.
 | `LEARNINGS.md`      | Lessons learned, gotchas, tips             | 6           |
 | `GLOSSARY.md`       | Domain terms and abbreviations             | 7           |
 | `AGENT_PLAYBOOK.md` | Instructions for AI tools                  | 8 (lowest)  |
-| `templates/`        | Entry format templates for `ctx add`       | (optional)  |
-| `steering/`         | Behavioral rules with YAML frontmatter     | (optional)  |
-| `hooks/`            | Lifecycle hook scripts                     | (optional)  |
-| `skills/`           | Reusable instruction bundles               | (optional)  |
+
+Two subdirectories under `.context/` are **implementation details** that
+are user-editable but not part of the priority read order:
+
+- **`.context/templates/`** — format templates for `ctx add decision`
+  and `ctx add learning`. See [templates](#templates) below.
+- **`.context/steering/`** — behavioral rules with YAML frontmatter
+  that get synced into each AI tool's native config. See
+  [steering](#steering) below, and the full
+  [Steering files](steering.md) page for the design and workflow.
+
+### Outside `.context/`
+
+Two other moving parts are often confused with context files but are
+**not** under `.context/`:
+
+- **Skills** live in `.claude/skills/` (project-local) or are provided
+  by the installed `ctx` plugin. A typical project doesn't see the
+  plugin's skills at all — they ride with the plugin and are owned by
+  its update cycle. See [`ctx skill`](../cli/skill.md) and
+  [Skills reference](../reference/skills.md).
+- **Hooks** are Claude Code `PreToolUse`/`PostToolUse`/
+  `UserPromptSubmit` entries configured in `.claude/settings.json` or
+  shipped by a plugin. The `ctx` plugin registers its own hooks
+  automatically; **a typical project does not author hooks by hand**,
+  and any local edits to plugin-owned hook files will be overridden
+  on the next plugin update. If you need to customize behavior, edit
+  your own project settings, not the plugin's files. See
+  [Hook sequence diagrams](../recipes/hook-sequence-diagrams.md).
 
 ## Read Order Rationale
 
@@ -449,6 +478,9 @@ for full documentation.
 
 ## `templates/`
 
+**Location**: `.context/templates/`.
+**Status**: implementation detail, user-editable.
+
 **Purpose**: Format templates for `ctx add decision` and `ctx add learning`.
 These control the structure of new entries appended to DECISIONS.md and
 LEARNINGS.md.
@@ -466,6 +498,45 @@ all new decisions, edit `.context/templates/decision.md`.
 
 Templates are committed to git, so customizations are shared with the
 team.
+
+---
+
+## `steering/`
+
+**Location**: `.context/steering/`.
+**Status**: implementation detail, user-editable.
+
+**Purpose**: Behavioral rules with YAML frontmatter that tell an AI
+assistant *how to behave* when a specific kind of prompt arrives.
+Unlike the core context files (which describe *what* the project is),
+steering files describe *what to do* and ride alongside the prompt
+through the AI tool's native rule pipeline (Claude Code, Cursor, Kiro,
+Cline). `ctx` matches steering files to prompts and syncs them out to
+each tool's config.
+
+`ctx init` scaffolds four foundation files:
+
+- `product.md` — who this project serves and why
+- `tech.md` — the technology stack and its constraints
+- `structure.md` — how the code is organized
+- `workflow.md` — how work moves through the system
+
+Each file carries YAML frontmatter describing **when** it applies
+(always, matching prompts, or manually referenced) and **what** tool
+scope it covers. The foundation files use `inclusion: always` by default
+so every session picks them up.
+
+### Customizing
+
+Edit the files directly. Add your own steering files with `ctx steering
+add`, preview the match set with `ctx steering preview`, and run
+`ctx steering sync` to push them into each AI tool's config after
+changes. Steering files are committed to git, so they're shared with
+the team.
+
+For the design rationale, the full inclusion/priority model, and the
+end-to-end sync workflow, see the dedicated
+[Steering files](steering.md) page.
 
 ---
 

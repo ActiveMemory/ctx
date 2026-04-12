@@ -504,6 +504,39 @@ impersonate every registered project.
 **Fix complexity**: Small (argon2 is in `golang.org/x/crypto`,
 the validation loop is a one-line change).
 
+**Why hashing and not encryption with the pad key?**
+A reasonable-sounding alternative is to reuse the existing
+global encryption key at `~/.ctx/.ctx.key` (the one that
+protects `ctx pad` entries) to encrypt the `Token` field
+in `clients.json` at rest. Rejected, for two reasons:
+
+1. **Same-host compromise defeats it.** The pad key lives
+   on the same machine as `<data-dir>/clients.json`. The
+   threat model H-03 defends against is *file-level host
+   compromise yields every token in the clear* — and an
+   attacker who can read the data dir almost certainly
+   can also read `~/.ctx/`. Co-located key + ciphertext
+   is not meaningfully better than plaintext against that
+   threat. Hashing with argon2id is, because re-deriving
+   each token still costs argon2id work per attempt with
+   no shortcut.
+2. **Wrong primitive for the job.** Tokens are
+   server-side credentials the server only needs to
+   *verify* (compare a presented value to a stored
+   record). They never need to be recovered to plaintext
+   on the server. Encryption is the right primitive when
+   the server must read the plaintext back (which is why
+   `ctx pad` uses it — the user wants to see their note).
+   For verify-only, hashing is strictly better: it
+   removes a recovery path that doesn't need to exist and
+   sidesteps a future key-rotation problem.
+
+Encryption-of-tokens would help if and only if the key
+lived **off-host** (OS keyring, HSM, external secrets
+manager). That's the "behind the local keyring" half of
+the brainstorm follow-up note below — a separate, larger
+piece of work than H-03, tracked but not blocking.
+
 **Existing task coverage**:
 `#### Design follow-ups surfaced by the brainstorm
 (2026-04-11)` → "Hash `clients.json` tokens or move them
@@ -516,13 +549,17 @@ concrete remediation.
 
 **Severity**: High.
 
-**Location**: `internal/hub/handler.go:62-98`.
+**Location**: `internal/hub/handler.go:62-98`,
+`internal/hub/validate.go:23-47`,
+`internal/hub/store.go` (`ValidateToken`).
 
 The publish handler copies `pe.Origin` verbatim from the
 client's PublishRequest into the stored Entry. The
 authenticated client's `ClientInfo.ProjectName` is
-available via `ValidateToken` but is never cross-checked
-against `pe.Origin`.
+available inside `validateBearer` but is never attached
+to the request context, so the handler has no way to
+cross-check `pe.Origin` against the authenticated
+identity.
 
 **Impact**: A client with a valid token for project
 `alpha` can publish entries with `Origin: beta` and the
@@ -539,25 +576,211 @@ allows:
   from a high-privilege one, defeating any
   after-the-fact "who published this?" investigation.
 
-**Recommendation**:
+**Current (broken) user-to-server trace**:
 
-1. Modify `validateBearer` (currently in `validate.go:23`)
-   to return the `ClientInfo` AND attach it to the gRPC
-   context via `context.WithValue`.
-2. In `handler.go publish()`, read the ClientInfo from
-   context and **overwrite** `pe.Origin` with
-   `ClientInfo.ProjectName` before storing. The client's
-   `Origin` field becomes advisory.
-3. Add a test that a client authenticated as `alpha`
-   cannot publish entries stored as `beta`.
+1. User runs `ctx connect publish --type learning "..."`.
+2. Client reads `.context/.connect.enc`, pulls out the
+   bearer token and local project name, builds a
+   `PublishRequest{Origin: "<local project>", ...}`,
+   attaches `authorization: Bearer <token>` to gRPC
+   metadata, sends it.
+3. Auth interceptor calls `validateBearer`. It reads
+   the header, strips `Bearer `, and calls
+   `store.ValidateToken(token)`. That returns
+   `error` only — **the matched `ClientInfo` is
+   discarded**.
+4. `handler.publish()` copies `pe.Origin` verbatim into
+   the stored `Entry` (`handler.go:81`). No cross-check.
+5. Entry is persisted and replicated under whatever
+   `Origin` the client claimed.
 
-**Fix complexity**: Small (a context-value helper and a
-one-line overwrite).
+The break is between steps 3 and 4: the auth layer knows
+which project the token maps to but throws that
+knowledge away before the handler runs.
+
+**Recommendation (fix shape)**:
+
+1. **`store.go` — promote `ValidateToken` to
+   `LookupToken`.** Today it returns `error`; change it
+   to `LookupToken(token string) (*ClientInfo, error)`.
+   There is only one caller (`validateBearer`), so the
+   rename is cheap; prefer promoting the existing method
+   over adding a sibling.
+
+2. **`validate.go` — return the enriched context.**
+   `validateBearer` changes signature from
+   `(ctx, store) error` to
+   `(ctx, store) (context.Context, error)`. On success,
+   it attaches the looked-up `*ClientInfo` to the
+   context via `context.WithValue` under a private
+   package key:
+
+   ```go
+   type ctxKey int
+   const clientInfoKey ctxKey = 1
+
+   func validateBearer(
+       ctx context.Context, store *Store,
+   ) (context.Context, error) {
+       // ... same metadata parsing ...
+       info, err := store.LookupToken(token)
+       if err != nil {
+           return ctx, status.Error(
+               codes.Unauthenticated, "invalid token",
+           )
+       }
+       return context.WithValue(
+           ctx, clientInfoKey, info,
+       ), nil
+   }
+
+   func clientFromContext(
+       ctx context.Context,
+   ) *ClientInfo {
+       v, _ := ctx.Value(clientInfoKey).(*ClientInfo)
+       return v
+   }
+   ```
+
+   The gRPC auth interceptor that calls `validateBearer`
+   must propagate the **returned** context to the
+   downstream handler — that's how metadata rides
+   through the middleware chain.
+
+3. **`handler.go` — overwrite, don't trust.** In
+   `publish()`, replace `Origin: pe.Origin` with a
+   value pulled from the context:
+
+   ```go
+   client := clientFromContext(ctx)
+   for i, pe := range req.Entries {
+       entries[i] = Entry{
+           ID:        pe.ID,
+           Type:      pe.Type,
+           Content:   pe.Content,
+           Origin:    client.ProjectName, // server-enforced
+           Meta:      pe.Meta,
+           Timestamp: time.Unix(pe.Timestamp, 0),
+       }
+   }
+   ```
+
+   `client` is guaranteed non-nil here because the
+   interceptor rejects unauthenticated requests before
+   the handler runs. If a future refactor ever allows
+   unauthenticated publish, this becomes a panic-on-nil
+   bug — add a defensive nil-check in that future diff,
+   not this one.
+
+4. **Silent rewrite vs. loud reject.** The client's
+   `pe.Origin` field is now advisory. Three options:
+
+   - **(a) Silent overwrite**: ignore `pe.Origin`
+     entirely. Simplest. Audit-recommended default.
+   - **(b) Reject mismatch**: if
+     `pe.Origin != "" && pe.Origin != client.ProjectName`,
+     return `codes.InvalidArgument`. Surfaces client
+     config bugs loudly (typo fails fast instead of
+     getting silently rewritten).
+   - **(c) Warn**: log a server-side warning on
+     mismatch but persist the corrected value.
+
+   Prefer **(b)** for the initial implementation: it
+   catches client-side configuration drift that (a)
+   would hide. The cost is a handful of extra lines; the
+   benefit is that a broken CI script fails visibly
+   instead of silently corrupting attribution. Drop to
+   (a) only if real-world friction shows it.
+
+5. **Test — the whole point.** Regression test in
+   `internal/hub/handler_test.go` (new file or existing):
+
+   ```go
+   func TestPublish_OriginServerEnforced(t *testing.T) {
+       // Register project "alpha", get token T_alpha.
+       // Register project "beta",  get token T_beta.
+       // Publish with T_alpha but Origin: "beta".
+       // Assert: under policy (b) the RPC returns
+       //         InvalidArgument; under (a) the stored
+       //         entry has Origin == "alpha".
+   }
+   ```
+
+   Without this test the fix is a promise. With it, any
+   future refactor that breaks the wiring fails CI.
+
+**Fixed user-to-server trace (post-fix)**:
+
+1. Client sends `PublishRequest{Origin: "beta"}` with
+   `T_alpha` in the header.
+2. Auth interceptor calls `validateBearer`, which
+   looks up `T_alpha` → `ClientInfo{ProjectName: "alpha", ...}`
+   and attaches it to the context.
+3. `handler.publish()` reads
+   `clientFromContext(ctx) → {ProjectName: "alpha"}`.
+   Under policy (b), rejects with `InvalidArgument`
+   because `"beta" != "alpha"`. Under policy (a),
+   overwrites every entry's `Origin` to `"alpha"` and
+   persists.
+4. Stored entry (if persisted): `Origin: "alpha"`. The
+   client's `"beta"` claim is either refused or
+   discarded; never persisted.
+
+**Threat-model caveat the fix does NOT address**:
+
+Under today's single-admin-token deployment model,
+server-enforced Origin does **not** prevent a legitimate
+`alpha` client from publishing garbage *as alpha*. It
+only prevents `alpha` from publishing *as beta*. This
+collapses the "any valid token can impersonate any
+project" class of attack into "a compromised token can
+only impersonate its own project" — a large improvement,
+but not a complete fix for attribution integrity. The
+remaining holes:
+
+- **H-05** (project squatting at registration): the
+  admin-token holder can pre-register `production` and
+  then legitimately publish as `production`.
+- **H-06** (no user identity layer): attribution is
+  project-scoped, not human-scoped — two developers on
+  the same project are indistinguishable.
+
+Both close when the sysadmin-registry MVP lands (Hub
+identity layer phase, TASKS.md).
+
+**Pairing with H-22a — share the commit**:
+
+H-04 (Origin) and H-22a (Author) are the **same
+plumbing**: both need `ClientInfo` on the context, both
+need `handler.go publish()` to stamp a field from that
+context instead of from the request. Land them in a
+single commit. The commit message references both
+`specs/hub-security-audit.md` H-04/H-22a and
+`.context/DECISIONS.md [2026-04-11-180000]`. Under the
+pre-registry model, both fields stamp from
+`client.ProjectName`; under the registry MVP, Author
+upgrades to `client.UserID` while Origin stays on
+`client.ProjectName`.
+
+**Fix complexity**: Small. Concrete line counts:
+
+- `store.go`: ~3 lines (signature change, return
+  `*ClientInfo`).
+- `validate.go`: ~10 lines (signature change,
+  context-value helper, `clientFromContext` accessor).
+- Auth interceptor site: 1-line change (use returned
+  context for downstream handler).
+- `handler.go publish()`: 2 lines (pull client, swap
+  `Origin` and `Author` sources).
+- Test: ~40 lines (new regression test).
+
+Total: <60 lines, single commit, single spec reference.
 
 **Existing task coverage**:
-"Server-enforce `Origin` on publish". Already captured.
-This audit upgrades its framing from "small cheap fix"
-to "High-severity finding."
+"Server-enforce `Origin` on publish". Already captured
+in the PR #60 follow-up section. This audit upgrades its
+framing from "small cheap fix" to "High-severity
+finding" and adds the H-22a pairing requirement.
 
 ---
 

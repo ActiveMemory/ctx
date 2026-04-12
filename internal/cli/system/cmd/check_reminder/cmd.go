@@ -15,17 +15,17 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
-// Cmd returns the "ctx system check-reminders" subcommand.
+// Cmd returns the "ctx system check-reminder" subcommand.
 //
 // Returns:
-//   - *cobra.Command: Configured check-reminders subcommand
+//   - *cobra.Command: Configured check-reminder subcommand
 func Cmd() *cobra.Command {
-	short, _ := desc.Command(cmd.DescKeySystemCheckReminders)
+	short, _ := desc.Command(cmd.DescKeySystemCheckReminder)
 
 	return &cobra.Command{
-		Use:     cmd.UseSystemCheckReminders,
+		Use:     cmd.UseSystemCheckReminder,
 		Short:   short,
-		Example: desc.Example(cmd.DescKeySystemCheckReminders),
+		Example: desc.Example(cmd.DescKeySystemCheckReminder),
 		Hidden:  true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd, os.Stdin)

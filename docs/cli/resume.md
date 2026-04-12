@@ -9,6 +9,8 @@ title: Resume
 icon: lucide/play
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx resume`
 
 Resume context hooks after a pause. Silent no-op if not paused.

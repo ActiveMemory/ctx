@@ -9,6 +9,8 @@ title: Loop
 icon: lucide/refresh-cw
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx loop`
 
 Generate a shell script for running an autonomous loop.

@@ -9,6 +9,8 @@ package hub
 import (
 	"strings"
 	"testing"
+
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 )
 
 // baseEntry returns a PublishEntry that passes all
@@ -50,11 +52,11 @@ func TestValidateEntry_MetaRoundTrip(t *testing.T) {
 }
 
 // TestValidateEntry_MetaFieldOversize verifies that any
-// single Meta field exceeding maxMetaFieldLen bytes is
+// single Meta field exceeding cfgHub.MaxMetaFieldLen bytes is
 // rejected.
 func TestValidateEntry_MetaFieldOversize(t *testing.T) {
 	pe := baseEntry()
-	pe.Meta.DisplayName = strings.Repeat("a", maxMetaFieldLen+1)
+	pe.Meta.DisplayName = strings.Repeat("a", cfgHub.MaxMetaFieldLen+1)
 	err := validateEntry(pe)
 	if err == nil {
 		t.Fatal("oversize meta.display_name accepted")
@@ -66,30 +68,30 @@ func TestValidateEntry_MetaFieldOversize(t *testing.T) {
 
 // TestValidateEntry_MetaTotalOversize verifies that
 // multiple almost-full fields summing past
-// maxMetaTotalLen are rejected.
+// cfgHub.MaxMetaTotalLen are rejected.
 func TestValidateEntry_MetaTotalOversize(t *testing.T) {
 	pe := baseEntry()
 	// 4 fields × 250 bytes = 1000 bytes — under cap.
 	// Reset for the oversize case:
-	// 4 fields × (maxMetaFieldLen) = 4 × 256 = 1024,
+	// 4 fields × (cfgHub.MaxMetaFieldLen) = 4 × 256 = 1024,
 	// which is under the 2048 total cap. Need to sneak
 	// past individual caps? No — we enforce total
 	// separately. To exceed the total without exceeding
 	// any individual field, set 4 × 256 + an extra
 	// field-len to push over.
 	// The cheapest reproducer uses the total-cap path
-	// directly: bump maxMetaTotalLen via fields.
+	// directly: bump cfgHub.MaxMetaTotalLen via fields.
 	// 4 × 256 = 1024 < 2048, so we can't exceed total
 	// with the current 4-field struct unless we exceed
 	// per-field. This test guards against future
 	// expansion of the struct. For now we verify the
 	// total check at the upper edge: fill every field
-	// at exactly maxMetaFieldLen and confirm acceptance.
+	// at exactly cfgHub.MaxMetaFieldLen and confirm acceptance.
 	pe.Meta = EntryMeta{
-		DisplayName: strings.Repeat("d", maxMetaFieldLen),
-		Host:        strings.Repeat("h", maxMetaFieldLen),
-		Tool:        strings.Repeat("t", maxMetaFieldLen),
-		Via:         strings.Repeat("v", maxMetaFieldLen),
+		DisplayName: strings.Repeat("d", cfgHub.MaxMetaFieldLen),
+		Host:        strings.Repeat("h", cfgHub.MaxMetaFieldLen),
+		Tool:        strings.Repeat("t", cfgHub.MaxMetaFieldLen),
+		Via:         strings.Repeat("v", cfgHub.MaxMetaFieldLen),
 	}
 	// 4 × 256 = 1024, under 2048 total cap — accept.
 	if err := validateEntry(pe); err != nil {

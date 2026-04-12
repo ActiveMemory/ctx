@@ -9,6 +9,8 @@ title: Pause
 icon: lucide/pause
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx pause`
 
 Pause all context nudge and reminder hooks for the current

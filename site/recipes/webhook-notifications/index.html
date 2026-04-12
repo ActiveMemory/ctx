@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -1378,6 +1378,8 @@
       
         
       
+        
+      
     
     
     
@@ -2449,8 +2451,8 @@ results on the main branch after merging.</p>
 in <code>.ctxrc</code>. The event log writes the same payload as webhooks to a local
 JSONL file (<code>.context/state/events.jsonl</code>) that you can query without any
 external service:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--last<span class="w"> </span><span class="m">20</span><span class="w">          </span><span class="c1"># recent hook activity</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>event<span class="w"> </span>--last<span class="w"> </span><span class="m">20</span><span class="w">          </span><span class="c1"># recent hook activity</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
 </span></code></pre></div>
 <p>Webhooks and event logging are independent: you can use either, both, or
 neither. Webhooks give you push notifications and an external audit trail.
@@ -2632,7 +2634,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

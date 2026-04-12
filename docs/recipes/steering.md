@@ -9,6 +9,8 @@ title: Writing Steering Files
 icon: lucide/compass
 ---
 
+![ctx](../images/ctx-banner.png)
+
 # Writing Steering Files
 
 Steering files tell your AI assistant **how to behave**, not

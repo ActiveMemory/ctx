@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://ctx.ist/cli/hub/">
       
       
-        <link rel="prev" href="../connect/">
+        <link rel="prev" href="../connection/">
       
       
         <link rel="next" href="../serve/">
@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.20">
+      <meta name="generator" content="zensical-0.0.21">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.f28b7ce3.min.css">
       
         
           
@@ -1273,7 +1273,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../connect/" class="md-nav__link">
+      <a href="../connection/" class="md-nav__link">
         
   
   
@@ -1588,6 +1588,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1641,6 +1649,12 @@
   
     
     
+      
+        
+      
+        
+      
+        
       
         
       
@@ -2201,6 +2215,7 @@
 
   <h1>Hub</h1>
 
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="ctx-hub"><code>ctx hub</code><a class="headerlink" href="#ctx-hub" title="Permanent link">&para;</a></h2>
 <p>Operator commands for a <strong><code>ctx</code> Hub</strong> — the gRPC server that
 fans out decisions, learnings, conventions, and tasks across
@@ -2212,19 +2227,20 @@ leadership before maintenance.</p>
 <p>You only need <code>ctx hub</code> if you are <strong>running</strong> a hub
 server or cluster. For client-side operations (register,
 subscribe, sync, publish, listen), see
-<a href="../connect/"><code>ctx connect</code></a>. For the mental model behind
+<a href="../connection/"><code>ctx connect</code></a>. For the mental model behind
 the hub as a whole, read the
 <a href="../../recipes/hub-overview/"><code>ctx</code> Hub overview</a>.</p>
 </div>
 <h3 id="ctx-hub-start"><code>ctx hub start</code><a class="headerlink" href="#ctx-hub-start" title="Permanent link">&para;</a></h3>
 <p>Start the hub gRPC server.</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w">                           </span><span class="c1"># Foreground, default port 9900</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--port<span class="w"> </span><span class="m">8080</span><span class="w">               </span><span class="c1"># Custom port</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--data-dir<span class="w"> </span>/srv/ctx-hub<span class="w">   </span><span class="c1"># Custom data directory</span>
 </span></code></pre></div>
 <p>On first run, generates an <strong>admin token</strong> and prints it to
 stdout. Save this token — it's required for
-<a href="../connect/#ctx-connect-register"><code>ctx connect register</code></a> in
+<a href="../connection/#ctx-connect-register"><code>ctx connection register</code></a> in
 client projects. Subsequent runs reuse the stored token from
 <code>&lt;data-dir&gt;/admin.token</code>.</p>
 <p><strong>Default data directory</strong>: <code>~/.ctx/hub-data/</code></p>
@@ -2288,6 +2304,7 @@ setup and the Raft-lite durability caveat.</p>
 </ul>
 <h3 id="ctx-hub-stop"><code>ctx hub stop</code><a class="headerlink" href="#ctx-hub-stop" title="Permanent link">&para;</a></h3>
 <p>Stop a running hub daemon.</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>stop<span class="w">                            </span><span class="c1"># Stop using default data dir</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>hub<span class="w"> </span>stop<span class="w"> </span>--data-dir<span class="w"> </span>/srv/ctx-hub<span class="w">    </span><span class="c1"># Custom data directory</span>
 </span></code></pre></div>
@@ -2298,12 +2315,14 @@ Safe to rerun — if no daemon is running, returns a
 <h3 id="ctx-hub-status"><code>ctx hub status</code><a class="headerlink" href="#ctx-hub-status" title="Permanent link">&para;</a></h3>
 <p>Show cluster status: role, peers, sync state, entry count,
 and uptime.</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>status
 </span></code></pre></div>
 <h3 id="ctx-hub-peer"><code>ctx hub peer</code><a class="headerlink" href="#ctx-hub-peer" title="Permanent link">&para;</a></h3>
 <p>Add or remove peers from the cluster at runtime. Useful for
 scaling up or replacing a decommissioned node without
 restarting the leader.</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>peer<span class="w"> </span>add<span class="w"> </span>host2:9901
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>hub<span class="w"> </span>peer<span class="w"> </span>remove<span class="w"> </span>host2:9901
 </span></code></pre></div>
@@ -2312,11 +2331,12 @@ restarting the leader.</p>
 new election among the remaining followers before the current
 leader steps down. Use before taking the leader offline for
 maintenance.</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>stepdown
 </span></code></pre></div>
 <h3 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="../connect/"><code>ctx connect</code></a> — client-side commands
+<li><a href="../connection/"><code>ctx connect</code></a> — client-side commands
   (register, subscribe, sync, publish, listen)</li>
 <li><a href="../../recipes/hub-overview/"><code>ctx</code> Hub overview</a> — mental
   model and user stories</li>
@@ -2368,7 +2388,7 @@ maintenance.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../connect/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Connect">
+          <a href="../connection/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Connect">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -2474,7 +2494,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.36a64b72.min.js"></script>
       
     
   </body>

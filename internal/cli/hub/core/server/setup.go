@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	"github.com/ActiveMemory/ctx/internal/hub"
 	"github.com/ActiveMemory/ctx/internal/io"
 	writeServe "github.com/ActiveMemory/ctx/internal/write/serve"
@@ -22,43 +23,53 @@ import (
 // defaultPort is the default hub listen port.
 const defaultPort = 9900
 
-// hubDataDir is the subdirectory for hub data files.
-const hubDataDir = "hub-data"
-
-// adminTokenFile stores the admin token after first run.
-const adminTokenFile = "admin.token"
-
-// dataDirPerm is the permission for the hub data directory.
-const dataDirPerm = fs.PermKeyDir
-
 // resolveDataDir returns the data directory, creating it
 // if needed.
+//
+// Parameters:
+//   - dataDir: Explicit data dir path, or empty for default
+//
+// Returns:
+//   - string: Resolved absolute data directory path
+//   - error: Non-nil on mkdir failure
 func resolveDataDir(dataDir string) (string, error) {
 	if dataDir == "" {
 		return defaultDataDir()
 	}
 	return dataDir, io.SafeMkdirAll(
-		dataDir, dataDirPerm,
+		dataDir, fs.PermKeyDir,
 	)
 }
 
 // defaultDataDir returns the default hub data directory path.
 // Uses ~/.ctx/hub-data/ (same parent as the encryption key).
+//
+// Returns:
+//   - string: Absolute path to ~/.ctx/hub-data/
+//   - error: Non-nil on home-dir lookup or mkdir failure
 func defaultDataDir() (string, error) {
 	home, homeErr := os.UserHomeDir()
 	if homeErr != nil {
 		return "", homeErr
 	}
-	p := filepath.Join(home, dir.CtxData, hubDataDir)
+	p := filepath.Join(home, dir.CtxData, cfgHub.DirHubData)
 	return p, io.SafeMkdirAll(p, fs.PermKeyDir)
 }
 
 // loadOrCreateAdmin loads an existing admin token or
 // generates a new one on first run.
+//
+// Parameters:
+//   - cmd: Cobra command for output (prints token on first run)
+//   - dataDir: Hub data directory containing admin.token
+//
+// Returns:
+//   - string: Admin token (existing or newly generated)
+//   - error: Non-nil on generation or I/O failure
 func loadOrCreateAdmin(
 	cmd *cobra.Command, dataDir string,
 ) (string, error) {
-	tokenPath := filepath.Join(dataDir, adminTokenFile)
+	tokenPath := filepath.Join(dataDir, cfgHub.FileAdminToken)
 	data, readErr := io.SafeReadUserFile(tokenPath)
 	if readErr == nil && len(data) > 0 {
 		return string(data), nil

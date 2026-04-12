@@ -844,7 +844,9 @@ write.context-dir-label:
 write.context-dir-bracket:
   short: " [Context: %s]"
 write.provenance-line:
-  short: "Display this line verbatim at the start of your response: Session: %s | Branch: %s @ %s"
+  short: "Display this line verbatim at the start of your response: Session: %s | Branch: %s @ %s%s"
+write.provenance-context:
+  short: " | Context: %d%% free"
 
 write.knowledge-unit-entries:
   short: "entries"
@@ -864,3 +866,155 @@ write.vscode-add-manually:
   short: "  ○ %s (exists, add %s manually)"
 write.vscode-warn-non-fatal:
   short: "  ⚠ %s: %v"
+
+write.steering-desc-product:
+  short: "Product context, goals, and target users"
+write.steering-desc-tech:
+  short: "Technology stack, constraints, and dependencies"
+write.steering-desc-structure:
+  short: "Project structure and directory conventions"
+write.steering-desc-workflow:
+  short: "Development workflow and process rules"
+
+write.steering-guidance:
+  short: |-
+    <!--
+      This is a ctx steering file — persistent behavioral
+      rules prepended to prompts based on the frontmatter
+      above.
+
+      inclusion (when the rule fires):
+        always  → injected on EVERY tool call. On Claude
+                  Code this is the only mode that fires
+                  AUTOMATICALLY (the PreToolUse hook
+                  passes an empty prompt to ctx agent).
+                  Use for invariants and for any rule
+                  that MUST fire reliably.
+        auto    → injected when the prompt matches the
+                  `description` field above.
+                    - Cursor / Cline / Kiro: native.
+                    - Claude Code: Claude calls the
+                      ctx_steering_get MCP tool on its
+                      own when it decides the rule is
+                      relevant. The ctx plugin ships
+                      the MCP auto-registration; verify
+                      with `claude mcp list`.
+        manual  → only when the file is explicitly named
+                  (e.g. via the MCP tool or a skill).
+
+      priority (ordering within a tier):
+        Lower numbers inject first. 10 is a reasonable
+        default for invariants; use 50 for normal rules.
+
+      tools (scope the rule to specific AI tools):
+        Empty list = applies to all tools (default).
+        Example:  tools: [claude, cursor]
+
+      Edit the body below, then delete this comment.
+      See docs/cli/steering.md for the full reference.
+    -->
+
+write.steering-body-product:
+  short: |-
+    # Product Context
+
+    Describe the product, its goals, and target users.
+
+    - **What is this project?**
+    - **Who uses it?**
+    - **What problem does it solve?**
+    - **What is explicitly out of scope?**
+
+write.steering-body-tech:
+  short: |-
+    # Technology Stack
+
+    Describe the technology stack, constraints, and key dependencies.
+
+    - **Languages and versions**
+    - **Frameworks and key libraries**
+    - **Runtime / deployment target**
+    - **Hard constraints** (e.g. no CGO, no network at test time)
+
+write.steering-body-structure:
+  short: |-
+    # Project Structure
+
+    Describe the project layout and directory conventions.
+
+    - **Top-level directories and their purpose**
+    - **Where new files should go** (and where they should not)
+    - **Naming conventions** for files, packages, modules
+
+write.connect-registered:
+  short: Registered as
+write.connect-subscribed:
+  short: Subscribed to
+write.connect-synced:
+  short: 'Synced %d entries'
+write.connect-published:
+  short: 'Published %d entries'
+write.connect-listening:
+  short: Listening for new entries (Ctrl-C to stop)
+write.connect-received:
+  short: Received
+write.connect-publish-warning:
+  short: 'Warning: hub publish failed: %v'
+write.connect-hub-label:
+  short: "Hub:"
+write.connect-hub-stats:
+  short: 'Entries: %d  Clients: %d'
+write.hub-cluster-stats:
+  short: 'Entries: %d  Peers: %d'
+write.agent-section-hub:
+  short: "## ctx Hub"
+write.connect-hub-sync:
+  short: 'Hub sync: %d shared entries updated'
+write.hub-added-peer:
+  short: 'Added peer %s'
+write.hub-removed-peer:
+  short: 'Removed peer %s'
+write.hub-leadership-transferred:
+  short: Leadership transferred
+write.hub-leader:
+  short: 'Leader: %s'
+write.hub-role:
+  short: 'Role: %s'
+
+write.serve-hub-started:
+  short: 'Hub started on %s'
+write.serve-admin-token:
+  short: 'Admin token (save this): %s'
+write.serve-hub-background:
+  short: 'Hub running in background (PID %d)'
+write.serve-hub-stopped:
+  short: 'Hub stopped (PID %d)'
+
+write.claudecheck-unknown:
+  short: unknown
+write.claudecheck-none:
+  short: "(none)"
+write.claudecheck-source-dir:
+  short: directory (hot-reload)
+write.claudecheck-source-github:
+  short: github (marketplace)
+write.claudecheck-enabled-both:
+  short: user scope + project
+write.claudecheck-enabled-global:
+  short: user scope (all projects)
+write.claudecheck-enabled-local:
+  short: project only
+write.claudecheck-version-open:
+  short: " ("
+write.claudecheck-version-close:
+  short: ")"
+write.steering-body-workflow:
+  short: |-
+    # Development Workflow
+
+    Describe the development workflow, branching strategy, and process rules.
+
+    - **Branch strategy** (main-only, trunk-based, feature branches)
+    - **Commit conventions** (message format, signed-off-by)
+    - **Pre-commit / pre-push checks**
+    - **Review expectations**

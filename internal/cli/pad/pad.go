@@ -22,7 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/rm"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/show"
-	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/tags"
+	tagCmd "github.com/ActiveMemory/ctx/internal/cli/pad/cmd/tag"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/tag"
@@ -45,10 +45,11 @@ func Cmd() *cobra.Command {
 
 	short, long := desc.Command(cmd.DescKeyPad)
 	c := &cobra.Command{
-		Use:   cmd.UsePad,
-		Short: short,
-		Long:  long,
-		Args:  cobra.NoArgs,
+		Use:     cmd.UsePad,
+		Short:   short,
+		Long:    long,
+		Example: desc.Example(cmd.DescKeyPad),
+		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			entries, readErr := store.ReadEntriesWithIDs()
 			if readErr != nil {
@@ -100,7 +101,7 @@ func Cmd() *cobra.Command {
 	c.AddCommand(export.Cmd())
 	c.AddCommand(merge.Cmd())
 	c.AddCommand(normalize.Cmd())
-	c.AddCommand(tags.Cmd())
+	c.AddCommand(tagCmd.Cmd())
 
 	return c
 }

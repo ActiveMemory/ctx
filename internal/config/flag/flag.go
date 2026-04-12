@@ -50,11 +50,6 @@ const (
 	Skill    = "skill"
 )
 
-// Connect command flag names.
-const (
-	AdminAuth = "admin-auth"
-)
-
 // Shared flag names used across commands.
 const (
 	After           = "after"

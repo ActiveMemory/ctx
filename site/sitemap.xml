@@ -127,6 +127,9 @@
         <loc>https://ctx.ist/recipes/context-health/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/recipes/configuration-profiles/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/recipes/troubleshooting/</loc>
       </url>
       <url>
@@ -235,7 +238,7 @@
         <loc>https://ctx.ist/cli/loop/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli/connect/</loc>
+        <loc>https://ctx.ist/cli/connection/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/hub/</loc>
@@ -256,7 +259,28 @@
         <loc>https://ctx.ist/cli/trace/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/cli/bootstrap/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/event/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/resource/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/stats/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/cli/config/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/backup/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/prune/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/message/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/system/</loc>

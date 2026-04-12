@@ -9,6 +9,8 @@ title: Remind
 icon: lucide/bell-ring
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## `ctx remind`
 
 Session-scoped reminders that surface at session start.
@@ -55,8 +57,11 @@ ctx remind "check CI after the deploy" --after 2026-02-25
 List all pending reminders. Date-gated reminders that aren't
 yet due are annotated with `(after DATE, not yet due)`.
 
+**Examples**:
+
 ```bash
 ctx remind list
+ctx remind ls            # alias
 ```
 
 **Aliases**: `ls`
@@ -95,6 +100,8 @@ ctx remind dismiss --all
 
 Reassign reminder IDs as a contiguous sequence 1..N, closing
 any gaps left by dismissals.
+
+**Examples**:
 
 ```bash
 ctx remind normalize

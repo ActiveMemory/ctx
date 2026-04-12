@@ -9,6 +9,8 @@ title: Doctor
 icon: lucide/stethoscope
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ### `ctx doctor`
 
 Structural health check across context, hooks, and configuration. Runs
@@ -142,7 +144,7 @@ Status indicators:
 
 ---
 
-#### Examples
+**Examples**:
 
 ```bash
 # Quick structural health check
@@ -182,6 +184,6 @@ ctx doctor --json | jq '[.results[] | select(.status == "error")]'
 ---
 
 **See also**: [Troubleshooting](../recipes/troubleshooting.md) |
-[`ctx system events`](system.md#ctx-system-events) |
+[`ctx event`](system.md#ctx-system-events) |
 [`/ctx-doctor` skill](../reference/skills.md#ctx-doctor) |
 [Detecting and Fixing Drift](../recipes/context-health.md)
