@@ -944,6 +944,67 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#package-taxonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Taxonomy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Package Taxonomy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-internalwrite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output: internal/write/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errors-internalerr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors: internal/err/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-constants-internalconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config constants: internal/config/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-assets-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The assets pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#adding-a-new-session-parser" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2096,6 +2157,67 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#package-taxonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Taxonomy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Package Taxonomy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-internalwrite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output: internal/write/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errors-internalerr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors: internal/err/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-constants-internalconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config constants: internal/config/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-assets-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The assets pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#adding-a-new-session-parser" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2553,6 +2675,10 @@ never distributed to users.</p>
 <td><code>/_ctx-update-docs</code></td>
 <td>Check docs/code consistency after changes</td>
 </tr>
+<tr>
+<td><code>/_ctx-command-audit</code></td>
+<td>Audit CLI surface after renames, moves, or deletions</td>
+</tr>
 </tbody>
 </table>
 <p>Six skills previously in this list have been promoted to bundled plugin skills
@@ -2562,15 +2688,106 @@ and are now available to all ctx users: <code>/ctx-brainstorm</code>, <code>/ctx
 <h2 id="how-to-add-things">How To Add Things<a class="headerlink" href="#how-to-add-things" title="Permanent link">&para;</a></h2>
 <h3 id="adding-a-new-cli-command">Adding a New CLI Command<a class="headerlink" href="#adding-a-new-cli-command" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Create a package under <code>internal/cli/&lt;name&gt;/</code>;</li>
+<li>Create a package under <code>internal/cli/&lt;name&gt;/</code> with <code>doc.go</code>, <code>cmd.go</code>,
+   and <code>run.go</code>;</li>
 <li>Implement <code>Cmd() *cobra.Command</code> as the entry point;</li>
-<li>Register it in <code>internal/bootstrap/bootstrap.go</code> (add import + call in <code>Initialize</code>);</li>
-<li>Use <code>cmd.Printf</code>/<code>cmd.Println</code> for output (not <code>fmt.Print</code>);</li>
+<li>Add <code>Use*</code> and <code>DescKey*</code> constants in <code>internal/config/embed/cmd/&lt;name&gt;.go</code>;</li>
+<li>Add command descriptions in <code>internal/assets/commands/commands.yaml</code>;</li>
+<li>Add examples in <code>internal/assets/commands/examples.yaml</code>;</li>
+<li>Add flag descriptions in <code>internal/assets/commands/flags.yaml</code>;</li>
+<li>Register the command in <code>internal/bootstrap/group.go</code> (add import +
+   entry in the appropriate group function);</li>
+<li>Create an output package at <code>internal/write/&lt;name&gt;/</code> for all
+   user-facing output (see <a href="#package-taxonomy">Package Taxonomy</a>);</li>
+<li>Create error constructors at <code>internal/err/&lt;name&gt;/</code> for
+   domain-specific errors;</li>
 <li>Add tests in the same package (<code>&lt;name&gt;_test.go</code>);</li>
-<li>Add a section to the appropriate CLI doc page in <code>docs/cli/</code>.</li>
+<li>Add a doc page at <code>docs/cli/&lt;name&gt;.md</code> and update
+    <code>docs/cli/index.md</code>;</li>
+<li>Add the page to <code>zensical.toml</code> nav.</li>
 </ol>
 <p>Pattern to follow: <code>internal/cli/pad/pad.go</code> (parent with subcommands) or
-<code>internal/cli/drift/drift.go</code> (single command).</p>
+<code>internal/cli/drift/</code> (single command).</p>
+<h3 id="package-taxonomy">Package Taxonomy<a class="headerlink" href="#package-taxonomy" title="Permanent link">&para;</a></h3>
+<p>ctx separates concerns into a strict package taxonomy. Knowing where
+things go prevents code review friction and keeps the AST lint tests
+happy.</p>
+<h4 id="output-internalwrite">Output: <code>internal/write/</code><a class="headerlink" href="#output-internalwrite" title="Permanent link">&para;</a></h4>
+<p>Every CLI command's user-facing output lives in its own sub-package
+under <code>internal/write/&lt;domain&gt;/</code>. Output functions accept
+<code>*cobra.Command</code> and call <code>cmd.Println(...)</code> — never <code>fmt.Print*</code>
+directly. All text strings are loaded from YAML via
+<code>desc.Text(text.DescKey*)</code>, never inline.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>internal/write/add/add.go       # output for ctx add
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>internal/write/stat/stat.go     # output for ctx usage
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>internal/write/resource/        # output for ctx sysinfo
+</span></code></pre></div>
+<p>Exception: <code>write/rc/</code> writes to <code>os.Stderr</code> because rc loads before
+cobra is initialized.</p>
+<h4 id="errors-internalerr">Errors: <code>internal/err/</code><a class="headerlink" href="#errors-internalerr" title="Permanent link">&para;</a></h4>
+<p>Domain-specific error constructors live under <code>internal/err/&lt;domain&gt;/</code>.
+Each package mirrors the write structure. Functions return <code>error</code>
+(never custom error types) and load messages from YAML via
+<code>desc.Text(text.DescKey*)</code>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>internal/err/add/add.go         # errors for ctx add
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>internal/err/config/config.go   # errors for configuration
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>internal/err/cli/cli.go         # errors for CLI argument validation
+</span></code></pre></div>
+<h4 id="config-constants-internalconfig">Config constants: <code>internal/config/</code><a class="headerlink" href="#config-constants-internalconfig" title="Permanent link">&para;</a></h4>
+<p>Pure-constant leaf packages with zero internal dependencies (stdlib
+only). Over 60 sub-packages, organized by domain. See
+<code>internal/config/README.md</code> for the full decision tree.</p>
+<table>
+<thead>
+<tr>
+<th>What you're adding</th>
+<th>Where it goes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File names, extensions, paths</td>
+<td><code>config/file/</code>, <code>config/dir/</code></td>
+</tr>
+<tr>
+<td>Regex patterns</td>
+<td><code>config/regex/</code></td>
+</tr>
+<tr>
+<td>CLI flag names (<code>--flag-name</code>)</td>
+<td><code>config/flag/flag.go</code></td>
+</tr>
+<tr>
+<td>Flag description YAML keys</td>
+<td><code>config/embed/flag/&lt;cmd&gt;.go</code></td>
+</tr>
+<tr>
+<td>Command Use/DescKey strings</td>
+<td><code>config/embed/cmd/&lt;cmd&gt;.go</code></td>
+</tr>
+<tr>
+<td>User-facing text YAML keys</td>
+<td><code>config/embed/text/&lt;domain&gt;.go</code></td>
+</tr>
+<tr>
+<td>Time durations, thresholds</td>
+<td><code>config/&lt;domain&gt;/</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="the-assets-pipeline">The assets pipeline<a class="headerlink" href="#the-assets-pipeline" title="Permanent link">&para;</a></h4>
+<p>User-facing text flows through a three-level chain:</p>
+<ol>
+<li><strong>Go constant</strong> (<code>config/embed/text/</code>) defines a string key:
+   <code>DescKeyWriteAddedTo = "write.added-to"</code></li>
+<li><strong>Call site</strong> resolves it: <code>desc.Text(text.DescKeyWriteAddedTo)</code></li>
+<li><strong>YAML</strong> (<code>internal/assets/commands/text/write.yaml</code>) holds the
+   actual text: <code>write.added-to: { short: "Added to %s" }</code></li>
+</ol>
+<p>The same pattern applies to command descriptions (<code>commands.yaml</code>),
+flag descriptions (<code>flags.yaml</code>), and examples (<code>examples.yaml</code>).
+The <code>TestDescKeyYAMLLinkage</code> test verifies every constant resolves
+to a non-empty YAML value.</p>
 <h3 id="adding-a-new-session-parser">Adding a New Session Parser<a class="headerlink" href="#adding-a-new-session-parser" title="Permanent link">&para;</a></h3>
 <p>The journal system uses a <code>SessionParser</code> interface. To add support for a
 new AI tool (e.g. Aider, Cursor):</p>
@@ -2614,7 +2831,7 @@ need prefix-based header detection.</p>
 <h2 id="day-to-day-workflow">Day-to-Day Workflow<a class="headerlink" href="#day-to-day-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="go-code-changes">Go Code Changes<a class="headerlink" href="#go-code-changes" title="Permanent link">&para;</a></h3>
 <p>After modifying Go source files, rebuild and reinstall:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>make<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>make<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
 </span></code></pre></div>
 <p>The <code>ctx</code> binary is statically compiled. There is no hot reload.
 You must rebuild for Go changes to take effect.</p>
@@ -2623,8 +2840,8 @@ You must rebuild for Go changes to take effect.</p>
 <code>internal/assets/claude/hooks/</code>.</p>
 <p>Claude Code caches plugin files, so edits aren't picked up automatically.</p>
 <p><strong>Clear the cache and restart</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>plugin-reload<span class="w">   </span><span class="c1"># nukes ~/.claude/plugins/cache/activememory-ctx/</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># then restart Claude Code</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>make<span class="w"> </span>plugin-reload<span class="w">   </span><span class="c1"># nukes ~/.claude/plugins/cache/activememory-ctx/</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># then restart Claude Code</span>
 </span></code></pre></div>
 <p>The plugin will be re-installed from your local marketplace on startup.
 No version bump is needed during development.</p>
@@ -2660,29 +2877,29 @@ is gitignored and swapped between them:</p>
 </tbody>
 </table>
 <p>Use ctx commands to switch:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>dev<span class="w">      </span><span class="c1"># switch to dev profile</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>base<span class="w">     </span><span class="c1"># switch to base profile</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ctx<span class="w"> </span>config<span class="w"> </span>status<span class="w">          </span><span class="c1"># show which profile is active</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>dev<span class="w">      </span><span class="c1"># switch to dev profile</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>base<span class="w">     </span><span class="c1"># switch to base profile</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ctx<span class="w"> </span>config<span class="w"> </span>status<span class="w">          </span><span class="c1"># show which profile is active</span>
 </span></code></pre></div>
 <p>After cloning, run <code>ctx config switch dev</code> to get started with full logging.</p>
 <p>See <a href="../configuration/">Configuration</a> for the full <code>.ctxrc</code> option reference.</p>
 <h3 id="backups">Backups<a class="headerlink" href="#backups" title="Permanent link">&para;</a></h3>
 <p>Back up project context and global Claude Code data with:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>backup<span class="w">                    </span><span class="c1"># both project + global (default)</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>backup<span class="w"> </span>--scope<span class="w"> </span>project<span class="w">    </span><span class="c1"># .context/, .claude/, ideas/ only</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ctx<span class="w"> </span>backup<span class="w"> </span>--scope<span class="w"> </span>global<span class="w">     </span><span class="c1"># ~/.claude/ only</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>backup<span class="w">                    </span><span class="c1"># both project + global (default)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>backup<span class="w"> </span>--scope<span class="w"> </span>project<span class="w">    </span><span class="c1"># .context/, .claude/, ideas/ only</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ctx<span class="w"> </span>backup<span class="w"> </span>--scope<span class="w"> </span>global<span class="w">     </span><span class="c1"># ~/.claude/ only</span>
 </span></code></pre></div>
 <p>Archives are saved to <code>/tmp/</code>. When <code>CTX_BACKUP_SMB_URL</code> is configured,
 they are also copied to an SMB share. See
-<a href="../../cli/system/#ctx-system-backup">CLI Reference: backup</a> for details.</p>
+<a href="../../cli/backup/">CLI Reference: backup</a> for details.</p>
 <h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># fast: all tests</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>make<span class="w"> </span>audit<span class="w">  </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>make<span class="w"> </span>smoke<span class="w">  </span><span class="c1"># build + run basic commands end-to-end</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># fast: all tests</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>make<span class="w"> </span>audit<span class="w">  </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>make<span class="w"> </span>smoke<span class="w">  </span><span class="c1"># build + run basic commands end-to-end</span>
 </span></code></pre></div>
 <h3 id="running-the-docs-site-locally">Running the Docs Site Locally<a class="headerlink" href="#running-the-docs-site-locally" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>make<span class="w"> </span>site-setup<span class="w">  </span><span class="c1"># one-time: install zensical via pipx</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>make<span class="w"> </span>site-serve<span class="w">  </span><span class="c1"># serve at localhost</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>make<span class="w"> </span>site-setup<span class="w">  </span><span class="c1"># one-time: install zensical via pipx</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>make<span class="w"> </span>site-serve<span class="w">  </span><span class="c1"># serve at localhost</span>
 </span></code></pre></div>
 <hr />
 <h2 id="submitting-changes">Submitting Changes<a class="headerlink" href="#submitting-changes" title="Permanent link">&para;</a></h2>
@@ -2724,7 +2941,14 @@ doc consistency, and tests in one pass.</p>
 <li>Follow Go conventions (<code>gofmt</code>, <code>go vet</code>);</li>
 <li>Keep functions <strong>focused</strong> and <strong>small</strong>;</li>
 <li>Add tests for new functionality;</li>
-<li>Handle errors explicitly.</li>
+<li>Handle errors explicitly — use descriptive names (<code>readErr</code>,
+  <code>writeErr</code>) not repeated <code>err</code>;</li>
+<li>No magic strings — all repeated literals go in <code>internal/config/</code>;</li>
+<li>Output goes through <code>internal/write/</code> packages, not <code>fmt.Print*</code>;</li>
+<li>Errors go through <code>internal/err/</code> constructors, not inline
+  <code>fmt.Errorf</code>;</li>
+<li>See <a href="#package-taxonomy">Package Taxonomy</a> and
+  <code>.context/CONVENTIONS.md</code> for the full reference.</li>
 </ul>
 <hr />
 <h2 id="code-of-conduct">Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Permanent link">&para;</a></h2>
@@ -2737,7 +2961,7 @@ doc consistency, and tests in one pass.</p>
 <p>By contributing, you agree to the
 <a href="https://github.com/ActiveMemory/ctx/blob/main/CONTRIBUTING_DCO.md">Developer Certificate of Origin</a>.</p>
 <p>All commits must be signed off:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
 </span></code></pre></div>
 <h3 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h3>
 <p>Contributions are licensed under the

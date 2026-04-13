@@ -89,11 +89,6 @@ decision:
 decision.reindex:
   short: '  ctx decision reindex'
 
-dep:
-  short: |2-
-      ctx dep
-      ctx dep --external
-      ctx dep --format table
 
 doctor:
   short: |2-
@@ -110,6 +105,12 @@ fmt:
       ctx fmt                # Rewrap all .context/ files
       ctx fmt --check        # CI-safe: exit 1 if anything changes
       ctx fmt --width 100    # Rewrap to a custom line width
+
+hook:
+  short: |2-
+      ctx hook message list
+      ctx hook pause
+      ctx hook event --last 10
 
 guide:
   short: |2-
@@ -249,14 +250,14 @@ memory.unpublish:
 
 notify:
   short: |2-
-      ctx notify --event loop "Loop completed"
-      ctx notify -e nudge -s session-abc "Checkpoint at prompt #20"
+      ctx hook notify --event loop "Loop completed"
+      ctx hook notify -e nudge -s session-abc "Checkpoint at prompt #20"
 
 notify.setup:
-  short: '  ctx notify setup'
+  short: '  ctx hook notify setup'
 
 notify.test:
-  short: '  ctx notify test'
+  short: '  ctx hook notify test'
 
 pad:
   short: |2-
@@ -309,7 +310,7 @@ pad.tag:
       ctx pad tag --json
 
 pause:
-  short: '  ctx pause'
+  short: '  ctx hook pause'
 
 permission:
   short: |2-
@@ -346,7 +347,7 @@ remind.normalize:
   short: '  ctx remind normalize'
 
 resume:
-  short: '  ctx resume'
+  short: '  ctx hook resume'
 
 serve:
   short: |2-
@@ -438,7 +439,7 @@ system.blocknonpathctx:
   short: '  ctx system block-non-path-ctx'
 
 bootstrap:
-  short: '  ctx bootstrap'
+  short: '  ctx system bootstrap'
 
 system.checkbackupage:
   short: '  ctx system check-backup-age'
@@ -490,9 +491,9 @@ system.contextloadgate:
 
 event:
   short: |2-
-      ctx event
-      ctx event --hook check-context-size --last 10
-      ctx event --json
+      ctx hook event
+      ctx hook event --hook check-context-size --last 10
+      ctx hook event --json
 
 system.heartbeat:
   short: '  ctx system heartbeat'
@@ -507,20 +508,20 @@ system.markwrappedup:
 
 message:
   short: |2-
-      ctx message list
-      ctx message show check-context-size checkpoint
+      ctx hook message list
+      ctx hook message show check-context-size checkpoint
 
 message.edit:
-  short: '  ctx message edit check-context-size checkpoint'
+  short: '  ctx hook message edit check-context-size checkpoint'
 
 message.list:
-  short: '  ctx message list'
+  short: '  ctx hook message list'
 
 message.reset:
-  short: '  ctx message reset check-context-size checkpoint'
+  short: '  ctx hook message reset check-context-size checkpoint'
 
 message.show:
-  short: '  ctx message show check-context-size checkpoint'
+  short: '  ctx hook message show check-context-size checkpoint'
 
 system.pause:
   short: '  ctx system pause --session-id $PPID'
@@ -537,8 +538,8 @@ prune:
 system.qareminder:
   short: '  ctx system qa-reminder'
 
-resource:
-  short: '  ctx resource'
+sysinfo:
+  short: '  ctx sysinfo'
 
 system.resume:
   short: '  ctx system resume --session-id $PPID'
@@ -551,11 +552,11 @@ system.sessionevent:
 system.specsnudge:
   short: '  ctx system specs-nudge'
 
-stats:
+usage:
   short: |2-
-      ctx stats
-      ctx stats --follow
-      ctx stats --session abc123
+      ctx usage
+      ctx usage --follow
+      ctx usage --session abc123
 
 task:
   short: |2-

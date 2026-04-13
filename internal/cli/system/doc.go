@@ -8,9 +8,13 @@
 // hosts Claude Code hook plumbing subcommands as native Go binaries,
 // replacing the shell scripts previously deployed to .claude/hooks/.
 //
-// User-facing maintenance commands (backup, bootstrap, event, message,
-// prune, resource, stats) have been promoted to top-level commands and
-// are registered in internal/bootstrap/group.go.
+// User-facing maintenance commands (backup, prune, sysinfo, usage)
+// are registered as top-level commands in internal/bootstrap/group.go.
+// Hook-facing commands (event, message, notify, pause, resume) live
+// under the "ctx hook" parent, also registered in group.go.
+//
+// Agent-only subcommands:
+//   - bootstrap: Print context location for AI agents (hidden, agent-only)
 //
 // Plumbing subcommands (used by skills and automation):
 //   - mark-journal: Update journal processing state (.state.json)

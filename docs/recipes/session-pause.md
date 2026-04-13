@@ -23,8 +23,8 @@ that won't produce learnings or decisions worth capturing.
 
 | Command                       | What it does                             |
 |-------------------------------|------------------------------------------|
-| `ctx pause` or `/ctx-pause`   | Silence all nudge hooks for this session |
-| `ctx resume` or `/ctx-resume` | Restore normal hook behavior             |
+| `ctx hook pause` or `/ctx-pause`   | Silence all nudge hooks for this session |
+| `ctx hook resume` or `/ctx-resume` | Restore normal hook behavior             |
 
 Pause is **session-scoped**: It only affects the current session.
 Other sessions (same project, different terminal) are unaffected.
@@ -61,12 +61,12 @@ All nudge and reminder hooks go silent:
 # 1. Session starts: Context loads normally.
 
 # 2. You realize this is a quick task
-ctx pause
+ctx hook pause
 
 # 3. Work without interruption: hooks are silent
 
 # 4. Session evolves into real work? Resume first
-ctx resume
+ctx hook resume
 
 # 5. Now wrap up normally
 # /ctx-wrap-up

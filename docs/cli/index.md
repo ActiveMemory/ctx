@@ -89,7 +89,6 @@ Commands that work before initialization: `ctx init`, `ctx setup`,
 | [`ctx connection`](connection.md#ctx-connection) | Connect to a ctx Hub                                  |
 | [`ctx mcp`](mcp.md#ctx-mcp)                  | MCP server for AI tool integration (stdin/stdout)        |
 | [`ctx watch`](watch.md#ctx-watch)             | Auto-apply context updates from AI output                |
-| [`ctx notify`](notify.md#ctx-notify)          | Send webhook notifications                               |
 | [`ctx loop`](loop.md#ctx-loop)                | Generate autonomous loop script                          |
 
 ## Diagnostics
@@ -98,13 +97,10 @@ Commands that work before initialization: `ctx init`, `ctx setup`,
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx doctor`](doctor.md#ctx-doctor)          | Structural health check (hooks, drift, config)           |
 | [`ctx change`](change.md#ctx-change)          | Show what changed since last session                     |
-| [`ctx dep`](dep.md#ctx-dep)                   | Show package dependency graph                            |
 | [`ctx why`](why.md#ctx-why)                   | Read the philosophy behind `ctx`                         |
 | [`ctx trace`](trace.md#ctx-trace)             | Show context behind git commits                          |
-| [`ctx bootstrap`](bootstrap.md#ctx-bootstrap) | Print context location for AI agents                     |
-| [`ctx event`](event.md#ctx-event)             | Query the local hook event log                           |
-| [`ctx resource`](resource.md#ctx-resource)    | Show system resource usage (memory, swap, disk, load)    |
-| [`ctx stats`](stats.md#ctx-stats)             | Show session token usage stats                           |
+| [`ctx sysinfo`](sysinfo.md#ctx-sysinfo)      | Show system resource usage (memory, swap, disk, load)    |
+| [`ctx usage`](usage.md#ctx-usage)             | Show session token usage stats                           |
 
 ## Runtime
 
@@ -112,11 +108,9 @@ Commands that work before initialization: `ctx init`, `ctx setup`,
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx config`](config.md#ctx-config)          | Manage runtime configuration profiles                    |
 | [`ctx permission`](context.md#ctx-permission) | Permission snapshots (golden image)                      |
-| [`ctx pause`](pause.md#ctx-pause)             | Pause context hooks for this session                     |
-| [`ctx resume`](resume.md#ctx-resume)          | Resume context hooks after a pause                       |
+| [`ctx hook`](hook.md#ctx-hook)                | Hook message, notification, and lifecycle controls       |
 | [`ctx backup`](backup.md#ctx-backup)          | Back up context and Claude data to tar.gz / SMB          |
 | [`ctx prune`](prune.md#ctx-prune)             | Clean stale per-session state files                      |
-| [`ctx message`](message.md#ctx-message)       | Manage hook message templates                            |
 
 ## Shell
 
@@ -129,7 +123,7 @@ Commands that work before initialization: `ctx init`, `ctx setup`,
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx site`](site.md#ctx-site)                | Site management (feed generation)                        |
-| [`ctx system`](system.md#ctx-system)          | Hook plumbing (not user-facing)                          |
+| [`ctx system`](system.md#ctx-system)          | Hook plumbing and agent-only commands (not user-facing)  |
 
 ---
 

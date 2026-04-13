@@ -184,6 +184,6 @@ ctx doctor --json | jq '[.results[] | select(.status == "error")]'
 ---
 
 **See also**: [Troubleshooting](../recipes/troubleshooting.md) |
-[`ctx event`](system.md#ctx-system-events) |
+[`ctx hook event`](event.md) |
 [`/ctx-doctor` skill](../reference/skills.md#ctx-doctor) |
 [Detecting and Fixing Drift](../recipes/context-health.md)

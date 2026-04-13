@@ -106,7 +106,7 @@ Silence all nudge hooks for a **quick task** that doesn't need ceremony
 overhead. Session-scoped: Other sessions are unaffected. Security
 hooks still fire.
 
-**Uses**: `ctx pause`, `ctx resume`, `/ctx-pause`, `/ctx-resume`
+**Uses**: `ctx hook pause`, `ctx hook resume`, `/ctx-pause`, `/ctx-resume`
 
 ---
 
@@ -185,8 +185,8 @@ Customize what hooks **say** without changing what they **do**. Override
 the QA gate for Python (`pytest` instead of `make lint`), silence noisy
 ceremony nudges, or tailor post-commit instructions for your stack.
 
-**Uses**: `ctx message list`, `ctx message show`,
-`ctx message edit`, `ctx message reset`
+**Uses**: `ctx hook message list`, `ctx hook message show`,
+`ctx hook message edit`, `ctx hook message reset`
 
 ---
 
@@ -207,7 +207,7 @@ one does, why it exists, and how to **verify** they're actually firing.
 Covers webhook-based audit trails, log inspection, and detecting silent
 hook failures.
 
-**Uses**: `ctx system`, `ctx notify`, `.context/logs/`, `.ctxrc`
+**Uses**: `ctx system`, `ctx hook notify`, `.context/logs/`, `.ctxrc`
 `notify.events`
 
 ---
@@ -218,7 +218,7 @@ Get **push notifications** when loops complete, hooks fire, or agents hit
 milestones. Webhook URL is **encrypted**: never stored in plaintext.
 Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.
 
-**Uses**: `ctx notify setup`, `ctx notify test`, `ctx notify --event`,
+**Uses**: `ctx hook notify setup`, `ctx hook notify test`, `ctx hook notify --event`,
 `.ctxrc` `notify.events`
 
 ---
@@ -262,7 +262,7 @@ Diagnose hook failures, noisy nudges, stale context, and configuration
 issues. Start with `ctx doctor` for a structural health check, then
 use `/ctx-doctor` for agent-driven analysis of event patterns.
 
-**Uses**: `ctx doctor`, `ctx event`, `/ctx-doctor`
+**Uses**: `ctx doctor`, `ctx hook event`, `/ctx-doctor`
 
 ---
 
@@ -382,16 +382,6 @@ quantified dependency data, and ranked failure hypotheses.
 
 **Uses**: `/ctx-architecture`, `/ctx-architecture-enrich`,
 `/ctx-architecture-failure-analysis`
-
----
-
-### [Generating Dependency Graphs](dependency-graph.md)
-
-Map your project's internal and external **dependency structure**.
-Auto-detects Go, Node.js, Python, and Rust. Output as Mermaid,
-table, or JSON.
-
-**Uses**: `ctx dep`, `ctx drift`
 
 ---
 

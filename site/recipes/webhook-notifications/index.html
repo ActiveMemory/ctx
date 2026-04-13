@@ -2187,8 +2187,8 @@ from the terminal. You have no way to know when it finishes, hits a limit, or
 when a hook fires a nudge.</p>
 <p><strong>How do you get notified about agent activity without watching the terminal?</strong></p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup<span class="w">  </span><span class="c1"># configure webhook URL (encrypted)</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># verify delivery</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>setup<span class="w">  </span><span class="c1"># configure webhook URL (encrypted)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># verify delivery</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Hooks auto-notify on: session-end, loop-iteration, resource-danger</span>
 </span></code></pre></div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -2202,17 +2202,17 @@ when a hook fires a nudge.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>ctx notify setup</code></td>
+<td><code>ctx hook notify setup</code></td>
 <td>CLI command</td>
 <td>Configure and encrypt webhook URL</td>
 </tr>
 <tr>
-<td><code>ctx notify test</code></td>
+<td><code>ctx hook notify test</code></td>
 <td>CLI command</td>
 <td>Send a test notification</td>
 </tr>
 <tr>
-<td><code>ctx notify --event &lt;name&gt; "msg"</code></td>
+<td><code>ctx hook notify --event &lt;name&gt; "msg"</code></td>
 <td>CLI command</td>
 <td>Send a notification from scripts/skills</td>
 </tr>
@@ -2259,7 +2259,7 @@ when a hook fires a nudge.</p>
 <p><strong>The URL contains auth tokens</strong>. <code>ctx</code> encrypts it; it never appears in plaintext
 in your repo.</p>
 <h3 id="step-2-configure-the-webhook">Step 2: Configure the Webhook<a class="headerlink" href="#step-2-configure-the-webhook" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>setup
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Enter webhook URL: https://maker.ifttt.com/trigger/ctx/json/with/key/YOUR_KEY</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Webhook configured: https://maker.ifttt.com/***</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Encrypted at: .context/.notify.enc</span>
@@ -2268,10 +2268,10 @@ in your repo.</p>
 (<code>~/.ctx/.ctx.key</code>). The encrypted file (<code>.context/.notify.enc</code>)
 is safe to commit. The key lives outside the project and is never committed.</p>
 <h3 id="step-3-test-it">Step 3: Test It<a class="headerlink" href="#step-3-test-it" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Webhook responded: HTTP 200 OK</span>
 </span></code></pre></div>
-<p>If you see <code>No webhook configured</code>, run <code>ctx notify setup</code> first.</p>
+<p>If you see <code>No webhook configured</code>, run <code>ctx hook notify setup</code> first.</p>
 <h3 id="step-4-configure-events">Step 4: Configure Events<a class="headerlink" href="#step-4-configure-events" title="Permanent link">&para;</a></h3>
 <p>Notifications are opt-in: no events are sent unless you configure an event
 list in <code>.ctxrc</code>:</p>
@@ -2285,12 +2285,12 @@ list in <code>.ctxrc</code>:</p>
 </span></code></pre></div>
 <p>Only listed events fire. Omitting an event silently drops it.</p>
 <h3 id="step-5-use-in-your-own-skills">Step 5: Use in Your Own Skills<a class="headerlink" href="#step-5-use-in-your-own-skills" title="Permanent link">&para;</a></h3>
-<p>Add <code>ctx notify</code> calls to any skill or script:</p>
+<p>Add <code>ctx hook notify</code> calls to any skill or script:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># In a release skill</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>release<span class="w"> </span><span class="s2">&quot;v1.2.0 released successfully&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>release<span class="w"> </span><span class="s2">&quot;v1.2.0 released successfully&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># In a backup script</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ctx<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>backup<span class="w"> </span><span class="s2">&quot;Nightly backup completed&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>backup<span class="w"> </span><span class="s2">&quot;Nightly backup completed&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 </span></code></pre></div>
 <p>The <code>2&gt;/dev/null || true</code> suffix ensures the notification never breaks your
 script: If there's no webhook or the HTTP call fails, it's a silent noop.</p>
@@ -2327,13 +2327,13 @@ script: If there's no webhook or the HTTP call fails, it's a silent noop.</p>
 </tr>
 <tr>
 <td><code>test</code></td>
-<td><code>ctx notify test</code></td>
+<td><code>ctx hook notify test</code></td>
 <td>Manual test notification</td>
 </tr>
 <tr>
 <td><em>(custom)</em></td>
 <td>Your skills</td>
-<td>You wire <code>ctx notify --event &lt;name&gt;</code> in your own scripts</td>
+<td>You wire <code>ctx hook notify --event &lt;name&gt;</code> in your own scripts</td>
 </tr>
 </tbody>
 </table>
@@ -2368,7 +2368,7 @@ absorbs a nudge instead of surfacing it. </p>
 <p>The <code>detail</code> field is a structured template reference containing the hook
 name, variant, and any template variables. This lets receivers filter by
 hook or variant without parsing rendered text. The field is omitted when
-no template reference applies (e.g. custom <code>ctx notify</code> calls).</p>
+no template reference applies (e.g. custom <code>ctx hook notify</code> calls).</p>
 <h3 id="heartbeat-payload">Heartbeat Payload<a class="headerlink" href="#heartbeat-payload" title="Permanent link">&para;</a></h3>
 <p>The <code>heartbeat</code> event fires on every prompt with session metadata and token
 usage telemetry:</p>
@@ -2429,7 +2429,7 @@ for observability dashboards or liveness monitoring of long-running sessions.</p
 </tbody>
 </table>
 <p>The key is shared with the scratchpad. If you rotate the encryption key,
-re-run <code>ctx notify setup</code> to re-encrypt the webhook URL with the new key.</p>
+re-run <code>ctx hook notify setup</code> to re-encrypt the webhook URL with the new key.</p>
 <h2 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h2>
 <p><code>ctx</code> checks the age of the encryption key once per day. If it's older
 than 90 days (<em>configurable via <code>key_rotation_days</code></em>), a VERBATIM nudge
@@ -2451,8 +2451,8 @@ results on the main branch after merging.</p>
 in <code>.ctxrc</code>. The event log writes the same payload as webhooks to a local
 JSONL file (<code>.context/state/events.jsonl</code>) that you can query without any
 external service:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>event<span class="w"> </span>--last<span class="w"> </span><span class="m">20</span><span class="w">          </span><span class="c1"># recent hook activity</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--last<span class="w"> </span><span class="m">20</span><span class="w">          </span><span class="c1"># recent hook activity</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
 </span></code></pre></div>
 <p>Webhooks and event logging are independent: you can use either, both, or
 neither. Webhooks give you push notifications and an external audit trail.
@@ -2463,7 +2463,7 @@ The event log gives you local queryability and <code>ctx doctor</code> integrati
 <ul>
 <li><strong>Fire-and-forget</strong>: Notifications never block. HTTP errors are silently
   ignored. No retry, no response parsing.</li>
-<li><strong>No webhook = no cost</strong>: When no webhook is configured, <code>ctx notify</code> exits
+<li><strong>No webhook = no cost</strong>: When no webhook is configured, <code>ctx hook notify</code> exits
   immediately. System hooks that call <code>notify.Send()</code> add zero overhead.</li>
 <li><strong>Multiple projects</strong>: Each project has its own <code>.notify.enc</code>. You can point
   different projects at different webhooks.</li>
@@ -2475,7 +2475,7 @@ The event log gives you local queryability and <code>ctx doctor</code> integrati
 are running, audit what they do, and get alerted when they go silent.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../cli/notify/">CLI Reference: ctx notify</a>:
+<li><a href="../../cli/notify/">CLI Reference: ctx hook notify</a>:
   full command reference</li>
 <li><a href="../../home/configuration/">Configuration</a>: <code>.ctxrc</code> settings including
   <code>notify</code> options</li>

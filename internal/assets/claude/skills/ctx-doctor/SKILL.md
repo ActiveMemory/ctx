@@ -19,7 +19,7 @@ event log analysis.
 
 - User wants a quick status check (use `/ctx-status`)
 - User wants to fix drift (use `/ctx-drift`)
-- User wants to change hook messages (use `ctx message`)
+- User wants to change hook messages (use `ctx hook message`)
 - User wants to pause hooks (use `/ctx-pause`)
 
 ## Diagnostic Playbook
@@ -41,13 +41,13 @@ Parse the JSON output. Note any warnings or errors.
 If the doctor report shows event logging is enabled, query recent events:
 
 ```bash
-ctx event --json --last 100
+ctx hook event --json --last 100
 ```
 
 If the user is asking about a specific hook:
 
 ```bash
-ctx event --hook <hook-name> --json --last 20
+ctx hook event --hook <hook-name> --json --last 20
 ```
 
 If event logging is not enabled, note: "Enable `event_log: true` in
@@ -58,7 +58,7 @@ If event logging is not enabled, note: "Enable `event_log: true` in
 Based on findings, check additional sources:
 
 - **Hook config**: read `.claude/settings.local.json` to verify hook registration
-- **Custom messages**: run `ctx message list` to check for silenced hooks
+- **Custom messages**: run `ctx hook message list` to check for silenced hooks
 - **RC config**: read `.ctxrc` to check configuration
 - **Reminders**: run `ctx remind list` for pending reminders
 
@@ -90,10 +90,10 @@ The user decides what to act on.
 | Source               | Command                                  | What it reveals       |
 |----------------------|------------------------------------------|-----------------------|
 | Structural health    | `ctx doctor --json`                      | All mechanical checks |
-| Event log            | `ctx event --json --last 100`    | Recent hook activity  |
-| Event log (filtered) | `ctx event --hook <name> --json` | Specific hook         |
+| Event log            | `ctx hook event --json --last 100`    | Recent hook activity  |
+| Event log (filtered) | `ctx hook event --hook <name> --json` | Specific hook         |
 | Reminders            | `ctx remind list`                        | Pending reminders     |
-| Hook messages        | `ctx message list`                | Custom vs default     |
+| Hook messages        | `ctx hook message list`                | Custom vs default     |
 | RC config            | Read `.ctxrc`                            | Configuration         |
 
 ## Graceful Degradation

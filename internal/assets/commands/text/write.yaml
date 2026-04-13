@@ -30,7 +30,7 @@ write.bootstrap-rules:
 write.bootstrap-sep:
   short: =============
 write.bootstrap-title:
-  short: ctx bootstrap
+  short: ctx system bootstrap
 write.bootstrap-warning:
   short: 'Warning: %s'
 write.completed-task:
@@ -41,14 +41,6 @@ write.config-profile-dev:
   short: 'active: dev (verbose logging enabled)'
 write.config-profile-none:
   short: 'active: none (%s does not exist)'
-write.deps-looking-for:
-  short: 'Looking for: go.mod, package.json, requirements.txt, pyproject.toml, Cargo.toml'
-write.deps-no-deps:
-  short: No dependencies found.
-write.deps-no-project:
-  short: No supported project detected.
-write.deps-use-type:
-  short: 'Use --type to force: %s'
 write.dry-run:
   short: Dry run - no files will be written.
 write.exists-writing-as-alternative:
@@ -753,7 +745,7 @@ write.test-filtered:
     Note: event "test" is filtered by your .ctxrc notify.events config.
     Sending anyway for testing purposes.
 write.test-no-webhook:
-  short: 'No webhook configured. Run: ctx notify setup'
+  short: 'No webhook configured. Run: ctx hook notify setup'
 write.test-result:
   short: 'Webhook responded: HTTP %d %s'
 write.test-working:

@@ -448,7 +448,7 @@ Break any part of this contract and the loop degrades.
   `.context/`, then signal.
 * Set up [webhook notifications](webhook-notifications.md) to get notified
   when the loop completes, hits max iterations, or when hooks fire nudges.
-  The generated loop script includes `ctx notify` calls automatically.
+  The generated loop script includes `ctx hook notify` calls automatically.
 
 ## Next Up
 

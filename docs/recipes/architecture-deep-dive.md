@@ -42,7 +42,7 @@ artifacts and extends them.
 | `/ctx-architecture`                     | Skill | Map modules, dependencies, data flow, patterns   |
 | `/ctx-architecture-enrich`              | Skill | Verify blast radius and flows with code intel     |
 | `/ctx-architecture-failure-analysis`    | Skill | Generate falsifiable incident hypotheses          |
-| `ctx deps`                              | CLI   | Bootstrap dependency graph for Pass 1             |
+| `ctx drift`                             | CLI   | Detect stale paths and broken references          |
 | `ctx status`                            | CLI   | Quick structural overview                         |
 
 ## The Workflow
@@ -169,5 +169,5 @@ new files.
 *See also: [Detecting and Fixing Context Drift](context-health.md)
 — keep architecture artifacts fresh between deep-dive sessions.*
 
-*See also: [Dependency Graph](dependency-graph.md) — quick
-dependency overview without the full architecture pass.*
+*See also: [Detecting and Fixing Context Drift](context-health.md)
+— structural checks that complement architecture analysis.*

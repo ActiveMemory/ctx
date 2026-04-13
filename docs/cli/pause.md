@@ -11,14 +11,14 @@ icon: lucide/pause
 
 ![ctx](../images/ctx-banner.png)
 
-## `ctx pause`
+## `ctx hook pause`
 
 Pause all context nudge and reminder hooks for the current
 session. Security hooks (dangerous command blocking) and
 housekeeping hooks still fire.
 
 ```bash
-ctx pause [flags]
+ctx hook pause [flags]
 ```
 
 **Flags**:
@@ -31,13 +31,13 @@ ctx pause [flags]
 
 ```bash
 # Pause hooks for a quick investigation
-ctx pause
+ctx hook pause
 
 # Resume when ready
-ctx resume
+ctx hook resume
 ```
 
 **See also**:
 
-- [`ctx resume`](resume.md) — the matching resume command
+- [`ctx hook resume`](resume.md) — the matching resume command
 - [Pausing Context Hooks recipe](../recipes/session-pause.md)

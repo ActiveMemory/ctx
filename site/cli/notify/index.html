@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ctx-notify" class="md-skip">
+        <a href="#ctx-hook-notify" class="md-skip">
           Skip to content
         </a>
       
@@ -1274,22 +1274,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ctx-notify" class="md-nav__link">
+  <a href="#ctx-hook-notify" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx notify
+        ctx hook notify
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ctx notify">
+    <nav class="md-nav" aria-label="ctx hook notify">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ctx-notify-setup" class="md-nav__link">
+  <a href="#ctx-hook-notify-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx notify setup
+        ctx hook notify setup
       
     </span>
   </a>
@@ -1297,10 +1297,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-notify-test" class="md-nav__link">
+  <a href="#ctx-hook-notify-test" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx notify test
+        ctx hook notify test
       
     </span>
   </a>
@@ -1487,12 +1487,6 @@
   
     
     
-      
-        
-      
-        
-      
-        
       
         
       
@@ -1903,22 +1897,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ctx-notify" class="md-nav__link">
+  <a href="#ctx-hook-notify" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx notify
+        ctx hook notify
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ctx notify">
+    <nav class="md-nav" aria-label="ctx hook notify">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ctx-notify-setup" class="md-nav__link">
+  <a href="#ctx-hook-notify-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx notify setup
+        ctx hook notify setup
       
     </span>
   </a>
@@ -1926,10 +1920,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ctx-notify-test" class="md-nav__link">
+  <a href="#ctx-hook-notify-test" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx notify test
+        ctx hook notify test
       
     </span>
   </a>
@@ -2028,10 +2022,10 @@
   <h1>Notify</h1>
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="ctx-notify"><code>ctx notify</code><a class="headerlink" href="#ctx-notify" title="Permanent link">&para;</a></h2>
+<h2 id="ctx-hook-notify"><code>ctx hook notify</code><a class="headerlink" href="#ctx-hook-notify" title="Permanent link">&para;</a></h2>
 <p>Send fire-and-forget webhook notifications from skills, loops,
 and hooks.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--session-id<span class="w"> </span>&lt;id&gt;<span class="o">]</span><span class="w"> </span><span class="s2">&quot;message&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--session-id<span class="w"> </span>&lt;id&gt;<span class="o">]</span><span class="w"> </span><span class="s2">&quot;message&quot;</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -2063,22 +2057,22 @@ and hooks.</p>
 <li>HTTP errors silently ignored (no retry)</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>loop<span class="w"> </span><span class="s2">&quot;Loop completed after 5 iterations&quot;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>notify<span class="w"> </span>-e<span class="w"> </span>nudge<span class="w"> </span>-s<span class="w"> </span>session-abc<span class="w"> </span><span class="s2">&quot;Context checkpoint at prompt #20&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>loop<span class="w"> </span><span class="s2">&quot;Loop completed after 5 iterations&quot;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>-e<span class="w"> </span>nudge<span class="w"> </span>-s<span class="w"> </span>session-abc<span class="w"> </span><span class="s2">&quot;Context checkpoint at prompt #20&quot;</span>
 </span></code></pre></div>
-<h3 id="ctx-notify-setup"><code>ctx notify setup</code><a class="headerlink" href="#ctx-notify-setup" title="Permanent link">&para;</a></h3>
+<h3 id="ctx-hook-notify-setup"><code>ctx hook notify setup</code><a class="headerlink" href="#ctx-hook-notify-setup" title="Permanent link">&para;</a></h3>
 <p>Configure the webhook URL interactively. The URL is encrypted
 with AES-256-GCM using the encryption key and stored in
 <code>.context/.notify.enc</code>.</p>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>setup
 </span></code></pre></div>
 <p>The encrypted file is safe to commit. The key (<code>~/.ctx/.ctx.key</code>)
 lives outside the project and is never committed.</p>
-<h3 id="ctx-notify-test"><code>ctx notify test</code><a class="headerlink" href="#ctx-notify-test" title="Permanent link">&para;</a></h3>
+<h3 id="ctx-hook-notify-test"><code>ctx hook notify test</code><a class="headerlink" href="#ctx-hook-notify-test" title="Permanent link">&para;</a></h3>
 <p>Send a test notification and report the HTTP response status.</p>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span>
 </span></code></pre></div>
 <p><strong>Payload format</strong> (JSON POST):</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>

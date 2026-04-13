@@ -368,11 +368,11 @@ prune.error-line:
   short: '  error removing %s: %v'
 prune.summary:
   short: Pruned %d files (skipped %d recent, preserved %d global)
-stats.empty:
-  short: No stats recorded yet.
-stats.header-format:
+usage.empty:
+  short: No usage recorded yet.
+usage.header-format:
   short: '%-19s  %-8s  %6s  %8s  %4s  %-12s'
-stats.line-format:
+usage.line-format:
   short: '%-19s  %-8s  %6d  %7s  %3d%%  %-12s'
 stopwords:
   short: the and for that this with from are was were been have has had but not you all can her his she its our they will each make like use way may any into when which their about would there what also should after before than then them could more some other only just see add new update how

@@ -16,7 +16,7 @@ Security hooks (dangerous command blocking) still fire.
 
 ## When NOT to Use
 
-- User wants to silence a specific hook (use `ctx message edit` to
+- User wants to silence a specific hook (use `ctx hook message edit` to
   customize or silence individual hooks)
 - User wants to permanently disable hooks (edit `.claude/settings.local.json`)
 - Session involves real project work that benefits from persistence nudges

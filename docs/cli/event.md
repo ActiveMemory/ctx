@@ -11,7 +11,7 @@ icon: lucide/scroll-text
 
 ![ctx](../images/ctx-banner.png)
 
-### `ctx event`
+### `ctx hook event`
 
 Query the local hook event log. Requires `event_log: true` in
 `.ctxrc`. Reads events from `.context/state/events.jsonl` and outputs
@@ -20,7 +20,7 @@ them in a human-readable table or raw JSONL format.
 All filter flags combine with AND logic.
 
 ```bash
-ctx event [flags]
+ctx hook event [flags]
 ```
 
 **Flags**:
@@ -37,8 +37,8 @@ ctx event [flags]
 **Examples**:
 
 ```bash
-ctx event                                        # recent events
-ctx event --hook check-context-size --last 10    # one hook, last 10
-ctx event --json | jq '.hook'                    # pipe to jq
-ctx event --session abc123                       # filter by session
+ctx hook event                                        # recent events
+ctx hook event --hook check-context-size --last 10    # one hook, last 10
+ctx hook event --json | jq '.hook'                    # pipe to jq
+ctx hook event --session abc123                       # filter by session
 ```

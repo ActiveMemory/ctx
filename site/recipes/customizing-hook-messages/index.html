@@ -2124,10 +2124,10 @@ then you lose the <em>logic</em> (<em>counting, state tracking, adaptive frequen
 just to change the <em>words</em>.</p>
 <p><strong>How do you customize what hooks say without removing what they do?</strong></p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>message<span class="w"> </span>list<span class="w">                     </span><span class="c1"># see all hooks and their messages</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># view the current template</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># copy default to .context/ for editing</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>message<span class="w"> </span>reset<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">   </span><span class="c1"># revert to embedded default</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>list<span class="w">                     </span><span class="c1"># see all hooks and their messages</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># view the current template</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># copy default to .context/ for editing</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>reset<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">   </span><span class="c1"># revert to embedded default</span>
 </span></code></pre></div>
 <h2 id="commands-used">Commands Used<a class="headerlink" href="#commands-used" title="Permanent link">&para;</a></h2>
 <table>
@@ -2140,22 +2140,22 @@ just to change the <em>words</em>.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>ctx message list</code></td>
+<td><code>ctx hook message list</code></td>
 <td>CLI command</td>
 <td>Show all hook messages with category and override status</td>
 </tr>
 <tr>
-<td><code>ctx message show</code></td>
+<td><code>ctx hook message show</code></td>
 <td>CLI command</td>
 <td>Print the effective message template</td>
 </tr>
 <tr>
-<td><code>ctx message edit</code></td>
+<td><code>ctx hook message edit</code></td>
 <td>CLI command</td>
 <td>Copy embedded default to <code>.context/</code> for editing</td>
 </tr>
 <tr>
-<td><code>ctx message reset</code></td>
+<td><code>ctx hook message reset</code></td>
 <td>CLI command</td>
 <td>Delete user override, revert to default</td>
 </tr>
@@ -2179,11 +2179,11 @@ decides to speak.</p>
 </span></code></pre></div>
 <p>You can also browse them on GitHub:
 <a href="https://github.com/ActiveMemory/ctx/tree/main/internal/assets/hooks/messages"><code>internal/assets/hooks/messages/</code></a></p>
-<p>Or use <code>ctx message show</code> to print any template without digging
+<p>Or use <code>ctx hook message show</code> to print any template without digging
 through source code:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">        </span><span class="c1"># QA gate instructions</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>check-persistence<span class="w"> </span>nudge<span class="w">  </span><span class="c1"># persistence nudge</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ctx<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>post-commit<span class="w"> </span>nudge<span class="w">        </span><span class="c1"># post-commit reminder</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">        </span><span class="c1"># QA gate instructions</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>check-persistence<span class="w"> </span>nudge<span class="w">  </span><span class="c1"># persistence nudge</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>post-commit<span class="w"> </span>nudge<span class="w">        </span><span class="c1"># post-commit reminder</span>
 </span></code></pre></div>
 <p>The <code>show</code> output includes the template source and available variables --
 everything you need to write a replacement.</p>
@@ -2208,10 +2208,10 @@ This lets you silence specific messages without removing the hook from
 <p>The default QA gate says "<em>lint the ENTIRE project</em>" and references
 <code>make lint</code>. For a Python project, you want <code>pytest</code> and <code>ruff</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># See the current default</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Copy it to .context/ for editing</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ctx<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Edit the override</span>
 </span></code></pre></div>
@@ -2228,9 +2228,9 @@ the instructions changed.</p>
 <h2 id="example-silencing-ceremony-nudges">Example: Silencing Ceremony Nudges<a class="headerlink" href="#example-silencing-ceremony-nudges" title="Permanent link">&para;</a></h2>
 <p>The ceremony check nudges you to use <code>/ctx-remember</code> and <code>/ctx-wrap-up</code>.
 If your team has a different workflow and finds these noisy:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>check-ceremonies<span class="w"> </span>both
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>check-ceremonies<span class="w"> </span>remember
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>check-ceremonies<span class="w"> </span>wrapup
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>check-ceremonies<span class="w"> </span>both
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>check-ceremonies<span class="w"> </span>remember
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>check-ceremonies<span class="w"> </span>wrapup
 </span></code></pre></div>
 <p>Then empty each file:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.context/hooks/messages/check-ceremonies/both.txt
@@ -2243,7 +2243,7 @@ any visible output.</p>
 <h2 id="example-javascript-project-post-commit">Example: JavaScript Project Post-Commit<a class="headerlink" href="#example-javascript-project-post-commit" title="Permanent link">&para;</a></h2>
 <p>The default post-commit nudge mentions generic "lints and tests." For a
 JavaScript project:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>post-commit<span class="w"> </span>nudge
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>post-commit<span class="w"> </span>nudge
 </span></code></pre></div>
 <p>Replace with:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Commit succeeded. 1. Offer context capture to the user: Decision (design
@@ -2545,7 +2545,7 @@ no error, graceful degradation.</p>
   reverts to the embedded default instantly.</li>
 <li><strong>Empty file = silence</strong>: you don't need to delete the hook. An empty
   override file silences the message while preserving the hook's logic.</li>
-<li><strong>JSON output for scripting</strong>: <code>ctx message list --json</code> returns
+<li><strong>JSON output for scripting</strong>: <code>ctx hook message list --json</code> returns
   structured data for automation.</li>
 </ul>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

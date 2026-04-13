@@ -2635,7 +2635,7 @@ and get alerted when they go silent?</strong></p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>check-resources<span class="w"> </span><span class="c1"># run a hook manually</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>.context/logs/<span class="w">      </span><span class="c1"># check hook execution logs</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup<span class="w">           </span><span class="c1"># get notified when hooks fire</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>setup<span class="w">      </span><span class="c1"># get notified when hooks fire</span>
 </span></code></pre></div>
 <p>Or ask your agent: <em>"Are our hooks running?"</em></p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -2654,22 +2654,22 @@ and get alerted when they go silent?</strong></p>
 <td>Run a system hook manually</td>
 </tr>
 <tr>
-<td><code>ctx resource</code></td>
+<td><code>ctx sysinfo</code></td>
 <td>CLI command</td>
 <td>Show system resource status</td>
 </tr>
 <tr>
-<td><code>ctx stats</code></td>
+<td><code>ctx usage</code></td>
 <td>CLI command</td>
 <td>Stream or dump per-session token stats</td>
 </tr>
 <tr>
-<td><code>ctx notify setup</code></td>
+<td><code>ctx hook notify setup</code></td>
 <td>CLI command</td>
 <td>Configure webhook for audit trail</td>
 </tr>
 <tr>
-<td><code>ctx notify test</code></td>
+<td><code>ctx hook notify test</code></td>
 <td>CLI command</td>
 <td>Verify webhook delivery</td>
 </tr>
@@ -2735,9 +2735,9 @@ agent to persist context before the window fills up.</p>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│ ⏱ Context window: ~45k tokens (~22% of 200k)
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>└──────────────────────────────────────────────────
 </span></code></pre></div>
-<p><strong>Stats</strong>: Every prompt records token usage to <code>.context/state/stats-{session}.jsonl</code>.
-Monitor live with <code>ctx stats --follow</code> or query with <code>ctx stats --json</code>.
-Stats are recorded even during wrap-up suppression (event: <code>suppressed</code>).</p>
+<p><strong>Usage</strong>: Every prompt records token usage to <code>.context/state/stats-{session}.jsonl</code>.
+Monitor live with <code>ctx usage --follow</code> or query with <code>ctx usage --json</code>.
+Usage is recorded even during wrap-up suppression (event: <code>suppressed</code>).</p>
 <p><strong>Billing guard</strong>: When <code>billing_token_warn</code> is set in <code>.ctxrc</code>, a one-shot warning
 fires if session tokens exceed the threshold. This warning is independent of all
 other triggers - it fires even during wrap-up suppression.</p>
@@ -2932,11 +2932,11 @@ a self-contained record of hook activity:</p>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nt">event_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span></code></pre></div>
 <p>Once enabled, every hook that fires writes an entry to
-<code>.context/state/events.jsonl</code>. Query it with <code>ctx event</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>event<span class="w">                    </span><span class="c1"># last 50 events</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ctx<span class="w"> </span>event<span class="w"> </span>--session<span class="w"> </span>&lt;id&gt;<span class="w">     </span><span class="c1"># filter by session</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ctx<span class="w"> </span>event<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w">    </span><span class="c1"># raw JSONL for processing</span>
+<code>.context/state/events.jsonl</code>. Query it with <code>ctx hook event</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w">                    </span><span class="c1"># last 50 events</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--session<span class="w"> </span>&lt;id&gt;<span class="w">     </span><span class="c1"># filter by session</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w">    </span><span class="c1"># raw JSONL for processing</span>
 </span></code></pre></div>
 <p>The event log is local, queryable, and doesn't require any external service.
 For a full diagnostic workflow combining event logs with structural health
@@ -2946,7 +2946,7 @@ checks, see <a href="../troubleshooting/">Troubleshooting</a>.</p>
 <p>The most powerful audit setup pipes <strong>all</strong> hook output to a webhook,
 giving you a real-time external record of what your agent is being told.</p>
 <h3 id="step-1-set-up-the-webhook">Step 1: Set Up the Webhook<a class="headerlink" href="#step-1-set-up-the-webhook" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>setup
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Enter your webhook URL (Slack, Discord, ntfy.sh, IFTTT, etc.)</span>
 </span></code></pre></div>
 <p>See <a href="../webhook-notifications/">Webhook Notifications</a> for service-specific

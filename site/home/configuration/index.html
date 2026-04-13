@@ -2209,7 +2209,7 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 </span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># key_rotation_days: 90</span>
 </span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># task_nudge_interval: 5   # Edit/Write calls between task completion nudges</span>
 </span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1">#</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># notify:               # requires: ctx notify setup</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># notify:               # requires: ctx hook notify setup</span>
 </span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">#   events:             # required: no events sent unless listed</span>
 </span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1">#     - loop</span>
 </span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1">#     - nudge</span>
@@ -2617,10 +2617,10 @@ the threshold. Set to <code>0</code> (or omit) to disable.</p>
 <h3 id="webhook-notifications">Webhook Notifications<a class="headerlink" href="#webhook-notifications" title="Permanent link">&para;</a></h3>
 <p>Get notified when loops complete, hooks fire, or agents reach milestones:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Configure the webhook URL (encrypted, safe to commit)</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>setup
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Test delivery</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ctx<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span>
 </span></code></pre></div>
 <p>Filter which events reach your webhook:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># .ctxrc</span>
@@ -2644,11 +2644,11 @@ path under <code>.context/</code>:</p>
 <p>The override takes priority over the embedded default compiled into the
 <code>ctx</code> binary. An empty file silences the message while preserving the
 hook's logic (counting, state tracking, cooldowns).</p>
-<p>Use <code>ctx message</code> to discover and manage overrides:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>message<span class="w"> </span>list<span class="w">                      </span><span class="c1"># see all messages</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># view the current template</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ctx<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># copy default for editing</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>ctx<span class="w"> </span>message<span class="w"> </span>reset<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># revert to default</span>
+<p>Use <code>ctx hook message</code> to discover and manage overrides:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>list<span class="w">                      </span><span class="c1"># see all messages</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># view the current template</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># copy default for editing</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>reset<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># revert to default</span>
 </span></code></pre></div>
 <p>See <a href="../../recipes/customizing-hook-messages/">Customizing Hook Messages</a>
 for detailed examples including Python, JavaScript, and silence
@@ -2656,11 +2656,11 @@ configurations.</p>
 <hr />
 <h2 id="agent-bootstrapping">Agent Bootstrapping<a class="headerlink" href="#agent-bootstrapping" title="Permanent link">&para;</a></h2>
 <p>AI agents need to know the resolved context directory at session start.
-The <code>ctx bootstrap</code> command prints the context path, file list, and
-operating rules in both text and JSON formats:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>bootstrap<span class="w">          </span><span class="c1"># text output for agents</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ctx<span class="w"> </span>bootstrap<span class="w"> </span>-q<span class="w">       </span><span class="c1"># just the context directory path</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>ctx<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">   </span><span class="c1"># structured output for automation</span>
+The <code>ctx system bootstrap</code> command prints the context path, file list,
+and operating rules in both text and JSON formats:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w">          </span><span class="c1"># text output for agents</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>-q<span class="w">       </span><span class="c1"># just the context directory path</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">   </span><span class="c1"># structured output for automation</span>
 </span></code></pre></div>
 <p>The <code>CLAUDE.md</code> template instructs the agent to run this as its first action.
 Every nudge (<em>context checkpoint, persistence reminder, etc.</em>) also includes a

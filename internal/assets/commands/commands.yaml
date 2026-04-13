@@ -251,22 +251,7 @@ decision.reindex:
     Examples:
       ctx decision reindex
   short: Regenerate the quick-reference index
-dep:
-  long: |-
-    Generate a dependency graph from source code.
 
-    Outputs a Mermaid graph of internal package dependencies by default.
-    Use --external to include external module dependencies.
-
-    Supported project types: Go, Node.js, Python, Rust.
-    Auto-detected from manifest files (go.mod, package.json,
-    requirements.txt/pyproject.toml, Cargo.toml). Use --type to override.
-
-    Output formats:
-      mermaid   Mermaid graph definition (default)
-      table     Package | Imports table
-      json      Machine-readable adjacency list
-  short: Show package dependency graph
 doctor:
   long: |-
     Run mechanical health checks across context, hooks, and configuration.
@@ -369,6 +354,18 @@ hub.stepdown:
     before the current leader steps down. Use before taking a
     node offline for maintenance.
   short: Transfer leadership
+hook:
+  long: |-
+    Manage hook-related settings: messages, notifications,
+    pause/resume, and event log.
+
+    Subcommands:
+      message   View, edit, or reset hook messages
+      notify    Send webhook notifications
+      pause     Pause all context hooks for the current session
+      resume    Resume paused context hooks
+      event     Browse the hook event log
+  short: Hook message, notification, and lifecycle controls
 guide:
   long: |-
     Use-case-oriented cheat sheet for ctx.
@@ -649,13 +646,13 @@ notify:
   long: |-
     Send a fire-and-forget webhook notification.
 
-    Requires a configured webhook URL (see "ctx notify setup").
+    Requires a configured webhook URL (see "ctx hook notify setup").
     Silent noop when no webhook is configured or the event is filtered.
 
     Examples:
-      ctx notify --event loop "Loop completed after 5 iterations"
-      ctx notify -e nudge -s session-abc "Context checkpoint at prompt #20"
-      ctx notify -e relay --hook check-version --variant mismatch "Version mismatch"
+      ctx hook notify --event loop "Loop completed after 5 iterations"
+      ctx hook notify -e nudge -s session-abc "Context checkpoint at prompt #20"
+      ctx hook notify -e relay --hook check-version --variant mismatch "Version mismatch"
   short: Send a webhook notification
 notify.setup:
   long: |-
@@ -800,7 +797,7 @@ pause:
     Security hooks (dangerous command blocking) and housekeeping hooks still fire.
 
     The session ID is read from stdin JSON (same as hooks) or --session-id flag.
-    Resume with: ctx resume
+    Resume with: ctx hook resume
   short: Pause context hooks for this session
 permission:
   long: |-
@@ -1277,7 +1274,7 @@ system.checkresource:
       Memory DANGER: >= 90% used    Swap DANGER: >= 75% used
       Disk DANGER:   >= 95% full    Load DANGER: >= 1.5x CPUs
 
-    For full resource stats at any severity, use: ctx resource
+    For full resource stats at any severity, use: ctx sysinfo
 
     Hook event: UserPromptSubmit
     Output: VERBATIM relay (DANGER only), silent otherwise
@@ -1434,7 +1431,7 @@ system.qareminder:
     Output: agent directive (when command contains "git" and .context/ is initialized)
     Silent when: .context/ not initialized or command does not contain "git"
   short: QA reminder hook
-resource:
+sysinfo:
   short: Show system resource usage (memory, swap, disk, load)
 system.resume:
   long: |-
@@ -1461,7 +1458,7 @@ system.specsnudge:
     Output: agent directive (always, when .context/ is initialized)
     Silent when: .context/ not initialized
   short: Plan-to-specs directory nudge
-stats:
+usage:
   long: |-
     Display per-session token usage statistics from stats JSONL files.
 
@@ -1473,7 +1470,7 @@ stats:
       --session, -s  Filter by session ID (prefix match)
       --last, -n     Show last N entries (default 20)
       --json, -j     Output raw JSONL
-  short: Show session token usage stats
+  short: Show session token usage
 task:
   long: |-
     Manage task archival and snapshots.

@@ -80,12 +80,8 @@ err.config.read-profile:
   short: 'read %s: %w'
 err.config.settings-not-found:
   short: no .claude/settings.local.json found
-err.config.unknown-format:
-  short: 'unknown format %q (supported: %s)'
 err.config.unknown-profile:
   short: 'unknown profile %q: must be dev, base, or prod'
-err.config.unknown-project-type:
-  short: 'unknown project type %q (supported: %s)'
 err.config.unknown-update-type:
   short: 'unknown update type: %s'
 err.config.unsupported-tool:
@@ -124,10 +120,6 @@ err.date.invalid-date:
   short: 'invalid %s date %q (expected YYYY-MM-DD): %w'
 err.date.invalid-date-value:
   short: invalid date %q (expected YYYY-MM-DD)
-err.deps.cargo-metadata-failed:
-  short: 'cargo metadata failed: %w'
-err.deps.parse-cargo-metadata:
-  short: 'parsing cargo metadata: %w'
 err.fs.boundary-violation:
   short: "%w\nUse --allow-outside-cwd to override this check"
 err.fs.create-dir:
@@ -207,7 +199,7 @@ err.hook.marshal-input:
 err.hook.not-found:
   short: 'hook not found: %s'
 err.hook.override-exists:
-  short: "override already exists at %s\nEdit it directly or use `ctx message reset %s %s` first"
+  short: "override already exists at %s\nEdit it directly or use `ctx hook message reset %s %s` first"
 err.hook.remove-override:
   short: 'failed to remove override %s: %w'
 err.hook.resolve-hooks-dir:
@@ -223,9 +215,9 @@ err.hook.stat-path:
 err.hook.timeout:
   short: 'timeout after %s'
 err.hook.unknown-hook:
-  short: "unknown hook: %s\nRun `ctx message list` to see available hooks"
+  short: "unknown hook: %s\nRun `ctx hook message list` to see available hooks"
 err.hook.unknown-variant:
-  short: "unknown variant %q for hook %q\nRun `ctx message list` to see available variants"
+  short: "unknown variant %q for hook %q\nRun `ctx hook message list` to see available variants"
 err.hook.write-override:
   short: 'failed to write override %s: %w'
 err.hook.write-script:

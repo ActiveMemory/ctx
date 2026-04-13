@@ -135,18 +135,15 @@ nav = [
     ]},
     { "Diagnostics" = [
       "cli/doctor.md",
-      "cli/dep.md",
       "cli/trace.md",
-      "cli/bootstrap.md",
-      "cli/event.md",
-      "cli/resource.md",
-      "cli/stats.md",
+      "cli/sysinfo.md",
+      "cli/usage.md",
     ]},
     { "Runtime" = [
       "cli/config.md",
       "cli/backup.md",
       "cli/prune.md",
-      "cli/message.md",
+      "cli/hook.md",
       "cli/system.md",
     ]},
     { "Shell" = [

@@ -11,13 +11,13 @@ icon: lucide/bell
 
 ![ctx](../images/ctx-banner.png)
 
-## `ctx notify`
+## `ctx hook notify`
 
 Send fire-and-forget webhook notifications from skills, loops,
 and hooks.
 
 ```bash
-ctx notify --event <name> [--session-id <id>] "message"
+ctx hook notify --event <name> [--session-id <id>] "message"
 ```
 
 **Flags**:
@@ -37,11 +37,11 @@ ctx notify --event <name> [--session-id <id>] "message"
 **Examples**:
 
 ```bash
-ctx notify --event loop "Loop completed after 5 iterations"
-ctx notify -e nudge -s session-abc "Context checkpoint at prompt #20"
+ctx hook notify --event loop "Loop completed after 5 iterations"
+ctx hook notify -e nudge -s session-abc "Context checkpoint at prompt #20"
 ```
 
-### `ctx notify setup`
+### `ctx hook notify setup`
 
 Configure the webhook URL interactively. The URL is encrypted
 with AES-256-GCM using the encryption key and stored in
@@ -50,20 +50,20 @@ with AES-256-GCM using the encryption key and stored in
 **Examples**:
 
 ```bash
-ctx notify setup
+ctx hook notify setup
 ```
 
 The encrypted file is safe to commit. The key (`~/.ctx/.ctx.key`)
 lives outside the project and is never committed.
 
-### `ctx notify test`
+### `ctx hook notify test`
 
 Send a test notification and report the HTTP response status.
 
 **Examples**:
 
 ```bash
-ctx notify test
+ctx hook notify test
 ```
 
 **Payload format** (JSON POST):

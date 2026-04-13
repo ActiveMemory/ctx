@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_dangerous_command"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_non_path_ctx"
+	sysBootstrap "github.com/ActiveMemory/ctx/internal/cli/system/cmd/bootstrap"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_backup_age"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_ceremony"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_context_size"
@@ -42,10 +43,12 @@ import (
 
 // Cmd returns the "ctx system" parent command.
 //
-// Hosts hidden Claude Code hook plumbing only. User-facing
-// maintenance commands (backup, bootstrap, event, message, prune,
-// resource, stats) have been promoted to top-level commands and
-// are registered separately in internal/bootstrap/group.go.
+// Hosts hidden Claude Code hook plumbing and agent-only commands.
+// User-facing maintenance commands (backup, prune, sysinfo, usage)
+// are top-level; hook-facing commands (event, message, notify,
+// pause, resume) live under "ctx hook". Both groups are registered
+// in internal/bootstrap/group.go. Bootstrap remains here as
+// agent-only plumbing.
 //
 // Hook subcommands implement Claude Code hook logic as native Go
 // binaries and are not intended for direct user invocation.
@@ -55,6 +58,7 @@ import (
 func Cmd() *cobra.Command {
 	return parent.Cmd(cmd.DescKeySystem, cmd.UseSystem,
 		block_dangerous_command.Cmd(),
+		sysBootstrap.Cmd(),
 		block_non_path_ctx.Cmd(),
 		check_backup_age.Cmd(),
 		check_ceremony.Cmd(),

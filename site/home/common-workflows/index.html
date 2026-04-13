@@ -2246,7 +2246,7 @@ just use <code>ctx add</code>, <code>ctx task complete</code>, and commit as usu
 <h2 id="agent-session-start">Agent Session Start<a class="headerlink" href="#agent-session-start" title="Permanent link">&para;</a></h2>
 <p>The first thing an AI agent should do at session start is discover where
 context lives:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>bootstrap
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap
 </span></code></pre></div>
 <p>This prints the resolved context directory, the files in it, and the
 operating rules. The <code>CLAUDE.md</code> template instructs the agent to run this
@@ -2397,12 +2397,12 @@ agent's judgment.</p>
 <td>Agent adds semantic analysis to structural checks</td>
 </tr>
 <tr>
-<td><code>ctx pause</code></td>
+<td><code>ctx hook pause</code></td>
 <td><code>/ctx-pause</code></td>
 <td>Agent pauses hooks with session-aware reasoning</td>
 </tr>
 <tr>
-<td><code>ctx resume</code></td>
+<td><code>ctx hook resume</code></td>
 <td><code>/ctx-resume</code></td>
 <td>Agent resumes hooks after a pause</td>
 </tr>
@@ -2548,7 +2548,7 @@ agent's judgment.</p>
 <td>Generate browsable journal from exports</td>
 </tr>
 <tr>
-<td><code>ctx notify setup</code></td>
+<td><code>ctx hook notify setup</code></td>
 <td>Configure webhook notifications</td>
 </tr>
 <tr>

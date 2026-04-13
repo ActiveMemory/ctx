@@ -253,22 +253,13 @@
         <loc>https://ctx.ist/cli/doctor/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli/dep/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/cli/trace/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli/bootstrap/</loc>
+        <loc>https://ctx.ist/cli/sysinfo/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli/event/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/cli/resource/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/cli/stats/</loc>
+        <loc>https://ctx.ist/cli/usage/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/config/</loc>
@@ -280,7 +271,7 @@
         <loc>https://ctx.ist/cli/prune/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli/message/</loc>
+        <loc>https://ctx.ist/cli/hook/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/system/</loc>

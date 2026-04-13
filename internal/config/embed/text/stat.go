@@ -1,17 +1,17 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\\
+// `.,'\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 package text
 
-// DescKeys for statistics display.
+// DescKeys for usage display.
 const (
-	// DescKeyStatsEmpty is the text key for stats empty messages.
-	DescKeyStatsEmpty = "stats.empty"
-	// DescKeyStatsHeaderFormat is the text key for stats header format messages.
-	DescKeyStatsHeaderFormat = "stats.header-format"
-	// DescKeyStatsLineFormat is the text key for stats line format messages.
-	DescKeyStatsLineFormat = "stats.line-format"
+	// DescKeyUsageEmpty is the text key for usage empty messages.
+	DescKeyUsageEmpty = "usage.empty"
+	// DescKeyUsageHeaderFormat is the text key for usage header format messages.
+	DescKeyUsageHeaderFormat = "usage.header-format"
+	// DescKeyUsageLineFormat is the text key for usage line format messages.
+	DescKeyUsageLineFormat = "usage.line-format"
 )

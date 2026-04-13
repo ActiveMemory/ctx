@@ -91,7 +91,7 @@ A commented `.ctxrc` showing all options and their defaults:
 # key_rotation_days: 90
 # task_nudge_interval: 5   # Edit/Write calls between task completion nudges
 #
-# notify:               # requires: ctx notify setup
+# notify:               # requires: ctx hook notify setup
 #   events:             # required: no events sent unless listed
 #     - loop
 #     - nudge
@@ -344,10 +344,10 @@ Get notified when loops complete, hooks fire, or agents reach milestones:
 
 ```bash
 # Configure the webhook URL (encrypted, safe to commit)
-ctx notify setup
+ctx hook notify setup
 
 # Test delivery
-ctx notify test
+ctx hook notify test
 ```
 
 Filter which events reach your webhook:
@@ -383,13 +383,13 @@ The override takes priority over the embedded default compiled into the
 `ctx` binary. An empty file silences the message while preserving the
 hook's logic (counting, state tracking, cooldowns).
 
-Use `ctx message` to discover and manage overrides:
+Use `ctx hook message` to discover and manage overrides:
 
 ```bash
-ctx message list                      # see all messages
-ctx message show qa-reminder gate     # view the current template
-ctx message edit qa-reminder gate     # copy default for editing
-ctx message reset qa-reminder gate    # revert to default
+ctx hook message list                      # see all messages
+ctx hook message show qa-reminder gate     # view the current template
+ctx hook message edit qa-reminder gate     # copy default for editing
+ctx hook message reset qa-reminder gate    # revert to default
 ```
 
 See [Customizing Hook Messages](../recipes/customizing-hook-messages.md)
@@ -401,13 +401,13 @@ configurations.
 ## Agent Bootstrapping
 
 AI agents need to know the resolved context directory at session start.
-The `ctx bootstrap` command prints the context path, file list, and
-operating rules in both text and JSON formats:
+The `ctx system bootstrap` command prints the context path, file list,
+and operating rules in both text and JSON formats:
 
 ```bash
-ctx bootstrap          # text output for agents
-ctx bootstrap -q       # just the context directory path
-ctx bootstrap --json   # structured output for automation
+ctx system bootstrap          # text output for agents
+ctx system bootstrap -q       # just the context directory path
+ctx system bootstrap --json   # structured output for automation
 ```
 
 The `CLAUDE.md` template instructs the agent to run this as its first action.

@@ -5,25 +5,25 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Bootstrap
+title: System Bootstrap
 icon: lucide/compass
 ---
 
 ![ctx](../images/ctx-banner.png)
 
-### `ctx bootstrap`
+### `ctx system bootstrap`
 
 Print the resolved context directory path so AI agents can anchor
 their session. The default output lists the context directory, the
 tracked context files, and a short health snapshot. `--quiet` prints
 just the path; `--json` produces structured output for automation.
 
-This is the command agents are instructed to run first in their
-session-start procedure — it is the authoritative answer to "where
-does this project's context live?".
+This is a hidden, agent-only command that agents are instructed to
+run first in their session-start procedure — it is the authoritative
+answer to "where does this project's context live?".
 
 ```bash
-ctx bootstrap [flags]
+ctx system bootstrap [flags]
 ```
 
 **Flags**:
@@ -36,11 +36,11 @@ ctx bootstrap [flags]
 **Examples**:
 
 ```bash
-ctx bootstrap                 # Text output for agents
-ctx bootstrap -q              # Just the context directory path
-ctx bootstrap --json          # Structured output for automation
+ctx system bootstrap                 # Text output for agents
+ctx system bootstrap -q              # Just the context directory path
+ctx system bootstrap --json          # Structured output for automation
 ```
 
-**Scripting tip**: `CTX_DIR=$(ctx bootstrap -q)` is the canonical way
-for skills and scripts to find the project's context directory
-without hardcoding `.context/`.
+**Scripting tip**: `CTX_DIR=$(ctx system bootstrap -q)` is the
+canonical way for skills and scripts to find the project's context
+directory without hardcoding `.context/`.

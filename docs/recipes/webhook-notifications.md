@@ -16,8 +16,8 @@ when a hook fires a nudge.
 ## TL;DR
 
 ```bash
-ctx notify setup  # configure webhook URL (encrypted)
-ctx notify test   # verify delivery
+ctx hook notify setup  # configure webhook URL (encrypted)
+ctx hook notify test   # verify delivery
 # Hooks auto-notify on: session-end, loop-iteration, resource-danger
 ```
 
@@ -25,9 +25,9 @@ ctx notify test   # verify delivery
 
 | Tool                              | Type          | Purpose                                 |
 |-----------------------------------|---------------|-----------------------------------------|
-| `ctx notify setup`                | CLI command   | Configure and encrypt webhook URL       |
-| `ctx notify test`                 | CLI command   | Send a test notification                |
-| `ctx notify --event <name> "msg"` | CLI command   | Send a notification from scripts/skills |
+| `ctx hook notify setup`                | CLI command   | Configure and encrypt webhook URL       |
+| `ctx hook notify test`                 | CLI command   | Send a test notification                |
+| `ctx hook notify --event <name> "msg"` | CLI command   | Send a notification from scripts/skills |
 | `.ctxrc` `notify.events`          | Configuration | Filter which events reach your webhook  |
 
 ## The Workflow
@@ -50,7 +50,7 @@ in your repo.
 ### Step 2: Configure the Webhook
 
 ```bash
-ctx notify setup
+ctx hook notify setup
 # Enter webhook URL: https://maker.ifttt.com/trigger/ctx/json/with/key/YOUR_KEY
 # Webhook configured: https://maker.ifttt.com/***
 # Encrypted at: .context/.notify.enc
@@ -63,11 +63,11 @@ is safe to commit. The key lives outside the project and is never committed.
 ### Step 3: Test It
 
 ```bash
-ctx notify test
+ctx hook notify test
 # Webhook responded: HTTP 200 OK
 ```
 
-If you see `No webhook configured`, run `ctx notify setup` first.
+If you see `No webhook configured`, run `ctx hook notify setup` first.
 
 ### Step 4: Configure Events
 
@@ -88,14 +88,14 @@ Only listed events fire. Omitting an event silently drops it.
 
 ### Step 5: Use in Your Own Skills
 
-Add `ctx notify` calls to any skill or script:
+Add `ctx hook notify` calls to any skill or script:
 
 ```bash
 # In a release skill
-ctx notify --event release "v1.2.0 released successfully" 2>/dev/null || true
+ctx hook notify --event release "v1.2.0 released successfully" 2>/dev/null || true
 
 # In a backup script
-ctx notify --event backup "Nightly backup completed" 2>/dev/null || true
+ctx hook notify --event backup "Nightly backup completed" 2>/dev/null || true
 ```
 
 The `2>/dev/null || true` suffix ensures the notification never breaks your
@@ -111,8 +111,8 @@ script: If there's no webhook or the HTTP call fails, it's a silent noop.
 | `nudge`     | System hooks      | VERBATIM relay nudge is emitted (context checkpoint, persistence, ceremonies, journal, resources, knowledge, version) |
 | `relay`     | System hooks      | Any hook output (VERBATIM relays, agent directives, block responses)                                                  |
 | `heartbeat` | System hook       | Every prompt: session-alive signal with prompt count and context modification status                                  |
-| `test`      | `ctx notify test` | Manual test notification                                                                                              |
-| *(custom)*  | Your skills       | You wire `ctx notify --event <name>` in your own scripts                                                              |
+| `test`      | `ctx hook notify test` | Manual test notification                                                                                              |
+| *(custom)*  | Your skills       | You wire `ctx hook notify --event <name>` in your own scripts                                                              |
 
 **`nudge` vs `relay`**: The `nudge` event fires only for VERBATIM relay hooks
 (*the ones the agent is instructed to show verbatim*). The `relay` event fires
@@ -151,7 +151,7 @@ Every notification sends a JSON POST:
 The `detail` field is a structured template reference containing the hook
 name, variant, and any template variables. This lets receivers filter by
 hook or variant without parsing rendered text. The field is omitted when
-no template reference applies (e.g. custom `ctx notify` calls).
+no template reference applies (e.g. custom `ctx hook notify` calls).
 
 ### Heartbeat Payload
 
@@ -196,7 +196,7 @@ for observability dashboards or liveness monitoring of long-running sessions.
 | Webhook URL    | Never on disk in plaintext        | N/A             | N/A         |
 
 The key is shared with the scratchpad. If you rotate the encryption key,
-re-run `ctx notify setup` to re-encrypt the webhook URL with the new key.
+re-run `ctx hook notify setup` to re-encrypt the webhook URL with the new key.
 
 ## Key Rotation
 
@@ -229,8 +229,8 @@ JSONL file (`.context/state/events.jsonl`) that you can query without any
 external service:
 
 ```bash
-ctx event --last 20          # recent hook activity
-ctx event --hook qa-reminder # filter by hook
+ctx hook event --last 20          # recent hook activity
+ctx hook event --hook qa-reminder # filter by hook
 ```
 
 Webhooks and event logging are independent: you can use either, both, or
@@ -245,7 +245,7 @@ See [Troubleshooting](troubleshooting.md) for how they work together.
 
 * **Fire-and-forget**: Notifications never block. HTTP errors are silently
   ignored. No retry, no response parsing.
-* **No webhook = no cost**: When no webhook is configured, `ctx notify` exits
+* **No webhook = no cost**: When no webhook is configured, `ctx hook notify` exits
   immediately. System hooks that call `notify.Send()` add zero overhead.
 * **Multiple projects**: Each project has its own `.notify.enc`. You can point
   different projects at different webhooks.
@@ -259,7 +259,7 @@ are running, audit what they do, and get alerted when they go silent.
 
 ## See Also
 
-* [CLI Reference: ctx notify](../cli/notify.md):
+* [CLI Reference: ctx hook notify](../cli/notify.md):
   full command reference
 * [Configuration](../home/configuration.md): `.ctxrc` settings including
   `notify` options

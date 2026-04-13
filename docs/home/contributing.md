@@ -145,6 +145,7 @@ never distributed to users.
 | `/_ctx-release-notes`        | Generate release notes for `dist/RELEASE_NOTES.md`            |
 | `/_ctx-alignment-audit`      | Audit doc claims against agent instructions                   |
 | `/_ctx-update-docs`          | Check docs/code consistency after changes                     |
+| `/_ctx-command-audit`        | Audit CLI surface after renames, moves, or deletions          |
 
 Six skills previously in this list have been promoted to bundled plugin skills
 and are now available to all ctx users: `/ctx-brainstorm`, `/ctx-link-check`,
@@ -156,15 +157,93 @@ and are now available to all ctx users: `/ctx-brainstorm`, `/ctx-link-check`,
 
 ### Adding a New CLI Command
 
-1. Create a package under `internal/cli/<name>/`;
+1. Create a package under `internal/cli/<name>/` with `doc.go`, `cmd.go`,
+   and `run.go`;
 2. Implement `Cmd() *cobra.Command` as the entry point;
-3. Register it in `internal/bootstrap/bootstrap.go` (add import + call in `Initialize`);
-4. Use `cmd.Printf`/`cmd.Println` for output (not `fmt.Print`);
-5. Add tests in the same package (`<name>_test.go`);
-6. Add a section to the appropriate CLI doc page in `docs/cli/`.
+3. Add `Use*` and `DescKey*` constants in `internal/config/embed/cmd/<name>.go`;
+4. Add command descriptions in `internal/assets/commands/commands.yaml`;
+5. Add examples in `internal/assets/commands/examples.yaml`;
+6. Add flag descriptions in `internal/assets/commands/flags.yaml`;
+7. Register the command in `internal/bootstrap/group.go` (add import +
+   entry in the appropriate group function);
+8. Create an output package at `internal/write/<name>/` for all
+   user-facing output (see [Package Taxonomy](#package-taxonomy));
+9. Create error constructors at `internal/err/<name>/` for
+   domain-specific errors;
+10. Add tests in the same package (`<name>_test.go`);
+11. Add a doc page at `docs/cli/<name>.md` and update
+    `docs/cli/index.md`;
+12. Add the page to `zensical.toml` nav.
 
 Pattern to follow: `internal/cli/pad/pad.go` (parent with subcommands) or
-`internal/cli/drift/drift.go` (single command).
+`internal/cli/drift/` (single command).
+
+### Package Taxonomy
+
+ctx separates concerns into a strict package taxonomy. Knowing where
+things go prevents code review friction and keeps the AST lint tests
+happy.
+
+#### Output: `internal/write/`
+
+Every CLI command's user-facing output lives in its own sub-package
+under `internal/write/<domain>/`. Output functions accept
+`*cobra.Command` and call `cmd.Println(...)` — never `fmt.Print*`
+directly. All text strings are loaded from YAML via
+`desc.Text(text.DescKey*)`, never inline.
+
+```
+internal/write/add/add.go       # output for ctx add
+internal/write/stat/stat.go     # output for ctx usage
+internal/write/resource/        # output for ctx sysinfo
+```
+
+Exception: `write/rc/` writes to `os.Stderr` because rc loads before
+cobra is initialized.
+
+#### Errors: `internal/err/`
+
+Domain-specific error constructors live under `internal/err/<domain>/`.
+Each package mirrors the write structure. Functions return `error`
+(never custom error types) and load messages from YAML via
+`desc.Text(text.DescKey*)`.
+
+```
+internal/err/add/add.go         # errors for ctx add
+internal/err/config/config.go   # errors for configuration
+internal/err/cli/cli.go         # errors for CLI argument validation
+```
+
+#### Config constants: `internal/config/`
+
+Pure-constant leaf packages with zero internal dependencies (stdlib
+only). Over 60 sub-packages, organized by domain. See
+`internal/config/README.md` for the full decision tree.
+
+| What you're adding              | Where it goes                     |
+|---------------------------------|-----------------------------------|
+| File names, extensions, paths   | `config/file/`, `config/dir/`     |
+| Regex patterns                  | `config/regex/`                   |
+| CLI flag names (`--flag-name`)  | `config/flag/flag.go`             |
+| Flag description YAML keys      | `config/embed/flag/<cmd>.go`      |
+| Command Use/DescKey strings     | `config/embed/cmd/<cmd>.go`       |
+| User-facing text YAML keys      | `config/embed/text/<domain>.go`   |
+| Time durations, thresholds      | `config/<domain>/`                |
+
+#### The assets pipeline
+
+User-facing text flows through a three-level chain:
+
+1. **Go constant** (`config/embed/text/`) defines a string key:
+   `DescKeyWriteAddedTo = "write.added-to"`
+2. **Call site** resolves it: `desc.Text(text.DescKeyWriteAddedTo)`
+3. **YAML** (`internal/assets/commands/text/write.yaml`) holds the
+   actual text: `write.added-to: { short: "Added to %s" }`
+
+The same pattern applies to command descriptions (`commands.yaml`),
+flag descriptions (`flags.yaml`), and examples (`examples.yaml`).
+The `TestDescKeyYAMLLinkage` test verifies every constant resolves
+to a non-empty YAML value.
 
 ### Adding a New Session Parser
 
@@ -280,7 +359,7 @@ ctx backup --scope global     # ~/.claude/ only
 
 Archives are saved to `/tmp/`. When `CTX_BACKUP_SMB_URL` is configured,
 they are also copied to an SMB share. See
-[CLI Reference: backup](../cli/system.md#ctx-system-backup) for details.
+[CLI Reference: backup](../cli/backup.md) for details.
 
 ### Running Tests
 
@@ -344,7 +423,14 @@ Examples:
 * Follow Go conventions (`gofmt`, `go vet`);
 * Keep functions **focused** and **small**;
 * Add tests for new functionality;
-* Handle errors explicitly.
+* Handle errors explicitly — use descriptive names (`readErr`,
+  `writeErr`) not repeated `err`;
+* No magic strings — all repeated literals go in `internal/config/`;
+* Output goes through `internal/write/` packages, not `fmt.Print*`;
+* Errors go through `internal/err/` constructors, not inline
+  `fmt.Errorf`;
+* See [Package Taxonomy](#package-taxonomy) and
+  `.context/CONVENTIONS.md` for the full reference.
 
 ----
 

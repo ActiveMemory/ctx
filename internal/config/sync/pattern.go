@@ -23,6 +23,16 @@ const (
 	ActionNewDir = "NEW_DIR"
 )
 
+// Packages maps manifest filenames to their ecosystem descriptions.
+// Used by sync to detect projects and suggest dependency documentation.
+var Packages = map[string]string{
+	"package.json":     "Node.js dependencies",
+	"go.mod":           "Go module dependencies",
+	"Cargo.toml":       "Rust dependencies",
+	"requirements.txt": "Python dependencies",
+	"Gemfile":          "Ruby dependencies",
+}
+
 // KeywordDependencies is the search keyword for dependency documentation.
 const KeywordDependencies = "dependencies"
 

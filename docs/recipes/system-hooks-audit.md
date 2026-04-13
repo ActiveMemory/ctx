@@ -20,7 +20,7 @@ and get alerted when they go silent?**
 ```bash
 ctx system check-resources # run a hook manually
 ls -la .context/logs/      # check hook execution logs
-ctx notify setup           # get notified when hooks fire
+ctx hook notify setup      # get notified when hooks fire
 ```
 
 Or ask your agent: *"Are our hooks running?"*
@@ -30,10 +30,10 @@ Or ask your agent: *"Are our hooks running?"*
 | Tool                     | Type          | Purpose                                  |
 |--------------------------|---------------|------------------------------------------|
 | `ctx system <hook>`      | CLI command   | Run a system hook manually               |
-| `ctx resource`   | CLI command   | Show system resource status              |
-| `ctx stats`       | CLI command   | Stream or dump per-session token stats   |
-| `ctx notify setup`       | CLI command   | Configure webhook for audit trail        |
-| `ctx notify test`        | CLI command   | Verify webhook delivery                  |
+| `ctx sysinfo`   | CLI command   | Show system resource status              |
+| `ctx usage`       | CLI command   | Stream or dump per-session token stats   |
+| `ctx hook notify setup`  | CLI command   | Configure webhook for audit trail        |
+| `ctx hook notify test`   | CLI command   | Verify webhook delivery                  |
 | `.ctxrc` `notify.events` | Configuration | Subscribe to `relay` for full hook audit |
 | `.context/logs/`         | Log files     | Local hook execution ledger              |
 
@@ -81,9 +81,9 @@ agent to persist context before the window fills up.
 └──────────────────────────────────────────────────
 ```
 
-**Stats**: Every prompt records token usage to `.context/state/stats-{session}.jsonl`.
-Monitor live with `ctx stats --follow` or query with `ctx stats --json`.
-Stats are recorded even during wrap-up suppression (event: `suppressed`).
+**Usage**: Every prompt records token usage to `.context/state/stats-{session}.jsonl`.
+Monitor live with `ctx usage --follow` or query with `ctx usage --json`.
+Usage is recorded even during wrap-up suppression (event: `suppressed`).
 
 **Billing guard**: When `billing_token_warn` is set in `.ctxrc`, a one-shot warning
 fires if session tokens exceed the threshold. This warning is independent of all
@@ -371,13 +371,13 @@ event_log: true
 ```
 
 Once enabled, every hook that fires writes an entry to
-`.context/state/events.jsonl`. Query it with `ctx event`:
+`.context/state/events.jsonl`. Query it with `ctx hook event`:
 
 ```bash
-ctx event                    # last 50 events
-ctx event --hook qa-reminder # filter by hook
-ctx event --session <id>     # filter by session
-ctx event --json | jq '.'    # raw JSONL for processing
+ctx hook event                    # last 50 events
+ctx hook event --hook qa-reminder # filter by hook
+ctx hook event --session <id>     # filter by session
+ctx hook event --json | jq '.'    # raw JSONL for processing
 ```
 
 The event log is local, queryable, and doesn't require any external service.
@@ -394,7 +394,7 @@ giving you a real-time external record of what your agent is being told.
 ### Step 1: Set Up the Webhook
 
 ```bash
-ctx notify setup
+ctx hook notify setup
 # Enter your webhook URL (Slack, Discord, ntfy.sh, IFTTT, etc.)
 ```
 

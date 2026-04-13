@@ -1460,17 +1460,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#generating-dependency-graphs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Generating Dependency Graphs
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#writing-steering-files" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1663,7 +1652,7 @@ state markers.</p>
 <p>Silence all nudge hooks for a <strong>quick task</strong> that doesn't need ceremony
 overhead. Session-scoped: Other sessions are unaffected. Security
 hooks still fire.</p>
-<p><strong>Uses</strong>: <code>ctx pause</code>, <code>ctx resume</code>, <code>/ctx-pause</code>, <code>/ctx-resume</code></p>
+<p><strong>Uses</strong>: <code>ctx hook pause</code>, <code>ctx hook resume</code>, <code>/ctx-pause</code>, <code>/ctx-resume</code></p>
 <hr />
 <h2 id="knowledge-tasks">Knowledge &amp; Tasks<a class="headerlink" href="#knowledge-tasks" title="Permanent link">&para;</a></h2>
 <h3 id="persisting-decisions-learnings-and-conventions"><a href="knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a><a class="headerlink" href="#persisting-decisions-learnings-and-conventions" title="Permanent link">&para;</a></h3>
@@ -1712,8 +1701,8 @@ directives for nudges, and five more patterns across the spectrum.</p>
 <p>Customize what hooks <strong>say</strong> without changing what they <strong>do</strong>. Override
 the QA gate for Python (<code>pytest</code> instead of <code>make lint</code>), silence noisy
 ceremony nudges, or tailor post-commit instructions for your stack.</p>
-<p><strong>Uses</strong>: <code>ctx message list</code>, <code>ctx message show</code>,
-<code>ctx message edit</code>, <code>ctx message reset</code></p>
+<p><strong>Uses</strong>: <code>ctx hook message list</code>, <code>ctx hook message show</code>,
+<code>ctx hook message edit</code>, <code>ctx hook message reset</code></p>
 <hr />
 <h3 id="hook-sequence-diagrams"><a href="hook-sequence-diagrams/">Hook Sequence Diagrams</a><a class="headerlink" href="#hook-sequence-diagrams" title="Permanent link">&para;</a></h3>
 <p><strong>Mermaid sequence diagrams</strong> for every system hook: entry conditions,
@@ -1726,14 +1715,14 @@ summary table and state file reference.</p>
 one does, why it exists, and how to <strong>verify</strong> they're actually firing.
 Covers webhook-based audit trails, log inspection, and detecting silent
 hook failures.</p>
-<p><strong>Uses</strong>: <code>ctx system</code>, <code>ctx notify</code>, <code>.context/logs/</code>, <code>.ctxrc</code>
+<p><strong>Uses</strong>: <code>ctx system</code>, <code>ctx hook notify</code>, <code>.context/logs/</code>, <code>.ctxrc</code>
 <code>notify.events</code></p>
 <hr />
 <h3 id="webhook-notifications"><a href="webhook-notifications/">Webhook Notifications</a><a class="headerlink" href="#webhook-notifications" title="Permanent link">&para;</a></h3>
 <p>Get <strong>push notifications</strong> when loops complete, hooks fire, or agents hit
 milestones. Webhook URL is <strong>encrypted</strong>: never stored in plaintext.
 Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.</p>
-<p><strong>Uses</strong>: <code>ctx notify setup</code>, <code>ctx notify test</code>, <code>ctx notify --event</code>,
+<p><strong>Uses</strong>: <code>ctx hook notify setup</code>, <code>ctx hook notify test</code>, <code>ctx hook notify --event</code>,
 <code>.ctxrc</code> <code>notify.events</code></p>
 <hr />
 <h3 id="configuration-profiles"><a href="configuration-profiles/">Configuration Profiles</a><a class="headerlink" href="#configuration-profiles" title="Permanent link">&para;</a></h3>
@@ -1760,7 +1749,7 @@ state directory lean.</p>
 <p>Diagnose hook failures, noisy nudges, stale context, and configuration
 issues. Start with <code>ctx doctor</code> for a structural health check, then
 use <code>/ctx-doctor</code> for agent-driven analysis of event patterns.</p>
-<p><strong>Uses</strong>: <code>ctx doctor</code>, <code>ctx event</code>, <code>/ctx-doctor</code></p>
+<p><strong>Uses</strong>: <code>ctx doctor</code>, <code>ctx hook event</code>, <code>/ctx-doctor</code></p>
 <hr />
 <h3 id="claude-code-permission-hygiene"><a href="claude-code-permissions/">Claude Code Permission Hygiene</a><a class="headerlink" href="#claude-code-permission-hygiene" title="Permanent link">&para;</a></h3>
 <p>Keep <code>.claude/settings.local.json</code> clean: recommended <strong>safe defaults</strong>,
@@ -1836,12 +1825,6 @@ where it will silently fail. Produces architecture docs,
 quantified dependency data, and ranked failure hypotheses.</p>
 <p><strong>Uses</strong>: <code>/ctx-architecture</code>, <code>/ctx-architecture-enrich</code>,
 <code>/ctx-architecture-failure-analysis</code></p>
-<hr />
-<h3 id="generating-dependency-graphs"><a href="dependency-graph/">Generating Dependency Graphs</a><a class="headerlink" href="#generating-dependency-graphs" title="Permanent link">&para;</a></h3>
-<p>Map your project's internal and external <strong>dependency structure</strong>.
-Auto-detects Go, Node.js, Python, and Rust. Output as Mermaid,
-table, or JSON.</p>
-<p><strong>Uses</strong>: <code>ctx dep</code>, <code>ctx drift</code></p>
 <hr />
 <h3 id="writing-steering-files"><a href="steering/">Writing Steering Files</a><a class="headerlink" href="#writing-steering-files" title="Permanent link">&para;</a></h3>
 <p>Tell your AI assistant <strong>how to behave</strong> — rule-based prompt

@@ -11,12 +11,12 @@ icon: lucide/play
 
 ![ctx](../images/ctx-banner.png)
 
-## `ctx resume`
+## `ctx hook resume`
 
 Resume context hooks after a pause. Silent no-op if not paused.
 
 ```bash
-ctx resume [flags]
+ctx hook resume [flags]
 ```
 
 **Flags**:
@@ -28,10 +28,10 @@ ctx resume [flags]
 **Example**:
 
 ```bash
-ctx resume
+ctx hook resume
 ```
 
 **See also**:
 
-- [`ctx pause`](pause.md) — the matching pause command
+- [`ctx hook pause`](pause.md) — the matching pause command
 - [Pausing Context Hooks recipe](../recipes/session-pause.md)

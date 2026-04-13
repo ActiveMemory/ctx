@@ -10,18 +10,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
 	"github.com/ActiveMemory/ctx/internal/cli/backup"
-	cliBootstrap "github.com/ActiveMemory/ctx/internal/cli/bootstrap"
+
 	"github.com/ActiveMemory/ctx/internal/cli/change"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
 	"github.com/ActiveMemory/ctx/internal/cli/connection"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
-	"github.com/ActiveMemory/ctx/internal/cli/dep"
+
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
-	"github.com/ActiveMemory/ctx/internal/cli/event"
 	ctxFmt "github.com/ActiveMemory/ctx/internal/cli/fmt"
 	"github.com/ActiveMemory/ctx/internal/cli/guide"
+	"github.com/ActiveMemory/ctx/internal/cli/hook"
 	cliHub "github.com/ActiveMemory/ctx/internal/cli/hub"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/cli/journal"
@@ -30,28 +30,24 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
 	"github.com/ActiveMemory/ctx/internal/cli/mcp"
 	"github.com/ActiveMemory/ctx/internal/cli/memory"
-	"github.com/ActiveMemory/ctx/internal/cli/message"
-	"github.com/ActiveMemory/ctx/internal/cli/notify"
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
-	"github.com/ActiveMemory/ctx/internal/cli/pause"
 	"github.com/ActiveMemory/ctx/internal/cli/permission"
 	"github.com/ActiveMemory/ctx/internal/cli/prune"
 	"github.com/ActiveMemory/ctx/internal/cli/reindex"
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
-	"github.com/ActiveMemory/ctx/internal/cli/resource"
-	"github.com/ActiveMemory/ctx/internal/cli/resume"
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
 	"github.com/ActiveMemory/ctx/internal/cli/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/site"
 	"github.com/ActiveMemory/ctx/internal/cli/skill"
-	"github.com/ActiveMemory/ctx/internal/cli/stats"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
 	"github.com/ActiveMemory/ctx/internal/cli/steering"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
+	"github.com/ActiveMemory/ctx/internal/cli/sysinfo"
 	"github.com/ActiveMemory/ctx/internal/cli/system"
 	"github.com/ActiveMemory/ctx/internal/cli/task"
 	"github.com/ActiveMemory/ctx/internal/cli/trace"
 	"github.com/ActiveMemory/ctx/internal/cli/trigger"
+	"github.com/ActiveMemory/ctx/internal/cli/usage"
 	"github.com/ActiveMemory/ctx/internal/cli/watch"
 	"github.com/ActiveMemory/ctx/internal/cli/why"
 	embedCmd "github.com/ActiveMemory/ctx/internal/config/embed/cmd"
@@ -129,16 +125,14 @@ func sessions() []registration {
 // runtime configuration group.
 //
 // Returns:
-//   - []registration: Config, permission, pause, and resume commands
+//   - []registration: Config, permission, hook, backup, and prune commands
 func runtimeCmds() []registration {
 	return []registration{
 		{config.Cmd, embedCmd.GroupRuntime},
 		{permission.Cmd, embedCmd.GroupRuntime},
-		{pause.Cmd, embedCmd.GroupRuntime},
-		{resume.Cmd, embedCmd.GroupRuntime},
+		{hook.Cmd, embedCmd.GroupRuntime},
 		{backup.Cmd, embedCmd.GroupRuntime},
 		{prune.Cmd, embedCmd.GroupRuntime},
-		{message.Cmd, embedCmd.GroupRuntime},
 	}
 }
 
@@ -150,7 +144,7 @@ func runtimeCmds() []registration {
 //
 // Returns:
 //   - []registration: Setup, steering, trigger, serve, hub,
-//     connect, mcp, watch, notify, and loop commands
+//     connect, mcp, watch, and loop commands
 func integrations() []registration {
 	return []registration{
 		{setup.Cmd, embedCmd.GroupIntegration},
@@ -161,7 +155,6 @@ func integrations() []registration {
 		{connection.Cmd, embedCmd.GroupIntegration},
 		{mcp.Cmd, embedCmd.GroupIntegration},
 		{watch.Cmd, embedCmd.GroupIntegration},
-		{notify.Cmd, embedCmd.GroupIntegration},
 		{loop.Cmd, embedCmd.GroupIntegration},
 	}
 }
@@ -169,18 +162,15 @@ func integrations() []registration {
 // diagnostics returns command registrations for the diagnostics group.
 //
 // Returns:
-//   - []registration: Doctor, change, dep, why, and trace commands
+//   - []registration: Doctor, change, why, trace, sysinfo, and usage commands
 func diagnostics() []registration {
 	return []registration{
 		{doctor.Cmd, embedCmd.GroupDiagnostics},
 		{change.Cmd, embedCmd.GroupDiagnostics},
-		{dep.Cmd, embedCmd.GroupDiagnostics},
 		{why.Cmd, embedCmd.GroupDiagnostics},
 		{trace.Cmd, embedCmd.GroupDiagnostics},
-		{cliBootstrap.Cmd, embedCmd.GroupDiagnostics},
-		{event.Cmd, embedCmd.GroupDiagnostics},
-		{resource.Cmd, embedCmd.GroupDiagnostics},
-		{stats.Cmd, embedCmd.GroupDiagnostics},
+		{sysinfo.Cmd, embedCmd.GroupDiagnostics},
+		{usage.Cmd, embedCmd.GroupDiagnostics},
 	}
 }
 

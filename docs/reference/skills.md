@@ -386,12 +386,12 @@ positive observations.
 ### `/ctx-doctor`
 
 Troubleshoot ctx behavior. Runs structural health checks via `ctx doctor`,
-analyzes event log patterns via `ctx event`, and presents findings
+analyzes event log patterns via `ctx hook event`, and presents findings
 with suggested actions. The CLI provides the structural baseline; the agent
 adds semantic analysis of event patterns and correlations.
 
-**Wraps**: `ctx doctor --json`, `ctx event --json --last 100`,
-`ctx remind list`, `ctx message list`, reads `.ctxrc`
+**Wraps**: `ctx doctor --json`, `ctx hook event --json --last 100`,
+`ctx remind list`, `ctx hook message list`, reads `.ctxrc`
 
 **Trigger phrases**: "diagnose", "troubleshoot", "doctor", "health check",
 "why didn't my hook fire?", "hooks seem broken", "something seems off"
@@ -402,7 +402,7 @@ works but with reduced capability. It runs structural checks and notes:
 
 **See also**: [Troubleshooting](../recipes/troubleshooting.md),
 [`ctx doctor` CLI](../cli/doctor.md#ctx-doctor),
-[`ctx event` CLI](../cli/system.md#ctx-system-events)
+[`ctx hook event` CLI](../cli/event.md#ctx-hook-event)
 
 ---
 
@@ -658,7 +658,7 @@ Pause all context nudge and reminder hooks for the current session.
 Security hooks still fire. Use for quick investigations or tasks that
 don't need ceremony overhead.
 
-**Wraps**: `ctx pause`
+**Wraps**: `ctx hook pause`
 
 **Trigger phrases**: "pause ctx", "pause context", "stop the nudges",
 "quiet mode"
@@ -673,7 +673,7 @@ don't need ceremony overhead.
 Resume context hooks after a pause. Restores normal nudge, reminder,
 and ceremony behavior. Silent no-op if not paused.
 
-**Wraps**: `ctx resume`
+**Wraps**: `ctx hook resume`
 
 **Trigger phrases**: "resume ctx", "resume context", "turn nudges back on",
 "unpause"

@@ -54,12 +54,7 @@ context-dir:
   short: 'Override context directory path (default: .context)'
 initialize.caller:
   short: Identify the calling tool (e.g. vscode) to tailor output
-deps.external:
-  short: Include external module dependencies
-deps.format:
-  short: 'Output format: mermaid, table, json'
-deps.type:
-  short: 'Force project type: go, node, python, rust'
+
 doctor.json:
   short: Machine-readable JSON output
 fmt.width:
@@ -244,15 +239,15 @@ prune.days:
   short: Prune files older than this many days
 prune.dry-run:
   short: Show what would be pruned without deleting
-resource.json:
+sysinfo.json:
   short: Output in JSON format
-stats.follow:
+usage.follow:
   short: Stream new entries as they arrive
-stats.json:
+usage.json:
   short: Output raw JSONL
-stats.last:
+usage.last:
   short: Show last N entries
-stats.session:
+usage.session:
   short: Filter by session ID (prefix match)
 system.markjournal.check:
   short: Check if stage is set (exit 1 if not)

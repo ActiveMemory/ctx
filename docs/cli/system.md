@@ -24,20 +24,19 @@ ctx system <subcommand>
 ```
 
 !!! note "Commands previously under `ctx system`"
-    Seven user-facing maintenance commands used to live under
-    `ctx system`:
+    Several user-facing maintenance commands used to live under
+    `ctx system` and were promoted to top-level:
 
     - `ctx system backup` → **`ctx backup`**
-    - `ctx system bootstrap` → **`ctx bootstrap`**
-    - `ctx system events` → **`ctx event`**
-    - `ctx system message` → **`ctx message`**
+    - `ctx system events` → **`ctx hook event`**
+    - `ctx system message` → **`ctx hook message`**
     - `ctx system prune` → **`ctx prune`**
-    - `ctx system resources` → **`ctx resource`**
-    - `ctx system stats` → **`ctx stats`**
+    - `ctx system resources` → **`ctx sysinfo`**
+    - `ctx system stats` → **`ctx usage`**
 
-    They've been promoted to top-level commands. Update any scripts or
-    personal docs that reference the old paths. See the release notes
-    for the rename list.
+    `ctx system bootstrap` remains under `ctx system` as a hidden,
+    agent-only command. Update any scripts or personal docs that
+    reference the old paths.
 
 ## Plumbing subcommands
 
@@ -89,7 +88,7 @@ marker timestamp.
 Session-scoped hook suppression. `ctx system pause` writes a marker
 file that causes hook plumbing to no-op for the current session;
 `ctx system resume` removes it. These are the hook-plumbing
-counterparts to the top-level `ctx pause` / `ctx resume` commands
+counterparts to the `ctx hook pause` / `ctx hook resume` commands
 (which call them internally).
 
 Read the session ID from stdin JSON (same as hooks) or pass
