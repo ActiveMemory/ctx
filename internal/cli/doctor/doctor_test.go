@@ -403,7 +403,7 @@ func TestAddResourceResults_DangerMapsToError(t *testing.T) {
 			Supported:  true,
 		},
 		Load: sysinfo.LoadInfo{
-			Load1:     12.0,
+			Load5:     12.0,
 			NumCPU:    8, // 1.5x -> DANGER
 			Supported: true,
 		},
@@ -479,7 +479,7 @@ func TestAddResourceResults_MessageFormat(t *testing.T) {
 		},
 		Disk: sysinfo.DiskInfo{Supported: false},
 		Load: sysinfo.LoadInfo{
-			Load1:     2.0,
+			Load5:     2.0,
 			NumCPU:    8,
 			Supported: true,
 		},

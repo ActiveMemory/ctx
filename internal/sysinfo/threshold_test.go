@@ -122,7 +122,7 @@ func TestEvaluate_DiskBoundaries(t *testing.T) {
 func TestEvaluate_LoadBoundaries(t *testing.T) {
 	tests := []struct {
 		name    string
-		load1   float64
+		load5   float64
 		ncpu    int
 		wantSev Severity
 		wantN   int
@@ -137,7 +137,7 @@ func TestEvaluate_LoadBoundaries(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			snap := Snapshot{
 				Load: LoadInfo{
-					Load1:     tt.load1,
+					Load5:     tt.load5,
 					NumCPU:    tt.ncpu,
 					Supported: true,
 				},
@@ -171,7 +171,7 @@ func TestEvaluate_AllDanger(t *testing.T) {
 			Supported:  true,
 		},
 		Load: LoadInfo{
-			Load1:     12.0,
+			Load5:     12.0,
 			NumCPU:    8,
 			Supported: true,
 		},

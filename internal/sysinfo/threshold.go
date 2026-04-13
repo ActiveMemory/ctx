@@ -96,9 +96,9 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 		}
 	}
 
-	// Load (1m)
+	// Load (5m) — 5-minute average smooths transient build/test spikes.
 	if snap.Load.Supported && snap.Load.NumCPU > 0 {
-		ratio := snap.Load.Load1 / float64(snap.Load.NumCPU)
+		ratio := snap.Load.Load5 / float64(snap.Load.NumCPU)
 		msg := fmt.Sprintf(desc.Text(text.DescKeyResourcesAlertLoad), ratio)
 		if ratio >= stats.ThresholdLoadDangerRatio {
 			alerts = append(alerts, ResourceAlert{
