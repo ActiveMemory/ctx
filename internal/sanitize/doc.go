@@ -8,6 +8,9 @@
 //
 // Unlike validation (which rejects bad input), sanitization mutates
 // input to conform to constraints. [Filename] converts arbitrary
-// strings into safe filename components.
+// strings into safe filename components, [Content] neutralizes
+// Markdown structure injections, [Reflect] truncates and strips
+// control characters for error messages, and [SessionID] produces
+// path-safe session identifiers.
 // Part of the internal subsystem.
 package sanitize
