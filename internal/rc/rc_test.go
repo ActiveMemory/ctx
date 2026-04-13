@@ -881,17 +881,18 @@ func TestContextDir_UpwardWalkFromSubdir(t *testing.T) {
 	tempDir := t.TempDir()
 
 	// Project root layout:
+	//   <tempDir>/project/.git/
 	//   <tempDir>/project/.context/
 	//   <tempDir>/project/deep/nested/
 	projectRoot := filepath.Join(tempDir, "project")
+	gitPath := filepath.Join(projectRoot, ".git")
 	contextPath := filepath.Join(projectRoot, dir.Context)
 	deepSubdir := filepath.Join(projectRoot, "deep", "nested")
 
-	if mkErr := os.MkdirAll(contextPath, 0700); mkErr != nil {
-		t.Fatalf("mkdir context: %v", mkErr)
-	}
-	if mkErr := os.MkdirAll(deepSubdir, 0700); mkErr != nil {
-		t.Fatalf("mkdir deep: %v", mkErr)
+	for _, d := range []string{gitPath, contextPath, deepSubdir} {
+		if mkErr := os.MkdirAll(d, 0700); mkErr != nil {
+			t.Fatalf("mkdir %s: %v", d, mkErr)
+		}
 	}
 
 	origDir, _ := os.Getwd()

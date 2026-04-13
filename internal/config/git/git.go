@@ -9,28 +9,27 @@ package git
 // Binary is the git executable name.
 const Binary = "git"
 
-// Git subcommands.
+// DotDir is the name of the git metadata directory (or file in worktrees).
+const DotDir = ".git"
+
+// Subcommand names passed as the first argument to git.
 const (
 	Branch   = "branch"
+	Diff     = "diff"
 	DiffTree = "diff-tree"
 	Log      = "log"
 	Remote   = "remote"
 	RevParse = "rev-parse"
 )
 
-// Git hook names.
+// Hook names used in .git/hooks/.
 const (
 	HookPrepareCommitMsg = "prepare-commit-msg"
 	HookPostCommit       = "post-commit"
 	HooksDir             = "hooks"
 )
 
-// Git subcommands (additional).
-const (
-	Diff = "diff"
-)
-
-// Git rev-parse flags.
+// Rev-parse flags.
 const (
 	FlagShort        = "--short"
 	FlagShowCurrent  = "--show-current"
@@ -38,7 +37,7 @@ const (
 	FlagGitDir       = "--git-dir"
 )
 
-// Git flags.
+// Common flags and format strings for git commands.
 const (
 	FlagCached         = "--cached"
 	FlagChangeDir      = "-C"
@@ -63,13 +62,13 @@ const (
 	FlagLastN = "-%d"
 )
 
-// Git ref constants.
+// Ref constants for addressing commits and branches.
 const (
 	// RefHead is the symbolic reference for the current commit.
 	RefHead = "HEAD"
 )
 
-// Git remote subcommands and arguments.
+// Remote subcommands and arguments.
 const (
 	RemoteGetURL = "get-url"
 	RemoteOrigin = "origin"
@@ -78,7 +77,7 @@ const (
 // PathSeparator is the separator git uses in file paths (always forward slash).
 const PathSeparator = "/"
 
-// Git commit trailers.
+// Commit trailer keys for structured metadata in commit messages.
 const (
 	// TrailerSpec is the commit trailer for spec references.
 	TrailerSpec = "Spec: specs/"
