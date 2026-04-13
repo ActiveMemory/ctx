@@ -40,12 +40,12 @@
       {
         "hooks": [
           {"type": "command", "command": "ctx system check-context-size"},
-          {"type": "command", "command": "ctx system check-ceremonies"},
+          {"type": "command", "command": "ctx system check-ceremony"},
           {"type": "command", "command": "ctx system check-persistence"},
           {"type": "command", "command": "ctx system check-journal"},
-          {"type": "command", "command": "ctx system check-reminders"},
+          {"type": "command", "command": "ctx system check-reminder"},
           {"type": "command", "command": "ctx system check-version"},
-          {"type": "command", "command": "ctx system check-resources"},
+          {"type": "command", "command": "ctx system check-resource"},
           {"type": "command", "command": "ctx system check-knowledge"},
           {"type": "command", "command": "ctx system check-map-staleness"},
           {"type": "command", "command": "ctx system check-memory-drift"},

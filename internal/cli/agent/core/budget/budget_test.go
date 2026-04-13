@@ -375,7 +375,7 @@ func TestAssemblePacket_WithSteering(t *testing.T) {
 	ctx := &entity.Context{}
 	bodies := []string{"Rule one", "Rule two"}
 
-	pkt := AssemblePacket(ctx, 8000, bodies, "")
+	pkt := AssemblePacket(ctx, 8000, bodies, "", nil)
 
 	if len(pkt.Steering) == 0 {
 		t.Error("expected steering files in packet")
@@ -389,7 +389,7 @@ func TestAssemblePacket_WithSkill(t *testing.T) {
 	ctx := &entity.Context{}
 	skillBody := "# My Skill\n\nDo things."
 
-	pkt := AssemblePacket(ctx, 8000, nil, skillBody)
+	pkt := AssemblePacket(ctx, 8000, nil, skillBody, nil)
 
 	if pkt.Skill != skillBody {
 		t.Errorf("expected skill body %q, got %q", skillBody, pkt.Skill)
@@ -399,7 +399,7 @@ func TestAssemblePacket_WithSkill(t *testing.T) {
 func TestAssemblePacket_NoSteeringNoSkill(t *testing.T) {
 	ctx := &entity.Context{}
 
-	pkt := AssemblePacket(ctx, 8000, nil, "")
+	pkt := AssemblePacket(ctx, 8000, nil, "", nil)
 
 	if len(pkt.Steering) != 0 {
 		t.Errorf("expected no steering, got %d", len(pkt.Steering))
@@ -415,7 +415,7 @@ func TestAssemblePacket_SteeringRespectsBudget(t *testing.T) {
 	bigBody := strings.Repeat("x", 5000)
 	bodies := []string{bigBody, bigBody}
 
-	pkt := AssemblePacket(ctx, 100, bodies, "")
+	pkt := AssemblePacket(ctx, 100, bodies, "", nil)
 
 	// With a tiny budget, at most one steering body should fit
 	// (FitItems always includes at least one)
@@ -427,7 +427,7 @@ func TestAssemblePacket_SteeringRespectsBudget(t *testing.T) {
 func TestAssemblePacket_SkillOmittedWhenBudgetExhausted(t *testing.T) {
 	ctx := &entity.Context{}
 	// Use a very small budget
-	pkt := AssemblePacket(ctx, 1, nil, strings.Repeat("x", 5000))
+	pkt := AssemblePacket(ctx, 1, nil, strings.Repeat("x", 5000), nil)
 
 	// Skill should be omitted when budget is exhausted
 	if pkt.Skill != "" {

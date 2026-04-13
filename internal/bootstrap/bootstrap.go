@@ -54,14 +54,16 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 			Title: desc.Text(embedText.DescKeyGroupDiagnostics),
 		},
 		&cobra.Group{
-			ID:    embedCmd.GroupUtilities,
-			Title: desc.Text(embedText.DescKeyGroupUtilities),
+			ID:    embedCmd.GroupShell,
+			Title: desc.Text(embedText.DescKeyGroupShell),
 		},
 	)
 
-	// Assign built-in commands to groups.
-	cmd.SetHelpCommandGroupID(embedCmd.GroupUtilities)
-	cmd.SetCompletionCommandGroupID(embedCmd.GroupUtilities)
+	// Route Cobra's built-in help and completion into the
+	// narrow Shell group. These are the only commands that
+	// live there — everything else has a domain group.
+	cmd.SetHelpCommandGroupID(embedCmd.GroupShell)
+	cmd.SetCompletionCommandGroupID(embedCmd.GroupShell)
 
 	// Command-to-group mapping. Centralized here so the taxonomy
 	// is visible in one place.
@@ -73,7 +75,6 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 	commands = append(commands, runtimeCmds()...)
 	commands = append(commands, integrations()...)
 	commands = append(commands, diagnostics()...)
-	commands = append(commands, utilities()...)
 	commands = append(commands, hiddenCmds()...)
 
 	for _, reg := range commands {

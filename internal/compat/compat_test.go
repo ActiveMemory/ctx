@@ -30,7 +30,7 @@ import (
 func TestBackwardCompat_AssemblePacket_NoSteeringNoSkill(t *testing.T) {
 	ctx := &entity.Context{}
 
-	pkt := budget.AssemblePacket(ctx, 8000, nil, "")
+	pkt := budget.AssemblePacket(ctx, 8000, nil, "", nil)
 
 	if len(pkt.Steering) != 0 {
 		t.Errorf("expected no steering entries, got %d", len(pkt.Steering))
@@ -153,7 +153,7 @@ func TestBackwardCompat_FullAgentPath_NoExtensions(t *testing.T) {
 
 	// Simulate the agent path: no steering files loaded (directory
 	// missing → error → caller passes nil), no skill.
-	pkt := budget.AssemblePacket(ctx, 8000, nil, "")
+	pkt := budget.AssemblePacket(ctx, 8000, nil, "", nil)
 
 	// Verify core structure is intact.
 	if pkt.Budget != 8000 {

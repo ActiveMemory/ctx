@@ -336,8 +336,8 @@ agent's judgment.
 | `ctx agent`          | `/ctx-agent`          | Agent loads and acts on the context packet                 |
 | `ctx loop`           | `/ctx-loop`           | Agent tailors the loop script to your project              |
 | `ctx doctor`         | `/ctx-doctor`         | Agent adds semantic analysis to structural checks          |
-| `ctx pause`          | `/ctx-pause`          | Agent pauses hooks with session-aware reasoning            |
-| `ctx resume`         | `/ctx-resume`         | Agent resumes hooks after a pause                          |
+| `ctx hook pause`     | `/ctx-pause`          | Agent pauses hooks with session-aware reasoning            |
+| `ctx hook resume`    | `/ctx-resume`         | Agent resumes hooks after a pause                          |
 | `ctx remind`         | `/ctx-remind`         | Agent manages reminders in conversation flow               |
 
 ### AI-Only Skills
@@ -381,7 +381,7 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 | `ctx permission snapshot` | Save settings as a golden image                 |
 | `ctx permission restore`  | Restore settings from golden image              |
 | `ctx journal site`        | Generate browsable journal from exports         |
-| `ctx notify setup`        | Configure webhook notifications                 |
+| `ctx hook notify setup`   | Configure webhook notifications                 |
 | `ctx decision`            | List and filter decisions                       |
 | `ctx learning`            | List and filter learnings                       |
 | `ctx task`                | List tasks, manage archival and snapshots       |
@@ -390,7 +390,7 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 | `ctx site`                | Site management commands                        |
 | `ctx config`              | Manage runtime configuration profiles           |
 | `ctx system`              | System diagnostics and hook commands            |
-| `ctx system backup`       | Back up context and Claude data to tar.gz / SMB |
+| `ctx backup`       | Back up context and Claude data to tar.gz / SMB |
 | `ctx completion`          | Generate shell autocompletion scripts           |
 
 !!! tip "Rule of Thumb"

@@ -91,5 +91,6 @@ func Run(c *cobra.Command, name string) error {
 	}
 
 	writeSteering.Created(c, filePath)
+	writeSteering.AddModeHint(c)
 	return nil
 }

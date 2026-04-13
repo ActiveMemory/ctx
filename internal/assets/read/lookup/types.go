@@ -18,6 +18,10 @@ type ConfigPattern struct {
 
 // commandEntry is a single YAML-backed description with
 // short and optional long forms.
+//
+// Fields:
+//   - Short: One-line description
+//   - Long: Multi-line help text (may be empty)
 type commandEntry struct {
 	Short string `yaml:"short"`
 	Long  string `yaml:"long"`

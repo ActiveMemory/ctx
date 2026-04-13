@@ -1,0 +1,4 @@
+{{.AlertMessages}}
+System resources are critically low.
+Persist unsaved context NOW with /ctx-wrap-up
+and consider ending this session.

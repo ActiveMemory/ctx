@@ -45,7 +45,7 @@ func TestTasksCommands(t *testing.T) {
 
 	// Add some tasks
 	addCmd := add.Cmd()
-	addCmd.SetArgs([]string{"task", "Test task 1", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
+	addCmd.SetArgs([]string{"task", "Test task 1", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatalf("add task failed: %v", err)
 	}
@@ -210,7 +210,7 @@ func TestSnapshotCommand_DefaultName(t *testing.T) {
 
 	// Add a task so TASKS.md has content
 	addCmd := add.Cmd()
-	addCmd.SetArgs([]string{"task", "Test task", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
+	addCmd.SetArgs([]string{"task", "Test task", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatal(err)
 	}
@@ -266,7 +266,7 @@ func TestArchiveCommand_NoCompletedTasks(t *testing.T) {
 	setupTaskDir(t)
 
 	addCmd := add.Cmd()
-	addCmd.SetArgs([]string{"task", "Pending task", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
+	addCmd.SetArgs([]string{"task", "Pending task", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatal(err)
 	}

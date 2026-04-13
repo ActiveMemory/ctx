@@ -220,7 +220,9 @@ is also the only way that produces both depth and accuracy. We
 accept the cost because architecture analysis is not a speed game:
 it is a coverage game.
 
-*Esegin aklina karpuz kabugu sokmak.*
+**Esegin aklina karpuz kabugu sokma!**
+
+(*don't put the watermelon rind to a donkey's mind*)
 
 If the agent never struggles, it never discovers. And if it never
 discovers, you are not doing architecture; you are doing

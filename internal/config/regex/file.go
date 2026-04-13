@@ -17,10 +17,6 @@ var UUID = regexp.MustCompile(
 		`[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`,
 )
 
-// MermaidUnsafe matches characters that are invalid in
-// Mermaid node identifiers (slash, dot, hyphen).
-var MermaidUnsafe = regexp.MustCompile(`[/.\-]`)
-
 // SlugUnsafe matches characters replaced during slug
 // generation (slash, dot). Glob star (*) is handled
 // separately as it maps to a different replacement.

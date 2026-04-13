@@ -106,7 +106,7 @@ Silence all nudge hooks for a **quick task** that doesn't need ceremony
 overhead. Session-scoped: Other sessions are unaffected. Security
 hooks still fire.
 
-**Uses**: `ctx pause`, `ctx resume`, `/ctx-pause`, `/ctx-resume`
+**Uses**: `ctx hook pause`, `ctx hook resume`, `/ctx-pause`, `/ctx-resume`
 
 ---
 
@@ -185,8 +185,8 @@ Customize what hooks **say** without changing what they **do**. Override
 the QA gate for Python (`pytest` instead of `make lint`), silence noisy
 ceremony nudges, or tailor post-commit instructions for your stack.
 
-**Uses**: `ctx system message list`, `ctx system message show`,
-`ctx system message edit`, `ctx system message reset`
+**Uses**: `ctx hook message list`, `ctx hook message show`,
+`ctx hook message edit`, `ctx hook message reset`
 
 ---
 
@@ -207,7 +207,7 @@ one does, why it exists, and how to **verify** they're actually firing.
 Covers webhook-based audit trails, log inspection, and detecting silent
 hook failures.
 
-**Uses**: `ctx system`, `ctx notify`, `.context/logs/`, `.ctxrc`
+**Uses**: `ctx system`, `ctx hook notify`, `.context/logs/`, `.ctxrc`
 `notify.events`
 
 ---
@@ -218,8 +218,18 @@ Get **push notifications** when loops complete, hooks fire, or agents hit
 milestones. Webhook URL is **encrypted**: never stored in plaintext.
 Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.
 
-**Uses**: `ctx notify setup`, `ctx notify test`, `ctx notify --event`,
+**Uses**: `ctx hook notify setup`, `ctx hook notify test`, `ctx hook notify --event`,
 `.ctxrc` `notify.events`
+
+---
+
+### [Configuration Profiles](configuration-profiles.md)
+
+Switch between **dev** and **base** runtime configurations without
+editing `.ctxrc` by hand. Verbose logging and webhooks for debugging,
+clean defaults for normal sessions.
+
+**Uses**: `ctx config switch`, `ctx config status`, `/ctx-config`
 
 ---
 
@@ -242,7 +252,7 @@ Clean up session tombstones from `.context/state/`. Prune old
 per-session files, identify stale global markers, and keep the
 state directory lean.
 
-**Uses**: `ctx system prune`
+**Uses**: `ctx prune`
 
 ---
 
@@ -252,7 +262,7 @@ Diagnose hook failures, noisy nudges, stale context, and configuration
 issues. Start with `ctx doctor` for a structural health check, then
 use `/ctx-doctor` for agent-driven analysis of event patterns.
 
-**Uses**: `ctx doctor`, `ctx system events`, `/ctx-doctor`
+**Uses**: `ctx doctor`, `ctx hook event`, `/ctx-doctor`
 
 ---
 
@@ -375,11 +385,91 @@ quantified dependency data, and ranked failure hypotheses.
 
 ---
 
-### [Generating Dependency Graphs](dependency-graph.md)
+### [Writing Steering Files](steering.md)
 
-Map your project's internal and external **dependency structure**.
-Auto-detects Go, Node.js, Python, and Rust. Output as Mermaid,
-table, or JSON.
+Tell your AI assistant **how to behave** — rule-based prompt
+injection that fires automatically when prompts match a
+description. Walks through scaffolding a steering file,
+previewing matches, and syncing to each AI tool's native
+format.
 
-**Uses**: `ctx dep`, `ctx drift`
+**Uses**: `ctx steering add`, `ctx steering preview`,
+`ctx steering list`, `ctx steering sync`
+
+---
+
+### [Authoring Lifecycle Triggers](triggers.md)
+
+Run **executable shell scripts** at session-start,
+pre-tool-use, file-save, and other lifecycle events.
+Script-based automation (complementary to steering's
+rule-based prompts), with a security-first workflow: scaffold
+disabled, test with mock input, enable only after review.
+
+**Uses**: `ctx trigger add`, `ctx trigger test`,
+`ctx trigger enable`, `ctx trigger disable`, `ctx trigger list`
+
+---
+
+## `ctx` Hub
+
+### [`ctx` Hub: Getting Started](hub-getting-started.md)
+
+Stand up a single-node hub on localhost, register two projects,
+publish a decision from one, and watch it appear in the other.
+End-to-end in under five minutes.
+
+**Uses**: `ctx hub start`, `ctx connection register`,
+`ctx connection subscribe`, `ctx connection sync`, `ctx connection listen`,
+`ctx add --share`, `ctx agent --include-hub`
+
+---
+
+### [Personal cross-project brain](hub-personal.md)
+
+**Story 1** day-to-day workflow: one developer, many
+projects, one hub on localhost. Records a learning in
+project A, watches it show up automatically in project B.
+Walks through a realistic day of using the hub as passive
+infrastructure — no manual `sync`, no `git push`, no
+ceremony.
+
+**Uses**: `ctx add --share`, `ctx connection subscribe`,
+`ctx agent --include-hub`
+
+---
+
+### [Team knowledge bus](hub-team.md)
+
+**Story 2** day-to-day workflow: a small trusted team
+sharing decisions, learnings, and conventions via a hub on
+an internal server. Covers the team publishing culture,
+what belongs on the hub vs. local, token management, and
+the social rules that make a shared knowledge stream
+stay signal-rich.
+
+**Uses**: `ctx add --share`, `ctx connection status`,
+`ctx connection subscribe`, `ctx hub status`
+
+---
+
+### [`ctx` Hub: Multi-machine](hub-multi-machine.md)
+
+Run the hub on a **LAN host** as a daemon and connect from project
+directories on other workstations. Firewall guidance, TLS via a
+reverse proxy, and safe daemon restart semantics.
+
+**Uses**: `ctx hub start --daemon`, `ctx hub stop`,
+`ctx connection register`, `ctx connection status`
+
+---
+
+### [`ctx` Hub: HA cluster](hub-cluster.md)
+
+Raft-based leader election across three or more nodes for
+redundancy. Covers bootstrap, runtime peer management, graceful
+stepdown, and the Raft-lite durability caveat.
+
+**Uses**: `ctx hub start --peers`, `ctx hub status`,
+`ctx hub peer add/remove`, `ctx hub stepdown`
 

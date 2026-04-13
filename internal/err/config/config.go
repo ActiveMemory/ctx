@@ -41,36 +41,6 @@ func ReadProfile(name string, cause error) error {
 	)
 }
 
-// UnknownFormat returns an error for an unsupported output format.
-//
-// Parameters:
-//   - format: the format string that was not recognized
-//   - supported: list of valid formats
-//
-// Returns:
-//   - error: "unknown format <format> (supported: <list>)"
-func UnknownFormat(format, supported string) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrConfigUnknownFormat),
-		format, supported,
-	)
-}
-
-// UnknownProjectType returns an error for an unsupported project type.
-//
-// Parameters:
-//   - projType: the type string that was not recognized
-//   - supported: list of valid types
-//
-// Returns:
-//   - error: "unknown project type <type> (supported: <list>)"
-func UnknownProjectType(projType, supported string) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrConfigUnknownProjectType),
-		projType, supported,
-	)
-}
-
 // InvalidTool returns an error for an unsupported AI tool name.
 //
 // Parameters:

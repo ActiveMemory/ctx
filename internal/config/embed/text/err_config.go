@@ -29,15 +29,9 @@ const (
 	// DescKeyErrConfigSettingsNotFound is the text key for err config settings
 	// not found messages.
 	DescKeyErrConfigSettingsNotFound = "err.config.settings-not-found"
-	// DescKeyErrConfigUnknownFormat is the text key for err config unknown format
-	// messages.
-	DescKeyErrConfigUnknownFormat = "err.config.unknown-format"
 	// DescKeyErrConfigUnknownProfile is the text key for err config unknown
 	// profile messages.
 	DescKeyErrConfigUnknownProfile = "err.config.unknown-profile"
-	// DescKeyErrConfigUnknownProjectType is the text key for err config unknown
-	// project type messages.
-	DescKeyErrConfigUnknownProjectType = "err.config.unknown-project-type"
 	// DescKeyErrConfigUnknownUpdateType is the text key for err config unknown
 	// update type messages.
 	DescKeyErrConfigUnknownUpdateType = "err.config.unknown-update-type"

@@ -15,14 +15,20 @@ import (
 
 // Cmd returns the serve command.
 //
-// Serves a static site by invoking zensical serve on the specified directory.
+// Serves a static site locally via zensical. With no argument,
+// serves the journal site at .context/journal-site. With a
+// directory argument, serves that directory if it contains a
+// zensical.toml.
+//
+// This command does NOT start a ctx Hub — for that, use
+// `ctx hub start`.
 //
 // Returns:
 //   - *cobra.Command: The serve command
 func Cmd() *cobra.Command {
 	short, long := desc.Command(cmd.DescKeyServe)
 
-	c := &cobra.Command{
+	return &cobra.Command{
 		Use:     cmd.UseServe,
 		Short:   short,
 		Long:    long,
@@ -32,6 +38,4 @@ func Cmd() *cobra.Command {
 			return Run(args)
 		},
 	}
-
-	return c
 }

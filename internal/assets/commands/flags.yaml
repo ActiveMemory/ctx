@@ -30,6 +30,8 @@ add.section:
   short: Target section within file
 add.session-id:
   short: AI session ID for task provenance
+add.share:
+  short: Also publish to the ctx Hub
 agent.budget:
   short: Token budget for context packet
 agent.cooldown:
@@ -40,6 +42,8 @@ agent.session:
   short: Session identifier for cooldown isolation (e.g., $PPID)
 agent.skill:
   short: Include named skill content in context packet
+agent.include-hub:
+  short: Include ctx Hub entries in context packet
 allow-outside-cwd:
   short: Allow context directory outside current working directory
 changes.since:
@@ -50,12 +54,7 @@ context-dir:
   short: 'Override context directory path (default: .context)'
 initialize.caller:
   short: Identify the calling tool (e.g. vscode) to tailor output
-deps.external:
-  short: Include external module dependencies
-deps.format:
-  short: 'Output format: mermaid, table, json'
-deps.type:
-  short: 'Force project type: go, node, python, rust'
+
 doctor.json:
   short: Machine-readable JSON output
 fmt.width:
@@ -84,6 +83,8 @@ initialize.minimal:
   short: Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)
 initialize.no-plugin-enable:
   short: Skip auto-enabling the ctx plugin in global Claude Code settings
+initialize.no-steering-init:
+  short: Skip scaffolding foundation steering files in .context/steering/
 journal.obsidian.output:
   short: Output directory for vault
 journal.site.build:
@@ -172,7 +173,7 @@ pad.show.out:
   short: write blob content to a file
 pad.tag:
   short: filter entries by tag (prefix with ~ to exclude)
-pad.tags.json:
+pad.tag.json:
   short: output tags as JSON
 pause.session-id:
   short: Session ID (overrides stdin)
@@ -212,52 +213,52 @@ steering.sync.all:
   short: Sync to all supported tool formats
 sync.dry-run:
   short: Show what would change without modifying
-system.backup.json:
+backup.json:
   short: Output results as JSON
-system.backup.scope:
+backup.scope:
   short: 'Backup scope: project, global, or all'
-system.bootstrap.json:
+bootstrap.json:
   short: Output in JSON format
-system.bootstrap.quiet:
+bootstrap.quiet:
   short: Output only the context directory path
-system.events.all:
+event.all:
   short: Include rotated log file
-system.events.event:
+event.event:
   short: Filter by event type
-system.events.hook:
+event.hook:
   short: Filter by hook name
-system.events.json:
+event.json:
   short: Output raw JSONL
-system.events.last:
+event.last:
   short: Show last N events
-system.events.session:
+event.session:
   short: Filter by session ID
+message.json:
+  short: Output in JSON format
+prune.days:
+  short: Prune files older than this many days
+prune.dry-run:
+  short: Show what would be pruned without deleting
+sysinfo.json:
+  short: Output in JSON format
+usage.follow:
+  short: Stream new entries as they arrive
+usage.json:
+  short: Output raw JSONL
+usage.last:
+  short: Show last N entries
+usage.session:
+  short: Filter by session ID (prefix match)
 system.markjournal.check:
   short: Check if stage is set (exit 1 if not)
-system.message.json:
-  short: Output in JSON format
 system.pause.session-id:
   short: Session ID (overrides stdin)
-system.prune.days:
-  short: Prune files older than this many days
-system.prune.dry-run:
-  short: Show what would be pruned without deleting
-system.resources.json:
-  short: Output in JSON format
 system.resume.session-id:
   short: Session ID (overrides stdin)
 system.sessionevent.caller:
   short: Calling editor (e.g., vscode)
 system.sessionevent.type:
   short: 'Event type: start or end'
-system.stats.follow:
-  short: Stream new entries as they arrive
-system.stats.json:
-  short: Output raw JSONL
-system.stats.last:
-  short: Show last N entries
-system.stats.session:
-  short: Filter by session ID (prefix match)
 trace.collect.record:
   short: Record context refs for a post-commit hash
 trace.file.last:
@@ -272,6 +273,18 @@ task.archive.dry-run:
   short: Preview changes without modifying files
 tool:
   short: 'Override active AI tool (e.g., claude, cursor, cline, kiro, codex)'
+connection.token:
+  short: Admin credential from hub startup
+hub.start.daemon:
+  short: Run the hub server in the background
+hub.start.data-dir:
+  short: Hub data directory (default ~/.ctx/hub-data/)
+hub.start.peers:
+  short: Comma-separated peer addresses for cluster mode
+hub.start.port:
+  short: Hub listen port (default 9900)
+hub.stop.data-dir:
+  short: Hub data directory (default ~/.ctx/hub-data/)
 watch.dry-run:
   short: Show updates without applying
 watch.log:

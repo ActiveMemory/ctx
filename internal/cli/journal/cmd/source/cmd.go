@@ -64,47 +64,38 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	flagbind.StringFlagP(
-		c, &showID,
-		cFlag.Show, cFlag.ShortShow,
-		flag.DescKeyJournalSourceShow,
+	flagbind.BindStringFlagsP(c,
+		[]*string{&showID, &project, &tool},
+		[]string{cFlag.Show, cFlag.Project, cFlag.Tool},
+		[]string{cFlag.ShortShow, cFlag.ShortProject, cFlag.ShortTool},
+		[]string{
+			flag.DescKeyJournalSourceShow,
+			flag.DescKeyJournalSourceProject,
+			flag.DescKeyJournalSourceTool,
+		},
 	)
-	flagbind.BoolFlag(
-		c, &latest,
-		cFlag.Latest, flag.DescKeyJournalSourceLatest,
+	flagbind.BindStringFlags(c,
+		[]*string{&since, &until},
+		[]string{cFlag.Since, cFlag.Until},
+		[]string{
+			flag.DescKeyJournalSourceSince,
+			flag.DescKeyJournalSourceUntil,
+		},
 	)
-	flagbind.BoolFlag(
-		c, &full,
-		cFlag.Full, flag.DescKeyJournalSourceFull,
+	flagbind.BindBoolFlags(c,
+		[]*bool{&latest, &full, &allProjects},
+		[]string{cFlag.Latest, cFlag.Full, cFlag.AllProjects},
+		[]string{
+			flag.DescKeyJournalSourceLatest,
+			flag.DescKeyJournalSourceFull,
+			flag.DescKeyJournalSourceAllProjects,
+		},
 	)
 	flagbind.IntFlagP(
 		c, &limit,
 		cFlag.Limit, cFlag.ShortMaxIterations,
 		journal.DefaultRecallListLimit,
 		flag.DescKeyJournalSourceLimit,
-	)
-	flagbind.StringFlagP(
-		c, &project,
-		cFlag.Project, cFlag.ShortProject,
-		flag.DescKeyJournalSourceProject,
-	)
-	flagbind.StringFlagP(
-		c, &tool,
-		cFlag.Tool, cFlag.ShortTool,
-		flag.DescKeyJournalSourceTool,
-	)
-	flagbind.StringFlag(
-		c, &since,
-		cFlag.Since, flag.DescKeyJournalSourceSince,
-	)
-	flagbind.StringFlag(
-		c, &until,
-		cFlag.Until, flag.DescKeyJournalSourceUntil,
-	)
-	flagbind.BoolFlag(
-		c, &allProjects,
-		cFlag.AllProjects,
-		flag.DescKeyJournalSourceAllProjects,
 	)
 
 	return c

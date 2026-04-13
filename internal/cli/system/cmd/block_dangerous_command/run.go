@@ -70,7 +70,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var reason string
 	if variant != "" {
 		reason = message.Load(
-			hook.BlockDangerousCommands, variant, nil, fallback,
+			hook.BlockDangerousCommand, variant, nil, fallback,
 		)
 	}
 
@@ -81,10 +81,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		}
 		data, _ := json.Marshal(resp)
 		writeSetup.BlockResponse(cmd, string(data))
-		ref := notify.NewTemplateRef(hook.BlockDangerousCommands, variant, nil)
+		ref := notify.NewTemplateRef(hook.BlockDangerousCommand, variant, nil)
 		nudge.Relay(fmt.Sprintf(
 			desc.Text(text.DescKeyRelayPrefixFormat),
-			hook.BlockDangerousCommands,
+			hook.BlockDangerousCommand,
 			reason,
 		),
 			input.SessionID, ref,

@@ -8,6 +8,8 @@
 title: Code Conventions
 icon: lucide/scroll-text
 ---
+![ctx](../images/ctx-banner.png)
+
 
 # Code Conventions: Common Patterns and Fixes
 

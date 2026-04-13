@@ -16,8 +16,6 @@ const (
 	UseChange = "change"
 	// UseCompact is the cobra Use string for the compact command.
 	UseCompact = "compact"
-	// UseDep is the cobra Use string for the dep command.
-	UseDep = "dep"
 	// UseDoctor is the cobra Use string for the doctor command.
 	UseDoctor = "doctor"
 	// UseDrift is the cobra Use string for the drift command.
@@ -84,8 +82,6 @@ const (
 	DescKeyComplete = "complete"
 	// DescKeyCtx is the description key for the ctx command.
 	DescKeyCtx = "ctx"
-	// DescKeyDep is the description key for the dep command.
-	DescKeyDep = "dep"
 	// DescKeyDoctor is the description key for the doctor command.
 	DescKeyDoctor = "doctor"
 	// DescKeyDrift is the description key for the drift command.

@@ -141,10 +141,12 @@ func TaskAfterSection(entry, content, section string) []byte {
 
 	found, idx := inspect.Contains(content, header)
 	if !found {
+		// Section does not exist: create it and append the task after.
 		if !inspect.EndsWithNewline(content) {
 			content += token.NewlineLF
 		}
-		return []byte(content + token.NewlineLF + entry)
+		return []byte(content + token.NewlineLF + header +
+			token.NewlineLF + token.NewlineLF + entry)
 	}
 
 	hasNewLine, lineEnd := inspect.ContainsNewLine(content[idx:])

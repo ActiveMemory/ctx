@@ -8,6 +8,8 @@
 title: Commit Context Tracing
 icon: lucide/git-commit-horizontal
 ---
+![ctx](../images/ctx-banner.png)
+
 
 ### `ctx trace`
 

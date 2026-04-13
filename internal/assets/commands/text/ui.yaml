@@ -15,8 +15,8 @@ group.integration:
   short: "Integration:"
 group.diagnostics:
   short: "Diagnostics:"
-group.utilities:
-  short: "Utilities:"
+group.shell:
+  short: "Shell:"
 
 agent.instruction:
   short: 'Before starting work, confirm to the user: "I have read the required context files and I''m following project conventions."'
@@ -254,6 +254,8 @@ init.label-permissions:
   short: Permissions
 init.label-plugin-enable:
   short: Plugin enablement
+init.label-steering:
+  short: Steering foundation files
 init.confirm-claude:
   short: Would you like to append ctx context management instructions?
 events.empty:
@@ -366,11 +368,11 @@ prune.error-line:
   short: '  error removing %s: %v'
 prune.summary:
   short: Pruned %d files (skipped %d recent, preserved %d global)
-stats.empty:
-  short: No stats recorded yet.
-stats.header-format:
+usage.empty:
+  short: No usage recorded yet.
+usage.header-format:
   short: '%-19s  %-8s  %6s  %8s  %4s  %-12s'
-stats.line-format:
+usage.line-format:
   short: '%-19s  %-8s  %6d  %7s  %3d%%  %-12s'
 stopwords:
   short: the and for that this with from are was were been have has had but not you all can her his she its our they will each make like use way may any into when which their about would there what also should after before than then them could more some other only just see add new update how
@@ -529,6 +531,13 @@ help.community-footer:
 
 write.steering-created:
   short: 'Created %s'
+write.steering-add-mode-hint:
+  short: |2-
+      inclusion: manual  → the file is NOT auto-injected.
+      Edit the `inclusion:` frontmatter to `always` if the
+      rule should fire on every tool call, or `auto` to
+      fire when the prompt matches the `description`.
+      See: ctx steering preview "<prompt>"
 write.steering-skipped:
   short: 'Skipped %s (already exists)'
 write.steering-init-summary:

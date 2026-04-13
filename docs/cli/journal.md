@@ -8,6 +8,8 @@
 title: Journal
 icon: lucide/history
 ---
+![ctx](../images/ctx-banner.png)
+
 
 ### `ctx journal`
 

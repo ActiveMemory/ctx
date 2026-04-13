@@ -125,6 +125,17 @@ This loads your context and presents a structured
 confirm the agent knows what is going on. Context also loads automatically
 via hooks, but the explicit ceremony gives you a **readback** to verify.
 
+!!! tip "Steering files fire automatically"
+    If you edited the four foundation files scaffolded by
+    `ctx init` (`.context/steering/product.md`, `tech.md`,
+    `structure.md`, `workflow.md`), their `inclusion:
+    always` rules are prepended to **every** tool call via
+    the plugin's `PreToolUse` hook — no `/ctx-remember`
+    needed, no MCP call. Edit a file, save, and the next
+    tool call in Claude Code picks it up. See
+    [Steering files](steering.md) for details on the
+    inclusion modes.
+
 !!! info "Using VS Code?"
     With **VS Code Copilot Chat** (*and the
     [ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx)*), 

@@ -16,29 +16,29 @@ import (
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
-// Cmd returns the "ctx system bootstrap" subcommand.
+// Cmd returns the "ctx system bootstrap" hidden command.
 //
 // Returns:
-//   - *cobra.Command: Configured bootstrap subcommand
+//   - *cobra.Command: Configured bootstrap command
 func Cmd() *cobra.Command {
-	short, long := desc.Command(cmd.DescKeySystemBootstrap)
+	short, long := desc.Command(cmd.DescKeyBootstrap)
 
 	c := &cobra.Command{
-		Use:     cmd.UseSystemBootstrap,
+		Use:     cmd.UseBootstrap,
 		Short:   short,
 		Long:    long,
-		Example: desc.Example(cmd.DescKeySystemBootstrap),
+		Example: desc.Example(cmd.DescKeyBootstrap),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd)
 		},
 	}
 
 	flagbind.BoolFlagNoPtr(c,
-		cFlag.JSON, flag.DescKeySystemBootstrapJson,
+		cFlag.JSON, flag.DescKeyBootstrapJson,
 	)
 	flagbind.BoolFlagShort(c,
 		cFlag.Quiet, cFlag.ShortQuiet,
-		flag.DescKeySystemBootstrapQuiet,
+		flag.DescKeyBootstrapQuiet,
 	)
 
 	return c

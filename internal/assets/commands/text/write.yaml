@@ -30,7 +30,7 @@ write.bootstrap-rules:
 write.bootstrap-sep:
   short: =============
 write.bootstrap-title:
-  short: ctx bootstrap
+  short: ctx system bootstrap
 write.bootstrap-warning:
   short: 'Warning: %s'
 write.completed-task:
@@ -41,14 +41,6 @@ write.config-profile-dev:
   short: 'active: dev (verbose logging enabled)'
 write.config-profile-none:
   short: 'active: none (%s does not exist)'
-write.deps-looking-for:
-  short: 'Looking for: go.mod, package.json, requirements.txt, pyproject.toml, Cargo.toml'
-write.deps-no-deps:
-  short: No dependencies found.
-write.deps-no-project:
-  short: No supported project detected.
-write.deps-use-type:
-  short: 'Use --type to force: %s'
 write.dry-run:
   short: Dry run - no files will be written.
 write.exists-writing-as-alternative:
@@ -247,14 +239,14 @@ write.init-workflow-tips:
           /ctx-consolidate          Merge overlapping entries in DECISIONS.md and LEARNINGS.md
           /ctx-drift                Detect stale paths, broken references, and outdated context
 
-      Have a question, bug, or feature request? Join us on Discord:
-        https://ctx.ist/discord
-
         Journal pipeline (every few sessions):
-          ctx journal import --all   Import session transcripts to .context/journal/
+          ctx journal import --all  Import session transcripts to .context/journal/
           /ctx-journal-enrich-all   Add frontmatter, tags, and summaries to imported entries
 
         Run 'ctx guide' for the full command reference.
+
+      Have a question, bug, or feature request? Join us on Discord:
+        https://ctx.ist/discord
 write.init-getting-started-saved:
   short: '  ✓ Quick-start reference saved to %s'
 write.init-no-changes:
@@ -277,6 +269,108 @@ write.init-plugin-enabled:
   short: '  ✓ Plugin enabled globally in %s'
 write.init-plugin-skipped:
   short: '  ○ Plugin enablement skipped (plugin not installed)'
+write.init-claude-absent:
+  short: |
+
+    Claude Code is not installed on this machine.
+
+    To use ctx with Claude Code:
+
+      1. Install Claude Code: https://claude.ai/download
+
+      2. Launch it once so it completes initial setup:
+
+           claude
+
+      3. Install the ctx plugin from your local clone:
+
+           /plugin                          ← inside claude
+           Marketplaces → Add Marketplace
+           <path-to-your-ctx-clone>         ← e.g. ~/WORKSPACE/ctx
+           Back in /plugin → Install → ctx
+
+         Install at USER scope so the plugin is available
+         across all your projects without per-project
+         enablement.
+
+      4. Re-run `ctx init` in this project to auto-enable
+         the plugin for use here.
+
+    If you don't use Claude Code, ignore this — ctx works
+    with Cursor, Kiro, Cline, Aider, Copilot, and Windsurf
+    as well (see `ctx setup --help`).
+write.init-claude-plugin-missing:
+  short: |
+
+    Claude Code detected, but the ctx plugin is not installed.
+
+    Install from your local clone of the ctx repository:
+
+      1. Launch Claude Code:
+
+           claude
+
+      2. Type `/plugin` and press Enter.
+
+      3. Select Marketplaces → Add Marketplace.
+
+      4. Enter the path to your ctx clone (the directory
+         that contains `.claude-plugin/marketplace.json`),
+         for example:
+
+           ~/WORKSPACE/ctx
+
+      5. Back in `/plugin`, select Install and choose `ctx`.
+
+         ⚠ Install at USER scope. Local plugin installs are
+         NOT auto-enabled globally by Claude Code — user
+         scope avoids the per-project enablement gotcha.
+
+      6. Re-run `ctx init` in this project to wire up the
+         local enablement (it's a no-op if already enabled).
+
+    This points Claude Code at the plugin source on disk, so
+    changes you make to hooks or skills take effect
+    immediately — no reinstall needed.
+write.init-claude-ready:
+  short: |2-
+
+      ✓ Claude Code + ctx plugin detected and enabled
+          scope:       %s
+          version:     %s
+          source:      %s
+          clone path:  %s
+          enabled:     %s
+write.init-claude-ready-minimal:
+  short: '  ✓ Claude Code + ctx plugin detected and enabled'
+write.setup-claude-ready:
+  short: |
+
+    ✓ Claude Code detected.
+    ✓ ctx plugin is installed and enabled.
+
+        scope:       %s
+        version:     %s
+        source:      %s
+        clone path:  %s
+        enabled:     %s
+
+    You're all set. Run `ctx init` in any project to scaffold
+    `.context/` and wire up the local plugin enablement:
+
+      cd <your-project>
+      ctx init
+write.setup-claude-ready-minimal:
+  short: |
+
+    ✓ Claude Code detected.
+    ✓ ctx plugin is installed and enabled.
+
+    You're all set. Run `ctx init` in any project to scaffold
+    `.context/` and wire up the local plugin enablement:
+
+      cd <your-project>
+      ctx init
 write.init-plugin-local-already-enabled:
   short: '  ○ Plugin already enabled in project settings'
 write.init-plugin-local-enabled:
@@ -651,7 +745,7 @@ write.test-filtered:
     Note: event "test" is filtered by your .ctxrc notify.events config.
     Sending anyway for testing purposes.
 write.test-no-webhook:
-  short: 'No webhook configured. Run: ctx notify setup'
+  short: 'No webhook configured. Run: ctx hook notify setup'
 write.test-result:
   short: 'Webhook responded: HTTP %d %s'
 write.test-working:
@@ -742,7 +836,9 @@ write.context-dir-label:
 write.context-dir-bracket:
   short: " [Context: %s]"
 write.provenance-line:
-  short: "Display this line verbatim at the start of your response: Session: %s | Branch: %s @ %s"
+  short: "Display this line verbatim at the start of your response: Session: %s | Branch: %s @ %s%s"
+write.provenance-context:
+  short: " | Context: %d%% free"
 
 write.knowledge-unit-entries:
   short: "entries"
@@ -762,3 +858,155 @@ write.vscode-add-manually:
   short: "  ○ %s (exists, add %s manually)"
 write.vscode-warn-non-fatal:
   short: "  ⚠ %s: %v"
+
+write.steering-desc-product:
+  short: "Product context, goals, and target users"
+write.steering-desc-tech:
+  short: "Technology stack, constraints, and dependencies"
+write.steering-desc-structure:
+  short: "Project structure and directory conventions"
+write.steering-desc-workflow:
+  short: "Development workflow and process rules"
+
+write.steering-guidance:
+  short: |-
+    <!--
+      This is a ctx steering file — persistent behavioral
+      rules prepended to prompts based on the frontmatter
+      above.
+
+      inclusion (when the rule fires):
+        always  → injected on EVERY tool call. On Claude
+                  Code this is the only mode that fires
+                  AUTOMATICALLY (the PreToolUse hook
+                  passes an empty prompt to ctx agent).
+                  Use for invariants and for any rule
+                  that MUST fire reliably.
+        auto    → injected when the prompt matches the
+                  `description` field above.
+                    - Cursor / Cline / Kiro: native.
+                    - Claude Code: Claude calls the
+                      ctx_steering_get MCP tool on its
+                      own when it decides the rule is
+                      relevant. The ctx plugin ships
+                      the MCP auto-registration; verify
+                      with `claude mcp list`.
+        manual  → only when the file is explicitly named
+                  (e.g. via the MCP tool or a skill).
+
+      priority (ordering within a tier):
+        Lower numbers inject first. 10 is a reasonable
+        default for invariants; use 50 for normal rules.
+
+      tools (scope the rule to specific AI tools):
+        Empty list = applies to all tools (default).
+        Example:  tools: [claude, cursor]
+
+      Edit the body below, then delete this comment.
+      See docs/cli/steering.md for the full reference.
+    -->
+
+write.steering-body-product:
+  short: |-
+    # Product Context
+
+    Describe the product, its goals, and target users.
+
+    - **What is this project?**
+    - **Who uses it?**
+    - **What problem does it solve?**
+    - **What is explicitly out of scope?**
+
+write.steering-body-tech:
+  short: |-
+    # Technology Stack
+
+    Describe the technology stack, constraints, and key dependencies.
+
+    - **Languages and versions**
+    - **Frameworks and key libraries**
+    - **Runtime / deployment target**
+    - **Hard constraints** (e.g. no CGO, no network at test time)
+
+write.steering-body-structure:
+  short: |-
+    # Project Structure
+
+    Describe the project layout and directory conventions.
+
+    - **Top-level directories and their purpose**
+    - **Where new files should go** (and where they should not)
+    - **Naming conventions** for files, packages, modules
+
+write.connect-registered:
+  short: Registered as
+write.connect-subscribed:
+  short: Subscribed to
+write.connect-synced:
+  short: 'Synced %d entries'
+write.connect-published:
+  short: 'Published %d entries'
+write.connect-listening:
+  short: Listening for new entries (Ctrl-C to stop)
+write.connect-received:
+  short: Received
+write.connect-publish-warning:
+  short: 'Warning: hub publish failed: %v'
+write.connect-hub-label:
+  short: "Hub:"
+write.connect-hub-stats:
+  short: 'Entries: %d  Clients: %d'
+write.hub-cluster-stats:
+  short: 'Entries: %d  Peers: %d'
+write.agent-section-hub:
+  short: "## ctx Hub"
+write.connect-hub-sync:
+  short: 'Hub sync: %d shared entries updated'
+write.hub-added-peer:
+  short: 'Added peer %s'
+write.hub-removed-peer:
+  short: 'Removed peer %s'
+write.hub-leadership-transferred:
+  short: Leadership transferred
+write.hub-leader:
+  short: 'Leader: %s'
+write.hub-role:
+  short: 'Role: %s'
+
+write.serve-hub-started:
+  short: 'Hub started on %s'
+write.serve-admin-token:
+  short: 'Admin token (save this): %s'
+write.serve-hub-background:
+  short: 'Hub running in background (PID %d)'
+write.serve-hub-stopped:
+  short: 'Hub stopped (PID %d)'
+
+write.claudecheck-unknown:
+  short: unknown
+write.claudecheck-none:
+  short: "(none)"
+write.claudecheck-source-dir:
+  short: directory (hot-reload)
+write.claudecheck-source-github:
+  short: github (marketplace)
+write.claudecheck-enabled-both:
+  short: user scope + project
+write.claudecheck-enabled-global:
+  short: user scope (all projects)
+write.claudecheck-enabled-local:
+  short: project only
+write.claudecheck-version-open:
+  short: " ("
+write.claudecheck-version-close:
+  short: ")"
+write.steering-body-workflow:
+  short: |-
+    # Development Workflow
+
+    Describe the development workflow, branching strategy, and process rules.
+
+    - **Branch strategy** (main-only, trunk-based, feature branches)
+    - **Commit conventions** (message format, signed-off-by)
+    - **Pre-commit / pre-push checks**
+    - **Review expectations**

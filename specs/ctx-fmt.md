@@ -44,7 +44,7 @@ exists today; the only workaround is manual line breaks.
 
 ### Validation Rules
 
-- Context directory must exist (standard ctx bootstrap check)
+- Context directory must exist (standard ctx system bootstrap check)
 - No input validation needed: the command operates on known files
 
 ### Error Handling

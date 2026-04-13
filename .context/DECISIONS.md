@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-04-11 | Journal stays local; LEARNINGS.md is the shareable layer |
 | 2026-04-09 | Architecture skill pipeline is a triad not a quartet |
 | 2026-04-08 | Remove #done tag convention, simplify task archival |
 | 2026-04-06 | Use hook relay for session provenance instead of JSONL parsing or env vars |
@@ -118,6 +119,178 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-04-11-200000] Journal stays local; LEARNINGS.md is the shareable layer
+
+**Status**: Accepted
+
+**Context**: With the hub now carrying shared project context between machines
+and eventually between teammates, the question came up whether enriched
+journal entries should ride along — either the raw `.context/journal/` files
+or an "export enriched entries as shareable learning items" pipeline layered
+on top of `/ctx-journal-enrich`. The journal is already gitignored per the
+2026-03-05 `.context/memory/` decision and for the same reason: it's a
+first-person log of raw prompts, half-formed thoughts, dead ends, personal
+names, and things the user talks through with themselves. It sits in the
+same trust tier as shell history or a private notebook.
+
+The trade-off is real: shared journals would make it trivial for teammates
+(or future-me on another machine) to see the full reasoning trail behind a
+decision. But "full reasoning trail" is precisely the thing that makes a
+journal journal and not a changelog — it includes the parts the author
+hasn't decided to stand behind yet, plus incidental private content.
+
+**Decision**: The journal is **Tier-0 personal** and never leaves the
+originating machine. No hub sync, no export-by-default, no
+enriched-entries-as-shareable-items pipeline. The enrichment pipeline
+(`/ctx-journal-enrich`) stays as-is: journal → human-in-the-loop review →
+explicit promotion to LEARNINGS.md / DECISIONS.md / CONVENTIONS.md via the
+existing `/ctx-learning-add`, `/ctx-decision-add`, `/ctx-convention-add`
+commands. Those distilled artifacts are **Tier-1 shareable** and are what
+the hub syncs when a team opts into shared context.
+
+The promotion boundary is therefore the enrichment step, not a new export
+pipeline. The user is the gate.
+
+**Rationale**: Any "shareable enriched journal entry" pipeline would have to
+re-implement the trust boundary that `/ctx-learning-add` already enforces:
+the human decides what's worth sharing, strips incidental private content,
+and rewrites it as a standalone artifact. A second pipeline that tries to
+do this automatically would either (a) leak private content by accident, or
+(b) require the same human review and thus collapse back into
+`/ctx-learning-add`. The principled answer is that there is no second
+pipeline — LEARNINGS.md *is* the shareable form of the journal.
+
+This also preserves the psychological safety of the journal: the author
+can write freely because they know nothing they write is one sync away
+from a teammate's screen. Lose that property and the journal stops being a
+journal and starts being a changelog draft.
+
+**Consequence**:
+
+- Journal files stay gitignored and stay out of `ctx hub` sync paths. Any
+  future code that walks context files for replication must exclude
+  `.context/journal/` explicitly and be covered by a test.
+- `/ctx-journal-enrich` remains the promotion boundary. Its output targets
+  are LEARNINGS.md / DECISIONS.md / CONVENTIONS.md, never a separate
+  "shareable journal" bucket.
+- Hub docs (`docs/home/hub.md`, `docs/recipes/hub-personal.md`,
+  `docs/recipes/hub-team.md`, `docs/security/hub.md`) should state the
+  Tier-0 / Tier-1 split explicitly so users building team workflows don't
+  assume "shared context" means "shared everything."
+- The sync code path in `internal/hub/sync_helper.go` and any future
+  replication of context files must enforce this exclusion at the
+  code level — a gitignore entry is a user-convenience signal, not a
+  hub-trust boundary.
+- A potential future "personal multi-machine journal sync" (same human,
+  different laptops) is explicitly **out of scope** of this decision. If
+  it ever ships, it rides a different transport (encrypted-at-rest,
+  single-user, not the team hub) and needs its own decision record.
+
+**Alternatives considered**:
+
+- **Sync raw journal files via hub**: rejected. Inverts the gitignore
+  decision, leaks private content by construction, destroys the
+  journal's "safe to write freely" property.
+- **Auto-export enriched entries as a new shareable artifact type**:
+  rejected. Duplicates `/ctx-learning-add` without the human gate, or
+  collapses back into it. No real difference from the status quo except
+  the opportunity for accidental leakage.
+- **Opt-in per-entry "publish to hub" flag in the journal**: rejected as
+  premature. If the user wants an entry on the hub, the existing flow is
+  one command away — write it as a learning or decision. A second path
+  adds surface area without adding capability.
+
+**Related**: Reinforces the 2026-03-05 `.context/memory/` gitignore
+decision (same trust-tier reasoning for a different private artifact).
+
+## [2026-04-11-180000] `Entry.Author` is server-authoritative, not client-authoritative
+
+**Status**: Accepted
+
+**Context**: The `Entry.Author` field on hub entries is copied verbatim from
+the client's publish request (`handler.go:82`). It's optional, freeform, and
+unauthenticated — a client with a valid token for project `alpha` can publish
+entries claiming `Author: "bob@acme.com"` regardless of who actually
+authenticated. This is the same spoofing pattern as `Origin` (audit finding
+H-04) and was flagged as audit finding H-22 with three options: keep, drop,
+override, or promote. The decision was never formally closed.
+
+The premise that resolved it: **identity is eventually part of the token**.
+Under the sysadmin-registry MVP, the server already knows `{user_id, project}`
+from the authenticated token. Under the PKI stretch, the signed claim carries
+identity cryptographically. In both models, the client has nothing to say about
+authorship that the server doesn't already know with higher confidence.
+
+**Decision**: `Entry.Author` is **server-authoritative**. The server stamps it
+from the authenticated identity source on every publish. The client's
+`pe.Author` input is ignored (or rejected — implementation choice, not
+semantic difference). The field stays in the wire format but its semantics
+change from "whatever the client said" to "whatever the server's auth layer
+resolved."
+
+Stamping source by phase:
+
+- **Today (pre-registry)**: `Author = ClientInfo.ProjectName`, same source as
+  the `Origin` server-enforcement fix (H-04). Lossy but consistent.
+- **Registry MVP**: `Author = users.json` row's `user_id` (e.g.,
+  `alice@acme.com`). Precise per-human attribution.
+- **PKI stretch**: `Author = signed claim's sub field`. Cryptographic identity.
+
+**Rationale**: Dropping the field is wrong because the registry MVP will
+already give us a per-user identity to stamp — removing Author just to re-add
+it later is churn. "Override" and "promote" are cosmetically different forms
+of the same decision (server fills from auth context); "promote" is what
+happens naturally once the registry MVP types the field as `UserID`.
+Client-sourced Author is indefensible because it replicates the Origin
+spoofing vector in a second field.
+
+**Consequence**:
+
+- The Author field stays on the wire and in `Entry{}`.
+- Client-side code that populates `pe.Author` from local config becomes a
+  no-op. Audit `ctx connect publish` and `ctx add --share` for any such
+  code paths before the server-enforcement fix lands.
+- `handler.go publish()` fills Author from the authenticated context (the
+  same `ClientInfo` that H-04 pulls for Origin). Single unified
+  auth-to-handler pipe.
+- `docs/security/hub.md` "Compromised client token" section gets rewritten:
+  attribution becomes **wrong** on compromise (attacker's token maps to
+  attacker's identity), not **forgeable** (attacker cannot stamp someone
+  else's name).
+- The sysadmin-registry spec (`specs/hub-identity-registry.md`, tasked)
+  MUST include a `user_id` field per row — it's the stamping source.
+- Three open tasks collapse into one: H-22 resolves to "implement
+  server-authoritative Author" instead of "decide Author fate." TASKS.md
+  updated.
+
+**Alternatives considered**:
+
+- **Keep client-authoritative**: rejected. Same spoofing vector as Origin;
+  trivially defeats any downstream attribution check.
+- **Drop the field**: rejected. The registry MVP will need per-human
+  attribution anyway. Dropping today is churn that gets undone
+  immediately.
+- **Override at client-side before publish**: rejected. Puts the security
+  boundary on the wrong side of the trust zone. Must be server-side.
+
+**Follow-up — client-advisory metadata**: the client still has useful
+information to share that isn't an identity claim: a human-friendly
+display name, the machine that made the publish, the tool version, a
+CI system label, a team/role handle. This lives on a **new sibling
+field `Meta`** (a `ClientMetadata` sub-struct), not on `Author`. The
+separation of types is what protects the security property: `Author`
+is reserved for server-authoritative identity, `Meta` is
+client-advisory and explicitly labeled as such in any rendered
+surface. `Meta` fields are size-capped individually (256 bytes) and
+in aggregate (2 KB), validated for plain-string content (no
+newlines, no control characters), and never claimed as attribution
+in any API response. The renderer MUST label `Meta`-sourced values
+with prose like "client label" or "client-reported" so readers
+cannot mistake them for authoritative identity. See TASKS.md for
+the implementation task.
+
+---
 
 ## [2026-04-09-001332] Architecture skill pipeline is a triad not a quartet
 

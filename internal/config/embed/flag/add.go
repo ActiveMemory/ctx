@@ -30,4 +30,6 @@ const (
 	DescKeyAddSection = "add.section"
 	// DescKeyAddSessionID is the description key for the add session-id flag.
 	DescKeyAddSessionID = "add.session-id"
+	// DescKeyAddShare is the description key for the add share flag.
+	DescKeyAddShare = "add.share"
 )

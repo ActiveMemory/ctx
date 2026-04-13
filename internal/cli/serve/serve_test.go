@@ -128,9 +128,19 @@ func TestRunServe_ZensicalNotFound(t *testing.T) {
 }
 
 func TestRunServe_DefaultDir(t *testing.T) {
-	// When no args are given, serveRoot.Run uses the
-	// default journal-site directory
-	// which won't exist in test, so we expect directory not found
+	// When no args are given, serveRoot.Run uses the default
+	// journal-site directory under the resolved context dir.
+	//
+	// Chdir to a clean tempdir so rc.ContextDir()'s upward walk falls
+	// back to <tempdir>/.context (which does not exist), ensuring the
+	// default resolves to a nonexistent path and the run errors with
+	// "directory not found" rather than accidentally hitting a real
+	// context dir anchored by a parent repository.
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
 	err := serveRoot.Run([]string{})
 	if err == nil {
 		t.Fatal("expected error when default dir doesn't exist")

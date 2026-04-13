@@ -8,16 +8,37 @@
 title: Hook Sequence Diagrams
 ---
 
+![ctx](../images/ctx-banner.png)
+
 ## Hook Lifecycle
 
-Every ctx hook is a Go binary invoked by Claude Code at one of three
-lifecycle events: `PreToolUse` (before a tool runs, can block),
-`PostToolUse` (after a tool completes), or `UserPromptSubmit` (on
-every user prompt, before any tools run). Hooks receive JSON on stdin
-and emit JSON or plain text on stdout.
+This page documents the **ctx system hooks** — the built-in
+`ctx system *` subcommands that Claude Code invokes via
+`.claude/hooks.json` at lifecycle events. These are owned by
+ctx itself, not authored by users.
 
-This page documents the execution flow of every hook as a
-sequence diagram.
+!!! info "Not to be confused with `ctx trigger`"
+    `ctx` has **three distinct hook-like layers**:
+
+    - **`ctx system` hooks** (this page) — built-in, owned
+      by ctx, wired into Claude Code via
+      `internal/assets/claude/hooks/hooks.json`.
+    - **`ctx trigger`** — user-authored shell scripts in
+      `.context/hooks/<type>/*.sh`. See
+      [`ctx trigger` reference](../cli/trigger.md) and the
+      [trigger authoring recipe](triggers.md).
+    - **Claude Code hooks** configured directly in
+      `.claude/settings.local.json` — tool-specific, not
+      portable across AI tools.
+
+    This page is *only* about the first category.
+
+Every `ctx system` hook is a Go binary invoked by Claude Code
+at one of three lifecycle events: `PreToolUse` (before a tool
+runs, can block), `PostToolUse` (after a tool completes), or
+`UserPromptSubmit` (on every user prompt, before any tools
+run). Hooks receive JSON on stdin and emit JSON or plain text
+on stdout.
 
 ---
 

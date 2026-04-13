@@ -15,7 +15,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/dep"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgSync "github.com/ActiveMemory/ctx/internal/config/sync"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -39,7 +38,7 @@ import (
 func CheckPackageFiles(ctx *entity.Context) []Action {
 	var actions []Action
 
-	for f, d := range dep.Packages {
+	for f, d := range cfgSync.Packages {
 		if _, statErr := os.Stat(f); statErr == nil {
 			// File exists, check if we have DEPENDENCIES.md or similar
 			hasDepsDoc := false

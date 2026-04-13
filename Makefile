@@ -168,12 +168,12 @@ release-notes:
 ## install: Install to /usr/local/bin (run as: make build && sudo make install)
 install:
 	@test -f $(BINARY) || (echo "Binary not found. Run 'make build' first, then 'sudo make install'" && exit 1)
-	cp $(BINARY) /usr/local/bin/$(BINARY)
+	install -m 0755 $(BINARY) /usr/local/bin/$(BINARY)
 	@echo "Installed ctx to /usr/local/bin/ctx"
 
 ## reinstall: Build and install in one step
 reinstall: build
-	cp -f $(BINARY) /usr/local/bin/$(BINARY) 2>/dev/null || sudo cp -f $(BINARY) /usr/local/bin/$(BINARY)
+	install -m 0755 $(BINARY) /usr/local/bin/$(BINARY) 2>/dev/null || sudo install -m 0755 $(BINARY) /usr/local/bin/$(BINARY)
 	@echo "ctx reinstalled to /usr/local/bin/ctx"
 
 ## site-setup: Install zensical via pipx

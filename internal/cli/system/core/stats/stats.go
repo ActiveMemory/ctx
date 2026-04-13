@@ -130,7 +130,7 @@ func ParseFile(path, sid string) ([]Entry, error) {
 //   - []string: formatted output lines
 func FormatDump(entries []Entry, last int, jsonOut bool) []string {
 	if len(entries) == 0 {
-		return []string{desc.Text(text.DescKeyStatsEmpty)}
+		return []string{desc.Text(text.DescKeyUsageEmpty)}
 	}
 
 	// Tail: take last N entries.
@@ -175,7 +175,7 @@ func FormatJSON(entries []Entry) []string {
 //   - string: header line
 //   - string: separator line
 func FormatHeader() (string, string) {
-	fmtStr := desc.Text(text.DescKeyStatsHeaderFormat)
+	fmtStr := desc.Text(text.DescKeyUsageHeaderFormat)
 	header := fmt.Sprintf(fmtStr,
 		stats.HeaderTime, stats.HeaderSession,
 		stats.HeaderPrompt, stats.HeaderTokens,
@@ -201,7 +201,7 @@ func FormatLine(e *Entry) string {
 		sid = sid[:journal.SessionIDShortLen]
 	}
 	tokens := session.FormatTokenCount(e.Tokens)
-	return fmt.Sprintf(desc.Text(text.DescKeyStatsLineFormat),
+	return fmt.Sprintf(desc.Text(text.DescKeyUsageLineFormat),
 		ts, sid, e.Prompt, tokens, e.Pct, e.Event)
 }
 

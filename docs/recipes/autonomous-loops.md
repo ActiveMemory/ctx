@@ -448,7 +448,7 @@ Break any part of this contract and the loop degrades.
   `.context/`, then signal.
 * Set up [webhook notifications](webhook-notifications.md) to get notified
   when the loop completes, hits max iterations, or when hooks fire nudges.
-  The generated loop script includes `ctx notify` calls automatically.
+  The generated loop script includes `ctx hook notify` calls automatically.
 
 ## Next Up
 
@@ -459,8 +459,8 @@ worktrees, and a full agent team.
 ## See Also
 
 * [Autonomous Loops](../operations/autonomous-loop.md): loop pattern, prompt templates, troubleshooting
-* [CLI Reference: ctx loop](../cli/tools.md#ctx-loop): flags and options
-* [CLI Reference: ctx watch](../cli/tools.md#ctx-watch): watch mode details
+* [CLI Reference: ctx loop](../cli/loop.md): flags and options
+* [CLI Reference: ctx watch](../cli/watch.md): watch mode details
 * [CLI Reference: ctx init](../cli/init-status.md#ctx-init): init flags
 * [The Complete Session](session-lifecycle.md): interactive workflow
 * [Tracking Work Across Sessions](task-management.md): structuring TASKS.md

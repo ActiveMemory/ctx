@@ -161,7 +161,7 @@ prompts work:
 
 The encryption key lives at `~/.ctx/.ctx.key` (user-level, outside
 the project). Because all worktrees on the same machine share this path,
-**`ctx pad` and `ctx notify` work in worktrees automatically** - no
+**`ctx pad` and `ctx hook notify` work in worktrees automatically** - no
 special setup needed.
 
 One thing to watch:

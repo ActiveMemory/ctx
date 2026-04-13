@@ -88,8 +88,8 @@ done
         break
     fi`
 
-	// LoopNotify is the ctx notify call appended to loop completion points.
-	LoopNotify = `ctx notify --event loop` +
+	// LoopNotify is the ctx hook notify call appended to loop completion points.
+	LoopNotify = `ctx hook notify --event loop` +
 		` "Loop completed after $ITERATION iterations"` +
 		` 2>/dev/null || true`
 
