@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -34,6 +35,9 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
+	if !state.Initialized() {
+		return nil
+	}
 	input, _, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil

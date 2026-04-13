@@ -17,6 +17,9 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-04-13 | GPG signing from non-TTY contexts requires pinentry-mac (or equivalent) |
+| 2026-04-13 | Load average measures a queue, not CPU utilization |
+| 2026-04-13 | rc.ContextDir() is the single source of truth — fix the resolver, not callers |
 | 2026-04-09 | Pad index shifting is a real UX bug in batch operations |
 | 2026-04-08 | fmt.Fprintf to strings.Builder silently discards errors |
 | 2026-04-08 | AST audit tests must cover unexported functions too |
@@ -112,33 +115,100 @@ DO NOT UPDATE FOR:
 
 ---
 
+## [2026-04-13-153618] GPG signing from non-TTY contexts requires pinentry-mac (or equivalent)
+
+**Context**: git commit failed from Claude Code's shell with 'gpg: signing
+failed: No such file or directory' — the default pinentry-curses cannot open a
+TTY in agent-invoked shells. Manual commits from a real terminal worked fine.
+
+**Lesson**: GPG's default curses pinentry requires an interactive TTY. In
+non-TTY contexts (Claude Code, CI, scripts, cron), signing fails silently-ish.
+The fix is to configure a GUI pinentry that uses the OS keychain: brew install
+pinentry-mac; echo 'pinentry-program $(brew --prefix)/bin/pinentry-mac' >>
+~/.gnupg/gpg-agent.conf; gpgconf --kill gpg-agent. Once the passphrase is saved
+in Keychain, signing works from any context.
+
+**Application**: If agents or CI need to sign commits, configure pinentry-mac
+(macOS) or pinentry-gtk/pinentry-qt (Linux) with the OS keychain, not
+pinentry-curses. This is a one-time setup per machine.
+
+---
+
+## [2026-04-13-153618] Load average measures a queue, not CPU utilization
+
+**Context**: The 'Load Xx CPU count' resource alert fired at 1.74x while htop
+showed per-core utilization well under 50% and idle cores. Load average counts
+runnable + uninterruptible-sleep processes, smoothed over 1/5/15 minutes.
+
+**Lesson**: Load average and CPU% measure different things. High load with low
+CPU% typically means many short-lived processes or I/O-bound work (e.g., go test
+spawning hundreds of parallel test binaries). The 1-minute average is too
+reactive for dev machines that periodically run test suites — 5-minute smooths
+transient spikes without hiding sustained pressure.
+
+**Application**: For alerting thresholds based on system load, prefer 5-minute
+over 1-minute averages. 1-minute is useful for interactive debugging; 5-minute
+is better for automated alerts that should not fire on normal build/test
+activity.
+
+---
+
+## [2026-04-13-153618] rc.ContextDir() is the single source of truth — fix the resolver, not callers
+
+**Context**: When ctx init failed with a boundary error, my first instinct was
+to have init bypass rc.ContextDir() and use filepath.Join(cwd, dir.Context)
+directly. Volkan shut that down: rc.ContextDir() encodes invariants (team
+shares, symlinks, network mounts, .ctxrc overrides) that individual commands
+cannot reason about.
+
+**Lesson**: Resolution chains with multiple fallbacks are contracts. If one
+command bypasses the chain, it silently diverges from every other command's
+notion of 'the context directory.' When a resolver produces a wrong answer for a
+specific case, fix the resolver — don't let callers opt out.
+
+**Application**: Any time you see rc.ContextDir(), rc.RC(), or similar central
+resolvers producing a bad result, the fix belongs in the resolver itself (or in
+its input data like .ctxrc). Caller-side bypasses create drift.
+
+---
+
 ## [2026-04-09-001323] Pad index shifting is a real UX bug in batch operations
 
-**Context**: ctx pad rm 10; rm 11; rm 12 deleted wrong entries because indices shifted after each deletion
+**Context**: ctx pad rm 10; rm 11; rm 12 deleted wrong entries because indices
+shifted after each deletion
 
-**Lesson**: Any ID-based system where users chain operations needs stable IDs. Look-then-act is safe for single ops; look-then-batch-act breaks with shifting indices
+**Lesson**: Any ID-based system where users chain operations needs stable IDs.
+Look-then-act is safe for single ops; look-then-batch-act breaks with shifting
+indices
 
-**Application**: Both pad and remind now use stable IDs with batch delete and range support. Apply same pattern to any future numbered-list subsystem
+**Application**: Both pad and remind now use stable IDs with batch delete and
+range support. Apply same pattern to any future numbered-list subsystem
 
 ---
 
 ## [2026-04-08-074612] fmt.Fprintf to strings.Builder silently discards errors
 
-**Context**: golangci-lint errcheck allows fmt.Fprintf to strings.Builder because Write never fails, but project convention says zero silent discard
+**Context**: golangci-lint errcheck allows fmt.Fprintf to strings.Builder
+because Write never fails, but project convention says zero silent discard
 
-**Lesson**: Linter coverage gaps exist where language guarantees mask conventions. AST tests fill the gap
+**Lesson**: Linter coverage gaps exist where language guarantees mask
+conventions. AST tests fill the gap
 
-**Application**: Created TestNoUncheckedFmtWrite to enforce fmt.Fprintf error handling. Use if _, err := fmt.Fprintf(...) with log.Warn on the error path
+**Application**: Created TestNoUncheckedFmtWrite to enforce fmt.Fprintf error
+handling. Use if _, err := fmt.Fprintf(...) with log.Warn on the error path
 
 ---
 
 ## [2026-04-08-074604] AST audit tests must cover unexported functions too
 
-**Context**: TestDocCommentStructure only checked exported functions, so agent-written helpers in format.go had no godoc enforcement
+**Context**: TestDocCommentStructure only checked exported functions, so
+agent-written helpers in format.go had no godoc enforcement
 
-**Lesson**: Convention enforcement tests must default to scanning all documented functions. Use explicit opt-outs (test files) not opt-ins (exported only)
+**Lesson**: Convention enforcement tests must default to scanning all documented
+functions. Use explicit opt-outs (test files) not opt-ins (exported only)
 
-**Application**: When adding AST audit tests, scan all functions. We fixed TestDocCommentStructure to drop the IsExported gate and fixed 84 violations
+**Application**: When adding AST audit tests, scan all functions. We fixed
+TestDocCommentStructure to drop the IsExported gate and fixed 84 violations
 
 ---
 
