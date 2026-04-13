@@ -3,7 +3,9 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-04-13 | Walk boundary uses git as a hint, not a requirement |
 | 2026-04-11 | Journal stays local; LEARNINGS.md is the shareable layer |
+| 2026-04-11 | `Entry.Author` is server-authoritative, not client-authoritative |
 | 2026-04-09 | Architecture skill pipeline is a triad not a quartet |
 | 2026-04-08 | Remove #done tag convention, simplify task archival |
 | 2026-04-06 | Use hook relay for session provenance instead of JSONL parsing or env vars |
@@ -119,6 +121,29 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-04-13-153617] Walk boundary uses git as a hint, not a requirement
+
+**Status**: Accepted
+
+**Context**: ctx init failed when a non-ctx-initialized repo lived inside a
+ctx-initialized parent workspace. walkForContextDir walked up and found the
+parent's .context, then the boundary check rejected it. We considered
+project-marker heuristics (go.mod, package.json) and making git mandatory.
+
+**Decision**: Walk boundary uses git as a hint, not a requirement
+
+**Rationale**: Project markers are unreliable (e.g. package.json for customer
+shipments, Haskell projects have no common marker). Making git mandatory breaks
+ctx's 'git recommended but not required' stance. Git-as-hint resolves the bug
+without new dependencies: walk finds candidate, validate against git root,
+discard if outside; fall back to CWD when no git is found.
+
+**Consequence**: walkForContextDir now consults findGitRoot to anchor ancestor
+.context candidates. Monorepos, submodules, and nested workspaces resolve
+correctly. No-git projects still work via CWD fallback.
+
+---
 
 ## [2026-04-11-200000] Journal stays local; LEARNINGS.md is the shareable layer
 
@@ -296,13 +321,17 @@ the implementation task.
 
 **Status**: Accepted
 
-**Context**: Had a proposed ctx-architecture-extend for extension point mapping, making four skills
+**Context**: Had a proposed ctx-architecture-extend for extension point mapping,
+making four skills
 
 **Decision**: Architecture skill pipeline is a triad not a quartet
 
-**Rationale**: Extension points already covered per-module in DETAILED_DESIGN and by registration site discovery in enrich. Fourth skill fragments pipeline without distinct value
+**Rationale**: Extension points already covered per-module in DETAILED_DESIGN
+and by registration site discovery in enrich. Fourth skill fragments pipeline
+without distinct value
 
-**Consequence**: Pipeline is map enrich hunt. Three skills three questions: how does it work, how well does it connect, where will it break
+**Consequence**: Pipeline is map enrich hunt. Three skills three questions: how
+does it work, how well does it connect, where will it break
 
 ---
 
@@ -310,13 +339,19 @@ the implementation task.
 
 **Status**: Accepted
 
-**Context**: Tasks had #done:YYYY-MM-DD timestamps that agents added inconsistently and nobody read. compact --archive filtered by age using these timestamps.
+**Context**: Tasks had #done:YYYY-MM-DD timestamps that agents added
+inconsistently and nobody read. compact --archive filtered by age using these
+timestamps.
 
 **Decision**: Remove #done tag convention, simplify task archival
 
-**Rationale**: [x] checkbox is semantically sufficient. git blame provides the completion timestamp. Removing #done eliminates redundant ceremony and simplifies compact --archive to archive all completed tasks regardless of age.
+**Rationale**: [x] checkbox is semantically sufficient. git blame provides the
+completion timestamp. Removing #done eliminates redundant ceremony and
+simplifies compact --archive to archive all completed tasks regardless of age.
 
-**Consequence**: compact --archive no longer filters by archive_after_days for tasks. The .ctxrc field is inert but retained for backwards compatibility. Historical #done tags in archives are preserved.
+**Consequence**: compact --archive no longer filters by archive_after_days for
+tasks. The .ctxrc field is inert but retained for backwards compatibility.
+Historical #done tags in archives are preserved.
 
 ---
 

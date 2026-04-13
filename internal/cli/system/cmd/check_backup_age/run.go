@@ -37,6 +37,9 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
+	if !state.Initialized() {
+		return nil
+	}
 	input, _, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil
