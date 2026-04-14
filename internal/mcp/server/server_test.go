@@ -1024,6 +1024,36 @@ func TestPromptAddDecision(t *testing.T) {
 	}
 }
 
+func TestPromptAddLearning(t *testing.T) {
+	srv, _ := newTestServer(t)
+	resp := request(t, srv, "prompts/get", proto.GetPromptParams{
+		Name: "ctx-learning-add",
+		Arguments: map[string]string{
+			"content":     "Always validate inputs",
+			"context":     "MCP sanitization work",
+			"lesson":      "Never trust external input",
+			"application": "Add validation at boundaries",
+		},
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.GetPromptResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if len(result.Messages) == 0 {
+		t.Fatal("expected message in learning prompt")
+	}
+	text := result.Messages[0].Content.Text
+	if !strings.Contains(text, "Always validate inputs") {
+		t.Errorf(
+			"expected learning content in text, got: %s", text,
+		)
+	}
+}
+
 func TestPromptReflect(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "prompts/get", proto.GetPromptParams{
@@ -1377,5 +1407,82 @@ func TestToolSearchNoQuery(t *testing.T) {
 	}
 	if !result.IsError {
 		t.Error("expected error when query is missing")
+	}
+}
+
+// --- Serve edge-case tests ---
+
+// errWriter is an io.Writer that always returns an error.
+type errWriter struct{}
+
+func (errWriter) Write([]byte) (int, error) {
+	return 0, os.ErrClosed
+}
+
+func TestServeEmptyLines(t *testing.T) {
+	srv, _ := newTestServer(t)
+
+	// Feed an empty line followed by a valid ping.
+	idBytes, _ := json.Marshal(1)
+	req := proto.Request{
+		JSONRPC: "2.0",
+		ID:      idBytes,
+		Method:  "ping",
+	}
+	line, _ := json.Marshal(req)
+
+	// Empty line + valid request.
+	input := append([]byte("\n"), line...)
+	input = append(input, '\n')
+
+	var out bytes.Buffer
+	srv.in = bytes.NewReader(input)
+	srv.out = mcpIO.NewWriter(&out)
+	if err := srv.Serve(); err != nil {
+		t.Fatalf("serve: %v", err)
+	}
+
+	var resp proto.Response
+	if err := json.Unmarshal(out.Bytes(), &resp); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if resp.Error != nil {
+		t.Errorf("unexpected error: %v", resp.Error.Message)
+	}
+}
+
+func TestServeParseErrorWriteFailure(t *testing.T) {
+	srv, _ := newTestServer(t)
+
+	// Feed invalid JSON to trigger a parse error.
+	srv.in = bytes.NewReader([]byte("not-json\n"))
+	srv.out = mcpIO.NewWriter(errWriter{})
+
+	err := srv.Serve()
+	if err == nil {
+		t.Fatal("expected write error, got nil")
+	}
+}
+
+func TestServeDispatchWriteFailure(t *testing.T) {
+	srv, _ := newTestServer(t)
+
+	// Feed a valid request but use an errWriter for output.
+	idBytes, _ := json.Marshal(1)
+	req := proto.Request{
+		JSONRPC: "2.0",
+		ID:      idBytes,
+		Method:  "ping",
+	}
+	line, _ := json.Marshal(req)
+
+	srv.in = bytes.NewReader(append(line, '\n'))
+	srv.out = mcpIO.NewWriter(errWriter{})
+
+	// The marshal itself succeeds but the write fails, triggering
+	// the fallback error path which also fails, returning the error.
+	err := srv.Serve()
+	if err == nil {
+		t.Fatal("expected write error, got nil")
 	}
 }

@@ -65,3 +65,19 @@ func UnknownEventType(eventType string) error {
 		eventType,
 	)
 }
+
+// InputTooLong returns an error when input exceeds the allowed
+// length.
+//
+// Parameters:
+//   - field: the field name that is too long
+//   - maxLen: the maximum allowed length
+//
+// Returns:
+//   - error: "<field> exceeds maximum length of <maxLen>"
+func InputTooLong(field string, maxLen int) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyMCPErrInputTooLong),
+		field, maxLen,
+	)
+}

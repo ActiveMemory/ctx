@@ -30,14 +30,22 @@ const (
 	// DescKeyMCPErrTypeContentRequired is the text key for mcp err type content
 	// required messages.
 	DescKeyMCPErrTypeContentRequired = "mcp.err-type-content-required"
-	// DescKeyMCPErrQueryRequired is the text key for mcp err query required
-	// messages.
+	// DescKeyMCPErrQueryRequired is the text key for mcp err
+	// query required messages.
 	DescKeyMCPErrQueryRequired = "mcp.err-query-required"
-	// DescKeyMCPErrSearchRead is the text key for mcp err search read messages.
+	// DescKeyMCPErrSearchRead is the text key for mcp err
+	// search read messages.
 	DescKeyMCPErrSearchRead = "mcp.err-search-read"
-	// DescKeyMCPErrUnknownPrompt is the text key for mcp err unknown prompt
-	// messages.
+	// DescKeyMCPErrUnknownPrompt is the text key for mcp err
+	// unknown prompt messages.
 	DescKeyMCPErrUnknownPrompt = "mcp.err-unknown-prompt"
-	// DescKeyMCPErrURIRequired is the text key for mcp err uri required messages.
+	// DescKeyMCPErrURIRequired is the text key for mcp err
+	// uri required messages.
 	DescKeyMCPErrURIRequired = "mcp.err-uri-required"
+	// DescKeyMCPErrInputTooLong is the text key for mcp err
+	// input too long messages.
+	DescKeyMCPErrInputTooLong = "mcp.err-input-too-long"
+	// DescKeyMCPErrUnknownEntryType is the text key for mcp
+	// err unknown entry type messages.
+	DescKeyMCPErrUnknownEntryType = "mcp.err-unknown-entry-type"
 )
