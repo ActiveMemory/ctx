@@ -11,7 +11,6 @@ icon: lucide/settings
 
 ![ctx](../images/ctx-banner.png)
 
-
 ### `ctx system`
 
 Hidden parent command that hosts Claude Code hook plumbing and a small
@@ -23,7 +22,7 @@ integrations. The parent is registered without a visible group in
 ctx system <subcommand>
 ```
 
-!!! note "Commands previously under `ctx system`"
+!!! note "Commands Previously under `ctx system`"
     Several user-facing maintenance commands used to live under
     `ctx system` and were promoted to top-level:
 
@@ -38,7 +37,7 @@ ctx system <subcommand>
     agent-only command. Update any scripts or personal docs that
     reference the old paths.
 
-## Plumbing subcommands
+## Plumbing Subcommands
 
 These are not hook handlers — they're called by skills and editor
 integrations during the session lifecycle. Safe to run manually.
@@ -104,7 +103,7 @@ ctx system session-event --type start --caller vscode
 ctx system session-event --type end --caller vscode
 ```
 
-## Hook subcommands
+## Hook Subcommands
 
 Hidden Claude Code hook handlers implementing the hook contract: read
 JSON from stdin, perform logic, emit output on stdout, exit 0. Block

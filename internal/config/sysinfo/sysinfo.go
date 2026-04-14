@@ -4,8 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package sysinfo provides constants for system information
-// collection commands and keys.
 package sysinfo
 
 // macOS system command names.

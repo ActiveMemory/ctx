@@ -4,12 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package why provides constants for the ctx why command's embedded
-// philosophy documents.
-//
-// Doc* constants are user-facing alias keys (CLI args, menu items).
-// DocAlias* constants are embedded asset names (file stems in assets/why/).
-// Import as config/why.
 package why
 
 // User-facing document alias keys (CLI arguments and menu items).

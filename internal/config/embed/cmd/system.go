@@ -8,10 +8,16 @@ package cmd
 
 // Use strings for system subcommands.
 //
-// The ctx system namespace hosts hook plumbing only. User-facing
-// maintenance commands (backup, bootstrap, event, message, prune,
-// resource, stats) have been promoted to top-level commands; their
-// Use constants live in their own per-command files in this package.
+// The ctx system namespace hosts hook plumbing plus the
+// agent-only `bootstrap` command. Other user-facing maintenance
+// commands (backup, event, message, prune, resource, stats) have
+// been promoted to top-level commands; their Use constants live in
+// their own per-command files in this package.
+//
+// `bootstrap` is intentionally NOT promoted to top-level — it is
+// invoked by AI agents on session start, not by humans. Keeping it
+// under `ctx system` keeps `ctx --help` focused on user-facing
+// commands. The canonical invocation is `ctx system bootstrap`.
 const (
 	// UseSystemBlockDangerousCommand is the cobra Use string for the system
 	// block dangerous command command.

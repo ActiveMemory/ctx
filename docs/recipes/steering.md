@@ -19,7 +19,7 @@ walks through writing a steering file from scratch, validating
 which prompts will trigger it, and syncing it out to your
 configured AI tools.
 
-!!! tip "Before you start"
+!!! tip "Before You Start"
     If you're unsure whether a rule belongs in
     `steering/`, `DECISIONS.md`, or `CONVENTIONS.md`, read the
     "Steering vs decisions vs conventions" admonition on the
@@ -28,7 +28,7 @@ configured AI tools.
     when asked about Y," that's steering. Otherwise it's
     probably a decision or convention.
 
-## Start here — customize the foundation files
+## Start Here — Customize the Foundation Files
 
 **`ctx init` scaffolds four foundation steering files** for
 you the first time you initialize a project:
@@ -92,7 +92,7 @@ pick up the new rules automatically via the plugin's
 (Cursor, Cline, Kiro) need `ctx steering sync` to export
 into their native format.
 
-!!! note "Prefer a bare `.context/steering/` directory?"
+!!! note "Prefer a Bare `.context/steering/` Directory?"
     Re-run `ctx init --no-steering-init` and delete the
     scaffolded files. `ctx init` leaves existing files
     alone, so the flag is only needed if you want to opt
@@ -110,7 +110,7 @@ before touching the database. You want the AI to flag this
 concern automatically whenever it's asked to write an HTTP
 handler, without you having to remind it every session.
 
-!!! warning "Claude Code users: pick `always`, not `auto`"
+!!! warning "Claude Code Users: Pick `always`, Not `auto`"
     This walkthrough uses `inclusion: auto` because the
     scenario is a scoped rule that matches a specific kind
     of prompt. That works natively on **Cursor, Cline, and
@@ -135,7 +135,7 @@ handler, without you having to remind it every session.
     "Prefer `inclusion: always` for Claude Code" section
     for the full trade-off.
 
-## Step 1 — scaffold the file
+## Step 1 — Scaffold the File
 
 ```bash
 ctx steering add api-validation
@@ -158,7 +158,7 @@ The defaults are deliberately conservative: `inclusion: manual`
 means the file won't be applied until you opt in, which keeps
 the rules out of the prompt until you've reviewed them.
 
-## Step 2 — fill in the rule
+## Step 2 — Fill in the Rule
 
 Open the file and write the rule body plus a focused
 description. The description is what `inclusion: auto` matches
@@ -197,7 +197,7 @@ Notes on the choices:
   validation and request parsing" — the `auto` matcher scores
   prompts against these words.
 
-## Step 3 — preview which prompts match
+## Step 3 — Preview Which Prompts Match
 
 Before committing the file, validate your description catches
 the prompts you care about:
@@ -224,7 +224,7 @@ If `api-validation` incorrectly fires for unrelated prompts,
 tighten the description. If it misses prompts it should catch,
 add more keywords.
 
-## Step 4 — list to confirm metadata
+## Step 4 — List to Confirm Metadata
 
 ```bash
 ctx steering list
@@ -234,13 +234,13 @@ Should show `api-validation` alongside any other files,
 with its inclusion mode and priority. If the list is wrong,
 check the frontmatter for typos.
 
-## Step 5 — get the rules in front of the AI
+## Step 5 — Get the Rules in Front of the AI
 
 **Steering files are authored once in `.context/steering/`,
 but how they reach the AI depends on which tool you use.**
 There are two delivery mechanisms:
 
-### Path A — native-rules tools (Cursor, Cline, Kiro)
+### Path A — Native-Rules Tools (Cursor, Cline, Kiro)
 
 These tools read a specific directory for rules. `ctx
 steering sync` exports your files into that directory with
@@ -261,7 +261,7 @@ Depending on the active tool in `.ctxrc` or `--tool`:
 The sync is idempotent — unchanged files are skipped. Run
 it whenever you edit a steering file.
 
-### Path B — Claude Code and Codex (hook + MCP)
+### Path B — Claude Code and Codex (Hook + MCP)
 
 Claude Code and Codex have **no native rules primitive**,
 so `ctx steering sync` is a **no-op** for them — it
@@ -299,7 +299,7 @@ up on the next tool call — no sync step needed.
     to keep Cursor up to date; the Claude pipeline takes
     care of itself via the hook.
 
-## Step 6 — verify the AI sees it
+## Step 6 — Verify the AI Sees It
 
 Open your AI tool and ask it something the rule should fire
 on:
@@ -340,7 +340,7 @@ If nothing happens, the fix depends on which path you're on:
    has access but isn't pulling it into the initial
    context packet — tighten the description keywords.
 
-## Common mistakes
+## Common Mistakes
 
 **Too-generic descriptions.** `description: general coding`
 will match almost every prompt and flood the context window.
@@ -362,7 +362,7 @@ permanently. Only use `always` for true invariants (security,
 safety, licensing). Everything else should be `auto` or
 `manual`.
 
-## See also
+## See Also
 
 - [`ctx steering` reference](../cli/steering.md) — full
   command, flag, and frontmatter reference.

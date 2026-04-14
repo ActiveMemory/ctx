@@ -16,7 +16,7 @@ grows cluttered with completed checkboxes that obscure the remaining work.
 
 How do you manage work items that span multiple sessions without losing context?
 
-!!! tip "Prefer skills over raw commands"
+!!! tip "Prefer Skills over Raw Commands"
     When working with an AI agent, use `/ctx-task-add` instead of raw
     `ctx add task`. The agent automatically picks up session ID, branch,
     and commit hash from its context — no manual flags needed.

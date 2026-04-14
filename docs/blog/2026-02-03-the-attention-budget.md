@@ -166,7 +166,7 @@ Also noted: ~100 tokens (title-only summaries for overflow)
 
 The constraint is the feature: It enforces ruthless prioritization.
 
-### Primitive 3: Indexes Over Full Content
+### Primitive 3: Indexes over Full Content
 
 `DECISIONS.md` and `LEARNINGS.md` both include index sections:
 
@@ -243,7 +243,7 @@ cat .context/sessions/...       # Deep dive when needed
 
 Summaries **first**. Details: **on demand**.
 
-## Quality Over Quantity
+## Quality over Quantity
 
 Here is the counterintuitive part: **more context can make AI worse**.
 

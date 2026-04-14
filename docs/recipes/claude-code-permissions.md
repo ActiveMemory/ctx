@@ -214,7 +214,7 @@ Project-local hooks (not part of the plugin) catch regex edge cases:
 
 ## The Maintenance Workflow
 
-### After busy sessions
+### After Busy Sessions
 
 Permissions accumulate fastest during debugging and exploration sessions.
 After a session where you clicked "*Allow*" many times:
@@ -245,14 +245,14 @@ Run `/ctx-permission-sanitize` to catch security issues:
 * Overly broad permissions
 * Injection vectors
 
-### When adding new skills
+### When Adding New Skills
 
 If you create a custom `ctx-*` skill, add its `Skill()` entry to the
 allowlist manually. 
 
 `ctx init` only populates the default permissions: It won't pick up custom skills.
 
-### Golden image snapshots
+### Golden Image Snapshots
 
 If manual cleanup is too tedious, use a **golden image** to automate it: 
 

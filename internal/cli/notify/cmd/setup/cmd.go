@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
-// Cmd returns the "ctx notify setup" subcommand.
+// Cmd returns the "ctx hook notify setup" subcommand.
 //
 // Returns:
 //   - *cobra.Command: Configured setup subcommand

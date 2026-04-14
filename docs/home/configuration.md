@@ -53,7 +53,7 @@ per-project.
     via `ctx config switch dev` / `ctx config switch base`.
     See [Contributing: Configuration Profiles](contributing.md#configuration-profiles).
 
-!!! tip "Using a Different .context Directory"
+!!! tip "Using a Different .Context Directory"
     The default `.context/` directory can be changed per-project via the
     `context_dir` key in `.ctxrc`, the `CTX_DIR` environment variable, or the
     `--context-dir` CLI flag.

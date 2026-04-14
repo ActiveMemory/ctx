@@ -19,7 +19,7 @@ topics:
 
 *Jose Alekhinne / 2026-02-05*
 
-!!! question "Have You Ever Dropped a Well-Crafted Template Into a Project and Had It Do... Nothing Useful?"
+!!! question "Have You Ever Dropped a Well-Crafted Template into a Project and Had It Do... Nothing Useful?"
     * The template was **thorough**, 
     * The structure was **sound**,
     * The advice was **correct**...
@@ -40,7 +40,7 @@ Then I stopped, and applied `ctx`'s own evaluation framework:
 
 This post is about **why**.
 
-!!! tip "It Is About Encoding Templates"
+!!! tip "It Is about Encoding Templates"
     **Templates describe categories of problems.**
  
     **Expertise encodes which problems actually happen, and how often.**
@@ -138,7 +138,7 @@ that competed with the AI's built-in capabilities.
 
 ## What the Skill Didn't Know
 
-!!! tip "AI Without Context is Just a Corpus"
+!!! tip "AI without Context Is Just a Corpus"
     * LLMs are optimized on insanely large **corpora**.
     * And then they are passed through several layers of
     human-assisted **refinement**.
@@ -305,7 +305,7 @@ that **actually** drift in this project.
 
 ---
 
-!!! quote "**If You Remember One Thing From This Post...**"
+!!! quote "**If You Remember One Thing from This Post...**"
     **Frameworks travel. Expertise doesn't.**
 
     You can import structures, matrices, and workflows.

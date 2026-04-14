@@ -19,7 +19,7 @@ specific events during an AI session. They're how you express
 this path, check Y first." This recipe walks through writing
 your first trigger, testing it, and enabling it safely.
 
-!!! danger "Triggers execute arbitrary code"
+!!! danger "Triggers Execute Arbitrary Code"
     A trigger is a shell script with the executable bit set.
     It runs with the same privileges as your AI tool and
     receives JSON input on stdin. **Treat triggers like
@@ -44,7 +44,7 @@ editing anything in `internal/crypto/` without explicit
 confirmation. Cryptographic code is sensitive, and accidental
 edits have caused outages before — you want a hard gate.
 
-## Step 1 — scaffold the script
+## Step 1 — Scaffold the Script
 
 ```bash
 ctx trigger add pre-tool-use protect-crypto
@@ -75,7 +75,7 @@ on-disk layout still uses `hooks/` even though the command is
 `ctx trigger`. If you `ls .context/hooks/`, that's where
 your triggers live.
 
-## Step 2 — write the logic
+## Step 2 — Write the Logic
 
 Open the file and replace the template body:
 
@@ -123,7 +123,7 @@ A few things to note:
   string concatenation when the message may contain special
   characters.
 
-## Step 3 — test with a mock payload
+## Step 3 — Test with a Mock Payload
 
 Before enabling the trigger, test it with a realistic mock
 input using `ctx trigger test`. This runs the script against
@@ -155,7 +155,7 @@ If any of these cases misbehave, **fix the trigger before
 enabling it.** The trigger is disabled at this point, so
 misbehavior doesn't affect real AI sessions.
 
-## Step 4 — enable it
+## Step 4 — Enable It
 
 Once the test cases pass, enable the trigger:
 
@@ -175,7 +175,7 @@ ctx trigger list
 Should show `protect-crypto` under `pre-tool-use` with an
 enabled indicator.
 
-## Step 5 — iterate safely
+## Step 5 — Iterate Safely
 
 If you discover a bug after enabling, **disable first, fix
 second**:
@@ -191,9 +191,9 @@ Disabling simply clears the executable bit — the script stays
 on disk, and `ctx trigger enable` re-enables it without
 rewriting anything.
 
-## Patterns worth copying
+## Patterns Worth Copying
 
-### Logging, not blocking
+### Logging, Not Blocking
 
 For auditing or analytics, return `{"action":"allow"}` always
 and append to a log as a side effect:
@@ -206,20 +206,20 @@ echo "$payload" >> .context/logs/tool-use.jsonl
 echo '{"action":"allow"}'
 ```
 
-### Context injection at session start
+### Context Injection at Session Start
 
 A `session-start` trigger can prepend text to the agent's
 initial prompt by emitting `{"action":"inject", "content": "..."}`
 — useful for injecting daily standup notes, open PRs, or
 rotating TODOs without storing them in a steering file.
 
-### Chaining triggers of the same type
+### Chaining Triggers of the Same Type
 
 Multiple scripts in the same type directory all run. If any
 returns `action: block`, the block wins. Keep individual
 triggers single-purpose and rely on composition.
 
-## Common mistakes
+## Common Mistakes
 
 **Forgetting the shebang.** Without `#!/usr/bin/env bash`,
 the trigger won't execute even with the executable bit set.
@@ -242,7 +242,7 @@ strings.
 The feature was renamed; the directory name lags behind.
 Don't let this confuse you — they refer to the same thing.
 
-## See also
+## See Also
 
 - [`ctx trigger` reference](../cli/trigger.md) — full
   command, flag, and event-type reference.

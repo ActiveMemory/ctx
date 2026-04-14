@@ -55,7 +55,7 @@ regardless of prefix configuration.
 
 ## Configuration
 
-### Adding a language
+### Adding a Language
 
 Add the prefix with a trailing colon to your `.ctxrc`:
 
@@ -65,18 +65,18 @@ session_prefixes:
   - "Sesión:"       # Spanish
 ```
 
-!!! warning "Include Session: explicitly"
+!!! warning "Include Session: Explicitly"
     When you override `session_prefixes`, **the default is replaced**,
     not extended. If you still want English headers recognized, include
     `"Session:"` in your list.
 
-### Team setup
+### Team Setup
 
 Commit `.ctxrc` to the repo so all team members share the same prefix
 list. This ensures `ctx journal import` and journal generation pick up
 sessions from all team members regardless of language.
 
-### Common prefixes
+### Common Prefixes
 
 | Language   | Prefix     |
 |------------|------------|

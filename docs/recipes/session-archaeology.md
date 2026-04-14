@@ -172,7 +172,7 @@ ctx journal import gleaming-wobbling-sutherland
 ctx journal import --all --all-projects
 ```
 
-!!! warning "--keep-frontmatter=false Discards Enrichments"
+!!! warning "`--keep-frontmatter=false` Discards Enrichments"
     `--keep-frontmatter=false` discards enriched YAML frontmatter during
     regeneration.
 
@@ -190,7 +190,7 @@ To re-import existing files (*e.g., after a format improvement*), use
 YAML frontmatter you or the **enrichment** skill has added. You'll be prompted
 before any files are overwritten.
 
-!!! danger "--regenerate Replaces the Markdown Body"
+!!! danger "`--regenerate` Replaces the Markdown Body"
     `--regenerate` preserves YAML frontmatter but **replaces the entire
     Markdown body** with freshly generated content from the source JSONL.
 
@@ -389,7 +389,7 @@ Claude Code exposes a `cleanupPeriodDays` setting in its configuration
 | `60`, `90`, etc. | Extends the retention window                                       |
 | `0`              | **Disables writing new transcripts entirely** - not "keep forever" |
 
-!!! warning "Setting `cleanupPeriodDays` to 0"
+!!! warning "Setting `cleanupPeriodDays` To 0"
     Setting this to `0` does **not** mean "never delete." It disables
     transcript creation altogether. No new JSONL files are written, which
     means `ctx journal` sees nothing new. This is rarely what you want.

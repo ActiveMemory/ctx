@@ -143,7 +143,7 @@ How's the context looking?
 This turns maintenance from a scheduled chore into a conversation that happens
 **when** it matters.
 
-### Step 3: Real-Time Detection During Work
+### Step 3: Real-Time Detection during Work
 
 Agents *can* notice drift while working: When a mismatch is directly in the
 path of their current task. If an agent reads `ARCHITECTURE.md` to find where
@@ -219,7 +219,7 @@ ctx doctor          # everything in one pass
 ctx doctor --json   # machine-readable for scripting
 ```
 
-!!! tip "Use `/ctx-doctor` Too" 
+!!! tip "Use `/ctx-doctor` Too"
     For agent-driven diagnosis that adds semantic analysis on top of the structural
     checks, use `/ctx-doctor`. 
 

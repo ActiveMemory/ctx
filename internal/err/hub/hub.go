@@ -4,7 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package hub provides error constructors for the hub subsystem.
 package hub
 
 import (

@@ -15,11 +15,11 @@ topics:
 
 ![ctx](../images/ctx-banner.png)
 
-## When the Screen Looks Like Progress
+## When the Screen Looks like Progress
 
 *Jose Alekhinne / 2026-02-17*
 
-!!! question "How Many Terminals Are too Many?"
+!!! question "How Many Terminals Are Too Many?"
     You discover agents can run in parallel.
 
     So you open ten... 
@@ -135,7 +135,7 @@ Real parallelism comes from **task topology**, not from tooling.
 
 * Four agents editing the same implementation surface
 
-!!! tip "Context is the Boundary"
+!!! tip "Context Is the Boundary"
     * The goal is **not** to keep agents busy. 
     * The goal is to keep **contexts isolated**.
 
@@ -343,7 +343,7 @@ A well-written task description that takes 50 tokens outperforms a rambling one
 that takes 200: **Not** just because it is cheaper, but because it leaves more 
 **headroom** for the model to actually **think**.
 
-!!! tip "Literature is NOT Overrated"
+!!! tip "Literature Is NOT Overrated"
     * Attention is a **finite** budget. 
     * **Language** determines how fast you spend it.
 
@@ -382,7 +382,7 @@ Every post has arrived (*and made me converge*) at the same answer so far:
 
 ---
 
-## `ctx` Was Never About Spawning More Minds
+## `ctx` Was Never about Spawning More Minds
 
 `ctx` is about:
 
@@ -426,7 +426,7 @@ This is *slower* to watch. **Faster** to ship.
 
 ---
 
-!!! quote "**If You Remember One Thing From This Post...**"
+!!! quote "**If You Remember One Thing from This Post...**"
     **Progress is not what the machine produces while you sleep.**
 
     **Progress is what survives contact with the main branch.**

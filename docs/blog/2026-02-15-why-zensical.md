@@ -15,7 +15,7 @@ topics:
 
 ![ctx](../images/ctx-banner.png)
 
-## Why ctx's Journal Site Runs on a v0.0.21 Tool
+## Why `ctx`'s Journal Site Runs on a v0.0.21 Tool
 
 *Jose Alekhinne / 2026-02-15*
 
@@ -329,7 +329,7 @@ This is the same kind of decision that shows up throughout `ctx`:
 
 ---
 
-!!! quote "**If You Remember One Thing From This Post...**"
+!!! quote "**If You Remember One Thing from This Post...**"
     **Version numbers measure where a project has been.**
 
     **The team and the architecture tell you where it's going.**

@@ -19,7 +19,7 @@ terminal, a browser, or a code review. There's no schema to learn, no
 binary format to decode, no vendor lock-in. You can inspect your
 context with `cat`, diff it with `git diff`, and review it in a PR.
 
-## Does ctx work offline?
+## Does `ctx` Work Offline?
 
 Yes. ctx is completely local. It reads and writes files on disk,
 generates context packets from local state, and requires no network
@@ -27,7 +27,7 @@ access. The only feature that touches the network is the optional
 [webhook notifications](../recipes/webhook-notifications.md) hook,
 which you have to explicitly configure.
 
-## What gets committed to git?
+## What Gets Committed to Git?
 
 The `.context/` directory: yes, commit it. That's the whole point.
 Team members and AI agents read the same context files.
@@ -42,7 +42,7 @@ What **not** to commit:
   commit if you want shared scratchpad state. See
   [Scratchpad](../reference/scratchpad.md) for details.
 
-## How big should my token budget be?
+## How Big Should My Token Budget Be?
 
 The default is 8000 tokens, which works well for most projects.
 Configure it via `.ctxrc` or the `CTX_TOKEN_BUDGET` environment
@@ -65,7 +65,7 @@ content first, so CONSTITUTION and TASKS always make the cut.
 
 See [Configuration](configuration.md) for all available settings.
 
-## Why not a database?
+## Why Not a Database?
 
 Files are inspectable, diffable, and reviewable in pull requests.
 You can `grep` them, `cat` them, pipe them through `jq` or `awk`.
@@ -75,7 +75,7 @@ A database would add a dependency, require migrations, and make
 context opaque. The design bet is that context should be as visible
 and portable as the code it describes.
 
-## Does it work with tools other than Claude Code?
+## Does It Work with Tools Other than Claude Code?
 
 Yes. `ctx agent` outputs a context packet that any AI tool can
 consume: paste it into ChatGPT, Cursor, Copilot, Aider, or anything
@@ -89,7 +89,7 @@ instruction files or manual pasting.
 See [Integrations](../operations/integrations.md) for tool-specific
 setup, including the [multi-tool recipe](../recipes/multi-tool-setup.md).
 
-## Can I use ctx on an existing project?
+## Can I Use `ctx` on an Existing Project?
 
 Yes. Run `ctx init` in any repo and it creates `.context/` with
 template files. Start recording decisions, tasks, and conventions as
@@ -100,7 +100,7 @@ See [Getting Started](getting-started.md) for the full setup flow,
 or [Joining a ctx Project](joining-a-project.md) if someone else
 already initialized it.
 
-## What happens when context files get too big?
+## What Happens When Context Files Get Too Big?
 
 Token budgeting handles this automatically. `ctx agent` prioritizes
 content by file priority (CONSTITUTION first, GLOSSARY last) and
@@ -113,7 +113,7 @@ old entries, keeping active context lean. You can also run
 The goal is to keep context files focused on **current** state.
 Historical entries belong in git history or the archive.
 
-## Is .context/ meant to be shared?
+## Is `.context/` Meant to Be Shared?
 
 Yes. Commit it to your repo. Every team member and every AI agent
 reads the same files. That's the mechanism for shared memory:

@@ -11,13 +11,13 @@ icon: lucide/alert-triangle
 
 ![ctx](../images/ctx-banner.png)
 
-# `ctx` Hub: Failure modes
+# `ctx` Hub: Failure Modes
 
 What can go wrong, what the system does about it, and what you
 should do. Complementary to
 [`ctx` Hub Operations](hub.md).
 
-!!! info "Design posture"
+!!! info "Design Posture"
     The hub is **best-effort knowledge sharing**, not a durable
     ledger. Local `.context/` files are the source of truth for
     each project; the hub is a fan-out channel. This framing
@@ -25,7 +25,7 @@ should do. Complementary to
 
 ## Network
 
-### Client loses connection mid-stream
+### Client Loses Connection Mid-Stream
 
 **What happens:** `ctx connection listen` detects the EOF, waits
 with exponential backoff, and reconnects. On reconnect it passes
@@ -34,7 +34,7 @@ its last-seen sequence; the hub replays everything newer.
 **What you should do:** nothing. If reconnects are looping, check
 firewall state on the hub and `ctx hub status` output.
 
-### Partition — majority side reachable
+### Partition — Majority Side Reachable
 
 **What happens:** clients routed to the majority side continue to
 publish and listen. The minority nodes step down to followers
@@ -43,7 +43,7 @@ that cannot accept writes (Raft quorum lost).
 **What you should do:** let it heal. When the partition closes,
 followers catch up via sequence-based sync automatically.
 
-### Partition — split brain (no quorum)
+### Partition — Split Brain (No Quorum)
 
 **What happens:** no node holds a majority, so no leader is
 elected. All nodes become read-only. `ctx connection publish` and
@@ -54,7 +54,7 @@ still succeed.
 permanent (e.g., a data center is gone), bootstrap a new cluster
 from the survivors with `ctx hub peer remove` for the dead nodes.
 
-### Hub unreachable during `ctx add --share`
+### Hub Unreachable during `ctx add --share`
 
 **What happens:** the local write succeeds; the share step prints
 a warning and exits non-zero on the share leg only. `--share` is
@@ -66,7 +66,7 @@ The hub deduplicates by entry ID.
 
 ## Storage
 
-### Disk full on the leader
+### Disk Full on the Leader
 
 **What happens:** `entries.jsonl` append fails. The hub rejects
 writes with an error and stays up for read traffic. Clients
@@ -88,7 +88,7 @@ earlier line is malformed, the hub refuses to start.
 line. Move the bad region to a `.quarantine` file, then start.
 Nothing is ever silently dropped.
 
-### `meta.json` / `entries.jsonl` sequence mismatch
+### `meta.json` / `entries.jsonl` Sequence Mismatch
 
 **What happens:** the hub refuses to start. This usually means
 someone copied one file without the other.
@@ -99,13 +99,13 @@ or accept the higher sequence by regenerating `meta.json` from
 
 ## Cluster
 
-### Leader crash, clean shutdown
+### Leader Crash, Clean Shutdown
 
 **What happens:** `ctx hub stop` triggers `stepdown` first, so
 a new leader is elected before the old one exits. In-flight
 writes drain. Clients reconnect to the new leader transparently.
 
-### Leader crash, hard fail (kill -9, power loss)
+### Leader Crash, Hard Fail (Kill -9, Power Loss)
 
 **What happens:** Raft detects the missing heartbeat and elects
 a new leader within a few seconds. Writes the old leader accepted
@@ -116,7 +116,7 @@ warning in [the cluster recipe](../recipes/hub-cluster.md).
 `ctx connection listen` on a dedicated "collector" project that
 persists entries locally as a write-ahead backup.
 
-### Split-brain after rejoin
+### Split-Brain After Rejoin
 
 **What happens:** Raft reconciles: the minority side's uncommitted
 writes are discarded, and the majority's log is authoritative.
@@ -126,9 +126,9 @@ minority had important writes, grep for them in
 `<data-dir>/entries.jsonl.rejected` (written by the reconciliation
 pass) and replay them with `ctx connection publish`.
 
-## Auth and tokens
+## Auth and Tokens
 
-### Lost admin token
+### Lost Admin Token
 
 **What happens:** you cannot register new projects.
 
@@ -137,7 +137,7 @@ pass) and replay them with `ctx connection publish`.
 and regenerate — note that **all existing client tokens keep
 working**; only new registrations need the admin token.
 
-### Compromised admin token
+### Compromised Admin Token
 
 **What happens:** anyone with the token can register new
 projects and publish. They cannot read existing entries without
@@ -148,7 +148,7 @@ a client token for a project that subscribes.
 suspicious client registrations via `clients.json`, and audit
 `entries.jsonl` for unexpected origins.
 
-### Compromised client token
+### Compromised Client Token
 
 **What happens:** the attacker can publish as that project and
 read anything that project is subscribed to. Because `Origin`
@@ -164,7 +164,7 @@ published after the compromise timestamp and quarantine any
 that look suspicious — remember that `Origin` on those entries
 proves nothing.
 
-### Compromised hub host
+### Compromised Hub Host
 
 **What happens:** `<data-dir>/clients.json` stores client
 tokens **verbatim** (not hashed). Anyone with read access to
@@ -178,7 +178,7 @@ See [Security model](../security/hub.md#hub-side-token-storage)
 for the mitigations that reduce the blast radius while the
 hashing follow-up is pending.
 
-## Clock skew
+## Clock Skew
 
 Hub entries carry a timestamp assigned **by the publishing
 client**. The hub does not rewrite timestamps. Clients with
@@ -189,7 +189,7 @@ order in the shared feed.
 see entries dated in the future or far past, the publisher's
 clock is the culprit.
 
-## The short list
+## The Short List
 
 | Symptom                           | First thing to check              |
 |-----------------------------------|-----------------------------------|
@@ -200,7 +200,7 @@ clock is the culprit.
 | Duplicate entries in shared feed  | Client replayed after restore — safe, dedup by ID |
 | Followers lagging                 | Disk or network on the follower, not the leader |
 
-## See also
+## See Also
 
 - [`ctx` Hub Operations](hub.md)
 - [`ctx` Hub security model](../security/hub.md)

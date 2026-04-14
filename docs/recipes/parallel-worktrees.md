@@ -107,7 +107,7 @@ claude
 Each agent sees the full project, including `.context/`, and can work
 independently. 
 
-!!! warning "Do Not Initialize Context in Worktrees" 
+!!! warning "Do Not Initialize Context in Worktrees"
     **Do not** run `ctx init` in worktrees: The `.context`
     directory is already tracked in `git`.
 

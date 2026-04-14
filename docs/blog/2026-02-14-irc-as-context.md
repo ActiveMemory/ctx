@@ -89,7 +89,7 @@ Client sessions become **ephemeral**.
 
 Presence becomes **infrastructural**.
 
-!!! tip "ZNC is tmux for IRC"
+!!! tip "ZNC Is Tmux for IRC"
     * Close your laptop.
         * ZNC remains.
 
@@ -100,7 +100,7 @@ This is **not** convenience; this is **continuity**.
 
 ---
 
-## Presence Without Flapping
+## Presence without Flapping
 
 With a bouncer:
 

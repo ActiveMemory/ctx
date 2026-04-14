@@ -20,7 +20,7 @@ topics:
 
 # Code Structure as an Agent Interface
 
-## What 19 AST Tests Taught Us About Agent-Readable Code
+## What 19 AST Tests Taught Us about Agent-Readable Code
 
 ![ctx](../images/ctx-banner.png)
 

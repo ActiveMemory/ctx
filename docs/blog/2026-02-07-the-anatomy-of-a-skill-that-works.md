@@ -20,11 +20,11 @@ topics:
 
 ![ctx](../images/ctx-banner.png)
 
-## What 20 Skill Rewrites Taught Me About Guiding AI
+## What 20 Skill Rewrites Taught Me about Guiding AI
 
 *Jose Alekhinne / 2026-02-07*
 
-!!! question "Why do some skills produce great results while others get ignored or produce garbage?"
+!!! question "Why Do Some Skills Produce Great Results While Others Get Ignored or Produce Garbage?"
     I had 20 skills. Most were well-intentioned stubs: a description,
     a command to run, and a wish for the best.
 
@@ -151,7 +151,7 @@ These are not just nice-to-have. They are **load-bearing**.
 Withoutthem, the agent will trigger the skill at the *wrong* time, produce
 *unwanted* output, and **erode the user's trust** in the skill system.
 
-## Lesson 3: Examples Set Boundaries Better Than Rules
+## Lesson 3: Examples Set Boundaries Better than Rules
 
 The most common failure mode of thin skills was not wrong behavior
 but *vague* behavior. The agent would do roughly the right thing,
@@ -201,7 +201,7 @@ The agent does not have a notes app. It does not browse the web
 to find one. This instruction, clearly written for a human
 audience, was *dead weight* in a skill consumed by an AI.
 
-!!! tip "Skills are for the Agents"
+!!! tip "Skills Are for the Agents"
     **Every sentence in a skill should be actionable by the agent**.
 
     If the guidance requires human judgment or human tools, it belongs in
@@ -322,7 +322,7 @@ checklists is a **tool**: the difference is not the content; it
 is **whether the agent can reliably execute it without human
 intervention**.
 
-!!! tip "Skills are Interfaces"
+!!! tip "Skills Are Interfaces"
     **Good skills are not instructions. They are contracts.**:
 
     * They **specify** preconditions, postconditions, and boundaries.
@@ -331,7 +331,7 @@ intervention**.
 
 ---
 
-!!! quote "**If You Remember One Thing From This Post...**"
+!!! quote "**If You Remember One Thing from This Post...**"
     **Skills that work have bones, not just flesh.**
 
     Quality gates, negative triggers, examples, and checklists

@@ -24,7 +24,7 @@ explains what the hub is, the two user stories it supports
 it does **not** do. A client-side tour is in
 [Getting Started](../recipes/hub-getting-started.md).
 
-!!! info "Operator cheat sheet"
+!!! info "Operator Cheat Sheet"
     - The hub fans out four entry types only: `decision`,
       `learning`, `convention`, `task`. Journals, scratchpad,
       and other local state are out of scope.
@@ -34,7 +34,7 @@ it does **not** do. A client-side tour is in
     - The data model is an **append-only JSONL log** plus two
       small JSON sidecar files. Nothing is rewritten in place.
 
-## Data directory layout
+## Data Directory Layout
 
 The hub stores everything under a single data directory
 (default `~/.ctx/hub-data/`, override with `--data-dir`).
@@ -63,7 +63,7 @@ The hub stores everything under a single data directory
 * `clients.json` holds hashed client tokens; losing it invalidates
   all client registrations.
 
-## Starting and stopping
+## Starting and Stopping
 
 === "Foreground"
 
@@ -85,7 +85,7 @@ in-flight RPCs to drain, then exits. If the daemon is wedged,
 remove `hub.pid` and send `SIGKILL` manually — `entries.jsonl` is
 crash-safe, so you will not lose accepted writes.
 
-## Systemd unit
+## Systemd Unit
 
 For production single-node deployments, run the hub as a systemd
 service instead of `--daemon`:
@@ -120,7 +120,7 @@ sudo systemctl enable --now ctx-hub
 sudo journalctl -u ctx-hub -f
 ```
 
-## Backup and restore
+## Backup and Restore
 
 Because `entries.jsonl` is append-only, backups are trivial:
 
@@ -150,7 +150,7 @@ will re-publish on the next `listen` reconnect, because the hub
 now reports a lower sequence than what clients have on disk. This
 is safe — the store deduplicates by entry ID.
 
-## Log rotation
+## Log Rotation
 
 `entries.jsonl` grows unbounded. For long-lived hubs, rotate it
 offline:
@@ -191,13 +191,13 @@ For cluster deployments, watch for:
 
 ## Upgrading
 
-The JSONL format is versioned in `meta.json`. Ctx refuses to start
+The JSONL format is versioned in `meta.json`. `ctx` refuses to start
 against a newer store version than it understands; older store
 versions are upgraded in place at first start after an upgrade.
 
 **Always back up `<data-dir>/` before upgrading.**
 
-## See also
+## See Also
 
 - [`ctx` Hub failure modes](hub-failure-modes.md)
 - [`ctx` Hub security model](../security/hub.md)

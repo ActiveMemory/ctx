@@ -12,7 +12,7 @@ import (
 	pauseRoot "github.com/ActiveMemory/ctx/internal/cli/pause/cmd/root"
 )
 
-// Cmd returns the top-level "ctx pause" command.
+// Cmd returns the "ctx hook pause" command.
 //
 // Returns:
 //   - *cobra.Command: The pause command with subcommands registered

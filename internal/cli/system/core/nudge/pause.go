@@ -74,7 +74,7 @@ func PausedMessage(turns int) string {
 }
 
 // Pause creates the session pause marker. Exported for use by the
-// top-level ctx pause command.
+// ctx hook pause command.
 //
 // Parameters:
 //   - sessionID: Session identifier
@@ -83,7 +83,7 @@ func Pause(sessionID string) {
 }
 
 // Resume removes the session pause marker. Exported for use by the
-// top-level ctx resume command. No-op if not paused.
+// ctx hook resume command. No-op if not paused.
 //
 // Parameters:
 //   - sessionID: Session identifier

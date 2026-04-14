@@ -23,7 +23,7 @@ events.
 ctx trigger <subcommand>
 ```
 
-!!! warning "Triggers execute arbitrary scripts"
+!!! warning "Triggers Execute Arbitrary Scripts"
     A trigger is a shell script with the executable bit set.
     It runs with the same privileges as your AI tool and
     receives JSON input on stdin. Treat triggers like
@@ -31,7 +31,7 @@ ctx trigger <subcommand>
     understand. A malicious or buggy trigger can block tool
     calls, corrupt context files, or exfiltrate data.
 
-### Where triggers live
+### Where Triggers Live
 
 Triggers live in `.context/hooks/<trigger-type>/` as executable
 scripts. The on-disk directory name is still `hooks/` for
@@ -53,7 +53,7 @@ Each script:
         └── record-edit.sh
 ```
 
-### Trigger types
+### Trigger Types
 
 | Type            | Fires when                           |
 |-----------------|--------------------------------------|
@@ -64,7 +64,7 @@ Each script:
 | `file-save`     | When a file is saved                 |
 | `context-add`   | When a context entry is added        |
 
-### Input and output contract
+### Input and Output Contract
 
 Each trigger receives a JSON object on stdin with the event
 details. Minimal contract (fields vary by trigger type):
@@ -189,7 +189,7 @@ ctx trigger disable inject-context
 # Disabled .context/hooks/session-start/inject-context.sh
 ```
 
-### Three hooking concepts in ctx — don't confuse them
+### Three Hooking Concepts in ctx — Don't Confuse Them
 
 This is a common source of confusion. `ctx` has three
 distinct hook-like layers, and they serve different purposes:
@@ -207,7 +207,7 @@ be portable across tools. `ctx system` hooks are not something
 you author — they're the internal nudge machinery that ships
 with ctx.
 
-### See also
+### See Also
 
 - [`ctx steering`](steering.md) — persistent AI behavioral
   rules (a different concept; rules vs scripts)

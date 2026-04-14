@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package notify provides terminal output for webhook notification
-// setup and testing (ctx notify setup, ctx notify test).
+// setup and testing (ctx hook notify setup, ctx hook notify test).
 //
 // [SetupPrompt] displays the webhook URL prompt, [SetupDone]
 // confirms successful configuration. [TestResult] reports the HTTP

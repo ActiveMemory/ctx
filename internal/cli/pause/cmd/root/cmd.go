@@ -15,7 +15,7 @@ import (
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
-// Cmd returns the top-level "ctx pause" command.
+// Cmd returns the "ctx hook pause" command.
 //
 // Returns:
 //   - *cobra.Command: Configured pause command

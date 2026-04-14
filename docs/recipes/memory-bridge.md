@@ -182,7 +182,7 @@ ctx memory import --dry-run    # 2. Preview what would be imported
 ctx memory import              # 3. Promote entries to .context/ files
 ```
 
-## Publishing Context to MEMORY.md
+## Publishing Context to `MEMORY.md`
 
 Push curated `.context/` content back into MEMORY.md so Claude Code sees
 structured project context on session start - without needing hooks.

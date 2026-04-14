@@ -19,10 +19,7 @@
         <loc>https://ctx.ist/home/is-ctx-right/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/home/community/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/home/contributing/</loc>
+        <loc>https://ctx.ist/home/faq/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/home/getting-started/</loc>
@@ -40,7 +37,13 @@
         <loc>https://ctx.ist/home/configuration/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/home/hub/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/home/prompting-guide/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/home/keeping-ai-honest/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/home/repeated-mistakes/</loc>
@@ -49,19 +52,19 @@
         <loc>https://ctx.ist/home/joining-a-project/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/home/keeping-ai-honest/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/home/steering/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/home/triggers/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/home/hub/</loc>
+        <loc>https://ctx.ist/home/community/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/home/faq/</loc>
+        <loc>https://ctx.ist/home/contributing/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/guide-your-agent/</loc>
@@ -307,12 +310,6 @@
         <loc>https://ctx.ist/operations/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/operations/hub/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/operations/hub-failure-modes/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/operations/migration/</loc>
       </url>
       <url>
@@ -323,6 +320,12 @@
       </url>
       <url>
         <loc>https://ctx.ist/operations/autonomous-loop/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/hub/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/hub-failure-modes/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/operations/release/</loc>
