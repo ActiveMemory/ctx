@@ -124,7 +124,7 @@ Merge a completed worktree back and clean up.
 
 The encryption key lives at `~/.ctx/.ctx.key` (user-level, outside
 the project). All worktrees on the same machine share this path, so
-**`ctx pad` and `ctx notify` work in worktrees automatically**.
+**`ctx pad` and `ctx hook notify` work in worktrees automatically**.
 
 One thing to watch:
 

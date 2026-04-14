@@ -22,7 +22,7 @@ normal sessions.
 
 ---
 
-## How it works
+## How It Works
 
 The `ctx` repo ships two source profiles committed to git:
 
@@ -37,7 +37,7 @@ is always a clean snapshot of one of the two sources.
 
 ---
 
-## Switching profiles
+## Switching Profiles
 
 ```bash
 # Switch to dev (verbose logging, notifications)
@@ -58,7 +58,7 @@ in `.ctxrc`: present means dev, absent means base.
 
 ---
 
-## Checking the active profile
+## Checking the Active Profile
 
 ```bash
 ctx config status
@@ -74,7 +74,7 @@ active: none (.ctxrc does not exist)
 
 ---
 
-## Typical workflow
+## Typical Workflow
 
 1. **Start of a debugging session**: switch to dev for verbose
    logging and webhook notifications so you can trace hook
@@ -95,7 +95,7 @@ active: none (.ctxrc does not exist)
 
 ---
 
-## Customizing profiles
+## Customizing Profiles
 
 Edit the source files directly:
 
@@ -108,14 +108,14 @@ Edit the source files directly:
 After editing a source file, re-run `ctx config switch <profile>`
 to apply the changes to the working copy.
 
-!!! tip "Commit your profiles"
+!!! tip "Commit Your Profiles"
     Both `.ctxrc.base` and `.ctxrc.dev` should be committed to git
     so team members share the same profile definitions. The working
     copy `.ctxrc` stays gitignored.
 
 ---
 
-## Using the skill
+## Using the Skill
 
 In a Claude Code session, say any of:
 

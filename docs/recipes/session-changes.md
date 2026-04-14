@@ -7,8 +7,8 @@
 
 title: Reviewing Session Changes
 ---
-![ctx](../images/ctx-banner.png)
 
+![ctx](../images/ctx-banner.png)
 
 ## What Changed While You Were Away?
 
@@ -48,7 +48,7 @@ everything after that.
 
 ## What It Reports
 
-### Context file changes
+### Context File Changes
 
 Any `.md` file in `.context/` modified after the reference time:
 
@@ -58,7 +58,7 @@ Any `.md` file in `.context/` modified after the reference time:
 - `DECISIONS.md` - modified 2026-03-11 09:15
 ```
 
-### Code changes
+### Code Changes
 
 Git activity since the reference time:
 
@@ -70,7 +70,7 @@ Git activity since the reference time:
 - **Authors**: jose, claude
 ```
 
-## Integrating Into Session Start
+## Integrating into Session Start
 
 Pair `ctx change` with the `/ctx-remember` ceremony for a complete
 session-start picture:

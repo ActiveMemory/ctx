@@ -71,7 +71,7 @@ braces.
 | `ctx journal source` | CLI   | List recent sessions                               |
 | `ctx add`         | CLI   | Persist learnings, decisions, conventions, tasks   |
 
-## Session Start: /ctx-remember
+## Session Start: `/ctx-remember`
 
 Invoke at the beginning of every session:
 
@@ -96,7 +96,7 @@ The readback should feel like recall, not a file system tour. If the
 agent says "Let me check if there are files..." instead of a confident
 summary, the skill is not working correctly.
 
-!!! note "What About '*do you remember?*'"
+!!! note "What about '*do you remember?*'"
     The conversational trigger still works. But `/ctx-remember` guarantees
     the full ceremony runs: 
     
@@ -107,7 +107,7 @@ summary, the skill is not working correctly.
 
     The conversational version *may* cut corners.
 
-## Session End: /ctx-wrap-up
+## Session End: `/ctx-wrap-up`
 
 Invoke before ending a session where meaningful work happened:
 

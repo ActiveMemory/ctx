@@ -29,7 +29,7 @@ persisting context before you close it, so you can see how each piece connects.
 
 Read on for the full walkthrough with examples.
 
-!!! note "What is a Readback?"
+!!! note "What Is a Readback?"
     A **readback** is a **structured summary** where the agent plays back what
     it knows:
 

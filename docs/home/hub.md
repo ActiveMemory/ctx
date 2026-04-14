@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: The ctx Hub
+title: Hub
 icon: lucide/network
 ---
 
 ![ctx](../images/ctx-banner.png)
 
-## The `ctx` Hub
+## Sharing Is Caring
 
 `ctx` projects are normally **independent**: each project has its
 own `.context/` directory, its own decisions, its own learnings,
@@ -26,7 +26,7 @@ A is the same gotcha waiting for you in service B. The **`ctx`
 Hub** is the feature that makes those specific entries travel,
 without replicating everything else.
 
-## What the Hub actually is
+## What the Hub Actually Is
 
 In one paragraph: the `ctx` Hub is a **fan-out channel** for
 four specific kinds of structured entries — `decision`,
@@ -52,11 +52,11 @@ If you want "my agent in project B sees everything my agent did
 in project A," that's not the Hub. Local session density stays
 local.
 
-## Who it's for
+## Who It's For
 
 Two shapes, same mechanics, different trust models.
 
-### Personal cross-project brain
+### Personal Cross-Project Brain
 
 **One developer, many projects.** You want a learning from
 project A to show up when you open project B a week later. You
@@ -64,7 +64,7 @@ want a convention you codified in your dotfiles project to be
 visible everywhere else on your workstation. Run a Hub on
 localhost, register each project, done.
 
-### Small trusted team
+### Small Trusted Team
 
 **A few teammates on a LAN or a hub.ctx-like self-hosted
 server.** You want team conventions to propagate without a
@@ -77,7 +77,7 @@ The Hub is **not** a multi-tenant public service. It assumes
 everyone holding a client token is friendly. Don't stand up
 `hub.example.com` for untrusted participants.
 
-## Going further
+## Going Further
 
 - **First-time setup:** [Hub: Getting Started](../recipes/hub-getting-started.md) —
   a five-minute walkthrough on localhost.

@@ -17,6 +17,11 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-04-14 | Constitution forbids context window as a deferral excuse |
+| 2026-04-14 | docs/cli/system.md and embed/cmd/system.go diverged on bootstrap promotion intent |
+| 2026-04-14 | Raft-lite trade-off is the load-bearing choice in internal/hub |
+| 2026-04-14 | AST stutter test only checks FuncDecl, not GenDecl |
+| 2026-04-14 | Brand-name handling in title-case engines must cover possessives |
 | 2026-04-13 | GPG signing from non-TTY contexts requires pinentry-mac (or equivalent) |
 | 2026-04-13 | Load average measures a queue, not CPU utilization |
 | 2026-04-13 | rc.ContextDir() is the single source of truth — fix the resolver, not callers |
@@ -112,6 +117,56 @@ DO NOT UPDATE FOR:
 | 2026-02-22 | Gitignore and filesystem hygiene (consolidated) |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-04-14-010134] Constitution forbids context window as a deferral excuse
+
+**Context**: Mid-session, agent proposed pacing through doc.go rewrites with the reasoning that context budget was tight.
+
+**Lesson**: The CONSTITUTION explicitly lists 'We are running out of context window' as a forbidden deferral phrase under No Excuse Generation. The rule is real and applies to agent self-pacing, not just user-facing answers.
+
+**Application**: When tempted to scope down because context is tight, re-read the constitution. The right move is to do the work end-to-end, not to ask the user which slice to skip.
+
+---
+
+## [2026-04-14-010134] docs/cli/system.md and embed/cmd/system.go diverged on bootstrap promotion intent
+
+**Context**: Header comment in internal/config/embed/cmd/system.go claimed bootstrap was promoted to top-level; the bootstrap.go registration never actually promoted it. Two contradictory sources of truth coexisted silently.
+
+**Lesson**: Header-comment claims about command-tree structure are unaudited; they can drift from registrations without any test failing. Trust the code, not the comment.
+
+**Application**: When evaluating any package_name namespace cleanup type claim about command structure, verify against the actual cobra registration in internal/bootstrap/group.go before acting.
+
+---
+
+## [2026-04-14-010134] Raft-lite trade-off is the load-bearing choice in internal/hub
+
+**Context**: Discovered while writing thorough doc.go for internal/hub. The package embeds HashiCorp Raft for leader election only; data replication is sequence-based gRPC sync over the append-only JSONL store.
+
+**Lesson**: A leader crash window between accept and replicate can lose the most recent write. Append-only storage plus idempotent clients make this acceptable; full Raft log replication would not be needed and would not be simpler.
+
+**Application**: Any future make hub stronger proposal must engage with this trade-off explicitly. Do not abandon Raft-lite accidentally by introducing log-replicated state; that would invalidate the simplicity argument.
+
+---
+
+## [2026-04-14-010134] AST stutter test only checks FuncDecl, not GenDecl
+
+**Context**: tpl.TplEntryMarkdown stuttered for a long time because TestNoStutteryFunctions in internal/audit walks *ast.FuncDecl only; the constant slipped through.
+
+**Lesson**: The audit suite has a real coverage gap for *ast.GenDecl (consts, vars, types). Stuttery type/const names will not be caught until the audit is extended to walk those node kinds.
+
+**Application**: When a stuttery identifier is reported by a human, check both the offending file and whether the audit can catch it; if not, file an audit-extension task.
+
+---
+
+## [2026-04-14-010105] Brand-name handling in title-case engines must cover possessives
+
+**Context**: First pass of hack/title-case-headings.py produced 'Ctx's' from 'ctx's' because the brand check matched the bare token only.
+
+**Lesson**: A brand allowlist needs to recognize <brand>, <brand>'s, <brand>s, and short apostrophe-suffixed variants. Single-word matching misses contractions and possessives.
+
+**Application**: When adding a new always-lowercase brand to hack/title-case-headings.py, extend the suffix-aware loop in title_case_word, not just the BRAND_LOWER set.
 
 ---
 

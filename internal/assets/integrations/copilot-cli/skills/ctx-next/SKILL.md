@@ -1,6 +1,7 @@
 ---
 name: ctx-next
 description: "Suggest what to work on next. Use when starting a session, finishing a task, or when unsure what to prioritize."
+tools: [bash, read, glob, grep]
 ---
 
 Analyze current tasks and recent session activity, then suggest

@@ -19,7 +19,7 @@ rejected.
 
 **How do you make sure important context survives across sessions?**
 
-!!! tip "Prefer skills over raw commands"
+!!! tip "Prefer Skills to Raw Commands"
     Use `/ctx-decision-add` and `/ctx-learning-add` instead of raw
     `ctx add` commands. The agent automatically picks up session ID,
     branch, and commit hash from its context — no manual flags needed.
@@ -208,7 +208,7 @@ individually with `ctx decision reindex` or `ctx learning reindex`.
 Run reindex after any manual edit. The index lets AI tools scan all entries
 without reading the full file, which matters when token budgets are tight.
 
-### Step 6: Use /ctx-reflect to Surface What to Capture
+### Step 6: Use `/ctx-reflect` to Surface What to Capture
 
 !!! tip "Keep It Conversational"
     `/ctx-reflect` is not the only way to trigger reflection.
@@ -308,7 +308,7 @@ rather than waiting for explicit instructions.
 
 ## Putting It All Together
 
-### Command-line Approach (*Scripting and Automation*)
+### Command-Line Approach (*Scripting and Automation*)
 
 ```bash
 # Decision: record the trade-off

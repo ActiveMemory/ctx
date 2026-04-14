@@ -4,12 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package parser provides JSONL session file parsing for the recall system.
-//
-// It parses AI coding assistant session transcripts into structured Go types
-// that can be rendered, searched, and analyzed. The package
-// uses a tool-agnostic
-// Session output type with tool-specific parsers (e.g., ClaudeCode).
 package parser
 
 import (

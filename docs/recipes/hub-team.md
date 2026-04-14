@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Team knowledge bus
+title: Team Knowledge Bus
 icon: lucide/users
 ---
 
 ![ctx](../images/ctx-banner.png)
 
-# Team knowledge bus
+# Team Knowledge Bus
 
 This recipe shows **how a small trusted team uses a `ctx`
 Hub as a shared knowledge bus** — the "Story 2" shape
@@ -32,7 +32,7 @@ without ceremony.
   `ctx connection register`-ed their working projects with
   the hub.
 
-## Trust model — read this first
+## Trust Model — Read This First
 
 The hub assumes **everyone holding a client token is
 friendly**. There's no per-user attribution you can rely
@@ -61,7 +61,7 @@ If your team is:
 not** support today. Use a wiki or a dedicated knowledge
 platform instead.
 
-## The team's three verbs
+## The Team's Three Verbs
 
 Everyone on the team does three things, same as in the
 [personal recipe](hub-personal.md), but with different
@@ -80,7 +80,7 @@ different is the *culture* around publishing: when do
 you `--share`, and what belongs on the hub vs. in your
 local `.context/`.
 
-## What goes on the hub (team rules of thumb)
+## What Goes on the Hub (Team Rules of Thumb)
 
 **Share it if it's true for more than one person.** The
 central question: "would the next teammate who hits this
@@ -120,7 +120,7 @@ problem save time if they already knew this?" If yes,
 to `task` unless the team has a specific reason (e.g., a
 cross-cutting migration you want visible everywhere).
 
-## A realistic week
+## A Realistic Week
 
 **Monday — 3 AM incident, shared learning**
 
@@ -134,8 +134,12 @@ records the learning:
 ```bash
 ctx add learning --share \
   --context "Payment service 3 AM incident, 2026-04-03" \
-  --lesson  "grpc-go v1.62+ changes DialContext behavior under high concurrency: connections from a single channel can deadlock if the server emits GOAWAY mid-stream. Symptom: 500 errors cluster in 30s bursts, no error in grpc client logs." \
-  --application "Any service on grpc-go. Pin to v1.61 or patch with keepalive: https://github.com/grpc/grpc-go/issues/..." 
+  --lesson  "grpc-go v1.62+ changes DialContext behavior under high \
+  concurrency: connections from a single channel can deadlock if the \
+  server emits GOAWAY mid-stream. Symptom: 500 errors cluster in \
+  30s bursts, no error in grpc client logs." \
+  --application "Any service on grpc-go. Pin to v1.61 or patch with \
+  keepalive: https://github.com/grpc/grpc-go/issues/..." 
 ```
 
 By Tuesday morning, every other engineer's agent
@@ -152,9 +156,13 @@ records the decision:
 
 ```bash
 ctx add decision --share \
-  --context "Need consistent API versioning across all 6 services. Current URL-based /v1/ isn't working for gradual rollouts." \
-  --rationale "Header-based versioning lets us route by header at the edge, which makes canary rollouts trivial. URL-based versioning forces clients to update their paths." \
-  --consequence "All new endpoints use X-API-Version header. Existing /v1/ endpoints stay. Deprecation schedule in q3." \
+  --context "Need consistent API versioning across all 6 services. \
+  Current URL-based /v1/ isn't working for gradual rollouts." \
+  --rationale "Header-based versioning lets us route by header at the \
+  edge, which makes canary rollouts trivial. URL-based versioning \
+  forces clients to update their paths." \
+  --consequence "All new endpoints use X-API-Version header. \
+  Existing /v1/ endpoints stay. Deprecation schedule in q3." \
   "Use header-based API versioning for new endpoints"
 ```
 
@@ -181,7 +189,7 @@ Lowercase start, no trailing period, single sentence.
 He fixes the PR. No lookup on the wiki, no question in
 chat, no context-switch penalty.
 
-## Workflow tips for teams
+## Workflow Tips for Teams
 
 **Designate a "champion" for decisions.** The team lead
 or platform engineer should be the person who explicitly
@@ -216,7 +224,7 @@ need to share knowledge, they should share a hub.
 Splitting hubs by team creates silos — which is often
 exactly the thing you were trying to solve.
 
-## Operational concerns
+## Operational Concerns
 
 The team recipe assumes someone owns the hub host. That
 person (or a small group) is responsible for:
@@ -239,7 +247,7 @@ so the hub survives individual node failures. See
 [HA cluster](hub-cluster.md). For teams under 10 people,
 a single-node hub with daily backups is usually fine.
 
-## Token management
+## Token Management
 
 Every team member has a client token stored in their
 `.context/.connect.enc`. Rules of thumb:
@@ -256,7 +264,7 @@ Every team member has a client token stored in their
   encrypted with the local machine key, but don't push
   it to shared repos — it's per-workstation.
 
-## What this recipe is *not*
+## What This Recipe Is *Not*
 
 **Not a wiki replacement.** The hub is for structured
 entries, not prose. Put your architecture overviews,
@@ -276,7 +284,7 @@ existing tracker doesn't capture well.
 internal team infrastructure. Do not expose the hub to
 customers, partners, or the open internet.
 
-## See also
+## See Also
 
 - [Hub overview](hub-overview.md) — when to use the
   hub and when not to.

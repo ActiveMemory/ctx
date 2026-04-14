@@ -52,7 +52,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		fallback = desc.Text(text.DescKeyBlockMidSudo)
 	}
 
-	if variant == "" && regex.MidGitPush.MatchString(command) {
+	if variant == "" && regex.GitPush.MatchString(command) {
 		variant = hook.VariantMidGitPush
 		fallback = desc.Text(text.DescKeyBlockMidGitPush)
 	}

@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: HA cluster
+title: HA Cluster
 icon: lucide/layers
 ---
 
 ![ctx](../images/ctx-banner.png)
 
-# `ctx` Hub: High-availability cluster
+# `ctx` Hub: High-Availability Cluster
 
 Run **multiple** hub nodes with Raft-based leader election for
 redundancy. Any follower can take over if the leader dies.
@@ -23,7 +23,7 @@ sense in the "small trusted team" story — a personal
 cross-project brain on one workstation does not need three Raft
 peers.
 
-!!! warning "Raft-lite"
+!!! warning "Raft-Lite"
     ctx uses Raft **only for leader election**, not for data
     consensus. Entry replication happens via sequence-based gRPC
     sync on the append-only JSONL store. This is simpler than full
@@ -56,7 +56,7 @@ it doubles failure probability without providing quorum.
         gRPC (data sync)
 ```
 
-## Step 1 — Bootstrap the first node
+## Step 1 — Bootstrap the First Node
 
 ```bash
 ctx hub start --daemon \
@@ -66,7 +66,7 @@ ctx hub start --daemon \
 
 The node starts a Raft election as soon as it sees its peers.
 
-## Step 2 — Start the other nodes
+## Step 2 — Start the Other Nodes
 
 On `hub-b.lan`:
 
@@ -87,7 +87,7 @@ ctx hub start --daemon \
 After a few seconds, one node wins the election and becomes the
 **leader**. The other two are followers.
 
-## Step 3 — Verify cluster state
+## Step 3 — Verify Cluster State
 
 From any node:
 
@@ -106,7 +106,7 @@ entries:    1248
 uptime:     3h42m
 ```
 
-## Step 4 — Register clients with failover peers
+## Step 4 — Register Clients with Failover Peers
 
 When registering a client, give it the **full peer list**:
 
@@ -120,7 +120,7 @@ If the leader becomes unreachable, the client reconnects to the
 next peer. Followers redirect to the current leader, so writes
 always land on the right node.
 
-## Runtime membership changes
+## Runtime Membership Changes
 
 Add a new peer without downtime:
 
@@ -134,7 +134,7 @@ Remove a decommissioned peer:
 ctx hub peer remove hub-c.lan:9900
 ```
 
-## Planned maintenance
+## Planned Maintenance
 
 Before taking a leader offline, hand off leadership:
 
@@ -146,7 +146,7 @@ ssh hub-a.lan 'ctx hub stepdown'
 before the leader goes offline. In-flight clients briefly pause,
 then reconnect to the new leader.
 
-## Failure modes at a glance
+## Failure Modes at a Glance
 
 | Event                       | What happens                                 |
 |-----------------------------|----------------------------------------------|
@@ -159,7 +159,7 @@ then reconnect to the new leader.
 For the full list, see
 [Hub failure modes](../operations/hub-failure-modes.md).
 
-## See also
+## See Also
 
 - [Multi-machine recipe](hub-multi-machine.md) — single-node
   deployment

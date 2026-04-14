@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package prune provides terminal output for the state file pruning
-// command (ctx system prune).
+// command (ctx prune).
 //
 // [DryRunLine] previews each file that would be removed with its
 // age. [ErrorLine] reports per-file removal failures. [Summary]

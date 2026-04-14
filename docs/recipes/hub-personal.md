@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Personal cross-project brain
+title: Personal Cross-Project Brain
 icon: lucide/brain
 ---
 
 ![ctx](../images/ctx-banner.png)
 
-# Personal cross-project brain
+# Personal Cross-Project Brain
 
 This recipe shows **how one developer uses a `ctx` Hub
 across their own projects day-to-day** — the "Story 1"
@@ -25,7 +25,7 @@ surface when you open project B next Thursday.
 ~5-minute setup). This recipe assumes the hub is already
 running and you've registered at least two projects.
 
-## The core loop
+## The Core Loop
 
 Every day, the same three verbs matter:
 
@@ -41,7 +41,7 @@ Every day, the same three verbs matter:
 That's the whole workflow. The rest of this recipe fills
 in the concrete moments where each verb matters.
 
-## A realistic day
+## A Realistic Day
 
 You have three projects on your workstation:
 
@@ -58,7 +58,7 @@ user unit — see [Hub operations](../operations/hub.md)).
 All three subscribe to `decision`, `learning`, and
 `convention`.
 
-### 09:00 — Start work on `api`
+### 09:00 — Start Work on `api`
 
 You `cd ~/projects/api` and start a Claude Code session.
 Behind the scenes, the plugin's `PreToolUse` hook calls
@@ -73,7 +73,7 @@ So the "use UTC timestamps everywhere" decision you
 recorded in `dotfiles` last week is already in Claude's
 context for this session, without any manual `sync`.
 
-### 10:30 — You discover a gotcha
+### 10:30 — You Discover a Gotcha
 
 While debugging, you find that the API's retry loop
 silently drops the last error when the transport times
@@ -101,7 +101,7 @@ Within seconds, `cli/.context/hub/learnings.md` and
 of this learning (the `ctx connection listen` daemon picks
 it up from the ctx Hub's Listen stream).
 
-### 12:00 — You switch to `cli`
+### 12:00 — You Switch to `cli`
 
 `cd ~/projects/cli`, open a new session. The agent
 packet for `cli` now includes **the learning you just
@@ -112,7 +112,7 @@ recorded in `api`**, because `cli` is subscribed to
 You don't have to re-explain the retry-loop gotcha.
 Claude already sees it.
 
-### 14:00 — You codify a convention
+### 14:00 — You Codify a Convention
 
 You've been writing error messages in `api` and decided
 you want a consistent pattern: lowercase start, no
@@ -133,14 +133,14 @@ Claude Code session in either project gets the
 convention injected into the steering-adjacent slot of
 the agent packet.
 
-### 16:30 — End of day
+### 16:30 — End of Day
 
 You didn't run `ctx connection sync` once. You didn't
 `git push` anything between projects. You didn't
 remember to tell your agent about the retry-loop gotcha
 in the new project. The hub did all of it for you.
 
-## What the workflow actually looks like
+## What the Workflow Actually Looks Like
 
 Stripped of prose, the day's commands were:
 
@@ -161,7 +161,7 @@ The hub is passive infrastructure. You never talk **to**
 it directly — you talk **through** it by using `--share`
 on commands you were already running.
 
-## Tips for solo use
+## Tips for Solo Use
 
 **Pick a "standards" project.** One of your projects
 should play the role of "canonical source for rules you
@@ -212,7 +212,7 @@ TLS setup from the
 relevant when the hub is on a LAN host serving multiple
 workstations, not when it's a personal daemon.
 
-## What this recipe is *not*
+## What This Recipe Is *Not*
 
 **Not a setup guide.** For the one-time hub install and
 project registration, use
@@ -228,7 +228,7 @@ rotation, failure recovery, and HA, see
 [Hub operations](../operations/hub.md) and
 [Hub failure modes](../operations/hub-failure-modes.md).
 
-## See also
+## See Also
 
 - [Hub overview](hub-overview.md) — when to use the Hub
   and when not to.

@@ -51,7 +51,7 @@ does not exist, the AI is hallucinating - and you know immediately.
 This is **grounded memory**: claims that trace back to artifacts you
 control and can audit.
 
-## CONSTITUTION.md: Hard Guardrails
+## `CONSTITUTION.md`: Hard Guardrails
 
 CONSTITUTION.md defines rules the AI must treat as inviolable. These
 are not suggestions or best practices - they are constraints that
@@ -123,7 +123,7 @@ verification step confirms that context still matches reality. When
 it does not, you fix it - and the next session starts from truth,
 not from drift.
 
-## Trust Through Structure
+## Trust through Structure
 
 The common thread across all of these mechanisms is **structure over
 prose**. Timestamps make claims verifiable. Constitutional rules make

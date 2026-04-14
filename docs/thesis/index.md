@@ -282,7 +282,7 @@ or time-dependent scoring) destroys the ability to reproduce a context window
 and therefore to diagnose why a model produced a given output. Determinism in 
 the assembly path is what makes the persistence layer auditable.
 
-### Invariant 4: Human Authority Over Persistent State
+### Invariant 4: Human Authority over Persistent State
 
 The agent may propose changes to context files but must not unilaterally modify 
 them. All persistent changes go through human-reviewable git commits.
@@ -471,7 +471,7 @@ automate it away.
 
 ---
 
-## 6. Worked Example: Architectural Decision Under Two Models
+## 6. Worked Example: Architectural Decision under Two Models
 
 We now instantiate the three-tier model in a concrete system  (`ctx`) and 
 illustrate the difference between prompt-time retrieval and cognitive state 

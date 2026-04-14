@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
-// Cmd returns the "ctx complete" command for marking tasks as done.
+// Cmd returns the "ctx task complete" command for marking tasks as done.
 //
 // Tasks can be specified by number, partial text match, or full text.
 // The command updates TASKS.md by changing "- [ ]" to "- [x]".

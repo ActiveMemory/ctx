@@ -196,7 +196,7 @@ This is where **v0.2.0** becomes more than a refactor.
 The biggest feature of this change window wasn't a refactor; it was
 the **journal system**.
 
-!!! note "45 files changed, 1680 insertions"
+!!! note "45 Files Changed, 1680 Insertions"
     This commit added the infrastructure for synthesizing AI session
     history into human-readable content.
 
@@ -245,7 +245,7 @@ The work also introduced **thread safety** in the **recall parser** and
 centralized shared validation logic; removing duplication that had
 quietly spread during YOLO mode.
 
-## I (Re)learned My Lessons
+## I (Re)Learned My Lessons
 
 Similar to what I've learned in 
 [the former human-assisted refactoring post][first-post], this

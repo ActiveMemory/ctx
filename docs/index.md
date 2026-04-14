@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: The ctx Manifesto
+title: Manifesto
 icon: lucide/flame
 ---
 
 ![ctx](images/ctx-banner.png)
 
-# `ctx` Manifesto
+# The `ctx` Manifesto
 
 **Creation, not code**.
 
@@ -101,7 +101,7 @@ Vision, goals, and direction are **human responsibilities**.
 
 **Nothing** critical should depend on recall.
 
-!!! danger "Oral Tradition Does not Scale"
+!!! danger "Oral Tradition Does Not Scale"
     If intent cannot be inspected, it cannot be enforced.
 
 ---
@@ -189,7 +189,7 @@ Memory heuristics **drift**.
 
 ## Verified Reality Is the Scoreboard
 
-!!! danger "Activity is a False Proxy"
+!!! danger "Activity Is a False Proxy"
     Output volume correlates *poorly* with impact.
 
     * *Code* is **not** progress.
@@ -238,7 +238,7 @@ We build to:
 
 ## Failures Are Assets
 
-!!! important "Failure Without Capture is Waste"
+!!! important "Failure without Capture Is Waste"
     **Pain** that does not teach is pure *loss*.
 
     **Failures** are *not* erased: They are **preserved**.
@@ -280,9 +280,9 @@ A repeated mistake is a missing `ctx` artifact.
 
 ---
 
-## Encode Intent Into the Environment
+## Encode Intent into the Environment
 
-!!! danger "Goodwill Does not Belong to the Table"
+!!! danger "Goodwill Does Not Belong to the Table"
     *Alignment* that depends on memory will **drift**.
 
     *Alignment* **cannot depend on** *memory* or *goodwill*.
@@ -364,7 +364,7 @@ Transparent `ctx` **compounds** understanding.
 
 ## Continuously Verify the System
 
-!!! warning "Stability is Temporary"
+!!! warning "Stability Is Temporary"
     Every assumption has a half-life:
 
     * Models drift.
@@ -387,7 +387,7 @@ Transparent `ctx` **compounds** understanding.
 
 ## `ctx` Is Leverage
 
-!!! note "Humans are Decision Engines"
+!!! note "Humans Are Decision Engines"
     *Execution* should **not** consume *judgment*.
 
     Humans **must not be** typists.

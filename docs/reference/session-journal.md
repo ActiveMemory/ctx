@@ -375,7 +375,7 @@ To use: open the output directory in Obsidian ("Open folder as vault").
 ctx journal obsidian --output ~/vaults/ctx-journal
 ```
 
-!!! tip "Static site vs Obsidian Vault"
+!!! tip "Static Site vs Obsidian Vault"
     Use `ctx journal site` when you want a **web-browsable** archive with search
     and dark mode. Use `ctx journal obsidian` when you want **graph view**,
     **backlinks**, and **tag-based navigation** inside Obsidian. Both use the
@@ -397,7 +397,7 @@ import → enrich → rebuild
 | **Rebuild**  | `ctx journal site --build` | Generates static HTML site              | --                                 |
 | **Obsidian** | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | --                                 |
 
-!!! tip "One-command pipeline"
+!!! tip "One-Command Pipeline"
     `/ctx-journal-enrich-all` handles import automatically - it detects
     unimported sessions and imports them before enriching. You only need
     to run `ctx journal site --build` afterward.

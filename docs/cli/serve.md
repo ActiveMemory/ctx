@@ -25,7 +25,7 @@ ctx serve ./my-site                   # Serve a specific directory
 ctx serve ./docs                      # Serve any zensical site
 ```
 
-!!! info "This command does NOT start a hub"
+!!! info "This Command Does NOT Start a Hub"
     `ctx serve` is purely for static-site serving. To run a
     `ctx` Hub for cross-project knowledge sharing, use
     [`ctx hub start`](hub.md). That command lives in its
@@ -55,7 +55,7 @@ ctx serve ./my-site               # Serve a specific directory
 ctx serve ./docs                  # Serve any zensical site
 ```
 
-### See also
+### See Also
 
 - [`ctx journal`](journal.md) — generate the journal site
   that `ctx serve` displays.

@@ -8,8 +8,8 @@
 title: Connect
 icon: lucide/link
 ---
-![ctx](../images/ctx-banner.png)
 
+![ctx](../images/ctx-banner.png)
 
 ## `ctx connect`
 
@@ -107,7 +107,7 @@ Show ctx Hub connection state and entry statistics.
 ctx connection status
 ```
 
-## Automatic sharing
+## Automatic Sharing
 
 Use `--share` on `ctx add` to write locally AND publish to the ctx Hub:
 
@@ -122,13 +122,13 @@ If the hub is unreachable, the local write succeeds and a warning
 is printed. The `--share` flag is best-effort — it never blocks
 local context updates.
 
-## Auto-sync
+## Auto-Sync
 
 Once registered, the `check-hub-sync` hook automatically syncs
 new entries from the ctx Hub at the start of each session (daily
 throttled). No manual `ctx connection sync` needed.
 
-## Shared files
+## Shared Files
 
 Entries from the ctx Hub are stored in `.context/hub/`:
 
@@ -143,7 +143,7 @@ Entries from the ctx Hub are stored in `.context/hub/`:
 These files are read-only (managed by sync/listen) and never
 mixed with local context files.
 
-## Agent integration
+## Agent Integration
 
 Include shared knowledge in agent context packets:
 

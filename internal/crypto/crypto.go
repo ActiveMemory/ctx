@@ -4,11 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package crypto provides AES-256-GCM encryption for the scratchpad.
-//
-// The key is a 256-bit random value stored as a raw file. The nonce is
-// 12 bytes of random data prepended to the ciphertext. Each write
-// re-encrypts the entire file.
 package crypto
 
 import (

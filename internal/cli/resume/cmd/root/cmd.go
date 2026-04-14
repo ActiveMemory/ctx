@@ -15,7 +15,7 @@ import (
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
-// Cmd returns the top-level "ctx resume" command.
+// Cmd returns the "ctx hook resume" command.
 //
 // Returns:
 //   - *cobra.Command: Configured resume command

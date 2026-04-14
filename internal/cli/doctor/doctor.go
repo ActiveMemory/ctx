@@ -4,8 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package doctor provides the "ctx doctor" command for structural
-// health checks across context, hooks, and configuration.
 package doctor
 
 import (

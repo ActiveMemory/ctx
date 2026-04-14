@@ -8,8 +8,8 @@
 title: Architecture Deep Dive
 icon: lucide/layers
 ---
-![ctx](../images/ctx-banner.png)
 
+![ctx](../images/ctx-banner.png)
 
 ## The Problem
 
@@ -47,7 +47,7 @@ artifacts and extends them.
 
 ## The Workflow
 
-### Pass 1: Map what exists
+### Pass 1: Map What Exists
 
 ```text
 /ctx-architecture
@@ -77,7 +77,7 @@ dependencies).
 /ctx-architecture principal
 ```
 
-### Pass 2: Enrich with code intelligence
+### Pass 2: Enrich with Code Intelligence
 
 ```text
 /ctx-architecture-enrich
@@ -101,7 +101,7 @@ confidence for refactoring decisions or risk assessment.
 
 **Requires**: GitNexus MCP server connected.
 
-### Pass 3: Hunt for failure modes
+### Pass 3: Hunt for Failure Modes
 
 ```text
 /ctx-architecture-failure-analysis

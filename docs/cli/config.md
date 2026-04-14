@@ -8,8 +8,8 @@
 title: Config
 icon: lucide/settings-2
 ---
-![ctx](../images/ctx-banner.png)
 
+![ctx](../images/ctx-banner.png)
 
 ### `ctx config`
 

@@ -5,7 +5,7 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Lifecycle triggers
+title: Lifecycle Triggers
 icon: lucide/zap
 ---
 
@@ -38,9 +38,9 @@ type.
 | `file-save`     | A file is saved                     | Lint on save, update indices           |
 | `context-add`   | A new entry is added to `.context/` | Cross-link, notify, enrich             |
 
-## Triggers are arbitrary code — treat them like pre-commit hooks
+## Triggers Are Arbitrary Code — Treat Them like Pre-Commit Hooks
 
-!!! warning "Only enable scripts you've read and understand"
+!!! warning "Only Enable Scripts You've Read and Understand"
     A trigger is a shell script with the executable bit set.
     It runs with the same privileges as your AI tool and
     receives JSON input on stdin. A malicious or buggy
@@ -52,7 +52,7 @@ type.
     `ctx trigger enable <name>` after reviewing the contents.
     That's not a suggestion — it's the security model.
 
-## Three hook-like layers in ctx
+## Three Hook-like Layers in ctx
 
 Triggers are one of **three** distinct hook-like concepts in
 ctx. The names are similar but the owners and use cases are
@@ -67,7 +67,7 @@ not:
 This page is about the first category. The other two run
 automatically and are invisible to you.
 
-## Triggers vs steering — same problem, different shape
+## Triggers vs Steering — Same Problem, Different Shape
 
 Triggers are the imperative counterpart to
 [**steering files**](steering.md). Steering expresses
@@ -80,7 +80,7 @@ complementary, not competing:
 
 Most projects use both.
 
-## Where to go next
+## Where to Go Next
 
 - **[Authoring Lifecycle Triggers](../recipes/triggers.md)**
   — walkthrough with security guidance: scaffold, test,

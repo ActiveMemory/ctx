@@ -33,7 +33,7 @@ This is the story of `ctx`, how it evolved from a hasty "*YOLO mode*" experiment
 to a disciplined system for **persistent AI context**, and what I have 
 learned along the way.
 
-!!! info "Context is a Record"
+!!! info "Context Is a Record"
     **Context** *is a* **persistent record**.
     
     By "*context*", I **don't** mean model memory or stored thoughts: 
@@ -165,7 +165,7 @@ The `git` history tells the story:
 4f0e195 feat: separate orchestrator directive from agent tasks
 ```
 
-## YOLO Mode: Fast, But Dangerous
+## YOLO Mode: Fast, but Dangerous
 
 The *Ralph Loop* made feature development *incredibly fast*.
 
@@ -277,12 +277,12 @@ conventions...*) should go in to `CONVENTIONS.md`.
 
 Here's how `ctx` explained why the distinction was important: 
 
-!!! tip "Decision record, 2026-01-25"
+!!! tip "Decision Record, 2026-01-25"
     Overly strict constitution creates friction and gets ignored.
 
     Conventions can be bent; constitution **cannot**.
 
-## Hooks: Harder Than They Look
+## Hooks: Harder than They Look
 
 Claude Code hooks seemed simple: Run a script before/after certain events. 
 
@@ -339,7 +339,7 @@ By the time of this writing this project's `ctx` sessions
 
 They are not part of the source code due to security, privacy, and size concerns.
 
-!!! tip "Middle Ground: the Scratchpad"
+!!! tip "Middle Ground: The Scratchpad"
     For sensitive notes that *do* need to travel with the project,
     `ctx pad` stores encrypted one-liners in git, and
     `ctx pad add "label" --file PATH` can ingest small files.
@@ -470,7 +470,7 @@ The archive from January 23rd shows 13 phases of work:
 
 That's an impressive ^^173 commits** across **8 days** of development.
 
-## What I Learned About AI-Assisted Development
+## What I Learned about AI-Assisted Development
 
 **1. Memory changes everything**
 
@@ -551,7 +551,7 @@ If you are reading this, chances are that you already have heard about `ctx`.
 [github.com/ActiveMemory/ctx](https://github.com/ActiveMemory/ctx),
 * and the documentation lives at [ctx.ist](https://ctx.ist).
 
-!!! note "Session Records are a Gold Mine"
+!!! note "Session Records Are a Gold Mine"
     By the time of this writing, I have **more than 70 megabytes** of
     **text-only** session capture, spread across >100 Markdown and `JSONL`
     files.

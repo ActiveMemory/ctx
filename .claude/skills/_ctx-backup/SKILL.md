@@ -1,7 +1,7 @@
 ---
 name: _ctx-backup
 description: "Backup project context and global Claude data to SMB share. Use before risky operations, at end of session, or on request."
-allowed-tools: Bash(ctx system backup*), Bash(ls /tmp/ctx-backup*)
+allowed-tools: Bash(ctx backup*), Bash(ls /tmp/ctx-backup*)
 ---
 
 Backup `.context/`, `.claude/`, `ideas/`, and `~/.claude/` to
@@ -44,19 +44,19 @@ Based on the argument, run the appropriate command:
 
 ```bash
 # For "project"
-ctx system backup --scope project
+ctx backup --scope project
 
 # For "global"
-ctx system backup --scope global
+ctx backup --scope global
 
 # For "all" or no argument
-ctx system backup --scope all
+ctx backup --scope all
 ```
 
 ## Process
 
 1. Parse the argument (default to `all` if none provided)
-2. Run the appropriate `ctx system backup` command
+2. Run the appropriate `ctx backup` command
 3. Report the archive path and size from the output
 4. Confirm success to the user
 

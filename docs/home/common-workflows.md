@@ -24,7 +24,7 @@ For deeper, step-by-step guides, see [Recipes](../recipes/index.md).
 
 ## Track Context
 
-!!! tip "Prefer skills over raw commands"
+!!! tip "Prefer Skills over Raw Commands"
     When working with an AI agent, use `/ctx-task-add`,
     `/ctx-decision-add`, or `/ctx-learning-add` instead of raw
     `ctx add` commands. The agent automatically picks up session ID,
@@ -141,7 +141,7 @@ Open [http://localhost:8000](http://localhost:8000) to browse.
 
 To update after new sessions, run the same two commands again.
 
-### Safe By Default
+### Safe by Default
 
 `ctx journal import --all` is **safe by default**:
 
