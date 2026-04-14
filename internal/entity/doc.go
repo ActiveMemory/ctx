@@ -84,7 +84,7 @@
 // Methods on entity types are limited to:
 //
 //   - **Pure predicates** (e.g. `Message.BelongsToUser()`,
-//     `Task.IsDone()`) — they read fields and return derived
+//     `Task.Done()`) — they read fields and return derived
 //     facts.
 //   - **Pure derivations** (e.g. `Session.Duration()`).
 //   - **Display helpers** (e.g. `String()` overrides for
