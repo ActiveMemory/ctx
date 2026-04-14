@@ -37,7 +37,7 @@ ctx setup <tool> [flags]
 | `copilot`     | GitHub Copilot                               |
 | `windsurf`    | Windsurf IDE                                 |
 
-!!! note "Claude Code uses the plugin system"
+!!! note "Claude Code Uses the Plugin System"
     Claude Code integration is now provided via the `ctx` plugin.
     Running `ctx setup claude-code` prints plugin install instructions.
 

@@ -4,11 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package notify provides fire-and-forget webhook notifications.
-//
-// The webhook URL is stored encrypted in .context/.notify.enc using the
-// same AES-256-GCM key as the scratchpad (resolved via rc.KeyPath()).
-// When no webhook is configured, all operations are silent noops.
 package notify
 
 import (

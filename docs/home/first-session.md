@@ -125,7 +125,7 @@ This loads your context and presents a structured
 confirm the agent knows what is going on. Context also loads automatically
 via hooks, but the explicit ceremony gives you a **readback** to verify.
 
-!!! tip "Steering files fire automatically"
+!!! tip "Steering Files Fire Automatically"
     If you edited the four foundation files scaffolded by
     `ctx init` (`.context/steering/product.md`, `tech.md`,
     `structure.md`, `workflow.md`), their `inclusion:
@@ -262,7 +262,7 @@ You should **`.gitignore`** the generated and sensitive paths:
 .claude/settings.local.json
 ```
 
-!!! tip "`ctx init` Patches Your .gitignore for You"
+!!! tip "`ctx init` Patches Your .Gitignore for You"
     `ctx init` automatically adds these entries to your `.gitignore`.
 
      Review the additions with `cat .gitignore` after init.

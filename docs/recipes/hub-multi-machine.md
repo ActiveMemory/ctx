@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Multi-machine
+title: Multi-Machine
 icon: lucide/network
 ---
 
 ![ctx](../images/ctx-banner.png)
 
-# `ctx` Hub: Multi-machine
+# `ctx` Hub: Multi-Machine
 
 Run the hub on a **LAN host** and connect from project directories
 on other workstations. This recipe is the **Story 2 ("small trusted
@@ -43,7 +43,7 @@ tasks — **not** journals, scratchpad, or raw context files).
               +-------------------+
 ```
 
-## Step 1 — Start the daemon on the LAN host
+## Step 1 — Start the Daemon on the LAN Host
 
 On the machine that will hold the hub (call it `nexus`):
 
@@ -58,7 +58,7 @@ later with:
 ctx hub stop
 ```
 
-## Step 2 — Firewall and port
+## Step 2 — Firewall and Port
 
 Open port `9900/tcp` on `nexus` to the LAN only — **never** expose
 the hub to the public internet without a reverse proxy and TLS in
@@ -87,7 +87,7 @@ Typical LAN allowlist rules:
       tcp dport 9900 accept
     ```
 
-## Step 3 — Retrieve the admin token
+## Step 3 — Retrieve the Admin Token
 
 The daemon prints the admin token to stdout on first run. Running as
 a daemon, that output goes to the log instead:
@@ -99,7 +99,7 @@ cat ~/.ctx/hub-data/admin.token
 Copy the token over a trusted channel (SSH, password manager, or
 an encrypted note). **Do not email it or put it in chat.**
 
-## Step 4 — Register projects from each workstation
+## Step 4 — Register Projects from Each Workstation
 
 On workstation `A`:
 
@@ -133,7 +133,7 @@ ctx connection status
 You should see the ctx Hub address, role (`leader` for single-node),
 subscription filters, and the sequence number you're synced to.
 
-## TLS (recommended)
+## TLS (Recommended)
 
 For anything beyond a trusted home LAN, terminate TLS in front of
 the hub. The hub speaks gRPC, so the reverse proxy must speak
@@ -155,14 +155,14 @@ server {
 
 Point `ctx connection register` at the public hostname and port 443.
 
-## Handling daemon restarts
+## Handling Daemon Restarts
 
 The hub is **append-only JSONL** — restarts are safe. Clients keep
 their last-seen sequence in `.context/hub/.sync-state.json` and
 pick up exactly where they left off on the next `sync` or `listen`
 reconnect.
 
-## See also
+## See Also
 
 - [HA cluster recipe](hub-cluster.md) — for redundancy
 - [Hub operations](../operations/hub.md) — backup, rotation

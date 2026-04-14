@@ -15,11 +15,11 @@ topics:
 
 ![ctx](../images/ctx-banner.png)
 
-## When Your Custom Prompts Work Against You
+## When Your Custom Prompts Work against You
 
 *Jose Alekhinne / 2026-02-04*
 
-!!! question "Have You Ever Written a Skill that Made Your AI Worse?"
+!!! question "Have You Ever Written a Skill That Made Your AI Worse?"
     You craft detailed instructions. You add examples. You build elaborate
     guardrails...
 
@@ -62,7 +62,7 @@ Here is a partial overview of what's built in:
 
 **Skills should complement this, not compete with it.**
 
-!!! tip "You are the Guest, not the Host"
+!!! tip "You Are the Guest, Not the Host"
     Treat the system prompt like a kernel scheduler.
 
     You don't re-implement it in user space: 
@@ -119,7 +119,7 @@ Once judgment is suppressed, every other safeguard becomes **optional**.
 | "*Just this once*"     | No exceptions              |
 ```
 
-!!! danger "Judgment Suppression is Dangerous"
+!!! danger "Judgment Suppression Is Dangerous"
     The **attack vector** structurally identical to **prompt injection**.
 
     It teaches the AI that its own judgment is wrong.
@@ -238,7 +238,7 @@ Skills designed to activate on every interaction regardless of relevance.
 Universal triggers override the platform's **relevance matching**: 
 The AI spends tokens on process overhead instead of the actual task.
 
-!!! tip "`ctx` preserves relevance"
+!!! tip "`ctx` Preserves Relevance"
     This is exactly the failure mode `ctx` exists to mitigate: 
 
     Wasting attention budget on irrelevant process instead of 

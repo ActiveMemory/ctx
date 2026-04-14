@@ -244,7 +244,7 @@ That's the test. That's the difference.
 
 ---
 
-## What Gets Lost Without Infrastructure Memory
+## What Gets Lost without Infrastructure Memory
 
 Consider the knowledge that accumulates around a non-trivial project:
 
@@ -410,7 +410,7 @@ The project's memory is an infrastructure problem.
 
 And **infrastructure belongs in the repository**.
 
-!!! quote "If You Remember One Thing From This Post..."
+!!! quote "If You Remember One Thing from This Post..."
     **Prompts are conversations: Infrastructure persists.**
 
     Your AI doesn't need a better notepad. It needs a filesystem:

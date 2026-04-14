@@ -45,37 +45,37 @@ Commands that work before initialization: `ctx init`, `ctx setup`,
 | [`ctx init`](init-status.md#ctx-init)         | Initialize `.context/` directory with templates          |
 | [`ctx status`](init-status.md#ctx-status)     | Show context summary (files, tokens, drift)              |
 | [`ctx guide`](guide.md#ctx-guide)             | Quick-reference cheat sheet                              |
+| [`ctx why`](why.md#ctx-why)                   | Read the philosophy behind `ctx`                         |
 
 ## Context
 
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx add`](context.md#ctx-add)               | Add a task, decision, learning, or convention            |
-| [`ctx load`](init-status.md#ctx-load)         | Output assembled context in read order                   |
-| [`ctx agent`](init-status.md#ctx-agent)       | Print token-budgeted context packet for AI consumption   |
-| [`ctx skill`](skill.md#ctx-skill)             | Manage reusable instruction bundles                      |
+| [`ctx load`](context.md#ctx-load)             | Output assembled context in read order                   |
+| [`ctx agent`](context.md#ctx-agent)           | Print token-budgeted context packet for AI consumption   |
 | [`ctx sync`](context.md#ctx-sync)             | Reconcile context with codebase state                    |
 | [`ctx drift`](context.md#ctx-drift)           | Detect stale paths, secrets, missing files               |
 | [`ctx compact`](context.md#ctx-compact)       | Archive completed tasks, clean up files                  |
 | [`ctx fmt`](context.md#ctx-fmt)               | Format context files to 80-char line width               |
-
-## Artifacts
-
-| Command                                       | Description                                              |
-|-----------------------------------------------|----------------------------------------------------------|
 | [`ctx decision`](context.md#ctx-decision)     | Manage `DECISIONS.md` (reindex)                          |
 | [`ctx learning`](context.md#ctx-learning)     | Manage `LEARNINGS.md` (reindex)                          |
 | [`ctx task`](context.md#ctx-task)             | Task completion, archival, and snapshots                 |
 | [`ctx reindex`](context.md#ctx-reindex)       | Regenerate indices for `DECISIONS.md` and `LEARNINGS.md` |
+| [`ctx permission`](context.md#ctx-permission) | Permission snapshots (golden image)                      |
+| [`ctx change`](change.md#ctx-change)          | Show what changed since last session                     |
+| [`ctx memory`](memory.md#ctx-memory)          | Bridge Claude Code auto memory into `.context/`          |
+| [`ctx watch`](watch.md#ctx-watch)             | Auto-apply context updates from AI output                |
 
 ## Sessions
 
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx journal`](journal.md#ctx-journal)       | Browse, import, enrich, and lock session history         |
-| [`ctx memory`](memory.md#ctx-memory)          | Bridge Claude Code auto memory into `.context/`          |
-| [`ctx remind`](remind.md#ctx-remind)          | Session-scoped reminders that surface at session start   |
 | [`ctx pad`](pad.md#ctx-pad)                   | Encrypted scratchpad for sensitive one-liners            |
+| [`ctx remind`](remind.md#ctx-remind)          | Session-scoped reminders that surface at session start   |
+| [`ctx hook pause`](pause.md)                  | Pause context hooks for the current session              |
+| [`ctx hook resume`](resume.md)                | Resume paused context hooks                              |
 
 ## Integrations
 
@@ -84,22 +84,22 @@ Commands that work before initialization: `ctx init`, `ctx setup`,
 | [`ctx setup`](setup.md#ctx-setup)             | Generate AI tool integration configs                     |
 | [`ctx steering`](steering.md#ctx-steering)    | Manage steering files (behavioral rules for AI tools)    |
 | [`ctx trigger`](trigger.md#ctx-trigger)       | Manage lifecycle triggers (scripts for automation)       |
-| [`ctx serve`](serve.md#ctx-serve)             | Serve a static site locally via zensical                 |
-| [`ctx hub`](hub.md#ctx-hub)                   | Operate a ctx Hub server or cluster                      |
-| [`ctx connection`](connection.md#ctx-connection) | Connect to a ctx Hub                                  |
-| [`ctx mcp`](mcp.md#ctx-mcp)                  | MCP server for AI tool integration (stdin/stdout)        |
-| [`ctx watch`](watch.md#ctx-watch)             | Auto-apply context updates from AI output                |
+| [`ctx skill`](skill.md#ctx-skill)             | Manage reusable instruction bundles                      |
+| [`ctx mcp`](mcp.md#ctx-mcp)                   | MCP server for AI tool integration (stdin/stdout)        |
+| [`ctx hook notify`](notify.md)                | Webhook notifications (setup, test, send)                |
 | [`ctx loop`](loop.md#ctx-loop)                | Generate autonomous loop script                          |
+| [`ctx connection`](connection.md#ctx-connection) | Client-side commands for connecting to a `ctx` Hub    |
+| [`ctx hub`](hub.md#ctx-hub)                   | Operate a `ctx` Hub server or cluster                    |
+| [`ctx serve`](serve.md#ctx-serve)             | Serve a static site locally via zensical                 |
+| [`ctx site`](site.md#ctx-site)                | Site management (feed generation)                        |
 
 ## Diagnostics
 
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx doctor`](doctor.md#ctx-doctor)          | Structural health check (hooks, drift, config)           |
-| [`ctx change`](change.md#ctx-change)          | Show what changed since last session                     |
-| [`ctx why`](why.md#ctx-why)                   | Read the philosophy behind `ctx`                         |
 | [`ctx trace`](trace.md#ctx-trace)             | Show context behind git commits                          |
-| [`ctx sysinfo`](sysinfo.md#ctx-sysinfo)      | Show system resource usage (memory, swap, disk, load)    |
+| [`ctx sysinfo`](sysinfo.md#ctx-sysinfo)       | Show system resource usage (memory, swap, disk, load)    |
 | [`ctx usage`](usage.md#ctx-usage)             | Show session token usage stats                           |
 
 ## Runtime
@@ -107,23 +107,16 @@ Commands that work before initialization: `ctx init`, `ctx setup`,
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx config`](config.md#ctx-config)          | Manage runtime configuration profiles                    |
-| [`ctx permission`](context.md#ctx-permission) | Permission snapshots (golden image)                      |
-| [`ctx hook`](hook.md#ctx-hook)                | Hook message, notification, and lifecycle controls       |
 | [`ctx backup`](backup.md#ctx-backup)          | Back up context and Claude data to tar.gz / SMB          |
 | [`ctx prune`](prune.md#ctx-prune)             | Clean stale per-session state files                      |
+| [`ctx hook`](hook.md#ctx-hook)                | Hook message, notification, and lifecycle controls       |
+| [`ctx system`](system.md#ctx-system)          | Hook plumbing and agent-only commands (not user-facing)  |
 
 ## Shell
 
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx completion`](completion.md#ctx-completion) | Generate shell autocompletion scripts                 |
-
-## Hidden
-
-| Command                                       | Description                                              |
-|-----------------------------------------------|----------------------------------------------------------|
-| [`ctx site`](site.md#ctx-site)                | Site management (feed generation)                        |
-| [`ctx system`](system.md#ctx-system)          | Hook plumbing and agent-only commands (not user-facing)  |
 
 ---
 

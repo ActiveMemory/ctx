@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
-// Cmd returns the "ctx message show" subcommand.
+// Cmd returns the "ctx hook message show" subcommand.
 //
 // Returns:
 //   - *cobra.Command: Configured show subcommand

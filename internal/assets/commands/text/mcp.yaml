@@ -134,7 +134,7 @@ mcp.all-tasks-complete:
 mcp.check-task-format:
   short: 'Did this complete task #%d: "%s"?'
 mcp.check-task-hint:
-  short: 'If yes, run: ctx complete %d'
+  short: 'If yes, run: ctx task complete %d'
 mcp.compact-clean:
   short: Nothing to compact - context is already clean.
 mcp.format-compacted:

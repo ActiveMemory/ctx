@@ -8,8 +8,8 @@
 title: Context Management
 icon: lucide/layers
 ---
-![ctx](../images/ctx-banner.png)
 
+![ctx](../images/ctx-banner.png)
 
 ### `ctx add`
 

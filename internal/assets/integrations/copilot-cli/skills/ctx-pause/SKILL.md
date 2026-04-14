@@ -1,47 +1,48 @@
 ---
 name: ctx-pause
-description: "Pause context nudge/reminder hooks for the session. Security hooks remain active."
+description: "Pause context hooks for this session. Use when context nudges aren't needed for the current task."
 tools: [bash]
 ---
 
-Temporarily pause context nudge and reminder hooks while keeping
-security hooks active.
+Pause all context nudge and reminder hooks for the current session.
+Security hooks (dangerous command blocking) still fire.
 
 ## When to Use
 
-- When hooks are too noisy during focused work
-- When doing rapid iteration and nudges interrupt flow
-- When the user says "pause hooks" or "too many reminders"
+- User says "pause ctx", "pause context", "quiet mode"
+- User says "stop the nudges", "too many reminders"
+- Quick investigation or one-off task that doesn't need ceremonies
+- User explicitly asks to reduce context overhead
 
 ## When NOT to Use
 
-- At session start (hooks haven't fired yet)
-- When the user wants to disable security hooks (not supported)
+- User wants to silence a specific hook (use `ctx hook message edit` to
+  customize or silence individual hooks)
+- User wants to permanently disable hooks (edit `.claude/settings.local.json`)
+- Session involves real project work that benefits from persistence nudges
 
-## Process
+## Execution
+
+Run the pause command:
 
 ```bash
-ctx system pause-hooks
+ctx hook pause
 ```
 
-This suppresses:
-- Ceremony checks (remember, wrap-up)
-- Persistence nudges
-- Task completion checks
-- Journal reminders
+Then confirm to the user:
 
-This does NOT suppress:
-- Dangerous command blocking
-- Context load gate
-- Version checks
+> Context hooks paused for this session. Nudges, reminders, and ceremony
+> prompts are silenced. Security hooks still fire.
+>
+> Resume anytime with `/ctx-resume`.
 
-## Resuming
+## Important Notes
 
-Use `ctx-resume` to re-enable hooks, or they automatically
-resume at next session start.
-
-## Quality Checklist
-
-- [ ] User confirmed they want to pause
-- [ ] Security hooks remain active
-- [ ] Informed user how to resume
+- **Session-scoped**: only affects the current session, not other terminals
+- **Hooks still fire silently**: they check the pause flag and no-op
+- **Graduated reminder**: a minimal `ctx:paused` indicator appears in hook
+  output so the state is never invisible
+- **Resume before wrap-up**: if the session evolves into real work, resume
+  hooks before wrapping up to capture learnings and decisions
+- **Initial context load is unaffected**: the ~8k token startup injection
+  happens before any command runs: pause only affects subsequent hooks

@@ -140,7 +140,7 @@ from the VERSION file. No source file needs editing.
 
 ## Troubleshooting
 
-### "Release notes not found"
+### "Release Notes Not Found"
 
 ```
 ERROR: dist/RELEASE_NOTES.md not found.
@@ -149,7 +149,7 @@ ERROR: dist/RELEASE_NOTES.md not found.
 Run `/_ctx-release-notes` in Claude Code first, or write
 `dist/RELEASE_NOTES.md` manually.
 
-### "Working tree is not clean"
+### "Working Tree Is Not Clean"
 
 ```
 ERROR: Working tree is not clean.
@@ -157,7 +157,7 @@ ERROR: Working tree is not clean.
 
 Commit or stash all changes before running `make release`.
 
-### "Tag already exists"
+### "Tag Already Exists"
 
 ```
 ERROR: Tag v0.9.0 already exists.
@@ -172,7 +172,7 @@ git tag -d v0.9.0
 git push origin :refs/tags/v0.9.0
 ```
 
-### CI build fails after tag push
+### CI Build Fails After Tag Push
 
 The tag is already published. Fix the issue, bump to a patch
 version (e.g. `0.9.1`), and release again. Do not force-push

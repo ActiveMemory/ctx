@@ -126,7 +126,7 @@ validation, session tracking, and boundary checks automatically.
 **Rule**: Do NOT run `ctx` in the terminal when the equivalent MCP tool
 exists. MCP tools enforce boundary validation and track session state.
 Terminal fallback is only for commands without an MCP equivalent (e.g.,
-`ctx agent`, `ctx recall list`).
+`ctx agent`, `ctx journal source`).
 
 ## Governance: When to Call Tools
 

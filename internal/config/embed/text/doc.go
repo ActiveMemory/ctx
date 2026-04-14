@@ -4,9 +4,67 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package text defines description key constants for user-facing text.
+// Package text holds the **lookup keys** for every piece of
+// user-facing display text emitted anywhere in ctx — error
+// messages, status banners, MCP responses, hook nudges,
+// admonition templates, you name it.
 //
-// Constants are referenced by domain packages via config/text.*.
-// Provides constants and definitions for text operations.
-// Constants are referenced by domain packages.
+// The package is one half of a deliberate two-step indirection:
+//
+//  1. **Here** — typed `DescKeyXxx` Go constants. Compile-time
+//     guarantees that every reference is a real key.
+//  2. **In** [internal/assets/commands/text/*.yaml] — the
+//     actual strings, embedded into the binary at build time.
+//     Reachable via [internal/assets/read/desc.Text](key).
+//
+// The split exists for three reasons:
+//
+//   - **Editing copy stops touching Go code** — copywriters,
+//     translators, and product owners can edit YAML without
+//     a Go toolchain.
+//   - **i18n is structurally possible** — adding a locale is
+//     a parallel YAML tree, not a fork of every package.
+//   - **One sentence cannot quietly drift between two
+//     callers** — both grab the same key, both render the
+//     same text.
+//
+// # File Layout
+//
+// One Go file per subsystem (`agent.go`, `bootstrap.go`,
+// `mcp.go`, `journal.go`, `steering.go`, …). Each file groups
+// the `DescKeyXxx` constants for that subsystem so adding a
+// new message to the agent flow only edits `agent.go` and the
+// corresponding YAML file.
+//
+// # Naming Convention
+//
+// Constants follow `DescKey<Subsystem><Specifier>`; the
+// underlying YAML key follows the dotted form
+// `<subsystem>.<specifier>`. Both halves are validated by the
+// `desckey_namespace_test` audit so a typo in either side
+// fails CI.
+//
+// # Consumers
+//
+// Pretty much every CLI subcommand, every MCP handler, and
+// every write-side terminal-output package imports this
+// package. Common usage:
+//
+//	import (
+//	    "github.com/ActiveMemory/ctx/internal/assets/read/desc"
+//	    "github.com/ActiveMemory/ctx/internal/config/embed/text"
+//	)
+//	msg := desc.Text(text.DescKeyAgentInstruction)
+//
+// # Related Packages
+//
+//   - [internal/assets/read/desc]            — the Text /
+//     Command / Flag lookup helpers that resolve a key into
+//     a string at run-time.
+//   - [internal/assets/commands/text]        — the embedded
+//     YAML files that hold the actual strings.
+//   - [internal/config/embed/cmd] and
+//     [internal/config/embed/flag]           — sister
+//     packages with the same key/YAML pattern for command
+//     short-help and flag-help text.
 package text

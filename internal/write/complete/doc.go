@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package complete provides terminal output for the task completion
-// command (ctx complete).
+// command (ctx task complete).
 //
 // The single exported function [Completed] prints a confirmation
 // message when a task checkbox is toggled from [ ] to [x] in

@@ -24,7 +24,7 @@ memory-related question:
 
 **Do this FIRST (silently):**
 - Read TASKS.md, DECISIONS.md, and LEARNINGS.md from the context directory
-- Run `ctx recall list --limit 5` for recent session history
+- Run `ctx journal source --limit 5` for recent session history
 
 **Then respond with a structured readback:**
 

@@ -24,7 +24,7 @@ reminder, and ceremony behavior.
 Run the resume command:
 
 ```bash
-ctx resume
+ctx hook resume
 ```
 
 Then confirm to the user:

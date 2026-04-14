@@ -37,22 +37,30 @@ Required:
 Optional:
 - **Reference post**: An existing post to match the style
 
+## Usage Examples
+
+```text
+/ctx-blog-changelog 040ce99 "human-assisted refactoring"
+/ctx-blog-changelog HEAD~30 "building the journal system"
+/ctx-blog-changelog v0.1.0 "what's new in v0.2.0"
+```
+
 ## Process
 
 1. **Analyze the commit range**:
 ```bash
-git --no-pager log --oneline <commit>..HEAD
-git --no-pager diff --stat <commit>..HEAD
-git --no-pager log --format="%s" <commit>..HEAD | head -50
+git log --oneline <commit>..HEAD
+git diff --stat <commit>..HEAD
+git log --format="%s" <commit>..HEAD | head -50
 ```
 
 2. **Gather supporting context**:
 ```bash
 # Files most changed
-git --no-pager diff --stat <commit>..HEAD | sort -t'|' -k2 -rn | head -20
+git diff --stat <commit>..HEAD | sort -t'|' -k2 -rn | head -20
 
 # Journal entries from this period
-ctx recall list
+ctx journal source
 ```
 
 3. **Draft the narrative** following the theme

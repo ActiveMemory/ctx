@@ -1,35 +1,38 @@
 ---
 name: ctx-resume
-description: "Resume context hooks after a pause."
+description: "Resume context hooks after a pause. Use when the user says 'resume ctx', 'unpause', 'turn nudges back on', or when transitioning from a quick task back to project work."
 tools: [bash]
 ---
 
-Re-enable context hooks that were paused with `ctx-pause`.
+Resume all context hooks after a `/ctx-pause`. Restores normal nudge,
+reminder, and ceremony behavior.
 
 ## When to Use
 
-- After a focused work period where hooks were paused
-- When the user is ready for nudges and reminders again
-- When the user says "resume hooks"
+- User says "resume ctx", "resume context", "unpause"
+- User says "turn nudges back on"
+- Session has evolved from a quick task into real project work
+- Before running `/ctx-wrap-up` (wrap-up needs hooks active)
 
 ## When NOT to Use
 
-- Hooks are not currently paused
-- At session start (hooks auto-resume)
+- Session is not paused (resume is a silent no-op, but don't confuse the user)
+- User wants to restart or reset the session (just start a new session)
 
-## Process
+## Execution
+
+Run the resume command:
 
 ```bash
-ctx system resume-hooks
+ctx hook resume
 ```
 
-This re-enables all non-security hooks:
-- Ceremony checks
-- Persistence nudges
-- Task completion checks
-- Journal reminders
+Then confirm to the user:
 
-## Quality Checklist
+> Context hooks resumed. Nudges, reminders, and ceremonies are active again.
 
-- [ ] Hooks were actually paused before resuming
-- [ ] Confirmed hooks are active again
+## Important Notes
+
+- **Silent no-op if not paused**: safe to run even if hooks aren't paused
+- **Turn counter resets**: the graduated reminder counter starts fresh if
+  you pause again later

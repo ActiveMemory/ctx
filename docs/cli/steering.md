@@ -27,7 +27,7 @@ prompt, and syncs them out to each AI tool's native format
 ctx steering <subcommand>
 ```
 
-!!! tip "Steering vs decisions vs conventions"
+!!! tip "Steering vs Decisions vs Conventions"
     The three look similar on disk but serve different purposes:
 
     - **Decisions** record *what* was chosen and *why*.
@@ -42,7 +42,7 @@ ctx steering <subcommand>
     If you find yourself writing "the AI should always do X"
     — that belongs in steering, not decisions.
 
-### Anatomy of a steering file
+### Anatomy of a Steering File
 
 ```yaml
 ---
@@ -165,7 +165,7 @@ each matching steering file to the appropriate directory
 with tool-specific frontmatter transforms. Unchanged files
 are skipped (idempotent).
 
-### How Claude Code and Codex consume steering
+### How Claude Code and Codex Consume Steering
 
 Claude Code has no native "steering files" primitive, so
 `ctx steering sync` skips it entirely. Instead, steering
@@ -237,7 +237,7 @@ file.
   covers Claude Code. For rules you need to fire
   automatically on both, use `inclusion: always`.
 
-### `ctx agent` integration
+### `ctx agent` Integration
 
 When `ctx agent` builds a context packet, steering files are
 loaded as Tier 6 of the budget-aware assembly (see
@@ -246,7 +246,7 @@ loaded as Tier 6 of the budget-aware assembly (see
 scored against the current prompt and included in priority
 order until the tier budget is exhausted.
 
-### See also
+### See Also
 
 - [`ctx setup`](setup.md) — configure which tools receive
   steering syncs

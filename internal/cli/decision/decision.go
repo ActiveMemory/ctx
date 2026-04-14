@@ -4,7 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package decision provides commands for managing DECISIONS.md.
 package decision
 
 import (

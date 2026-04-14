@@ -256,3 +256,9 @@ DO NOT UPDATE FOR:
 - Warn format strings centralized in config/warn/ — use warn.Close,
   warn.Write, warn.Remove, warn.Mkdir, warn.Rename, warn.Walk, warn.Getwd,
   warn.Readdir, warn.Marshal instead of inline format strings in log.Warn calls
+
+- Nav frontmatter title: fields must not contain ctx — frontmatter does not support backticks, so the brand stays out of nav titles entirely (Hub, not The ctx Hub). Body headings can use `ctx` since markdown supports backticks.
+
+- CLI flags and slash-commands inside headings or admonition titles must be backticked: `--keep-frontmatter=false`, `/ctx-reflect`. The title-case engine in hack/title-case-headings.py protects these patterns automatically, but authors should still backtick at write time for clarity.
+
+- File extensions inside headings must be backticked when title-case capitalization would otherwise apply: write `CONSTITUTION.md`, not CONSTITUTION.Md. The title-case engine refuses to capitalize lowercase tokens following a literal . dot, but explicit backticks remain the clearest signal.

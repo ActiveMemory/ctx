@@ -25,7 +25,7 @@ topics:
 
 *Jose Alekhinne / February 17, 2026*
 
-!!! question "Are You Worried About AI Taking Your Job?"
+!!! question "Are You Worried about AI Taking Your Job?"
     You might be confusing the thing that's *cheap* with the
     thing that's **valuable**.
 
@@ -116,7 +116,7 @@ accountable.
 
 ---
 
-## The Evidence From Building ctx
+## The Evidence from Building ctx
 
 I did **not** arrive at this conclusion theoretically. 
 
@@ -306,7 +306,7 @@ the *replacement*:
 
 ---
 
-!!! quote "**If You Remember One Thing From This Post...**"
+!!! quote "**If You Remember One Thing from This Post...**"
     **Code is cheap. Judgment is not.**
 
     AI replaces unstructured effort, not directed expertise. The

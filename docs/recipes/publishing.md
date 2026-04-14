@@ -195,7 +195,7 @@ it to `docs/blog/YYYY-MM-DD-slug.md`.
 Posts are written in first person with code snippets, commit references, and an
 honest discussion of what went wrong.
 
-!!! info "The Output is `zensical`-Flavored Markdown"
+!!! info "The Output Is `zensical`-Flavored Markdown"
     The blog skills produce Markdown tuned for a
     [zensical](https://pypi.org/project/zensical/) site: `topics:`
     frontmatter (zensical's tag field), a `docs/blog/` output path,

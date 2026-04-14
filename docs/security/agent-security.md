@@ -78,7 +78,7 @@ rules stated early. Edge cases where instructions are ambiguous.
 **Verdict**: Necessary but not sufficient. Good for the common case.
 **Do not** rely on it for security boundaries.
 
-### Layer 2: Application Controls (*Deterministic at Runtime, Mutable Across Iterations*)
+### Layer 2: Application Controls (*Deterministic at Runtime, Mutable across Iterations*)
 
 AI tool runtimes (*Claude Code, Cursor, etc.*) provide permission systems:
 tool allowlists, command restrictions, confirmation prompts.
@@ -204,7 +204,7 @@ docker run --rm \
   ./loop.sh
 ```
 
-!!! danger "Docker Socket is sudo Access"
+!!! danger "Docker Socket Is Sudo Access"
     Critical: **never mount the Docker socket** (`/var/run/docker.sock`).
 
     An agent with socket access can spawn sibling containers with full host

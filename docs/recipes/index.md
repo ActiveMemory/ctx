@@ -19,7 +19,7 @@ Train your agent to be proactive through **ask, guide, reinforce**.
 
 ---
 
-### [Setup Across AI Tools](multi-tool-setup.md)
+### [Setup across AI Tools](multi-tool-setup.md)
 
 Initialize `ctx` and configure hooks for Claude Code, Cursor,
 Aider, Copilot, or Windsurf. Includes **shell completion**,
@@ -27,6 +27,17 @@ Aider, Copilot, or Windsurf. Includes **shell completion**,
 
 **Uses**: `ctx init`, `ctx setup`, `ctx agent`, `ctx completion`,
 `ctx watch`
+
+---
+
+### [Multilingual Session Parsing](multilingual-sessions.md)
+
+Parse session journal entries written in **other languages**.
+Configure recognized session-header prefixes so the journal
+pipeline works for Turkish, Japanese, and any other locale.
+
+**Uses**: `ctx journal source`, `ctx journal import`,
+`session_prefixes` in `.ctxrc`
 
 ---
 
@@ -110,7 +121,7 @@ hooks still fire.
 
 ---
 
-## Knowledge & Tasks
+## Knowledge and Tasks
 
 ### [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md)
 
@@ -125,7 +136,7 @@ survive across sessions and team members.
 
 ---
 
-### [Tracking Work Across Sessions](task-management.md)
+### [Tracking Work across Sessions](task-management.md)
 
 **Add**, **prioritize**, **complete**, **snapshot**, and **archive** tasks. Keep
 `TASKS.md` focused as your project evolves across dozens of
@@ -146,7 +157,7 @@ storage out.
 
 ---
 
-### [Syncing Scratchpad Notes Across Machines](scratchpad-sync.md)
+### [Syncing Scratchpad Notes across Machines](scratchpad-sync.md)
 
 Distribute your **scratchpad** encryption key, push and pull encrypted
 notes via git, and resolve merge conflicts when two machines edit
@@ -167,7 +178,7 @@ entries into structured context files with heuristic classification.
 
 ---
 
-## Hooks & Notifications
+## Hooks and Notifications
 
 ### [Hook Output Patterns](hook-output-patterns.md)
 
@@ -323,7 +334,7 @@ Each step produces an artifact that feeds the next.
 
 ---
 
-## Agents & Automation
+## Agents and Automation
 
 ### [Building Project Skills](building-skills.md)
 
@@ -411,7 +422,17 @@ disabled, test with mock input, enable only after review.
 
 ---
 
-## `ctx` Hub
+## Hub
+
+### [Hub Overview](hub-overview.md)
+
+Mental model and three user stories for the `ctx` Hub. What flows,
+what doesn't, and when not to use it. Read this before any of the
+other Hub recipes.
+
+**Uses**: `ctx hub`, `ctx connection`, `ctx add --share`
+
+---
 
 ### [`ctx` Hub: Getting Started](hub-getting-started.md)
 
@@ -425,7 +446,7 @@ End-to-end in under five minutes.
 
 ---
 
-### [Personal cross-project brain](hub-personal.md)
+### [Personal Cross-Project Brain](hub-personal.md)
 
 **Story 1** day-to-day workflow: one developer, many
 projects, one hub on localhost. Records a learning in
@@ -439,7 +460,7 @@ ceremony.
 
 ---
 
-### [Team knowledge bus](hub-team.md)
+### [Team Knowledge Bus](hub-team.md)
 
 **Story 2** day-to-day workflow: a small trusted team
 sharing decisions, learnings, and conventions via a hub on
@@ -453,7 +474,7 @@ stay signal-rich.
 
 ---
 
-### [`ctx` Hub: Multi-machine](hub-multi-machine.md)
+### [`ctx` Hub: Multi-Machine](hub-multi-machine.md)
 
 Run the hub on a **LAN host** as a daemon and connect from project
 directories on other workstations. Firewall guidance, TLS via a
@@ -464,7 +485,7 @@ reverse proxy, and safe daemon restart semantics.
 
 ---
 
-### [`ctx` Hub: HA cluster](hub-cluster.md)
+### [`ctx` Hub: HA Cluster](hub-cluster.md)
 
 Raft-based leader election across three or more nodes for
 redundancy. Covers bootstrap, runtime peer management, graceful

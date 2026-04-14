@@ -18,6 +18,6 @@ const (
 	HookLogMaxBytes = 1 << 20
 	// RotationSuffix is the suffix appended to log files during rotation.
 	RotationSuffix = ".1"
-	// DefaultLast is the default number of events shown by ctx system events.
+	// DefaultLast is the default number of events shown by ctx hook event.
 	DefaultLast = 50
 )

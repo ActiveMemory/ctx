@@ -58,8 +58,8 @@ compact:
 
 complete:
   short: |2-
-      ctx complete 3
-      ctx complete "auth"
+      ctx task complete 3
+      ctx task complete "auth"
 
 config:
   short: |2-

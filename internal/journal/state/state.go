@@ -4,11 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package state manages journal processing state via an external JSON file.
-//
-// Instead of embedding markers (<!-- normalized: ... -->) inside journal
-// files, which causes false positives when journal content includes those
-// exact strings, state is tracked in .context/journal/.state.json.
 package state
 
 import (

@@ -75,7 +75,7 @@ func writeEntry(b *strings.Builder, e *hub.EntryMsg) {
 	ts := time.Unix(e.Timestamp, 0).UTC()
 	date := ts.Format(cfgTime.DateFormat)
 	if _, err := fmt.Fprintf(b,
-		tpl.TplEntryMarkdown,
+		tpl.HubEntryMarkdown,
 		date, firstLine(e.Content),
 		e.Origin, e.Content,
 	); err != nil {

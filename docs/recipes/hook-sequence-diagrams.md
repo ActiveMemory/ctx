@@ -17,7 +17,7 @@ This page documents the **ctx system hooks** — the built-in
 `.claude/hooks.json` at lifecycle events. These are owned by
 ctx itself, not authored by users.
 
-!!! info "Not to be confused with `ctx trigger`"
+!!! info "Not to Be Confused with `ctx trigger`"
     `ctx` has **three distinct hook-like layers**:
 
     - **`ctx system` hooks** (this page) — built-in, owned
@@ -49,7 +49,7 @@ on stdout.
 These fire **before** a tool executes. They can block, gate, or
 inject context.
 
-### context-load-gate
+### Context-Load-Gate
 
 Matcher: `.*` (all tools)
 
@@ -96,7 +96,7 @@ sequenceDiagram
     Hook->>State: Write oversize flag if tokens > threshold
 ```
 
-### block-non-path-ctx
+### Block-Non-Path-ctx
 
 Matcher: `Bash`
 
@@ -126,7 +126,7 @@ sequenceDiagram
     Hook->>Hook: NudgeAndRelay(message)
 ```
 
-### qa-reminder
+### Qa-Reminder
 
 Matcher: `Bash`
 
@@ -153,7 +153,7 @@ sequenceDiagram
     Hook->>Hook: Relay(message)
 ```
 
-### specs-nudge
+### Specs-Nudge
 
 Matcher: `EnterPlanMode`
 
@@ -185,7 +185,7 @@ sequenceDiagram
 These fire **after** a tool completes. They observe, nudge, and
 track state.
 
-### post-commit
+### Post-Commit
 
 Matcher: `Bash`
 
@@ -218,7 +218,7 @@ sequenceDiagram
     Hook->>Hook: CheckVersionDrift()
 ```
 
-### check-task-completion
+### Check-Task-Completion
 
 Matcher: `Edit`, `Write`
 
@@ -263,7 +263,7 @@ sequenceDiagram
 These fire **on every user prompt**, before any tools run. They
 perform health checks, track state, and nudge for housekeeping.
 
-### check-context-size
+### Check-Context-Size
 
 Adaptive context window monitoring. Fires checkpoints, window
 warnings, and billing alerts based on prompt count and token usage.
@@ -325,7 +325,7 @@ sequenceDiagram
     Hook->>State: Write session stats
 ```
 
-### check-ceremonies
+### Check-Ceremonies
 
 Daily check for `/ctx-remember` and `/ctx-wrap-up` usage in
 recent journal entries.
@@ -362,7 +362,7 @@ sequenceDiagram
     Hook->>State: Touch throttle marker
 ```
 
-### check-freshness
+### Check-Freshness
 
 Daily check for technology-dependent constants that may need review.
 
@@ -393,7 +393,7 @@ sequenceDiagram
     Hook->>State: Touch throttle marker
 ```
 
-### check-journal
+### Check-Journal
 
 Daily check for unimported sessions and unenriched journal entries.
 
@@ -433,7 +433,7 @@ sequenceDiagram
     Hook->>State: Touch throttle marker
 ```
 
-### check-knowledge
+### Check-Knowledge
 
 Daily check for knowledge file entry/line counts exceeding
 configured thresholds.
@@ -473,7 +473,7 @@ sequenceDiagram
     Hook->>State: Touch throttle marker
 ```
 
-### check-map-staleness
+### Check-Map-Staleness
 
 Daily check for architecture map age and relevant code changes.
 
@@ -513,7 +513,7 @@ sequenceDiagram
     Hook->>State: Touch throttle marker
 ```
 
-### check-memory-drift
+### Check-Memory-Drift
 
 Per-session check for MEMORY.md changes since last sync.
 
@@ -548,7 +548,7 @@ sequenceDiagram
     Hook->>State: Touch session tombstone
 ```
 
-### check-persistence
+### Check-Persistence
 
 Tracks context file modification and nudges when edits happen
 without persisting context. Adaptive threshold based on prompt count.
@@ -589,7 +589,7 @@ sequenceDiagram
     Hook->>State: Update LastNudge = Count, write state
 ```
 
-### check-reminders
+### Check-Reminders
 
 Per-prompt check for due reminders. No throttle.
 
@@ -618,7 +618,7 @@ sequenceDiagram
     Hook->>Hook: NudgeAndRelay(message)
 ```
 
-### check-resources
+### Check-Resources
 
 Checks system resources (memory, swap, disk, load). Fires on
 every prompt. No initialization required.
@@ -647,7 +647,7 @@ sequenceDiagram
     Hook->>Hook: NudgeAndRelay(message)
 ```
 
-### check-version
+### Check-Version
 
 Daily binary-vs-plugin version comparison with piggybacked key
 rotation check.
@@ -691,7 +691,7 @@ sequenceDiagram
     Hook->>Hook: CheckKeyAge() (piggybacked)
 ```
 
-### heartbeat
+### Heartbeat
 
 Silent per-prompt pulse. Tracks prompt count, context modification,
 and token usage. The agent never sees this hook's output.
@@ -727,7 +727,7 @@ sequenceDiagram
 These hooks are configured in `settings.local.json` and are **not**
 shipped with ctx. They are specific to individual developer setups.
 
-### block-dangerous-commands
+### Block-Dangerous-Commands
 
 Lifecycle: PreToolUse. Matcher: `Bash`
 
@@ -770,7 +770,7 @@ sequenceDiagram
     Hook->>Hook: NudgeAndRelay(message)
 ```
 
-### check-backup-age
+### Check-Backup-Age
 
 Lifecycle: UserPromptSubmit.
 

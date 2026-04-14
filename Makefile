@@ -306,6 +306,14 @@ check-why:
 	@diff -q docs/reference/design-invariants.md internal/assets/why/design-invariants.md || (echo "FAIL: design-invariants.md is stale — run 'make sync-why'" && exit 1)
 	@echo "Why docs are in sync."
 
+## title-case-check: Dry-run title-case checker on docs (or TARGET=path)
+title-case-check:
+	@python3 hack/title-case-headings.py $${TARGET:-docs}
+
+## title-case-fix: Apply title-case fixes to headings + admonition titles (TARGET=path defaults to docs)
+title-case-fix:
+	@python3 hack/title-case-headings.py --apply $${TARGET:-docs}
+
 ## help: Show this help
 help:
 	@echo "Context CLI - Available targets:"

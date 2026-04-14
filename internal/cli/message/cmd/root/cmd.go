@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
-// Cmd returns the "ctx message" top-level command.
+// Cmd returns the "ctx hook message" command.
 //
 // Returns:
 //   - *cobra.Command: Configured message command

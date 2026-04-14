@@ -205,7 +205,7 @@ guide.default:
 
     TRACKING DECISIONS & KNOWLEDGE
       ctx add -t TYPE       Add a decision, learning, convention, or task
-      ctx complete          Mark a task as done in TASKS.md
+      ctx task complete     Mark a task as done in TASKS.md
       ctx decision reindex  Rebuild the DECISIONS.md index table
 
     BROWSING HISTORY

@@ -19,7 +19,7 @@ topics:
 
 *Jose Alekhinne / 2026-02-14*
 
-!!! question "What Do You Do With 30 Open Tasks?"
+!!! question "What Do You Do with 30 Open Tasks?"
     You could work through them one at a time.
 
     One agent, one branch, one commit stream.
@@ -274,7 +274,7 @@ The hard part is not the `git` commands; it is the **discipline**:
 
 ---
 
-!!! quote "**If You Remember One Thing From This Post...**"
+!!! quote "**If You Remember One Thing from This Post...**"
     **Partition by blast radius, not by priority.**
 
     Two tasks that touch the same files belong in the same track,

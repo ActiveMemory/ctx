@@ -64,7 +64,7 @@ This guide documents prompts that **reliably** produce **good results**.
 
 ## Session Start
 
-### "*Do you remember?*"
+### "*do you remember?*"
 
 Triggers the AI to silently read `TASKS.md`, `DECISIONS.md`,
 `LEARNINGS.md`, and check recent history via `ctx journal` before
@@ -95,7 +95,7 @@ protocol (*including the failure modes, the timing problem, and the
 hook design that solved it*) see
 [The Dog Ate My Homework](../blog/2026-02-25-the-homework-problem.md).
 
-### "*What's the current state?*"
+### "*What's the Current State?*"
 
 Prompts reading of `TASKS.md`, recent sessions, and status overview.
 
@@ -111,7 +111,7 @@ Use this when **resuming work** after a break.
 
 ## During Work
 
-### "*Why doesn't X work?*"
+### "*Why Doesn't X Work?*"
 
 This triggers **root cause analysis** rather than surface-level fixes.
 
@@ -126,7 +126,7 @@ through code, check configurations, and identify the actual cause.
 
     This was a fix that benefited all users of `ctx`.
 
-### "*Is this consistent with our decisions?*"
+### "*Is This Consistent with Our Decisions?*"
 
 This prompts checking `DECISIONS.md` before implementing.
 
@@ -137,7 +137,7 @@ Use this before making architectural choices.
 * "*Check if we've decided on this before*"
 * "*Does this align with our conventions?*"
 
-### "*What would break if we...*"
+### "*What Would Break If We...*"
 
 This triggers **defensive thinking** and **impact analysis**.
 
@@ -147,7 +147,7 @@ Use this before making significant changes.
 What would break if we change the Settings struct?
 ```
 
-### "*Before you start, read X*"
+### "*Before You Start, Read X*"
 
 This ensures specific context is loaded before work begins.
 
@@ -218,7 +218,7 @@ Use them **in the moment** when you see the behavior.
 
 ## Reflection and Persistence
 
-### "*What did we learn?*"
+### "*What Did We Learn?*"
 
 This prompts **reflection** on the session and often triggers adding
 learnings to `LEARNINGS.md`.
@@ -228,7 +228,7 @@ Use this after completing a task or debugging session.
 This is an **explicit reflection prompt**. The AI will summarize insights
 and often offer to persist them.
 
-### "*Add this as a learning/decision*"
+### "*Add This as a Learning/decision*"
 
 This is an **explicit persistence request**.
 
@@ -242,7 +242,7 @@ Add this as a learning.
 # and let the AI autonomously infer and summarize.
 ```
 
-### "*Save context before we end*"
+### "*Save Context Before We End*"
 
 This triggers **context persistence** before the session closes.
 
@@ -260,7 +260,7 @@ Use it at the end of the session or before switching topics.
 
 ## Exploration and Research
 
-### "Explore the codebase for X"
+### "Explore the Codebase for X"
 
 This triggers thorough codebase search rather than guessing.
 
@@ -269,7 +269,7 @@ Use this when you need to understand how something works.
 This works because "**Explore**" signals that **investigation is needed**, 
 not immediate action.
 
-### "*How does X work in this codebase?*"
+### "*How Does X Work in This Codebase?*"
 
 This prompts reading actual code rather than explaining general concepts.
 
@@ -279,7 +279,7 @@ Use this to understand the existing implementation.
 How does session saving work in this codebase?
 ```
 
-### "*Find all places where X*"
+### "*Find All Places Where X*"
 
 This triggers a **comprehensive search** across the codebase.
 
@@ -289,14 +289,14 @@ Use this before refactoring or understanding the impact.
 
 ## Meta and Process
 
-### "*What should we document from this?*"
+### "*What Should We Document from This?*"
 
 This prompts identifying learnings, decisions, and conventions
 worth persisting.
 
 Use this after complex discussions or implementations.
 
-### "*Is this the right approach?*"
+### "*Is This the Right Approach?*"
 
 This invites the AI to challenge the current direction.
 
@@ -311,7 +311,7 @@ AIs often default to agreeing; this prompt signals you want an
 This sets the tone for the entire session: The AI will flag
 questionable choices proactively instead of waiting to be asked.
 
-### "*What am I missing?*"
+### "*What Am I Missing?*"
 
 This prompts thinking about **edge cases**, overlooked requirements,
 or **unconsidered approaches**.
@@ -378,7 +378,7 @@ Use `ctx` skills  by name:
 Skills combine a prompt, tool permissions, and domain knowledge
 into a single invocation.
 
-!!! info "Skills Beyond Claude Code"
+!!! info "Skills beyond Claude Code"
     The `/slash-command` syntax above is Claude Code native, but the
     underlying `SKILL.md` files are a standard markdown format that any
     agent can consume. If you use a different coding agent, consult its
@@ -427,7 +427,7 @@ evidence.
 
 ## Safety Invariants
 
-!!! warning "These are **Invariants**: Not Suggestions"
+!!! warning "These Are **Invariants**: Not Suggestions"
     A prompting guide earns its trust by **being honest about risk**.
 
     These four rules mentioned below don't change with model versions, agent

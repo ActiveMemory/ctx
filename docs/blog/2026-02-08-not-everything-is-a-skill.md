@@ -20,11 +20,11 @@ topics:
 
 ![ctx](../images/ctx-banner.png)
 
-## What a Codebase Audit Taught Me About Restraint
+## What a Codebase Audit Taught Me about Restraint
 
 *Jose Alekhinne / 2026-02-08*
 
-!!! question "When You Find a Useful Prompt, What Do You Do With It?"
+!!! question "When You Find a Useful Prompt, What Do You Do with It?"
     My instinct was to make it a *skill*.
 
     I had just spent **three posts** explaining how to build skills that work. 
@@ -334,7 +334,7 @@ time:
     If yes, it is a skill. If no, it is a recipe. If you are
     not sure, it is a recipe until proven otherwise.
 
-## This Mindset In the Context of `ctx`
+## This Mindset in the Context of `ctx`
 
 `ctx` is a **tool** that gives AI agents persistent memory. Its purpose
 is **automation**: reducing the **friction** of context loading, session
@@ -356,7 +356,7 @@ the right things and to make the rest easy to find when you need it.
 
 ---
 
-!!! quote "**If You Remember One Thing From This Post...**"
+!!! quote "**If You Remember One Thing from This Post...**"
     **The best automation decision is sometimes not to automate.**
 
     A **runbook** in a Markdown file costs nothing until you use it.

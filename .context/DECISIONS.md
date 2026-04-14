@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-04-14 | doc.go quality floor: behavior-grounded, ~25-100 body lines, related-packages section required |
+| 2026-04-14 | Bootstrap stays under ctx system bootstrap (reverted experimental top-level promotion) |
+| 2026-04-14 | Title Case style for docs is AP-leaning with explicit ambiguity carve-outs |
 | 2026-04-13 | Walk boundary uses git as a hint, not a requirement |
 | 2026-04-11 | Journal stays local; LEARNINGS.md is the shareable layer |
 | 2026-04-11 | `Entry.Author` is server-authoritative, not client-authoritative |
@@ -121,6 +124,48 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-04-14-010205] doc.go quality floor: behavior-grounded, ~25-100 body lines, related-packages section required
+
+**Status**: Accepted
+
+**Context**: About 140 doc.go files were rewritten this session. User flagged the original 5-line Key exports + See source files + Part of subsystem pattern as lazy minimum effort.
+
+**Decision**: doc.go quality floor: behavior-grounded, ~25-100 body lines, related-packages section required
+
+**Rationale**: Behavior-grounded rewrites (read source first, then write) are the only acceptable form for any non-trivial package. The lazy template communicates nothing a future reader cannot grep for; it satisfies tooling without adding signal.
+
+**Consequence**: Every non-trivial package's doc.go now leads with the package's actual purpose, names key behaviors, calls out non-obvious design choices (Raft-lite, two-step indirection, idempotency contracts), and lists related packages with paths. New packages should follow the same shape.
+
+---
+
+## [2026-04-14-010205] Bootstrap stays under ctx system bootstrap (reverted experimental top-level promotion)
+
+**Status**: Accepted
+
+**Context**: Mid-session promoted ctx bootstrap to top-level to make a stale CLAUDE.md instruction work. User reverted it and reaffirmed the original design.
+
+**Decision**: Bootstrap stays under ctx system bootstrap (reverted experimental top-level promotion)
+
+**Rationale**: The ctx system namespace is for agent and hook plumbing the user does not type by hand. Bootstrap is invoked by AI agents at session start; surfacing it at top-level pollutes ctx --help for humans without benefit.
+
+**Consequence**: internal/bootstrap/group.go reverted; internal/config/embed/cmd/system.go header now correctly states bootstrap is intentionally not promoted. The CLAUDE.md template across the repo (and the workspace copy) updated to reference ctx system bootstrap as canonical.
+
+---
+
+## [2026-04-14-010205] Title Case style for docs is AP-leaning with explicit ambiguity carve-outs
+
+**Status**: Accepted
+
+**Context**: Needed a deterministic Title Case engine for headings and admonition titles across docs/. User precedent (Working with AI lowercase with) ruled out strict Chicago.
+
+**Decision**: Title Case style for docs is AP-leaning with explicit ambiguity carve-outs
+
+**Rationale**: AP lowercase prepositions regardless of length matches user-approved titles. But strict AP would lowercase ambiguous prep/conj/adv words like before, after, since, until, past, near, down, up, off, hurting common cases. Carve-outs leave them at default-cap and let the engine reach a sensible result for ~95 percent of headings without manual review.
+
+**Consequence**: hack/title-case-headings.py ships an AP-leaning with ambiguity carve-outs PREPOSITIONS set. Future style changes must touch that set explicitly with reasoning. New brand or acronym additions go through the same audited pattern.
+
+---
 
 ## [2026-04-13-153617] Walk boundary uses git as a hint, not a requirement
 

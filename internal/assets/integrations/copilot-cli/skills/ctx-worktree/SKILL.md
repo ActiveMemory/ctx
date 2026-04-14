@@ -21,7 +21,7 @@ with ctx-aware guardrails.
 - Tasks that touch overlapping files (high merge conflict risk)
 - Fewer than 3 independent tasks (overhead exceeds benefit)
 - Already inside a worktree (manage from the main checkout only)
-- User just wants concurrent sessions in the same tree
+- User just wants concurrent Claude Code sessions in the same tree
 
 ## Operations
 
@@ -56,7 +56,8 @@ Create a new worktree as a sibling directory with a `work/` branch.
 5. **Remind the user**:
    > Do NOT run `ctx init` in the worktree. The context
    > directory is already tracked in git and will be present.
-   > Launch a separate session there and work normally.
+   > Launch a separate Claude Code session there and work
+   > normally.
 
 ### `list`
 
@@ -123,11 +124,11 @@ Merge a completed worktree back and clean up.
 
 The encryption key lives at `~/.ctx/.ctx.key` (user-level, outside
 the project). All worktrees on the same machine share this path, so
-**`ctx pad` and `ctx notify` work in worktrees automatically**.
+**`ctx pad` and `ctx hook notify` work in worktrees automatically**.
 
 One thing to watch:
 
-- **Journal enrichment**: `ctx recall export` and `ctx journal enrich`
+- **Journal enrichment**: `ctx journal import` and journal enrichment
   resolve paths relative to the current working directory. Files
   created in a worktree stay in that worktree and are discarded on
   teardown. Enrich journals on the main branch after merging: the

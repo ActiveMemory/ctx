@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Steering files
+title: Steering Files
 icon: lucide/compass
 ---
 
 ![ctx](../images/ctx-banner.png)
 
-## Steering files
+## Steering Files
 
 `ctx` projects talk to AI assistants through several layers
 — context files, decisions, conventions, the agent context
@@ -27,7 +27,7 @@ and syncs them out to each AI tool's native config (Claude
 Code, Cursor, Kiro, Cline) so the rules actually land in the
 prompt pipeline.
 
-## Not the same as decisions or conventions
+## Not the Same as Decisions or Conventions
 
 The three look similar on disk but serve different purposes:
 
@@ -40,7 +40,7 @@ The three look similar on disk but serve different purposes:
 If you find yourself writing "the AI should always do X when
 asked about Y," that belongs in steering, not decisions.
 
-## Your first steering files
+## Your First Steering Files
 
 **`ctx init` scaffolds four foundation steering files** in
 `.context/steering/` so you start with something to edit
@@ -72,7 +72,7 @@ Re-running `ctx init` is safe: existing files are left
 alone, so your edits survive. Use `ctx init --no-steering-init`
 to opt out of the scaffold entirely.
 
-## Inclusion modes
+## Inclusion Modes
 
 Each steering file declares an inclusion mode in its
 frontmatter:
@@ -120,7 +120,7 @@ pick `always`, even if it's overkill for your Cursor
 setup. The context budget cost is small; the alternative
 (silently not firing) is worse.
 
-## Two families of AI tools, two delivery paths
+## Two Families of AI Tools, Two Delivery Paths
 
 Not every AI tool consumes steering the same way. ctx
 handles two tool families differently, and it's worth
@@ -165,7 +165,7 @@ works for Claude Code.
 - Using both? → Run `sync` for the native-rules tools; the
   hook+MCP pipeline covers Claude Code automatically.
 
-## Two shapes of automation: rules and scripts
+## Two Shapes of Automation: Rules and Scripts
 
 Steering is one of **two** hook-like layers ctx provides for
 customizing AI behavior. They're complementary:
@@ -180,7 +180,7 @@ Pick steering when you want "always remind the AI of X."
 Pick triggers when you want "do Y when event Z happens."
 They can coexist — many projects use both.
 
-## Where to go next
+## Where to Go Next
 
 - **[Writing Steering Files](../recipes/steering.md)** —
   a six-step walkthrough: scaffold, write the rule, preview

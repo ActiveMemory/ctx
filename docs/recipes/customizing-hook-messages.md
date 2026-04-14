@@ -176,7 +176,7 @@ manually.
 Not all messages are equal. The `list` command shows each message's
 category:
 
-### Customizable (17 messages)
+### Customizable (17 Messages)
 
 Messages that are **opinions**: project-specific wording that benefits
 from customization. These are the primary targets for override.
@@ -200,7 +200,7 @@ from customization. These are the primary targets for override.
 | post-commit         | nudge      | Post-commit context capture              |
 | qa-reminder         | gate       | Pre-commit QA gate                       |
 
-### ctx-specific (10 messages)
+### ctx-Specific (10 Messages)
 
 Messages specific to ctx's own development workflow. You *can* customize
 them, but `edit` will warn you first.

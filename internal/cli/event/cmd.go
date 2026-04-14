@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
-// Cmd returns the "ctx event" top-level command.
+// Cmd returns the "ctx hook event" command.
 //
 // Returns:
 //   - *cobra.Command: Configured event command

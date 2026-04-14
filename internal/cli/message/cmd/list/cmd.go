@@ -15,7 +15,7 @@ import (
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
-// Cmd returns the "ctx message list" subcommand.
+// Cmd returns the "ctx hook message list" subcommand.
 //
 // Returns:
 //   - *cobra.Command: Configured list subcommand

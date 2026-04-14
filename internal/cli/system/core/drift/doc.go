@@ -4,10 +4,55 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package drift detects version drift across VERSION, plugin, and.
+// Package drift detects **version drift** across the three
+// places ctx's version can diverge: the source-of-truth
+// `VERSION` file, the installed binary's
+// `ctx --version`, and the marketplace plugin manifest. The
+// `check_version` hook calls into here to nudge users when
+// any of the three drift apart.
 //
-// Key exports: [FormatStaleEntries], [CheckVersion], [ReadVersionFile],
-// [ReadMarketplaceVersion].
-// Shared helpers used by sibling cmd/ packages.
-// Used by core cmd/ packages.
+// (This is the *system-hook* drift package and is unrelated
+// to [internal/drift], which detects context-file drift.)
+//
+// # Public Surface
+//
+//   - **[CheckVersion]** — runs the full three-way
+//     comparison and returns a [DriftReport].
+//   - **[ReadVersionFile]** — reads the `VERSION` file
+//     from the install dir.
+//   - **[ReadMarketplaceVersion]** — reads the
+//     plugin manifest's pinned version from
+//     `~/.claude/marketplaces/...`.
+//   - **[FormatStaleEntries]** — formats a [DriftReport]
+//     as the user-facing nudge body (delivered via
+//     [internal/cli/system/core/message]).
+//
+// # The Three Sources, Why They Drift
+//
+//  1. **`VERSION` file** — bumped by maintainers as part
+//     of the release runbook. The source of truth.
+//  2. **Installed binary** — the result of the user's
+//     last `make install` / `brew upgrade`. Drifts
+//     downward if the user has not updated.
+//  3. **Marketplace plugin manifest** — pinned by the
+//     user's most recent `claude plugin install`.
+//     Drifts downward if the user has not run
+//     `claude plugin update`.
+//
+// Any pair-wise mismatch is a candidate nudge; the hook
+// picks the most actionable phrasing per case.
+//
+// # Concurrency
+//
+// All functions are filesystem-bound and stateless.
+// Concurrent invocations never race.
+//
+// # Related Packages
+//
+//   - [internal/cli/system/cmd/check_version] — the
+//     hook that fires the nudge.
+//   - [internal/cli/system/core/message]      — renders
+//     the nudge body.
+//   - [internal/bootstrap]                    — owns
+//     the `Version` constant baked into the binary.
 package drift
