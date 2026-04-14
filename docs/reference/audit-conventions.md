@@ -8,8 +8,8 @@
 title: Code Conventions
 icon: lucide/scroll-text
 ---
-![ctx](../images/ctx-banner.png)
 
+![ctx](../images/ctx-banner.png)
 
 # Code Conventions: Common Patterns and Fixes
 
@@ -22,7 +22,7 @@ code under `internal/`.
 
 ---
 
-## Variable Shadowing (bare `err :=` reuse)
+## Variable Shadowing (Bare `err :=` Reuse)
 
 **Test:** `TestNoVariableShadowing`
 
@@ -715,7 +715,7 @@ func Journal(cmd *cobra.Command, ...) {
 
 ---
 
-## Predicate Naming (no `Is`/`Has`/`Can` prefix)
+## Predicate Naming (No `Is`/`Has`/`Can` Prefix)
 
 **Test:** None (manual review convention)
 
@@ -778,7 +778,7 @@ parse.go
 
 ---
 
-## Stray err.go Files
+## Stray Err.Go Files
 
 **Test:** `TestNoStrayErrFiles`
 

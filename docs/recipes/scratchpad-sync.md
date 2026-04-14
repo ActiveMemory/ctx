@@ -30,7 +30,7 @@ chmod 600 ~/.ctx/.ctx.key                                 # 3. secure it
 !!! tip "Finding Your Key File"
     The key is always at `~/.ctx/.ctx.key` - one key, one machine.
 
-!!! danger "Treat the Key Like a Password"
+!!! danger "Treat the Key like a Password"
     The scratchpad key is the only thing protecting your **encrypted** entries.
 
     Store a backup in a secure enclave such as a password manager, and treat

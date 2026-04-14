@@ -53,7 +53,7 @@ key_rotation_days: 90  # Days before encryption key rotation nudge
 
 # --- Webhook notifications ---
 # Notifications are opt-in: nothing fires unless events are listed.
-# Run `ctx notify setup` to configure the encrypted webhook URL first.
+# Run `ctx hook notify setup` to configure the encrypted webhook URL first.
 #
 notify:
   events:
@@ -73,5 +73,5 @@ notify:
     #   qa-reminder         — QA gate reminder emitted
     #   block-non-path-ctx  — blocked non-PATH ctx invocation
 #
-# Note: `ctx notify test` always bypasses the event filter — no need to
+# Note: `ctx hook notify test` always bypasses the event filter — no need to
 # list "test" here. It warns if filtered but sends anyway.

@@ -204,7 +204,7 @@ ctx setup copilot   # Generate Copilot tips
 ctx setup windsurf  # Generate Windsurf config
 ```
 
-### Migrating Content Into `.context/`
+### Migrating Content into `.context/`
 
 If you have project knowledge scattered across `.cursorrules` or custom
 prompt files, consider migrating it:
@@ -261,7 +261,7 @@ git push
 
 Teammates pull and immediately have context. No per-developer setup needed.
 
-### What About `.claude/`?
+### What about `.claude/`?
 
 The `.claude/` directory contains permissions that `ctx init` seeds.
 Hooks and skills are provided by the `ctx` plugin (*not per-project files*).

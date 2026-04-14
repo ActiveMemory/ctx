@@ -11,12 +11,12 @@ icon: lucide/shield
 
 ![ctx](../images/ctx-banner.png)
 
-# `ctx` Hub: Security model
+# `ctx` Hub: Security Model
 
 What the hub defends against, what it **does not** defend against,
 and the concrete mechanisms in play.
 
-## Threat model
+## Threat Model
 
 The hub is designed for **trusted cross-project knowledge sharing**
 within a team or homelab. It assumes:
@@ -39,7 +39,7 @@ use a dedicated tool and keep the hub for knowledge sharing.
 
 ## Mechanisms
 
-### Bearer tokens
+### Bearer Tokens
 
 All RPCs except `Register` require a bearer token in gRPC
 metadata. Two kinds of tokens exist:
@@ -54,7 +54,7 @@ prevent timing oracles, and looked up via an `O(1)` hash map so
 the comparison cost does not depend on the total number of
 registered clients.
 
-### Client-side encryption at rest
+### Client-Side Encryption at Rest
 
 `.context/.connect.enc` stores the client token and hub address,
 encrypted with **AES-256-GCM** using the same scheme the
@@ -65,9 +65,9 @@ An attacker with read access to the project directory cannot
 learn the client token without also breaking ctx's local
 keyring.
 
-### Hub-side token storage
+### Hub-Side Token Storage
 
-!!! warning "Tokens are stored in plaintext on the hub host"
+!!! warning "Tokens Are Stored in Plaintext on the Hub Host"
     `<data-dir>/clients.json` currently stores client tokens
     **verbatim**, not hashed. Anyone with read access to the
     hub's data directory sees every registered client's token
@@ -92,7 +92,7 @@ keyring.
     that lands, assume a hub host compromise equals total hub
     compromise.
 
-### Input validation
+### Input Validation
 
 Every published entry is validated before it touches the log:
 
@@ -105,14 +105,14 @@ Every published entry is validated before it touches the log:
   replays an old `Register` call gets an error, not a second
   token.
 
-### No script execution
+### No Script Execution
 
 The hub never interprets entry content. There is no expression
 language, no template evaluation, no markdown rendering at
 ingest. Content is stored as bytes and fanned out to clients
 verbatim.
 
-### Audit trail
+### Audit Trail
 
 `entries.jsonl` is append-only. Every accepted publish is
 recorded with the publishing project's origin tag and sequence
@@ -120,7 +120,7 @@ number. Nothing is ever deleted by the hub; retention is managed
 manually by the operator (see
 [log rotation](../operations/hub.md#log-rotation)).
 
-## What the hub does **not** defend against
+## What the Hub Does **Not** Defend Against
 
 - **Untrusted entry senders.** A client with a valid token can
   publish anything (within the 1 MB cap). There is no content
@@ -137,7 +137,7 @@ manually by the operator (see
   decision containing an API key. Sanitize content before
   publishing.
 
-## Operational hardening checklist
+## Operational Hardening Checklist
 
 - [ ] Run the hub as an **unprivileged user** with
       `NoNewPrivileges=true` and `ProtectSystem=strict` (see
@@ -155,12 +155,12 @@ manually by the operator (see
 - [ ] Run NTP on all clients to prevent entry-timestamp skew.
 - [ ] Do not publish from machines you do not trust.
 
-## Responsible disclosure
+## Responsible Disclosure
 
 Security issues in the hub follow the same process as the rest
 of ctx — see [Reporting](reporting.md).
 
-## See also
+## See Also
 
 - [`ctx` Hub Operations](../operations/hub.md)
 - [`ctx` Hub failure modes](../operations/hub-failure-modes.md)

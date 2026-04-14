@@ -134,13 +134,13 @@ tool.
 No action needed. Just install `ctx` from the Marketplace
 as `ActiveMemory/ctx`.
 
-!!! tip "Claude Code is a First-Class Citizen"
+!!! tip "Claude Code Is a First-Class Citizen"
     With the `ctx` plugin installed, Claude Code gets hooks and skills
     automatically. The `PreToolUse` hook runs
     `ctx agent --budget 4000` on every tool call
     (*with a 10-minute cooldown so it only fires once per window*).
 
-#### Cursor 
+#### Cursor
 
 Add the system prompt snippet to `.cursor/settings.json`:
 

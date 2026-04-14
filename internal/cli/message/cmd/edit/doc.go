@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package edit provides the ctx system message edit subcommand for.
+// Package edit provides the ctx hook message edit subcommand for.
 //
 // Key exports: [Cmd], [Run].
 // Follows the cmd/root + core taxonomy.

@@ -4,15 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package task implements the "ctx tasks" command for managing task archival
-// and snapshots.
-//
-// The task package provides subcommands to:
-//   - archive: Move completed tasks to timestamped archive files
-//   - snapshot: Create point-in-time copies of TASKS.md
-//
-// Archive files preserve phase structure for traceability, while snapshots
-// copy the entire file as-is without modification.
 package task
 
 import (

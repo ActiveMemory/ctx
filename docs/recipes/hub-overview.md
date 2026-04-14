@@ -17,7 +17,7 @@ Start here before the other hub recipes. This page answers *what*
 the hub is, *who* it's for, *why* you'd run one, and —
 equally important — *what it is not*.
 
-## Mental model in one paragraph
+## Mental Model in One Paragraph
 
 The hub is a **fan-out channel for structured knowledge
 entries across projects**. When you publish a decision, learning,
@@ -32,7 +32,7 @@ knowledge bus** for a small, curated set of entry types. It is
 **not** a shared memory, a shared journal, or a multi-user
 database.
 
-## What flows through the hub
+## What Flows through the Hub
 
 Only four entry types:
 
@@ -48,7 +48,7 @@ publishing project's name as `Origin`, a timestamp, and a
 hub-assigned sequence number. Once published, entries are
 never rewritten.
 
-## What does *not* flow through the hub
+## What Does *Not* Flow through the Hub
 
 This is the part new users get wrong most often:
 
@@ -68,13 +68,13 @@ If you were expecting "now my agent in project B can see
 everything my agent did in project A," that's not this feature.
 Local session density still lives on the local machine.
 
-## Two user stories
+## Two User Stories
 
 The hub makes sense in two different shapes. Pick the one that
 matches your situation — the mechanics are identical but the
 trust model and threat surface are very different.
 
-### Story 1: Personal cross-project brain
+### Story 1: Personal Cross-Project Brain
 
 **One developer, many projects, one hub — usually on localhost.**
 
@@ -103,7 +103,7 @@ LAN, use the default single-node setup, don't worry about TLS.
 setup, then [Personal cross-project brain](hub-personal.md)
 for the day-to-day workflow.
 
-### Story 2: Small trusted team
+### Story 2: Small Trusted Team
 
 **A few teammates, projects they each own, one hub on a LAN host
 they all trust.**
@@ -143,7 +143,7 @@ deployment, [Team knowledge bus](hub-team.md) for the
 day-to-day team workflow, then [HA cluster](hub-cluster.md)
 if you need redundancy.
 
-## Identity: projects, not users
+## Identity: Projects, Not Users
 
 The hub has **no concept of users.** Its unit of identity is the
 *project*. `ctx connection register` binds a hub token to a project
@@ -159,7 +159,7 @@ project share either:
 Either works; neither gives you per-human attribution. If you
 need "who wrote this," the hub is the wrong tool.
 
-## When *not* to use it
+## When *Not* to Use It
 
 - **Solo, single-project work.** Local `.context/` files are
   enough. The hub adds operational surface for no payoff.
@@ -176,7 +176,7 @@ need "who wrote this," the hub is the wrong tool.
   above. If that's what you want, this feature won't provide
   it — talk to us in the issue tracker about what *would*.
 
-## How entries reach your agent
+## How Entries Reach Your Agent
 
 Once a project is registered and subscribed, entries arrive by
 three mechanisms:
@@ -193,7 +193,7 @@ Once entries exist in `.context/hub/`, `ctx agent
 context packet, scored by recency and type relevance. That's
 the end of the pipeline.
 
-## Where to go next
+## Where to Go Next
 
 | If you're…                                        | Read                                             |
 |---------------------------------------------------|--------------------------------------------------|

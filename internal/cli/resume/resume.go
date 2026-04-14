@@ -12,7 +12,7 @@ import (
 	resumeRoot "github.com/ActiveMemory/ctx/internal/cli/resume/cmd/root"
 )
 
-// Cmd returns the top-level "ctx resume" command.
+// Cmd returns the "ctx hook resume" command.
 //
 // Returns:
 //   - *cobra.Command: The resume command with subcommands registered

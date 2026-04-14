@@ -170,7 +170,7 @@ before anyone does any work. For small tasks, that overhead dominates.
 
 Four practical team compositions for common workflows.
 
-### Feature Development (3 agents)
+### Feature Development (3 Agents)
 
 | Role        | Responsibility                                            |
 |-------------|-----------------------------------------------------------|
@@ -184,7 +184,7 @@ implementer starts. Reviewer runs after each implementer commit.
 **Anti-pattern**: All three agents editing the same file simultaneously.
 Sequence the work so only one agent touches a file at a time.
 
-### Consolidation Sprint (3-4 agents)
+### Consolidation Sprint (3-4 Agents)
 
 | Role       | Responsibility                                           |
 |------------|----------------------------------------------------------|
@@ -199,7 +199,7 @@ Each agent claims a subset of issues by adding `#in-progress` labels.
 **Anti-pattern**: Fixer and doc writer both editing ARCHITECTURE.md.
 Assign file ownership explicitly.
 
-### Release Prep (2 agents)
+### Release Prep (2 Agents)
 
 | Role          | Responsibility                                         |
 |---------------|--------------------------------------------------------|
@@ -212,7 +212,7 @@ notes agent works from `git log`; validation agent works from `make audit`.
 **Anti-pattern**: Release notes agent running tests "to verify." Each
 agent stays in its lane.
 
-### Documentation Sprint (3 agents)
+### Documentation Sprint (3 Agents)
 
 | Role          | Responsibility                                             |
 |---------------|------------------------------------------------------------|

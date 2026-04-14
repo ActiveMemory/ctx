@@ -39,7 +39,7 @@ ctx init --force --merge
 # /plugin → select ctx → Update now   (if using Claude Code)
 ```
 
-## What Changes Between Versions
+## What Changes between Versions
 
 `ctx init` generates two categories of files:
 

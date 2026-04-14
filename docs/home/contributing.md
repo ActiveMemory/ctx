@@ -153,7 +153,7 @@ and are now available to all ctx users: `/ctx-brainstorm`, `/ctx-link-check`,
 
 ----
 
-## How To Add Things
+## How to Add Things
 
 ### Adding a New CLI Command
 
@@ -214,7 +214,7 @@ internal/err/config/config.go   # errors for configuration
 internal/err/cli/cli.go         # errors for CLI argument validation
 ```
 
-#### Config constants: `internal/config/`
+#### Config Constants: `internal/config/`
 
 Pure-constant leaf packages with zero internal dependencies (stdlib
 only). Over 60 sub-packages, organized by domain. See
@@ -230,7 +230,7 @@ only). Over 60 sub-packages, organized by domain. See
 | User-facing text YAML keys      | `config/embed/text/<domain>.go`   |
 | Time durations, thresholds      | `config/<domain>/`                |
 
-#### The assets pipeline
+#### The Assets Pipeline
 
 User-facing text flows through a three-level chain:
 
@@ -258,7 +258,7 @@ new AI tool (e.g. Aider, Cursor):
 
 Pattern to follow: the Claude Code JSONL parser in `internal/journal/parser/`.
 
-!!! note "Multilingual session headers"
+!!! note "Multilingual Session Headers"
     The Markdown parser recognizes session header prefixes configured via
     `session_prefixes` in `.ctxrc` (default: `Session:`). To support a new
     language, users add a prefix to their `.ctxrc` - no code change needed.
@@ -319,7 +319,7 @@ make plugin-reload   # nukes ~/.claude/plugins/cache/activememory-ctx/
 The plugin will be re-installed from your local marketplace on startup.
 No version bump is needed during development.
 
-!!! tip "Version bumps are for releases, not iteration"
+!!! tip "Version Bumps Are for Releases, Not Iteration"
     Only bump `VERSION`, `plugin.json`, and `marketplace.json` when
     cutting a release. During development, `make plugin-reload` is
     all you need.

@@ -289,7 +289,7 @@ These are invoked in Claude Code with `/skill-name`.
 
 #### Blogging Skills
 
-!!! tip "Blogging is a Better Way of Creating Release Notes"
+!!! tip "Blogging Is a Better Way of Creating Release Notes"
     The blogging workflow can also double as generating release notes:
 
     AI reads your git commit history and creates a "*narrative*",
@@ -669,7 +669,7 @@ The `ctx watch` command parses update commands from AI output. Use this format:
 | `convention` | CONVENTIONS.md | None                                          |
 | `complete`   | TASKS.md       | None                                          |
 
-### Simple Format (tasks, conventions, complete)
+### Simple Format (Tasks, Conventions, Complete)
 
 ```xml
 <context-update type="task">Implement rate limiting</context-update>
@@ -677,7 +677,7 @@ The `ctx watch` command parses update commands from AI output. Use this format:
 <context-update type="complete">rate limiting</context-update>
 ```
 
-### Structured Format (*learnings, decisions*)
+### Structured Format (*Learnings, Decisions*)
 
 Learnings and decisions support structured attributes for better documentation:
 

@@ -5,7 +5,7 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Joining a ctx Project
+title: Joining a Project
 icon: lucide/user-plus
 ---
 

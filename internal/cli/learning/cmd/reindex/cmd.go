@@ -4,7 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package reindex provides the "ctx learning reindex" subcommand.
 package reindex
 
 import (

@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
-// Cmd returns the "ctx notify test" subcommand.
+// Cmd returns the "ctx hook notify test" subcommand.
 //
 // Returns:
 //   - *cobra.Command: Configured test subcommand

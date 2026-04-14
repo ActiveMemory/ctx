@@ -25,7 +25,7 @@ topics:
 
 *Jose Alekhinne / February 17, 2026*
 
-!!! question "Where does your AI's knowledge live between sessions?"
+!!! question "Where Does Your AI's Knowledge Live between Sessions?"
     If the answer is "in a prompt I paste at the start," you are treating
     context as a **consumable**. Something assembled, used, and discarded.
 
@@ -392,7 +392,7 @@ The tool is a convenience: **The principles are what matter**.
 
 ---
 
-!!! quote "**If You Remember One Thing From This Post...**"
+!!! quote "**If You Remember One Thing from This Post...**"
     **Prompts are conversations. Infrastructure persists.**
 
     Your AI does not need a better prompt. It needs a filesystem:

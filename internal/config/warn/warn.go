@@ -4,12 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package warn provides format string constants for best-effort
-// warning messages routed through log.Warn.
-//
-// These are Printf-style format strings for common I/O failure
-// patterns. Using constants prevents typo drift across 40+ call sites.
-// Import as config/warn.
 package warn
 
 // Format strings for file I/O warnings. Each takes (path, error).

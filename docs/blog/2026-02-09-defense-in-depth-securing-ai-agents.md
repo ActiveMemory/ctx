@@ -73,7 +73,7 @@ iteration `N`.
 
 **The agent can rewrite its own guardrails.**
 
-## Five Layers, Each With a Hole
+## Five Layers, Each with a Hole
 
 That's five nested layers of swiss cheese. Alone, each of them has large
 holes. Together, they create a **boundary**.
@@ -102,7 +102,7 @@ The agent *usually* follows them.
 **Verdict**: Necessary. Not sufficient. Good for the common case.
 Never trust it as a security boundary.
 
-### Layer 2: Application Controls (*Deterministic at Runtime, Mutable Across Iterations*)
+### Layer 2: Application Controls (*Deterministic at Runtime, Mutable across Iterations*)
 
 Permission allowlists in `.claude/settings.local.json`:
 
@@ -367,7 +367,7 @@ overnight.
 
 ---
 
-!!! quote "**If You Remember One Thing From This Post...**"
+!!! quote "**If You Remember One Thing from This Post...**"
     **Markdown is not a security boundary.**
 
     `CONSTITUTION.md` is a nudge. An allowlist is a gate.

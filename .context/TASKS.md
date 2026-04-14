@@ -2076,3 +2076,13 @@ disambiguates.
   `make test` (0 failures including the audit exempt-list
   update and the `gofmt` round-trip on `serve/cmd/root/cmd.go`).
   #added:2026-04-11 #pr:60 #done:2026-04-11
+
+### Later
+
+- [ ] Optional follow-up doc.go pass: a handful of tiny per-subcommand wrappers under internal/cli/*/cmd/* still have ~5-line bodies. Most are accurate-but-brief; expand only if the brief form proves insufficient in review. #session:4b37e2f6 #branch:feat/copilot-cli-skill-parity-rebased #commit:edaac81786c9379333b352dae0d55df0ae0f72bb #added:2026-04-14-010311
+
+- [ ] Extend internal/audit/stuttery_functions_test.go to cover *ast.GenDecl (consts, vars, types). Current implementation walks *ast.FuncDecl only and missed tpl.TplEntryMarkdown (since renamed to HubEntryMarkdown). #session:4b37e2f6 #branch:feat/copilot-cli-skill-parity-rebased #commit:edaac81786c9379333b352dae0d55df0ae0f72bb #added:2026-04-14-010311
+
+- [ ] Decide whether to delete docs/cli/connect.md — verified dead duplicate of docs/cli/connection.md (uses old ctx connect command name; zero inbound references; not in zensical.toml). Awaiting explicit user OK before git rm. #session:4b37e2f6 #branch:feat/copilot-cli-skill-parity-rebased #commit:edaac81786c9379333b352dae0d55df0ae0f72bb #added:2026-04-14-010311
+
+- [-] PROMPT.md design — belongs in another project; skipped here. #session:4b37e2f6 #added:2026-04-14-010311 #skipped:2026-04-14

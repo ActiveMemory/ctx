@@ -233,7 +233,7 @@ does the heavy lifting here: Without the relay requirement, the agent
 would silently rationalize skipping. With it, skipping becomes a
 **visible, auditable decision** that the user can override.
 
-### The Compliance Canary 
+### The Compliance Canary
 
 Here's the design insight that only became clear after watching it work
 across multiple sessions: **the relay block is a compliance canary**.
@@ -640,7 +640,7 @@ context at session start**. The [Prompting Guide](../home/prompting-guide.md)
 applies this insight directly: Scope constraints, verification commands,
 and the reliability checklist are all **one-hop**, moment-of-action patterns.
 
-### 2. Delegation chains decay
+### 2. Delegation Chains Decay
 
 Every hop in an instruction chain loses authority: 
 

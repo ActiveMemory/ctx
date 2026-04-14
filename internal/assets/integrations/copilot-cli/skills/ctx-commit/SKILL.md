@@ -10,37 +10,90 @@ recording the context behind it.
 
 ## When to Use
 
-- When committing after meaningful work (feature, bugfix,
-  refactor)
-- When the commit involves a design choice or trade-off
-- When the user says "commit" or "commit this"
+- For ALL commits. This is the only way to commit in this project.
+  Raw `git commit` bypasses spec enforcement and violates CONSTITUTION.
+- When the user says "commit", "commit this", "ship it", "let's commit":
+  always use this skill, never raw git commit.
 
 ## When NOT to Use
 
-- For trivial commits (typo, formatting): just commit normally
-- When the user explicitly says "just commit, no context"
-- When nothing has changed
+- When nothing has changed (no staged or unstaged modifications)
+
+## Usage Examples
+
+```text
+/ctx-commit
+/ctx-commit "implement session enrichment"
+/ctx-commit --skip-qa
+```
 
 ## Process
 
-### 1. Pre-commit checks
+### 1. Check CONSTITUTION for commit rules
 
-Unless the user says "skip checks":
+Read `.context/CONSTITUTION.md` (if it exists) for commit-specific
+rules. Common project rules to look for and enforce:
+
+- **Spec-per-commit**: Add a `Spec:` trailer, verify a spec file exists in
+  `specs/` before proceeding. If no spec exists, stop and offer to run
+  `/ctx-spec` to scaffold one.
+- **Sign-off**: `Signed-off-by:`, include it.
+- **Other trailers**: Honor any project-specific trailer requirements.
+
+Read CONSTITUTION fully and apply all relevant rules before
+proceeding to pre-commit checks.
+
+### 2. Pre-commit checks
+
+Unless the user says `--skip-qa` or "skip checks":
 
 - Run `git diff --name-only` to see what changed
-- If Go files changed, run `go build ./cmd/ctx/...`
-- If build fails, stop and report: do not commit broken code
+- Run the project's build and lint commands to verify nothing is broken.
+  Check for a Makefile, package.json, or equivalent. If you cannot
+  identify the build/lint commands, ask the user before proceeding.
+- If the build or lint fails, stop and report: do not commit broken code
 
-### 2. Stage and commit
+**Verify before claiming ready**: map each claim to evidence.
+"Tests pass" requires test output with 0 failures. "Build succeeds"
+requires exit 0. "Lint clean" requires linter output with 0 errors.
+Run commands fresh — never reuse earlier output. Before proceeding
+to stage, answer these self-audit questions:
+
+1. What assumptions did I make?
+2. What did I NOT check?
+3. Where am I least confident?
+4. What would a reviewer question first?
+
+If any answer reveals a gap, address it before staging.
+
+### 3. Close matching tasks
+
+Every commit closes work. Before staging, check TASKS.md for
+tasks that this commit completes:
+
+- Read `.context/TASKS.md`
+- Identify the spec being committed (the `Spec:` trailer value)
+- Find open tasks (`[ ]`) whose `Spec:` field matches
+- If no spec match, search by keywords from the commit subject
+- Mark matching tasks `[x]`
+- If uncertain whether a task is fully done, ask the user
+- Stage the updated TASKS.md alongside the code changes
+
+This is the closure point in the plan→spec→task→commit chain.
+Skipping it causes task rot: completed work stays open,
+future sessions waste time re-triaging stale items.
+
+### 4. Stage and commit
 
 - Review unstaged changes with `git status`
 - Stage relevant files (prefer specific files over `git add -A`)
 - Craft a concise commit message:
   - If the user provided a message, use it
-  - If not, draft one based on the changes
-- Commit with trailers as required by project conventions
+  - If not, draft one based on the changes (1-2 sentences,
+    "why" not "what")
+- Include the `Spec:` and `Signed-off-by:` trailers (see format below)
 
-### 3. Context prompt
+### 5. Context prompt
 
 After a successful commit, ask the user:
 
@@ -48,43 +101,103 @@ After a successful commit, ask the user:
 >
 > - **Decision**: Did you make a design choice or trade-off?
 > - **Learning**: Did you hit a gotcha or discover something?
-> - **Neither**: No context to capture.
+> - **Neither**: No context to capture: we're done.
 
-If they provide a decision or learning, record it:
+Wait for the user's response. If they provide a decision or
+learning, record it using the appropriate command:
 
 ```bash
-ctx add decision "..."
-ctx add learning --context "..." --lesson "..." --application "..."
+ctx add decision "Use PostgreSQL" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
+  --context "Need a reliable database" \
+  --rationale "ACID compliance and JSON support" \
+  --consequence "Team needs training"
 ```
 
-### 4. Doc drift check
+```bash
+ctx add learning "Go embed requires files in same package" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
+  --context "..." --lesson "..." --application "..."
+```
 
-If committed files include source code that could affect docs,
-offer to check for doc drift.
+### 6. Reflect
 
-### 5. Reflect (optional)
+After every commit, run `/ctx-reflect` to capture the bigger
+picture before moving on. This is mandatory: Skipping reflection
+is how context gets lost between sessions.
 
-If the commit represents a significant milestone, suggest:
+## Commit Message Format
 
-> This looks like a good checkpoint. Want me to run a quick
-> reflection to capture the bigger picture?
-
-## Commit Message Style
-
+Follow the repository's existing commit style. Draft messages
+that:
 - Focus on **why**, not what (the diff shows what)
-- Concise (1-2 sentences)
-- Follow the repository's existing commit style
-- Include required trailers (Spec:, Co-authored-by:, etc.)
+- Use lowercase, no period at the end
+- Scale detail to match scope: a one-file fix gets 1-2 sentences;
+  a multi-package change gets a summary paragraph plus a bulleted
+  list of what changed and why
+- Include any trailers required by CONSTITUTION (e.g., `Spec:`,
+  `Signed-off-by:`)
+
+Example:
+```
+complete journal-recall merge wiring and cross-cutting cleanup
+
+Wire journal commands through journal/core packages instead of
+recall/core. Move importer, lock, unlock, sync cmd packages from
+recall/cmd to journal/cmd.
+
+Changes:
+- journal/core/{plan,execute,query} are now canonical
+- sourcefm/sourceformat renamed to source/frontmatter, source/format
+- Magic numbers extracted to config/stats constants
+- state.StateDir renamed to state.Dir across 26 callers
+- splitLines moved to parse.ByteLines
+- /ctx-commit skill generalized to be language-agnostic
+
+Spec: specs/journal-merge-completion.md
+Signed-off-by: Jane Doe <jane@example.com>
+```
+
+## Commit Discipline
+
+- **Spec trailer is mandatory**: identify the spec that covers
+  this work and include `Spec:` in the commit message. If
+  CONSTITUTION also requires it, this is non-negotiable.
+- **Confirm the message** with the user before committing (or use
+  their provided message)
+- **Always present the context prompt**: this is the whole point
+  of the skill
+- **Always reflect**: even a one-sentence reflection prevents
+  context loss
+- **Check for secrets** (`.env`, credentials, tokens) in the diff
+  before staging
 
 ## Quality Checklist
 
-Before committing:
-- [ ] Build passes (if Go files changed)
-- [ ] Commit message explains the why
-- [ ] No secrets in staged changes
+Before committing, verify:
+- [ ] Spec exists and is referenced in the commit message
+- [ ] Build and lint pass
+- [ ] Matching tasks marked `[x]` in TASKS.md
+- [ ] Commit message is concise and explains the why
+- [ ] `Spec:` and `Signed-off-by:` trailers are present
+- [ ] No secrets or sensitive files in the staged changes
 - [ ] Specific files staged (not blind `git add -A`)
 
-After committing:
-- [ ] Context prompt was presented
-- [ ] Any decisions/learnings were recorded
-- [ ] Doc drift check offered if source code changed
+After committing, verify:
+- [ ] Context prompt was presented to the user
+- [ ] Any decisions/learnings provided were recorded
+- [ ] Reflection was completed
+
+## Human Relay
+
+After every successful commit, relay a structured summary to the
+human verbatim:
+
+```
+┌─ Commit Summary ─────────────────────────
+│ Spec: specs/<name>.md
+│ Tasks closed: <list or "none">
+│ Files changed: <count>
+│ Message: <first line of commit message>
+└──────────────────────────────────────────
+```

@@ -129,7 +129,7 @@ Claude Code has built-in loop support:
 
 This is convenient for quick iterations, but be aware of important caveats:
 
-!!! warning "This Loop Is not Pure"
+!!! warning "This Loop Is Not Pure"
     Claude Code's `/loop` runs all iterations **within the same session**.
     This means:
 
@@ -332,7 +332,7 @@ my-project/
 └── src/                  # Your code
 ```
 
-### Sample TASKS.md for Autonomous Loops
+### Sample `TASKS.md` for Autonomous Loops
 
 ```markdown
 # Tasks

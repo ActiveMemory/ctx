@@ -26,7 +26,7 @@ Security hooks (dangerous command blocking) still fire.
 Run the pause command:
 
 ```bash
-ctx pause
+ctx hook pause
 ```
 
 Then confirm to the user:

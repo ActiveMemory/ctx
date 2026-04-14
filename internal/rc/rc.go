@@ -4,7 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package rc provides runtime configuration loading from .ctxrc files.
 package rc
 
 import (
@@ -231,7 +230,7 @@ func KeyPath() string {
 
 // KeyRotationDays returns the configured key rotation threshold in days.
 //
-// The encryption key is shared by both ctx pad and ctx notify, so the
+// The encryption key is shared by both ctx pad and ctx hook notify, so the
 // rotation threshold is a project-wide setting.
 //
 // Priority: top-level key_rotation_days >

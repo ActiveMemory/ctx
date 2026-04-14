@@ -253,7 +253,7 @@ For other tools, paste the output of:
 ctx agent --budget 8000
 ```
 
-### 3b. Set Up for Your AI Tool
+### 3B. Set Up for Your AI Tool
 
 If you use an MCP-compatible tool, generate the integration config
 with `ctx setup`:

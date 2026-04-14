@@ -109,7 +109,7 @@ and won't accept "none" without a challenge.
 Sections that don't apply can be skipped. The result is a complete spec
 at `specs/{feature-name}.md`.
 
-### Step 3: Break Into Tasks
+### Step 3: Break into Tasks
 
 After the spec is written, the skill offers to create tasks:
 

@@ -27,26 +27,39 @@ nav = [
     "blog/index.md",
   ]},
   { "Home" = [
-    "home/index.md",
-    "home/about.md",
-    "home/is-ctx-right.md",
-    "home/community.md",
-    "home/contributing.md",
-    "home/getting-started.md",
-    "home/first-session.md",
-    "home/common-workflows.md",
-    "home/context-files.md",
-    "home/configuration.md",
-    "home/prompting-guide.md",
-    "home/repeated-mistakes.md",
-    "home/joining-a-project.md",
-    "home/keeping-ai-honest.md",
-    "home/steering.md",
-    "home/triggers.md",
-    "home/hub.md",
-    "home/faq.md",
+    { "Introduction" = [
+      "home/index.md",
+      "home/about.md",
+      "home/is-ctx-right.md",
+      "home/faq.md",
+    ]},
+    { "Get Started" = [
+      "home/getting-started.md",
+      "home/first-session.md",
+      "home/common-workflows.md",
+    ]},
+    { "Concepts" = [
+      "home/context-files.md",
+      "home/configuration.md",
+      "home/hub.md",
+    ]},
+    { "Working with AI" = [
+      "home/prompting-guide.md",
+      "home/keeping-ai-honest.md",
+      "home/repeated-mistakes.md",
+      "home/joining-a-project.md",
+    ]},
+    { "Customization" = [
+      "home/steering.md",
+      "home/triggers.md",
+    ]},
+    { "Community" = [
+      "home/community.md",
+      "home/contributing.md",
+    ]},
   ]},
   { "Recipes" = [
+    "recipes/index.md",
     { "Getting Started" = [
       "recipes/guide-your-agent.md",
       "recipes/multi-tool-setup.md",
@@ -162,15 +175,15 @@ nav = [
   ]},
   { "Operations" = [
     "operations/index.md",
-    { "Hub" = [
-      "operations/hub.md",
-      "operations/hub-failure-modes.md",
-    ]},
-    { "Operating ctx" = [
+    { "Day-to-Day" = [
       "operations/migration.md",
       "operations/upgrading.md",
       "operations/integrations.md",
       "operations/autonomous-loop.md",
+    ]},
+    { "Hub" = [
+      "operations/hub.md",
+      "operations/hub-failure-modes.md",
     ]},
     { "Maintainers" = [
       "operations/release.md",
@@ -215,12 +228,12 @@ features = [
 [[project.theme.palette]]
 scheme = "default"
 toggle.icon = "lucide/sun"
-toggle.name = "Switch to dark mode"
+toggle.name = "Switch to Dark Mode"
 
 [[project.theme.palette]]
 scheme = "slate"
 toggle.icon = "lucide/moon"
-toggle.name = "Switch to light mode"
+toggle.name = "Switch to Light Mode"
 
 [project.theme.icon]
 #logo = "images/ctx-favicon-128.png"

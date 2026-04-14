@@ -19,7 +19,7 @@ topics:
 
 *Jose Alekhinne / 2026-02-12*
 
-!!! question "Have You Ever Felt Like You Should Understand More of the Stack Beneath You?"
+!!! question "Have You Ever Felt like You Should Understand More of the Stack beneath You?"
     You can talk about transformers at a whiteboard.
 
     You can explain attention to a colleague.
@@ -316,7 +316,7 @@ loss function.
 
 ---
 
-!!! quote "**If You Remember One Thing From This Post...**"
+!!! quote "**If You Remember One Thing from This Post...**"
     Go deep enough to diagnose your failures. Stop before you are solving
     problems that do not propagate to your layer.
 

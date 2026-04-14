@@ -65,7 +65,7 @@ who report valid vulnerabilities (*unless they prefer to remain anonymous*).
 
 ### Response Timeline
 
-!!! note "Open source, Best-Effort Timelines"
+!!! note "Open Source, Best-Effort Timelines"
     `ctx` is a volunteer-maintained open source project. 
 
     The timelines below are **guidelines**, not guarantees, and depend on 

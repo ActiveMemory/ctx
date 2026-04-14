@@ -10,28 +10,7 @@ Guides for **installing**, **upgrading**, **integrating**, and
 
 ---
 
-## Hub
-
-Operator guides for running a `ctx` Hub — the gRPC server that
-fans out structured entries across projects. If you're a client
-connecting to a Hub someone else runs, see
-[`ctx connect`](../cli/connection.md) and the
-[Hub recipes](../recipes/hub-overview.md) instead.
-
-### [Hub Operations](hub.md)
-
-Data directory layout, daemon management, systemd unit,
-backup and restore, log rotation, monitoring, and upgrades.
-
-### [Hub Failure Modes](hub-failure-modes.md)
-
-What can go wrong in network, storage, cluster, auth, and
-clock layers — and what you should do about each one. Includes
-the short-list table oncall engineers will want bookmarked.
-
----
-
-## Operating `ctx`
+## Day-to-Day
 
 Everyday operation guides for anyone running `ctx` in a
 project or adopting it in a team.
@@ -55,6 +34,27 @@ Windsurf, and other AI coding tools.
 
 Run an unattended AI agent that works through tasks overnight,
 with `ctx` providing persistent memory between iterations.
+
+---
+
+## Hub
+
+Operator guides for running a `ctx` Hub — the gRPC server that
+fans out structured entries across projects. If you're a client
+connecting to a Hub someone else runs, see
+[`ctx connect`](../cli/connection.md) and the
+[Hub recipes](../recipes/hub-overview.md) instead.
+
+### [Hub Operations](hub.md)
+
+Data directory layout, daemon management, systemd unit,
+backup and restore, log rotation, monitoring, and upgrades.
+
+### [Hub Failure Modes](hub-failure-modes.md)
+
+What can go wrong in network, storage, cluster, auth, and
+clock layers — and what you should do about each one. Includes
+the short-list table oncall engineers will want bookmarked.
 
 ---
 

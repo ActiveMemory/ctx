@@ -19,7 +19,7 @@ projects. Use `ctx hub` to start and stop the server, inspect
 cluster state, add or remove peers at runtime, and hand off
 leadership before maintenance.
 
-!!! tip "Who needs this page"
+!!! tip "Who Needs This Page"
     You only need `ctx hub` if you are **running** a hub
     server or cluster. For client-side operations (register,
     subscribe, sync, publish, listen), see
@@ -47,7 +47,7 @@ client projects. Subsequent runs reuse the stored token from
 
 **Default data directory**: `~/.ctx/hub-data/`
 
-#### Daemon mode
+#### Daemon Mode
 
 Run the hub as a detached background process:
 
@@ -59,7 +59,7 @@ ctx hub stop                    # Graceful shutdown
 The daemon writes a PID file to `<data-dir>/hub.pid`. Stop
 the daemon with `ctx hub stop` (see below).
 
-#### Cluster mode
+#### Cluster Mode
 
 For high availability, run multiple hubs with Raft-based
 leader election:
@@ -146,7 +146,7 @@ maintenance.
 ctx hub stepdown
 ```
 
-### See also
+### See Also
 
 - [`ctx connect`](connection.md) — client-side commands
   (register, subscribe, sync, publish, listen)

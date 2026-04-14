@@ -216,7 +216,7 @@ was the same; the experience was worse.
 felt productive. But the codebase on March 5 was harder to modify
 than the codebase on February 16, despite having more features.
 
-!!! tip "Speed Without Structure"
+!!! tip "Speed without Structure"
     Speed without structure is negative progress.
 
 **Agents amplify both building and debt**: The same AI that can

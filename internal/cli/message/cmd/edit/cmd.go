@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
-// Cmd returns the "ctx message edit" subcommand.
+// Cmd returns the "ctx hook message edit" subcommand.
 //
 // Returns:
 //   - *cobra.Command: Configured edit subcommand

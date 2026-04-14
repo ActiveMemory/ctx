@@ -137,7 +137,7 @@ QA reminder events from that specific session.
 
 ## Common Problems
 
-### "ctx: not initialized"
+### "ctx: Not Initialized"
 
 **Symptoms**: Any `ctx` command fails with
 `ctx: not initialized - run "ctx init" first`.
@@ -156,7 +156,7 @@ ctx init --minimal  # or just the essentials (CONSTITUTION, TASKS, DECISIONS)
 **Commands that work without initialization**: `ctx init`, `ctx setup`,
 `ctx doctor`, and help-only grouping commands (`ctx`, `ctx system`).
 
-### "My hook isn't firing"
+### "My Hook Isn't Firing"
 
 **Symptoms**: No nudges appearing, webhook silent, event log shows no entries
 for the expected hook.
@@ -186,7 +186,7 @@ ctx hook event --hook check-persistence
 * **Hook silenced**: a custom message override may be an empty file:
   check `ctx hook message list` for overrides
 
-### "*Too many nudges*"
+### "*Too Many Nudges*"
 
 **Symptoms**: The agent is overwhelmed with hook output. Context checkpoints,
 persistence reminders, and QA gates fire constantly.
@@ -217,7 +217,7 @@ ctx hook event --json | jq -r '.detail.hook // "unknown"' \
 * **`ctx` version mismatch**: Build (*or download*) and install the 
   latest `ctx` vesion.
 
-### "*Context seems stale*"
+### "*Context Seems Stale*"
 
 **Symptoms**: The agent references outdated information, paths that don't
 exist, or decisions that were reversed.
@@ -247,7 +247,7 @@ ctx status --verbose
   being used, context doesn't get refreshed. See
   [Session Ceremonies](session-ceremonies.md).
 
-### "*The agent isn't following instructions*"
+### "*The Agent Isn't Following Instructions*"
 
 **Symptoms**: The agent ignores conventions, forgets decisions, or acts
 contrary to `CONSTITUTION.md` rules.

@@ -24,7 +24,7 @@ import (
 	iNotify "github.com/ActiveMemory/ctx/internal/notify"
 )
 
-// Cmd returns the "ctx notify" parent command.
+// Cmd returns the "ctx hook notify" parent command.
 //
 // Returns:
 //   - *cobra.Command: Configured notify command with subcommands

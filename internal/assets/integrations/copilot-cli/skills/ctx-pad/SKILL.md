@@ -35,11 +35,15 @@ command.
 | "move entry 4 to the top" / "prioritize entry 4"           | `ctx pad mv 4 1`                           |
 | "move entry 1 to the bottom"                               | `ctx pad mv 1 N` (where N = last position) |
 | "import my notes from notes.txt"                           | `ctx pad import notes.txt`                 |
-| "import from stdin" / pipe into pad                        | `cmd | ctx pad import -`                   |
+| "import from stdin" / pipe into pad                        | `cmd \| ctx pad import -`                  |
 | "export all blobs" / "extract blobs to DIR"                | `ctx pad export [DIR]`                     |
 | "export blobs, overwrite existing"                         | `ctx pad export --force [DIR]`             |
 | "merge entries from another pad"                           | `ctx pad merge FILE...`                    |
 | "merge with a different key"                               | `ctx pad merge --key /path/to/key FILE`    |
+| "show entries tagged later" / "filter by #later"           | `ctx pad --tag later`                      |
+| "show everything except #later"                            | `ctx pad --tag ~later`                   |
+| "what tags do I have" / "list my tags"                     | `ctx pad tags`                             |
+| "tag entry 5 as urgent"                                    | `ctx pad edit 5 --tag urgent`              |
 
 ## Execution
 
@@ -110,6 +114,25 @@ ctx pad export --force ./backup # overwrite existing files
 ctx pad merge worktree/.context/scratchpad.enc
 ctx pad merge --key /path/to/other.key foreign.enc
 ctx pad merge --dry-run pad-a.enc pad-b.md
+```
+
+**Filter by tag:**
+```bash
+ctx pad --tag later             # entries with #later
+ctx pad --tag ~later          # entries WITHOUT #later
+ctx pad --tag later --tag ci    # entries with both (AND)
+```
+
+**List all tags:**
+```bash
+ctx pad tags
+ctx pad tags --json
+```
+
+**Tag an entry:**
+```bash
+ctx pad edit 5 --tag urgent
+ctx pad edit 5 --append "checked" --tag done   # combine with other ops
 ```
 
 ## Interpreting User Intent

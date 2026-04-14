@@ -259,7 +259,7 @@ The two are complementary. `ctx` can absorb auto-memory as an input source
 (importing what the model remembered into structured context files) while
 providing the durable, inspectable layer that auto-memory lacks.
 
-### .cursorrules / .claude/rules
+### .Cursorrules / .Claude/rules
 
 Static rule files (`.cursorrules`, `.claude/rules/`) declare conventions:
 coding style, forbidden patterns, preferred libraries. They are effective
@@ -287,7 +287,7 @@ ordering across file types, and no structured format for decisions or
 learnings. `ctx` provides the full lifecycle: load, accumulate, persist,
 and budget.
 
-### Copilot @workspace
+### Copilot @Workspace
 
 GitHub Copilot's `@workspace` performs workspace-wide code search. It
 answers **"what code exists?"** - finding function definitions, usages,

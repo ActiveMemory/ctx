@@ -375,7 +375,7 @@ The self-check becomes the trigger: after meaningful work, the agent evaluates
 whether the context files reflect reality and updates them immediately if they
 do not.
 
-### What the Agent Does Proactively Between Iterations
+### What the Agent Does Proactively between Iterations
 
 At milestones within an iteration, the agent persists without waiting for
 instructions:

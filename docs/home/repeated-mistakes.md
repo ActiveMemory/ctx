@@ -30,7 +30,7 @@ persistent context, every session starts with amnesia.
 `ctx` gives your AI three files that directly prevent repeated mistakes,
 each targeting a different failure mode.
 
-### DECISIONS.md: Stop Relitigating Settled Choices
+### `DECISIONS.md`: Stop Relitigating Settled Choices
 
 When you make an architectural decision, record it with rationale and
 rejected alternatives. The AI reads this at session start and treats
@@ -56,7 +56,7 @@ Next session, when the AI considers auth, it reads this entry and builds
 on the decision instead of re-debating it. If someone asks "why not
 sessions?", the rationale is already there.
 
-### LEARNINGS.md: Capture Gotchas Once
+### `LEARNINGS.md`: Capture Gotchas Once
 
 Learnings are the bugs, quirks, and non-obvious behaviors that cost you
 time the first time around. Write them down so they cost you zero time
@@ -81,7 +81,7 @@ for SQLite builds. Never set CGO_ENABLED=0.
 Without this entry, the next session that touches the Dockerfile will
 hit the same wall. With it, the AI knows before it starts.
 
-### CONSTITUTION.md: Draw Hard Lines
+### `CONSTITUTION.md`: Draw Hard Lines
 
 Some mistakes are not about forgetting - they are about boundaries the
 AI should never cross. CONSTITUTION.md sets inviolable rules.

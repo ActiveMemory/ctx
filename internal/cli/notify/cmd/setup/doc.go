@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package setup implements the ctx notify setup subcommand.
+// Package setup implements the ctx hook notify setup subcommand.
 //
 // Key exports: [Cmd], [Run].
 // Follows the cmd/root + core taxonomy.
