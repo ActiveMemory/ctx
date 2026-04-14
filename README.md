@@ -34,13 +34,13 @@ Read the full **[Thesis](https://ctx.ist/thesis/)**
 
 ## Core Documents
 
-| Document                                                          | Context                                           |
-|-------------------------------------------------------------------|---------------------------------------------------|
-| [Manifesto](https://ctx.ist/manifesto/)                           | Philosophy: creation, context, verification       |
-| [The Thesis](https://ctx.ist/thesis/)                             | Whitepaper: context as deterministic state        |
-| [Design Invariants](https://ctx.ist/reference/design-invariants/) | System properties that must always hold           |
-| [Tool Comparison](https://ctx.ist/reference/comparison/)          | How ctx differs from .cursorrules, Aider, Copilot |
-| [`ctx` Blog](https://ctx.ist/blog/)                               | Deep dives, architecture notes, learnings         |
+| Document                                                          | Context                                             |
+|-------------------------------------------------------------------|-----------------------------------------------------|
+| [Manifesto](https://ctx.ist/manifesto/)                           | Philosophy: creation, context, verification         |
+| [The Thesis](https://ctx.ist/thesis/)                             | Whitepaper: context as deterministic state          |
+| [Design Invariants](https://ctx.ist/reference/design-invariants/) | System properties that must always hold             |
+| [Tool Comparison](https://ctx.ist/reference/comparison/)          | How `ctx` differs from .cursorrules, Aider, Copilot |
+| [`ctx` Blog](https://ctx.ist/blog/)                               | Deep dives, architecture notes, learnings           |
 
 ## The Problem
 
