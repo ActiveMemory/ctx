@@ -29,6 +29,10 @@ import (
 // Returns:
 //   - error: Non-nil if the marker file cannot be written
 func Run(cmd *cobra.Command) error {
+	if !state.Initialized() {
+		return nil
+	}
+
 	markerPath := filepath.Join(state.Dir(), wrap.Marker)
 
 	if writeErr := ctxIo.SafeWriteFile(

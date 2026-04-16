@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	writePause "github.com/ActiveMemory/ctx/internal/write/pause"
@@ -32,6 +33,10 @@ import (
 // Returns:
 //   - error: Always nil
 func Run(cmd *cobra.Command, stdin *os.File) error {
+	if !state.Initialized() {
+		return nil
+	}
+
 	sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
 	if sessionID == "" {
 		input := coreSession.ReadInput(stdin)
