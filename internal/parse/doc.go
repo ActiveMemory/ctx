@@ -45,17 +45,4 @@
 //
 // All functions are pure and stateless. Concurrent
 // callers never race.
-//
-// # Related Packages
-//
-//   - [internal/config/time]      — date and timestamp
-//     format constants this package consumes.
-//   - [internal/steering], [internal/skill],
-//     [internal/journal/parser] — direct consumers of
-//     [SplitFrontmatter].
-//   - [internal/journal/parser]   — consumes
-//     [StripSystemReminders] when normalizing Claude Code
-//     transcripts.
-//   - [internal/memory], [internal/drift]   — consume
-//     [WordSet] for keyword-classification helpers.
 package parse

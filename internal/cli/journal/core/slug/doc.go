@@ -44,15 +44,4 @@
 //
 // All functions are pure. Concurrent callers never
 // race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/importer]   — chief
-//     consumer; calls [ForTitle] when materializing
-//     a session as a journal entry.
-//   - [internal/cli/journal/core/parse]     — reads
-//     slugs out of frontmatter when reconciling
-//     state.
-//   - [internal/cli/journal/cmd/source]     — looks
-//     up entries by slug.
 package slug

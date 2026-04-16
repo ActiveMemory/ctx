@@ -51,16 +51,4 @@
 // Filesystem-bound and stateless. Concurrent
 // invocations would race on the destination file;
 // single-process is the assumed model.
-//
-// # Related Packages
-//
-//   - [internal/cli/initialize/core/merge]   — the
-//     same merger used by `ctx init` for permission
-//     defaults; complementary to this package's
-//     wholesale snapshot/restore.
-//   - [internal/assets/claude/skills/ctx-permission-sanitize]
-//     — the skill that wraps `restore` for
-//     interactive use.
-//   - [internal/config/claude]               — settings
-//     file path constants.
 package permission

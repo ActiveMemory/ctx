@@ -54,15 +54,4 @@
 //
 // File reads are scoped per call; no module-level
 // caches. Concurrent loads are safe.
-//
-// # Related Packages
-//
-//   - [internal/cli/message]              — the
-//     `ctx hook message *` CLI surface.
-//   - [internal/assets/hooks/messages]    — the
-//     embedded default templates.
-//   - [internal/cli/system/cmd/check_*]   — every hook
-//     consumes a message through this package.
-//   - [internal/cli/system/core/nudge]    — the
-//     emitter that renders [NudgeBox] output.
 package message

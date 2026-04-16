@@ -39,15 +39,4 @@
 //
 // All functions are pure data transformations.
 // Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/importer]   — chief
-//     consumer; runs reduce before normalize.
-//   - [internal/cli/journal/core/normalize] — runs
-//     after reduce; assumes its input is already
-//     noise-stripped.
-//   - [internal/cli/journal/core/collapse]  — sister
-//     pass that condenses *large* tool-output blocks
-//     into expandable summaries.
 package reduce

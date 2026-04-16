@@ -1,7 +1,6 @@
 ---
 name: ctx-skill-audit
 description: "Audit skills against Anthropic prompting best practices. Use when reviewing skill quality, after creating or modifying a skill, before releasing skills, or when a skill produces inconsistent results. Also use when the user says 'audit this skill', 'check skill quality', 'review the skills', or 'are our skills any good?'"
-tools: [bash, read, glob, grep]
 ---
 
 Audit one or more skills against Anthropic's prompting best

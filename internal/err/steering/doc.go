@@ -49,13 +49,4 @@
 // # Concurrency
 //
 // Pure constructors. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/steering]              — chief
-//     producer.
-//   - [internal/cli/steering]          — also
-//     producer.
-//   - [internal/write/steering]        — renders
-//     these into user-facing text.
 package steering

@@ -41,13 +41,4 @@
 // # Concurrency
 //
 // Filesystem-bound. Stateless.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/cmd/check_knowledge] —
-//     the hook that fires the warning.
-//   - [internal/rc]                              —
-//     supplies the thresholds.
-//   - [internal/index]                           —
-//     used to count entry blocks.
 package knowledge

@@ -1,7 +1,6 @@
 ---
 name: ctx-brainstorm
 description: "Design before implementation. Use before any creative or constructive work (features, architecture, behavior changes) to transform vague ideas into validated designs."
-tools: [bash, read, write]
 ---
 
 Transform raw ideas into **clear, validated designs** through

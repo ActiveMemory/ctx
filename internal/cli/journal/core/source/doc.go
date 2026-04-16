@@ -38,14 +38,4 @@
 //
 // All helpers are pure data transformations over
 // [entity.Session]. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/source]    — the
-//     `ctx journal source` CLI surface.
-//   - [internal/cli/journal/cmd/importer]  — the
-//     importer that consumes the same renderer to
-//     write enriched journal entries to disk.
-//   - [internal/journal/parser]            — produces
-//     the [entity.Session] this package renders.
 package source

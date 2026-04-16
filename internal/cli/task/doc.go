@@ -53,18 +53,4 @@
 //
 // Filesystem-bound and stateless. Single-process
 // assumption.
-//
-// # Related Packages
-//
-//   - [internal/tidy]                 — the
-//     archival engine that powers `ctx task archive`.
-//   - [internal/task]                 — the parsing
-//     primitives (Completed, Pending, Indent,
-//     Content, Sub) used by Complete to find the
-//     right line.
-//   - [internal/mcp/handler]          — the MCP
-//     `ctx_complete` tool delegates here.
-//   - [internal/cli/system/cmd/check_task_completion]
-//     — the hook that nudges when an edit looks
-//     task-completing but the task was not flipped.
 package task

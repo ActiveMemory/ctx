@@ -76,16 +76,4 @@
 //  4. **No destructive operations without an explicit
 //     `--force`** — `init` does not delete or move user
 //     files.
-//
-// # Related Packages
-//
-//   - [internal/bootstrap]                — wires
-//     `ctx init` into the root cobra tree.
-//   - [internal/assets]                   — the embedded
-//     templates init writes to disk.
-//   - [internal/steering]                 — supplies
-//     [FoundationFiles] for the steering scaffold.
-//   - [internal/cli/setup]                — separate CLI
-//     for re-running just the tool-integration step
-//     after `ctx init`.
 package initialize

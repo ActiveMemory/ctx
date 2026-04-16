@@ -53,14 +53,4 @@
 // # Concurrency
 //
 // Filesystem-bound and stateless.
-//
-// # Related Packages
-//
-//   - [internal/cli/setup]                — the
-//     `ctx setup copilot-cli` CLI surface.
-//   - [internal/cli/setup/core/copilot]   — sister
-//     package for VS Code Copilot Chat.
-//   - [internal/assets/integrations/copilot-cli] —
-//     the embedded source for everything this
-//     package deploys.
 package copilotcli

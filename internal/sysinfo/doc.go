@@ -62,15 +62,4 @@
 // produce independent readings. The `vm_stat` / `sysctl`
 // shell-out path on macOS uses an external process which is
 // the slowest case (~tens of milliseconds).
-//
-// # Related Packages
-//
-//   - [internal/cli/sysinfo]                    — the
-//     top-level `ctx sysinfo` CLI surface.
-//   - [internal/cli/system/cmd/check_resource]  — the
-//     resource-pressure hook.
-//   - [internal/config/sysinfo]                 — procfs
-//     paths and meminfo field-key constants used by Linux.
-//   - [internal/write/sysinfo]                  — terminal
-//     output formatters consumed by both the CLI and hook.
 package sysinfo

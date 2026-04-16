@@ -49,14 +49,4 @@
 //
 // Filesystem-bound and stateless. Concurrent
 // callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/change]    — chief consumer.
-//   - [internal/log/event]     — supplies the event
-//     log [FromEvents] reads.
-//   - [internal/cli/system/cmd/session_event] —
-//     writes the markers [FromMarkers] reads.
-//   - [internal/parse]         — supplies [Date]
-//     used by [ParseSinceFlag].
 package detect

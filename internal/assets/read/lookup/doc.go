@@ -52,17 +52,4 @@
 // All readers are safe for concurrent use after [Init]
 // returns. The single-init guard ensures no race
 // between concurrent first-callers.
-//
-// # Related Packages
-//
-//   - [internal/assets/read/desc]   — the typed
-//     resolver helpers callers actually call
-//     (`desc.Text(key)`, `desc.Command(key)`, etc.);
-//     all delegate to this package.
-//   - [internal/assets/commands]    — the embedded
-//     YAML source for command/flag/text data.
-//   - [internal/cli/agent/core/score] — consumer of
-//     [StopWords].
-//   - [internal/cli/initialize]     — consumer of
-//     the permission defaults.
 package lookup

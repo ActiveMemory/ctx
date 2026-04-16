@@ -70,15 +70,4 @@
 // process-level execution; concurrent invocations against
 // the same context dir would race on file writes (no
 // locking is implemented).
-//
-// # Related Packages
-//
-//   - [internal/cli/task]            — `ctx task archive`,
-//     `ctx task complete`, `ctx task snapshot`.
-//   - [internal/cli/compact]         — `ctx compact` CLI
-//     entry point.
-//   - [internal/mcp/handler]         — MCP `ctx_compact`
-//     tool calls into this package.
-//   - [internal/entity]              — [TaskBlock] and
-//     related domain types.
 package tidy

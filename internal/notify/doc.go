@@ -73,17 +73,4 @@
 // All exported functions are safe to call concurrently;
 // they hold no module-level state. The HTTP client is the
 // stdlib default — connection-pooled and goroutine-safe.
-//
-// # Related Packages
-//
-//   - [internal/cli/notify]       — the `ctx hook notify`
-//     CLI: setup, test, and the bare send invocation.
-//   - [internal/cli/hook]         — parent command that
-//     hosts notify under `ctx hook`.
-//   - [internal/crypto]           — AES-256-GCM helpers
-//     for the encrypted URL store.
-//   - [internal/rc]               — `notify.events`
-//     filter + key-rotation threshold.
-//   - [internal/entity]           — [NotifyPayload],
-//     [TemplateRef] domain types.
 package notify

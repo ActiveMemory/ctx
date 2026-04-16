@@ -35,16 +35,4 @@
 //
 // Pure data → io.Writer. Concurrent calls
 // serialize through cobra's output stream.
-//
-// # Related Packages
-//
-//   - [internal/cli/message]                  —
-//     chief consumer.
-//   - [internal/cli/system/core/message]      —
-//     the resolver that loads messages and
-//     decides override vs default; the badges
-//     this package renders come from there.
-//   - [internal/assets/hooks/messages]        —
-//     the embedded message catalog `list`
-//     enumerates.
 package message

@@ -39,13 +39,4 @@
 //
 // Filesystem-bound. Concurrent calls each pay the
 // full read cost; no module-level cache.
-//
-// # Related Packages
-//
-//   - [internal/cli/site/cmd/feed]   — chief
-//     consumer for RSS/Atom generation.
-//   - [internal/parse]               — supplies
-//     [SplitFrontmatter] used here.
-//   - [internal/entity]              — [BlogPost]
-//     domain type (when promoted to entity).
 package scan

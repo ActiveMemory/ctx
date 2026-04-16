@@ -1,7 +1,6 @@
 ---
 name: ctx-blog
 description: "Generate blog post draft. Use when documenting project progress, sharing learnings, or writing about development experience."
-tools: [bash, read, write]
 ---
 
 <!-- This skill assumes a ctx-style blog layout (docs/blog/, frontmatter,

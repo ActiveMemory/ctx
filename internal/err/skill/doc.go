@@ -36,11 +36,4 @@
 // # Concurrency
 //
 // Pure constructors. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/skill]            — chief producer.
-//   - [internal/cli/skill]        — also producer.
-//   - [internal/write/skill]      — the renderer
-//     that maps these to user text.
 package skill

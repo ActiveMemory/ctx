@@ -1,7 +1,6 @@
 ---
 name: ctx-agent
 description: "Load full context packet. Use at session start or when context seems stale or incomplete."
-tools: [bash]
 ---
 
 Load the full context packet for AI consumption.

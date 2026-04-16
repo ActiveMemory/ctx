@@ -45,16 +45,4 @@
 //
 // Filesystem-bound and stateless. Callers serialize
 // through process-level execution.
-//
-// # Related Packages
-//
-//   - [internal/cli/setup]                 — the
-//     `ctx setup copilot` CLI surface.
-//   - [internal/cli/setup/core/copilot_cli] — sister
-//     package for the Copilot **CLI** integration
-//     (different beast: hook scripts under `.github/
-//     hooks/`, not VS Code chat).
-//   - [internal/cli/initialize/core/merge] — the
-//     marker-aware merger this package uses for the
-//     instructions file.
 package copilot

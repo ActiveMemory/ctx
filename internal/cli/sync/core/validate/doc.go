@@ -41,13 +41,4 @@
 // Filesystem-bound and stateless. Concurrent
 // invocations against the same project each pay
 // the full scan cost.
-//
-// # Related Packages
-//
-//   - [internal/cli/sync]                  — chief
-//     consumer.
-//   - [internal/assets/read/lookup]        — supplies
-//     the pattern set.
-//   - [internal/entity]                    — context
-//     file types.
 package validate

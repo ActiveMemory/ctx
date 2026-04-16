@@ -57,16 +57,4 @@
 // [Query] reads a snapshot of the file; concurrent
 // appends mid-read are tolerated (the worst case is a
 // half-written final line that the JSONL decoder skips).
-//
-// # Related Packages
-//
-//   - [internal/cli/event]            — the `ctx hook
-//     event` CLI surface.
-//   - [internal/config/event]         — file names,
-//     rotation threshold, default-last constant.
-//   - [internal/cli/system/cmd/check_persistence] and
-//     other `check_*` hooks — append events at fire time
-//     and read them at evaluation time.
-//   - [internal/entity]               — [EventQueryOpts]
-//     filter struct.
 package event

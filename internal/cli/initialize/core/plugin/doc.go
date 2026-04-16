@@ -47,13 +47,4 @@
 //
 // Filesystem-bound and stateless; serialized through
 // process-level execution.
-//
-// # Related Packages
-//
-//   - [internal/cli/initialize]                — top-level
-//     orchestrator.
-//   - [internal/cli/initialize/core/claude_check] —
-//     read-only detection.
-//   - [internal/config/claude]                 — settings
-//     file paths and JSON key constants.
 package plugin

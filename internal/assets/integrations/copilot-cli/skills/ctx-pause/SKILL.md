@@ -1,7 +1,6 @@
 ---
 name: ctx-pause
 description: "Pause context hooks for this session. Use when context nudges aren't needed for the current task."
-tools: [bash]
 ---
 
 Pause all context nudge and reminder hooks for the current session.

@@ -30,6 +30,16 @@ If you start something, you own it, you finish it.
 
 ---
 
+## Context Integrity Invariants
+
+- [ ] **Never** modify or reason about a file based on partial or assumed content
+- [ ] If a file is the subject of an operation, its relevant contents must be 
+  **fully understood** before acting
+- [ ] Sampling, guessing, or relying on prior assumptions instead of 
+  reading is a **violation**
+
+---
+
 ## No Excuse Generation
 
 **Never default to deferral.**

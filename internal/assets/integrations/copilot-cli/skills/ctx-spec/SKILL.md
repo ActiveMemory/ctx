@@ -1,7 +1,6 @@
 ---
 name: ctx-spec
 description: "Scaffold a feature spec from the project template. Use when planning a new feature, writing a design document, or when a task references a missing spec."
-tools: [bash, read, write]
 ---
 
 Scaffold a new spec from `specs/tpl/spec-template.md` and walk through

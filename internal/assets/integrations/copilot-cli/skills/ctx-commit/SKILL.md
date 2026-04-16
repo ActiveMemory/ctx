@@ -1,7 +1,6 @@
 ---
 name: ctx-commit
 description: "Commit with context persistence. Use instead of raw git commit to capture decisions and learnings alongside code changes."
-tools: [bash, read, write, edit]
 ---
 
 Commit code changes, then prompt for decisions and learnings

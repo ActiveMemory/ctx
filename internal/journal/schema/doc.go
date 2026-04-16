@@ -66,13 +66,4 @@
 // All exported functions are pure data transformations
 // over byte slices and `[]Finding`. Concurrent callers
 // never race.
-//
-// # Related Packages
-//
-//   - [internal/journal/parser]   — the actual session
-//     parser; this package is its **canary**.
-//   - [internal/cli/journal/cmd/schema]  — the
-//     `ctx journal schema` CLI surface.
-//   - [internal/entity]           — finding and report
-//     types.
 package schema

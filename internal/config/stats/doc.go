@@ -29,14 +29,4 @@
 //
 // All exports are immutable. Safe for any access
 // pattern.
-//
-// # Related Packages
-//
-//   - [internal/cli/status]              — chief
-//     consumer for the status one-liner.
-//   - [internal/cli/agent]               — uses
-//     [StatusIcon] in the per-section budget
-//     summary at the head of the context packet.
-//   - [internal/cli/doctor]              — uses
-//     the same icons in its checklist output.
 package stats

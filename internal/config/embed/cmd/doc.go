@@ -52,16 +52,4 @@
 // `GroupContext`, `GroupRuntime`) name the cobra command
 // groups that organize `ctx --help` output. The grouping is
 // applied at registration time in [internal/bootstrap].
-//
-// # Related Packages
-//
-//   - [internal/assets/read/desc]      — `desc.Command(key)`
-//     and `desc.Example(key)` resolve at run-time.
-//   - [internal/assets/commands]       — the YAML store of
-//     short / long / example text.
-//   - [internal/bootstrap]             — wires every cobra
-//     command and assigns each to a `Group<Section>`.
-//   - [internal/config/embed/text],
-//     [internal/config/embed/flag]     — sister key
-//     registries for general text and flag help.
 package cmd

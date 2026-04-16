@@ -54,19 +54,4 @@
 // concurrent updates to the same file would race on the
 // final write (no per-file locking is implemented — the
 // CLI is single-process anyway).
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/lock] /
-//     [internal/cli/journal/cmd/unlock] — the user-facing
-//     CLI surface.
-//   - [internal/cli/journal/cmd/sync] — frontmatter ↔
-//     state-file reconciliation.
-//   - [internal/journal/state]       — the denormalized
-//     state file the importer consults at scan time.
-//   - [internal/cli/journal/cmd/importer] — the importer
-//     that respects `locked: true` and reports skipped
-//     files.
-//   - [internal/parse]               — [SplitFrontmatter]
-//     used by [UpdateFrontmatter].
 package lock

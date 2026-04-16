@@ -53,17 +53,4 @@
 // Stateless and filesystem-bound. Concurrent
 // invocations against the same directory each pay
 // the full read cost — by design, see above.
-//
-// # Related Packages
-//
-//   - [internal/cli/agent]            — chief
-//     consumer.
-//   - [internal/cli/drift]            — also consumes
-//     the loaded context.
-//   - [internal/mcp/handler]          — every MCP
-//     tool that operates on context calls [Do].
-//   - [internal/rc]                   — supplies the
-//     priority order and the resolved context dir.
-//   - [internal/entity]               — the
-//     [Context] type produced.
 package load

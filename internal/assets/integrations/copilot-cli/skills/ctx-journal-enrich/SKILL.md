@@ -1,7 +1,6 @@
 ---
 name: ctx-journal-enrich
 description: "Enrich journal entry with metadata. Use when journal entries lack frontmatter, tags, or summary for future reference."
-tools: [bash, read, write, edit]
 ---
 
 Enrich a session journal entry with structured metadata.
