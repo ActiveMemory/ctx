@@ -71,21 +71,24 @@ release notes, run the release script, and verify the result.
 
 ## Runbooks
 
-Step-by-step procedures in `hack/runbooks/`. Run these
-regularly — they catch problems that linters and tests cannot.
+Step-by-step procedures you run with your agent. Each runbook
+includes a prompt to paste into a Claude Code session and
+guidance on triaging the results.
 
 | Runbook | Purpose | When to run |
 |---------|---------|-------------|
-| [Codebase audit](../../hack/runbooks/codebase-audit.md) | AST audits, magic strings, dead code, doc alignment | Before release, quarterly |
-| [Docs semantic audit](../../hack/runbooks/docs-semantic-audit.md) | Narrative gaps, weak pages, structural problems | Before release, after adding pages |
-| [Sanitize permissions](../../hack/runbooks/sanitize-permissions.md) | Clean `.claude/settings.local.json` of over-broad grants | After heavy permission granting |
+| [Release checklist](runbooks/release-checklist.md) | Full pre-release sequence | Before every release |
+| [Plugin release](runbooks/plugin-release.md) | Plugin-specific release steps | Plugin changes ship |
+| [Breaking migration](runbooks/breaking-migration.md) | Guide users across breaking changes | Releases with renames |
+| [Hub deployment](runbooks/hub-deployment.md) | Set up a ctx Hub end-to-end | First-time hub setup |
+| [New contributor](runbooks/new-contributor.md) | Onboarding: clone to first session | New contributors |
+| [Codebase audit](runbooks/codebase-audit.md) | AST audits, magic strings, dead code, doc alignment | Before release, quarterly |
+| [Docs semantic audit](runbooks/docs-semantic-audit.md) | Narrative gaps, weak pages, structural problems | Before release, after adding pages |
+| [Sanitize permissions](runbooks/sanitize-permissions.md) | Clean `.claude/settings.local.json` of over-broad grants | After heavy permission granting |
 
 **Recommended cadence**:
 
-- **Before every release**: codebase audit + docs semantic audit
+- **Before every release**: release checklist (which includes
+  codebase audit + docs semantic audit)
 - **Monthly**: sanitize permissions
-- **Quarterly**: full sweep of all three
-
-The `_ctx-release` skill runs the codebase audit automatically
-as part of its pre-release checks. The other two are manual —
-add them to your release checklist.
+- **Quarterly**: full sweep of all audit runbooks

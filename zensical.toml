@@ -188,6 +188,16 @@ nav = [
     { "Maintainers" = [
       "operations/release.md",
     ]},
+    { "Runbooks" = [
+      "operations/runbooks/release-checklist.md",
+      "operations/runbooks/plugin-release.md",
+      "operations/runbooks/breaking-migration.md",
+      "operations/runbooks/hub-deployment.md",
+      "operations/runbooks/new-contributor.md",
+      "operations/runbooks/codebase-audit.md",
+      "operations/runbooks/docs-semantic-audit.md",
+      "operations/runbooks/sanitize-permissions.md",
+    ]},
   ]},
   { "Security" = [
     "security/index.md",

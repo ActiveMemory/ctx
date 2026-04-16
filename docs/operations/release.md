@@ -11,6 +11,12 @@ icon: lucide/package
 
 ![ctx](../images/ctx-banner.png)
 
+!!! tip "Full Release Checklist"
+    This page covers the **mechanics** of cutting a release (bump, tag, push).
+    For the complete pre-release ceremony — audits, tests, verification, and
+    post-release steps — see the
+    [Release Checklist runbook](runbooks/release-checklist.md).
+
 ## Prerequisites
 
 Before you can cut a release you need:

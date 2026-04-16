@@ -331,6 +331,30 @@
         <loc>https://ctx.ist/operations/release/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/operations/runbooks/release-checklist/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/runbooks/plugin-release/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/runbooks/breaking-migration/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/runbooks/hub-deployment/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/runbooks/new-contributor/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/runbooks/codebase-audit/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/runbooks/docs-semantic-audit/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/runbooks/sanitize-permissions/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/security/</loc>
       </url>
       <url>
