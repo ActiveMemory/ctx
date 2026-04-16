@@ -17,16 +17,16 @@
 // context file paths, and writes structured entries.
 // Errors fall into three categories:
 //
-//   - **Missing content** -- the user invoked add
+//   - **Missing content**: the user invoked add
 //     without providing a value via flag, argument,
 //     or stdin. Constructors: [NoContent],
 //     [NoContentProvided].
-//   - **Validation** -- the entry type is unknown,
+//   - **Validation**: the entry type is unknown,
 //     a required field is absent, or the --section
 //     flag was omitted for tasks. Constructors:
 //     [UnknownType], [MissingFields],
 //     [SectionRequired].
-//   - **File operations** -- the target context
+//   - **File operations**: the target context
 //     file does not exist or its index could not
 //     be updated. Constructors: [FileNotFound],
 //     [IndexUpdate].

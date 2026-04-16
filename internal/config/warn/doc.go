@@ -17,32 +17,32 @@
 //
 // # File I/O Formats
 //
-//   - [Close]   — file close failure.
-//   - [Write]   — file write failure.
-//   - [Remove]  — file remove failure.
-//   - [Mkdir]   — directory creation failure.
-//   - [Rename]  — file rename failure.
-//   - [Walk]    — directory walk failure.
-//   - [Readdir] — directory read failure.
-//   - [Getwd]   — working directory resolution.
+//   - [Close]: file close failure.
+//   - [Write]: file write failure.
+//   - [Remove]: file remove failure.
+//   - [Mkdir]: directory creation failure.
+//   - [Rename]: file rename failure.
+//   - [Walk]: directory walk failure.
+//   - [Readdir]: directory read failure.
+//   - [Getwd]: working directory resolution.
 //
 // # Serialization Formats
 //
-//   - [Marshal]    — JSON marshal failure.
-//   - [JSONEncode] — JSON-safe error for encoding
+//   - [Marshal]: JSON marshal failure.
+//   - [JSONEncode]: JSON-safe error for encoding
 //     failures (returns valid JSON).
 //
 // # Specialized Formats
 //
-//   - [ParseConfig]    — config file parse failure
+//   - [ParseConfig]: config file parse failure
 //     with a "using defaults" note.
-//   - [CloseResponse]  — HTTP response body close.
-//   - [CopilotClose]   — Copilot CLI file close.
+//   - [CloseResponse]: HTTP response body close.
+//   - [CopilotClose]: Copilot CLI file close.
 //
 // # Context Identifiers
 //
 //   - [IndexHeader], [IndexSeparator], [IndexRow],
-//     [ResponseBody] — labels attached to warnings
+//     [ResponseBody]: labels attached to warnings
 //     for traceability in index generation and HTTP
 //     operations.
 //

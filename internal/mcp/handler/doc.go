@@ -10,7 +10,7 @@
 //
 // The package is intentionally protocol-free. Every exported
 // function takes typed Go parameters (a `*entity.MCPDeps`, a
-// path, a string, a struct) and returns `(string, error)` —
+// path, a string, a struct) and returns `(string, error)`:
 // the formatted user-facing reply and a Go error. The sister
 // package [internal/mcp/server] handles JSON-RPC framing,
 // argument extraction from `map[string]any`, and response
@@ -25,38 +25,38 @@
 // MCP tools advertised by the server. A non-exhaustive
 // inventory:
 //
-//   - [Status]                 — context summary (file list,
+//   - [Status]:                 context summary (file list,
 //     token counts, drift signals).
-//   - **`ctx_add`**            — add a task / decision /
+//   - **`ctx_add`**:            add a task / decision /
 //     learning / convention.
-//   - **`ctx_complete`**       — flip a task from `[ ]` to
+//   - **`ctx_complete`**:       flip a task from `[ ]` to
 //     `[x]` via [taskComplete].
-//   - **`ctx_compact`**        — invoke [tidy] to archive
+//   - **`ctx_compact`**:        invoke [tidy] to archive
 //     done work.
-//   - **`ctx_drift`**          — run [drift.Detect] and
+//   - **`ctx_drift`**:          run [drift.Detect] and
 //     render the report.
-//   - **`ctx_journal_source`** — list raw session
+//   - **`ctx_journal_source`**: list raw session
 //     transcripts via [journal/parser].
-//   - **`ctx_search`**         — text search across context
+//   - **`ctx_search`**:         text search across context
 //     files via [internal/entry].
-//   - **`ctx_remind`**         — read/dismiss reminders via
+//   - **`ctx_remind`**:         read/dismiss reminders via
 //     [remindStore].
-//   - **`ctx_session_*`**      — `session_start`,
+//   - **`ctx_session_*`**:      `session_start`,
 //     `session_end`, `session_event` lifecycle plumbing
 //     (covered in [session_hooks.go]).
-//   - **`ctx_steering_get`**   — surface matched steering
+//   - **`ctx_steering_get`**:   surface matched steering
 //     files via [steering.go] (see [internal/steering]).
-//   - **`ctx_check_task_completion`** — match recent file
+//   - **`ctx_check_task_completion`**: match recent file
 //     edits to open tasks.
-//   - **`ctx_watch_update`**   — apply context updates the
+//   - **`ctx_watch_update`**:   apply context updates the
 //     agent emits in `<ctx-update>` blocks.
 //
 // Each function loads context fresh via [load.Do] when it
-// needs current state — there is no per-tool cache. This
+// needs current state; there is no per-tool cache. This
 // keeps the response correct after edits the agent itself
 // just made.
 //
-// # Governance — The Append-on-Every-Reply Layer
+// # Governance: The Append-on-Every-Reply Layer
 //
 // [governance.go] implements the **governance trailer**:
 // short, structured warnings that ride along with every MCP
@@ -70,7 +70,7 @@
 // The function is a free function rather than a method on
 // `MCPSession` precisely because it does I/O (reading the
 // violations file). `toolName` is passed in so the function
-// can suppress redundant warnings — e.g. the drift warning
+// can suppress redundant warnings, e.g. the drift warning
 // is not appended to a `ctx_drift` response, since the user
 // is already looking at it.
 //

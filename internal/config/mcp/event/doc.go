@@ -15,11 +15,11 @@
 //
 // # Key Constants
 //
-//   - [Start] ("start") -- sent when the agent begins a
+//   - [Start] ("start"): sent when the agent begins a
 //     new session. The MCP server uses this to
 //     initialize per-session state such as the tool
 //     call counter and the drift check timer.
-//   - [End] ("end") -- sent when the agent is about to
+//   - [End] ("end"): sent when the agent is about to
 //     exit. The server flushes pending writes,
 //     records a journal entry, and tears down session
 //     state.

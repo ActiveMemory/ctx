@@ -1389,7 +1389,7 @@
   <a href="#step-1-bootstrap-the-first-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1 — Bootstrap the First Node
+        Step 1: Bootstrap the First Node
       
     </span>
   </a>
@@ -1400,7 +1400,7 @@
   <a href="#step-2-start-the-other-nodes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2 — Start the Other Nodes
+        Step 2: Start the Other Nodes
       
     </span>
   </a>
@@ -1411,7 +1411,7 @@
   <a href="#step-3-verify-cluster-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3 — Verify Cluster State
+        Step 3: Verify Cluster State
       
     </span>
   </a>
@@ -1422,7 +1422,7 @@
   <a href="#step-4-register-clients-with-failover-peers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4 — Register Clients with Failover Peers
+        Step 4: Register Clients with Failover Peers
       
     </span>
   </a>
@@ -1817,7 +1817,7 @@
   <a href="#step-1-bootstrap-the-first-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1 — Bootstrap the First Node
+        Step 1: Bootstrap the First Node
       
     </span>
   </a>
@@ -1828,7 +1828,7 @@
   <a href="#step-2-start-the-other-nodes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2 — Start the Other Nodes
+        Step 2: Start the Other Nodes
       
     </span>
   </a>
@@ -1839,7 +1839,7 @@
   <a href="#step-3-verify-cluster-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3 — Verify Cluster State
+        Step 3: Verify Cluster State
       
     </span>
   </a>
@@ -1850,7 +1850,7 @@
   <a href="#step-4-register-clients-with-failover-peers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4 — Register Clients with Failover Peers
+        Step 4: Register Clients with Failover Peers
       
     </span>
   </a>
@@ -1992,7 +1992,7 @@ redundancy. Any follower can take over if the leader dies.</p>
 <p>This recipe assumes you've read the
 <a href="../hub-overview/"><code>ctx</code> Hub overview</a> and the
 <a href="../hub-multi-machine/">Multi-machine setup</a>. HA only makes
-sense in the "small trusted team" story — a personal
+sense in the "small trusted team" story; a personal
 cross-project brain on one workstation does not need three Raft
 peers.</p>
 <div class="admonition warning">
@@ -2008,7 +2008,7 @@ crashes <strong>between</strong> accepting a write and replicating it,
 that write can be lost. Do not use the hub as a bank ledger.</p>
 </div>
 <h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
-<p>A minimum HA cluster is <strong>three</strong> nodes. Two is worse than one —
+<p>A minimum HA cluster is <strong>three</strong> nodes. Two is worse than one:
 it doubles failure probability without providing quorum.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>         +-------------+
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>         |  client(s)  |
@@ -2025,13 +2025,13 @@ it doubles failure probability without providing quorum.</p>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        Raft (leader election)
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        gRPC (data sync)
 </span></code></pre></div>
-<h2 id="step-1-bootstrap-the-first-node">Step 1 — Bootstrap the First Node<a class="headerlink" href="#step-1-bootstrap-the-first-node" title="Permanent link">&para;</a></h2>
+<h2 id="step-1-bootstrap-the-first-node">Step 1: Bootstrap the First Node<a class="headerlink" href="#step-1-bootstrap-the-first-node" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--daemon<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--port<span class="w"> </span><span class="m">9900</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--peers<span class="w"> </span>hub-b.lan:9900,hub-c.lan:9900
 </span></code></pre></div>
 <p>The node starts a Raft election as soon as it sees its peers.</p>
-<h2 id="step-2-start-the-other-nodes">Step 2 — Start the Other Nodes<a class="headerlink" href="#step-2-start-the-other-nodes" title="Permanent link">&para;</a></h2>
+<h2 id="step-2-start-the-other-nodes">Step 2: Start the Other Nodes<a class="headerlink" href="#step-2-start-the-other-nodes" title="Permanent link">&para;</a></h2>
 <p>On <code>hub-b.lan</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--daemon<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--port<span class="w"> </span><span class="m">9900</span><span class="w"> </span><span class="se">\</span>
@@ -2044,7 +2044,7 @@ it doubles failure probability without providing quorum.</p>
 </span></code></pre></div>
 <p>After a few seconds, one node wins the election and becomes the
 <strong>leader</strong>. The other two are followers.</p>
-<h2 id="step-3-verify-cluster-state">Step 3 — Verify Cluster State<a class="headerlink" href="#step-3-verify-cluster-state" title="Permanent link">&para;</a></h2>
+<h2 id="step-3-verify-cluster-state">Step 3: Verify Cluster State<a class="headerlink" href="#step-3-verify-cluster-state" title="Permanent link">&para;</a></h2>
 <p>From any node:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>status
 </span></code></pre></div>
@@ -2056,7 +2056,7 @@ it doubles failure probability without providing quorum.</p>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>entries:    1248
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>uptime:     3h42m
 </span></code></pre></div>
-<h2 id="step-4-register-clients-with-failover-peers">Step 4 — Register Clients with Failover Peers<a class="headerlink" href="#step-4-register-clients-with-failover-peers" title="Permanent link">&para;</a></h2>
+<h2 id="step-4-register-clients-with-failover-peers">Step 4: Register Clients with Failover Peers<a class="headerlink" href="#step-4-register-clients-with-failover-peers" title="Permanent link">&para;</a></h2>
 <p>When registering a client, give it the <strong>full peer list</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>hub-a.lan:9900<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--token<span class="w"> </span>ctx_adm_...<span class="w"> </span><span class="se">\</span>
@@ -2114,11 +2114,11 @@ then reconnect to the new leader.</p>
 <a href="../../operations/hub-failure-modes/">Hub failure modes</a>.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../hub-multi-machine/">Multi-machine recipe</a> — single-node
+<li><a href="../hub-multi-machine/">Multi-machine recipe</a>: single-node
   deployment</li>
-<li><a href="../../operations/hub/">Hub operations</a> — backup and
+<li><a href="../../operations/hub/">Hub operations</a>: backup and
   maintenance</li>
-<li><a href="../../security/hub/">Hub security model</a> — TLS, tokens</li>
+<li><a href="../../security/hub/">Hub security model</a>: TLS, tokens</li>
 </ul>
 
 

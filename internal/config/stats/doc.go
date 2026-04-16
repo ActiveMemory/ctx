@@ -10,18 +10,18 @@
 // percentages that decide which icon to use, and the
 // per-line format strings the renderers consume.
 //
-// The package is a typed constants registry — no logic.
+// The package is a typed constants registry, not logic.
 //
 // # Public Surface
 //
-//   - **[StatusIcon]** — map from status level to
+//   - **[StatusIcon]**: map from status level to
 //     the rendered glyph; consumed by `ctx status`,
 //     `ctx doctor`, and the per-section size lines
 //     in the agent context packet.
-//   - **Threshold percentage constants** — `ok` /
+//   - **Threshold percentage constants**: `ok` /
 //     `warn` / `danger` boundaries the renderers
 //     use to pick the matching icon.
-//   - **Format-string constants** — the per-line
+//   - **Format-string constants**: the per-line
 //     templates used to render "FILE:  N tokens
 //     (PCT%)" rows.
 //

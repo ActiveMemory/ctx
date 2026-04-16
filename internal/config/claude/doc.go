@@ -50,13 +50,13 @@
 // ctx ships as a Claude Code plugin. These constants
 // manage plugin identity and permissions:
 //
-//   - [Binary] -- the "claude" executable name
-//   - [Md] -- the CLAUDE.md project config file
-//   - [Settings] / [SettingsGolden] -- local settings
-//   - [PluginID] -- the plugin identifier
-//   - [PluginScope] / [PluginScopeWildcard] -- permission
+//   - [Binary]: the "claude" executable name
+//   - [Md]: the CLAUDE.md project config file
+//   - [Settings] / [SettingsGolden]: local settings
+//   - [PluginID]: the plugin identifier
+//   - [PluginScope] / [PluginScopeWildcard]: permission
 //     scope prefixes for skill permissions
-//   - [PermSkillPrefix] / [PermSkillSuffix] -- tokens
+//   - [PermSkillPrefix] / [PermSkillSuffix]: tokens
 //     that wrap skill names in permission strings
 //
 // # Why Centralized

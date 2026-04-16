@@ -33,21 +33,21 @@
 // Each check lives in its own _test.go file, one test
 // function per file. Categories include:
 //
-//   - **Naming** — stuttery function names, descKey
+//   - **Naming**: stuttery function names, descKey
 //     namespace alignment, mixed-visibility files.
-//   - **Error handling** — naked errors, errors.As
+//   - **Error handling**: naked errors, errors.As
 //     usage, unchecked fmt returns, printf calls.
-//   - **Code hygiene** — magic strings, magic values,
+//   - **Code hygiene**: magic strings, magic values,
 //     raw file I/O, raw logging, raw time formats,
 //     string-concat paths, literal whitespace.
-//   - **Structure** — CLI command structure, core
+//   - **Structure**: CLI command structure, core
 //     structure, cross-package types, dead exports,
 //     type file conventions.
-//   - **Documentation** — doc comment alignment, doc
+//   - **Documentation**: doc comment alignment, doc
 //     comments, doc structure, package doc quality.
-//   - **Assets** — YAML content drift, YAML examples
+//   - **Assets**: YAML content drift, YAML examples
 //     registry, YAML linkage.
-//   - **Permissions** — flagbind usage, import shadow,
+//   - **Permissions**: flagbind usage, import shadow,
 //     variable shadowing.
 //
 // See specs/ast-audit-tests.md for the full check

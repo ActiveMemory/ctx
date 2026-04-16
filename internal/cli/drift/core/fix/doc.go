@@ -19,29 +19,29 @@
 //
 // # What Gets Auto-Fixed
 //
-//   - **Stale-completed tasks** — tasks marked `[x]`
+//   - **Stale-completed tasks**: tasks marked `[x]`
 //     in the body of TASKS.md (not in a Completed
 //     section) are archived via [internal/tidy].
-//   - **Missing required files** — empty placeholders
+//   - **Missing required files**: empty placeholders
 //     for the foundation files (CONSTITUTION,
 //     CONVENTIONS, etc.) are deployed from the
 //     embedded templates.
 //
 // # What Stays Manual
 //
-//   - **Dead path references** — the package cannot
+//   - **Dead path references**: the package cannot
 //     know whether a path is genuinely gone or just
 //     temporarily missing.
-//   - **Leaked secrets** — the user must redact and
+//   - **Leaked secrets**: the user must redact and
 //     rotate; auto-removal could corrupt history.
-//   - **Constitution violations** — the user agreed
+//   - **Constitution violations**: the user agreed
 //     to the rule and must un-violate it.
-//   - **File-age warnings** — staleness is
+//   - **File-age warnings**: staleness is
 //     informational, not fixable.
 //
 // # Public Surface
 //
-//   - **[Apply](report, contextDir)** — walks the
+//   - **[Apply](report, contextDir)**: walks the
 //     report, applies fixable issues, returns a
 //     summary of what was changed and what was
 //     skipped.

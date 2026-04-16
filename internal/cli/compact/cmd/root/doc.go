@@ -13,13 +13,13 @@
 // The command performs two housekeeping passes over
 // the .context/ directory:
 //
-//  1. Task compaction -- moves completed tasks in
+//  1. Task compaction: moves completed tasks in
 //     TASKS.md to a "Completed (Recent)" section.
 //     When --archive or .ctxrc auto_archive is
 //     enabled, older completed tasks are moved to
 //     .context/archive/ files.
 //
-//  2. Section cleanup -- removes empty markdown
+//  2. Section cleanup: removes empty markdown
 //     sections from all context files (TASKS.md,
 //     DECISIONS.md, LEARNINGS.md, CONVENTIONS.md).
 //

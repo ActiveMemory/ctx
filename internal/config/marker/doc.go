@@ -32,16 +32,16 @@
 //
 // # Marker Pairs Defined Here
 //
-//   - **ctx:context** — the persistent-context block
+//   - **ctx:context**: the persistent-context block
 //     in `CLAUDE.md`-style files.
-//   - **ctx:copilot** — the persistent-context block
+//   - **ctx:copilot**: the persistent-context block
 //     in `.github/copilot-instructions.md`.
-//   - **ctx:agents**  — the equivalent block in
+//   - **ctx:agents**: the equivalent block in
 //     `AGENTS.md`.
-//   - **ctx:permissions** — the auto-managed allow/
+//   - **ctx:permissions**: the auto-managed allow/
 //     deny entries in `settings.local.json`-style
 //     comments.
-//   - **INDEX:START / INDEX:END** — the
+//   - **INDEX:START / INDEX:END**: the
 //     auto-generated index table inside
 //     DECISIONS.md / LEARNINGS.md.
 //

@@ -44,7 +44,7 @@ If you added, removed, or modified hooks:
 make audit
 ```
 
-Check that `plugin.json` lists all hooks correctly — missing
+Check that `plugin.json` lists all hooks correctly. Missing
 hooks silently fail to fire.
 
 ## Step 2: Bump Version

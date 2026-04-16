@@ -29,9 +29,9 @@
 //
 // # Key Constants
 //
-//   - ThrottleID -- state file name for daily
+//   - ThrottleID: state file name for daily
 //     throttle ("check-knowledge").
-//   - VarFileWarnings -- template variable key
+//   - VarFileWarnings: template variable key
 //     injected into hook messages with the list
 //     of file-level warnings.
 package knowledge

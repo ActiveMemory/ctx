@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package lock manages **journal entry lock state** — the
+// Package lock manages **journal entry lock state**: the
 // `locked: true` frontmatter flag that protects an enriched
 // journal entry from being clobbered by a re-import of its
 // raw source session.
@@ -17,18 +17,18 @@
 //
 // # The Surface
 //
-//   - **[MatchJournalFiles](dir, pattern)** — finds journal
+//   - **[MatchJournalFiles](dir, pattern)**: finds journal
 //     files matching a CLI pattern (slug, date, ID, glob).
 //     Used by `ctx journal lock <pattern>` and `ctx journal
 //     unlock <pattern>` to expand a pattern to a concrete
 //     list of files. Pattern semantics match what the
 //     user-facing CLI documents.
-//   - **[MultipartBase](filename)** — extracts the base
+//   - **[MultipartBase](filename)**: extracts the base
 //     name from a multipart filename (e.g.
 //     `2026-04-12-foo--part2.md` → `2026-04-12-foo`). The
 //     lock state for a multipart entry lives on the **base
 //     part**, and other parts inherit it.
-//   - **[UpdateFrontmatter](path, lock)** — atomic update
+//   - **[UpdateFrontmatter](path, lock)**: atomic update
 //     of the `locked:` field in a file's YAML frontmatter.
 //     Adds the field if missing; removes it when `lock` is
 //     false (rather than writing `locked: false`, which
@@ -52,6 +52,6 @@
 // only for the duration of the read+write. Concurrent
 // invocations against different files never race;
 // concurrent updates to the same file would race on the
-// final write (no per-file locking is implemented — the
+// final write (no per-file locking is implemented; the
 // CLI is single-process anyway).
 package lock

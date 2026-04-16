@@ -206,22 +206,22 @@ These tools are designed for:
 
 `ctx` is intentionally:
 
-* **local-first** — context lives next to your code, not
+* **local-first**: context lives next to your code, not
   behind a service boundary.
-* **file-based** — everything important is a markdown
+* **file-based**: everything important is a markdown
   file you can read, diff, grep, and version-control.
-* **single-binary core** — the context persistence path
+* **single-binary core**: the context persistence path
   (`init`, `add`, `agent`, `status`, `drift`, `load`,
   `sync`, `compact`, `task`, `decision`, `learning`, and
   their siblings) is a single Go binary with no required
-  runtime dependencies. Optional integrations — `ctx
+  runtime dependencies. Optional integrations (`ctx
   trace` (needs `git`), `ctx serve` (needs `zensical`),
   the `ctx` Hub (needs a running hub), Claude Code
-  plugin (needs `claude`) — are opt-in and each declares
+  plugin (needs `claude`)) are opt-in and each declares
   its dependency explicitly.
-* **CLI-driven** — every feature is reachable from the
+* **CLI-driven**: every feature is reachable from the
   command line and scriptable.
-* **developer-controlled** — no auto-updating cloud
+* **developer-controlled**: no auto-updating cloud
   service, no telemetry, no account to sign up for.
 
 The core `ctx` binary does not require:

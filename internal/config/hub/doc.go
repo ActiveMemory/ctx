@@ -18,64 +18,64 @@
 //
 // # gRPC Service Descriptor
 //
-//   - ServiceName ("ctx.hub.v1.CtxHub") -- the fully
+//   - ServiceName ("ctx.hub.v1.CtxHub"): the fully
 //     qualified gRPC service name
-//   - ServicePath -- the service path prefix for
+//   - ServicePath: the service path prefix for
 //     method descriptors
 //   - MethodRegister, MethodPublish, MethodSync,
-//     MethodListen, MethodStatus -- RPC method names
+//     MethodListen, MethodStatus: RPC method names
 //   - PathRegister, PathPublish, PathSync,
-//     PathListen, PathStatus -- full method paths
-//   - ProtoFile ("hub.proto") -- virtual proto file
+//     PathListen, PathStatus: full method paths
+//   - ProtoFile ("hub.proto"): virtual proto file
 //     name in the service descriptor
 //
 // # Authentication
 //
-//   - HeaderAuthorization -- gRPC metadata key for
+//   - HeaderAuthorization: gRPC metadata key for
 //     bearer tokens
-//   - BearerPrefix ("Bearer ") -- prefix stripped
+//   - BearerPrefix ("Bearer "): prefix stripped
 //     from authorization header values
-//   - AdminTokenPrefix ("ctx_adm_") -- prefix for
+//   - AdminTokenPrefix ("ctx_adm_"): prefix for
 //     admin tokens
-//   - ClientTokenPrefix ("ctx_cli_") -- prefix for
+//   - ClientTokenPrefix ("ctx_cli_"): prefix for
 //     client tokens
-//   - TokenBytes (32) -- random bytes in generated
+//   - TokenBytes (32): random bytes in generated
 //     bearer tokens
 //
 // # Entry Metadata Fields
 //
-//   - MetaDisplayName, MetaHost, MetaTool, MetaVia
-//     -- JSON field names validated during publish
-//   - StructTagJSON -- struct tag key for field name
+//   - MetaDisplayName, MetaHost, MetaTool, MetaVia:
+//     JSON field names validated during publish
+//   - StructTagJSON: struct tag key for field name
 //     resolution
 //
 // # Persistence Files
 //
-//   - FileEntries ("entries.jsonl") -- append-only
+//   - FileEntries ("entries.jsonl"): append-only
 //     entry store
 //   - FileClients, FileMeta, FileSyncState,
-//     FileSyncLock, FileConnect -- client registry,
+//     FileSyncLock, FileConnect: client registry,
 //     metadata, sync state, lock, and encrypted
 //     connection config files
 //   - FilePID ("hub.pid"), FileAdminToken,
-//     DirHubData -- daemon management files
-//   - JSONIndent, LockSentinel, SuffixPluralMD
-//     -- formatting and naming helpers
+//     DirHubData: daemon management files
+//   - JSONIndent, LockSentinel, SuffixPluralMD:
+//     formatting and naming helpers
 //
 // # Raft Cluster Configuration
 //
-//   - RaftDir ("raft") -- subdirectory for Raft state
-//   - RaftTransport ("tcp") -- transport protocol
-//   - RaftLogDB ("log.db") -- BoltDB log file
+//   - RaftDir ("raft"): subdirectory for Raft state
+//   - RaftTransport ("tcp"): transport protocol
+//   - RaftLogDB ("log.db"): BoltDB log file
 //
 // # Validation Limits
 //
-//   - MaxContentLen (1 MB) -- maximum entry content
-//   - MaxMetaFieldLen (256) -- per-field meta cap
-//   - MaxMetaTotalLen (2048) -- total meta cap
-//   - MetaControlSpaceLow, MetaControlDelete --
+//   - MaxContentLen (1 MB): maximum entry content
+//   - MaxMetaFieldLen (256): per-field meta cap
+//   - MaxMetaTotalLen (2048): total meta cap
+//   - MetaControlSpaceLow, MetaControlDelete:
 //     control character boundaries
-//   - ClientIDBytes (16) -- UUID byte length
+//   - ClientIDBytes (16): UUID byte length
 //
 // # Error Messages
 //
@@ -86,12 +86,12 @@
 //
 // # Daemon and Peer Management
 //
-//   - ArgHub, ArgStart -- re-exec argument tokens
-//   - ActionAdd, ActionRemove -- peer action names
-//   - RoleFollower, RoleActive -- status role labels
-//   - ReplicateInterval (5s) -- follower retry
+//   - ArgHub, ArgStart: re-exec argument tokens
+//   - ActionAdd, ActionRemove: peer action names
+//   - RoleFollower, RoleActive: status role labels
+//   - ReplicateInterval (5s): follower retry
 //     interval
-//   - ThrottleHubSync -- daily sync throttle marker
+//   - ThrottleHubSync: daily sync throttle marker
 //
 // # Why Centralized
 //

@@ -32,8 +32,8 @@
 //
 // # Subpackages
 //
-//	cmd/sync, cmd/status, cmd/diff -- mirror operations
-//	cmd/importer -- entry classification and promotion
-//	cmd/publish, cmd/unpublish -- bidirectional sync
-//	core -- mirror discovery, diff, and classification
+//	cmd/sync, cmd/status, cmd/diff: mirror operations
+//	cmd/importer: entry classification and promotion
+//	cmd/publish, cmd/unpublish: bidirectional sync
+//	core: mirror discovery, diff, and classification
 package memory

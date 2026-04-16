@@ -14,11 +14,11 @@
 //
 // Errors fall into two categories:
 //
-//   - **Not found** -- the .context/ directory does
+//   - **Not found**: the .context/ directory does
 //     not exist. The [NotFoundError] struct
 //     implements the error interface and supports
 //     errors.As matching. Constructor: [NotFound].
-//   - **Security validation** -- the directory or a
+//   - **Security validation**: the directory or a
 //     file inside it is a symlink, or the directory
 //     resolves outside the project root.
 //     Constructors: [OutsideRoot], [DirSymlink],

@@ -17,15 +17,15 @@
 // The [Mode] enum and [Opts] struct define the four
 // operations:
 //
-//   - ModeReplace / [Replace] -- overwrites the entry
+//   - ModeReplace / [Replace]: overwrites the entry
 //     at 1-based index n with new text.
-//   - ModeAppend / [Append] -- appends text after the
+//   - ModeAppend / [Append]: appends text after the
 //     existing entry. For blob entries, the text is
 //     appended to the label portion only.
-//   - ModePrepend / [Prepend] -- prepends text before
+//   - ModePrepend / [Prepend]: prepends text before
 //     the existing entry. For blob entries, the text
 //     is prepended to the label portion only.
-//   - ModeBlob / [UpdateBlob] -- replaces the file
+//   - ModeBlob / [UpdateBlob]: replaces the file
 //     content and/or label of a blob entry. Either
 //     field can be left empty to keep the existing
 //     value. File size is validated against

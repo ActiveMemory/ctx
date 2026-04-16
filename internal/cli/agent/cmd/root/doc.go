@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package root implements **`ctx agent`** — the command
+// Package root implements **`ctx agent`**, the command
 // that produces an AI-ready, token-budgeted context
 // packet for injection into the next prompt.
 //
@@ -16,12 +16,12 @@
 //
 // # Public Surface
 //
-//   - **[Cmd]** — cobra command with `--budget N`
+//   - **[Cmd]**: cobra command with `--budget N`
 //     (default 8000), `--format markdown|json`,
 //     `--include-hub`, and the `--prompt <text>`
 //     companion that lets the budget allocator score
 //     for relevance against the user's actual prompt.
-//   - **[Run]** — loads context via
+//   - **[Run]**: loads context via
 //     [internal/context/load], optionally folds in
 //     hub entries (`--include-hub`), assembles the
 //     packet via [internal/cli/agent/core/budget],
@@ -31,7 +31,7 @@
 //
 // # Performance
 //
-// The whole call typically completes in 50–150 ms on
+// The whole call typically completes in 50-150 ms on
 // a project with hundreds of entries. The cost is
 // dominated by file IO (the per-file token estimator
 // is fast), which is why

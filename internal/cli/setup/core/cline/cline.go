@@ -14,8 +14,8 @@ import (
 )
 
 // Deploy generates Cline integration files:
-//  1. .vscode/mcp.json — MCP server configuration (shared with VS Code)
-//  2. .clinerules/*.md — synced steering files
+//  1. .vscode/mcp.json: MCP server configuration (shared with VS Code)
+//  2. .clinerules/*.md: synced steering files
 //
 // Parameters:
 //   - cmd: Cobra command for output and flag access

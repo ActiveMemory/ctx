@@ -2002,10 +2002,10 @@ in <code>.ctxrc</code>: present means dev, absent means base.</p>
 <h2 id="customizing-profiles">Customizing Profiles<a class="headerlink" href="#customizing-profiles" title="Permanent link">&para;</a></h2>
 <p>Edit the source files directly:</p>
 <ul>
-<li><strong><code>.ctxrc.dev</code></strong> -- add any <code>.ctxrc</code> keys you want active during
+<li><strong><code>.ctxrc.dev</code></strong>: add any <code>.ctxrc</code> keys you want active during
   development (e.g., <code>log_level: debug</code>, <code>notify.events</code>,
   <code>notify.webhook_url</code>).</li>
-<li><strong><code>.ctxrc.base</code></strong> -- keep this minimal. It represents your
+<li><strong><code>.ctxrc.base</code></strong>: keep this minimal. It represents your
   "production" defaults.</li>
 </ul>
 <p>After editing a source file, re-run <code>ctx config switch &lt;profile&gt;</code>

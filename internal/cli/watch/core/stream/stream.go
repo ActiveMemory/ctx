@@ -32,7 +32,7 @@ import (
 // Returns:
 //   - string: Attribute value, or empty string if not found
 func ExtractAttribute(tag, attrName string) string {
-	// Use simple string search — the attribute names are fixed XML
+	// Use simple string search; the attribute names are fixed XML
 	// attributes, no regex needed.
 	prefix := attrName + marker.AttrEquals
 	idx := strings.Index(tag, prefix)

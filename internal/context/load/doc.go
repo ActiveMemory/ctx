@@ -6,9 +6,9 @@
 
 // Package load reads the `.context/` directory and
 // **assembles its files into the in-memory
-// [entity.Context]** that every downstream consumer —
-// `ctx agent`, `ctx drift`, `ctx doctor`, every MCP
-// handler — operates on.
+// [entity.Context]** that every downstream consumer
+// (`ctx agent`, `ctx drift`, `ctx doctor`, every MCP
+// handler) operates on.
 //
 // The package is the single point of truth for "what
 // does the user's context look like right now?". Two
@@ -18,7 +18,7 @@
 //
 // # Public Surface
 //
-//   - **[Do](contextDir)** — reads every file in the
+//   - **[Do](contextDir)**: reads every file in the
 //     priority order [internal/rc.PriorityOrder]
 //     defines, populates an [entity.Context] with
 //     each file's name, body, byte/token counts, and
@@ -36,7 +36,7 @@
 // # Token Counts
 //
 // Each file's token count is computed by the rough
-// estimator in [internal/cli/agent/core/budget] —
+// estimator in [internal/cli/agent/core/budget],
 // approximate but stable. The count is what
 // [entity.Context.TokenInfo] surfaces.
 //
@@ -52,5 +52,5 @@
 //
 // Stateless and filesystem-bound. Concurrent
 // invocations against the same directory each pay
-// the full read cost — by design, see above.
+// the full read cost (by design; see above).
 package load

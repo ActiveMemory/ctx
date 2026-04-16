@@ -2632,7 +2632,7 @@ happy.</p>
 <h4 id="output-internalwrite">Output: <code>internal/write/</code><a class="headerlink" href="#output-internalwrite" title="Permanent link">&para;</a></h4>
 <p>Every CLI command's user-facing output lives in its own sub-package
 under <code>internal/write/&lt;domain&gt;/</code>. Output functions accept
-<code>*cobra.Command</code> and call <code>cmd.Println(...)</code> — never <code>fmt.Print*</code>
+<code>*cobra.Command</code> and call <code>cmd.Println(...)</code>, never <code>fmt.Print*</code>
 directly. All text strings are loaded from YAML via
 <code>desc.Text(text.DescKey*)</code>, never inline.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>internal/write/add/add.go       # output for ctx add
@@ -2858,9 +2858,9 @@ doc consistency, and tests in one pass.</p>
 <li>Follow Go conventions (<code>gofmt</code>, <code>go vet</code>);</li>
 <li>Keep functions <strong>focused</strong> and <strong>small</strong>;</li>
 <li>Add tests for new functionality;</li>
-<li>Handle errors explicitly — use descriptive names (<code>readErr</code>,
+<li>Handle errors explicitly; use descriptive names (<code>readErr</code>,
   <code>writeErr</code>) not repeated <code>err</code>;</li>
-<li>No magic strings — all repeated literals go in <code>internal/config/</code>;</li>
+<li>No magic strings: all repeated literals go in <code>internal/config/</code>;</li>
 <li>Output goes through <code>internal/write/</code> packages, not <code>fmt.Print*</code>;</li>
 <li>Errors go through <code>internal/err/</code> constructors, not inline
   <code>fmt.Errorf</code>;</li>

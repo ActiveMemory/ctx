@@ -21,25 +21,25 @@
 // [CheckResult] with a name, status (Ok / Warning / Error),
 // and a one-line message. The full battery, run by [Run]:
 //
-//   - **Context initialization** — `.context/` exists and
+//   - **Context initialization**: `.context/` exists and
 //     is populated.
-//   - **Required files** — TASKS, DECISIONS, LEARNINGS,
+//   - **Required files**: TASKS, DECISIONS, LEARNINGS,
 //     CONVENTIONS, ARCHITECTURE, CONSTITUTION present.
-//   - **`.ctxrc` validation** — file parses, all values
+//   - **`.ctxrc` validation**: file parses, all values
 //     within range.
-//   - **Drift** — wraps [internal/drift.Detect] and
+//   - **Drift**: wraps [internal/drift.Detect] and
 //     surfaces the report's status.
-//   - **Plugin enablement** — Claude Code plugin
+//   - **Plugin enablement**: Claude Code plugin
 //     installed AND enabled in `~/.claude/settings.json`.
-//   - **Event logging** — if `event_log: true`, the log
+//   - **Event logging**: if `event_log: true`, the log
 //     file exists and is writable.
-//   - **Reminders** — pending reminder count and freshness.
-//   - **Task completion** — open task count, oldest open
+//   - **Reminders**: pending reminder count and freshness.
+//   - **Task completion**: open task count, oldest open
 //     task age (consolidation nudge threshold).
-//   - **Token budgets** — currently injected size against
+//   - **Token budgets**: currently injected size against
 //     the configured `injection_token_warn` and
 //     `context_window`.
-//   - **System resource metrics** — wraps
+//   - **System resource metrics**: wraps
 //     [internal/sysinfo] to surface load/memory/disk
 //     pressure.
 //

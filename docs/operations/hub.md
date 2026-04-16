@@ -14,7 +14,7 @@ icon: lucide/settings
 # `ctx` Hub: Operations
 
 Running the ctx `ctx` Hub in production. This page is
-for **operators** — people running a hub for themselves or a
+for **operators**: people running a hub for themselves or a
 team, not people writing to a hub someone else is running.
 
 If you have not read it yet, start with the
@@ -82,7 +82,7 @@ The hub stores everything under a single data directory
 
 `--stop` sends SIGTERM to the PID in `hub.pid`, waits for
 in-flight RPCs to drain, then exits. If the daemon is wedged,
-remove `hub.pid` and send `SIGKILL` manually — `entries.jsonl` is
+remove `hub.pid` and send `SIGKILL` manually. `entries.jsonl` is
 crash-safe, so you will not lose accepted writes.
 
 ## Systemd Unit
@@ -125,14 +125,14 @@ sudo journalctl -u ctx-hub -f
 Because `entries.jsonl` is append-only, backups are trivial:
 
 ```bash
-# Hot backup — safe while the hub is running.
+# Hot backup, safe while the hub is running.
 cp <data-dir>/entries.jsonl backups/entries-$(date +%F).jsonl
 cp <data-dir>/meta.json      backups/meta-$(date +%F).json
 cp <data-dir>/clients.json   backups/clients-$(date +%F).json
 ```
 
 For a consistent snapshot across all three files, stop the hub,
-copy, then start again — or use a filesystem-level snapshot (LVM,
+copy, then start again, or use a filesystem-level snapshot (LVM,
 ZFS, Btrfs).
 
 **Restore:**
@@ -148,7 +148,7 @@ ctx hub start --daemon
 Clients that pushed sequences **above** the restored watermark
 will re-publish on the next `listen` reconnect, because the hub
 now reports a lower sequence than what clients have on disk. This
-is safe — the store deduplicates by entry ID.
+is safe; the store deduplicates by entry ID.
 
 ## Log Rotation
 
@@ -181,12 +181,12 @@ of choice.
 
 For cluster deployments, watch for:
 
-- **Role flaps** — the leader changing more than once per hour
+- **Role flaps**: the leader changing more than once per hour
   suggests network instability or disk contention.
-- **Replication lag** — `ctx hub status` shows per-peer sequence
+- **Replication lag**: `ctx hub status` shows per-peer sequence
   offsets. Sustained lag > 100 sequences on a follower is worth
   investigating.
-- **`entries.jsonl` growth rate** — sudden spikes often indicate a
+- **`entries.jsonl` growth rate**: sudden spikes often indicate a
   misbehaving `ctx connection listen` reconnect loop.
 
 ## Upgrading

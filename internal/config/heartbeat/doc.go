@@ -17,16 +17,16 @@
 //
 // # State File Prefixes
 //
-//   - CounterPrefix ("heartbeat-") -- prefix for
+//   - CounterPrefix ("heartbeat-"): prefix for
 //     per-session prompt counter files. The full
 //     filename is CounterPrefix + session ID. Each
 //     file stores the running prompt count for one
 //     session.
-//   - MtimePrefix ("heartbeat-mtime-") -- prefix for
+//   - MtimePrefix ("heartbeat-mtime-"): prefix for
 //     per-session context modification tracking. The
 //     file stores the last-seen mtime of context
 //     files so the hook can detect mid-session edits.
-//   - LogFile ("heartbeat.log") -- the log file for
+//   - LogFile ("heartbeat.log"): the log file for
 //     heartbeat events, stored in .context/state/.
 //
 // # Template Variables
@@ -35,15 +35,15 @@
 // are used by the template engine to render heartbeat
 // data:
 //
-//   - VarPromptCount -- number of prompts in the
+//   - VarPromptCount: number of prompts in the
 //     current session
-//   - VarSessionID -- the active session identifier
-//   - VarContextModified -- boolean flag indicating
+//   - VarSessionID: the active session identifier
+//   - VarContextModified: boolean flag indicating
 //     whether context files changed since last check
-//   - VarTokens -- current token count
-//   - VarContextWindow -- configured context window
+//   - VarTokens: current token count
+//   - VarContextWindow: configured context window
 //     size
-//   - VarUsagePct -- percentage of context window
+//   - VarUsagePct: percentage of context window
 //     currently consumed
 //
 // # Why Centralized

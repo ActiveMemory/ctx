@@ -13,25 +13,25 @@
 //
 // # Public Surface
 //
-//   - **[NewestMtime](dir)** — returns the modification
+//   - **[NewestMtime](dir)**: returns the modification
 //     time of the most recently changed file in `dir`,
 //     or zero time when the directory is empty/missing.
 //     Used to compare the journal directory's freshness
 //     to the raw-source directory.
-//   - **[CountNewerFiles](dir, since)** — counts files
+//   - **[CountNewerFiles](dir, since)**: counts files
 //     in `dir` modified strictly after `since`. The
 //     hook calls this with the last-known-import
 //     timestamp to surface "N new sessions to import".
-//   - **[CountUnenriched](journalDir)** — counts entries
+//   - **[CountUnenriched](journalDir)**: counts entries
 //     in `journalDir` that have not been enriched
 //     (frontmatter `enriched: false` or missing).
 //     Surfaces the "N entries waiting for enrichment"
 //     nudge.
-//   - **[CheckStage](path, stage)** — predicate: is
+//   - **[CheckStage](path, stage)**: predicate; is
 //     `path`'s frontmatter at or past `stage`?
 //     [internal/journal/state] supplies the canonical
 //     stage strings.
-//   - **[MarkStage](path, stage)** — atomically updates
+//   - **[MarkStage](path, stage)**: atomically updates
 //     the frontmatter `stage:` field. Used by the
 //     enrichment pipeline to advance an entry through
 //     normalize → enrich → wrap.

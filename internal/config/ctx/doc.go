@@ -8,8 +8,8 @@
 // their priority-ordered read sequence, and the minimum
 // required file set for a valid .context/ directory.
 //
-// Every ctx operation -- bootstrap, agent packet building,
-// drift detection, initialization -- needs to know which
+// Every ctx operation (bootstrap, agent packet building,
+// drift detection, initialization) needs to know which
 // files live in .context/ and in what order to read them.
 // This package is the single source of truth for those
 // names and that ordering.
@@ -18,18 +18,18 @@
 //
 // Each markdown file in .context/ has a named constant:
 //
-//   - [Constitution] -- inviolable rules for agents
-//   - [Task] -- current work items and status
-//   - [Convention] -- code patterns and standards
-//   - [Architecture] -- system structure documentation
-//   - [Decision] -- architectural decisions with rationale
-//   - [Learning] -- gotchas, tips, lessons learned
-//   - [Glossary] -- domain terms and definitions
-//   - [AgentPlaybook] -- meta-instructions for using the
+//   - [Constitution]: inviolable rules for agents
+//   - [Task]: current work items and status
+//   - [Convention]: code patterns and standards
+//   - [Architecture]: system structure documentation
+//   - [Decision]: architectural decisions with rationale
+//   - [Learning]: gotchas, tips, lessons learned
+//   - [Glossary]: domain terms and definitions
+//   - [AgentPlaybook]: meta-instructions for using the
 //     context system
-//   - [AgentPlaybookGate] -- distilled directives for the
+//   - [AgentPlaybookGate]: distilled directives for the
 //     session start hook
-//   - [Dependency] -- project dependency documentation
+//   - [Dependency]: project dependency documentation
 //
 // # Read Order
 //

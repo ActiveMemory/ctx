@@ -34,14 +34,14 @@
 //
 // # Key Constants
 //
-//   - PrefixCtxLoaded -- marker file prefix for
+//   - PrefixCtxLoaded: marker file prefix for
 //     per-session load tracking.
-//   - AutoPruneStaleDays -- days before stale markers
+//   - AutoPruneStaleDays: days before stale markers
 //     are auto-pruned (7).
-//   - EventContextLoadGate -- event name logged on
+//   - EventContextLoadGate: event name logged on
 //     each context injection.
-//   - ContextLoadSeparatorChar / Width -- visual
+//   - ContextLoadSeparatorChar / Width: visual
 //     separator for the injected block.
-//   - JSONKeyTimestamp -- JSON key used to extract
+//   - JSONKeyTimestamp: JSON key used to extract
 //     timestamps from event log lines.
 package load_gate

@@ -25,7 +25,7 @@ var sink io.Writer = os.Stderr
 // not be silently swallowed (file close, remove, state writes).
 //
 // The output is prefixed with "ctx: " and terminated with a
-// newline. sink write failures are silently dropped — there is
+// newline. Sink write failures are silently dropped; there is
 // nowhere else to report them.
 //
 // Parameters:

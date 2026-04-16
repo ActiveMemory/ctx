@@ -1845,7 +1845,7 @@ via hooks, but the explicit ceremony gives you a <strong>readback</strong> to ve
 <code>ctx init</code> (<code>.context/steering/product.md</code>, <code>tech.md</code>,
 <code>structure.md</code>, <code>workflow.md</code>), their <code>inclusion:
 always</code> rules are prepended to <strong>every</strong> tool call via
-the plugin's <code>PreToolUse</code> hook — no <code>/ctx-remember</code>
+the plugin's <code>PreToolUse</code> hook, with no <code>/ctx-remember</code>
 needed, no MCP call. Edit a file, save, and the next
 tool call in Claude Code picks it up. See
 <a href="../steering/">Steering files</a> for details on the

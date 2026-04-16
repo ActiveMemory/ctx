@@ -22,16 +22,16 @@
 // Several files are managed at the project root
 // during "ctx init" and ongoing operation:
 //
-//   - Makefile -- the user's own Makefile.
-//   - MakefileCtx ("Makefile.ctx") -- ctx-owned
+//   - Makefile: the user's own Makefile.
+//   - MakefileCtx ("Makefile.ctx"): ctx-owned
 //     Makefile include with convenience targets.
-//   - MakefileIncludeDirective -- the Make line
+//   - MakefileIncludeDirective: the Make line
 //     "-include Makefile.ctx" that pulls in ctx
 //     targets (leading dash suppresses errors when
 //     the file is absent).
-//   - GettingStarted ("GETTING_STARTED.md") -- a
+//   - GettingStarted ("GETTING_STARTED.md"): a
 //     quick-start reference written during init.
-//   - FallbackName ("unknown") -- project name used
+//   - FallbackName ("unknown"): project name used
 //     when os.Getwd fails.
 //
 // # Why Centralize

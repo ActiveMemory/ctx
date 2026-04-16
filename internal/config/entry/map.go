@@ -41,7 +41,7 @@ func CtxFile(entryType string) (string, bool) {
 }
 
 // MustCtxFile returns the context filename for a validated entry type.
-// Panics if the type is unknown — use only after validation. Thread-safe.
+// Panics if the type is unknown; use only after validation. Thread-safe.
 //
 // Parameters:
 //   - entryType: validated entry type key

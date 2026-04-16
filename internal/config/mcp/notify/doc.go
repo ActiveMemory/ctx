@@ -9,7 +9,7 @@
 // server-side state changes.
 //
 // Notifications are JSON-RPC 2.0 messages with no "id"
-// field -- they are fire-and-forget. The ctx MCP server
+// field; they are fire-and-forget. The ctx MCP server
 // uses them to tell clients that a subscribed resource
 // has changed on disk, so the client can re-read the
 // resource and update its view.
@@ -17,7 +17,7 @@
 // # Key Constants
 //
 //   - [ResourcesUpdated]
-//     ("notifications/resources/updated") -- emitted
+//     ("notifications/resources/updated"): emitted
 //     when a context file that a client has subscribed
 //     to via resources/subscribe is modified. The
 //     notification includes the resource URI so the

@@ -17,10 +17,10 @@
 //
 // # Public Surface
 //
-//   - [Frontmatter] -- returns the raw frontmatter
+//   - [Frontmatter]: returns the raw frontmatter
 //     block including the --- delimiters and trailing
 //     newline.
-//   - [StripFrontmatter] -- removes the frontmatter
+//   - [StripFrontmatter]: removes the frontmatter
 //     block and returns only the body content.
 //
 // # Algorithm

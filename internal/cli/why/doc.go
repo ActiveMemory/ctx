@@ -6,8 +6,8 @@
 
 // Package why provides the "ctx why" command.
 //
-// Surfaces ctx's philosophy documents -- manifesto,
-// about page, and design invariants -- directly in the
+// Surfaces ctx's philosophy documents, manifesto,
+// about page, and design invariants, directly in the
 // terminal, stripped of MkDocs-specific syntax so they
 // read cleanly without a browser.
 //

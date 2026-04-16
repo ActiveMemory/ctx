@@ -5,18 +5,18 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package steering defines the **typed error
-// constructors** returned by [internal/steering] —
+// constructors** returned by [internal/steering]:
 // frontmatter parse failures, sync target validation,
 // path-boundary violations, and missing-tool errors.
 //
 // # Why Typed Errors
 //
-//   - **Stability** — error categories are part of
+//   - **Stability**: error categories are part of
 //     the public API.
-//   - **Routing** — write-side packages map error
+//   - **Routing**: write-side packages map error
 //     types to localized text via
 //     [internal/assets/read/desc].
-//   - **Wrapping** — constructors wrap the
+//   - **Wrapping**: constructors wrap the
 //     underlying cause via `%w` so callers can
 //     `errors.Is` against system errors when
 //     needed.
@@ -25,23 +25,23 @@
 //
 // Constructors fall into three groups:
 //
-//   - **Parse / IO** — [Parse], [InvalidYAML],
+//   - **Parse / IO**: [Parse], [InvalidYAML],
 //     [MissingClosingDelimiter],
 //     [MissingOpeningDelimiter], [ReadFile],
 //     [ReadDir], [WriteFile], [WriteSteeringFile],
 //     [WriteInitFile].
-//   - **Sync** — [SyncAll], [SyncName],
+//   - **Sync**: [SyncAll], [SyncName],
 //     [UnsupportedTool], [NoTool],
 //     [ResolveOutput], [ResolveRoot],
 //     [OutputEscapesRoot], [ComputeRelPath],
 //     [CreateDir], [FileExists].
-//   - **Context** — [ContextDirMissing].
+//   - **Context**: [ContextDirMissing].
 //
 // # The Boundary Check
 //
 // [OutputEscapesRoot] is fired when a sync
 // target's resolved absolute path would land
-// outside the project root — a defensive check
+// outside the project root, a defensive check
 // that prevents a malicious or buggy steering
 // file from writing to arbitrary filesystem
 // locations.

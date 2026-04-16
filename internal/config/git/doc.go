@@ -18,24 +18,24 @@
 //
 // # Binary and Metadata Directory
 //
-//   - Binary ("git") -- the executable name passed
+//   - Binary ("git"): the executable name passed
 //     to exec.LookPath and exec.Command
-//   - DotDir (".git") -- the metadata directory (or
+//   - DotDir (".git"): the metadata directory (or
 //     file, in worktrees) used to detect whether a
 //     directory is a git repository
 //
 // # Subcommands
 //
 //   - Branch, Diff, DiffTree, Log, Remote, RevParse
-//     -- first arguments to the git binary
+//     are first arguments to the git binary
 //
 // # Hook Names
 //
-//   - HookPrepareCommitMsg -- the prepare-commit-msg
+//   - HookPrepareCommitMsg: the prepare-commit-msg
 //     hook for injecting commit trailers
-//   - HookPostCommit -- the post-commit hook for
+//   - HookPostCommit: the post-commit hook for
 //     session event recording
-//   - HooksDir ("hooks") -- the subdirectory under
+//   - HooksDir ("hooks"): the subdirectory under
 //     .git/ where hooks live
 //
 // # Rev-Parse and Common Flags
@@ -48,26 +48,26 @@
 //
 // # Format Strings
 //
-// Git --format templates for extracting commit data:
+// Git format templates for extracting commit data:
 //
 //   - FormatAuthor, FormatBody, FormatDateISO,
 //     FormatHashDateSubj, FormatHashSubj,
 //     FormatSubject, FormatTrailerValue
-//   - FormatEmpty -- suppresses default output
+//   - FormatEmpty: suppresses default output
 //
 // # Refs and Remotes
 //
-//   - RefHead ("HEAD") -- symbolic reference for the
+//   - RefHead ("HEAD"): symbolic reference for the
 //     current commit
-//   - RemoteGetURL, RemoteOrigin -- arguments for
+//   - RemoteGetURL, RemoteOrigin: arguments for
 //     git remote commands
-//   - PathSeparator ("/") -- git's path separator
+//   - PathSeparator ("/"): git's path separator
 //
 // # Commit Trailers
 //
-//   - TrailerSpec ("Spec: specs/") -- links a commit
+//   - TrailerSpec ("Spec: specs/"): links a commit
 //     to its design spec
-//   - TrailerSignedOffBy ("Signed-off-by:") -- the
+//   - TrailerSignedOffBy ("Signed-off-by:"): the
 //     standard sign-off trailer
 //
 // # Why Centralized

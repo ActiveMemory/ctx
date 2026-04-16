@@ -26,9 +26,9 @@ workspace directory (e.g., `~/WORKSPACE/`).
 
 **Companion skills**:
 
-- `/ctx-architecture` — structural baseline and principal analysis
-- `/ctx-architecture-enrich` — code intelligence enrichment via GitNexus
-- `/ctx-architecture-failure-analysis` — adversarial failure analysis
+- `/ctx-architecture`: structural baseline and principal analysis
+- `/ctx-architecture-enrich`: code intelligence enrichment via GitNexus
+- `/ctx-architecture-failure-analysis`: adversarial failure analysis
 
 ---
 
@@ -199,7 +199,7 @@ Update `.arch-explorer/manifest.json`:
 Append to `.arch-explorer/run-log.md`:
 
 ```markdown
-## 2026-04-07T14:00:00Z — ctx — principal
+## 2026-04-07T14:00:00Z / ctx / principal
 
 **Phase:** principal
 **Convergence:** 0.45 -> 0.72
@@ -253,7 +253,7 @@ A repo is considered "explored" when ANY of these is true:
   across consecutive runs)
 - All 5 lenses have been applied
 - Convergence score is `null` after 3 attempts (artifacts aren't being
-  generated properly — log warning and move on)
+  generated properly; log warning and move on)
 
 When a repo is explored, advance `current_repo_index` in the manifest.
 

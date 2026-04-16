@@ -13,19 +13,19 @@
 //
 // # Public Surface
 //
-//   - **[Validate](params)** — applies all the rules
+//   - **[Validate](params)**: applies all the rules
 //     a new entry must satisfy before it can be
 //     written: required fields present, body
 //     non-empty, identifier-like fields well-formed,
 //     provenance flags satisfy the per-project
 //     [internal/rc.ProvenanceConfig]. Returns a typed
 //     error per failure for actionable messages.
-//   - **[Write](params)** — writes the entry: builds
+//   - **[Write](params)**: writes the entry; builds
 //     the timestamped header, formats the body with
 //     the canonical attribute order, appends to the
 //     target file, and updates the file's index
 //     table via [internal/index].
-//   - **[ValidateAndWrite](params)** — convenience
+//   - **[ValidateAndWrite](params)**: convenience
 //     wrapper that runs [Validate] and then [Write]
 //     when validation passes; this is the function
 //     the CLI commands and the MCP handler actually
@@ -35,15 +35,15 @@
 //
 // Beyond presence checks, validation enforces:
 //
-//   - **Title length** — fits the index-table
+//   - **Title length**: fits the index-table
 //     column width without truncation.
-//   - **Body has at least one substantive line** —
+//   - **Body has at least one substantive line**:
 //     not just whitespace or template placeholders.
-//   - **Provenance** — `--session-id`, `--branch`,
+//   - **Provenance**: `--session-id`, `--branch`,
 //     `--commit` are required when
 //     `provenance_required` enables them in
 //     `.ctxrc`.
-//   - **No secrets** — body is scanned against
+//   - **No secrets**: body is scanned against
 //     [internal/config/token.SecretPatterns]; a
 //     match aborts with a typed error so the user
 //     can scrub before retry.

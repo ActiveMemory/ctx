@@ -1160,7 +1160,7 @@
   <a href="#partition-majority-side-reachable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Partition — Majority Side Reachable
+        Partition: Majority Side Reachable
       
     </span>
   </a>
@@ -1171,7 +1171,7 @@
   <a href="#partition-split-brain-no-quorum" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Partition — Split Brain (No Quorum)
+        Partition: Split Brain (No Quorum)
       
     </span>
   </a>
@@ -1659,7 +1659,7 @@
   <a href="#partition-majority-side-reachable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Partition — Majority Side Reachable
+        Partition: Majority Side Reachable
       
     </span>
   </a>
@@ -1670,7 +1670,7 @@
   <a href="#partition-split-brain-no-quorum" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Partition — Split Brain (No Quorum)
+        Partition: Split Brain (No Quorum)
       
     </span>
   </a>
@@ -1990,13 +1990,13 @@ with exponential backoff, and reconnects. On reconnect it passes
 its last-seen sequence; the hub replays everything newer.</p>
 <p><strong>What you should do:</strong> nothing. If reconnects are looping, check
 firewall state on the hub and <code>ctx hub status</code> output.</p>
-<h3 id="partition-majority-side-reachable">Partition — Majority Side Reachable<a class="headerlink" href="#partition-majority-side-reachable" title="Permanent link">&para;</a></h3>
+<h3 id="partition-majority-side-reachable">Partition: Majority Side Reachable<a class="headerlink" href="#partition-majority-side-reachable" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> clients routed to the majority side continue to
 publish and listen. The minority nodes step down to followers
 that cannot accept writes (Raft quorum lost).</p>
 <p><strong>What you should do:</strong> let it heal. When the partition closes,
 followers catch up via sequence-based sync automatically.</p>
-<h3 id="partition-split-brain-no-quorum">Partition — Split Brain (No Quorum)<a class="headerlink" href="#partition-split-brain-no-quorum" title="Permanent link">&para;</a></h3>
+<h3 id="partition-split-brain-no-quorum">Partition: Split Brain (No Quorum)<a class="headerlink" href="#partition-split-brain-no-quorum" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> no node holds a majority, so no leader is
 elected. All nodes become read-only. <code>ctx connection publish</code> and
 <code>ctx add --share</code> fail with a "no leader" error; local writes
@@ -2018,7 +2018,7 @@ writes with an error and stays up for read traffic. Clients
 retry; followers keep their in-sync status using whatever the
 leader already wrote.</p>
 <p><strong>What you should do:</strong> free disk or grow the volume, then
-nothing else — the hub resumes accepting writes on the next
+nothing else; the hub resumes accepting writes on the next
 append attempt.</p>
 <h3 id="corrupt-entriesjsonl">Corrupt <code>entries.jsonl</code><a class="headerlink" href="#corrupt-entriesjsonl" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> if the last line is a partial JSON write from a
@@ -2033,7 +2033,7 @@ Nothing is ever silently dropped.</p>
 someone copied one file without the other.</p>
 <p><strong>What you should do:</strong> restore both files from the same backup,
 or accept the higher sequence by regenerating <code>meta.json</code> from
-<code>entries.jsonl</code> (manual for now — file a bug).</p>
+<code>entries.jsonl</code> (manual for now; file a bug).</p>
 <h2 id="cluster">Cluster<a class="headerlink" href="#cluster" title="Permanent link">&para;</a></h2>
 <h3 id="leader-crash-clean-shutdown">Leader Crash, Clean Shutdown<a class="headerlink" href="#leader-crash-clean-shutdown" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> <code>ctx hub stop</code> triggers <code>stepdown</code> first, so
@@ -2042,7 +2042,7 @@ writes drain. Clients reconnect to the new leader transparently.</p>
 <h3 id="leader-crash-hard-fail-kill-9-power-loss">Leader Crash, Hard Fail (Kill -9, Power Loss)<a class="headerlink" href="#leader-crash-hard-fail-kill-9-power-loss" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> Raft detects the missing heartbeat and elects
 a new leader within a few seconds. Writes the old leader accepted
-<strong>but had not yet replicated</strong> can be lost — see the Raft-lite
+<strong>but had not yet replicated</strong> can be lost. See the Raft-lite
 warning in <a href="../../recipes/hub-cluster/">the cluster recipe</a>.</p>
 <p><strong>What you should do:</strong> if you need stronger durability, run
 <code>ctx connection listen</code> on a dedicated "collector" project that
@@ -2059,7 +2059,7 @@ pass) and replay them with <code>ctx connection publish</code>.</p>
 <p><strong>What happens:</strong> you cannot register new projects.</p>
 <p><strong>What you should do:</strong> retrieve it from
 <code>&lt;data-dir&gt;/admin.token</code>. If that file is also gone, stop the hub
-and regenerate — note that <strong>all existing client tokens keep
+and regenerate. Note that <strong>all existing client tokens keep
 working</strong>; only new registrations need the admin token.</p>
 <h3 id="compromised-admin-token">Compromised Admin Token<a class="headerlink" href="#compromised-admin-token" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> anyone with the token can register new
@@ -2080,7 +2080,7 @@ token compromise.</p>
 <code>clients.json</code>, restart the hub, and re-register the legitimate
 project with a fresh token. Audit <code>entries.jsonl</code> for entries
 published after the compromise timestamp and quarantine any
-that look suspicious — remember that <code>Origin</code> on those entries
+that look suspicious; remember that <code>Origin</code> on those entries
 proves nothing.</p>
 <h3 id="compromised-hub-host">Compromised Hub Host<a class="headerlink" href="#compromised-hub-host" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> <code>&lt;data-dir&gt;/clients.json</code> stores client
@@ -2116,7 +2116,7 @@ clock is the culprit.</p>
 </tr>
 <tr>
 <td>"No leader" errors</td>
-<td>Cluster quorum — run <code>ctx hub status</code> on each peer</td>
+<td>Cluster quorum; run <code>ctx hub status</code> on each peer</td>
 </tr>
 <tr>
 <td>Hub won't start after crash</td>
@@ -2128,7 +2128,7 @@ clock is the culprit.</p>
 </tr>
 <tr>
 <td>Duplicate entries in shared feed</td>
-<td>Client replayed after restore — safe, dedup by ID</td>
+<td>Client replayed after restore, safe (dedup by ID)</td>
 </tr>
 <tr>
 <td>Followers lagging</td>

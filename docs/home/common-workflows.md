@@ -28,7 +28,7 @@ For deeper, step-by-step guides, see [Recipes](../recipes/index.md).
     When working with an AI agent, use `/ctx-task-add`,
     `/ctx-decision-add`, or `/ctx-learning-add` instead of raw
     `ctx add` commands. The agent automatically picks up session ID,
-    branch, and commit hash from its context — no manual flags needed.
+    branch, and commit hash from its context, so no manual flags are needed.
 
 ```bash
 # Add a task
@@ -225,7 +225,7 @@ ctx trace hook enable
 ```
 
 From now on, every `git commit` automatically gets a `ctx-context`
-trailer linking it to relevant context. No extra steps needed —
+trailer linking it to relevant context. No extra steps needed;
 just use `ctx add`, `ctx task complete`, and commit as usual.
 
 ```bash

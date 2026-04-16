@@ -16,16 +16,16 @@
 //
 // # Supported Tools
 //
-//	Claude Code -- CLAUDE.md generation and hook config
-//	Cursor -- .cursor/rules and settings.json snippets
-//	Aider -- .aider.conf.yml and conventions file
-//	GitHub Copilot -- .github/copilot-instructions.md
-//	Windsurf -- .windsurfrules configuration
+//	Claude Code: CLAUDE.md generation and hook config
+//	Cursor: .cursor/rules and settings.json snippets
+//	Aider: .aider.conf.yml and conventions file
+//	GitHub Copilot: .github/copilot-instructions.md
+//	Windsurf: .windsurfrules configuration
 //
 // # Subpackages
 //
-//	cmd/root -- cobra command definition and tool
+//	cmd/root: cobra command definition and tool
 //	  selection logic
-//	core -- template rendering and config generation
+//	core: template rendering and config generation
 //	  for each supported tool
 package setup

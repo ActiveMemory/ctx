@@ -25,11 +25,11 @@ between hub and clients.
 
 **Companion docs**:
 
-- [Hub overview](../../recipes/hub-overview.md) — what the hub
-  is and isn't
-- [Hub operations](../hub.md) — data directory, systemd,
+- [Hub overview](../../recipes/hub-overview.md): what the hub
+  is and is not
+- [Hub operations](../hub.md): data directory, systemd,
   backup, monitoring
-- [Hub failure modes](../hub-failure-modes.md) — what can go wrong
+- [Hub failure modes](../hub-failure-modes.md): what can go wrong
 
 ---
 
@@ -50,8 +50,8 @@ between hub and clients.
     sudo systemctl enable --now ctx-hub
     ```
 
-The hub creates `admin.token` on first start. Save this token —
-it's the only way to register clients.
+The hub creates `admin.token` on first start. Save this token;
+it is the only way to register clients.
 
 ## Step 2: Generate the Admin Token
 

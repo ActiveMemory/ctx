@@ -80,8 +80,8 @@ for details on cache clearing.
 ctx config switch dev
 ```
 
-This enables verbose logging and notify events — useful during
-development.
+This enables verbose logging and notify events (useful during
+development).
 
 ## Step 6: Verify Hooks
 

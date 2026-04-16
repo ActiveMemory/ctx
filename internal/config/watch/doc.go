@@ -17,15 +17,15 @@
 //
 // # Stream Scanner Buffers
 //
-//   - [StreamScannerInitCap] (64 KB) — initial
+//   - [StreamScannerInitCap] (64 KB): initial
 //     buffer capacity for the line scanner.
-//   - [StreamScannerMaxSize] (1 MB) — maximum
+//   - [StreamScannerMaxSize] (1 MB): maximum
 //     buffer size before the scanner returns an
 //     error.
 //
 // # XML Parsing
 //
-//   - [ContextUpdateMinGroups] (3) — minimum regex
+//   - [ContextUpdateMinGroups] (3): minimum regex
 //     capture groups expected from a context-update
 //     match (full match + tag name + content).
 //
@@ -34,10 +34,10 @@
 // Watch-originated entries are machine-generated, so
 // they receive fixed provenance fields:
 //
-//   - [ProvenanceSessionID] — default session ID
+//   - [ProvenanceSessionID]: default session ID
 //     ("watch").
-//   - [ProvenanceBranch] — default branch ("watch").
-//   - [ProvenanceCommit] — default commit ("watch").
+//   - [ProvenanceBranch]: default branch ("watch").
+//   - [ProvenanceCommit]: default commit ("watch").
 //
 // These values let consumers distinguish watch
 // entries from human-authored ones.

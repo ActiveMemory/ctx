@@ -14,15 +14,15 @@
 //
 // Errors fall into three categories:
 //
-//   - **Frontmatter** -- a session file is missing
+//   - **Frontmatter**: a session file is missing
 //     its opening or closing --- delimiter.
 //     Constructors: [MissingOpenDelim],
 //     [MissingCloseDelim].
-//   - **File IO** -- a session file could not be
+//   - **File IO**: a session file could not be
 //     read, opened, scanned, or walked.
 //     Constructors: [ReadFile], [OpenFile],
 //     [ScanFile], [WalkDir].
-//   - **Parse** -- no parser matches a file, JSON
+//   - **Parse**: no parser matches a file, JSON
 //     unmarshaling failed, or a per-file parse
 //     error occurred. Constructors: [NoMatch],
 //     [Unmarshal], [FileError], [ParseFile].

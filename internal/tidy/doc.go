@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package tidy provides the **archive and compact** primitives
-// that keep `.context/` files lean as a project ages — moving
+// that keep `.context/` files lean as a project ages, moving
 // completed tasks into dated archive files, sweeping empty
 // sections, and reorganizing TASKS.md without losing
 // provenance.
@@ -26,7 +26,7 @@
 //     nested subtasks ride along with their parent.
 //  2. **Group** archived tasks by Phase header so the
 //     archive file preserves the same Phase structure as
-//     the source (a constitutional invariant — Phase
+//     the source (a constitutional invariant; Phase
 //     identity must survive archival).
 //  3. **Write** the archive to
 //     `.context/archive/tasks-YYYY-MM-DD.md`, creating
@@ -34,7 +34,7 @@
 //     already exists, the new content is *appended*, not
 //     overwritten.
 //  4. **Remove** the archived blocks from TASKS.md via
-//     [RemoveBlocksFromLines] — the rewriter operates on
+//     [RemoveBlocksFromLines]; the rewriter operates on
 //     the raw line slice so byte offsets stay aligned.
 //
 // # Compact and Sanitize

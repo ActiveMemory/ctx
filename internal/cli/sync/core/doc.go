@@ -22,7 +22,7 @@
 //
 // # Sub-Packages
 //
-//   - **[validate]** — the predicate package: the
+//   - **[validate]**: the predicate package; the
 //     type-aware "is this an undocumented X"
 //     checks.
 //

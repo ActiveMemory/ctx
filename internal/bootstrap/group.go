@@ -69,7 +69,7 @@ func gettingStarted() []registration {
 // management group.
 //
 // These commands operate on the full set of context source-of-truth
-// files (TASKS.md, DECISIONS.md, LEARNINGS.md, CONVENTIONS.md) —
+// files (TASKS.md, DECISIONS.md, LEARNINGS.md, CONVENTIONS.md):
 // adding entries, loading for agents, formatting, reconciling with
 // the codebase, detecting drift, and archiving completed work.
 //
@@ -92,7 +92,7 @@ func contextCmds() []registration {
 // artifacts returns command registrations for the artifacts group.
 //
 // These commands operate on specific artifact files inside
-// .context/ — the DECISIONS.md, LEARNINGS.md, and TASKS.md
+// .context/: the DECISIONS.md, LEARNINGS.md, and TASKS.md
 // stores, plus the `reindex` shortcut that rebuilds the
 // decision/learning index tables in a single call.
 //

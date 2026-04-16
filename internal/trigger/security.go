@@ -40,7 +40,7 @@ func ValidatePath(hooksDir, hookPath string) error {
 		return errTrigger.Symlink(hookPath)
 	}
 
-	// 2. Boundary check — hookPath must resolve within hooksDir.
+	// 2. Boundary check: hookPath must resolve within hooksDir.
 	absHooksDir, absHooksDirErr := filepath.Abs(hooksDir)
 	if absHooksDirErr != nil {
 		return errTrigger.ResolveHooksDir(hooksDir, absHooksDirErr)

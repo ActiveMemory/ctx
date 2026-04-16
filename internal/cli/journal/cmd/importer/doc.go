@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package importer implements **`ctx journal import`** —
+// Package importer implements **`ctx journal import`**,
 // the subcommand that ingests raw AI session files from
 // `~/.claude/projects/<slug>/` (and the equivalent paths
 // for other tools) into enriched, git-tracked journal
@@ -12,19 +12,19 @@
 //
 // # Public Surface
 //
-//   - **[Cmd]** — cobra command with `--all`,
+//   - **[Cmd]**: cobra command with `--all`,
 //     `--regenerate`, `--dry-run`, and
 //     `--keep-frontmatter` flags.
 //
-//   - **[Run]** — three-phase orchestration:
+//   - **[Run]**: three-phase orchestration;
 //
-//     1. **Plan** — diff the source set against the
+//     1. **Plan**: diff the source set against the
 //     journal state file ([internal/journal/state])
 //     to produce an [entity.ImportPlan]: which
 //     sources to create, regenerate, or skip.
-//     2. **Confirm** — print the plan and ask for
+//     2. **Confirm**: print the plan and ask for
 //     confirmation (skipped under `--dry-run`).
-//     3. **Execute** — for each action: parse via
+//     3. **Execute**: for each action, parse via
 //     [internal/journal/parser], reduce/collapse
 //     /normalize, write the entry, update the
 //     state file. Locked entries
@@ -39,7 +39,7 @@
 // preserving any frontmatter the user added by
 // default (`--keep-frontmatter true`). Pass
 // `--keep-frontmatter=false` to discard enrichments
-// — destructive; the importer warns explicitly.
+// (destructive; the importer warns explicitly).
 //
 // # Concurrency
 //

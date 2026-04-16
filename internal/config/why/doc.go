@@ -20,18 +20,18 @@
 // These constants are used as CLI arguments and
 // interactive menu keys:
 //
-//   - [DocManifesto]   — the project manifesto.
-//   - [DocAbout]       — the about page.
-//   - [DocInvariants]  — design invariants.
+//   - [DocManifesto]: the project manifesto.
+//   - [DocAbout]: the about page.
+//   - [DocInvariants]: design invariants.
 //
 // # Embedded Asset Names
 //
 // Each alias maps to an asset file stem under
 // internal/assets/why/:
 //
-//   - [DocAliasManifesto]   — "manifesto".
-//   - [DocAliasAbout]       — "about".
-//   - [DocAliasInvariants]  — "design-invariants".
+//   - [DocAliasManifesto]: "manifesto".
+//   - [DocAliasAbout]: "about".
+//   - [DocAliasInvariants]: "design-invariants".
 //
 // The alias and asset name differ only for
 // invariants, where the user-facing key is shorter

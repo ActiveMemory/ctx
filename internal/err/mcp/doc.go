@@ -15,11 +15,11 @@
 //
 // Errors fall into two categories:
 //
-//   - **Validation** -- a required field is missing
+//   - **Validation**: a required field is missing
 //     from a tool call payload. Constructors:
 //     [TypeContentRequired], [QueryRequired],
 //     [UnknownEventType].
-//   - **Search IO** -- the context directory could
+//   - **Search IO**: the context directory could
 //     not be read during a search operation.
 //     Constructor: [SearchRead].
 //

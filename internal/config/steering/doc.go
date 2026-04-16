@@ -20,10 +20,10 @@
 // The [InclusionMode] type controls when a steering
 // file is injected:
 //
-//   - [InclusionAlways]  — included in every packet.
-//   - [InclusionAuto]    — included when the prompt
+//   - [InclusionAlways]: included in every packet.
+//   - [InclusionAuto]: included when the prompt
 //     matches the file's globs or keywords.
-//   - [InclusionManual]  — included only when named
+//   - [InclusionManual]: included only when named
 //     explicitly.
 //
 // # Tool-Native Paths
@@ -31,10 +31,10 @@
 // Directory and extension constants map each editor
 // to its native format:
 //
-//   - [DirCursorDot] + [DirRules] + [ExtMDC] —
+//   - [DirCursorDot] + [DirRules] + [ExtMDC]:
 //     Cursor rules (.cursor/rules/*.mdc).
-//   - [DirClinerules] — Cline rules directory.
-//   - [DirKiroDot] + [DirSteering] — Kiro steering.
+//   - [DirClinerules]: Cline rules directory.
+//   - [DirKiroDot] + [DirSteering]: Kiro steering.
 //
 // # Foundation Files
 //
@@ -44,9 +44,9 @@
 //
 // # Other Constants
 //
-//   - [DefaultPriority] (50) — injection priority
+//   - [DefaultPriority] (50): injection priority
 //     when omitted from frontmatter.
-//   - [LabelAllTools] — display label when a file
+//   - [LabelAllTools]: display label when a file
 //     applies to all tools.
 //
 // # Concurrency

@@ -66,7 +66,7 @@
 //
 // # Subpackages
 //
-//	cmd/ -- one subpackage per hook or plumbing command
-//	core/ -- shared helpers (archive, event, health,
+//	cmd/: one subpackage per hook or plumbing command
+//	core/: shared helpers (archive, event, health,
 //	  resource, state, stats)
 package system

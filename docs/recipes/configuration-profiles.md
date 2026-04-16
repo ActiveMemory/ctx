@@ -99,10 +99,10 @@ active: none (.ctxrc does not exist)
 
 Edit the source files directly:
 
-- **`.ctxrc.dev`** -- add any `.ctxrc` keys you want active during
+- **`.ctxrc.dev`**: add any `.ctxrc` keys you want active during
   development (e.g., `log_level: debug`, `notify.events`,
   `notify.webhook_url`).
-- **`.ctxrc.base`** -- keep this minimal. It represents your
+- **`.ctxrc.base`**: keep this minimal. It represents your
   "production" defaults.
 
 After editing a source file, re-run `ctx config switch <profile>`

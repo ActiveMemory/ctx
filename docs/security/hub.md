@@ -27,7 +27,7 @@ within a team or homelab. It assumes:
   **strongly recommended** but not mandatory.
 - Client machines are trusted enough to hold a per-project client
   token. Losing a client token is roughly equivalent to losing an
-  API key — scoped damage, not total compromise.
+  API key: scoped damage, not total compromise.
 - Entry content is **not** secret. Decisions, learnings, and
   conventions may be indexed by AI agents, rendered in docs,
   shared across projects. Do not push credentials or PII into
@@ -84,7 +84,7 @@ keyring.
     - Never expose `<data-dir>` over NFS, SMB, or shared
       filesystems.
     - Treat `<data-dir>` the same way you'd treat
-      `/etc/shadow` — back it up encrypted, never check it
+      `/etc/shadow`: back it up encrypted, never check it
       into version control.
 
     Hashing `clients.json` and moving to keyring-backed storage
@@ -101,7 +101,7 @@ Every published entry is validated before it touches the log:
 - **ID** and **Origin** are required and non-empty.
 - **Content size** is capped at **1 MB**. Reasonable for text,
   hostile for attempts to fill the disk.
-- **Duplicate project registration** is rejected — a client that
+- **Duplicate project registration** is rejected; a client that
   replays an old `Register` call gets an error, not a second
   token.
 
@@ -158,7 +158,7 @@ manually by the operator (see
 ## Responsible Disclosure
 
 Security issues in the hub follow the same process as the rest
-of ctx — see [Reporting](reporting.md).
+of ctx; see [Reporting](reporting.md).
 
 ## See Also
 

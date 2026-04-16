@@ -93,7 +93,7 @@ ctx pad edit 1 --append "$(ctx pad show 2)"
 # Reorder
 ctx pad mv 2 1
 
-# Clean up (IDs are stable — they don't shift when entries are deleted)
+# Clean up (IDs are stable; they don't shift when entries are deleted)
 ctx pad rm 2
 ```
 
@@ -101,7 +101,7 @@ ctx pad rm 2
 
 Entries can contain `#word` tags for lightweight categorization. Tags are
 convention-based: any `#word` token in an entry's text is a tag. No special
-syntax to add or remove them — use the existing `add` and `edit` commands.
+syntax to add or remove them; use the existing `add` and `edit` commands.
 
 ```bash
 # Add tagged entries
@@ -142,7 +142,7 @@ ctx pad edit 1 --append "checked" --tag done
 ctx pad edit 1 "check DNS propagation"
 ```
 
-Entry IDs are stable — they don't shift when other entries are deleted, so
+Entry IDs are stable; they don't shift when other entries are deleted, so
 `ctx pad rm 3` always targets the same entry. Use `ctx pad normalize` to
 reassign IDs as 1..N if gaps bother you. Tags are case-sensitive and support
 letters, digits, hyphens, and underscores (`#high-priority`, `#v2`, `#my_tag`).

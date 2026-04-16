@@ -11,12 +11,12 @@
 //
 // The package is split into two focused subpackages:
 //
-//   - **[format]** — small format primitives:
+//   - **[format]**: small format primitives;
 //     part-navigation links for multipart sessions
 //     ([PartNavigation]), [Duration] for human-readable
 //     time spans, and [ToolUse] for one-line tool-call
 //     summaries.
-//   - **[frontmatter]** — YAML frontmatter assembly:
+//   - **[frontmatter]**: YAML frontmatter assembly;
 //     heading resolution from session content, field
 //     writing, and ordering so re-import produces
 //     byte-identical output.
@@ -29,10 +29,10 @@
 //
 // # Public Surface
 //
-//   - **[Opts]**             — flag-bag for source
+//   - **[Opts]**: flag-bag for source
 //     selection.
-//   - **[format]**           — see subpackage docs.
-//   - **[frontmatter]**      — see subpackage docs.
+//   - **[format]**: see subpackage docs.
+//   - **[frontmatter]**: see subpackage docs.
 //
 // # Concurrency
 //

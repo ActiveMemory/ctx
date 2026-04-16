@@ -12,13 +12,13 @@
 // [Content] resolves the entry body by checking three
 // sources in strict priority order:
 //
-//  1. File flag -- when AddConfig.FromFile is set, the
+//  1. File flag: when AddConfig.FromFile is set, the
 //     file is read via io.SafeReadUserFile and its
 //     trimmed contents are returned.
-//  2. Positional arguments -- when args has more than
+//  2. Positional arguments: when args has more than
 //     one element, args[1:] are joined with a space
 //     separator.
-//  3. Piped stdin -- when stdin is not a terminal
+//  3. Piped stdin: when stdin is not a terminal
 //     (character device), all lines are read with a
 //     bufio.Scanner and joined with newlines.
 //

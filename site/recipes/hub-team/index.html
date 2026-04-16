@@ -1318,7 +1318,7 @@
   <a href="#trust-model-read-this-first" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Trust Model — Read This First
+        Trust Model: Read This First
       
     </span>
   </a>
@@ -1806,7 +1806,7 @@
   <a href="#trust-model-read-this-first" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Trust Model — Read This First
+        Trust Model: Read This First
       
     </span>
   </a>
@@ -1988,7 +1988,7 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h1 id="team-knowledge-bus">Team Knowledge Bus<a class="headerlink" href="#team-knowledge-bus" title="Permanent link">&para;</a></h1>
 <p>This recipe shows <strong>how a small trusted team uses a <code>ctx</code>
-Hub as a shared knowledge bus</strong> — the "Story 2" shape
+Hub as a shared knowledge bus</strong>, the "Story 2" shape
 from the <a href="../hub-overview/">Hub overview</a>. You're not
 building a wiki, you're not replacing your issue tracker,
 and you're not running a multi-tenant service. You're
@@ -2005,7 +2005,7 @@ without ceremony.</p>
   <code>ctx connection register</code>-ed their working projects with
   the hub.</li>
 </ul>
-<h2 id="trust-model-read-this-first">Trust Model — Read This First<a class="headerlink" href="#trust-model-read-this-first" title="Permanent link">&para;</a></h2>
+<h2 id="trust-model-read-this-first">Trust Model: Read This First<a class="headerlink" href="#trust-model-read-this-first" title="Permanent link">&para;</a></h2>
 <p>The hub assumes <strong>everyone holding a client token is
 friendly</strong>. There's no per-user attribution you can rely
 on, no read ACL beyond subscription filters, and <code>Origin</code>
@@ -2036,11 +2036,11 @@ platform instead.</p>
 <a href="../hub-personal/">personal recipe</a>, but with different
 social expectations:</p>
 <ol>
-<li><strong>Record</strong> — when you learn something that would save
+<li><strong>Record</strong>: when you learn something that would save
    a teammate time, capture it with <code>ctx add --share</code>.</li>
-<li><strong>Subscribe</strong> — every engineer's project directories
+<li><strong>Subscribe</strong>: every engineer's project directories
    subscribe to the types the team cares about.</li>
-<li><strong>Load</strong> — agents pick up shared entries automatically
+<li><strong>Load</strong>: agents pick up shared entries automatically
    via the auto-sync hook and the <code>--include-hub</code> flag
    in the PreToolUse hook pipeline.</li>
 </ol>
@@ -2067,9 +2067,9 @@ problem save time if they already knew this?" If yes,
 <p><strong>Learnings</strong>:</p>
 <ul>
 <li>✅ Gotchas, surprising behavior, flaky infrastructure
-  quirks — anything you'd tell a teammate over coffee
+  quirks, anything you'd tell a teammate over coffee
   with "watch out for X".</li>
-<li>✅ Lessons from incidents — right after the postmortem
+<li>✅ Lessons from incidents, right after the postmortem
   is the highest-value time to share.</li>
 <li>❌ Internal debugging notes that only make sense with
   context from your current branch.</li>
@@ -2086,10 +2086,10 @@ problem save time if they already knew this?" If yes,
 to <code>task</code> unless the team has a specific reason (e.g., a
 cross-cutting migration you want visible everywhere).</p>
 <h2 id="a-realistic-week">A Realistic Week<a class="headerlink" href="#a-realistic-week" title="Permanent link">&para;</a></h2>
-<p><strong>Monday — 3 AM incident, shared learning</strong></p>
+<p><strong>Monday, 3 AM incident, shared learning</strong></p>
 <p>On-call engineer Alice gets paged: the payment service
 starts returning 500s after a dependency update. After
-an hour she finds the culprit — a breaking change in a
+an hour she finds the culprit: a breaking change in a
 transitive gRPC dep that only manifests under high
 concurrency. Postmortem on Tuesday, but right now she
 records the learning:</p>
@@ -2107,8 +2107,8 @@ context packet contains this learning. When Bob starts
 work on the <code>ledger</code> service (which also uses grpc-go),
 his Claude Code session already knows about the gotcha
 without Bob having to read the incident channel.</p>
-<p><strong>Wednesday — cross-service decision</strong></p>
-<p>The team agrees on a new pattern for API versioning —
+<p><strong>Wednesday, cross-service decision</strong></p>
+<p>The team agrees on a new pattern for API versioning:
 header-based instead of URL-based. Platform lead Carol
 records the decision:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span>--share<span class="w"> </span><span class="se">\</span>
@@ -2126,7 +2126,7 @@ automatically. When Dave starts adding endpoints to the
 <code>inventory</code> service on Thursday, Claude already prompts
 him for the header pattern instead of defaulting to
 <code>/v1/</code>.</p>
-<p><strong>Friday — convention drift caught at review</strong></p>
+<p><strong>Friday, convention drift caught at review</strong></p>
 <p>Dave notices that his PR auto-formatted some error
 messages to end with periods. He recalls the team
 convention is "no trailing period" but can't remember
@@ -2165,7 +2165,7 @@ experiment project, subscribing only to <code>convention</code>
 might be enough.</p>
 <p><strong>Run a single hub, not one per team.</strong> If two teams
 need to share knowledge, they should share a hub.
-Splitting hubs by team creates silos — which is often
+Splitting hubs by team creates silos, which is often
 exactly the thing you were trying to solve.</p>
 <h2 id="operational-concerns">Operational Concerns<a class="headerlink" href="#operational-concerns" title="Permanent link">&para;</a></h2>
 <p>The team recipe assumes someone owns the hub host. That
@@ -2202,7 +2202,7 @@ a single-node hub with daily backups is usually fine.</p>
   revocation steps.</li>
 <li><strong>No checked-in tokens.</strong> <code>.context/.connect.enc</code> is
   encrypted with the local machine key, but don't push
-  it to shared repos — it's per-workstation.</li>
+  it to shared repos; it's per-workstation.</li>
 </ul>
 <h2 id="what-this-recipe-is-not">What This Recipe Is <em>Not</em><a class="headerlink" href="#what-this-recipe-is-not" title="Permanent link">&para;</a></h2>
 <p><strong>Not a wiki replacement.</strong> The hub is for structured
@@ -2213,7 +2213,7 @@ self-asserted. If compliance requires provenance, the
 hub is the wrong tool.</p>
 <p><strong>Not a ticket system.</strong> Task sharing works, but
 mature teams already have Jira/Linear/Github Issues.
-Don't try to replace those with hub tasks — use the
+Don't try to replace those with hub tasks; use the
 hub for lightweight cross-project todos that your
 existing tracker doesn't capture well.</p>
 <p><strong>Not a production service for end users.</strong> This is
@@ -2221,17 +2221,17 @@ internal team infrastructure. Do not expose the hub to
 customers, partners, or the open internet.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../hub-overview/">Hub overview</a> — when to use the
+<li><a href="../hub-overview/">Hub overview</a>: when to use the
   hub and when not to.</li>
-<li><a href="../hub-personal/">Personal cross-project brain</a> —
+<li><a href="../hub-personal/">Personal cross-project brain</a>:
   the single-developer companion recipe.</li>
-<li><a href="../hub-multi-machine/">Multi-machine setup</a> —
+<li><a href="../hub-multi-machine/">Multi-machine setup</a>:
   standing up the hub on a LAN host.</li>
-<li><a href="../hub-cluster/">HA cluster</a> — optional redundancy
+<li><a href="../hub-cluster/">HA cluster</a>: optional redundancy
   for larger teams.</li>
-<li><a href="../../operations/hub/">Hub operations</a> — backup,
+<li><a href="../../operations/hub/">Hub operations</a>: backup,
   rotation, monitoring.</li>
-<li><a href="../../security/hub/">Hub security</a> — threat model
+<li><a href="../../security/hub/">Hub security</a>: threat model
   and hardening checklist.</li>
 </ul>
 

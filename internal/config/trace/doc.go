@@ -18,42 +18,42 @@
 //
 // # Git Trailer
 //
-//   - [TrailerKey] ("ctx-context") — the git trailer
+//   - [TrailerKey] ("ctx-context"): the git trailer
 //     key embedded in commit messages.
-//   - [TrailerFormat] — the format string for the
+//   - [TrailerFormat]: the format string for the
 //     trailer line.
 //
 // # Reference Types
 //
 //   - [RefTypeNote], [RefTypeSession],
 //     [RefTypeDecision], [RefTypeLearning],
-//     [RefTypeConvention], [RefTypeTask] — identifiers
+//     [RefTypeConvention], [RefTypeTask]: identifiers
 //     used in ctx-context trailer values.
-//   - [RefFormat], [SessionRefFormat] — format strings
+//   - [RefFormat], [SessionRefFormat]: format strings
 //     for numbered and session refs.
 //
 // # Display Defaults
 //
-//   - [DefaultLastFile] (20) — commits shown by
+//   - [DefaultLastFile] (20): commits shown by
 //     ctx trace file.
-//   - [DefaultLastShow] (10) — commits shown by
+//   - [DefaultLastShow] (10): commits shown by
 //     ctx trace with no arguments.
-//   - [ShortHashLen] (7) — abbreviated hash length.
+//   - [ShortHashLen] (7): abbreviated hash length.
 //
 // # Hook Management
 //
-//   - [ActionEnable], [ActionDisable] — arguments
+//   - [ActionEnable], [ActionDisable]: arguments
 //     for ctx trace hook enable/disable.
-//   - [CtxTraceMarker] — sentinel string that
+//   - [CtxTraceMarker]: sentinel string that
 //     identifies ctx-installed git hooks.
 //   - [ScriptPrepareCommitMsg],
-//     [ScriptPostCommit] — embedded hook script
+//     [ScriptPostCommit]: embedded hook script
 //     filenames.
 //
 // # Storage Files
 //
 //   - [FileHistory], [FileOverrides],
-//     [FilePending] — JSONL filenames within the
+//     [FilePending]: JSONL filenames within the
 //     trace state directory.
 //
 // # Concurrency

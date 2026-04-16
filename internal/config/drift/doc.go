@@ -18,36 +18,36 @@
 //
 // IssueType constants classify each detected problem:
 //
-//   - IssueDeadPath -- a file path reference that no
+//   - IssueDeadPath: a file path reference that no
 //     longer resolves on disk
-//   - IssueStaleness -- completed tasks that should be
+//   - IssueStaleness: completed tasks that should be
 //     archived
-//   - IssueSecret -- a file that may contain secrets
+//   - IssueSecret: a file that may contain secrets
 //     or credentials
-//   - IssueMissing -- a required context file that does
+//   - IssueMissing: a required context file that does
 //     not exist
-//   - IssueStaleAge -- a context file not modified for
+//   - IssueStaleAge: a context file not modified for
 //     an extended period
-//   - IssueEntryCount -- a knowledge file with too many
+//   - IssueEntryCount: a knowledge file with too many
 //     entries
-//   - IssueMissingPackage -- an internal Go package not
+//   - IssueMissingPackage: an internal Go package not
 //     documented in ARCHITECTURE.md
-//   - IssueStaleHeader -- a file whose comment header
+//   - IssueStaleHeader: a file whose comment header
 //     doesn't match the embedded template
-//   - IssueInvalidTool -- an unsupported tool identifier
+//   - IssueInvalidTool: an unsupported tool identifier
 //     in a steering file or .ctxrc
-//   - IssueHookNoExec -- a hook script missing the
+//   - IssueHookNoExec: a hook script missing the
 //     executable permission bit
-//   - IssueStaleSyncFile -- a synced tool-native file
+//   - IssueStaleSyncFile: a synced tool-native file
 //     that is out of date versus its source
 //
 // # Status Types
 //
 // A drift report carries an overall StatusType:
 //
-//   - StatusOk -- no issues detected
-//   - StatusWarning -- non-critical issues found
-//   - StatusViolation -- constitution violations found
+//   - StatusOk: no issues detected
+//   - StatusWarning: non-critical issues found
+//   - StatusViolation: constitution violations found
 //
 // # Check Names
 //

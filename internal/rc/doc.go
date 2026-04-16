@@ -13,15 +13,15 @@
 //
 // # Configuration Sources (Resolution Order)
 //
-//  1. CLI overrides -- set via ctx --context-dir
+//  1. CLI overrides: set via ctx --context-dir
 //     (highest priority, stored in rcOverrideDir).
-//  2. Environment variables -- CTX_DIR,
+//  2. Environment variables: CTX_DIR,
 //     CTX_TOKEN_BUDGET override .ctxrc fields.
-//  3. .ctxrc (YAML) -- read once at process start
+//  3. .ctxrc (YAML): read once at process start
 //     by [load]. Parse errors are logged via
 //     [internal/write/rc.ParseWarning] and defaults
 //     are kept; a malformed .ctxrc never aborts ctx.
-//  4. Defaults -- every field has a hardcoded default
+//  4. Defaults: every field has a hardcoded default
 //     in [Default] (8000 token budget, 7-day archive,
 //     200k context window, etc.).
 //
@@ -33,26 +33,26 @@
 //
 // [ContextDir] resolves the .context/ path:
 //
-//  1. CLI override (rcOverrideDir) -- return absolute.
-//  2. Configured absolute path -- return as-is.
-//  3. Upward walk from CWD ([walkForContextDir]) --
+//  1. CLI override (rcOverrideDir): return absolute.
+//  2. Configured absolute path: return as-is.
+//  3. Upward walk from CWD ([walkForContextDir]):
 //     find the first ancestor containing a matching
 //     directory, bounded by the git root.
-//  4. Fallback -- filepath.Join(cwd, name) so that
+//  4. Fallback: filepath.Join(cwd, name) so that
 //     ctx init can create a fresh .context/.
 //
 // # Key Accessors
 //
-//   - [TokenBudget], [ContextWindow] -- budgets
-//   - [AutoArchive], [ArchiveAfterDays] -- lifecycle
+//   - [TokenBudget], [ContextWindow]: budgets
+//   - [AutoArchive], [ArchiveAfterDays]: lifecycle
 //   - [ScratchpadEncrypt], [KeyPath],
-//     [KeyRotationDays] -- encryption
-//   - [ClassifyRules], [SpecSignalWords] -- memory
+//     [KeyRotationDays]: encryption
+//   - [ClassifyRules], [SpecSignalWords]: memory
 //   - [HooksEnabled], [HooksDir], [HookTimeout] --
 //     hook system
-//   - [SteeringDir] -- steering layer
-//   - [Tool], [ActiveProfile] -- tool and profile
-//   - [Validate] -- strict YAML validation with
+//   - [SteeringDir]: steering layer
+//   - [Tool], [ActiveProfile]: tool and profile
+//   - [Validate]: strict YAML validation with
 //     unknown-field warnings
 //
 // # Concurrency

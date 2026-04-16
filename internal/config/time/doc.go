@@ -16,29 +16,29 @@
 //
 // # Format Layouts
 //
-//   - [DateFormat] ("2006-01-02") — the canonical
+//   - [DateFormat] ("2006-01-02"): the canonical
 //     YYYY-MM-DD layout for dates.
-//   - [DateTimeFmt] — date with hours and minutes.
-//   - [DateTimePreciseFmt] — date with full HH:MM:SS.
-//   - [Format] ("15:04:05") — time-only layout.
-//   - [CompactTimestamp] — YYYYMMDD-HHMMSS layout
+//   - [DateTimeFmt]: date with hours and minutes.
+//   - [DateTimePreciseFmt]: date with full HH:MM:SS.
+//   - [Format] ("15:04:05"): time-only layout.
+//   - [CompactTimestamp]: YYYYMMDD-HHMMSS layout
 //     used in entry headers and task timestamps.
-//   - [OlderFormat] ("Jan 2, 2006") — human-friendly
+//   - [OlderFormat] ("Jan 2, 2006"): human-friendly
 //     layout for dates older than a week.
 //
 // # Duration Constants
 //
 //   - [HoursPerDay] (24), [MinutesPerHour] (60),
-//     [DaysPerWeek] (7) — integer constants for
+//     [DaysPerWeek] (7): integer constants for
 //     duration arithmetic that avoids magic numbers.
 //
 // # Date Parsing Helpers
 //
-//   - [DateMinLen] — minimum string length for a
+//   - [DateMinLen]: minimum string length for a
 //     YYYY-MM-DD date (10 characters).
-//   - [DateHyphenPos1], [DateHyphenPos2] — byte
+//   - [DateHyphenPos1], [DateHyphenPos2]: byte
 //     positions of hyphens for fast validation.
-//   - [InclusiveUntilOffset] — duration added to
+//   - [InclusiveUntilOffset]: duration added to
 //     --until flags to include the entire end day.
 //
 // # Concurrency

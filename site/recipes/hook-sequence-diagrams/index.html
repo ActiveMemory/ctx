@@ -1330,7 +1330,7 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="hook-lifecycle">Hook Lifecycle<a class="headerlink" href="#hook-lifecycle" title="Permanent link">&para;</a></h2>
-<p>This page documents the <strong>ctx system hooks</strong> — the built-in
+<p>This page documents the <strong>ctx system hooks</strong>: the built-in
 <code>ctx system *</code> subcommands that Claude Code invokes via
 <code>.claude/hooks.json</code> at lifecycle events. These are owned by
 ctx itself, not authored by users.</p>
@@ -1338,15 +1338,15 @@ ctx itself, not authored by users.</p>
 <p class="admonition-title">Not to Be Confused with <code>ctx trigger</code></p>
 <p><code>ctx</code> has <strong>three distinct hook-like layers</strong>:</p>
 <ul>
-<li><strong><code>ctx system</code> hooks</strong> (this page) — built-in, owned
+<li><strong><code>ctx system</code> hooks</strong> (this page): built-in, owned
   by ctx, wired into Claude Code via
   <code>internal/assets/claude/hooks/hooks.json</code>.</li>
-<li><strong><code>ctx trigger</code></strong> — user-authored shell scripts in
+<li><strong><code>ctx trigger</code></strong>: user-authored shell scripts in
   <code>.context/hooks/&lt;type&gt;/*.sh</code>. See
   <a href="../../cli/trigger/"><code>ctx trigger</code> reference</a> and the
   <a href="../triggers/">trigger authoring recipe</a>.</li>
 <li><strong>Claude Code hooks</strong> configured directly in
-  <code>.claude/settings.local.json</code> — tool-specific, not
+  <code>.claude/settings.local.json</code>, tool-specific, not
   portable across AI tools.</li>
 </ul>
 <p>This page is <em>only</em> about the first category.</p>

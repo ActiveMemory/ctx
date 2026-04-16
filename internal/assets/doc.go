@@ -17,22 +17,22 @@
 //
 // The FS variable includes:
 //
-//   - claude/ -- CLAUDE.md, plugin.json, and skill
+//   - claude/: CLAUDE.md, plugin.json, and skill
 //     definitions with SKILL.md and reference docs
-//   - context/ -- context file templates (TASKS.md,
+//   - context/: context file templates (TASKS.md,
 //     DECISIONS.md, CONVENTIONS.md, etc.)
-//   - entry-templates/ -- Markdown scaffolds for new
+//   - entry-templates/: Markdown scaffolds for new
 //     decisions, learnings, tasks, conventions
-//   - hooks/ -- message templates and trace scripts
+//   - hooks/: message templates and trace scripts
 //     for lifecycle hooks
-//   - integrations/ -- Copilot instructions, CLI
+//   - integrations/: Copilot instructions, CLI
 //     hooks, agent configs, and scripts
-//   - project/ -- README templates for subdirectories
-//   - schema/ -- JSON Schema for .ctxrc validation
-//   - why/ -- philosophy documents (manifesto, about,
+//   - project/: README templates for subdirectories
+//   - schema/: JSON Schema for .ctxrc validation
+//   - why/: philosophy documents (manifesto, about,
 //     design invariants)
-//   - permissions/ -- permission text files
-//   - commands/ -- YAML command/flag descriptions
+//   - permissions/: permission text files
+//   - commands/: YAML command/flag descriptions
 //
 // # Accessor Packages
 //
@@ -40,9 +40,9 @@
 // accessors grouped by domain, so callers do not
 // need to know embed paths:
 //
-//   - read/desc      -- command/flag/text descriptions
-//   - read/entry     -- entry template files
-//   - read/hook      -- hook message templates
-//   - read/skill     -- skill SKILL.md files
-//   - read/template  -- context file templates
+//   - read/desc:      command/flag/text descriptions
+//   - read/entry:     entry template files
+//   - read/hook:      hook message templates
+//   - read/skill:     skill SKILL.md files
+//   - read/template:  context file templates
 package assets

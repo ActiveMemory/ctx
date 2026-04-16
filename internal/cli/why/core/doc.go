@@ -13,13 +13,13 @@
 // The why core layer is split into focused packages
 // that each handle one aspect of document display:
 //
-//   - data -- document alias mappings and display
+//   - data: document alias mappings and display
 //     ordering for the interactive menu
-//   - menu -- interactive numbered menu that reads
+//   - menu: interactive numbered menu that reads
 //     user selection from stdin
-//   - show -- loads embedded philosophy documents,
+//   - show: loads embedded philosophy documents,
 //     strips MkDocs syntax, and prints them
-//   - strip -- removes MkDocs-specific markup
+//   - strip: removes MkDocs-specific markup
 //     (frontmatter, admonitions, tabs, image refs,
 //     relative links) for clean terminal display
 //

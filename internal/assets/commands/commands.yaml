@@ -317,7 +317,7 @@ hub.start:
     Start the ctx Hub gRPC server.
 
     On first run, generates an admin token and prints it to
-    stdout — save this token; it's required for
+    stdout. Save this token; it's required for
     `ctx connection register` in client projects.
 
     With --daemon, forks to the background and writes a PID
@@ -334,7 +334,7 @@ hub.stop:
 
     Sends SIGTERM to the PID recorded in <data-dir>/hub.pid,
     waits for in-flight RPCs to drain, and removes the PID
-    file. Safe to rerun — if no daemon is running, returns a
+    file. Safe to rerun: if no daemon is running, returns a
     "no running hub" error without side effects.
   short: Stop a running ctx Hub daemon
 hub.status:
@@ -1006,7 +1006,7 @@ serve:
     .context/journal-site. With a directory argument, serves
     that directory if it contains a zensical.toml.
 
-    This command does NOT start a ctx Hub — to run a hub,
+    This command does NOT start a ctx Hub. To run a hub,
     use `ctx hub start`.
 
     Requires zensical to be installed:
@@ -1096,7 +1096,7 @@ system:
       specs-nudge                 Plan-to-specs directory nudge (PreToolUse)
       check-memory-drift          Memory drift nudge (MEMORY.md changed)
       heartbeat                   Session heartbeat webhook (no stdout)
-  short: Hook plumbing (hidden) — promoted commands moved to top-level
+  short: Hook plumbing (hidden); promoted commands moved to top-level
 backup:
   long: |-
     Create timestamped tar.gz archives of project context and/or global
@@ -1510,7 +1510,7 @@ trace:
 
     ctx trace links commits back to the decisions, tasks,
     learnings, and sessions that motivated them. git log shows
-    what changed, git blame shows who — ctx trace shows why.
+    what changed, git blame shows who; ctx trace shows why.
 
     Subcommands and forms:
       ctx trace <commit>         Show context for a specific commit

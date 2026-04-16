@@ -25,10 +25,10 @@
 //
 // # Subpackages
 //
-//	cmd/start -- server startup logic
-//	cmd/stop -- graceful shutdown
-//	cmd/status -- health and topology display
-//	cmd/peer -- peer management
-//	cmd/stepdown -- leader yield
-//	core -- shared Hub client and config helpers
+//	cmd/start: server startup logic
+//	cmd/stop: graceful shutdown
+//	cmd/status: health and topology display
+//	cmd/peer: peer management
+//	cmd/stepdown: leader yield
+//	core: shared Hub client and config helpers
 package hub

@@ -30,8 +30,8 @@
 //
 // # Subpackages
 //
-//	cmd/add, cmd/list, cmd/preview -- CRUD operations
-//	cmd/initcmd -- foundation file generation
-//	cmd/synccmd -- tool-native export
-//	core -- glob matching, rule parsing, and formatting
+//	cmd/add, cmd/list, cmd/preview: CRUD operations
+//	cmd/initcmd: foundation file generation
+//	cmd/synccmd: tool-native export
+//	core: glob matching, rule parsing, and formatting
 package steering

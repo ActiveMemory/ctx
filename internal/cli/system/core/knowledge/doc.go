@@ -12,15 +12,15 @@
 //
 // # Public Surface
 //
-//   - **[ScanFiles](contextDir)** — counts entries
+//   - **[ScanFiles](contextDir)**: counts entries
 //     in DECISIONS.md and LEARNINGS.md, and lines
 //     in CONVENTIONS.md, and returns the result.
-//   - **[FormatWarnings](report, thresholds)** —
+//   - **[FormatWarnings](report, thresholds)**:
 //     turns the scan into the human-readable
 //     warning text emitted via the VERBATIM relay.
-//   - **[EmitWarning](text)** — writes the warning
+//   - **[EmitWarning](text)**: writes the warning
 //     through the standard nudge path.
-//   - **[CheckHealth](contextDir)** — convenience:
+//   - **[CheckHealth](contextDir)**: convenience;
 //     scan + threshold compare in one call;
 //     returns the warning text or empty.
 //

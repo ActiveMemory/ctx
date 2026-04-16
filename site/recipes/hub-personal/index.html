@@ -1311,7 +1311,7 @@
   <a href="#0900-start-work-on-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        09:00 — Start Work on api
+        09:00 - Start Work on api
       
     </span>
   </a>
@@ -1322,7 +1322,7 @@
   <a href="#1030-you-discover-a-gotcha" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10:30 — You Discover a Gotcha
+        10:30 - You Discover a Gotcha
       
     </span>
   </a>
@@ -1333,7 +1333,7 @@
   <a href="#1200-you-switch-to-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12:00 — You Switch to cli
+        12:00 - You Switch to cli
       
     </span>
   </a>
@@ -1344,7 +1344,7 @@
   <a href="#1400-you-codify-a-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14:00 — You Codify a Convention
+        14:00 - You Codify a Convention
       
     </span>
   </a>
@@ -1355,7 +1355,7 @@
   <a href="#1630-end-of-day" class="md-nav__link">
     <span class="md-ellipsis">
       
-        16:30 — End of Day
+        16:30 - End of Day
       
     </span>
   </a>
@@ -1857,7 +1857,7 @@
   <a href="#0900-start-work-on-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        09:00 — Start Work on api
+        09:00 - Start Work on api
       
     </span>
   </a>
@@ -1868,7 +1868,7 @@
   <a href="#1030-you-discover-a-gotcha" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10:30 — You Discover a Gotcha
+        10:30 - You Discover a Gotcha
       
     </span>
   </a>
@@ -1879,7 +1879,7 @@
   <a href="#1200-you-switch-to-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12:00 — You Switch to cli
+        12:00 - You Switch to cli
       
     </span>
   </a>
@@ -1890,7 +1890,7 @@
   <a href="#1400-you-codify-a-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14:00 — You Codify a Convention
+        14:00 - You Codify a Convention
       
     </span>
   </a>
@@ -1901,7 +1901,7 @@
   <a href="#1630-end-of-day" class="md-nav__link">
     <span class="md-ellipsis">
       
-        16:30 — End of Day
+        16:30 - End of Day
       
     </span>
   </a>
@@ -2044,24 +2044,24 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h1 id="personal-cross-project-brain">Personal Cross-Project Brain<a class="headerlink" href="#personal-cross-project-brain" title="Permanent link">&para;</a></h1>
 <p>This recipe shows <strong>how one developer uses a <code>ctx</code> Hub
-across their own projects day-to-day</strong> — the "Story 1"
+across their own projects day-to-day</strong>, the "Story 1"
 shape from the <a href="../hub-overview/">Hub overview</a>. You're not
 setting up infrastructure for a team; you're making a
 lesson you learned last Tuesday in project A automatically
 surface when you open project B next Thursday.</p>
 <p><strong>Prerequisites</strong>: a working <code>ctx</code> Hub on localhost
 (see <a href="../hub-getting-started/">Getting Started</a> for the
-~5-minute setup). This recipe assumes the hub is already
+roughly five-minute setup). This recipe assumes the hub is already
 running and you've registered at least two projects.</p>
 <h2 id="the-core-loop">The Core Loop<a class="headerlink" href="#the-core-loop" title="Permanent link">&para;</a></h2>
 <p>Every day, the same three verbs matter:</p>
 <ol>
-<li><strong>Record</strong> — notice a decision, learning, or
+<li><strong>Record</strong>: notice a decision, learning, or
    convention and capture it with <code>ctx add --share</code>.</li>
-<li><strong>Subscribe</strong> — every project you care about is
+<li><strong>Subscribe</strong>: every project you care about is
    subscribed to the types you want delivered (set once
    with <code>ctx connection subscribe</code>).</li>
-<li><strong>Load</strong> — your agent picks up shared entries on next
+<li><strong>Load</strong>: your agent picks up shared entries on next
    session start via the auto-sync hook, or explicitly
    via <code>ctx agent --include-hub</code>.</li>
 </ol>
@@ -2070,19 +2070,19 @@ in the concrete moments where each verb matters.</p>
 <h2 id="a-realistic-day">A Realistic Day<a class="headerlink" href="#a-realistic-day" title="Permanent link">&para;</a></h2>
 <p>You have three projects on your workstation:</p>
 <ul>
-<li><code>~/projects/api</code> — a Go service you're actively
+<li><code>~/projects/api</code>, a Go service you're actively
   developing</li>
-<li><code>~/projects/cli</code> — a companion CLI that consumes the
+<li><code>~/projects/cli</code>, a companion CLI that consumes the
   API</li>
-<li><code>~/projects/dotfiles</code> — your personal conventions and
+<li><code>~/projects/dotfiles</code>, your personal conventions and
   cross-project learnings</li>
 </ul>
 <p>All three are registered with a single hub running on
 <code>localhost:9900</code> (started once at boot, or via a systemd
-user unit — see <a href="../../operations/hub/">Hub operations</a>).
+user unit; see <a href="../../operations/hub/">Hub operations</a>).
 All three subscribe to <code>decision</code>, <code>learning</code>, and
 <code>convention</code>.</p>
-<h3 id="0900-start-work-on-api">09:00 — Start Work on <code>api</code><a class="headerlink" href="#0900-start-work-on-api" title="Permanent link">&para;</a></h3>
+<h3 id="0900-start-work-on-api">09:00 - Start Work on <code>api</code><a class="headerlink" href="#0900-start-work-on-api" title="Permanent link">&para;</a></h3>
 <p>You <code>cd ~/projects/api</code> and start a Claude Code session.
 Behind the scenes, the plugin's <code>PreToolUse</code> hook calls
 <code>ctx agent --budget 8000 --include-hub</code> before the first
@@ -2095,7 +2095,7 @@ tool call. Agent loads:</p>
 <p>So the "use UTC timestamps everywhere" decision you
 recorded in <code>dotfiles</code> last week is already in Claude's
 context for this session, without any manual <code>sync</code>.</p>
-<h3 id="1030-you-discover-a-gotcha">10:30 — You Discover a Gotcha<a class="headerlink" href="#1030-you-discover-a-gotcha" title="Permanent link">&para;</a></h3>
+<h3 id="1030-you-discover-a-gotcha">10:30 - You Discover a Gotcha<a class="headerlink" href="#1030-you-discover-a-gotcha" title="Permanent link">&para;</a></h3>
 <p>While debugging, you find that the API's retry loop
 silently drops the last error when the transport times
 out. This is the kind of thing you'd normally add to
@@ -2118,7 +2118,7 @@ Go service you'll ever write, not just this one. So:</p>
 <code>dotfiles/.context/hub/learnings.md</code> both contain a copy
 of this learning (the <code>ctx connection listen</code> daemon picks
 it up from the ctx Hub's Listen stream).</p>
-<h3 id="1200-you-switch-to-cli">12:00 — You Switch to <code>cli</code><a class="headerlink" href="#1200-you-switch-to-cli" title="Permanent link">&para;</a></h3>
+<h3 id="1200-you-switch-to-cli">12:00 - You Switch to <code>cli</code><a class="headerlink" href="#1200-you-switch-to-cli" title="Permanent link">&para;</a></h3>
 <p><code>cd ~/projects/cli</code>, open a new session. The agent
 packet for <code>cli</code> now includes <strong>the learning you just
 recorded in <code>api</code></strong>, because <code>cli</code> is subscribed to
@@ -2126,11 +2126,11 @@ recorded in <code>api</code></strong>, because <code>cli</code> is subscribed to
 <code>cli/.context/hub/learnings.md</code>.</p>
 <p>You don't have to re-explain the retry-loop gotcha.
 Claude already sees it.</p>
-<h3 id="1400-you-codify-a-convention">14:00 — You Codify a Convention<a class="headerlink" href="#1400-you-codify-a-convention" title="Permanent link">&para;</a></h3>
+<h3 id="1400-you-codify-a-convention">14:00 - You Codify a Convention<a class="headerlink" href="#1400-you-codify-a-convention" title="Permanent link">&para;</a></h3>
 <p>You've been writing error messages in <code>api</code> and decided
 you want a consistent pattern: lowercase start, no
 trailing period, single-sentence. This is a convention,
-not a decision — it applies to every Go project you
+not a decision; it applies to every Go project you
 touch. Record it in <code>dotfiles</code> (since that's your
 "personal standards" project), and share it:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/dotfiles
@@ -2142,7 +2142,7 @@ and fans out to <code>api</code> and <code>cli</code> via the hub. The next
 Claude Code session in either project gets the
 convention injected into the steering-adjacent slot of
 the agent packet.</p>
-<h3 id="1630-end-of-day">16:30 — End of Day<a class="headerlink" href="#1630-end-of-day" title="Permanent link">&para;</a></h3>
+<h3 id="1630-end-of-day">16:30 - End of Day<a class="headerlink" href="#1630-end-of-day" title="Permanent link">&para;</a></h3>
 <p>You didn't run <code>ctx connection sync</code> once. You didn't
 <code>git push</code> anything between projects. You didn't
 remember to tell your agent about the retry-loop gotcha
@@ -2161,7 +2161,7 @@ in the new project. The hub did all of it for you.</p>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Evening: nothing. Everything&#39;s already propagated.</span>
 </span></code></pre></div>
 <p>The hub is passive infrastructure. You never talk <strong>to</strong>
-it directly — you talk <strong>through</strong> it by using <code>--share</code>
+it directly; you talk <strong>through</strong> it by using <code>--share</code>
 on commands you were already running.</p>
 <h2 id="tips-for-solo-use">Tips for Solo Use<a class="headerlink" href="#tips-for-solo-use" title="Permanent link">&para;</a></h2>
 <p><strong>Pick a "standards" project.</strong> One of your projects
@@ -2201,7 +2201,7 @@ context packets get noisy.</p>
 <p><strong>Local storage is fine; no TLS needed.</strong> The hub runs
 on localhost. No one else is on the network. Skip the
 TLS setup from the
-<a href="../hub-multi-machine/">Multi-machine recipe</a> — it's
+<a href="../hub-multi-machine/">Multi-machine recipe</a>; it's
 relevant when the hub is on a LAN host serving multiple
 workstations, not when it's a personal daemon.</p>
 <h2 id="what-this-recipe-is-not">What This Recipe Is <em>Not</em><a class="headerlink" href="#what-this-recipe-is-not" title="Permanent link">&para;</a></h2>
@@ -2210,7 +2210,7 @@ project registration, use
 <a href="../hub-getting-started/">Getting Started</a>.</p>
 <p><strong>Not a team guide.</strong> If you're sharing across humans,
 not just across your own projects, read
-<a href="../hub-team/">Team knowledge bus</a> instead — the trust
+<a href="../hub-team/">Team knowledge bus</a> instead; the trust
 model and operational concerns are different.</p>
 <p><strong>Not production operations.</strong> For backup, log
 rotation, failure recovery, and HA, see
@@ -2218,16 +2218,16 @@ rotation, failure recovery, and HA, see
 <a href="../../operations/hub-failure-modes/">Hub failure modes</a>.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../hub-overview/">Hub overview</a> — when to use the Hub
+<li><a href="../hub-overview/">Hub overview</a>: when to use the Hub
   and when not to.</li>
-<li><a href="../hub-team/">Team knowledge bus</a> — the multi-human
+<li><a href="../hub-team/">Team knowledge bus</a>: the multi-human
   companion recipe.</li>
-<li><a href="../../cli/connection/"><code>ctx connect</code></a> — the client-side
+<li><a href="../../cli/connection/"><code>ctx connect</code></a>: the client-side
   commands used above (<code>subscribe</code>, <code>publish</code>, <code>sync</code>,
   <code>listen</code>, <code>status</code>).</li>
-<li><a href="../../cli/context/"><code>ctx add</code></a> — the <code>--share</code> flag
+<li><a href="../../cli/context/"><code>ctx add</code></a>: the <code>--share</code> flag
   reference.</li>
-<li><a href="../../cli/hub/"><code>ctx hub</code></a> — operator commands for
+<li><a href="../../cli/hub/"><code>ctx hub</code></a>: operator commands for
   starting, stopping, and inspecting the hub.</li>
 </ul>
 

@@ -19,7 +19,7 @@ tracked context files, and a short health snapshot. `--quiet` prints
 just the path; `--json` produces structured output for automation.
 
 This is a hidden, agent-only command that agents are instructed to
-run first in their session-start procedure — it is the authoritative
+run first in their session-start procedure; it is the authoritative
 answer to "where does this project's context live?".
 
 ```bash

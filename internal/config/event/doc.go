@@ -18,52 +18,52 @@
 //
 // Session lifecycle events:
 //
-//   - TypeStart -- emitted when a session begins
-//   - TypeEnd -- emitted when a session ends
+//   - TypeStart: emitted when a session begins
+//   - TypeEnd: emitted when a session ends
 //
 // Notification events:
 //
-//   - TypeTest -- used for test/ping notifications
-//   - TestMessage -- the payload for test events
+//   - TypeTest: used for test/ping notifications
+//   - TestMessage: the payload for test events
 //
 // # Categories and Variables
 //
-//   - CategorySession -- groups session lifecycle
+//   - CategorySession: groups session lifecycle
 //     events for filtering
-//   - VarCaller -- template variable key for the
+//   - VarCaller: template variable key for the
 //     calling editor in session events
 //
 // # Log Files and Rotation
 //
-//   - FileLog ("events.jsonl") -- the active log file
-//   - FileLogPrev ("events.1.jsonl") -- the rotated
+//   - FileLog ("events.jsonl"): the active log file
+//   - FileLogPrev ("events.1.jsonl"): the rotated
 //     previous log
-//   - LogMaxBytes (1 MB) -- size threshold that
+//   - LogMaxBytes (1 MB): size threshold that
 //     triggers rotation
-//   - HookLogMaxBytes (1 MB) -- size threshold for
+//   - HookLogMaxBytes (1 MB): size threshold for
 //     hook-specific log rotation
-//   - RotationSuffix (".1") -- suffix appended during
+//   - RotationSuffix (".1"): suffix appended during
 //     rotation
-//   - DefaultLast (50) -- default event count shown
+//   - DefaultLast (50): default event count shown
 //     by ctx hook event
 //
 // # Display Formatting
 //
-//   - MessageMaxLen (60) -- max characters before an
+//   - MessageMaxLen (60): max characters before an
 //     event message is truncated
-//   - HookFallback ("-") -- placeholder when no hook
+//   - HookFallback ("-"): placeholder when no hook
 //     name can be determined
-//   - TruncationSuffix ("...") -- appended to
+//   - TruncationSuffix ("..."): appended to
 //     truncated messages
 //
 // # Context-Size Events
 //
 // These event names track context window behavior:
 //
-//   - Suppressed -- prompt was suppressed
-//   - Silent -- prompt produced no action
-//   - Checkpoint -- context checkpoint emitted
-//   - WindowWarning -- context window nearing limit
+//   - Suppressed: prompt was suppressed
+//   - Silent: prompt produced no action
+//   - Checkpoint: context checkpoint emitted
+//   - WindowWarning: context window nearing limit
 //
 // # Why Centralized
 //

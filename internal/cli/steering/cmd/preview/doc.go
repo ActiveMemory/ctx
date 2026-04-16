@@ -28,7 +28,7 @@
 //
 // # Arguments
 //
-//   - PROMPT (required) -- the prompt text to match
+//   - PROMPT (required): the prompt text to match
 //     against auto-inclusion keywords.
 //
 // # Output

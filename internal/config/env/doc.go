@@ -17,27 +17,27 @@
 //
 // Core variables that control ctx behavior:
 //
-//   - Home -- the user's home directory ($HOME)
-//   - CtxDir -- overrides the default .context/
+//   - Home: the user's home directory ($HOME)
+//   - CtxDir: overrides the default .context/
 //     directory location ($CTX_DIR)
-//   - CtxTokenBudget -- overrides the default token
+//   - CtxTokenBudget: overrides the default token
 //     budget for context window sizing
 //     ($CTX_TOKEN_BUDGET)
-//   - BackupSMBURL -- SMB share URL for backup
+//   - BackupSMBURL: SMB share URL for backup
 //     operations ($CTX_BACKUP_SMB_URL)
-//   - BackupSMBSubdir -- subdirectory within the SMB
+//   - BackupSMBSubdir: subdirectory within the SMB
 //     share for backups ($CTX_BACKUP_SMB_SUBDIR)
-//   - SessionID -- active AI session identifier used
+//   - SessionID: active AI session identifier used
 //     by ctx trace ($CTX_SESSION_ID)
-//   - SkipPathCheck -- skips PATH validation during
+//   - SkipPathCheck: skips PATH validation during
 //     init; set to "1" in tests
 //     ($CTX_SKIP_PATH_CHECK)
 //
 // # OS-Specific Variables
 //
-//   - OSWindows -- the runtime.GOOS value for Windows,
+//   - OSWindows: the runtime.GOOS value for Windows,
 //     used in platform-specific path resolution
-//   - LocalAppData -- the Windows %LOCALAPPDATA%
+//   - LocalAppData: the Windows %LOCALAPPDATA%
 //     variable for finding config directories
 //
 // # Toggle Values

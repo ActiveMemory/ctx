@@ -16,18 +16,18 @@
 //
 // # Key Constants
 //
-//   - [Name] ("ctx") -- the server name reported in
+//   - [Name] ("ctx"): the server name reported in
 //     the initialize response.
-//   - [Command] ("ctx") -- the binary name used to
+//   - [Command] ("ctx"): the binary name used to
 //     spawn the MCP server process.
-//   - [SubcommandServe] ("serve") -- the subcommand
+//   - [SubcommandServe] ("serve"): the subcommand
 //     under "ctx mcp" that starts the stdio server.
-//   - [ResourceURIPrefix] ("ctx://context/") -- the
+//   - [ResourceURIPrefix] ("ctx://context/"): the
 //     URI scheme and path prefix prepended to
 //     resource names to form full resource URIs.
-//   - [JSONRPCVersion] ("2.0") -- the JSON-RPC
+//   - [JSONRPCVersion] ("2.0"): the JSON-RPC
 //     version string included in every response.
-//   - [PollIntervalSec] (5) -- the default interval
+//   - [PollIntervalSec] (5): the default interval
 //     in seconds between resource-change polls.
 //
 // # Args Helper

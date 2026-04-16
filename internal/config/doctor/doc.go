@@ -18,26 +18,26 @@
 //
 // Every constant maps 1-to-1 to a diagnostic routine:
 //
-//   - CheckContextInit -- verifies .context/ exists
-//   - CheckRequiredFiles -- ensures core markdown files
+//   - CheckContextInit: verifies .context/ exists
+//   - CheckRequiredFiles: ensures core markdown files
 //     (TASKS.md, DECISIONS.md, etc.) are present
-//   - CheckCtxrcValidation -- validates .ctxrc syntax
-//   - CheckDrift -- delegates to drift detection
+//   - CheckCtxrcValidation: validates .ctxrc syntax
+//   - CheckDrift: delegates to drift detection
 //   - CheckPluginInstalled, CheckPluginEnabledGlobal,
-//     CheckPluginEnabledLocal -- verify the companion
+//     CheckPluginEnabledLocal: verify the companion
 //     plugin is installed and activated
-//   - CheckCompanionConfig -- checks companion tool
+//   - CheckCompanionConfig: checks companion tool
 //     configuration status
-//   - CheckEventLogging -- confirms event log is writable
-//   - CheckWebhook -- validates webhook URL and delivery
-//   - CheckReminders -- flags pending reminders
-//   - CheckTaskCompletion -- warns when too many tasks
+//   - CheckEventLogging: confirms event log is writable
+//   - CheckWebhook: validates webhook URL and delivery
+//   - CheckReminders: flags pending reminders
+//   - CheckTaskCompletion: warns when too many tasks
 //     remain incomplete
-//   - CheckContextSize, CheckContextFilePrefix -- measure
+//   - CheckContextSize, CheckContextFilePrefix: measure
 //     token usage against the configured budget
-//   - CheckRecentEvents -- reviews recent event history
+//   - CheckRecentEvents: reviews recent event history
 //   - CheckResourceMemory, CheckResourceSwap,
-//     CheckResourceDisk, CheckResourceLoad -- system
+//     CheckResourceDisk, CheckResourceLoad: system
 //     resource health probes
 //
 // # Categories
@@ -51,11 +51,11 @@
 // Numeric thresholds control when a check transitions
 // from pass to warning:
 //
-//   - TaskCompletionWarnPct (80) -- warn when fewer
+//   - TaskCompletionWarnPct (80): warn when fewer
 //     than 80% of tasks are completed
-//   - TaskCompletionMinCount (5) -- skip ratio check
+//   - TaskCompletionMinCount (5): skip ratio check
 //     until at least 5 tasks exist
-//   - ContextSizeWarnPct (20) -- warn when context
+//   - ContextSizeWarnPct (20): warn when context
 //     window usage exceeds 20%
 //
 // # Why Centralized

@@ -12,7 +12,7 @@
 //
 // # Public Surface
 //
-//   - **[Text](report, w)** — writes the
+//   - **[Text](report, w)**: writes the
 //     human-readable report to `w`. Groups
 //     violations and warnings by issue type
 //     (path refs, staleness, missing files,
@@ -20,7 +20,7 @@
 //     each with status glyphs (`✗`, `⚠`, `✓`)
 //     and a one-line message; passed checks are
 //     listed at the bottom.
-//   - **[JSON](report, w)** — writes a
+//   - **[JSON](report, w)**: writes a
 //     structured JSON document with a UTC
 //     timestamp, the per-issue detail (file,
 //     line, type, message, path, rule), and the

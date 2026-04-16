@@ -16,7 +16,7 @@ const (
 	//   - name: trigger script base name (without .sh)
 	//   - type: trigger type (e.g. pre-tool-use, session-start)
 	//
-	// The generated script has no executable bit — users
+	// The generated script has no executable bit; users
 	// must run `ctx trigger enable <name>` after review, so
 	// unreviewed code never fires on real events.
 	TriggerScript = `#!/usr/bin/env bash

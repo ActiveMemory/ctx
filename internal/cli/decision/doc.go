@@ -22,5 +22,5 @@
 //
 // # Subpackages
 //
-//	cmd/reindex -- cobra command for index regeneration
+//	cmd/reindex: cobra command for index regeneration
 package decision

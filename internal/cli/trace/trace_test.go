@@ -65,7 +65,7 @@ func TestTraceTagAndShow(t *testing.T) {
 		t.Fatalf("WriteHistory: %v", histErr)
 	}
 
-	// Test ctx trace <commit> — should not error
+	// Test ctx trace <commit>; should not error
 	showCmd := Cmd()
 	showCmd.SetArgs([]string{hash[:7]})
 	if showErr := showCmd.Execute(); showErr != nil {

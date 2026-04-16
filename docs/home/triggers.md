@@ -38,7 +38,7 @@ type.
 | `file-save`     | A file is saved                     | Lint on save, update indices           |
 | `context-add`   | A new entry is added to `.context/` | Cross-link, notify, enrich             |
 
-## Triggers Are Arbitrary Code — Treat Them like Pre-Commit Hooks
+## Triggers Are Arbitrary Code: Treat Them like Pre-Commit Hooks
 
 !!! warning "Only Enable Scripts You've Read and Understand"
     A trigger is a shell script with the executable bit set.
@@ -50,7 +50,7 @@ type.
     `ctx trigger add` intentionally creates new scripts
     **disabled** (no executable bit). You must
     `ctx trigger enable <name>` after reviewing the contents.
-    That's not a suggestion — it's the security model.
+    That's not a suggestion; it's the security model.
 
 ## Three Hook-like Layers in ctx
 
@@ -67,7 +67,7 @@ not:
 This page is about the first category. The other two run
 automatically and are invisible to you.
 
-## Triggers vs Steering — Same Problem, Different Shape
+## Triggers vs Steering: Same Problem, Different Shape
 
 Triggers are the imperative counterpart to
 [**steering files**](steering.md). Steering expresses
@@ -82,10 +82,10 @@ Most projects use both.
 
 ## Where to Go Next
 
-- **[Authoring Lifecycle Triggers](../recipes/triggers.md)**
-  — walkthrough with security guidance: scaffold, test,
+- **[Authoring Lifecycle Triggers](../recipes/triggers.md)**:
+  walkthrough with security guidance: scaffold, test,
   enable, iterate.
-- **[`ctx trigger` reference](../cli/trigger.md)** — command
+- **[`ctx trigger` reference](../cli/trigger.md)**: command
   reference, trigger type table, input/output contract.
-- **[Steering files](steering.md)** — the declarative
+- **[Steering files](steering.md)**: the declarative
   counterpart to triggers.

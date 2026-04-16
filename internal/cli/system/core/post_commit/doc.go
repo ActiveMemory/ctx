@@ -14,12 +14,12 @@
 // [ScoreCommitViolations] reads the last commit message
 // and diff tree, then checks for five violation types:
 //
-//   - Missing Spec trailer -- the commit lacks the
+//   - Missing Spec trailer: the commit lacks the
 //     structured spec reference
-//   - Missing Signed-off-by -- no sign-off line
-//   - Single-line message -- no body after the subject
-//   - Missing task reference -- no T-NNN or similar ref
-//   - Source without TASKS.md -- Go files changed but
+//   - Missing Signed-off-by: no sign-off line
+//   - Single-line message: no body after the subject
+//   - Missing task reference: no T-NNN or similar ref
+//   - Source without TASKS.md: Go files changed but
 //     TASKS.md was not updated alongside them
 //
 // Each violation adds a weighted score. When the total

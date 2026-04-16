@@ -17,9 +17,9 @@
 //
 // # Sub-packages
 //
-//   - check -- individual diagnostic functions, each
+//   - check: individual diagnostic functions, each
 //     appending results to a shared [check.Report].
-//   - output -- renders the report as human-readable
+//   - output: renders the report as human-readable
 //     text or machine-readable JSON.
 //
 // # Check Categories

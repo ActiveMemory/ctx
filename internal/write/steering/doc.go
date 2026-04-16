@@ -17,18 +17,18 @@
 //
 // Output families:
 //
-//   - **Init** — [Created], [Skipped],
+//   - **Init**: [Created], [Skipped],
 //     [InitSummary]. The `init` subcommand
 //     announces each foundation file it
 //     materializes (or skipped because it
 //     already exists), then summarizes counts.
-//   - **List / Preview** — [NoFilesFound],
+//   - **List / Preview**: [NoFilesFound],
 //     [FileEntry], [FileCount], [NoFilesMatch],
 //     [PreviewHeader], [PreviewEntry],
 //     [PreviewCount]. Render the available
 //     steering files and their inclusion-rule
 //     match results against a sample prompt.
-//   - **Sync** — [SyncWritten], [SyncSkipped],
+//   - **Sync**: [SyncWritten], [SyncSkipped],
 //     [SyncError], [SyncSummary]. Per-tool
 //     progress narration during
 //     `ctx steering sync`.

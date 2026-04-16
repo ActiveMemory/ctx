@@ -38,7 +38,7 @@ const (
 	PluginMarketplaceID = "activememory-ctx"
 	// PluginSourceDirectory is the source type recorded in
 	// known_marketplaces.json for filesystem-sourced
-	// installs — the dev-loop install path.
+	// installs, the dev-loop install path.
 	PluginSourceDirectory = "directory"
 	// PluginSourceGitHub is the source type recorded for
 	// marketplace installs from the Anthropic-hosted

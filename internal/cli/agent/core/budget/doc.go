@@ -8,7 +8,7 @@
 // assembly algorithm** behind `ctx agent`. Given a token budget
 // (`--budget N`, default 8000) and a loaded [entity.Context],
 // it produces an AI-ready packet that maximizes information
-// density without exceeding the budget — the single most
+// density without exceeding the budget. This is the single most
 // performance-sensitive operation in ctx because it runs at
 // the head of every prompt in tool integrations that use the
 // hook+MCP pipeline.
@@ -18,18 +18,18 @@
 // [AssemblePacket] walks the seven content tiers in priority
 // order, each with its own share of the budget:
 //
-//  1. **CONSTITUTION** — always full; never truncated.
-//  2. **TASKS** — current and pending work.
-//  3. **CONVENTIONS** — coding patterns the AI must follow.
-//  4. **DECISIONS** — index table, then full entries as
+//  1. **CONSTITUTION**: always full; never truncated.
+//  2. **TASKS**: current and pending work.
+//  3. **CONVENTIONS**: coding patterns the AI must follow.
+//  4. **DECISIONS**: index table, then full entries as
 //     budget permits.
-//  5. **LEARNINGS** — same shape as decisions.
-//  6. **STEERING** — matched files for this prompt.
-//  7. **SKILL** — bundled instructions if a skill matched.
+//  5. **LEARNINGS**: same shape as decisions.
+//  6. **STEERING**: matched files for this prompt.
+//  7. **SKILL**: bundled instructions if a skill matched.
 //
 // Lower tiers see whatever budget the higher tiers leave
-// behind. The constitution invariant — "context loading is the
-// first step of every session" — translates into "the
+// behind. The constitution invariant ("context loading is the
+// first step of every session") translates into "the
 // constitution is always in the packet, no exceptions".
 //
 // # Two-Tier Degradation

@@ -14,24 +14,24 @@
 //
 // The package layers four concerns:
 //
-//   - Storage ([Store]) -- append-only JSONL with
+//   - Storage ([Store]): append-only JSONL with
 //     sequence numbers and per-client tokens.
-//   - Transport ([Server]) -- gRPC Register / Publish
+//   - Transport ([Server]): gRPC Register / Publish
 //     / Sync / Listen / Status RPCs.
-//   - Cluster ([Cluster]) -- HashiCorp Raft for leader
+//   - Cluster ([Cluster]): HashiCorp Raft for leader
 //     election only (see Raft-Lite below).
-//   - Client ([Client]) -- connection registration,
+//   - Client ([Client]): connection registration,
 //     sync catch-up, push streaming, and ordered-peer
 //     failover.
 //
 // Supporting pillars:
 //
 //   - Auth ([GenerateAdminToken],
-//     [GenerateClientToken]) -- bearer-token
+//     [GenerateClientToken]): bearer-token
 //     authentication on every RPC.
-//   - Validate ([ValidateEntry]) -- entry schema
+//   - Validate ([ValidateEntry]): entry schema
 //     enforcement and provenance normalization.
-//   - Fan-out -- internal broadcaster delivers each
+//   - Fan-out: internal broadcaster delivers each
 //     new entry to all live Listen subscribers.
 //
 // # Storage Model
@@ -46,7 +46,7 @@
 // # Raft-Lite
 //
 // The package embeds HashiCorp Raft for leader
-// election only -- never for data consensus. Entry
+// election only, never for data consensus. Entry
 // replication uses the sequence-based gRPC sync.
 // Writes are durable on the leader at acceptance;
 // followers catch up asynchronously.

@@ -19,26 +19,26 @@
 // The [TriggerType] alias and its constants define
 // the supported events:
 //
-//   - [PreToolUse]    — fires before an AI tool
+//   - [PreToolUse]: fires before an AI tool
 //     invocation (used for permission checks and
 //     context injection).
-//   - [PostToolUse]   — fires after an AI tool
+//   - [PostToolUse]: fires after an AI tool
 //     invocation (used for context updates).
-//   - [SessionStart]  — fires when a session begins
+//   - [SessionStart]: fires when a session begins
 //     (used for bootstrap and status).
-//   - [SessionEnd]    — fires when a session ends
+//   - [SessionEnd]: fires when a session ends
 //     (used for wrap-up nudges).
-//   - [FileSave]      — fires when a file is saved.
-//   - [ContextAdd]    — fires when context is added.
+//   - [FileSave]: fires when a file is saved.
+//   - [ContextAdd]: fires when context is added.
 //
 // # Hook Status Labels
 //
-//   - [StatusEnabled], [StatusDisabled] — display
+//   - [StatusEnabled], [StatusDisabled]: display
 //     labels for hook list output.
 //
 // # Mock Constants
 //
-//   - [MockSessionID], [MockModel], [MockVersion] —
+//   - [MockSessionID], [MockModel], [MockVersion]:
 //     fixed values used in hook test input to enable
 //     deterministic testing.
 //

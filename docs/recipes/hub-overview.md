@@ -14,8 +14,8 @@ icon: lucide/compass
 # `ctx` Hub: Overview
 
 Start here before the other hub recipes. This page answers *what*
-the hub is, *who* it's for, *why* you'd run one, and —
-equally important — *what it is not*.
+the hub is, *who* it's for, *why* you'd run one, and,
+equally important, *what it is not*.
 
 ## Mental Model in One Paragraph
 
@@ -56,13 +56,13 @@ This is the part new users get wrong most often:
   stay local. The hub does **not** sync your AI session history.
 - **Scratchpad** (`.context/pad`) stays local. Encrypted notes
   never leave the machine they were written on.
-- **Local context files** as a whole — `TASKS.md`,
-  `DECISIONS.md`, `LEARNINGS.md`, `CONVENTIONS.md` — are **not**
+- **Local context files** as a whole (`TASKS.md`,
+  `DECISIONS.md`, `LEARNINGS.md`, `CONVENTIONS.md`) are **not**
   mirrored wholesale. Only entries you explicitly `--share`, or
   publish later with `ctx connection publish`, cross the boundary.
 - **Anything under `.context/` that isn't one of the four entry
   types above.** Configuration, state, logs, memory, journal
-  metadata — all local.
+  metadata: all local.
 
 If you were expecting "now my agent in project B can see
 everything my agent did in project A," that's not this feature.
@@ -71,12 +71,12 @@ Local session density still lives on the local machine.
 ## Two User Stories
 
 The hub makes sense in two different shapes. Pick the one that
-matches your situation — the mechanics are identical but the
+matches your situation; the mechanics are identical but the
 trust model and threat surface are very different.
 
 ### Story 1: Personal Cross-Project Brain
 
-**One developer, many projects, one hub — usually on localhost.**
+**One developer, many projects, one hub, usually on localhost.**
 
 You're working across several projects on the same machine (or a
 handful of machines you own). You want a lesson learned
@@ -94,7 +94,7 @@ codified in one project to be visible as-you-type in another.
 - Cross-project conventions (e.g., "use UTC timestamps
   everywhere") live in one place and propagate.
 
-**Trust model:** high — you trust every participant because every
+**Trust model:** high, because you trust every participant since every
 participant is *you*. Run the hub on localhost or on your own
 LAN, use the default single-node setup, don't worry about TLS.
 
@@ -174,18 +174,18 @@ need "who wrote this," the hub is the wrong tool.
   anything you wouldn't paste in a team chat.
 - **Wholesale journal sharing.** See "what does not flow"
   above. If that's what you want, this feature won't provide
-  it — talk to us in the issue tracker about what *would*.
+  it. Talk to us in the issue tracker about what *would*.
 
 ## How Entries Reach Your Agent
 
 Once a project is registered and subscribed, entries arrive by
 three mechanisms:
 
-1. **`ctx connection sync`** — an on-demand pull, replays
+1. **`ctx connection sync`**: an on-demand pull, replays
    everything new since the last sequence you saw.
-2. **`ctx connection listen`** — a long-lived gRPC stream that
+2. **`ctx connection listen`**: a long-lived gRPC stream that
    writes new entries to `.context/hub/` as they arrive.
-3. **`check-hub-sync` hook** — runs at session start, daily
+3. **`check-hub-sync` hook**: runs at session start, daily
    throttled, so most users never call `sync` manually.
 
 Once entries exist in `.context/hub/`, `ctx agent

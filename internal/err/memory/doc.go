@@ -5,18 +5,18 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package memory defines the **typed error constructors**
-// returned by [internal/memory] — the Claude Code auto-
-// memory bridge — for discovery, diff, mirror, and
+// returned by [internal/memory] (the Claude Code auto-
+// memory bridge) for discovery, diff, mirror, and
 // publish failures.
 //
 // # Why Typed Errors
 //
-//   - **Stability** — error categories are part of
+//   - **Stability**: error categories are part of
 //     the public API.
-//   - **Routing** — write-side packages map error
+//   - **Routing**: write-side packages map error
 //     types to localized text via
 //     [internal/assets/read/desc].
-//   - **Wrapping** — constructors wrap the
+//   - **Wrapping**: constructors wrap the
 //     underlying cause via `%w` so callers can
 //     `errors.Is` against system errors when
 //     needed.

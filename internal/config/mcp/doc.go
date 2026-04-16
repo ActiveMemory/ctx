@@ -12,9 +12,9 @@
 // DECISIONS.md, LEARNINGS.md, etc.) as resources, tools,
 // and prompts to AI coding agents over JSON-RPC 2.0 on
 // stdio. Every string literal that appears in an MCP
-// message -- method names, tool names, field keys, MIME
+// message (method names, tool names, field keys, MIME
 // types, notification subjects, resource identifiers,
-// prompt names, and error codes -- is defined as a typed
+// prompt names, and error codes) is defined as a typed
 // constant in a domain-specific sub-package below this
 // one.
 //
@@ -37,28 +37,28 @@
 //
 // Each sub-package owns one domain of the protocol:
 //
-//   - [cfg]        -- server tuning: buffer sizes,
+//   - [cfg]:        server tuning, buffer sizes,
 //     default limits, word-overlap thresholds.
-//   - [event]      -- session lifecycle markers
+//   - [event]:      session lifecycle markers
 //     ("start", "end").
-//   - [field]      -- JSON property key names for tool
+//   - [field]:      JSON property key names for tool
 //     input schemas.
-//   - [governance] -- timing thresholds for drift and
+//   - [governance]: timing thresholds for drift and
 //     persist nudge hooks.
-//   - [method]     -- JSON-RPC method strings
+//   - [method]:     JSON-RPC method strings
 //     ("tools/call", "resources/list", etc.).
-//   - [mime]       -- MIME type and content-type
+//   - [mime]:       MIME type and content-type
 //     identifiers.
-//   - [notify]     -- notification method strings sent
+//   - [notify]:     notification method strings sent
 //     to clients on resource changes.
-//   - [prompt]     -- prompt registration names that
+//   - [prompt]:     prompt registration names that
 //     mirror ctx CLI skills.
-//   - [resource]   -- resource name constants used as
+//   - [resource]:   resource name constants used as
 //     URI path segments.
-//   - [schema]     -- JSON Schema type identifiers and
+//   - [schema]:     JSON Schema type identifiers and
 //     JSON-RPC error codes.
-//   - [server]     -- server identity, URI prefix, and
+//   - [server]:     server identity, URI prefix, and
 //     launch arguments.
-//   - [tool]       -- tool registration names that map
+//   - [tool]:       tool registration names that map
 //     to ctx CLI subcommands.
 package mcp

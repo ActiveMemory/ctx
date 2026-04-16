@@ -17,11 +17,11 @@
 // and, if any match, emits a JSON block response that
 // prevents execution. The patterns catch:
 //
-//   - **mid-command sudo** -- e.g. "echo foo | sudo rm"
-//   - **git push** -- any direct push attempt
-//   - **cp/mv to bin** -- copying files into system
+//   - **mid-command sudo**: e.g. "echo foo | sudo rm"
+//   - **git push**: any direct push attempt
+//   - **cp/mv to bin**: copying files into system
 //     binary directories
-//   - **install to /usr/local/bin** -- direct binary
+//   - **install to /usr/local/bin**: direct binary
 //     installation outside package managers
 //
 // When a command is blocked, a relay notification is

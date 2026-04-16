@@ -39,5 +39,5 @@ ctx hook resume
 
 **See also**:
 
-- [`ctx hook resume`](resume.md) — the matching resume command
+- [`ctx hook resume`](resume.md): the matching resume command
 - [Pausing Context Hooks recipe](../recipes/session-pause.md)

@@ -16,34 +16,34 @@
 //
 // # Key Constants
 //
-//   - [Status] ("ctx_status") -- returns a summary
+//   - [Status] ("ctx_status"): returns a summary
 //     of all context files and their freshness.
-//   - [Add] ("ctx_add") -- appends a new entry to a
+//   - [Add] ("ctx_add"): appends a new entry to a
 //     context file (decision, learning, task, etc.).
-//   - [Complete] ("ctx_complete") -- marks a task as
+//   - [Complete] ("ctx_complete"): marks a task as
 //     done in TASKS.md.
-//   - [Drift] ("ctx_drift") -- runs drift detection
+//   - [Drift] ("ctx_drift"): runs drift detection
 //     across context files.
-//   - [JournalSource] ("ctx_journal_source") -- queries
+//   - [JournalSource] ("ctx_journal_source"): queries
 //     past session journal entries.
-//   - [WatchUpdate] ("ctx_watch_update") -- writes a
+//   - [WatchUpdate] ("ctx_watch_update"): writes a
 //     structured update to a context file.
-//   - [Compact] ("ctx_compact") -- compacts completed
+//   - [Compact] ("ctx_compact"): compacts completed
 //     tasks in TASKS.md.
-//   - [Next] ("ctx_next") -- suggests the next task
+//   - [Next] ("ctx_next"): suggests the next task
 //     to work on.
 //   - [CheckTaskCompletion]
-//     ("ctx_check_task_completion") -- checks whether
+//     ("ctx_check_task_completion"): checks whether
 //     a recent action completed a pending task.
-//   - [SessionEvent] ("ctx_session_event") -- records
+//   - [SessionEvent] ("ctx_session_event"): records
 //     session start/end lifecycle events.
-//   - [Remind] ("ctx_remind") -- lists active
+//   - [Remind] ("ctx_remind"): lists active
 //     reminders for the current session.
-//   - [SteeringGet] ("ctx_steering_get") -- retrieves
+//   - [SteeringGet] ("ctx_steering_get"): retrieves
 //     a steering file matched to a prompt.
-//   - [Search] ("ctx_search") -- full-text search
+//   - [Search] ("ctx_search"): full-text search
 //     across context files.
-//   - [SessionStart] / [SessionEnd] -- hooks that run
+//   - [SessionStart] / [SessionEnd]: hooks that run
 //     at session boundaries.
 //
 // # Why These Are Centralized

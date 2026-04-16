@@ -17,10 +17,10 @@
 //
 // # Format Constants
 //
-//   - FormatJSON ("json") -- selects JSON output,
+//   - FormatJSON ("json"): selects JSON output,
 //     useful for piping into jq or programmatic
 //     consumption
-//   - FormatMarkdown ("md") -- selects Markdown
+//   - FormatMarkdown ("md"): selects Markdown
 //     output, the default human-readable format for
 //     most commands
 //

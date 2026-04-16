@@ -17,15 +17,15 @@
 // command an agent runs to anchor its session: it tells
 // the agent where context lives and what to read next.
 //
-// This is agent-only plumbing -- no human types it
+// This is agent-only plumbing; no human types it
 // interactively.
 //
 // # Flags
 //
-//   - **--json** -- emit a structured JSON object
+//   - **--json**: emit a structured JSON object
 //     containing the directory path, file list, rules,
 //     next steps, and any plugin warnings.
-//   - **--quiet, -q** -- emit only the bare directory
+//   - **--quiet, -q**: emit only the bare directory
 //     path with no decoration, suitable for shell
 //     variable capture.
 //

@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package server is the **server-side runtime** for
-// `ctx hub start` — daemon lifecycle, PID file management,
+// `ctx hub start`: daemon lifecycle, PID file management,
 // and the wire-up between the [internal/hub] package and
 // the user-facing CLI flags (`--port`, `--peers`,
 // `--daemon`).
@@ -16,12 +16,12 @@
 //
 // # Public Surface
 //
-//   - **[Run](opts)** — foreground server boot. Binds
+//   - **[Run](opts)**: foreground server boot. Binds
 //     the listener, instantiates the [hub.Server],
 //     wires the optional [hub.Cluster] when `--peers`
 //     is passed, blocks on serve. Honors signals
 //     (SIGINT, SIGTERM) for graceful shutdown.
-//   - **[DefaultPort]** — the canonical port (9900)
+//   - **[DefaultPort]**: the canonical port (9900)
 //     used by docs, examples, and the recipes.
 //
 // # Daemon Mode

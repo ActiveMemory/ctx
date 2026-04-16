@@ -11,11 +11,11 @@
 //
 // The summaries operate against an already-loaded
 // [entity.Context] so they share data with every other
-// downstream consumer — no double-reading the filesystem.
+// downstream consumer, avoiding double-reading the filesystem.
 //
 // # Public Surface
 //
-//   - **[Generate](ctx, opts)** — produces a multi-line
+//   - **[Generate](ctx, opts)**: produces a multi-line
 //     summary string covering:
 //   - file count + total token estimate
 //   - newest / oldest file mtime

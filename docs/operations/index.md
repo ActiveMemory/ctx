@@ -39,7 +39,7 @@ with `ctx` providing persistent memory between iterations.
 
 ## Hub
 
-Operator guides for running a `ctx` Hub — the gRPC server that
+Operator guides for running a `ctx` Hub, the gRPC server that
 fans out structured entries across projects. If you're a client
 connecting to a Hub someone else runs, see
 [`ctx connect`](../cli/connection.md) and the
@@ -53,7 +53,7 @@ backup and restore, log rotation, monitoring, and upgrades.
 ### [Hub Failure Modes](hub-failure-modes.md)
 
 What can go wrong in network, storage, cluster, auth, and
-clock layers — and what you should do about each one. Includes
+clock layers, and what you should do about each one. Includes
 the short-list table oncall engineers will want bookmarked.
 
 ---

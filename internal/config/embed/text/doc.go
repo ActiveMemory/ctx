@@ -5,27 +5,27 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package text holds the **lookup keys** for every piece of
-// user-facing display text emitted anywhere in ctx — error
+// user-facing display text emitted anywhere in ctx: error
 // messages, status banners, MCP responses, hook nudges,
 // admonition templates, you name it.
 //
 // The package is one half of a deliberate two-step indirection:
 //
-//  1. **Here** — typed `DescKeyXxx` Go constants. Compile-time
+//  1. **Here**: typed `DescKeyXxx` Go constants. Compile-time
 //     guarantees that every reference is a real key.
-//  2. **In** [internal/assets/commands/text/*.yaml] — the
+//  2. **In** [internal/assets/commands/text/*.yaml]: the
 //     actual strings, embedded into the binary at build time.
 //     Reachable via [internal/assets/read/desc.Text](key).
 //
 // The split exists for three reasons:
 //
-//   - **Editing copy stops touching Go code** — copywriters,
+//   - **Editing copy stops touching Go code**: copywriters,
 //     translators, and product owners can edit YAML without
 //     a Go toolchain.
-//   - **i18n is structurally possible** — adding a locale is
+//   - **i18n is structurally possible**: adding a locale is
 //     a parallel YAML tree, not a fork of every package.
 //   - **One sentence cannot quietly drift between two
-//     callers** — both grab the same key, both render the
+//     callers**: both grab the same key, both render the
 //     same text.
 //
 // # File Layout

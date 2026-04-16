@@ -15,16 +15,16 @@
 //
 // # Key Constants
 //
-//   - [DefaultFeedInputDir]  — where blog Markdown lives
+//   - [DefaultFeedInputDir]: where blog Markdown lives
 //     (docs/blog).
-//   - [DefaultFeedOutPath]   — where the compiled feed is
+//   - [DefaultFeedOutPath]: where the compiled feed is
 //     written (site/feed.xml).
-//   - [DefaultFeedBaseURL]   — root URL prepended to
+//   - [DefaultFeedBaseURL]: root URL prepended to
 //     entry permalinks (https://ctx.ist).
-//   - [FeedAtomNS]           — the Atom XML namespace.
-//   - [FeedXMLHeader]        — the XML declaration line
+//   - [FeedAtomNS]: the Atom XML namespace.
+//   - [FeedXMLHeader]: the XML declaration line
 //     prepended to every feed file.
-//   - [FeedTitle], [FeedDefaultAuthor] — metadata
+//   - [FeedTitle], [FeedDefaultAuthor]: metadata
 //     defaults.
 //
 // URL path constants ([FeedPath], [BlogPath],

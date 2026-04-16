@@ -32,7 +32,7 @@ everything *before* and *after* that automation.
 Use the [codebase audit runbook](codebase-audit.md) prompt with
 your agent. Focus on analyses 1-4 (extractable patterns,
 documentation drift, maintainability, security). Triage findings
-into TASKS.md — anything blocking ships before the release.
+into TASKS.md; anything blocking ships before the release.
 
 ### 2. Run the Docs Semantic Audit
 

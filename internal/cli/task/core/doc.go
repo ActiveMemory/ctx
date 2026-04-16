@@ -13,13 +13,13 @@
 // The task core layer is split into focused packages
 // that each handle one aspect of task management:
 //
-//   - archive -- moves completed tasks from TASKS.md
+//   - archive: moves completed tasks from TASKS.md
 //     into timestamped archive files
-//   - complete -- finds and marks individual tasks as
+//   - complete: finds and marks individual tasks as
 //     done by number or text search
-//   - count -- counts pending top-level tasks, excluding
+//   - count: counts pending top-level tasks, excluding
 //     subtasks
-//   - path -- resolves the absolute paths to TASKS.md
+//   - path: resolves the absolute paths to TASKS.md
 //     and the archive directory
 //
 // # Architecture

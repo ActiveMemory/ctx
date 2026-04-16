@@ -18,7 +18,7 @@ import (
 // RecordCommit records context refs for a specific commit hash to history.
 //
 // Called from the post-commit hook after a commit is made. Reads refs from
-// the commit trailer (not re-collected — the trailer is the single source
+// the commit trailer (not re-collected; the trailer is the single source
 // of truth), writes a history entry, and truncates pending state.
 //
 // Pending context is always consumed (truncated) per commit, even when no
@@ -33,11 +33,11 @@ import (
 func RecordCommit(commitHash string) error {
 	contextDir := rc.ContextDir()
 
-	// Read refs from the commit trailer — single source of truth.
+	// Read refs from the commit trailer, the single source of truth.
 	// This matches exactly what was injected by the prepare-commit-msg hook.
 	refs := trace.ReadTrailerRefs(commitHash)
 	if len(refs) == 0 {
-		// No trailer found — the commit was made without the
+		// No trailer found: the commit was made without the
 		// prepare-commit-msg hook (e.g. --no-verify, external tool,
 		// or hook not installed). Pending refs are still truncated
 		// because they were accumulated for *this* commit window;

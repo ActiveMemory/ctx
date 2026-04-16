@@ -15,7 +15,7 @@ import (
 // leaderFSM is a no-op finite state machine for Raft.
 //
 // Raft requires an FSM, but we only use Raft for leader
-// election — data replication is handled separately via
+// election; data replication is handled separately via
 // sequence-based gRPC sync. All FSM methods are no-ops.
 type leaderFSM struct{}
 

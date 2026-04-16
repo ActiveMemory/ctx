@@ -14,7 +14,7 @@ icon: lucide/users
 # Team Knowledge Bus
 
 This recipe shows **how a small trusted team uses a `ctx`
-Hub as a shared knowledge bus** — the "Story 2" shape
+Hub as a shared knowledge bus**, the "Story 2" shape
 from the [Hub overview](hub-overview.md). You're not
 building a wiki, you're not replacing your issue tracker,
 and you're not running a multi-tenant service. You're
@@ -32,7 +32,7 @@ without ceremony.
   `ctx connection register`-ed their working projects with
   the hub.
 
-## Trust Model — Read This First
+## Trust Model: Read This First
 
 The hub assumes **everyone holding a client token is
 friendly**. There's no per-user attribution you can rely
@@ -67,11 +67,11 @@ Everyone on the team does three things, same as in the
 [personal recipe](hub-personal.md), but with different
 social expectations:
 
-1. **Record** — when you learn something that would save
+1. **Record**: when you learn something that would save
    a teammate time, capture it with `ctx add --share`.
-2. **Subscribe** — every engineer's project directories
+2. **Subscribe**: every engineer's project directories
    subscribe to the types the team cares about.
-3. **Load** — agents pick up shared entries automatically
+3. **Load**: agents pick up shared entries automatically
    via the auto-sync hook and the `--include-hub` flag
    in the PreToolUse hook pipeline.
 
@@ -101,9 +101,9 @@ problem save time if they already knew this?" If yes,
 **Learnings**:
 
 - ✅ Gotchas, surprising behavior, flaky infrastructure
-  quirks — anything you'd tell a teammate over coffee
+  quirks, anything you'd tell a teammate over coffee
   with "watch out for X".
-- ✅ Lessons from incidents — right after the postmortem
+- ✅ Lessons from incidents, right after the postmortem
   is the highest-value time to share.
 - ❌ Internal debugging notes that only make sense with
   context from your current branch.
@@ -122,11 +122,11 @@ cross-cutting migration you want visible everywhere).
 
 ## A Realistic Week
 
-**Monday — 3 AM incident, shared learning**
+**Monday, 3 AM incident, shared learning**
 
 On-call engineer Alice gets paged: the payment service
 starts returning 500s after a dependency update. After
-an hour she finds the culprit — a breaking change in a
+an hour she finds the culprit: a breaking change in a
 transitive gRPC dep that only manifests under high
 concurrency. Postmortem on Tuesday, but right now she
 records the learning:
@@ -148,9 +148,9 @@ work on the `ledger` service (which also uses grpc-go),
 his Claude Code session already knows about the gotcha
 without Bob having to read the incident channel.
 
-**Wednesday — cross-service decision**
+**Wednesday, cross-service decision**
 
-The team agrees on a new pattern for API versioning —
+The team agrees on a new pattern for API versioning:
 header-based instead of URL-based. Platform lead Carol
 records the decision:
 
@@ -172,7 +172,7 @@ automatically. When Dave starts adding endpoints to the
 him for the header pattern instead of defaulting to
 `/v1/`.
 
-**Friday — convention drift caught at review**
+**Friday, convention drift caught at review**
 
 Dave notices that his PR auto-formatted some error
 messages to end with periods. He recalls the team
@@ -221,7 +221,7 @@ might be enough.
 
 **Run a single hub, not one per team.** If two teams
 need to share knowledge, they should share a hub.
-Splitting hubs by team creates silos — which is often
+Splitting hubs by team creates silos, which is often
 exactly the thing you were trying to solve.
 
 ## Operational Concerns
@@ -262,7 +262,7 @@ Every team member has a client token stored in their
   revocation steps.
 - **No checked-in tokens.** `.context/.connect.enc` is
   encrypted with the local machine key, but don't push
-  it to shared repos — it's per-workstation.
+  it to shared repos; it's per-workstation.
 
 ## What This Recipe Is *Not*
 
@@ -276,7 +276,7 @@ hub is the wrong tool.
 
 **Not a ticket system.** Task sharing works, but
 mature teams already have Jira/Linear/Github Issues.
-Don't try to replace those with hub tasks — use the
+Don't try to replace those with hub tasks; use the
 hub for lightweight cross-project todos that your
 existing tracker doesn't capture well.
 
@@ -286,15 +286,15 @@ customers, partners, or the open internet.
 
 ## See Also
 
-- [Hub overview](hub-overview.md) — when to use the
+- [Hub overview](hub-overview.md): when to use the
   hub and when not to.
-- [Personal cross-project brain](hub-personal.md) —
+- [Personal cross-project brain](hub-personal.md):
   the single-developer companion recipe.
-- [Multi-machine setup](hub-multi-machine.md) —
+- [Multi-machine setup](hub-multi-machine.md):
   standing up the hub on a LAN host.
-- [HA cluster](hub-cluster.md) — optional redundancy
+- [HA cluster](hub-cluster.md): optional redundancy
   for larger teams.
-- [Hub operations](../operations/hub.md) — backup,
+- [Hub operations](../operations/hub.md): backup,
   rotation, monitoring.
-- [Hub security](../security/hub.md) — threat model
+- [Hub security](../security/hub.md): threat model
   and hardening checklist.

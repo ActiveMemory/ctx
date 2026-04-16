@@ -160,7 +160,7 @@ func EnabledGlobally() bool {
 
 // EnableLocally enables the ctx plugin in the project-level
 // .claude/settings.local.json. Unlike EnableGlobally, this
-// does not check installed_plugins.json — it writes
+// does not check installed_plugins.json; it writes
 // unconditionally because ctx init owns the project setup.
 //
 // Parameters:

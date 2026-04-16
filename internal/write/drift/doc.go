@@ -16,17 +16,17 @@
 //
 // Output families:
 //
-//   - **Fix progress** — [FixHeader],
+//   - **Fix progress**: [FixHeader],
 //     [FixRecheck], [FixedCount],
 //     [SkippedCount], [FixError], [FixStaleness].
 //     Used by `--fix` to narrate what is being
 //     auto-remediated and what remained.
-//   - **Per-issue lines** — formatters for the
+//   - **Per-issue lines**: formatters for the
 //     individual issue rows (path refs,
 //     staleness markers, missing files,
 //     constitution violations) with the matching
 //     status glyph.
-//   - **Summaries** — final roll-up for `ctx
+//   - **Summaries**: final roll-up for `ctx
 //     drift` (counts of warnings/violations/
 //     passed) and for `--fix` (counts of fixed
 //     vs skipped).

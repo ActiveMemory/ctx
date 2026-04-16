@@ -6,7 +6,7 @@
 
 // Package format provides the **fine-grained formatting
 // primitives** used to render a parsed AI session into
-// human-readable markdown — part navigation, duration
+// human-readable markdown: part navigation, duration
 // strings, tool-call summaries, file references.
 //
 // The package sits one level below
@@ -16,19 +16,19 @@
 //
 // # Public Surface
 //
-//   - **[PartNavigation](currentPart, totalParts, slug)**
-//     — generates Previous / Next links for multipart
+//   - **[PartNavigation](currentPart, totalParts, slug)**:
+//     generates Previous / Next links for multipart
 //     sessions (sessions long enough to be split across
 //     several files). Returns markdown ready to splice
 //     into the per-part frontmatter.
-//   - **[Duration](d)** — formats a `time.Duration` as
+//   - **[Duration](d)**: formats a `time.Duration` as
 //     "23m 14s" / "2h 5m" / "3 days" depending on
 //     magnitude. Empty when zero.
-//   - **[ToolUse](tu)** — one-line summary of a tool
+//   - **[ToolUse](tu)**: one-line summary of a tool
 //     call: tool name, key argument(s), success/error.
 //     Used in the per-turn header and in the
 //     compressed view.
-//   - **[ToolResult](tr)** — one-line summary of the
+//   - **[ToolResult](tr)**: one-line summary of the
 //     tool's output, truncated to a configurable
 //     preview length.
 //

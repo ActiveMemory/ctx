@@ -22,11 +22,11 @@
 // Each journal entry moves through a linear pipeline
 // tracked by stage constants:
 //
-//   - StageExported  -- raw export from Claude Code
-//   - StageEnriched  -- metadata added (tags, summary)
-//   - StageNormalized -- content normalized for render
-//   - StageFencesVerified -- code fences validated
-//   - StageLocked    -- read-only, processing complete
+//   - StageExported : raw export from Claude Code
+//   - StageEnriched : metadata added (tags, summary)
+//   - StageNormalized: content normalized for render
+//   - StageFencesVerified: code fences validated
+//   - StageLocked   : read-only, processing complete
 //
 // Stage state is persisted in File (".state.json")
 // inside .context/journal/.

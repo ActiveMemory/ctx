@@ -15,22 +15,22 @@
 //
 // # Key Constants
 //
-//   - [Initialize] ("initialize") -- the handshake that
+//   - [Initialize] ("initialize"): the handshake that
 //     negotiates protocol version and capabilities.
-//   - [Ping] ("ping") -- a keep-alive probe.
-//   - [ResourceList] ("resources/list") -- enumerates
+//   - [Ping] ("ping"): a keep-alive probe.
+//   - [ResourceList] ("resources/list"): enumerates
 //     available context-file resources.
-//   - [ResourceRead] ("resources/read") -- returns the
+//   - [ResourceRead] ("resources/read"): returns the
 //     content of a single context resource.
 //   - [ResourceSubscribe] / [ResourceUnsubscribe] --
 //     manage change-notification subscriptions.
-//   - [ToolList] ("tools/list") -- enumerates the tools
+//   - [ToolList] ("tools/list"): enumerates the tools
 //     the server exposes.
-//   - [ToolCall] ("tools/call") -- invokes a tool by
+//   - [ToolCall] ("tools/call"): invokes a tool by
 //     name with a JSON input object.
-//   - [PromptList] ("prompts/list") -- lists available
+//   - [PromptList] ("prompts/list"): lists available
 //     prompts.
-//   - [PromptGet] ("prompts/get") -- retrieves a prompt
+//   - [PromptGet] ("prompts/get"): retrieves a prompt
 //     template by name.
 //
 // # Why These Are Centralized

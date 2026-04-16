@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package hub defines the typed error constructors
-// for the hub subsystem -- the background daemon
+// for the hub subsystem, the background daemon
 // that coordinates multi-project context sharing
 // and peer synchronization.
 //
@@ -13,13 +13,13 @@
 //
 // Errors fall into three categories:
 //
-//   - **Token generation** -- the hub failed to
+//   - **Token generation**: the hub failed to
 //     generate a cryptographic token for peer
 //     authentication. Constructor: [GenerateToken].
-//   - **Internal errors** -- a catch-all wrapper
+//   - **Internal errors**: a catch-all wrapper
 //     for unexpected failures inside the hub
 //     server. Constructor: [InternalErr].
-//   - **Registration** -- a project is already
+//   - **Registration**: a project is already
 //     registered with the hub, or a peer action
 //     is unrecognized. Constructors:
 //     [DuplicateProject], [InvalidPeerAction].

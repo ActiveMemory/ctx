@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package insert handles **section-aware insertion** of
-// new entries into context files — picking the right
+// new entries into context files, picking the right
 // location inside the target file (under the matching
 // Phase header, after the latest entry of the same type,
 // or at the file bottom as a fallback) instead of just
@@ -17,20 +17,20 @@
 //
 // # Public Surface
 //
-//   - **[AppendEntry](file, entry, opts)** — top-level
+//   - **[AppendEntry](file, entry, opts)**: top-level
 //     entry point. Reads `file`, decides where to
 //     insert based on `opts.Type` and `opts.Phase`,
 //     writes the result back.
-//   - **[AfterHeader](lines, header, content)** —
+//   - **[AfterHeader](lines, header, content)**:
 //     pure helper: insert `content` immediately after
 //     `header` (or at the end of `header`'s
 //     section, depending on the rule). Returns the
 //     new line slice.
-//   - **[Task](lines, entry, phase)** — task-specific
+//   - **[Task](lines, entry, phase)**: task-specific
 //     placement: finds the right Phase header (per
 //     CONSTITUTION, tasks must stay in their Phase
 //     forever) and inserts under it.
-//   - **[AppendAtEnd](lines, content)** — fallback
+//   - **[AppendAtEnd](lines, content)**: fallback
 //     when no smarter location can be inferred.
 //
 // # Constitutional Honors

@@ -17,28 +17,28 @@
 //
 // # Public Surface
 //
-//   - **[DeployHooks](projectRoot)** — the single
+//   - **[DeployHooks](projectRoot)**: the single
 //     public entry point called from the setup
 //     command. Orchestrates every artifact below.
 //
 // # What Gets Deployed
 //
-//   - **`.github/hooks/ctx-hooks.json`** — the hook
+//   - **`.github/hooks/ctx-hooks.json`**: the hook
 //     manifest declaring which `ctx system` command
 //     fires on each lifecycle event (sessionStart,
 //     preToolUse, postToolUse, sessionEnd). Skipped
 //     if a non-ctx version already exists.
-//   - **`.github/hooks/scripts/`** — wrapper shell
+//   - **`.github/hooks/scripts/`**: wrapper shell
 //     scripts for any non-stdin hooks Copilot CLI
 //     expects.
-//   - **`.github/copilot/skills/`** — the same skills
+//   - **`.github/copilot/skills/`**: the same skills
 //     ctx ships under
 //     `internal/assets/integrations/copilot-cli/skills/`.
-//   - **`.github/copilot/agents/`** — agent definitions.
-//   - **`.github/copilot/INSTRUCTIONS.md`** — the
+//   - **`.github/copilot/agents/`**: agent definitions.
+//   - **`.github/copilot/INSTRUCTIONS.md`**: the
 //     persistent rules Copilot CLI loads on every
 //     prompt.
-//   - **MCP config** for Copilot CLI's MCP client so
+//   - **MCP config**: for Copilot CLI's MCP client so
 //     `ctx mcp` is available.
 //
 // # Idempotency

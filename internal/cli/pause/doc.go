@@ -22,7 +22,7 @@
 //
 // # Subpackages
 //
-//	cmd/root -- cobra command definition and pause
+//	cmd/root: cobra command definition and pause
 //	  state management
 //
 // [Cmd] returns the cobra command that writes the pause

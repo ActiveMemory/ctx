@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package bootstrap is the **CLI assembly layer** for ctx —
+// Package bootstrap is the **CLI assembly layer** for ctx:
 // the place where every cobra command in the binary gets
 // constructed, grouped, and wired into the root command
 // before `cmd.Execute()` runs.
@@ -32,9 +32,9 @@
 // # Group-Based Registration
 //
 // [Initialize] does the wiring through small grouped
-// helpers — [gettingStarted], [contextCmds], [artifacts],
+// helpers ([gettingStarted], [contextCmds], [artifacts],
 // [sessions], [runtimeCmds], [integrations],
-// [diagnostics], [hiddenCmds] — each of which returns a
+// [diagnostics], [hiddenCmds]), each of which returns a
 // `[]registration` that pairs a constructor with a
 // [Group] tag. The result is the cobra command tree the
 // user sees in `ctx --help`, organized into the same

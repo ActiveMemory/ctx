@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package tool is the **MCP `tools/*` dispatcher** — the
+// Package tool is the **MCP `tools/*` dispatcher**: the
 // layer that takes a JSON-RPC `tools/list` or
 // `tools/call` request, validates parameters against
 // the per-tool schema in [internal/mcp/server/def/tool],
@@ -13,10 +13,10 @@
 //
 // # Public Surface
 //
-//   - **[DispatchList](req, deps)** — returns the
+//   - **[DispatchList](req, deps)**: returns the
 //     full tool catalog from
 //     [internal/mcp/server/def/tool.Defs].
-//   - **[DispatchCall](req, deps)** — extracts the
+//   - **[DispatchCall](req, deps)**: extracts the
 //     tool name and arguments map from the JSON-RPC
 //     params, dispatches to the matching handler,
 //     wraps the handler's `(string, error)` return
@@ -36,8 +36,8 @@
 //
 // Handler errors map to JSON-RPC error codes:
 //
-//   - **InvalidParams** — typed validation errors.
-//   - **InternalError** — anything else.
+//   - **InvalidParams**: typed validation errors.
+//   - **InternalError**: anything else.
 //
 // The original error message is included in the
 // `data` field so the client can surface it to

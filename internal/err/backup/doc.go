@@ -15,13 +15,13 @@
 //
 // Three reasons:
 //
-//   - **Stability** — error categories are part of
+//   - **Stability**: error categories are part of
 //     the public API; adding a constructor is an
 //     intentional change a reviewer can see.
-//   - **Routing** — the write-side
+//   - **Routing**: the write-side
 //     ([internal/write/backup]) maps error types to
 //     localized text via [internal/assets/read/desc].
-//   - **Wrapping** — every constructor wraps its
+//   - **Wrapping**: every constructor wraps its
 //     underlying cause via `%w` so callers can
 //     `errors.Is` / `errors.As` against system
 //     errors when needed.

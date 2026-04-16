@@ -17,13 +17,13 @@
 // live in internal/write/*. This split gives three
 // benefits:
 //
-//   - **Stable categories** -- adding a new error
+//   - **Stable categories**: adding a new error
 //     constructor is an explicit, reviewable change.
-//   - **Localized text** -- all user-facing wording
+//   - **Localized text**: all user-facing wording
 //     is looked up through [internal/assets/read/desc]
 //     so that error messages are consistent and
 //     centrally maintained.
-//   - **Wrapping** -- every constructor that accepts a
+//   - **Wrapping**: every constructor that accepts a
 //     cause wraps it with fmt.Errorf %w, so callers
 //     can use errors.Is / errors.As against system
 //     errors (os.ErrNotExist, io.EOF, etc.).

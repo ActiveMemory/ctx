@@ -48,6 +48,6 @@
 //
 // # Internal Types
 //
-//   - state -- tracks the LastSequence field, persisted
+//   - state: tracks the LastSequence field, persisted
 //     as JSON in .context/hub/.sync_state.json.
 package sync

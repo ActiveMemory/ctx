@@ -18,29 +18,29 @@
 // The core package itself serves as a namespace. All
 // logic lives in sub-packages:
 //
-//   - add -- append new text or blob entries with
+//   - add: append new text or blob entries with
 //     stable ID assignment.
-//   - blob -- base64 encode/decode binary content
+//   - blob: base64 encode/decode binary content
 //     within entry strings.
-//   - crypto -- decrypt external scratchpad files.
-//   - edit -- replace, append, prepend, or update
+//   - crypto: decrypt external scratchpad files.
+//   - edit: replace, append, prepend, or update
 //     blob content of existing entries.
-//   - export -- plan blob extraction to the
+//   - export: plan blob extraction to the
 //     filesystem with collision avoidance.
-//   - imp -- import entries from line-delimited
+//   - imp: import entries from line-delimited
 //     files, stdin, or directory trees.
-//   - load -- orchestrate import from files or
+//   - load: orchestrate import from files or
 //     directories with user output.
-//   - merge -- read and merge external scratchpad
+//   - merge: read and merge external scratchpad
 //     files with conflict detection.
-//   - parse -- split raw bytes into entries and
+//   - parse: split raw bytes into entries and
 //     assign stable IDs.
-//   - resolve -- convert raw entries to display
+//   - resolve: convert raw entries to display
 //     form for listing.
-//   - store -- read/write the default project
+//   - store: read/write the default project
 //     scratchpad with encryption.
-//   - tag -- scan entries for hash-prefixed tags.
-//   - validate -- bounds-check entry indexes.
+//   - tag: scan entries for hash-prefixed tags.
+//   - validate: bounds-check entry indexes.
 //
 // # Data Flow
 //

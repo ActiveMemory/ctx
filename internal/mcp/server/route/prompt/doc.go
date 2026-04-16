@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package prompt is the **MCP `prompts/*` dispatcher** —
+// Package prompt is the **MCP `prompts/*` dispatcher**:
 // the layer that takes a JSON-RPC request, validates
 // the parameters, and routes to the right handler in
 // [internal/mcp/handler] (or, for static catalog
@@ -12,18 +12,18 @@
 //
 // MCP exposes two prompt RPCs:
 //
-//   - **`prompts/list`** — return the catalog of
+//   - **`prompts/list`**: return the catalog of
 //     server-curated prompts the client may invoke.
-//   - **`prompts/get`** — render one prompt by name
+//   - **`prompts/get`**: render one prompt by name
 //     with its argument values filled in.
 //
 // # Public Surface
 //
-//   - **[DispatchList](req, deps)** — handles
+//   - **[DispatchList](req, deps)**: handles
 //     `prompts/list`. Returns the static catalog
 //     of ctx-curated prompts (session-start
 //     ceremony, decision-add wizard, etc.).
-//   - **[DispatchGet](req, deps)** — handles
+//   - **[DispatchGet](req, deps)**: handles
 //     `prompts/get`. Validates the requested
 //     prompt name + arguments, calls into
 //     [internal/mcp/handler] for the rendering.

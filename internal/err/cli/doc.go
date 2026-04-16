@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package cli defines the typed error constructors
-// for generic CLI input validation -- flags,
+// for generic CLI input validation: flags,
 // arguments, interactive selections, and tool
 // configuration. These errors are not tied to any
 // single command; they appear wherever the CLI
@@ -15,12 +15,12 @@
 //
 // Errors fall into two categories:
 //
-//   - **Input validation** -- a required flag or
+//   - **Input validation**: a required flag or
 //     argument is missing, or an interactive
 //     selection is out of range. Constructors:
 //     [FlagRequired], [ArgRequired],
 //     [InvalidSelection], [UnknownDocument].
-//   - **Tool configuration** -- no AI tool was
+//   - **Tool configuration**: no AI tool was
 //     specified via flag or .ctxrc. Constructor:
 //     [NoToolSpecified].
 //
@@ -28,7 +28,7 @@
 //
 // These constructors return plain errors (no cause
 // wrapping) because the failures are pure
-// validation -- there is no underlying system
+// validation; there is no underlying system
 // error to chain. All user-facing text is resolved
 // through [internal/assets/read/desc].
 //

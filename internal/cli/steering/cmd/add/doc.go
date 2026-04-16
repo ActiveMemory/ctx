@@ -24,7 +24,7 @@
 //
 // # Arguments
 //
-//   - NAME (required) -- the steering file name. The
+//   - NAME (required): the steering file name. The
 //     .md extension is appended automatically.
 //
 // # Output

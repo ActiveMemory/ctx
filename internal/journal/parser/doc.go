@@ -22,7 +22,7 @@
 //   - **Copilot CLI** writes a different, JSON-with-metadata layout
 //     under its own home tree.
 //   - **MarkdownSession** is the round-trip format ctx itself
-//     produces when an enriched journal entry is *re-imported* — it
+//     produces when an enriched journal entry is *re-imported*; it
 //     parses the YAML frontmatter + body that
 //     `ctx journal import` produced earlier.
 //
@@ -35,13 +35,13 @@
 //
 // Three entry points cover the common use cases:
 //
-//   - [ParseFile](path)                — parse one file; returns all
+//   - [ParseFile](path):                parse one file; returns all
 //     sessions it contains (a JSONL file may interleave many).
-//   - [ScanDirectory](dir)             — recursively walk a tree,
+//   - [ScanDirectory](dir):             recursively walk a tree,
 //     parse every parseable file, return sessions sorted
 //     newest-first; per-file errors are swallowed so one bad file
 //     does not abort the scan.
-//   - [ScanDirectoryWithErrors](dir)   — same walk, but also
+//   - [ScanDirectoryWithErrors](dir):   same walk, but also
 //     returns a slice of (path, err) pairs for every parse failure
 //     so callers can surface them to the user.
 //
@@ -57,7 +57,7 @@
 // `registeredParsers` slice holds one instance of each. Dispatch is
 // first-match-wins: [ParseFile] iterates the slice and asks each
 // parser whether it `Matches(path)`. Implementations may check
-// extension, directory shape, or peek at the first line — order in
+// extension, directory shape, or peek at the first line; order in
 // the slice matters when a file could plausibly match more than one
 // (in practice, the four formats are disjoint).
 //
@@ -77,7 +77,7 @@
 //     [config/session.PreviewMaxLen])
 //
 // [ScanDirectory] sorts the aggregated slice by `StartTime`
-// descending so the most recent session lands at index 0 — the
+// descending so the most recent session lands at index 0, the
 // invariant the journal CLI and site generator both rely on.
 //
 // # Error Handling
@@ -86,7 +86,7 @@
 //
 //   - **No matching parser**: [ParseFile] returns
 //     [internal/err/parser.NoMatch] when no registered parser claims
-//     the file. Callers should treat this as "skip", not "fail" —
+//     the file. Callers should treat this as "skip", not "fail";
 //     the directory may legitimately contain unrelated files.
 //   - **Per-file parse errors**: malformed JSON, truncated stream,
 //     unexpected schema. [ScanDirectory] swallows these silently;

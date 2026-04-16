@@ -14,13 +14,13 @@
 //
 // Errors fall into three categories:
 //
-//   - **Missing context** -- the context directory
+//   - **Missing context**: the context directory
 //     does not exist or contains no files.
 //     Constructors: [NoContextDir], [NoFiles].
-//   - **File IO** -- a context file could not be
+//   - **File IO**: a context file could not be
 //     read or written during formatting.
 //     Constructors: [FileRead], [FileWrite].
-//   - **Check mode** -- the formatter ran in
+//   - **Check mode**: the formatter ran in
 //     --check mode and found files that need
 //     formatting. Constructor: [NeedsFormatting].
 //

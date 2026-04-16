@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package check_persistence implements the
-// **`ctx system check-persistence`** hook — the nudge
+// **`ctx system check-persistence`** hook, the nudge
 // that tells the user (and the agent) "you have done a
 // lot of work without persisting anything to
 // `.context/`; consider adding a learning, decision, or
@@ -21,9 +21,9 @@
 //
 // # Public Surface
 //
-//   - **[Cmd]** — cobra command (hidden under
+//   - **[Cmd]**: cobra command (hidden under
 //     `ctx system`).
-//   - **[Run]** — reads the JSON envelope, scans
+//   - **[Run]**: reads the JSON envelope, scans
 //     `.context/` for the most recent mtime,
 //     compares against the prompt counter, and
 //     fires the nudge when the threshold is

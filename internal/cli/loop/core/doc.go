@@ -22,11 +22,11 @@
 //
 // The tool parameter selects the AI command template:
 //
-//   - "claude" -- runs Claude Code with the prompt
+//   - "claude": runs Claude Code with the prompt
 //     file via the LoopCmdClaude template.
-//   - "aider" -- runs Aider with the prompt file
+//   - "aider": runs Aider with the prompt file
 //     via the LoopCmdAider template.
-//   - "generic" -- runs a generic command via the
+//   - "generic": runs a generic command via the
 //     LoopCmdGeneric template.
 //
 // When maxIterations is greater than zero, the script

@@ -18,7 +18,7 @@
 // [DeployInstructions] writes two artifacts to the
 // project root:
 //
-//   - **`.github/copilot-instructions.md`** — the
+//   - **`.github/copilot-instructions.md`**: the
 //     prose Copilot Chat reads on session start. Tells
 //     it where context lives, which CLI commands it can
 //     ask the user to run, and the rule that MCP tool
@@ -26,7 +26,7 @@
 //     available. Idempotent: ctx-managed sections are
 //     bracketed by markers so user edits outside the
 //     markers survive re-deployment.
-//   - **`.vscode/mcp.json`** — VS Code Copilot's MCP
+//   - **`.vscode/mcp.json`**: VS Code Copilot's MCP
 //     server registry. Spawns `ctx mcp` over
 //     stdin/stdout. Created if missing; merged if
 //     present (other MCP servers in the file are

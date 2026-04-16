@@ -13,7 +13,7 @@
 //
 // A single constructor covers the entire surface:
 //
-//   - [Violations] -- drift detection completed and
+//   - [Violations]: drift detection completed and
 //     found one or more violations. The CLI uses
 //     this as a non-zero exit signal after printing
 //     the violation report.

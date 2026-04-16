@@ -122,7 +122,7 @@ You: "remove entry 2, it's done"
 
 Agent: [runs ctx pad rm 2]
        "Removed entry 2. 3 entries remaining.
-        (IDs are stable — remaining entries keep their IDs.)"
+        (IDs are stable; remaining entries keep their IDs.)"
 ```
 
 ### Step 7: Store a File as a Blob
@@ -214,7 +214,7 @@ Agent: [runs ctx pad --tag later]
         3. review PR feedback #later #ci"
 ```
 
-Entry IDs are stable — they don't shift when other entries are deleted,
+Entry IDs are stable; they don't shift when other entries are deleted,
 so `ctx pad rm 3` always targets the same entry regardless of deletions
 or active filters. Use `ctx pad normalize` to reassign IDs as 1..N.
 
@@ -236,7 +236,7 @@ Agent: [runs ctx pad tags]
         urgent   1"
 ```
 
-Tags work on blob entries too — they're extracted from the label:
+Tags work on blob entries too; they're extracted from the label:
 
 ```bash
 ctx pad add "deploy config #prod" --file ./deploy.yaml

@@ -25,7 +25,7 @@ err.add.section-required:
 err.add.unknown-type:
   short: 'unknown type %q. Valid types: decision, task, learning, convention'
 err.fmt.no-context-dir:
-  short: "context directory not found — run ctx init"
+  short: "context directory not found; run ctx init"
 err.fmt.file-read:
   short: 'failed to format %s: %w'
 err.fmt.file-write:

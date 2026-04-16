@@ -22,7 +22,7 @@
 //
 // # Flags
 //
-//   - **--all** -- sync to all supported tools instead
+//   - **--all**: sync to all supported tools instead
 //     of a single resolved tool. Overrides --tool and
 //     .ctxrc tool settings.
 //

@@ -36,7 +36,7 @@
 //
 // # Throttling
 //
-// No daily throttle -- reminders are checked on every
+// No daily throttle; reminders are checked on every
 // session start. The provenance output is also
 // unconditional and fires even when hooks are paused.
 //

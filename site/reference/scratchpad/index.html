@@ -1805,13 +1805,13 @@ re-encrypt on write. The key file is never printed to stdout.</p>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Reorder</span>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>ctx<span class="w"> </span>pad<span class="w"> </span>mv<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">1</span>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Clean up (IDs are stable — they don&#39;t shift when entries are deleted)</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Clean up (IDs are stable; they don&#39;t shift when entries are deleted)</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span><span class="m">2</span>
 </span></code></pre></div>
 <h2 id="tags">Tags<a class="headerlink" href="#tags" title="Permanent link">&para;</a></h2>
 <p>Entries can contain <code>#word</code> tags for lightweight categorization. Tags are
 convention-based: any <code>#word</code> token in an entry's text is a tag. No special
-syntax to add or remove them — use the existing <code>add</code> and <code>edit</code> commands.</p>
+syntax to add or remove them; use the existing <code>add</code> and <code>edit</code> commands.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add tagged entries</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;check DNS propagation #later&quot;</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy hotfix #urgent&quot;</span>
@@ -1849,7 +1849,7 @@ syntax to add or remove them — use the existing <code>add</code> and <code>edi
 </span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1"># Remove a tag (replace entry text without the tag)</span>
 </span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;check DNS propagation&quot;</span>
 </span></code></pre></div>
-<p>Entry IDs are stable — they don't shift when other entries are deleted, so
+<p>Entry IDs are stable; they don't shift when other entries are deleted, so
 <code>ctx pad rm 3</code> always targets the same entry. Use <code>ctx pad normalize</code> to
 reassign IDs as 1..N if gaps bother you. Tags are case-sensitive and support
 letters, digits, hyphens, and underscores (<code>#high-priority</code>, <code>#v2</code>, <code>#my_tag</code>).</p>

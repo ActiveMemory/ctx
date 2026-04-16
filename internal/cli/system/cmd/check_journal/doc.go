@@ -13,12 +13,12 @@
 //
 // The hook checks two sources of journal backlog:
 //
-//  1. **Unimported sessions** -- counts Claude Code
+//  1. **Unimported sessions**: counts Claude Code
 //     session files (.jsonl) in the projects directory
 //     that are newer than the most recent journal entry,
 //     indicating sessions that have not been imported
 //     into the journal yet.
-//  2. **Unenriched entries** -- counts journal entries
+//  2. **Unenriched entries**: counts journal entries
 //     (.md) that lack frontmatter enrichment (tags,
 //     summary, metadata).
 //

@@ -15,10 +15,10 @@
 // lines (tool results with full file contents). Three
 // buffer tiers handle different parsing contexts:
 //
-//   - BufInitSize (64 KB) -- initial scanner buffer.
-//   - BufMaxSize (1 MB) -- maximum for normal session
+//   - BufInitSize (64 KB): initial scanner buffer.
+//   - BufMaxSize (1 MB): maximum for normal session
 //     parsing.
-//   - BufMaxSizeSchema (4 MB) -- maximum for schema
+//   - BufMaxSizeSchema (4 MB): maximum for schema
 //     validation, where tool result lines can exceed
 //     the normal cap.
 //

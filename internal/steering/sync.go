@@ -128,7 +128,7 @@ func SyncAll(
 
 // StaleFiles returns the names of steering files whose synced
 // tool-native output differs from what SyncTool would produce.
-// This is a read-only check — no files are written.
+// This is a read-only check; no files are written.
 //
 // Returns nil if no stale files are found or if the steering
 // directory cannot be read.

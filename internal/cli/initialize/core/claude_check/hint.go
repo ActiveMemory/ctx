@@ -14,7 +14,7 @@ import (
 
 // InitHint prints stage-aware Claude Code setup guidance as
 // a post-script at the end of `ctx init`. Never writes
-// files, never errors, never fatal — it's a friendly nudge
+// files, never errors, never fatal: it's a friendly nudge
 // matching whichever step the user still needs to complete.
 //
 // State-to-output mapping:
@@ -56,7 +56,7 @@ func InitHint(cmd *cobra.Command) {
 // SetupHint prints stage-aware Claude Code setup guidance
 // as the primary output of `ctx setup claude-code`. Unlike
 // the other `ctx setup <tool>` commands, Claude Code has no
-// writable config file ctx can emit directly — the
+// writable config file ctx can emit directly; the
 // integration is delivered via the ctx plugin installed
 // from the user's local clone.
 //
@@ -68,7 +68,7 @@ func InitHint(cmd *cobra.Command) {
 //     flow.
 //   - StatePluginInstalledNotEnabled: print the same
 //     install flow, which ends with "re-run `ctx init` to
-//     enable locally" — the action the user needs.
+//     enable locally", the action the user needs.
 //   - StatePluginReady: print the detail block + setup
 //     ready message, or the minimal variant on metadata
 //     parse failure.

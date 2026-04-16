@@ -68,7 +68,7 @@ func Boundary(dir string) error {
 	// Append os.PathSeparator to avoid "/foo/bar" matching "/foo/b".
 	// On Windows, use case-insensitive comparison since NTFS paths are
 	// case-insensitive but EvalSymlinks normalizes casing only for the
-	// existing cwd, not the non-existent target — creating a mismatch.
+	// existing cwd, not the non-existent target, creating a mismatch.
 	root := resolvedCwd + string(os.PathSeparator)
 	if !equal(resolvedDir, resolvedCwd) && !hasPrefix(resolvedDir, root) {
 		return errCtx.OutsideRoot(dir, resolvedCwd)

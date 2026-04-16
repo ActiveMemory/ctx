@@ -39,8 +39,8 @@ ctx steering <subcommand>
       about X*. Consumed by the AI tool's prompt injection
       layer, conditionally on prompt match.
 
-    If you find yourself writing "the AI should always do X"
-    — that belongs in steering, not decisions.
+    If you find yourself writing "the AI should always do X",
+    that belongs in steering, not decisions.
 
 ### Anatomy of a Steering File
 
@@ -141,7 +141,7 @@ ctx steering preview "create a REST API endpoint"
 
 Sync steering files to tool-native formats for tools that
 have a **built-in rules primitive**. Not every tool needs
-this — Claude Code and Codex use a different delivery
+this; Claude Code and Codex use a different delivery
 mechanism (see below).
 
 **Examples**:
@@ -157,7 +157,7 @@ ctx steering sync
 | Cursor       | `.cursor/rules/`     | Cursor reads the directory natively     |
 | Cline        | `.clinerules/`       | Cline reads the directory natively      |
 | Kiro         | `.kiro/steering/`    | Kiro reads the directory natively       |
-| Claude Code  | *(no-op)*            | **Delivered via hook + MCP** — see next section |
+| Claude Code  | *(no-op)*            | **Delivered via hook + MCP** (see next section) |
 | Codex        | *(no-op)*            | Same as Claude Code                     |
 
 For the three native-rules tools, `ctx steering sync` writes
@@ -191,7 +191,7 @@ Claude Code on plugin install. Once registered, Claude
 can invoke the `ctx_steering_get` tool mid-task to fetch
 matching steering files for a specific prompt. This is
 the **only** path that resolves `inclusion: auto` and
-`inclusion: manual` matches for Claude Code — Claude
+`inclusion: manual` matches for Claude Code; Claude
 passes the prompt to the MCP tool, which runs the
 keyword match against each file's description.
 
@@ -203,7 +203,7 @@ claude mcp list
 
 Expected line: `ctx: ctx mcp serve - ✓ Connected`. If
 it's missing, reinstall the plugin from Claude Code
-(`/plugin` → find `ctx` → uninstall → install again) —
+(`/plugin` → find `ctx` → uninstall → install again);
 older plugin versions shipped without the `.mcp.json`
 file.
 
@@ -227,10 +227,10 @@ file.
 - Running `ctx steering sync` before starting a Claude
   session does **nothing** for Claude's benefit. Skip it.
 - `ctx steering preview` still works for validating your
-  descriptions — it doesn't depend on sync.
+  descriptions; it doesn't depend on sync.
 - If Claude Code is your only tool, the `ctx steering`
   commands you care about are `add`, `list`, `preview`,
-  `init` — never `sync`.
+  `init` (never `sync`).
 - If you use both Claude Code **and** (say) Cursor,
   `ctx steering sync` covers Cursor (where `auto` and
   `manual` work natively) while the hook+MCP pipeline
@@ -248,9 +248,9 @@ order until the tier budget is exhausted.
 
 ### See Also
 
-- [`ctx setup`](setup.md) — configure which tools receive
+- [`ctx setup`](setup.md): configure which tools receive
   steering syncs
-- [`ctx trigger`](trigger.md) — lifecycle scripts (a different
+- [`ctx trigger`](trigger.md): lifecycle scripts (a different
   hooking concept, see below)
-- [Building steering files recipe](../recipes/steering.md)
-  — walkthrough from first file to synced output
+- [Building steering files recipe](../recipes/steering.md):
+  walkthrough from first file to synced output

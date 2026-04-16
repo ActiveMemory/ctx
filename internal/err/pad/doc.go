@@ -14,20 +14,20 @@
 //
 // Errors fall into four categories:
 //
-//   - **Entry selection** -- the requested entry
+//   - **Entry selection**: the requested entry
 //     index is out of range, not found by ID, or
 //     not a valid number. Constructors:
 //     [EntryRange], [EntryNotFound],
 //     [InvalidIndex].
-//   - **Editing modes** -- mutually exclusive edit
+//   - **Editing modes**: mutually exclusive edit
 //     flags were combined, or no mode was given.
 //     Constructors: [EditBlobTextConflict],
 //     [EditTextConflict], [EditNoMode].
-//   - **Blob operations** -- a blob-only flag was
+//   - **Blob operations**: a blob-only flag was
 //     used on a text entry, or a file exceeds the
 //     size limit. Constructors: [NotBlobEntry],
 //     [OutFlagRequiresBlob], [FileTooLarge].
-//   - **Conflict resolution** -- the scratchpad is
+//   - **Conflict resolution**: the scratchpad is
 //     not encrypted, or no conflict files exist.
 //     Constructors: [ResolveNotEncrypted],
 //     [NoConflictFiles], [Read].

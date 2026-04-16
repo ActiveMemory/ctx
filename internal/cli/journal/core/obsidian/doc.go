@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package obsidian builds an **Obsidian vault** from the
-// project's enriched journal entries — the engine behind
+// project's enriched journal entries, the engine behind
 // the user-facing `ctx journal obsidian` command.
 //
 // The vault is a complete Obsidian-friendly directory
@@ -16,7 +16,7 @@
 //
 // # Public Surface
 //
-//   - **[BuildVault](journalDir, vaultDir, opts)** —
+//   - **[BuildVault](journalDir, vaultDir, opts)**:
 //     end-to-end pipeline: scan entries (parse),
 //     create directory structure, transform
 //     frontmatter (frontmatter), convert links
@@ -26,10 +26,10 @@
 //
 // # Layout Produced
 //
-//   - `<vault>/Home.md`           — landing MOC
-//   - `<vault>/MOC.md`            — topics overview
-//   - `<vault>/topics/<slug>.md`  — per-topic pages
-//   - `<vault>/<YYYY>/<MM>/<slug>.md` — entries
+//   - `<vault>/Home.md`: landing MOC
+//   - `<vault>/MOC.md`: topics overview
+//   - `<vault>/topics/<slug>.md`: per-topic pages
+//   - `<vault>/<YYYY>/<MM>/<slug>.md`: entries
 //
 // # Concurrency
 //

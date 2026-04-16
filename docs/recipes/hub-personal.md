@@ -14,7 +14,7 @@ icon: lucide/brain
 # Personal Cross-Project Brain
 
 This recipe shows **how one developer uses a `ctx` Hub
-across their own projects day-to-day** — the "Story 1"
+across their own projects day-to-day**, the "Story 1"
 shape from the [Hub overview](hub-overview.md). You're not
 setting up infrastructure for a team; you're making a
 lesson you learned last Tuesday in project A automatically
@@ -22,19 +22,19 @@ surface when you open project B next Thursday.
 
 **Prerequisites**: a working `ctx` Hub on localhost
 (see [Getting Started](hub-getting-started.md) for the
-~5-minute setup). This recipe assumes the hub is already
+roughly five-minute setup). This recipe assumes the hub is already
 running and you've registered at least two projects.
 
 ## The Core Loop
 
 Every day, the same three verbs matter:
 
-1. **Record** — notice a decision, learning, or
+1. **Record**: notice a decision, learning, or
    convention and capture it with `ctx add --share`.
-2. **Subscribe** — every project you care about is
+2. **Subscribe**: every project you care about is
    subscribed to the types you want delivered (set once
    with `ctx connection subscribe`).
-3. **Load** — your agent picks up shared entries on next
+3. **Load**: your agent picks up shared entries on next
    session start via the auto-sync hook, or explicitly
    via `ctx agent --include-hub`.
 
@@ -45,20 +45,20 @@ in the concrete moments where each verb matters.
 
 You have three projects on your workstation:
 
-- `~/projects/api` — a Go service you're actively
+- `~/projects/api`, a Go service you're actively
   developing
-- `~/projects/cli` — a companion CLI that consumes the
+- `~/projects/cli`, a companion CLI that consumes the
   API
-- `~/projects/dotfiles` — your personal conventions and
+- `~/projects/dotfiles`, your personal conventions and
   cross-project learnings
 
 All three are registered with a single hub running on
 `localhost:9900` (started once at boot, or via a systemd
-user unit — see [Hub operations](../operations/hub.md)).
+user unit; see [Hub operations](../operations/hub.md)).
 All three subscribe to `decision`, `learning`, and
 `convention`.
 
-### 09:00 — Start Work on `api`
+### 09:00 - Start Work on `api`
 
 You `cd ~/projects/api` and start a Claude Code session.
 Behind the scenes, the plugin's `PreToolUse` hook calls
@@ -73,7 +73,7 @@ So the "use UTC timestamps everywhere" decision you
 recorded in `dotfiles` last week is already in Claude's
 context for this session, without any manual `sync`.
 
-### 10:30 — You Discover a Gotcha
+### 10:30 - You Discover a Gotcha
 
 While debugging, you find that the API's retry loop
 silently drops the last error when the transport times
@@ -101,7 +101,7 @@ Within seconds, `cli/.context/hub/learnings.md` and
 of this learning (the `ctx connection listen` daemon picks
 it up from the ctx Hub's Listen stream).
 
-### 12:00 — You Switch to `cli`
+### 12:00 - You Switch to `cli`
 
 `cd ~/projects/cli`, open a new session. The agent
 packet for `cli` now includes **the learning you just
@@ -112,12 +112,12 @@ recorded in `api`**, because `cli` is subscribed to
 You don't have to re-explain the retry-loop gotcha.
 Claude already sees it.
 
-### 14:00 — You Codify a Convention
+### 14:00 - You Codify a Convention
 
 You've been writing error messages in `api` and decided
 you want a consistent pattern: lowercase start, no
 trailing period, single-sentence. This is a convention,
-not a decision — it applies to every Go project you
+not a decision; it applies to every Go project you
 touch. Record it in `dotfiles` (since that's your
 "personal standards" project), and share it:
 
@@ -133,7 +133,7 @@ Claude Code session in either project gets the
 convention injected into the steering-adjacent slot of
 the agent packet.
 
-### 16:30 — End of Day
+### 16:30 - End of Day
 
 You didn't run `ctx connection sync` once. You didn't
 `git push` anything between projects. You didn't
@@ -158,7 +158,7 @@ ctx add convention --share "..."
 ```
 
 The hub is passive infrastructure. You never talk **to**
-it directly — you talk **through** it by using `--share`
+it directly; you talk **through** it by using `--share`
 on commands you were already running.
 
 ## Tips for Solo Use
@@ -208,7 +208,7 @@ context packets get noisy.
 **Local storage is fine; no TLS needed.** The hub runs
 on localhost. No one else is on the network. Skip the
 TLS setup from the
-[Multi-machine recipe](hub-multi-machine.md) — it's
+[Multi-machine recipe](hub-multi-machine.md); it's
 relevant when the hub is on a LAN host serving multiple
 workstations, not when it's a personal daemon.
 
@@ -220,7 +220,7 @@ project registration, use
 
 **Not a team guide.** If you're sharing across humans,
 not just across your own projects, read
-[Team knowledge bus](hub-team.md) instead — the trust
+[Team knowledge bus](hub-team.md) instead; the trust
 model and operational concerns are different.
 
 **Not production operations.** For backup, log
@@ -230,14 +230,14 @@ rotation, failure recovery, and HA, see
 
 ## See Also
 
-- [Hub overview](hub-overview.md) — when to use the Hub
+- [Hub overview](hub-overview.md): when to use the Hub
   and when not to.
-- [Team knowledge bus](hub-team.md) — the multi-human
+- [Team knowledge bus](hub-team.md): the multi-human
   companion recipe.
-- [`ctx connect`](../cli/connection.md) — the client-side
+- [`ctx connect`](../cli/connection.md): the client-side
   commands used above (`subscribe`, `publish`, `sync`,
   `listen`, `status`).
-- [`ctx add`](../cli/context.md) — the `--share` flag
+- [`ctx add`](../cli/context.md): the `--share` flag
   reference.
-- [`ctx hub`](../cli/hub.md) — operator commands for
+- [`ctx hub`](../cli/hub.md): operator commands for
   starting, stopping, and inspecting the hub.

@@ -141,13 +141,13 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 			sess = &s
 
 		case copilotKindScalarPatch:
-			// Scalar property patch — apply to session
+			// Scalar property patch: apply to session
 			if sess != nil {
 				p.applyScalarPatch(sess, line.K, line.V)
 			}
 
 		case copilotKindObjectPatch:
-			// Array/object patch — apply to session
+			// Array/object patch: apply to session
 			if sess != nil {
 				p.applyPatch(sess, line.K, line.V)
 			}

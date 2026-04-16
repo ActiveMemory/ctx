@@ -18,23 +18,23 @@
 //
 // # Public Surface
 //
-//   - **[Init]** — loads every embedded YAML map into
+//   - **[Init]**: loads every embedded YAML map into
 //     memory. Called exactly once from `main()` before
 //     the CLI starts dispatching. Idempotent: repeat
 //     calls are noops (the [sync.Once] guard short-
 //     circuits).
-//   - **[TextDesc](key)** — resolves a
+//   - **[TextDesc](key)**: resolves a
 //     [internal/config/embed/text].DescKey to its
 //     rendered string.
-//   - **[StopWords]** — returns the embedded English
+//   - **[StopWords]**: returns the embedded English
 //     stop-word set used by
 //     [internal/cli/agent/core/score] for relevance
 //     scoring.
-//   - **[ConfigPatterns]** — returns the embedded glob
+//   - **[ConfigPatterns]**: returns the embedded glob
 //     pattern list used to detect "this file is a
 //     config" in drift checks and skill heuristics.
 //   - **[PermAllowListDefault]** /
-//     **[PermDenyListDefault]** — return the default
+//     **[PermDenyListDefault]**: return the default
 //     allow/deny entries for Claude Code permissions
 //     (used by `ctx init` and the
 //     `_ctx-permission-sanitize` skill).

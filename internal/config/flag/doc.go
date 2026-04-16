@@ -17,9 +17,9 @@
 //
 // # Global Flags
 //
-//   - ContextDir ("context-dir") -- override the
+//   - ContextDir ("context-dir"): override the
 //     .context/ directory path
-//   - AllowOutsideCwd ("allow-outside-cwd") -- permit
+//   - AllowOutsideCwd ("allow-outside-cwd"): permit
 //     operations outside the working directory
 //
 // PrefixLong ("--") is the long-flag prefix used in
@@ -39,7 +39,7 @@
 // # Agent Command Flags
 //
 //   - Budget, Cooldown, Follow, Format, Session,
-//     Skill -- control agent behavior and output
+//     Skill: control agent behavior and output
 //
 // # Shared Flags
 //
@@ -51,7 +51,7 @@
 //
 // # Time-Range Flags
 //
-//   - Log, Since, Until -- used by commands that
+//   - Log, Since, Until: used by commands that
 //     filter by date range
 //
 // # Why Centralized

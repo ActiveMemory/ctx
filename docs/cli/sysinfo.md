@@ -15,7 +15,7 @@ icon: lucide/cpu
 
 Display a snapshot of system resources (memory, swap, disk, load)
 with threshold-based alert severities. Mirrors what the
-`check-resource` hook plumbing monitors in the background — but this
+`check-resource` hook plumbing monitors in the background, but this
 command prints the full report at any severity level, not only at
 DANGER.
 

@@ -18,29 +18,29 @@
 //
 // # Directory and File Paths
 //
-//   - [Dir] (".vscode") — the workspace config dir.
+//   - [Dir] (".vscode"): the workspace config dir.
 //   - [FileExtensionsJSON], [FileTasksJSON],
-//     [FileMCPJSON] — config file names within it.
+//     [FileMCPJSON]: config file names within it.
 //
 // # Extension
 //
-//   - [ExtensionID] ("activememory.ctx-context") —
+//   - [ExtensionID] ("activememory.ctx-context"):
 //     the VS Code Marketplace identifier for the
 //     ctx extension.
 //
 // # JSON Keys
 //
-//   - [KeyRecommendations] — extensions.json key.
-//   - [KeyCommand] — tasks.json command key.
-//   - [KeyServers], [KeyArgs] — mcp.json keys.
+//   - [KeyRecommendations]: extensions.json key.
+//   - [KeyCommand]: tasks.json command key.
+//   - [KeyServers], [KeyArgs]: mcp.json keys.
 //
 // # Task Configuration
 //
-//   - [TasksVersion] ("2.0.0") — tasks schema
+//   - [TasksVersion] ("2.0.0"): tasks schema
 //     version.
 //   - [TypeShell], [GroupNone], [RevealAlways],
-//     [PanelShared] — task runner settings.
-//   - [Tasks] — the label/command pairs written
+//     [PanelShared]: task runner settings.
+//   - [Tasks]: the label/command pairs written
 //     into tasks.json (status, drift, agent,
 //     journal, journal-serve).
 //

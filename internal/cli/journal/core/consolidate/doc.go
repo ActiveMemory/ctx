@@ -17,7 +17,7 @@
 //
 // # Public Surface
 //
-//   - [ToolRuns] -- collapses consecutive turns with
+//   - [ToolRuns]: collapses consecutive turns with
 //     identical body content.
 //
 // # Algorithm

@@ -18,8 +18,8 @@
 //
 // Requires exactly two positional arguments:
 //
-//   - args[0]: action -- "add" or "remove"
-//   - args[1]: address -- peer gRPC address
+//   - args[0]: action: "add" or "remove"
+//   - args[1]: address: peer gRPC address
 //     (host:port)
 //
 // # Flags

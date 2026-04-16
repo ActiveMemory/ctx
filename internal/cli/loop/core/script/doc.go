@@ -15,11 +15,11 @@
 // [Generate] accepts a tool identifier that selects the
 // invocation command template:
 //
-//   - "claude" (default) — runs Claude Code in headless
+//   - "claude" (default): runs Claude Code in headless
 //     mode with the prompt file piped as input.
-//   - "aider" — runs the Aider CLI with the prompt file
+//   - "aider": runs the Aider CLI with the prompt file
 //     as the message argument.
-//   - "generic" — runs a shell command that reads the
+//   - "generic": runs a shell command that reads the
 //     prompt file, suitable for custom tool wrappers.
 //
 // # Iteration Control

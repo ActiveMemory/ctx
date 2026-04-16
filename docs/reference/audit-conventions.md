@@ -137,7 +137,7 @@ func loadContext() {
 }
 ```
 
-**Before (format verbs — also caught):**
+**Before (format verbs, also caught):**
 
 ```go
 func EntryHash(text string) string {
@@ -155,7 +155,7 @@ func EntryHash(text string) string {
 }
 ```
 
-**Before (URL schemes — also caught):**
+**Before (URL schemes, also caught):**
 
 ```go
 if strings.HasPrefix(target, "https://") ||
@@ -354,7 +354,7 @@ Each `.dead` file includes a header:
 
 **Rule:** If a test-only allowlist entry is needed (the export exists
 only for test use), add the fully qualified symbol to `testOnlyExports`
-in `dead_exports_test.go`. Keep this list small — prefer eliminating
+in `dead_exports_test.go`. Keep this list small; prefer eliminating
 the export.
 
 ---
@@ -371,7 +371,7 @@ This prevents `core/` from becoming a god package.
 
 ```
 internal/cli/dep/core/
-    go.go           # violation — logic at core/ level
+    go.go           # violation: logic at core/ level
     python.go       # violation
     node.go         # violation
     types.go        # violation
@@ -659,7 +659,7 @@ if len(entries) > config.MaxEntries {
 }
 ```
 
-**Exempt:** `0`, `1`, `-1`, `2`–`10`, strconv radix/bitsize args
+**Exempt:** `0`, `1`, `-1`, `2`-`10`, strconv radix/bitsize args
 (`10`, `32`, `64` in `strconv.Parse*`/`Format*`), octal permissions
 (caught separately by `TestNoRawPermissions`), and `const`/`var`
 definition sites.
@@ -744,7 +744,7 @@ reads more naturally (`isValid` in a local context is fine). This
 convention applies to exported methods and package-level functions.
 See CONVENTIONS.md "Predicates" section.
 
-This is not yet enforced by an AST test — it requires semantic
+This is not yet enforced by an AST test; it requires semantic
 understanding of return types and naming intent that makes automated
 detection fragile. Apply during code review.
 
@@ -762,7 +762,7 @@ functions. Public API and private helpers live in separate files.
 ```
 load.go
     func Load() { ... }        // exported
-    func parseHeader() { ... } // unexported — violation
+    func parseHeader() { ... } // unexported, violation
 ```
 
 **After:**
@@ -806,7 +806,7 @@ Each `cmd/$sub/` directory under `internal/cli/` may contain only
 internal/cli/doctor/cmd/root/
     cmd.go
     run.go
-    format.go   # violation — helper in cmd dir
+    format.go   # violation: helper in cmd dir
 ```
 
 **After:**
@@ -831,10 +831,10 @@ internal/cli/doctor/core/format/
 Three tests enforce DescKey/Use constant discipline:
 
 1. `Use*` constants appear only in cobra `Use:` struct field
-   assignments — never as arguments to `desc.Text()` or elsewhere.
+   assignments, never as arguments to `desc.Text()` or elsewhere.
 2. `DescKey*` constants are passed only to `assets.CommandDesc()`,
-   `assets.FlagDesc()`, or `desc.Text()` — never to cobra `Use:`.
-3. No cross-namespace lookups — `TextDescKey` must not be passed to
+   `assets.FlagDesc()`, or `desc.Text()`, never to cobra `Use:`.
+3. No cross-namespace lookups: `TextDescKey` must not be passed to
    `CommandDesc()`, `FlagDescKey` must not be passed to `Text()`, etc.
 
 ---
@@ -853,7 +853,7 @@ constant in `config/entry/`.
 
 ## Other Enforced Patterns
 
-These tests follow the same fix approach — extract the operation to
+These tests follow the same fix approach: extract the operation to
 its designated package:
 
 | Test | Violation | Fix |

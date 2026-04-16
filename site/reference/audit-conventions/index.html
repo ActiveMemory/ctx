@@ -2043,7 +2043,7 @@ another.</p>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Before (format verbs — also caught):</strong></p>
+<p><strong>Before (format verbs, also caught):</strong></p>
 <div class="language-go highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">func</span><span class="w"> </span><span class="nx">EntryHash</span><span class="p">(</span><span class="nx">text</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="nx">h</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">sha256</span><span class="p">.</span><span class="nx">Sum256</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">text</span><span class="p">))</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;%x&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">h</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span>
@@ -2055,7 +2055,7 @@ another.</p>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">hex</span><span class="p">.</span><span class="nx">EncodeToString</span><span class="p">(</span><span class="nx">h</span><span class="p">[:</span><span class="nx">cfgFmt</span><span class="p">.</span><span class="nx">HashPrefixLen</span><span class="p">])</span>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Before (URL schemes — also caught):</strong></p>
+<p><strong>Before (URL schemes, also caught):</strong></p>
 <div class="language-go highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">if</span><span class="w"> </span><span class="nx">strings</span><span class="p">.</span><span class="nx">HasPrefix</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;https://&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="nx">strings</span><span class="p">.</span><span class="nx">HasPrefix</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;http://&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">target</span>
@@ -2221,7 +2221,7 @@ preserves the code in git without polluting the live codebase:</p>
 </span></code></pre></div>
 <p><strong>Rule:</strong> If a test-only allowlist entry is needed (the export exists
 only for test use), add the fully qualified symbol to <code>testOnlyExports</code>
-in <code>dead_exports_test.go</code>. Keep this list small — prefer eliminating
+in <code>dead_exports_test.go</code>. Keep this list small; prefer eliminating
 the export.</p>
 <hr />
 <h2 id="core-package-structure">Core Package Structure<a class="headerlink" href="#core-package-structure" title="Permanent link">&para;</a></h2>
@@ -2231,7 +2231,7 @@ and test files at the top level. All domain logic lives in subpackages.
 This prevents <code>core/</code> from becoming a god package.</p>
 <p><strong>Before:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>internal/cli/dep/core/
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    go.go           # violation — logic at core/ level
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    go.go           # violation: logic at core/ level
 </span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    python.go       # violation
 </span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    node.go         # violation
 </span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    types.go        # violation
@@ -2430,7 +2430,7 @@ exceptions.</p>
 </span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="w">    </span><span class="nx">entries</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">entries</span><span class="p">[:</span><span class="nx">config</span><span class="p">.</span><span class="nx">MaxEntries</span><span class="p">]</span>
 </span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Exempt:</strong> <code>0</code>, <code>1</code>, <code>-1</code>, <code>2</code>–<code>10</code>, strconv radix/bitsize args
+<p><strong>Exempt:</strong> <code>0</code>, <code>1</code>, <code>-1</code>, <code>2</code>-<code>10</code>, strconv radix/bitsize args
 (<code>10</code>, <code>32</code>, <code>64</code> in <code>strconv.Parse*</code>/<code>Format*</code>), octal permissions
 (caught separately by <code>TestNoRawPermissions</code>), and <code>const</code>/<code>var</code>
 definition sites.</p>
@@ -2481,7 +2481,7 @@ especially at call sites where the package name provides context.</p>
 reads more naturally (<code>isValid</code> in a local context is fine). This
 convention applies to exported methods and package-level functions.
 See CONVENTIONS.md "Predicates" section.</p>
-<p>This is not yet enforced by an AST test — it requires semantic
+<p>This is not yet enforced by an AST test; it requires semantic
 understanding of return types and naming intent that makes automated
 detection fragile. Apply during code review.</p>
 <hr />
@@ -2492,7 +2492,7 @@ functions. Public API and private helpers live in separate files.</p>
 <p><strong>Before:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>load.go
 </span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>    func Load() { ... }        // exported
-</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>    func parseHeader() { ... } // unexported — violation
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>    func parseHeader() { ... } // unexported, violation
 </span></code></pre></div>
 <p><strong>After:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>load.go
@@ -2520,7 +2520,7 @@ contributors add local error definitions when they see a local
 <div class="language-text highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>internal/cli/doctor/cmd/root/
 </span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>    cmd.go
 </span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>    run.go
-</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a>    format.go   # violation — helper in cmd dir
+</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a>    format.go   # violation: helper in cmd dir
 </span></code></pre></div>
 <p><strong>After:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>internal/cli/doctor/cmd/root/
@@ -2538,10 +2538,10 @@ contributors add local error definitions when they see a local
 <p>Three tests enforce DescKey/Use constant discipline:</p>
 <ol>
 <li><code>Use*</code> constants appear only in cobra <code>Use:</code> struct field
-   assignments — never as arguments to <code>desc.Text()</code> or elsewhere.</li>
+   assignments, never as arguments to <code>desc.Text()</code> or elsewhere.</li>
 <li><code>DescKey*</code> constants are passed only to <code>assets.CommandDesc()</code>,
-   <code>assets.FlagDesc()</code>, or <code>desc.Text()</code> — never to cobra <code>Use:</code>.</li>
-<li>No cross-namespace lookups — <code>TextDescKey</code> must not be passed to
+   <code>assets.FlagDesc()</code>, or <code>desc.Text()</code>, never to cobra <code>Use:</code>.</li>
+<li>No cross-namespace lookups: <code>TextDescKey</code> must not be passed to
    <code>CommandDesc()</code>, <code>FlagDescKey</code> must not be passed to <code>Text()</code>, etc.</li>
 </ol>
 <hr />
@@ -2553,7 +2553,7 @@ entry type constant. Prevents orphan entries that are never rendered.</p>
 constant in <code>config/entry/</code>.</p>
 <hr />
 <h2 id="other-enforced-patterns">Other Enforced Patterns<a class="headerlink" href="#other-enforced-patterns" title="Permanent link">&para;</a></h2>
-<p>These tests follow the same fix approach — extract the operation to
+<p>These tests follow the same fix approach: extract the operation to
 its designated package:</p>
 <table>
 <thead>

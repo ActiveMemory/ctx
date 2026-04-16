@@ -329,7 +329,7 @@ func JournalEntryPart(
 	}
 
 	for i, msg := range messages {
-		// Skip API error messages — they're retry noise.
+		// Skip API error messages; they're retry noise.
 		if msg.IsApiError {
 			sb.WriteString(tpl.RecallApiError + nl + nl)
 			continue

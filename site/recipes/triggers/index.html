@@ -1323,7 +1323,7 @@
   <a href="#step-1-scaffold-the-script" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1 — Scaffold the Script
+        Step 1: Scaffold the Script
       
     </span>
   </a>
@@ -1334,7 +1334,7 @@
   <a href="#step-2-write-the-logic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2 — Write the Logic
+        Step 2: Write the Logic
       
     </span>
   </a>
@@ -1345,7 +1345,7 @@
   <a href="#step-3-test-with-a-mock-payload" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3 — Test with a Mock Payload
+        Step 3: Test with a Mock Payload
       
     </span>
   </a>
@@ -1356,7 +1356,7 @@
   <a href="#step-4-enable-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4 — Enable It
+        Step 4: Enable It
       
     </span>
   </a>
@@ -1367,7 +1367,7 @@
   <a href="#step-5-iterate-safely" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5 — Iterate Safely
+        Step 5: Iterate Safely
       
     </span>
   </a>
@@ -1856,7 +1856,7 @@
   <a href="#step-1-scaffold-the-script" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1 — Scaffold the Script
+        Step 1: Scaffold the Script
       
     </span>
   </a>
@@ -1867,7 +1867,7 @@
   <a href="#step-2-write-the-logic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2 — Write the Logic
+        Step 2: Write the Logic
       
     </span>
   </a>
@@ -1878,7 +1878,7 @@
   <a href="#step-3-test-with-a-mock-payload" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3 — Test with a Mock Payload
+        Step 3: Test with a Mock Payload
       
     </span>
   </a>
@@ -1889,7 +1889,7 @@
   <a href="#step-4-enable-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4 — Enable It
+        Step 4: Enable It
       
     </span>
   </a>
@@ -1900,7 +1900,7 @@
   <a href="#step-5-iterate-safely" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5 — Iterate Safely
+        Step 5: Iterate Safely
       
     </span>
   </a>
@@ -2093,8 +2093,8 @@ script. Enable it explicitly with <code>ctx trigger enable</code>.</p>
 <p>You want a <code>pre-tool-use</code> trigger that blocks the AI from
 editing anything in <code>internal/crypto/</code> without explicit
 confirmation. Cryptographic code is sensitive, and accidental
-edits have caused outages before — you want a hard gate.</p>
-<h2 id="step-1-scaffold-the-script">Step 1 — Scaffold the Script<a class="headerlink" href="#step-1-scaffold-the-script" title="Permanent link">&para;</a></h2>
+edits have caused outages before, and you want a hard gate.</p>
+<h2 id="step-1-scaffold-the-script">Step 1: Scaffold the Script<a class="headerlink" href="#step-1-scaffold-the-script" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>trigger<span class="w"> </span>add<span class="w"> </span>pre-tool-use<span class="w"> </span>protect-crypto
 </span></code></pre></div>
 <p>That creates <code>.context/hooks/pre-tool-use/protect-crypto.sh</code>
@@ -2114,11 +2114,11 @@ with a template:</p>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Return a JSON result. action can be &quot;allow&quot;, &quot;block&quot;, or absent.</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;action&quot;: &quot;allow&quot;}&#39;</span>
 </span></code></pre></div>
-<p>Note: the directory is <code>.context/hooks/pre-tool-use/</code> — the
+<p>Note: the directory is <code>.context/hooks/pre-tool-use/</code>; the
 on-disk layout still uses <code>hooks/</code> even though the command is
 <code>ctx trigger</code>. If you <code>ls .context/hooks/</code>, that's where
 your triggers live.</p>
-<h2 id="step-2-write-the-logic">Step 2 — Write the Logic<a class="headerlink" href="#step-2-write-the-logic" title="Permanent link">&para;</a></h2>
+<h2 id="step-2-write-the-logic">Step 2: Write the Logic<a class="headerlink" href="#step-2-write-the-logic" title="Permanent link">&para;</a></h2>
 <p>Open the file and replace the template body:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/usr/bin/env bash</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
@@ -2152,17 +2152,17 @@ your triggers live.</p>
 </span></code></pre></div>
 <p>A few things to note:</p>
 <ul>
-<li><strong><code>set -euo pipefail</code></strong> — any unhandled error aborts the
+<li><strong><code>set -euo pipefail</code></strong>: any unhandled error aborts the
   script. Critical for a security-relevant trigger.</li>
-<li><strong>Quote everything from <code>jq</code></strong> — the <code>path</code> field comes from
+<li><strong>Quote everything from <code>jq</code></strong>: the <code>path</code> field comes from
   the AI tool; treat it as untrusted input.</li>
-<li><strong>Explicit <code>allow</code> case</strong> — the default is allow. An
+<li><strong>Explicit <code>allow</code> case</strong>: the default is allow. An
   empty or missing response is a risky default.</li>
-<li><strong>Use <code>jq -n --arg</code></strong> for output construction — safer than
+<li><strong>Use <code>jq -n --arg</code></strong> for output construction, as it is safer than
   string concatenation when the message may contain special
   characters.</li>
 </ul>
-<h2 id="step-3-test-with-a-mock-payload">Step 3 — Test with a Mock Payload<a class="headerlink" href="#step-3-test-with-a-mock-payload" title="Permanent link">&para;</a></h2>
+<h2 id="step-3-test-with-a-mock-payload">Step 3: Test with a Mock Payload<a class="headerlink" href="#step-3-test-with-a-mock-payload" title="Permanent link">&para;</a></h2>
 <p>Before enabling the trigger, test it with a realistic mock
 input using <code>ctx trigger test</code>. This runs the script against
 a synthetic JSON payload without actually firing any AI tool.</p>
@@ -2182,7 +2182,7 @@ only gates write-family tools.</p>
 <p>If any of these cases misbehave, <strong>fix the trigger before
 enabling it.</strong> The trigger is disabled at this point, so
 misbehavior doesn't affect real AI sessions.</p>
-<h2 id="step-4-enable-it">Step 4 — Enable It<a class="headerlink" href="#step-4-enable-it" title="Permanent link">&para;</a></h2>
+<h2 id="step-4-enable-it">Step 4: Enable It<a class="headerlink" href="#step-4-enable-it" title="Permanent link">&para;</a></h2>
 <p>Once the test cases pass, enable the trigger:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>trigger<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>protect-crypto
 </span></code></pre></div>
@@ -2193,7 +2193,7 @@ misbehavior doesn't affect real AI sessions.</p>
 </span></code></pre></div>
 <p>Should show <code>protect-crypto</code> under <code>pre-tool-use</code> with an
 enabled indicator.</p>
-<h2 id="step-5-iterate-safely">Step 5 — Iterate Safely<a class="headerlink" href="#step-5-iterate-safely" title="Permanent link">&para;</a></h2>
+<h2 id="step-5-iterate-safely">Step 5: Iterate Safely<a class="headerlink" href="#step-5-iterate-safely" title="Permanent link">&para;</a></h2>
 <p>If you discover a bug after enabling, <strong>disable first, fix
 second</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>trigger<span class="w"> </span>disable<span class="w"> </span>protect-crypto
@@ -2201,7 +2201,7 @@ second</strong>:</p>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ctx<span class="w"> </span>trigger<span class="w"> </span><span class="nb">test</span><span class="w"> </span>pre-tool-use<span class="w"> </span>--tool<span class="w"> </span>write_file<span class="w"> </span>--path<span class="w"> </span>internal/crypto/aes.go
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ctx<span class="w"> </span>trigger<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>protect-crypto
 </span></code></pre></div>
-<p>Disabling simply clears the executable bit — the script stays
+<p>Disabling simply clears the executable bit; the script stays
 on disk, and <code>ctx trigger enable</code> re-enables it without
 rewriting anything.</p>
 <h2 id="patterns-worth-copying">Patterns Worth Copying<a class="headerlink" href="#patterns-worth-copying" title="Permanent link">&para;</a></h2>
@@ -2217,7 +2217,7 @@ and append to a log as a side effect:</p>
 <h3 id="context-injection-at-session-start">Context Injection at Session Start<a class="headerlink" href="#context-injection-at-session-start" title="Permanent link">&para;</a></h3>
 <p>A <code>session-start</code> trigger can prepend text to the agent's
 initial prompt by emitting <code>{"action":"inject", "content": "..."}</code>
-— useful for injecting daily standup notes, open PRs, or
+. This is useful for injecting daily standup notes, open PRs, or
 rotating TODOs without storing them in a steering file.</p>
 <h3 id="chaining-triggers-of-the-same-type">Chaining Triggers of the Same Type<a class="headerlink" href="#chaining-triggers-of-the-same-type" title="Permanent link">&para;</a></h3>
 <p>Multiple scripts in the same type directory all run. If any
@@ -2239,16 +2239,16 @@ strings.</p>
 <p><strong>Mixing <code>hook</code> and <code>trigger</code> vocabulary.</strong> The command is
 <code>ctx trigger</code> but the on-disk directory is <code>.context/hooks/</code>.
 The feature was renamed; the directory name lags behind.
-Don't let this confuse you — they refer to the same thing.</p>
+Don't let this confuse you; they refer to the same thing.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../cli/trigger/"><code>ctx trigger</code> reference</a> — full
+<li><a href="../../cli/trigger/"><code>ctx trigger</code> reference</a>: full
   command, flag, and event-type reference.</li>
-<li><a href="../../cli/steering/"><code>ctx steering</code></a> — persistent rules,
+<li><a href="../../cli/steering/"><code>ctx steering</code></a>: persistent rules,
   not scripts. Use steering when the thing you want is "tell
   the AI to always do X" rather than "run a script when Y
   happens."</li>
-<li><a href="../steering/">Writing steering files</a> — the rule-based
+<li><a href="../steering/">Writing steering files</a>: the rule-based
   equivalent of this recipe.</li>
 </ul>
 

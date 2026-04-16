@@ -17,22 +17,22 @@
 //
 // # Key Constants
 //
-//   - [Content]       -- the main text body passed to
+//   - [Content]      : the main text body passed to
 //     ctx_add and ctx_watch_update.
-//   - [Priority]      -- task priority ("high",
+//   - [Priority]     : task priority ("high",
 //     "medium", "low") for ctx_add.
-//   - [Section]       -- target section in TASKS.md.
-//   - [Query]         -- search text or task number
+//   - [Section]      : target section in TASKS.md.
+//   - [Query]        : search text or task number
 //     for ctx_complete and ctx_search.
-//   - [RecentAction]  -- recent action description for
+//   - [RecentAction] : recent action description for
 //     the task completion nudge.
-//   - [Caller]        -- identifies the MCP client
+//   - [Caller]       : identifies the MCP client
 //     (cursor, vscode, etc.).
-//   - [Limit], [Since] -- pagination and date filters
+//   - [Limit], [Since]: pagination and date filters
 //     for ctx_journal_source.
-//   - [SessionID], [Branch], [Commit] -- provenance
+//   - [SessionID], [Branch], [Commit]: provenance
 //     metadata attached to journal entries.
-//   - [Prompt], [Summary] -- optional fields for
+//   - [Prompt], [Summary]: optional fields for
 //     steering file matching and session-end hooks.
 //
 // # Why These Are Centralized

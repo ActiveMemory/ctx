@@ -5,16 +5,16 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package flag holds the **lookup keys** for every CLI flag's
-// help text — the short blurb cobra prints next to `--name`
+// help text, the short blurb cobra prints next to `--name`
 // in `ctx <command> --help` output.
 //
 // The package is the flag-help half of the same two-step
 // indirection used by [internal/config/embed/text] and
 // [internal/config/embed/cmd]:
 //
-//  1. **Here** — `DescKeyXxx` Go constants, one per flag
+//  1. **Here**: `DescKeyXxx` Go constants, one per flag
 //     across every command in the binary.
-//  2. **In** [internal/assets/commands/text/*.yaml] — the
+//  2. **In** [internal/assets/commands/text/*.yaml]: the
 //     actual help string. Resolved at run-time via
 //     [internal/assets/read/desc.Flag](key).
 //
@@ -22,7 +22,7 @@
 // rebuild, lets the audit suite catch typos at CI time, and
 // makes per-locale flag help structurally possible.
 //
-// # File Layout — One Command per File
+// # File Layout: One Command per File
 //
 // Each file groups the flag-key constants for one command
 // (`add.go`, `agent.go`, `backup.go`, …). Within a file,

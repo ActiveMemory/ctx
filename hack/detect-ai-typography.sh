@@ -79,7 +79,26 @@ fi
 #   ````      = quad backtick. AI wraps code fences in four-backtick
 #               blocks; zensical doesn't support them. Triple is the
 #               project maximum.
-PATTERN='\x{2013}|\x{2014}|\x{2018}|\x{2019}|\x{201C}|\x{201D}|(?<!\|) -- |````'
+# Detect grep capabilities. GNU grep supports -P (PCRE) with Unicode
+# hex escapes; BSD grep (macOS) does not. Use PCRE when available for
+# the negative lookbehind on " -- ", fall back to extended regex with
+# literal UTF-8 bytes otherwise.
+if echo "test" | grep -P "test" >/dev/null 2>&1; then
+  GREP_MODE="-P"
+  PATTERN='\x{2013}|\x{2014}|\x{2018}|\x{2019}|\x{201C}|\x{201D}|(?<!\|) -- |````'
+else
+  GREP_MODE="-E"
+  # Literal UTF-8 bytes for typographic characters.
+  EMDASH=$'\xe2\x80\x94'   # U+2014 —
+  ENDASH=$'\xe2\x80\x93'   # U+2013 –
+  LDQ=$'\xe2\x80\x9c'      # U+201C "
+  RDQ=$'\xe2\x80\x9d'      # U+201D "
+  LSQ=$'\xe2\x80\x98'      # U+2018 '
+  RSQ=$'\xe2\x80\x99'      # U+2019 '
+  # BSD grep lacks lookbehind; " -- " matches will include table cells.
+  # Acceptable trade-off: false positives > silent false negatives.
+  PATTERN="${ENDASH}|${EMDASH}|${LSQ}|${RSQ}|${LDQ}|${RDQ}| -- |\`\`\`\`"
+fi
 
 # Files where typographic punctuation is intentional.
 # Add glob patterns here to skip specific paths.
@@ -104,7 +123,7 @@ while IFS= read -r -d '' file; do
   # These are legitimate uses, not AI-generated prose.
   CONST_FILTER='^\s*const\s+\w+\s*=\s*"[^"]*"$'
 
-  matches=$(grep -P "$PATTERN" "$file" 2>/dev/null | grep -cvP "$CONST_FILTER" 2>/dev/null || true)
+  matches=$(grep $GREP_MODE "$PATTERN" "$file" 2>/dev/null | grep -cvE "$CONST_FILTER" 2>/dev/null || true)
   if [[ "$matches" -gt 0 ]]; then
     file_count=$((file_count + 1))
     hit_count=$((hit_count + matches))
@@ -115,7 +134,7 @@ while IFS= read -r -d '' file; do
     else
       echo ""
       echo "--- $rel ($matches matches) ---"
-      grep -nP "$PATTERN" "$file" 2>/dev/null | grep -vP "$CONST_FILTER" | while IFS= read -r line; do
+      grep -n $GREP_MODE "$PATTERN" "$file" 2>/dev/null | grep -vE "$CONST_FILTER" | while IFS= read -r line; do
         echo "  $line"
       done
     fi

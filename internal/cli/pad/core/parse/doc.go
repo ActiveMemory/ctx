@@ -5,18 +5,18 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package parse splits raw scratchpad content into
-// individual entries — the helper every `ctx pad`
+// individual entries, the helper every `ctx pad`
 // subcommand uses to turn the on-disk blob into a
 // `[]Entry` it can filter, render, or mutate.
 //
 // # Public Surface
 //
-//   - **[Entries](raw)** — returns the entry slice
+//   - **[Entries](raw)**: returns the entry slice
 //     parsed from the scratchpad text. Recognizes
 //     the `## YYYY-MM-DD HH:MM:SS` entry header;
 //     everything between two headers (or between a
 //     header and EOF) is one entry's body.
-//   - **[FormatEntries](entries)** — the inverse:
+//   - **[FormatEntries](entries)**: the inverse;
 //     serializes a `[]Entry` back to the raw on-disk
 //     shape so writes round-trip cleanly.
 //

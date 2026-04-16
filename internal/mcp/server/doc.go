@@ -6,7 +6,7 @@
 
 // Package server implements the **Model Context Protocol
 // (MCP) server** that exposes ctx context, commands, and
-// session-lifecycle hooks to MCP-compatible AI clients —
+// session-lifecycle hooks to MCP-compatible AI clients,
 // primarily Claude Code, but also any other tool that speaks
 // the same JSON-RPC 2.0 dialect.
 //
@@ -20,15 +20,15 @@
 //
 // MCP is JSON-RPC 2.0 with three core verbs ctx implements:
 //
-//   - **`tools/list`** — advertise the catalog of MCP tools
+//   - **`tools/list`**: advertise the catalog of MCP tools
 //     this server provides (`ctx_status`, `ctx_add`,
 //     `ctx_complete`, `ctx_drift`, `ctx_journal_source`,
 //     `ctx_search`, `ctx_steering_get`, `ctx_remind`,
 //     `ctx_session_*`, `ctx_check_task_completion`,
 //     `ctx_watch_update`).
-//   - **`tools/call`** — invoke one tool with a typed
+//   - **`tools/call`**: invoke one tool with a typed
 //     arguments map.
-//   - **`prompts/list` / `prompts/get`** — surface
+//   - **`prompts/list` / `prompts/get`**: surface
 //     ctx-curated prompts (e.g. the session-start
 //     ceremony prompt) as first-class MCP prompts.
 //
@@ -39,22 +39,22 @@
 //
 // The package layers four sub-concerns:
 //
-//   - **[New]** — constructs a server bound to a
+//   - **[New]**: constructs a server bound to a
 //     [entity.MCPDeps] (paths, runtime config). The
-//     server is single-threaded by design — Claude Code
+//     server is single-threaded by design; Claude Code
 //     spawns one sub-process per session and does not
 //     pipeline requests.
-//   - **Routing** — [route/tool], [route/prompt],
+//   - **Routing**: [route/tool], [route/prompt],
 //     [route/resource] register handlers per MCP verb.
-//   - **Dispatch** — [dispatch/poll] reads one
+//   - **Dispatch**: [dispatch/poll] reads one
 //     JSON-RPC message at a time from stdin and routes
 //     it to the right handler.
-//   - **Catalog** ([catalog/data.go]) — the static
+//   - **Catalog** ([catalog/data.go]): the static
 //     tool/prompt/resource definitions surfaced via
 //     `*/list` calls.
 //
-// All actual domain logic — what `ctx_drift` *does*, what
-// `ctx_search` returns — lives in [internal/mcp/handler].
+// All actual domain logic (what `ctx_drift` *does*, what
+// `ctx_search` returns) lives in [internal/mcp/handler].
 // This package is the protocol-aware shell around it.
 //
 // # Per-Session State

@@ -18,7 +18,7 @@
 //
 // # Sub-Packages
 //
-//   - **[apply]** — dispatches a parsed update to
+//   - **[apply]**: dispatches a parsed update to
 //     the right backend (entry, task, etc.).
 //
 // # Public Surface
@@ -35,6 +35,6 @@
 // # Concurrency
 //
 // Single goroutine per `ctx watch` invocation. The
-// scanner is sequential by design — order matters
+// scanner is sequential by design; order matters
 // when adds and completes interleave.
 package core

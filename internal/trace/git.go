@@ -135,7 +135,7 @@ func CollectRefsForCommit(
 		all = append(all, entry.Refs...)
 	}
 
-	// Source 2: git trailers (optional — slow for bulk operations)
+	// Source 2: git trailers (optional, slow for bulk operations)
 	if includeTrailers {
 		all = append(all, ReadTrailerRefs(commitHash)...)
 	}

@@ -16,13 +16,13 @@
 //
 // # Supported Tools
 //
-//   - **Kiro** — config dir .kiro/, MCP config at
+//   - **Kiro**: config dir .kiro/, MCP config at
 //     [MCPConfigPathKiro], steering at
 //     [SteeringDeployPathKiro].
-//   - **Cursor** — config dir .cursor/, MCP config at
+//   - **Cursor**: config dir .cursor/, MCP config at
 //     [MCPConfigPathCursor], steering at
 //     [SteeringPathCursor].
-//   - **Cline** — MCP config at [MCPConfigPathCline],
+//   - **Cline**: MCP config at [MCPConfigPathCline],
 //     steering at [SteeringPathCline].
 //
 // # Display Names

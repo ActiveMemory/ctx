@@ -19,9 +19,9 @@
 // reminder will not fire again until at least
 // [DriftCheckInterval] (15 minutes) has elapsed.
 //
-//   - [DriftCheckInterval] -- minimum wall-clock time
+//   - [DriftCheckInterval]: minimum wall-clock time
 //     between successive drift reminders.
-//   - [DriftCheckMinCalls] -- tool call floor before
+//   - [DriftCheckMinCalls]: tool call floor before
 //     the first drift reminder fires.
 //
 // # Persist Nudges
@@ -32,9 +32,9 @@
 // repeats every [PersistNudgeRepeat] (8) additional
 // calls until a write occurs.
 //
-//   - [PersistNudgeAfter]  -- tool call count that
+//   - [PersistNudgeAfter] : tool call count that
 //     triggers the first persist reminder.
-//   - [PersistNudgeRepeat] -- interval in tool calls
+//   - [PersistNudgeRepeat]: interval in tool calls
 //     between subsequent persist reminders.
 //
 // # Why These Are Centralized

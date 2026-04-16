@@ -37,9 +37,9 @@ context packet:
 Two subdirectories under `.context/` are **implementation details** that
 are user-editable but not part of the priority read order:
 
-- **`.context/templates/`** — format templates for `ctx add decision`
+- **`.context/templates/`**: format templates for `ctx add decision`
   and `ctx add learning`. See [templates](#templates) below.
-- **`.context/steering/`** — behavioral rules with YAML frontmatter
+- **`.context/steering/`**: behavioral rules with YAML frontmatter
   that get synced into each AI tool's native config. See
   [steering](#steering) below, and the full
   [Steering files](steering.md) page for the design and workflow.
@@ -51,10 +51,10 @@ Two other moving parts are often confused with context files but are
 
 - **Skills** live in `.claude/skills/` (project-local) or are provided
   by the installed `ctx` plugin. A typical project doesn't see the
-  plugin's skills at all — they ride with the plugin and are owned by
+  plugin's skills at all; they ride with the plugin and are owned by
   its update cycle. See [`ctx skill`](../cli/skill.md) and
   [Skills reference](../reference/skills.md).
-- **Hooks** are Claude Code `PreToolUse`/`PostToolUse`/
+- **Hooks**: Claude Code `PreToolUse`/`PostToolUse`/
   `UserPromptSubmit` entries configured in `.claude/settings.json` or
   shipped by a plugin. The `ctx` plugin registers its own hooks
   automatically; **a typical project does not author hooks by hand**,
@@ -487,8 +487,8 @@ LEARNINGS.md.
 
 `ctx init` deploys two starter templates:
 
-- `decision.md` — sections: Context, Rationale, Consequence
-- `learning.md` — sections: Context, Lesson, Application
+- `decision.md`: sections Context, Rationale, Consequence
+- `learning.md`: sections Context, Lesson, Application
 
 ### Customizing
 
@@ -516,10 +516,10 @@ each tool's config.
 
 `ctx init` scaffolds four foundation files:
 
-- `product.md` — who this project serves and why
-- `tech.md` — the technology stack and its constraints
-- `structure.md` — how the code is organized
-- `workflow.md` — how work moves through the system
+- `product.md`: who this project serves and why
+- `tech.md`: the technology stack and its constraints
+- `structure.md`: how the code is organized
+- `workflow.md`: how work moves through the system
 
 Each file carries YAML frontmatter describing **when** it applies
 (always, matching prompts, or manually referenced) and **what** tool

@@ -366,7 +366,7 @@ mcp.gov-drift-never-checked:
 mcp.gov-persist-nudge:
   short: '⚠ %d tool calls since last context write. Persist decisions, learnings, or completed tasks with ctx_add() or ctx_complete().'
 mcp.gov-violation-critical:
-  short: '🚨 CRITICAL: %s — %s (at %s). Review this action immediately. If unintended, revert it.'
+  short: '🚨 CRITICAL: %s, %s (at %s). Review this action immediately. If unintended, revert it.'
 
 mcp.tool-steering-get-desc:
   short: Retrieve applicable steering files for a prompt. Without a prompt, returns always-included files only.

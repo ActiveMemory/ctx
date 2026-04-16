@@ -1042,7 +1042,7 @@
   <a href="#triggers-are-arbitrary-code-treat-them-like-pre-commit-hooks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Triggers Are Arbitrary Code — Treat Them like Pre-Commit Hooks
+        Triggers Are Arbitrary Code: Treat Them like Pre-Commit Hooks
       
     </span>
   </a>
@@ -1064,7 +1064,7 @@
   <a href="#triggers-vs-steering-same-problem-different-shape" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Triggers vs Steering — Same Problem, Different Shape
+        Triggers vs Steering: Same Problem, Different Shape
       
     </span>
   </a>
@@ -1566,7 +1566,7 @@
   <a href="#triggers-are-arbitrary-code-treat-them-like-pre-commit-hooks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Triggers Are Arbitrary Code — Treat Them like Pre-Commit Hooks
+        Triggers Are Arbitrary Code: Treat Them like Pre-Commit Hooks
       
     </span>
   </a>
@@ -1588,7 +1588,7 @@
   <a href="#triggers-vs-steering-same-problem-different-shape" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Triggers vs Steering — Same Problem, Different Shape
+        Triggers vs Steering: Same Problem, Different Shape
       
     </span>
   </a>
@@ -1756,7 +1756,7 @@ type.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="triggers-are-arbitrary-code-treat-them-like-pre-commit-hooks">Triggers Are Arbitrary Code — Treat Them like Pre-Commit Hooks<a class="headerlink" href="#triggers-are-arbitrary-code-treat-them-like-pre-commit-hooks" title="Permanent link">&para;</a></h2>
+<h2 id="triggers-are-arbitrary-code-treat-them-like-pre-commit-hooks">Triggers Are Arbitrary Code: Treat Them like Pre-Commit Hooks<a class="headerlink" href="#triggers-are-arbitrary-code-treat-them-like-pre-commit-hooks" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Only Enable Scripts You've Read and Understand</p>
 <p>A trigger is a shell script with the executable bit set.
@@ -1767,7 +1767,7 @@ exfiltrate data.</p>
 <p><code>ctx trigger add</code> intentionally creates new scripts
 <strong>disabled</strong> (no executable bit). You must
 <code>ctx trigger enable &lt;name&gt;</code> after reviewing the contents.
-That's not a suggestion — it's the security model.</p>
+That's not a suggestion; it's the security model.</p>
 </div>
 <h2 id="three-hook-like-layers-in-ctx">Three Hook-like Layers in ctx<a class="headerlink" href="#three-hook-like-layers-in-ctx" title="Permanent link">&para;</a></h2>
 <p>Triggers are one of <strong>three</strong> distinct hook-like concepts in
@@ -1805,7 +1805,7 @@ not:</p>
 </table>
 <p>This page is about the first category. The other two run
 automatically and are invisible to you.</p>
-<h2 id="triggers-vs-steering-same-problem-different-shape">Triggers vs Steering — Same Problem, Different Shape<a class="headerlink" href="#triggers-vs-steering-same-problem-different-shape" title="Permanent link">&para;</a></h2>
+<h2 id="triggers-vs-steering-same-problem-different-shape">Triggers vs Steering: Same Problem, Different Shape<a class="headerlink" href="#triggers-vs-steering-same-problem-different-shape" title="Permanent link">&para;</a></h2>
 <p>Triggers are the imperative counterpart to
 <a href="../steering/"><strong>steering files</strong></a>. Steering expresses
 <em>persistent rules</em> the AI reads before each prompt; triggers
@@ -1818,12 +1818,12 @@ complementary, not competing:</p>
 <p>Most projects use both.</p>
 <h2 id="where-to-go-next">Where to Go Next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong><a href="../../recipes/triggers/">Authoring Lifecycle Triggers</a></strong>
-  — walkthrough with security guidance: scaffold, test,
+<li><strong><a href="../../recipes/triggers/">Authoring Lifecycle Triggers</a></strong>:
+  walkthrough with security guidance: scaffold, test,
   enable, iterate.</li>
-<li><strong><a href="../../cli/trigger/"><code>ctx trigger</code> reference</a></strong> — command
+<li><strong><a href="../../cli/trigger/"><code>ctx trigger</code> reference</a></strong>: command
   reference, trigger type table, input/output contract.</li>
-<li><strong><a href="../steering/">Steering files</a></strong> — the declarative
+<li><strong><a href="../steering/">Steering files</a></strong>: the declarative
   counterpart to triggers.</li>
 </ul>
 

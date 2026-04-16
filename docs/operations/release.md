@@ -13,8 +13,8 @@ icon: lucide/package
 
 !!! tip "Full Release Checklist"
     This page covers the **mechanics** of cutting a release (bump, tag, push).
-    For the complete pre-release ceremony — audits, tests, verification, and
-    post-release steps — see the
+    For the complete pre-release ceremony (audits, tests, verification, and
+    post-release steps), see the
     [Release Checklist runbook](runbooks/release-checklist.md).
 
 ## Prerequisites

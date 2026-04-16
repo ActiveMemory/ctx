@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package doctor implements **`ctx doctor`** — the
+// Package doctor implements **`ctx doctor`**, the
 // one-stop structural-health command users (and
 // onboarding scripts) run when something feels off:
 // hooks not firing, drift accumulating, plugin not
@@ -23,7 +23,7 @@
 // with a status glyph (`✓`, `⚠`, `✗`) plus a one-line
 // message. The roll-up banner at the end summarizes:
 // "all good", "warnings present", or "violations
-// present" — matching the same severity ladder
+// present", matching the same severity ladder
 // [internal/drift] uses.
 //
 // # JSON Output
@@ -35,13 +35,13 @@
 //
 // # Exit Codes
 //
-//   - **0** — all checks passed.
-//   - **1** — warnings present.
-//   - **3** — violations present (so CI scripts can
+//   - **0**: all checks passed.
+//   - **1**: warnings present.
+//   - **3**: violations present (so CI scripts can
 //     gate on `>= 3`).
 //
 // # Sub-Packages
 //
-//   - **[core/check]**   — the actual probe battery
+//   - **[core/check]**: the actual probe battery
 //     (no UI, no CLI parsing).
 package doctor

@@ -25,8 +25,8 @@
 //
 // # Subpackages
 //
-//	cmd/schema -- JSON Schema output implementation
-//	cmd/status -- active config display
-//	cmd/switchcmd -- profile switching logic
-//	core -- shared config helpers
+//	cmd/schema: JSON Schema output implementation
+//	cmd/status: active config display
+//	cmd/switchcmd: profile switching logic
+//	core: shared config helpers
 package config

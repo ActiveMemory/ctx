@@ -17,21 +17,21 @@
 //
 // # Site Configuration
 //
-//   - [Toml] ("zensical.toml") — the site config
+//   - [Toml] ("zensical.toml"): the site config
 //     filename.
-//   - [Bin] ("zensical") — the binary name.
-//   - [CmdServe], [CmdBuild] — subcommand names
+//   - [Bin] ("zensical"): the binary name.
+//   - [CmdServe], [CmdBuild]: subcommand names
 //     for serving and building.
-//   - [Stylesheets], [ExtraCSS] — CSS asset paths
+//   - [Stylesheets], [ExtraCSS]: CSS asset paths
 //     for journal site styling.
 //
 // # TOML Nav Formatting
 //
-//   - [TomlNavOpen]         — opening bracket for
+//   - [TomlNavOpen]: opening bracket for
 //     the nav array.
-//   - [TomlNavSectionClose] — closing bracket for a
+//   - [TomlNavSectionClose]: closing bracket for a
 //     nav section group.
-//   - [TomlNavClose]        — closing bracket for
+//   - [TomlNavClose]: closing bracket for
 //     the top-level nav array.
 //
 // # MkDocs Stripping
@@ -40,12 +40,12 @@
 // may contain MkDocs-specific syntax. These
 // constants control the stripping:
 //
-//   - [MkDocsAdmonitionPrefix] ("!!!") — admonition
+//   - [MkDocsAdmonitionPrefix] ("!!!"): admonition
 //     marker.
-//   - [MkDocsTabPrefix] ("=== ") — tab marker.
-//   - [MkDocsIndent], [MkDocsIndentWidth] — body
+//   - [MkDocsTabPrefix] ("=== "): tab marker.
+//   - [MkDocsIndent], [MkDocsIndentWidth]: body
 //     indentation to remove.
-//   - [MkDocsFrontmatterDelim] ("---") — YAML
+//   - [MkDocsFrontmatterDelim] ("---"): YAML
 //     frontmatter fence.
 //
 // # Concurrency
