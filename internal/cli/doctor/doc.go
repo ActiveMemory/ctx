@@ -44,15 +44,4 @@
 //
 //   - **[core/check]**   — the actual probe battery
 //     (no UI, no CLI parsing).
-//
-// # Related Packages
-//
-//   - [internal/cli/doctor/core/check]   — the
-//     measurement layer.
-//   - [internal/drift]                   — wrapped by
-//     the drift probe.
-//   - [internal/sysinfo]                 — wrapped by
-//     the resource probes.
-//   - [internal/write/doctor]            — terminal
-//     output formatters.
 package doctor

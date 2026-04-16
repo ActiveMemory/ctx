@@ -50,15 +50,4 @@
 //
 // All functions are pure data transformations over
 // `[]Entry` / topic maps. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/site]   — the zensical
-//     site builder that consumes this package.
-//   - [internal/cli/journal/core/moc]   — Map-of-Content
-//     pages (homepage MOC, Obsidian topics MOC).
-//   - [internal/cli/journal/core/generate]  — top-level
-//     site page templates (README, index page).
-//   - [internal/entity]                 — [Entry],
-//     [TopicData], [GroupedIndex] domain types.
 package section

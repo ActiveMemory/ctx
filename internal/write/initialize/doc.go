@@ -43,13 +43,4 @@
 //
 // Pure data → io.Writer. cobra serializes
 // concurrent writes through its output stream.
-//
-// # Related Packages
-//
-//   - [internal/cli/initialize]           — chief
-//     consumer.
-//   - [internal/cli/initialize/core/*]    — every
-//     init sub-package routes its output here.
-//   - [internal/format]                   — the
-//     formatters used for sizes, counts, etc.
 package initialize

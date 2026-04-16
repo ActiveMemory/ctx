@@ -1,7 +1,6 @@
 ---
 name: ctx-pad
 description: "Manage encrypted scratchpad. Use for short, sensitive one-liners that travel with the project."
-tools: [bash]
 ---
 
 Manage the encrypted scratchpad via `ctx pad` commands using

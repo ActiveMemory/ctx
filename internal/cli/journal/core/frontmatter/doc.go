@@ -45,16 +45,4 @@
 //
 // All functions are pure. Concurrent callers never
 // race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/importer] /
-//     [internal/cli/journal/cmd/site] /
-//     [internal/cli/journal/cmd/obsidian]   — chief
-//     consumers.
-//   - [internal/parse]                       —
-//     [SplitFrontmatter] returns the raw YAML this
-//     package transforms.
-//   - [internal/entity]                      — the
-//     canonical [JournalFrontmatter] type.
 package frontmatter

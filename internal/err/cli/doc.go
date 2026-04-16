@@ -4,10 +4,35 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package cli provides error constructors for generic CLI input.
+// Package cli defines the typed error constructors
+// for generic CLI input validation -- flags,
+// arguments, interactive selections, and tool
+// configuration. These errors are not tied to any
+// single command; they appear wherever the CLI
+// framework validates user input.
 //
-// Error constructors return structured errors with context for
-// user-facing messages routed through internal/assets text lookups.
-// Exports: [FlagRequired], [ArgRequired],
-// [InvalidSelection], [UnknownDocument].
+// # Domain
+//
+// Errors fall into two categories:
+//
+//   - **Input validation** -- a required flag or
+//     argument is missing, or an interactive
+//     selection is out of range. Constructors:
+//     [FlagRequired], [ArgRequired],
+//     [InvalidSelection], [UnknownDocument].
+//   - **Tool configuration** -- no AI tool was
+//     specified via flag or .ctxrc. Constructor:
+//     [NoToolSpecified].
+//
+// # Wrapping Strategy
+//
+// These constructors return plain errors (no cause
+// wrapping) because the failures are pure
+// validation -- there is no underlying system
+// error to chain. All user-facing text is resolved
+// through [internal/assets/read/desc].
+//
+// # Concurrency
+//
+// Pure constructors. Concurrent callers never race.
 package cli

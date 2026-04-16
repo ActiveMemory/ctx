@@ -1,7 +1,6 @@
 ---
 name: ctx-resume
 description: "Resume context hooks after a pause. Use when the user says 'resume ctx', 'unpause', 'turn nudges back on', or when transitioning from a quick task back to project work."
-tools: [bash]
 ---
 
 Resume all context hooks after a `/ctx-pause`. Restores normal nudge,

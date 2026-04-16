@@ -4,11 +4,13 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package load provides the command for outputting assembled context.
+// Package load provides the command for outputting
+// assembled context.
 //
-// The load command assembles context files from .context/ and outputs them
-// in the recommended read order, suitable for providing to an AI assistant.
-// This is the primary mechanism for giving AI tools access to project context.
+// The load command assembles context files from .context/
+// and outputs them in the recommended read order, suitable
+// for providing to an AI assistant. This is the primary
+// mechanism for giving AI tools access to project context.
 //
 // # Assembly Order
 //
@@ -25,14 +27,21 @@
 //
 // # Token Budget
 //
-// The --budget flag limits output to approximately the specified token count.
-// This is useful for AI assistants with context window limitations. Files are
-// prioritized by importance, with lower-priority files truncated or omitted
-// when budget constraints are reached.
+// The --budget flag limits output to approximately the
+// specified token count. This is useful for AI assistants
+// with context window limitations. Files are prioritized
+// by importance, with lower-priority files truncated or
+// omitted when budget constraints are reached.
 //
 // # Raw Output
 //
-// The --raw flag outputs file contents directly without assembly headers or
-// priority-based ordering. This is useful for debugging or when exact file
-// contents are needed.
+// The --raw flag outputs file contents directly without
+// assembly headers or priority-based ordering. This is
+// useful for debugging or when exact file contents are
+// needed.
+//
+// # Subpackages
+//
+//   - cmd/root: cobra command definition and flag binding
+//   - core: assembly, ordering, and budget logic
 package load

@@ -40,12 +40,4 @@
 // # Concurrency
 //
 // Pure constructors. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/crypto]   — chief producer.
-//   - [internal/pad] /
-//     [internal/notify]   — also produce these.
-//   - [internal/write/pad] /
-//     [internal/write/notify]   — render them.
 package crypto

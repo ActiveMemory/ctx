@@ -1,7 +1,6 @@
 ---
 name: ctx-remember
 description: "Recall project context and present structured readback. Use when the user asks 'do you remember?', at session start, or when context seems lost."
-tools: [bash, read]
 ---
 
 Recall project context and present a structured readback as if

@@ -56,16 +56,4 @@
 // Filesystem-bound and stateless. Concurrent invocations
 // against the same project would each pay the full
 // scan cost.
-//
-// # Related Packages
-//
-//   - [internal/assets/read/lookup]      — supplies
-//     [ConfigPatterns] used by the scanner.
-//   - [internal/drift]                   — separate
-//     "is what's documented still accurate" check
-//     (sync handles the inverse: what's real but
-//     undocumented).
-//   - [internal/cli/initialize/core/project] — knows
-//     the canonical `.context/` layout the scanner
-//     compares against.
 package sync

@@ -48,14 +48,4 @@
 //
 // Pure data transformation. Concurrent callers never
 // race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/importer]   — chief
-//     consumer; runs [ToolOutputs] before normalize so
-//     the disk representation is the readable form.
-//   - [internal/cli/journal/core/reduce]    — sister
-//     pass that strips outright noise.
-//   - [internal/cli/journal/core/normalize] — runs
-//     after both reduce and collapse.
 package collapse

@@ -46,19 +46,4 @@
 // Sequential. Concurrent imports against the same
 // journal directory would race on state-file writes;
 // ctx is single-process.
-//
-// # Related Packages
-//
-//   - [internal/journal/parser]               — turns
-//     raw sources into [entity.Session].
-//   - [internal/journal/state]                — the
-//     state file the plan diffs against.
-//   - [internal/cli/journal/core/lock]        — the
-//     locked-entry checks the importer respects.
-//   - [internal/cli/journal/core/{reduce,collapse,
-//     normalize,wrap}]                        —
-//     per-entry transformation passes the importer
-//     runs in order.
-//   - [internal/cli/journal/core/slug]        —
-//     filename slug generation.
 package importer

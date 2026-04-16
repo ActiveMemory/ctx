@@ -1,7 +1,6 @@
 ---
 name: ctx-doctor
 description: "Troubleshoot ctx behavior. Runs structural health checks, analyzes event log patterns, and presents findings with suggested actions."
-tools: [bash, read]
 ---
 
 Diagnose ctx problems by combining structural health checks with

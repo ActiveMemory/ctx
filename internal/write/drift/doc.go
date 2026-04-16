@@ -47,17 +47,4 @@
 // Pure data → io.Writer. Concurrent calls go
 // through cobra's output stream which is
 // serialized.
-//
-// # Related Packages
-//
-//   - [internal/cli/drift]                — chief
-//     consumer.
-//   - [internal/cli/drift/core/out]       — JSON
-//     and text renderers for the report shape.
-//   - [internal/cli/drift/core/fix]       — calls
-//     [FixHeader], [FixRecheck], etc., during
-//     auto-remediation.
-//   - [internal/drift]                    — the
-//     detector that produces the report this
-//     package narrates.
 package drift

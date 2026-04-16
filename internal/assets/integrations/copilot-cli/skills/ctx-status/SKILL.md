@@ -1,7 +1,6 @@
 ---
 name: ctx-status
 description: "Show context summary. Use at session start or when unclear about current project state."
-tools: [bash]
 ---
 
 Show the current context status: files, token budget, tasks,

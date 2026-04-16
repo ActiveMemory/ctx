@@ -60,18 +60,4 @@
 // in the middle. Callers serialize updates externally
 // (typically by holding the `.context/` directory
 // implicitly through process-level execution).
-//
-// # Related Packages
-//
-//   - [internal/cli/decision], [internal/cli/learning] —
-//     the `ctx decision reindex` and `ctx learning reindex`
-//     commands that drive [Update].
-//   - [internal/cli/reindex]                              —
-//     the `ctx reindex` convenience that runs both at once.
-//   - [internal/cli/agent]                                —
-//     consumes the index table to render the AI-ready
-//     short form of DECISIONS / LEARNINGS.
-//   - [internal/entity]                                   —
-//     [IndexEntry], [GroupedIndex], [TopicData] domain
-//     types this package returns.
 package index

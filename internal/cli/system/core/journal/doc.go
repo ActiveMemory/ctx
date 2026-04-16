@@ -42,14 +42,4 @@
 // [MarkStage] uses the same atomic-rename pattern as
 // the rest of the journal pipeline so a partial write
 // never leaves an entry in an undefined state.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/cmd/check_journal] — the
-//     hook that consumes these helpers and emits the
-//     user-facing nudge.
-//   - [internal/journal/state]                — the
-//     canonical stage strings.
-//   - [internal/cli/journal/cmd/importer]    — the
-//     importer that advances entries through stages.
 package journal

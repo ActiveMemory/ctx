@@ -63,13 +63,4 @@
 //
 // Filesystem-bound and stateless; serialized through
 // process-level execution.
-//
-// # Related Packages
-//
-//   - [internal/cli/initialize]    — invokes [OrCreate]
-//     for every foundation file.
-//   - [internal/config/marker]     — marker-pair
-//     constants.
-//   - [internal/assets]            — provides the
-//     templates passed to [OrCreate].
 package merge

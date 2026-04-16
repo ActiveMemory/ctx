@@ -40,16 +40,4 @@
 // All functions are filesystem-bound and stateless.
 // Concurrent invocations are safe; the auto-pruner
 // uses `os.Remove` which is atomic on POSIX.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/cmd/check_map_staleness] —
-//     the hook that consumes [ReadMapTracking] and
-//     [EmitMapStalenessWarning].
-//   - [internal/cli/system/cmd/check_knowledge]   —
-//     consumes the entry-count helpers via
-//     [internal/drift].
-//   - [internal/prune]                            —
-//     the `ctx prune` command that calls [AutoPrune]
-//     under explicit user invocation.
 package health

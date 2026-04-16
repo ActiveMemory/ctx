@@ -43,14 +43,4 @@
 //
 // All exports are immutable. Safe for concurrent
 // reads.
-//
-// # Related Packages
-//
-//   - [internal/mcp/server/route/tool]   — the
-//     dispatcher that maps `tools/call` to the
-//     right handler.
-//   - [internal/mcp/handler]             — the
-//     handlers tools dispatch to.
-//   - [internal/mcp/proto]               — the
-//     wire-protocol types.
 package tool

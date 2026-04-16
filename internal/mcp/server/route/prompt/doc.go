@@ -34,14 +34,4 @@
 // [internal/mcp/server]; concurrent requests
 // against the same `MCPDeps` are sequential by
 // MCP design.
-//
-// # Related Packages
-//
-//   - [internal/mcp/server]           — owner of the
-//     dispatch loop.
-//   - [internal/mcp/handler]          — domain
-//     logic for prompt rendering.
-//   - [internal/mcp/server/def/tool]  — sister
-//     package for tool catalog declarations.
-//   - [internal/mcp/proto]            — wire types.
 package prompt

@@ -53,13 +53,4 @@
 // # Concurrency
 //
 // Pure constructors. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/trigger]               — chief
-//     producer.
-//   - [internal/cli/trigger]           — also
-//     producer.
-//   - [internal/write/trigger]         — renders
-//     these into user-facing text.
 package trigger

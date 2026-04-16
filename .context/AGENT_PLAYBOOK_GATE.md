@@ -10,9 +10,24 @@ lifecycle details, or anti-patterns.
 ctx status        # correct
 ./dist/ctx        # wrong — never hardcode paths
 go run ./cmd/ctx  # wrong — unless developing ctx itself
-```
+````
+
+## File Interaction Protocol
+
+When a task involves reading, modifying, or reasoning about a file:
+
+1. **Read before act**: Do not rely on memory, summaries, or prior reads
+2. **No partial reads**: Do not sample and assume the rest
+3. **Freshness requirement**: Do not reuse stale context from earlier in the 
+   session
+4. **Edit authority comes from visibility**: If you haven't seen it, you don't 
+   get to modify it
+5. **Coverage requirement**: Before editing, state what parts of the file were 
+   read and why they are sufficient
 
 ## Planning Work
+
+Do not begin implementation without a spec.
 
 Every commit requires a `Spec:` trailer. Every piece of work needs
 a spec — no exceptions. Scale the spec to the work. Use `/ctx-spec`
@@ -28,15 +43,24 @@ persist before continuing. Don't wait for session end.
 For multi-step work: commit after each chunk, persist learnings,
 run tests before moving on. Track progress via TASKS.md checkboxes.
 
+## Independent Review
+
+A review must occur:
+
+* Before the first code change
+* After completing tasks
+* Before presenting results
+
+Review must consider:
+
+* Spec
+* TASKS.md
+* Current implementation
+
 ## Tool Preferences
 
 Use the `gemini-search` MCP server for web searches. Fall back to
 built-in search only if `gemini-search` is not connected.
-
-## Check Available Skills
-
-Before starting any task, scan available skills to see if one
-already handles the request. Prefer skills over ad-hoc work.
 
 ## Conversational Triggers
 

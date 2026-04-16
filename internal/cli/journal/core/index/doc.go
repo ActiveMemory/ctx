@@ -47,14 +47,4 @@
 // cost; no module-level cache is implemented because
 // the journal directory mutates between sessions and
 // stale-cache bugs are worse than the perf cost.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/source]    — invokes
-//     [Session] when resolving `--show <session-id>`.
-//   - [internal/cli/journal/cmd/importer]  — uses
-//     the inverse mapping (session ID → exists?) to
-//     skip already-imported sessions.
-//   - [internal/parse]                     — supplies
-//     [SplitFrontmatter] used internally.
 package index

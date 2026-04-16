@@ -41,13 +41,4 @@
 //
 // Pure data → io.Writer transformation.
 // Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/drift]   — chief consumer.
-//   - [internal/drift]       — produces the
-//     [Report] this package renders.
-//   - [internal/cli/doctor]  — sister renderer
-//     for the doctor's report (similar shape,
-//     different roll-up).
 package out

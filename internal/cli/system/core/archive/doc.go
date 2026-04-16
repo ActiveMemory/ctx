@@ -49,14 +49,4 @@
 // against the same destination would compete for the same
 // timestamped filename — single-process is the assumed
 // model.
-//
-// # Related Packages
-//
-//   - [internal/cli/backup]                — the
-//     `ctx backup` CLI surface.
-//   - [internal/cli/system/cmd/check_backup_age] — the
-//     hook that nudges when [CheckBackupMarker] reports
-//     stale.
-//   - [internal/config/archive]            — file-name
-//     prefix and SMB env-var name constants.
 package archive

@@ -38,17 +38,4 @@
 // # Concurrency
 //
 // Stateless. The CLI command runs once and exits.
-//
-// # Related Packages
-//
-//   - [internal/cli/add]                  — the
-//     `ctx add learning` entry path.
-//   - [internal/cli/decision]             — sister
-//     command for `DECISIONS.md`.
-//   - [internal/cli/reindex]              — the
-//     `ctx reindex` convenience that runs both
-//     learning and decision reindex in one call.
-//   - [internal/index]                    — the
-//     index-table generator and parser this package
-//     ultimately drives.
 package learning

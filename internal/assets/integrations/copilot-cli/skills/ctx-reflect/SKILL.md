@@ -1,7 +1,6 @@
 ---
 name: ctx-reflect
 description: "Reflect on session progress. Use at natural breakpoints, after unexpected behavior, or when shifting to a different task."
-tools: [bash, read]
 ---
 
 Pause and reflect on this session. Review what has been

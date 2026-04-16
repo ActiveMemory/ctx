@@ -40,13 +40,4 @@
 // # Concurrency
 //
 // Pure constructors. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/memory]            — chief
-//     producer.
-//   - [internal/cli/memory]        — also
-//     producer.
-//   - [internal/write/memory]      — the renderer
-//     that maps these to user text.
 package memory

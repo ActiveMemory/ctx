@@ -35,15 +35,4 @@
 // Filesystem-bound. Concurrent reads are safe;
 // writers are the per-session tracking hook
 // which is single-process per session.
-//
-// # Related Packages
-//
-//   - [internal/cli/usage]                  — the
-//     `ctx usage` CLI surface.
-//   - [internal/cli/system/cmd/check_context_size]
-//     — writes the stats this package reads.
-//   - [internal/cli/system/cmd/heartbeat]   — also
-//     contributes mtime updates.
-//   - [internal/format]                     — the
-//     Number / TimeAgo formatters used here.
 package stats

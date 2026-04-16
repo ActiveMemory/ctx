@@ -60,17 +60,4 @@
 // concurrent calls — each [Encrypt] generates a fresh
 // nonce internally, and the underlying cipher is
 // reentrant.
-//
-// # Related Packages
-//
-//   - [internal/pad]                — chief consumer;
-//     the scratchpad encrypts every write through
-//     this package.
-//   - [internal/notify]             — encrypts the
-//     webhook URL the same way.
-//   - [internal/rc]                 — owns the
-//     `KeyPath()` resolver this package's callers
-//     use.
-//   - [internal/err/crypto]         — typed error
-//     constructors.
 package crypto

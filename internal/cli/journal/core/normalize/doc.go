@@ -60,17 +60,4 @@
 // All exported functions are pure data transformations
 // over `string` / `[]string`. Concurrent callers never
 // race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/site]      — zensical
-//     site builder; calls into [Content] before
-//     templating.
-//   - [internal/cli/journal/cmd/obsidian]  — Obsidian
-//     vault exporter; same.
-//   - [internal/cli/journal/core/section]  — section
-//     index builder downstream of normalization.
-//   - [internal/wrap]                      — re-wraps
-//     long lines after normalization for the
-//     `ctx fmt` flow.
 package normalize

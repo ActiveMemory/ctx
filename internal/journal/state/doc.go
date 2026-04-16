@@ -61,15 +61,4 @@
 // File reads are scoped per call. Writes from the
 // importer use the atomic-rename pattern so a partial
 // write never produces a malformed JSON file.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/importer] — the chief
-//     reader/writer.
-//   - [internal/cli/journal/core/lock]    — the locking
-//     helpers; mutate frontmatter and re-sync state.
-//   - [internal/cli/journal/cmd/sync]     — explicit
-//     reconciliation between frontmatter and state.
-//   - [internal/cli/system/cmd/check_journal] — reads
-//     state to count unimported sources.
 package state

@@ -1,7 +1,6 @@
 ---
 name: ctx-architecture
 description: "Build and maintain architecture maps. Use to create or refresh ARCHITECTURE.md and DETAILED_DESIGN.md. Supports principal mode for deeper analysis: vision, future direction, bottlenecks, implementation alternatives, gaps, upstream proposals, and intervention points."
-tools: [bash, read, write, glob, grep]
 ---
 
 Build and maintain two architecture documents incrementally:

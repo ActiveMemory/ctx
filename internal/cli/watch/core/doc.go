@@ -37,15 +37,4 @@
 // Single goroutine per `ctx watch` invocation. The
 // scanner is sequential by design — order matters
 // when adds and completes interleave.
-//
-// # Related Packages
-//
-//   - [internal/cli/watch]              — the
-//     `ctx watch` CLI surface.
-//   - [internal/cli/watch/core/apply]   — the
-//     dispatcher.
-//   - [internal/entry]                  — the
-//     add-side backend.
-//   - [internal/cli/task]               — the
-//     complete-side backend.
 package core

@@ -1,7 +1,6 @@
 ---
 name: ctx-implement
 description: "Execute a plan step-by-step with verification. Use when you have a plan document and need disciplined, checkpointed implementation."
-tools: [bash, read, write, edit, glob, grep]
 ---
 
 Take a plan (inline text, file path, or from the conversation)

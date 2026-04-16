@@ -49,13 +49,4 @@
 // # Concurrency
 //
 // Filesystem-bound. Single-process, sequential.
-//
-// # Related Packages
-//
-//   - [internal/cli/drift]    — the `ctx drift
-//     --fix` CLI surface.
-//   - [internal/drift]        — produces the
-//     report this package consumes.
-//   - [internal/tidy]         — supplies the
-//     archive primitives.
 package fix

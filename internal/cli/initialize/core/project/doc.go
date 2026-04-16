@@ -51,13 +51,4 @@
 // Filesystem-bound and stateless. Concurrent invocations
 // against the same root would race on `MkdirAll` writes;
 // in practice ctx is single-process.
-//
-// # Related Packages
-//
-//   - [internal/cli/initialize]              — top-level
-//     orchestrator.
-//   - [internal/cli/initialize/core/merge]   — populates
-//     the directories with template content.
-//   - [internal/config/dir], [internal/config/fs]   —
-//     directory-name and permission constants.
 package project

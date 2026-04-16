@@ -1,7 +1,6 @@
 ---
 name: ctx-worktree
 description: "Manage git worktrees for parallel agent development. Use when splitting work across independent task tracks."
-tools: [bash, read, glob]
 ---
 
 Manage git worktrees to parallelize agent work across independent
