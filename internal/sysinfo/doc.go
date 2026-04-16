@@ -4,16 +4,16 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package sysinfo gathers OS-level resource metrics — memory,
-// swap, disk, load average — and evaluates them against
+// Package sysinfo gathers OS-level resource metrics (memory,
+// swap, disk, load average) and evaluates them against
 // configurable thresholds to produce alerts at **WARNING** and
 // **DANGER** severity levels.
 //
 // The package powers two surfaces:
 //
-//   - **`ctx sysinfo`** — the top-level user-facing CLI that
+//   - **`ctx sysinfo`**: the top-level user-facing CLI that
 //     prints a snapshot of host resources.
-//   - **`ctx system check_resource`** — the hook that fires a
+//   - **`ctx system check_resource`**: the hook that fires a
 //     pressure warning during sessions when load, memory, or
 //     disk crosses a danger threshold.
 //
@@ -23,12 +23,12 @@
 // tags so the binary stays a single static cross-compile while
 // still asking each OS in its native dialect:
 //
-//   - **Linux** — reads `/proc/meminfo` and `/proc/loadavg`
+//   - **Linux**: reads `/proc/meminfo` and `/proc/loadavg`
 //     directly ([memory_linux.go], [load_linux.go]).
-//   - **macOS / Darwin** — shells out to `sysctl -n vm.loadavg`
+//   - **macOS / Darwin**: shells out to `sysctl -n vm.loadavg`
 //     and `vm_stat` and parses their output
 //     ([memory_darwin.go], [load_darwin.go]).
-//   - **Other / Windows** — stubs that return
+//   - **Other / Windows**: stubs that return
 //     `Supported: false` ([memory_other.go], [load_other.go],
 //     [disk_windows.go]). The hook degrades gracefully rather
 //     than aborting the session.
@@ -43,7 +43,7 @@
 // severity. Defaults reflect "headroom you almost certainly
 // want": load averages compared against CPU count, memory
 // available below a percentage, disk free below a percentage.
-// The 5-minute load average — not the 1-minute — is used to
+// The 5-minute load average, not the 1-minute, is used to
 // avoid false positives from transient spikes (a deliberate
 // behavior, see commit `5958e558`).
 //

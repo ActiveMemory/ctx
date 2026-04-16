@@ -14,12 +14,12 @@
 //
 // Three constructors cover the entire surface:
 //
-//   - [NoConfig] -- the zensical.toml configuration
+//   - [NoConfig]: the zensical.toml configuration
 //     file is missing from the expected directory.
-//   - [MarshalFeed] -- the Atom XML feed could not
+//   - [MarshalFeed]: the Atom XML feed could not
 //     be marshaled from journal entries. Wraps the
 //     underlying encoding/xml error.
-//   - [ZensicalNotFound] -- the zensical binary is
+//   - [ZensicalNotFound]: the zensical binary is
 //     not installed. Returns a plain error with
 //     installation instructions.
 //

@@ -2180,8 +2180,8 @@ prompt, and syncs them out to each AI tool's native format
   about X</em>. Consumed by the AI tool's prompt injection
   layer, conditionally on prompt match.</li>
 </ul>
-<p>If you find yourself writing "the AI should always do X"
-— that belongs in steering, not decisions.</p>
+<p>If you find yourself writing "the AI should always do X",
+that belongs in steering, not decisions.</p>
 </div>
 <h3 id="anatomy-of-a-steering-file">Anatomy of a Steering File<a class="headerlink" href="#anatomy-of-a-steering-file" title="Permanent link">&para;</a></h3>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nn">---</span>
@@ -2266,7 +2266,7 @@ against realistic prompts.</p>
 <h3 id="ctx-steering-sync"><code>ctx steering sync</code><a class="headerlink" href="#ctx-steering-sync" title="Permanent link">&para;</a></h3>
 <p>Sync steering files to tool-native formats for tools that
 have a <strong>built-in rules primitive</strong>. Not every tool needs
-this — Claude Code and Codex use a different delivery
+this; Claude Code and Codex use a different delivery
 mechanism (see below).</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>sync
@@ -2299,7 +2299,7 @@ mechanism (see below).</p>
 <tr>
 <td>Claude Code</td>
 <td><em>(no-op)</em></td>
-<td><strong>Delivered via hook + MCP</strong> — see next section</td>
+<td><strong>Delivered via hook + MCP</strong> (see next section)</td>
 </tr>
 <tr>
 <td>Codex</td>
@@ -2335,7 +2335,7 @@ Claude Code on plugin install. Once registered, Claude
 can invoke the <code>ctx_steering_get</code> tool mid-task to fetch
 matching steering files for a specific prompt. This is
 the <strong>only</strong> path that resolves <code>inclusion: auto</code> and
-<code>inclusion: manual</code> matches for Claude Code — Claude
+<code>inclusion: manual</code> matches for Claude Code; Claude
 passes the prompt to the MCP tool, which runs the
 keyword match against each file's description.</p>
 <p><strong>Verify the MCP server is registered</strong>:</p>
@@ -2343,7 +2343,7 @@ keyword match against each file's description.</p>
 </span></code></pre></div>
 <p>Expected line: <code>ctx: ctx mcp serve - ✓ Connected</code>. If
 it's missing, reinstall the plugin from Claude Code
-(<code>/plugin</code> → find <code>ctx</code> → uninstall → install again) —
+(<code>/plugin</code> → find <code>ctx</code> → uninstall → install again);
 older plugin versions shipped without the <code>.mcp.json</code>
 file.</p>
 <div class="admonition warning">
@@ -2366,10 +2366,10 @@ default to <code>inclusion: always</code> for this reason.</p>
 <li>Running <code>ctx steering sync</code> before starting a Claude
   session does <strong>nothing</strong> for Claude's benefit. Skip it.</li>
 <li><code>ctx steering preview</code> still works for validating your
-  descriptions — it doesn't depend on sync.</li>
+  descriptions; it doesn't depend on sync.</li>
 <li>If Claude Code is your only tool, the <code>ctx steering</code>
   commands you care about are <code>add</code>, <code>list</code>, <code>preview</code>,
-  <code>init</code> — never <code>sync</code>.</li>
+  <code>init</code> (never <code>sync</code>).</li>
 <li>If you use both Claude Code <strong>and</strong> (say) Cursor,
   <code>ctx steering sync</code> covers Cursor (where <code>auto</code> and
   <code>manual</code> work natively) while the hook+MCP pipeline
@@ -2385,12 +2385,12 @@ scored against the current prompt and included in priority
 order until the tier budget is exhausted.</p>
 <h3 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="../setup/"><code>ctx setup</code></a> — configure which tools receive
+<li><a href="../setup/"><code>ctx setup</code></a>: configure which tools receive
   steering syncs</li>
-<li><a href="../trigger/"><code>ctx trigger</code></a> — lifecycle scripts (a different
+<li><a href="../trigger/"><code>ctx trigger</code></a>: lifecycle scripts (a different
   hooking concept, see below)</li>
-<li><a href="../../recipes/steering/">Building steering files recipe</a>
-  — walkthrough from first file to synced output</li>
+<li><a href="../../recipes/steering/">Building steering files recipe</a>:
+  walkthrough from first file to synced output</li>
 </ul>
 
 

@@ -15,7 +15,7 @@ icon: lucide/network
 
 `ctx` projects are normally **independent**: each project has its
 own `.context/` directory, its own decisions, its own learnings,
-its own journal. That's the right default — most work is
+its own journal. That's the right default, since most work is
 project-local, and mixing context across projects tends to dilute
 more than it helps.
 
@@ -29,7 +29,7 @@ without replicating everything else.
 ## What the Hub Actually Is
 
 In one paragraph: the `ctx` Hub is a **fan-out channel** for
-four specific kinds of structured entries — `decision`,
+four specific kinds of structured entries: `decision`,
 `learning`, `convention`, and `task`. You publish an entry with
 `ctx add --share` in one project, and it appears in
 `.context/hub/` for every other project subscribed to that
@@ -79,9 +79,9 @@ everyone holding a client token is friendly. Don't stand up
 
 ## Going Further
 
-- **First-time setup:** [Hub: Getting Started](../recipes/hub-getting-started.md) —
+- **First-time setup:** [Hub: Getting Started](../recipes/hub-getting-started.md),
   a five-minute walkthrough on localhost.
-- **Mental model and user stories:** [Hub Overview](../recipes/hub-overview.md) —
+- **Mental model and user stories:** [Hub Overview](../recipes/hub-overview.md),
   what flows, what doesn't, and when not to use it.
 - **Team / LAN deployment:** [Multi-machine setup](../recipes/hub-multi-machine.md).
 - **Redundancy:** [HA cluster](../recipes/hub-cluster.md).

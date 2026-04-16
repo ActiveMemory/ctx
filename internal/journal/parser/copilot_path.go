@@ -78,7 +78,7 @@ func fileURIToPath(uri string) string {
 		decoded = path
 	}
 
-	// On Windows, file URIs have /G:/... — strip the leading slash
+	// On Windows, file URIs have /G:/...; strip the leading slash
 	if runtime.GOOS == env.OSWindows && len(decoded) > 2 && decoded[0] == '/' {
 		decoded = decoded[1:]
 	}

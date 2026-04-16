@@ -5,18 +5,18 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package trigger defines the **typed error
-// constructors** returned by [internal/trigger] — every
+// constructors** returned by [internal/trigger]: every
 // validation, discovery, and execution failure the
 // trigger lifecycle can produce.
 //
 // # Why Typed Errors
 //
-//   - **Stability** — error categories are part of
+//   - **Stability**: error categories are part of
 //     the public API.
-//   - **Routing** — write-side packages map error
+//   - **Routing**: write-side packages map error
 //     types to localized text via
 //     [internal/assets/read/desc].
-//   - **Wrapping** — constructors wrap the
+//   - **Wrapping**: constructors wrap the
 //     underlying cause via `%w` so callers can
 //     `errors.Is` against system errors when
 //     needed.
@@ -25,18 +25,18 @@
 //
 // Constructors fall into four groups:
 //
-//   - **Validation** — [Validate], [InvalidType],
+//   - **Validation**: [Validate], [InvalidType],
 //     [Symlink] (boundary check),
 //     [ResolveHooksDir], [ResolvePath], [Boundary],
 //     [Stat], [StatPath], [NotFound],
 //     [ScriptExists].
-//   - **Discovery / Lifecycle** — [DiscoverFailed],
+//   - **Discovery / Lifecycle**: [DiscoverFailed],
 //     [Chmod], [CreateDir], [Unknown],
 //     [UnknownVariant].
-//   - **Override Management** — [OverrideExists],
+//   - **Override Management**: [OverrideExists],
 //     [WriteOverride], [RemoveOverride],
 //     [EmbeddedTemplateNotFound], [WriteScript].
-//   - **Execution** — [Exit] (non-zero hook
+//   - **Execution**: [Exit] (non-zero hook
 //     exit), [Timeout] (hook ran past the
 //     configured timeout), [InvalidJSONOutput]
 //     (hook stdout failed to parse),

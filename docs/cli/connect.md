@@ -32,7 +32,7 @@ token in `.context/.connect.enc`. Two developers on the same
 project either share that file over a trusted channel, or each
 register under a different project name.
 
-**Only structured entries flow through the hub** — `decision`,
+**Only structured entries flow through the hub**: `decision`,
 `learning`, `convention`, `task`. Session journals, scratchpad
 contents, and other local state stay on the machine that created
 them.
@@ -106,7 +106,7 @@ ctx add decision "Use UTC" --share \
 ```
 
 If the hub is unreachable, the local write succeeds and a warning
-is printed. The `--share` flag is best-effort — it never blocks
+is printed. The `--share` flag is best-effort; it never blocks
 local context updates.
 
 ## Auto-Sync

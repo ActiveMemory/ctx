@@ -13,10 +13,10 @@
 //
 // Used by two surfaces:
 //
-//  1. **`ctx journal schema`** — the standalone
+//  1. **`ctx journal schema`**: the standalone
 //     drift-check command users run when investigating
 //     parser issues.
-//  2. **`ctx journal import`** — runs validation
+//  2. **`ctx journal import`**: runs validation
 //     **after** an import as a post-flight check;
 //     prints a summary if drift is found so users know
 //     the next Claude Code release may need a parser
@@ -24,7 +24,7 @@
 //
 // # Public Surface
 //
-//   - **[Run](opts)** — orchestration: resolve scan
+//   - **[Run](opts)**: orchestration; resolve scan
 //     paths from flags, dispatch validation per file
 //     via [internal/journal/schema], aggregate the
 //     [Report], optionally write it to
@@ -32,7 +32,7 @@
 //
 // # The Drift Report
 //
-// Drift is **informational, not fatal** — a session
+// Drift is **informational, not fatal**: a session
 // with unknown fields still imports cleanly. The
 // report exists so maintainers can update
 // [internal/journal/parser]'s schema declarations

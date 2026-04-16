@@ -17,34 +17,34 @@
 // The main `Content(text, opts)` entry point performs, in
 // order:
 //
-//  1. **Fence stripping at boundaries** — orphan opening or
+//  1. **Fence stripping at boundaries**: orphan opening or
 //     closing fences left over from incomplete code blocks
 //     are removed so the renderer does not enter "code
 //     mode" for the rest of the document.
-//  2. **Heading demotion** — every H1 in the body is
+//  2. **Heading demotion**: every H1 in the body is
 //     demoted to H2 so it does not collide with the
 //     frontmatter-derived page title rendered by both
 //     zensical and Obsidian.
-//  3. **HTML escaping** — bare `<tag>` patterns that are
+//  3. **HTML escaping**: bare `<tag>` patterns that are
 //     not legitimate HTML are escaped so they do not get
 //     swallowed silently.
-//  4. **Turn-boundary normalization** — turn headers like
+//  4. **Turn-boundary normalization**: turn headers like
 //     `## [12:34:56] User:` are recognized and given a
 //     consistent shape via [MatchTurnHeader] /
 //     [FindTurnBoundary] so the per-turn navigator on the
 //     site can find them.
-//  5. **Trim** — leading and trailing blank-line runs are
+//  5. **Trim**: leading and trailing blank-line runs are
 //     reduced to a single blank line via [TrimBlankLines].
 //
 // # The Public Helpers
 //
-//   - **[MatchTurnHeader](line)** — returns true plus the
+//   - **[MatchTurnHeader](line)**: returns true plus the
 //     parsed turn role + timestamp when the line matches
 //     the canonical turn-header shape.
-//   - **[FindTurnBoundary](lines, start)** — locates the
+//   - **[FindTurnBoundary](lines, start)**: locates the
 //     index of the next turn boundary at or after `start`,
 //     used for slicing out a specific turn.
-//   - **[TrimBlankLines](lines)** — strips leading and
+//   - **[TrimBlankLines](lines)**: strips leading and
 //     trailing blank entries from a `[]string`.
 //
 // # Idempotency

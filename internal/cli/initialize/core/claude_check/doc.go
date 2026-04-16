@@ -25,12 +25,12 @@
 //
 // # Public Surface
 //
-//   - **[State]** — the four-bool detection result plus a
+//   - **[State]**: the four-bool detection result plus a
 //     [PluginDetails] struct with version, install path,
 //     and registration scope.
-//   - **[Detect]** — runs the cascade, returns a [State].
+//   - **[Detect]**: runs the cascade, returns a [State].
 //     Pure detection: no installation, no mutation.
-//   - **[Details]** — loads rich metadata about the
+//   - **[Details]**: loads rich metadata about the
 //     installed plugin (version, marketplace pin,
 //     install timestamp). Returns a zero value with
 //     `ok == false` when the plugin is not registered.

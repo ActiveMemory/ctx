@@ -20,29 +20,29 @@
 // Hook templates can interpolate version data using
 // these keys:
 //
-//   - [VarBinary]      — the running binary version.
-//   - [VarFile]        — version from the VERSION
+//   - [VarBinary]: the running binary version.
+//   - [VarFile]: version from the VERSION
 //     file at project root.
-//   - [VarPlugin]      — version from the Claude
+//   - [VarPlugin]: version from the Claude
 //     plugin manifest.
-//   - [VarMarketplace] — version from the VS Code
+//   - [VarMarketplace]: version from the VS Code
 //     marketplace manifest.
-//   - [VarKeyAgeDays]  — API key age in days.
+//   - [VarKeyAgeDays]: API key age in days.
 //
 // # Project Paths
 //
-//   - [FileVersion] ("VERSION") — the project-root
+//   - [FileVersion] ("VERSION"): the project-root
 //     version file.
-//   - [DirClaudePlugin] (".claude-plugin") — the
+//   - [DirClaudePlugin] (".claude-plugin"): the
 //     Claude plugin directory.
-//   - [FileMarketplace] ("marketplace.json") — the
+//   - [FileMarketplace] ("marketplace.json"): the
 //     marketplace manifest filename.
 //
 // # Throttling
 //
-//   - [ThrottleID] ("version-checked") — state file
+//   - [ThrottleID] ("version-checked"): state file
 //     name for daily check throttling.
-//   - [DevBuild] ("dev") — version string for
+//   - [DevBuild] ("dev"): version string for
 //     development builds (skips update checks).
 //
 // # Concurrency

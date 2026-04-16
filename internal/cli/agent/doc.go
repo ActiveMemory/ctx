@@ -77,6 +77,6 @@
 //
 // # Subpackages
 //
-//	cmd/root -- cobra command definition and flag binding
-//	core -- budget assembly, scoring, and formatting logic
+//	cmd/root: cobra command definition and flag binding
+//	core: budget assembly, scoring, and formatting logic
 package agent

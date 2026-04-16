@@ -14,10 +14,10 @@
 //
 // Two constructors cover the entire surface:
 //
-//   - [InvalidValue] -- a standalone date string
+//   - [InvalidValue]: a standalone date string
 //     does not match the expected YYYY-MM-DD format.
 //     Used during metadata validation.
-//   - [Invalid] -- a date flag value fails to parse.
+//   - [Invalid]: a date flag value fails to parse.
 //     Wraps the underlying time.Parse error and
 //     includes the flag name for context.
 //

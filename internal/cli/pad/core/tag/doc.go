@@ -13,17 +13,17 @@
 //
 // # Public Surface
 //
-//   - **[Extract](text)** — returns every `#word`
+//   - **[Extract](text)**: returns every `#word`
 //     occurrence in `text` as a `[]string`.
 //     De-duplicates and lower-cases.
-//   - **[Has](text, tag)** — predicate: does `text`
+//   - **[Has](text, tag)**: predicate; does `text`
 //     contain `#tag`?
-//   - **[Match](entry, query)** — true when `entry`
+//   - **[Match](entry, query)**: true when `entry`
 //     matches the query (single tag).
-//   - **[MatchAll](entry, queries)** — true when
+//   - **[MatchAll](entry, queries)**: true when
 //     `entry` matches every tag in `queries` (AND
 //     semantics).
-//   - **[ScanText](text, fn)** — visitor: invoke
+//   - **[ScanText](text, fn)**: visitor; invoke
 //     `fn` for every tag in `text`.
 //
 // # Tag Syntax

@@ -19,7 +19,7 @@
 // to inform the agent of the incoming content.
 //
 // This is internal plumbing invoked by Claude Code
-// hooks -- not intended for manual use.
+// hooks; not intended for manual use.
 //
 // # Input
 //

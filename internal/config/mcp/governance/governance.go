@@ -8,7 +8,7 @@ package governance
 
 import "time"
 
-// Governance thresholds — tuned to match Claude Code hook intervals.
+// Governance thresholds, tuned to match Claude Code hook intervals.
 const (
 	// DriftCheckInterval is the minimum time between drift reminders.
 	DriftCheckInterval = 15 * time.Minute

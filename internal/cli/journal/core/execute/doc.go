@@ -17,7 +17,7 @@
 //
 // # Public Surface
 //
-//   - [Import] -- writes files according to the plan
+//   - [Import]: writes files according to the plan
 //     and returns counts of imported, updated, and
 //     skipped entries.
 //

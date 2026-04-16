@@ -24,7 +24,7 @@
 //
 // # Subpackages
 //
-//	cmd/install -- skill installation logic
-//	cmd/list -- skill enumeration and display
-//	cmd/remove -- skill deletion
+//	cmd/install: skill installation logic
+//	cmd/list: skill enumeration and display
+//	cmd/remove: skill deletion
 package skill

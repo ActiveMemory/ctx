@@ -13,28 +13,28 @@
 // the *brain*. The check decides when a nudge fires; this
 // package decides what it looks like and where it lands. That
 // split keeps the per-check files small and ensures that
-// every nudge — checkpoint, oversize, billing window, pause
-// banner — has the same shape and routing.
+// every nudge (checkpoint, oversize, billing window, pause
+// banner) has the same shape and routing.
 //
 // # Emission Path
 //
-//   - **[EmitCheckpoint](msg)** — fires a "context
+//   - **[EmitCheckpoint](msg)**: fires a "context
 //     checkpoint reached" nudge: prompt-counter trip,
 //     persistence-stale signal, etc. Routes through the
 //     VERBATIM relay so the user (and the agent) both see
 //     the exact text.
-//   - **[EmitWindowWarning](used, total)** — fires when
+//   - **[EmitWindowWarning](used, total)**: fires when
 //     session token usage crosses the configured
 //     `injection_token_warn` (or `context_window`)
 //     threshold. One-shot per session.
-//   - **[EmitBillingWarning](used)** — fires the one-shot
+//   - **[EmitBillingWarning](used)**: fires the one-shot
 //     "you've exceeded your included token allowance"
 //     nudge for Claude Pro 1M-context users; gated by
 //     `billing_token_warn` in `.ctxrc`.
 //
 // All three honor the **session pause** flag (see
 // [Paused]) so a user who has explicitly silenced ceremony
-// nudges sees nothing — except for the security-relevant
+// nudges sees nothing, except for the security-relevant
 // hooks, which fire regardless.
 //
 // # Pause Semantics

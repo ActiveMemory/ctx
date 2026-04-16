@@ -22,5 +22,5 @@ func applyDefaults(sf *SteeringFile) {
 	if sf.Priority == 0 {
 		sf.Priority = cfgSteering.DefaultPriority
 	}
-	// Tools: nil means all tools — no default needed.
+	// Tools: nil means all tools, no default needed.
 }

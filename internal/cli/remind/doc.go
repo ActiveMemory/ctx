@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package remind implements **`ctx remind`** — the
+// Package remind implements **`ctx remind`**, the
 // session-scoped reminders that surface automatically at
 // session start and repeat until dismissed.
 //
@@ -16,12 +16,12 @@
 //
 // # Subcommands
 //
-//   - **`ctx remind add <text>`** — appends a reminder
+//   - **`ctx remind add <text>`**: appends a reminder
 //     with optional `--after <YYYY-MM-DD>` date gate
 //     and `--once` (auto-dismiss after first surface).
-//   - **`ctx remind list`** — prints all open
+//   - **`ctx remind list`**: prints all open
 //     reminders (with date-gating respected).
-//   - **`ctx remind dismiss <id>`** — marks one
+//   - **`ctx remind dismiss <id>`**: marks one
 //     reminder dismissed (or `--all`).
 //
 // # The Surface Path
@@ -35,7 +35,7 @@
 //
 // # Storage
 //
-// `.context/state/reminders.jsonl` — append-only,
+// `.context/state/reminders.jsonl`: append-only,
 // one [Reminder] per line. Dismissals are recorded as
 // new lines (state-machine-over-log style); the
 // reader collapses to the latest state per ID.

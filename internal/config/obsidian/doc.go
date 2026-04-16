@@ -27,10 +27,10 @@
 //
 // Four index pages provide navigation hubs:
 //
-//   - MOCHome ("Home.md") -- root navigation hub.
-//   - MOCTopics ("_Topics.md") -- topics index.
-//   - MOCFiles ("_Key Files.md") -- key files index.
-//   - MOCTypes ("_Session Types.md") -- session type
+//   - MOCHome ("Home.md"): root navigation hub.
+//   - MOCTopics ("_Topics.md"): topics index.
+//   - MOCFiles ("_Key Files.md"): key files index.
+//   - MOCTypes ("_Session Types.md"): session type
 //     index.
 //
 // # Wikilink Formatting

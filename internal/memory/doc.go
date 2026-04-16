@@ -22,25 +22,25 @@
 //
 // # Pipeline Stages
 //
-//   - **discover** ([DiscoverPath], [ProjectSlug]) --
+//   - **discover** ([DiscoverPath], [ProjectSlug]):
 //     encodes the project root into Claude Code's
 //     slug format and resolves the auto-memory file.
-//   - **sync** ([Sync], [Archive]) -- copies the
+//   - **sync** ([Sync], [Archive]): copies the
 //     source into .context/memory/mirror.md, archiving
 //     the previous mirror before overwrite.
-//   - **diff** ([Diff], [HasDrift]) -- line-level diff
+//   - **diff** ([Diff], [HasDrift]): line-level diff
 //     between source and mirror; surfaces what Claude
 //     wrote since the last sync.
-//   - **parse** ([Entries]) -- splits MEMORY.md
+//   - **parse** ([Entries]): splits MEMORY.md
 //     content into discrete [Entry] blocks by headers,
 //     blank lines, and list items.
-//   - **classify** ([Classify]) -- routes each entry
+//   - **classify** ([Classify]): routes each entry
 //     to the matching .context/ file based on keyword
 //     heuristics from .ctxrc classify_rules.
-//   - **promote** ([Promote]) -- writes a classified
+//   - **promote** ([Promote]): writes a classified
 //     entry to its target .context/ file.
 //   - **publish** ([Publish], [SelectContent],
-//     [MergePublished], [RemovePublished]) -- the
+//     [MergePublished], [RemovePublished]): the
 //     inverse direction: promotes .context/ entries
 //     into MEMORY.md so future Claude sessions see
 //     them up front.

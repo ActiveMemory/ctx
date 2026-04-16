@@ -11,22 +11,22 @@
 //
 // The package is the *predicates*; the CLI
 // ([internal/cli/sync]) is the *orchestrator*; neither
-// mutates context files — sync is suggestion-only by
+// mutates context files; sync is suggestion-only by
 // design.
 //
 // # Public Surface
 //
-//   - **[CheckPackageFiles](root, ctxFiles)** —
+//   - **[CheckPackageFiles](root, ctxFiles)**:
 //     walks for package-manager descriptors
 //     (`package.json`, `Cargo.toml`, `go.mod`,
 //     `pyproject.toml`, …) and returns suggestions
 //     when any are unmentioned in CONVENTIONS.md /
 //     ARCHITECTURE.md.
-//   - **[CheckConfigFiles](root, ctxFiles)** —
+//   - **[CheckConfigFiles](root, ctxFiles)**:
 //     same shape but for CI / tooling configs
 //     (`.github/workflows/*`, `.eslintrc*`,
 //     `.pre-commit-config.yaml`, …).
-//   - **[CheckNewDirectories](root, ctxFiles)** —
+//   - **[CheckNewDirectories](root, ctxFiles)**:
 //     same shape but for top-level directories
 //     that ARCHITECTURE.md does not mention.
 //

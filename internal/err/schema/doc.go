@@ -14,16 +14,16 @@
 // A single sentinel and its constructor cover the
 // entire surface:
 //
-//   - [ErrDrift] -- a package-level sentinel error
+//   - [ErrDrift]: a package-level sentinel error
 //     variable. Callers can match it with
 //     errors.Is(err, schema.ErrDrift).
-//   - [Drift] -- convenience constructor that
+//   - [Drift]: convenience constructor that
 //     returns the ErrDrift sentinel.
 //
 // The schema check command and the journal import
 // pipeline both return ErrDrift when JSONL fields
 // do not match the expected schema. Drift warnings
-// are informational -- they trigger a non-zero
+// are informational; they trigger a non-zero
 // exit code but never block operations.
 //
 // # Wrapping Strategy

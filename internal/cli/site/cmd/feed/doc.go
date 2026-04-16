@@ -4,18 +4,18 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package feed implements **`ctx site feed`** — the
+// Package feed implements **`ctx site feed`**, the
 // hidden subcommand that generates the **RSS / Atom
 // feed** for the project's published blog under the
 // zensical site directory.
 //
 // # Public Surface
 //
-//   - **[Cmd]** — cobra command with `--input`
+//   - **[Cmd]**: cobra command with `--input`
 //     (blog directory; default `docs/blog/`) and
 //     `--output` (feed file; default
 //     `site/feed.xml`).
-//   - **[Run]** — scans the input directory via
+//   - **[Run]**: scans the input directory via
 //     [internal/cli/site/core/scan], converts each
 //     post into a feed item (title, link, summary,
 //     pub date), and writes a valid feed XML

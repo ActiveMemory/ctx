@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package moc generates **Maps of Content** — the navigational
+// Package moc generates **Maps of Content**, the navigational
 // index pages that sit at the top of both the journal site and
 // the Obsidian vault and tell a human "here are the high-level
 // topics, here are the key files, here are the recent entries
@@ -17,14 +17,14 @@
 //
 // # The Surface
 //
-//   - **[Home](entries, opts)** — generates the **site
+//   - **[Home](entries, opts)**: generates the **site
 //     homepage MOC**: top topics, key files, recent
 //     entries, all in a single page. Output is markdown
 //     ready to land at `site/index.md`.
-//   - **[ObsidianTopics](entries)** — generates the
+//   - **[ObsidianTopics](entries)**: generates the
 //     Obsidian-vault topics index using `[[wikilink]]`
 //     syntax. Lives at `vault/MOC.md`.
-//   - **[GenerateObsidianTopicPage](topic, entries)** —
+//   - **[GenerateObsidianTopicPage](topic, entries)**:
 //     generates a per-topic page in Obsidian format with
 //     wikilinks back to each matching entry. Lives at
 //     `vault/topics/<slug>.md`.

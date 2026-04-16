@@ -13,10 +13,10 @@
 //
 // Centralizing them eliminates two whole classes of bug:
 //
-//   - **Typo drift** — `","` vs `", "` vs `" ,"` no longer
+//   - **Typo drift**: `","` vs `", "` vs `" ,"` no longer
 //     happen across 40 files; everyone uses
 //     [token.CommaSpace].
-//   - **Magic-string hunts** — searches for a marker that
+//   - **Magic-string hunts**: searches for a marker that
 //     appears in three places now resolve to one constant
 //     declaration with backlinks via `go references`.
 //
@@ -28,17 +28,17 @@
 //
 // Each `*.go` file groups one family:
 //
-//   - **delimiter** — newlines (`\n` / `\r\n`), commas,
+//   - **delimiter**: newlines (`\n` / `\r\n`), commas,
 //     spaces, ellipsis, separator runs.
-//   - **marker** — Markdown fences, frontmatter fences,
+//   - **marker**: Markdown fences, frontmatter fences,
 //     ctx HTML markers.
-//   - **prefix** — URL schemes (`http://`, `https://`,
+//   - **prefix**: URL schemes (`http://`, `https://`,
 //     `ftp://`, `file://`, `//`), absolute path
 //     marker.
-//   - **slash / quote** — single character constants
+//   - **slash / quote**: single character constants
 //     that have a name to avoid raw `'/'` / `'"'` in
 //     calling code.
-//   - **content** — common content-pattern groups
+//   - **content**: common content-pattern groups
 //     ([SecretPatterns], [TopicSeparators],
 //     [TemplateMarkers]) used by drift, classify, and
 //     search.

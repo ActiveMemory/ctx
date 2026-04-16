@@ -66,7 +66,7 @@ func Run(
 	caller string,
 ) error {
 	// Check if ctx is in PATH (required for hooks to work).
-	// Skip when a caller is set — the caller manages its own binary path.
+	// Skip when a caller is set: the caller manages its own binary path.
 	if caller == "" {
 		if pathErr := validate.CheckCtxInPath(cmd); pathErr != nil {
 			return pathErr
@@ -238,7 +238,7 @@ func Run(
 	coreProject.WriteGettingStarted(cmd)
 
 	// Post-script: stage-aware Claude Code setup guidance.
-	// Never fatal, never an error — a friendly nudge
+	// Never fatal, never an error; a friendly nudge
 	// pointing the user at whichever step they're missing.
 	// Honors --no-plugin-enable: if plugin detection was
 	// suppressed, skip the hint too.

@@ -14,10 +14,10 @@
 //
 // Two constructors cover the entire surface:
 //
-//   - [NotFound] -- the git binary is not on PATH.
+//   - [NotFound]: the git binary is not on PATH.
 //     Returns a plain error with installation
 //     guidance loaded from the assets catalog.
-//   - [NotInRepo] -- git rev-parse failed, meaning
+//   - [NotInRepo]: git rev-parse failed, meaning
 //     the current directory is not inside a git
 //     repository. Wraps the underlying exec error.
 //

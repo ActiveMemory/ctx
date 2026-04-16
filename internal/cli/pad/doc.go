@@ -36,12 +36,12 @@
 //
 // # Subpackages
 //
-//	cmd/add, cmd/edit, cmd/rm, cmd/mv -- entry mutation
-//	cmd/show, cmd/export -- entry display and extraction
-//	cmd/merge, cmd/resolve, cmd/normalize -- maintenance
-//	cmd/tag -- tag listing and filtering
-//	cmd/root -- default list behavior
-//	core/store -- encrypted file I/O
-//	core/blob -- blob encoding and decoding
-//	core/tag -- tag extraction and counting
+//	cmd/add, cmd/edit, cmd/rm, cmd/mv: entry mutation
+//	cmd/show, cmd/export: entry display and extraction
+//	cmd/merge, cmd/resolve, cmd/normalize: maintenance
+//	cmd/tag: tag listing and filtering
+//	cmd/root: default list behavior
+//	core/store: encrypted file I/O
+//	core/blob: blob encoding and decoding
+//	core/tag: tag extraction and counting
 package pad

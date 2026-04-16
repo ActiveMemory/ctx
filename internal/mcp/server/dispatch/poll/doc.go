@@ -17,10 +17,10 @@
 //
 // # Public Surface
 //
-//   - **[NewPoller](paths, intervalMs)** — builds a
+//   - **[NewPoller](paths, intervalMs)**: builds a
 //     poller for the given file paths with the
 //     given polling interval.
-//   - **Poller methods** — `Start(ctx, ch)` to
+//   - **Poller methods**: `Start(ctx, ch)` to
 //     begin emitting change events on `ch`,
 //     `Stop()` to cease, `Update(paths)` to swap
 //     the watch set without restart.

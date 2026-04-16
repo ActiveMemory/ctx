@@ -14,8 +14,8 @@ import (
 )
 
 // Deploy generates Cursor integration files:
-//  1. .cursor/mcp.json — MCP server configuration
-//  2. .cursor/rules/*.mdc — synced steering files
+//  1. .cursor/mcp.json: MCP server configuration
+//  2. .cursor/rules/*.mdc: synced steering files
 //
 // Parameters:
 //   - cmd: Cobra command for output and flag access

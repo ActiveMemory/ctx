@@ -16,15 +16,15 @@
 //
 // # Public Surface
 //
-//   - **[FromTitle](title)** — converts a title to a
+//   - **[FromTitle](title)**: converts a title to a
 //     lowercase, hyphenated, alphanumeric slug.
 //     Strips punctuation, collapses runs of separators,
 //     trims leading/trailing hyphens. Idempotent.
-//   - **[CleanTitle](title)** — strips non-alphanumeric
+//   - **[CleanTitle](title)**: strips non-alphanumeric
 //     characters from a display title (kept for the
 //     filename's human-readable suffix when one is
 //     wanted in addition to the slug).
-//   - **[ForTitle](title, existing)** — the dedup-aware
+//   - **[ForTitle](title, existing)**: the dedup-aware
 //     wrapper: produces both a slug and a cleaned
 //     title, appending `-2`, `-3`, etc. when the
 //     base slug already exists in `existing`. Used by

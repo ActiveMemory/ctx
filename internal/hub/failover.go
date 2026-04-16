@@ -56,7 +56,7 @@ func newFailoverClient(
 		if callErr != nil {
 			_ = conn.Close()
 
-			// Fail fast on auth errors — same token
+			// Fail fast on auth errors; same token
 			// won't work on other peers either.
 			if authErr(callErr) {
 				return nil, callErr

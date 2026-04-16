@@ -2191,7 +2191,7 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="ctx-hub"><code>ctx hub</code><a class="headerlink" href="#ctx-hub" title="Permanent link">&para;</a></h2>
-<p>Operator commands for a <strong><code>ctx</code> Hub</strong> — the gRPC server that
+<p>Operator commands for a <strong><code>ctx</code> Hub</strong>: the gRPC server that
 fans out decisions, learnings, conventions, and tasks across
 projects. Use <code>ctx hub</code> to start and stop the server, inspect
 cluster state, add or remove peers at runtime, and hand off
@@ -2213,7 +2213,7 @@ the hub as a whole, read the
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--data-dir<span class="w"> </span>/srv/ctx-hub<span class="w">   </span><span class="c1"># Custom data directory</span>
 </span></code></pre></div>
 <p>On first run, generates an <strong>admin token</strong> and prints it to
-stdout. Save this token — it's required for
+stdout. Save this token; it's required for
 <a href="../connection/#ctx-connect-register"><code>ctx connection register</code></a> in
 client projects. Subsequent runs reuse the stored token from
 <code>&lt;data-dir&gt;/admin.token</code>.</p>
@@ -2232,7 +2232,7 @@ leader election:</p>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--peers<span class="w"> </span>host2:9901,host3:9901
 </span></code></pre></div>
 <p>Raft is used <strong>only</strong> for leader election. Data replication
-uses sequence-based gRPC sync on the append-only JSONL log —
+uses sequence-based gRPC sync on the append-only JSONL log;
 there is no multi-node consensus on writes. See the
 <a href="../../recipes/hub-cluster/">HA cluster recipe</a> for the full
 setup and the Raft-lite durability caveat.</p>
@@ -2284,7 +2284,7 @@ setup and the Raft-lite durability caveat.</p>
 </span></code></pre></div>
 <p>Sends <code>SIGTERM</code> to the PID recorded in <code>&lt;data-dir&gt;/hub.pid</code>,
 waits for in-flight RPCs to drain, and removes the PID file.
-Safe to rerun — if no daemon is running, returns a
+Safe to rerun: if no daemon is running, returns a
 "no running hub" error without side effects.</p>
 <h3 id="ctx-hub-status"><code>ctx hub status</code><a class="headerlink" href="#ctx-hub-status" title="Permanent link">&para;</a></h3>
 <p>Show cluster status: role, peers, sync state, entry count,
@@ -2310,12 +2310,12 @@ maintenance.</p>
 </span></code></pre></div>
 <h3 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="../connection/"><code>ctx connect</code></a> — client-side commands
+<li><a href="../connection/"><code>ctx connect</code></a>: client-side commands
   (register, subscribe, sync, publish, listen)</li>
-<li><a href="../../recipes/hub-overview/"><code>ctx</code> Hub overview</a> — mental
+<li><a href="../../recipes/hub-overview/"><code>ctx</code> Hub overview</a>: mental
   model and user stories</li>
 <li><a href="../../recipes/hub-getting-started/"><code>ctx</code> Hub: Getting Started</a></li>
-<li><a href="../../operations/hub/">Hub operations</a> — production
+<li><a href="../../operations/hub/">Hub operations</a>: production
   deployment, backup, monitoring</li>
 <li><a href="../../operations/hub-failure-modes/">Hub failure modes</a></li>
 <li><a href="../../security/hub/">Hub security model</a></li>

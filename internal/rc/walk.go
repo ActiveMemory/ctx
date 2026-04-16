@@ -19,7 +19,7 @@ import (
 //
 // When a candidate is found above CWD, it is validated against the
 // git root (if any). If the candidate falls outside the git root,
-// it belongs to a different project and is discarded — the git root
+// it belongs to a different project and is discarded; the git root
 // is used as the anchor instead.
 //
 // Absolute configured names skip the walk entirely. When no matching
@@ -61,7 +61,7 @@ func walkForContextDir(name string) string {
 
 	gitRoot := findGitRoot(cwd)
 
-	// No candidate found — anchor to git root or CWD.
+	// No candidate found: anchor to git root or CWD.
 	if candidate == "" {
 		if gitRoot != "" {
 			return filepath.Join(gitRoot, name)
@@ -69,13 +69,13 @@ func walkForContextDir(name string) string {
 		return filepath.Join(cwd, name)
 	}
 
-	// Candidate found in CWD itself — always valid.
+	// Candidate found in CWD itself; always valid.
 	candidateParent := filepath.Dir(candidate)
 	if candidateParent == cwd {
 		return candidate
 	}
 
-	// Candidate found above CWD — validate against git root.
+	// Candidate found above CWD: validate against git root.
 	if gitRoot == "" {
 		// No git root to confirm ownership; don't trust the ancestor.
 		return filepath.Join(cwd, name)
@@ -88,7 +88,7 @@ func walkForContextDir(name string) string {
 		return candidate
 	}
 
-	// Candidate is outside the git root — belongs to a different project.
+	// Candidate is outside the git root; belongs to a different project.
 	// Anchor to the git root instead.
 	return filepath.Join(gitRoot, name)
 }

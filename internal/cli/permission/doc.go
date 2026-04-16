@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package permission implements **`ctx permission`** — the
+// Package permission implements **`ctx permission`**, the
 // CLI for capturing and restoring **golden-image
 // snapshots** of `.claude/settings.local.json` so a team
 // can maintain a curated permission baseline and
@@ -23,27 +23,27 @@
 //
 // # The Workflow
 //
-//  1. **Snapshot** — once, after a careful curation
+//  1. **Snapshot**: once, after a careful curation
 //     pass, the user runs `ctx permission snapshot`.
 //     The current `settings.local.json` is copied to
 //     `.context/permissions.golden.json` and committed
 //     to git as the team's baseline.
-//  2. **Restore** — at session start (often via the
+//  2. **Restore**: at session start (often via the
 //     `_ctx-permission-sanitize` skill or a simple
 //     `make` target), `ctx permission restore` resets
 //     `settings.local.json` to the golden image.
 //     Today's session starts clean.
-//  3. **Iterate** — when the user finds a
+//  3. **Iterate**: when the user finds a
 //     permission they actually want to keep, they
 //     re-snapshot to lock it in.
 //
 // # Subcommands
 //
-//   - **snapshot** — copy `settings.local.json` →
+//   - **snapshot**: copy `settings.local.json` to
 //     `permissions.golden.json` (overwrites previous
 //     golden image; the git history is the safety
 //     net).
-//   - **restore** — copy `permissions.golden.json` →
+//   - **restore**: copy `permissions.golden.json` to
 //     `settings.local.json` (creates a `.bak` first).
 //
 // # Concurrency

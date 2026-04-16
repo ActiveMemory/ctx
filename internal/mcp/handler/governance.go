@@ -72,7 +72,7 @@ func CheckGovernance(d *entity.MCPDeps, toolName string) string {
 		}
 	}
 
-	// 4. Persist nudge — no context writes in a while
+	// 4. Persist nudge: no context writes in a while
 	if ss.SessionStarted && ss.CallsSinceWrite >= governance.PersistNudgeAfter &&
 		toolName != tool.Add && toolName != tool.WatchUpdate &&
 		toolName != tool.Complete && toolName != tool.Compact &&

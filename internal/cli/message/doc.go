@@ -31,6 +31,6 @@
 //
 // # Subpackages
 //
-//	cmd/root -- cobra command definition, stdin reading,
+//	cmd/root: cobra command definition, stdin reading,
 //	  and JSON response formatting
 package message

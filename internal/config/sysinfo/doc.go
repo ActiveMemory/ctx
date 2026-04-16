@@ -15,36 +15,37 @@
 //
 // # Linux procfs Constants
 //
-//   - [ProcLoadavg], [ProcMeminfo] — file paths in
+//   - [ProcLoadavg], [ProcMeminfo]: file paths in
 //     /proc/ for load averages and memory stats.
-//   - [LoadavgFmt] — scanf format for three float
+//   - [LoadavgFmt]: scanf format for three float
 //     load averages.
 //   - [FieldMemTotal], [FieldMemAvailable],
 //     [FieldMemFree], [FieldBuffers], [FieldCached],
-//     [FieldSwapTotal], [FieldSwapFree] — keys for
+//     [FieldSwapTotal], [FieldSwapFree]: keys for
 //     parsing /proc/meminfo lines.
-//   - [BytesPerKB] — unit conversion factor.
+//   - [BytesPerKB]: unit conversion factor.
 //
 // # macOS Constants
 //
-//   - [CmdSysctl], [CmdVMStat] — system commands.
-//   - [KeyLoadAvg], [KeyHWMemsize], [KeyVMSwapUsage]
-//     — sysctl keys for load, memory, and swap.
+//   - [CmdSysctl], [CmdVMStat]: system commands.
+//   - [KeyLoadAvg], [KeyHWMemsize],
+//     [KeyVMSwapUsage]: sysctl keys for load,
+//     memory, and swap.
 //   - [MarkerPageSize], [LabelPagesFree],
-//     [LabelPagesInactive] — vm_stat output parsing.
-//   - [SuffixMB], [LabelTotal], [LabelUsed] — swap
+//     [LabelPagesInactive]: vm_stat output parsing.
+//   - [SuffixMB], [LabelTotal], [LabelUsed]: swap
 //     usage parsing tokens.
 //
 // # Severity Labels
 //
-//   - [LabelOK], [LabelWarning], [LabelDanger] —
+//   - [LabelOK], [LabelWarning], [LabelDanger]:
 //     severity strings for resource threshold
 //     evaluation.
 //
 // # Resource Names
 //
 //   - [ResourceMemory], [ResourceSwap],
-//     [ResourceDisk], [ResourceLoad] — identifiers
+//     [ResourceDisk], [ResourceLoad]: identifiers
 //     for threshold lookup.
 //
 // # Concurrency

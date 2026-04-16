@@ -14,18 +14,18 @@
 //
 // Errors fall into four categories:
 //
-//   - **Not initialized** -- the project has no
+//   - **Not initialized**: the project has no
 //     .context/ directory. Constructors:
 //     [NotInitialized], [ContextNotInitialized].
-//   - **Environment** -- the home directory cannot
+//   - **Environment**: the home directory cannot
 //     be resolved or ctx is not on PATH.
 //     Constructors: [HomeDir], [CtxNotInPath].
-//   - **Template IO** -- an embedded template or
+//   - **Template IO**: an embedded template or
 //     project README could not be read, or the
 //     Makefile could not be created.
 //     Constructors: [ReadTemplate],
 //     [ReadProjectReadme], [CreateMakefile].
-//   - **Deployment** -- listing or reading
+//   - **Deployment**: listing or reading
 //     embedded files during template deployment
 //     failed. Constructors: [DeployList],
 //     [DeployRead], [DetectReferenceTime].

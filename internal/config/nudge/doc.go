@@ -21,9 +21,9 @@
 // PersistenceLateInterval (15) prompts.
 //
 // State is tracked via three keys in the state file:
-//   - PersistenceKeyCount -- current prompt count
-//   - KeyLastNudge -- prompt number of last nudge
-//   - PersistenceKeyLastMtime -- last context mtime
+//   - PersistenceKeyCount: current prompt count
+//   - KeyLastNudge: prompt number of last nudge
+//   - PersistenceKeyLastMtime: last context mtime
 //
 // Events are logged to PersistenceLogFile
 // ("check-persistence.log").

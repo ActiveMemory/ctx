@@ -6,7 +6,7 @@
 
 package flag
 
-// Serve command flags currently have no overridable descriptions —
+// Serve command flags currently have no overridable descriptions;
 // ctx serve only takes a positional [directory] argument.
 //
 // Hub server flags (port, data-dir, daemon, peers) live in hub.go

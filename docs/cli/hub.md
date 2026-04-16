@@ -13,7 +13,7 @@ icon: lucide/network
 
 ## `ctx hub`
 
-Operator commands for a **`ctx` Hub** — the gRPC server that
+Operator commands for a **`ctx` Hub**: the gRPC server that
 fans out decisions, learnings, conventions, and tasks across
 projects. Use `ctx hub` to start and stop the server, inspect
 cluster state, add or remove peers at runtime, and hand off
@@ -40,7 +40,7 @@ ctx hub start --data-dir /srv/ctx-hub   # Custom data directory
 ```
 
 On first run, generates an **admin token** and prints it to
-stdout. Save this token — it's required for
+stdout. Save this token; it's required for
 [`ctx connection register`](connection.md#ctx-connect-register) in
 client projects. Subsequent runs reuse the stored token from
 `<data-dir>/admin.token`.
@@ -70,7 +70,7 @@ ctx hub start --port 9900 \
 ```
 
 Raft is used **only** for leader election. Data replication
-uses sequence-based gRPC sync on the append-only JSONL log —
+uses sequence-based gRPC sync on the append-only JSONL log;
 there is no multi-node consensus on writes. See the
 [HA cluster recipe](../recipes/hub-cluster.md) for the full
 setup and the Raft-lite durability caveat.
@@ -106,7 +106,7 @@ ctx hub stop --data-dir /srv/ctx-hub    # Custom data directory
 
 Sends `SIGTERM` to the PID recorded in `<data-dir>/hub.pid`,
 waits for in-flight RPCs to drain, and removes the PID file.
-Safe to rerun — if no daemon is running, returns a
+Safe to rerun: if no daemon is running, returns a
 "no running hub" error without side effects.
 
 ### `ctx hub status`
@@ -148,12 +148,12 @@ ctx hub stepdown
 
 ### See Also
 
-- [`ctx connect`](connection.md) — client-side commands
+- [`ctx connect`](connection.md): client-side commands
   (register, subscribe, sync, publish, listen)
-- [`ctx` Hub overview](../recipes/hub-overview.md) — mental
+- [`ctx` Hub overview](../recipes/hub-overview.md): mental
   model and user stories
 - [`ctx` Hub: Getting Started](../recipes/hub-getting-started.md)
-- [Hub operations](../operations/hub.md) — production
+- [Hub operations](../operations/hub.md): production
   deployment, backup, monitoring
 - [Hub failure modes](../operations/hub-failure-modes.md)
 - [Hub security model](../security/hub.md)

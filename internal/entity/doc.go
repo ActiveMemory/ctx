@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package entity is the **shared domain-types layer** for ctx —
+// Package entity is the **shared domain-types layer** for ctx:
 // the structs that carry information across package boundaries
 // without coupling the producer to the consumer.
 //
@@ -22,57 +22,57 @@
 // nothing except the standard library and a handful of typed
 // configuration constants.
 //
-// # File Layout — One Domain per File
+// # File Layout: One Domain per File
 //
 // Types are grouped by **the subsystem that owns the data**,
 // not by their Go shape. A non-exhaustive tour:
 //
-//   - **`context.go`**    — [Context], the assembled
+//   - **`context.go`**:    [Context], the assembled
 //     `.context/` snapshot every reader sees: file list, token
 //     stats, drift signals.
-//   - **`add.go`**        — [EntryParams], [AddConfig],
+//   - **`add.go`**:        [EntryParams], [AddConfig],
 //     [EntryOpts] for the `ctx add` family.
-//   - **`change.go`**     — [ContextChange], [CodeSummary] for
+//   - **`change.go`**:     [ContextChange], [CodeSummary] for
 //     `ctx change`.
-//   - **`message.go`**    — [Message], [ToolUse], [ToolResult]
-//     — the normalized session-message shape produced by
+//   - **`message.go`**:    [Message], [ToolUse], [ToolResult],
+//     the normalized session-message shape produced by
 //     [internal/journal/parser] and consumed everywhere
 //     downstream.
-//   - **`session.go`**    — the [Session] aggregate (start /
+//   - **`session.go`**:    the [Session] aggregate (start /
 //     end / duration / project / branch / messages / rollups)
 //     that flows from parser → journal pipeline → site /
 //     obsidian renderers.
-//   - **`journal.go`**    — [JournalEntry], [JournalFrontmatter]
-//     — the on-disk shape of an enriched journal entry.
-//   - **`import.go`**     — [ImportPlan], [ImportResult],
+//   - **`journal.go`**:    [JournalEntry], [JournalFrontmatter],
+//     the on-disk shape of an enriched journal entry.
+//   - **`import.go`**:     [ImportPlan], [ImportResult],
 //     [FileAction], [RenameOp] used by the journal-import
 //     pipeline.
-//   - **`index.go`**      — [IndexEntry], [GroupedIndex],
-//     [TopicData], [KeyFileData], [TypeData] — index-table
+//   - **`index.go`**:      [IndexEntry], [GroupedIndex],
+//     [TopicData], [KeyFileData], [TypeData], index-table
 //     primitives consumed by `internal/index`.
-//   - **`hook.go`**       — [HookInput], [ToolInput],
-//     [BlockResponse] — the payload shapes for ctx-system
+//   - **`hook.go`**:       [HookInput], [ToolInput],
+//     [BlockResponse], the payload shapes for ctx-system
 //     hook plumbing.
-//   - **`trigger.go`**    — [TriggerSession], [TriggerInput]
-//     — payloads for project-authored lifecycle scripts (see
+//   - **`trigger.go`**:    [TriggerSession], [TriggerInput],
+//     payloads for project-authored lifecycle scripts (see
 //     [internal/trigger]).
-//   - **`system.go`**     — system-hook input/output types.
-//   - **`event.go`**      — [EventQueryOpts] and event log
+//   - **`system.go`**:     system-hook input/output types.
+//   - **`event.go`**:      [EventQueryOpts] and event log
 //     types used by `ctx hook event`.
-//   - **`notify.go`**     — [NotifyPayload], [TemplateRef] —
+//   - **`notify.go`**:     [NotifyPayload], [TemplateRef],
 //     the webhook delivery payloads.
-//   - **`task.go`**       — task-related domain types
+//   - **`task.go`**:       task-related domain types
 //     (priority, completion state, snapshot shapes).
 //   - **`mcp_session.go`**, **`mcp_deps.go`**,
-//     **`mcp_prompt.go`** — the per-session state, runtime
+//     **`mcp_prompt.go`**: the per-session state, runtime
 //     dependency container, and prompt-spec types passed
 //     between the MCP server and its handler package.
-//   - **`bootstrap.go`**  — [BootstrapOutput] — the JSON
+//   - **`bootstrap.go`**:  [BootstrapOutput], the JSON
 //     emitted by `ctx system bootstrap` for AI agents at
 //     session start.
-//   - **`deploy.go`**, **`merge.go`** — pipeline params for
+//   - **`deploy.go`**, **`merge.go`**: pipeline params for
 //     deploy/merge orchestration.
-//   - **`meta.go`**       — [Stats], [TokenInfo] — rollup
+//   - **`meta.go`**:       [Stats], [TokenInfo], rollup
 //     metadata attached to many other types.
 //
 // New types should slot into the file whose subsystem owns
@@ -84,7 +84,7 @@
 // Methods on entity types are limited to:
 //
 //   - **Pure predicates** (e.g. `Message.BelongsToUser()`,
-//     `Task.Done()`) — they read fields and return derived
+//     `Task.Done()`): they read fields and return derived
 //     facts.
 //   - **Pure derivations** (e.g. `Session.Duration()`).
 //   - **Display helpers** (e.g. `String()` overrides for

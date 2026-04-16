@@ -18,26 +18,26 @@
 // Copilot Chat sessions are stored as JSONL. The importer
 // navigates nested JSON using these keys:
 //
-//   - [KeyRequests] -- top-level array of chat turns
-//   - [KeyResult] -- result object within a request
-//   - [KeyResponse] -- response payload within a result
+//   - [KeyRequests]: top-level array of chat turns
+//   - [KeyResult]: result object within a request
+//   - [KeyResponse]: response payload within a result
 //
 // # Response Kinds
 //
 // Each response item has a kind field. The importer
 // filters on:
 //
-//   - [RespKindThinking] -- extended thinking blocks
-//   - [RespKindToolInvoke] -- serialized tool invocations
+//   - [RespKindThinking]: extended thinking blocks
+//   - [RespKindToolInvoke]: serialized tool invocations
 //
 // # Scanner Buffer Sizes
 //
 // Copilot JSONL lines can be very large (embedded code).
 // The scanner buffers are sized accordingly:
 //
-//   - [ScanBufInit] -- 64KB initial buffer
-//   - [ScanBufMax] -- 4MB ceiling for full parsing
-//   - [ScanBufMatchMax] -- 1MB ceiling for format
+//   - [ScanBufInit]: 64KB initial buffer
+//   - [ScanBufMax]: 4MB ceiling for full parsing
+//   - [ScanBufMatchMax]: 1MB ceiling for format
 //     detection (only the first line is inspected)
 //
 // # Tool ID Parsing
@@ -52,13 +52,13 @@
 // Session files live in platform-specific directories.
 // Constants cover both VS Code and Copilot CLI paths:
 //
-//   - [DirChatSessions] / [FileWorkspace] -- VS Code
+//   - [DirChatSessions] / [FileWorkspace]: VS Code
 //     workspace storage
 //   - [CLIAppName] / [DirSessions] / [DirHistory] --
 //     Copilot CLI session directories
 //   - [OSDarwin] / [DirLibrary] / [DirAppSupport] --
 //     macOS path components
-//   - [EnvAppData] -- Windows environment variable
+//   - [EnvAppData]: Windows environment variable
 //
 // # Why Centralized
 //

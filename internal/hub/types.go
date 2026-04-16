@@ -19,7 +19,7 @@ import (
 // Entry is the unit of sharing in the hub.
 //
 // Every published piece of context is an Entry. Entries are
-// append-only — once published, never modified or deleted.
+// append-only: once published, never modified or deleted.
 // Each entry gets a monotonically increasing sequence number
 // assigned by the hub.
 //

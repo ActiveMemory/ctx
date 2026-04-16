@@ -96,7 +96,7 @@ const (
 // gRPC method descriptor metadata.
 const (
 	// ProtoFile is the virtual proto file name in the service
-	// descriptor (no actual .proto file — the service is hand-rolled).
+	// descriptor (no actual .proto file; the service is hand-rolled).
 	ProtoFile = "hub.proto"
 )
 

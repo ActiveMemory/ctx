@@ -15,28 +15,28 @@
 //
 // # Key Constants
 //
-//   - [DefaultTokenBudget] (8 000) — tokens allocated
+//   - [DefaultTokenBudget] (8 000): tokens allocated
 //     to the agent context packet.
-//   - [DefaultContextWindow] (200 000) — assumed
+//   - [DefaultContextWindow] (200 000): assumed
 //     model context window size.
-//   - [DefaultArchiveAfterDays] (7) — days before
+//   - [DefaultArchiveAfterDays] (7): days before
 //     completed tasks are auto-archived.
 //   - [DefaultEntryCountLearnings] (30) and
-//     [DefaultEntryCountDecisions] (20) — entry
+//     [DefaultEntryCountDecisions] (20): entry
 //     count thresholds that trigger consolidation
 //     nudges.
-//   - [DefaultConventionLineCount] (200) — line
+//   - [DefaultConventionLineCount] (200): line
 //     limit for CONVENTIONS.md before a nudge.
-//   - [DefaultInjectionTokenWarn] (15 000) — token
+//   - [DefaultInjectionTokenWarn] (15 000): token
 //     count that triggers an oversize injection
 //     warning.
-//   - [DefaultTaskNudgeInterval] (5) — Edit/Write
+//   - [DefaultTaskNudgeInterval] (5): Edit/Write
 //     calls between task-completion nudges.
-//   - [DefaultKeyRotationDays] (90) — days before
+//   - [DefaultKeyRotationDays] (90): days before
 //     an encryption key rotation nudge.
-//   - [DefaultStaleAgeDays] (30) — days before a
+//   - [DefaultStaleAgeDays] (30): days before a
 //     context file is flagged as stale.
-//   - [DefaultPruneDays] (7) — age threshold for
+//   - [DefaultPruneDays] (7): age threshold for
 //     state file pruning.
 //
 // # Why Centralized

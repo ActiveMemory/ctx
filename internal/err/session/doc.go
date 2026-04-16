@@ -14,14 +14,14 @@
 //
 // Errors fall into three categories:
 //
-//   - **Scan failures** -- the session scanner could
+//   - **Scan failures**: the session scanner could
 //     not enumerate available sessions.
 //     Constructor: [Find].
-//   - **Lookup** -- no session matches the query,
+//   - **Lookup**: no session matches the query,
 //     no sessions exist at all, or the query is
 //     ambiguous. Constructors: [NotFound],
 //     [NoneFound], [AmbiguousQuery], [IDRequired].
-//   - **Flag validation** -- mutually exclusive
+//   - **Flag validation**: mutually exclusive
 //     flags were combined (--all with a session ID
 //     or pattern, or an invalid --type value).
 //     Constructors: [AllWithID], [AllWithPattern],

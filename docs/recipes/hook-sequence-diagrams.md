@@ -12,7 +12,7 @@ title: Hook Sequence Diagrams
 
 ## Hook Lifecycle
 
-This page documents the **ctx system hooks** — the built-in
+This page documents the **ctx system hooks**: the built-in
 `ctx system *` subcommands that Claude Code invokes via
 `.claude/hooks.json` at lifecycle events. These are owned by
 ctx itself, not authored by users.
@@ -20,15 +20,15 @@ ctx itself, not authored by users.
 !!! info "Not to Be Confused with `ctx trigger`"
     `ctx` has **three distinct hook-like layers**:
 
-    - **`ctx system` hooks** (this page) — built-in, owned
+    - **`ctx system` hooks** (this page): built-in, owned
       by ctx, wired into Claude Code via
       `internal/assets/claude/hooks/hooks.json`.
-    - **`ctx trigger`** — user-authored shell scripts in
+    - **`ctx trigger`**: user-authored shell scripts in
       `.context/hooks/<type>/*.sh`. See
       [`ctx trigger` reference](../cli/trigger.md) and the
       [trigger authoring recipe](triggers.md).
     - **Claude Code hooks** configured directly in
-      `.claude/settings.local.json` — tool-specific, not
+      `.claude/settings.local.json`, tool-specific, not
       portable across AI tools.
 
     This page is *only* about the first category.

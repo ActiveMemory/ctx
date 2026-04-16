@@ -28,11 +28,11 @@
 //
 // # Subpackages
 //
-//	cmd/show -- trace display and formatting
-//	cmd/collect -- context snapshot collection
-//	cmd/file -- file-scoped trace lookup
-//	cmd/hook -- post-commit automation
-//	cmd/tag -- trace annotation
-//	core -- trace storage, git integration, and
+//	cmd/show: trace display and formatting
+//	cmd/collect: context snapshot collection
+//	cmd/file: file-scoped trace lookup
+//	cmd/hook: post-commit automation
+//	cmd/tag: trace annotation
+//	core: trace storage, git integration, and
 //	  context linking
 package trace

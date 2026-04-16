@@ -10,24 +10,24 @@
 // signals.
 //
 // Statistics are stored as JSON files under
-// `.context/state/` — one per session, named for the
+// `.context/state/`, one per session, named for the
 // session ID. Each record carries a timestamp, the
 // running token count, the budget, and the percentage
 // used.
 //
 // # Public Surface
 //
-//   - **[ReadDir](contextDir)** — returns every
+//   - **[ReadDir](contextDir)**: returns every
 //     session-stats file as a typed [Stats] slice,
 //     sorted by mtime descending.
-//   - **[ExtractSessionID](path)** — pulls the
+//   - **[ExtractSessionID](path)**: pulls the
 //     session ID out of a stats filename.
-//   - **[ParseFile](path)** — reads one stats
+//   - **[ParseFile](path)**: reads one stats
 //     file and returns the typed [Stats].
-//   - **[FormatDump](stats)** — renders the
+//   - **[FormatDump](stats)**: renders the
 //     collection as the human-readable table the
 //     `ctx usage` command displays.
-//   - **[FormatJSON](stats)** — renders the same
+//   - **[FormatJSON](stats)**: renders the same
 //     collection as a JSON document for tooling.
 //
 // # Concurrency

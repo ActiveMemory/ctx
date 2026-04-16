@@ -19,38 +19,38 @@
 //
 // The .context/ directory contains:
 //
-//   - [Archive] -- archived task snapshots
-//   - [Hooks] / [HooksMessages] -- lifecycle hook scripts
+//   - [Archive]: archived task snapshots
+//   - [Hooks] / [HooksMessages]: lifecycle hook scripts
 //     and message overrides
-//   - [Journal] -- session journal entries
-//   - [JournalObsidian] -- Obsidian-format journal export
-//   - [JournalSite] -- static site output for journals
-//   - [Logs] -- log files
-//   - [Memory] / [MemoryArchive] -- memory bridge files
-//   - [Reports] -- generated reports
-//   - [Sessions] -- session summaries
-//   - [Skills] -- skill definitions
-//   - [Steering] -- steering files for hook behavior
-//   - [State] -- project-scoped runtime state
-//   - [Trace] -- commit context trace data
-//   - [Templates] -- entry scaffolding templates
+//   - [Journal]: session journal entries
+//   - [JournalObsidian]: Obsidian-format journal export
+//   - [JournalSite]: static site output for journals
+//   - [Logs]: log files
+//   - [Memory] / [MemoryArchive]: memory bridge files
+//   - [Reports]: generated reports
+//   - [Sessions]: session summaries
+//   - [Skills]: skill definitions
+//   - [Steering]: steering files for hook behavior
+//   - [State]: project-scoped runtime state
+//   - [Trace]: commit context trace data
+//   - [Templates]: entry scaffolding templates
 //
 // # Project Root Directories
 //
-//   - [Claude] (".claude") -- Claude Code configuration
-//   - [Context] (".context") -- the default context root
-//   - [Ideas] ("ideas") -- early-stage explorations
-//   - [Specs] ("specs") -- formalized feature specs
-//   - [Projects] ("projects") -- .claude/projects/
+//   - [Claude] (".claude"): Claude Code configuration
+//   - [Context] (".context"): the default context root
+//   - [Ideas] ("ideas"): early-stage explorations
+//   - [Specs] ("specs"): formalized feature specs
+//   - [Projects] ("projects"): .claude/projects/
 //
 // # User-Level Directories
 //
-//   - [CtxData] ("~/.ctx/") -- user-level ctx data
+//   - [CtxData] ("~/.ctx/"): user-level ctx data
 //
 // # Default Paths
 //
-//   - [DefaultSteeringPath] -- .context/steering
-//   - [DefaultHooksPath] -- .context/hooks
+//   - [DefaultSteeringPath]: .context/steering
+//   - [DefaultHooksPath]: .context/hooks
 //
 // # Platform Paths
 //

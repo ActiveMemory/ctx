@@ -22,7 +22,7 @@ rejected.
 !!! tip "Prefer Skills to Raw Commands"
     Use `/ctx-decision-add` and `/ctx-learning-add` instead of raw
     `ctx add` commands. The agent automatically picks up session ID,
-    branch, and commit hash from its context — no manual flags needed.
+    branch, and commit hash from its context, so no manual flags are needed.
 
 ## TL;DR
 

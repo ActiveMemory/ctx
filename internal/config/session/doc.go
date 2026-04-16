@@ -17,10 +17,10 @@
 //
 // # Tool Identifiers
 //
-//   - [ToolClaudeCode]  — Claude Code JSONL sessions.
-//   - [ToolCopilot]     — VS Code Copilot Chat.
-//   - [ToolCopilotCLI]  — GitHub Copilot CLI.
-//   - [ToolMarkdown]    — plain Markdown transcripts.
+//   - [ToolClaudeCode]: Claude Code JSONL sessions.
+//   - [ToolCopilot]: VS Code Copilot Chat.
+//   - [ToolCopilotCLI]: GitHub Copilot CLI.
+//   - [ToolMarkdown]: plain Markdown transcripts.
 //
 // # Claude Code Tool Names
 //
@@ -42,12 +42,12 @@
 //
 // # Session Conventions
 //
-//   - [IDUnknown] — fallback when a session has no ID.
-//   - [IDSuffixSummary], [IDSuffixTopic] — suffixes
+//   - [IDUnknown]: fallback when a session has no ID.
+//   - [IDSuffixSummary], [IDSuffixTopic]: suffixes
 //     for derived session IDs.
-//   - [PreviewMaxLen] — truncation limit for first-
+//   - [PreviewMaxLen]: truncation limit for first-
 //     message previews.
-//   - [DefaultFilename] — fallback for sanitized
+//   - [DefaultFilename]: fallback for sanitized
 //     filenames.
 //
 // # Concurrency

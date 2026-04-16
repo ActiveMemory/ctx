@@ -18,10 +18,10 @@
 //
 // # Flags
 //
-//   - **--json** -- emit the status report as a single
+//   - **--json**: emit the status report as a single
 //     JSON object for machine consumption (scripts,
 //     dashboards, CI).
-//   - **--verbose, -v** -- include inline previews of
+//   - **--verbose, -v**: include inline previews of
 //     each file's opening lines so the user can skim
 //     content without opening individual files.
 //

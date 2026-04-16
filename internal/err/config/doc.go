@@ -14,17 +14,17 @@
 //
 // Errors fall into three categories:
 //
-//   - **Profile / tool validation** -- the user
+//   - **Profile / tool validation**: the user
 //     specified an unknown profile or unsupported
 //     AI tool. Constructors: [UnknownProfile],
 //     [InvalidTool], [UnsupportedTool],
 //     [UnknownUpdateType].
-//   - **Settings files** -- the local or golden
+//   - **Settings files**: the local or golden
 //     settings file is missing, or marshaling
 //     failed. Constructors: [SettingsNotFound],
 //     [GoldenNotFound], [MarshalSettings],
 //     [MarshalPlugins].
-//   - **Schema / profile IO** -- reading a profile
+//   - **Schema / profile IO**: reading a profile
 //     file or the embedded JSON schema failed.
 //     Constructors: [ReadProfile],
 //     [ReadEmbeddedSchema].

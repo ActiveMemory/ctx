@@ -32,12 +32,12 @@
 //
 // # Subpackages
 //
-//	cmd/source -- entry listing and inspection
-//	cmd/importer -- session file ingestion
-//	cmd/schema -- JSON Schema output
-//	cmd/lock, cmd/unlock -- entry finalization
-//	cmd/sync -- state synchronization
-//	cmd/site -- static site generation
-//	cmd/obsidian -- Obsidian vault generation
-//	core -- scan, parse, index, and enrichment logic
+//	cmd/source: entry listing and inspection
+//	cmd/importer: session file ingestion
+//	cmd/schema: JSON Schema output
+//	cmd/lock, cmd/unlock: entry finalization
+//	cmd/sync: state synchronization
+//	cmd/site: static site generation
+//	cmd/obsidian: Obsidian vault generation
+//	core: scan, parse, index, and enrichment logic
 package journal

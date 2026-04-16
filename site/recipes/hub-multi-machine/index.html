@@ -1359,7 +1359,7 @@
   <a href="#step-1-start-the-daemon-on-the-lan-host" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1 — Start the Daemon on the LAN Host
+        Step 1: Start the Daemon on the LAN Host
       
     </span>
   </a>
@@ -1370,7 +1370,7 @@
   <a href="#step-2-firewall-and-port" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2 — Firewall and Port
+        Step 2: Firewall and Port
       
     </span>
   </a>
@@ -1381,7 +1381,7 @@
   <a href="#step-3-retrieve-the-admin-token" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3 — Retrieve the Admin Token
+        Step 3: Retrieve the Admin Token
       
     </span>
   </a>
@@ -1392,7 +1392,7 @@
   <a href="#step-4-register-projects-from-each-workstation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4 — Register Projects from Each Workstation
+        Step 4: Register Projects from Each Workstation
       
     </span>
   </a>
@@ -1403,7 +1403,7 @@
   <a href="#step-5-verify" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5 — Verify
+        Step 5: Verify
       
     </span>
   </a>
@@ -1817,7 +1817,7 @@
   <a href="#step-1-start-the-daemon-on-the-lan-host" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1 — Start the Daemon on the LAN Host
+        Step 1: Start the Daemon on the LAN Host
       
     </span>
   </a>
@@ -1828,7 +1828,7 @@
   <a href="#step-2-firewall-and-port" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2 — Firewall and Port
+        Step 2: Firewall and Port
       
     </span>
   </a>
@@ -1839,7 +1839,7 @@
   <a href="#step-3-retrieve-the-admin-token" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3 — Retrieve the Admin Token
+        Step 3: Retrieve the Admin Token
       
     </span>
   </a>
@@ -1850,7 +1850,7 @@
   <a href="#step-4-register-projects-from-each-workstation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4 — Register Projects from Each Workstation
+        Step 4: Register Projects from Each Workstation
       
     </span>
   </a>
@@ -1861,7 +1861,7 @@
   <a href="#step-5-verify" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5 — Verify
+        Step 5: Verify
       
     </span>
   </a>
@@ -1990,12 +1990,12 @@
 <p>Run the hub on a <strong>LAN host</strong> and connect from project directories
 on other workstations. This recipe is the <strong>Story 2 ("small trusted
 team")</strong> shape described in the
-<a href="../hub-overview/"><code>ctx</code> Hub overview</a> — read that first if
+<a href="../hub-overview/"><code>ctx</code> Hub overview</a>; read that first if
 you haven't, especially the trust-model warnings.</p>
 <p>This recipe assumes you've already walked through
 <a href="../hub-getting-started/">Getting Started</a> and understand
 what flows through the hub (decisions, learnings, conventions,
-tasks — <strong>not</strong> journals, scratchpad, or raw context files).</p>
+tasks, <strong>not</strong> journals, scratchpad, or raw context files).</p>
 <h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>+------------------+        +------------------+
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>| workstation A    |        | workstation B    |
@@ -2012,7 +2012,7 @@ tasks — <strong>not</strong> journals, scratchpad, or raw context files).</p>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>              | :9900             |
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>              +-------------------+
 </span></code></pre></div>
-<h2 id="step-1-start-the-daemon-on-the-lan-host">Step 1 — Start the Daemon on the LAN Host<a class="headerlink" href="#step-1-start-the-daemon-on-the-lan-host" title="Permanent link">&para;</a></h2>
+<h2 id="step-1-start-the-daemon-on-the-lan-host">Step 1: Start the Daemon on the LAN Host<a class="headerlink" href="#step-1-start-the-daemon-on-the-lan-host" title="Permanent link">&para;</a></h2>
 <p>On the machine that will hold the hub (call it <code>nexus</code>):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--daemon<span class="w"> </span>--port<span class="w"> </span><span class="m">9900</span>
 </span></code></pre></div>
@@ -2020,8 +2020,8 @@ tasks — <strong>not</strong> journals, scratchpad, or raw context files).</p>
 later with:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>stop
 </span></code></pre></div>
-<h2 id="step-2-firewall-and-port">Step 2 — Firewall and Port<a class="headerlink" href="#step-2-firewall-and-port" title="Permanent link">&para;</a></h2>
-<p>Open port <code>9900/tcp</code> on <code>nexus</code> to the LAN only — <strong>never</strong> expose
+<h2 id="step-2-firewall-and-port">Step 2: Firewall and Port<a class="headerlink" href="#step-2-firewall-and-port" title="Permanent link">&para;</a></h2>
+<p>Open port <code>9900/tcp</code> on <code>nexus</code> to the LAN only. <strong>Never</strong> expose
 the hub to the public internet without a reverse proxy and TLS in
 front of it (see <a href="../../security/hub/">Hub security model</a>).</p>
 <p>Typical LAN allowlist rules:</p>
@@ -2044,14 +2044,14 @@ front of it (see <a href="../../security/hub/">Hub security model</a>).</p>
 </div>
 </div>
 </div>
-<h2 id="step-3-retrieve-the-admin-token">Step 3 — Retrieve the Admin Token<a class="headerlink" href="#step-3-retrieve-the-admin-token" title="Permanent link">&para;</a></h2>
+<h2 id="step-3-retrieve-the-admin-token">Step 3: Retrieve the Admin Token<a class="headerlink" href="#step-3-retrieve-the-admin-token" title="Permanent link">&para;</a></h2>
 <p>The daemon prints the admin token to stdout on first run. Running as
 a daemon, that output goes to the log instead:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cat<span class="w"> </span>~/.ctx/hub-data/admin.token
 </span></code></pre></div>
 <p>Copy the token over a trusted channel (SSH, password manager, or
 an encrypted note). <strong>Do not email it or put it in chat.</strong></p>
-<h2 id="step-4-register-projects-from-each-workstation">Step 4 — Register Projects from Each Workstation<a class="headerlink" href="#step-4-register-projects-from-each-workstation" title="Permanent link">&para;</a></h2>
+<h2 id="step-4-register-projects-from-each-workstation">Step 4: Register Projects from Each Workstation<a class="headerlink" href="#step-4-register-projects-from-each-workstation" title="Permanent link">&para;</a></h2>
 <p>On workstation <code>A</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/x
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>nexus.local:9900<span class="w"> </span>--token<span class="w"> </span>ctx_adm_...
@@ -2066,7 +2066,7 @@ an encrypted note). <strong>Do not email it or put it in chat.</strong></p>
 client token</strong>. Only the client token is persisted in
 <code>.context/.connect.enc</code>, encrypted with the same AES-256-GCM scheme
 ctx uses for notification credentials.</p>
-<h2 id="step-5-verify">Step 5 — Verify<a class="headerlink" href="#step-5-verify" title="Permanent link">&para;</a></h2>
+<h2 id="step-5-verify">Step 5: Verify<a class="headerlink" href="#step-5-verify" title="Permanent link">&para;</a></h2>
 <p>From either workstation:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>status
 </span></code></pre></div>
@@ -2090,14 +2090,14 @@ HTTP/2:</p>
 </span></code></pre></div>
 <p>Point <code>ctx connection register</code> at the public hostname and port 443.</p>
 <h2 id="handling-daemon-restarts">Handling Daemon Restarts<a class="headerlink" href="#handling-daemon-restarts" title="Permanent link">&para;</a></h2>
-<p>The hub is <strong>append-only JSONL</strong> — restarts are safe. Clients keep
+<p>The hub is <strong>append-only JSONL</strong>, so restarts are safe. Clients keep
 their last-seen sequence in <code>.context/hub/.sync-state.json</code> and
 pick up exactly where they left off on the next <code>sync</code> or <code>listen</code>
 reconnect.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../hub-cluster/">HA cluster recipe</a> — for redundancy</li>
-<li><a href="../../operations/hub/">Hub operations</a> — backup, rotation</li>
+<li><a href="../hub-cluster/">HA cluster recipe</a>: for redundancy</li>
+<li><a href="../../operations/hub/">Hub operations</a>: backup, rotation</li>
 <li><a href="../../operations/hub-failure-modes/">Hub failure modes</a></li>
 <li><a href="../../security/hub/">Hub security model</a></li>
 </ul>

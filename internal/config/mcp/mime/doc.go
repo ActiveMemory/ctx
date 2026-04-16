@@ -15,12 +15,12 @@
 //
 // # Key Constants
 //
-//   - [Markdown] ("text/markdown") -- the MIME type
+//   - [Markdown] ("text/markdown"): the MIME type
 //     assigned to context-file resources
 //     (TASKS.md, DECISIONS.md, etc.). Clients that
 //     understand markdown can render headings, lists,
 //     and code fences.
-//   - [ContentTypeText] ("text") -- the content type
+//   - [ContentTypeText] ("text"): the content type
 //     value used in tool result objects. The MCP
 //     specification defines "text" and "image" as the
 //     two content type discriminators; ctx uses "text"

@@ -17,37 +17,37 @@
 //
 // Each embedded subdirectory has a constant:
 //
-//   - [DirClaude] -- Claude Code configuration templates
-//   - [DirCommands] -- CLI command metadata (YAML)
-//   - [DirContext] -- context file templates
-//   - [DirEntryTemplates] -- entry scaffolding templates
-//   - [DirIntegrations] -- integration configs (Copilot,
+//   - [DirClaude]: Claude Code configuration templates
+//   - [DirCommands]: CLI command metadata (YAML)
+//   - [DirContext]: context file templates
+//   - [DirEntryTemplates]: entry scaffolding templates
+//   - [DirIntegrations]: integration configs (Copilot,
 //     Copilot CLI)
-//   - [DirHooksMessages] -- hook message templates
-//   - [DirJournal] -- journal site assets (CSS)
-//   - [DirPermissions] -- allow/deny lists
-//   - [DirSchema] -- JSON schemas
+//   - [DirHooksMessages]: hook message templates
+//   - [DirJournal]: journal site assets (CSS)
+//   - [DirPermissions]: allow/deny lists
+//   - [DirSchema]: JSON schemas
 //
 // # File Constants
 //
 // Leaf file names are exported individually:
 //
-//   - [FileCLAUDEMd] -- the CLAUDE.md template
-//   - [FileCommandsYAML] -- command registry
-//   - [FileFlagsYAML] -- flag definitions
-//   - [FilePluginJSON] -- Claude Code plugin manifest
-//   - [FileSKILLMd] -- skill template
-//   - [FileCtxrcSchemaJSON] -- ctxrc JSON schema
+//   - [FileCLAUDEMd]: the CLAUDE.md template
+//   - [FileCommandsYAML]: command registry
+//   - [FileFlagsYAML]: flag definitions
+//   - [FilePluginJSON]: Claude Code plugin manifest
+//   - [FileSKILLMd]: skill template
+//   - [FileCtxrcSchemaJSON]: ctxrc JSON schema
 //
 // # Composed Paths
 //
 // Package-level variables combine directories and files
 // into full embedded paths:
 //
-//   - [PathCLAUDEMd] -- claude/CLAUDE.md
-//   - [PathPluginJSON] -- plugin manifest path
-//   - [PathCommandsYAML] -- command registry path
-//   - [PathMessageRegistry] -- hook message registry
+//   - [PathCLAUDEMd]: claude/CLAUDE.md
+//   - [PathPluginJSON]: plugin manifest path
+//   - [PathCommandsYAML]: command registry path
+//   - [PathMessageRegistry]: hook message registry
 //
 // # Why Centralized
 //

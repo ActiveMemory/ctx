@@ -24,6 +24,6 @@
 //
 // # Subpackages
 //
-//	cmd/root -- cobra command definition that invokes
+//	cmd/root: cobra command definition that invokes
 //	  both decision and learning reindex in sequence
 package reindex

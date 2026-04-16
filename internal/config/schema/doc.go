@@ -16,25 +16,25 @@
 //
 // # Field Lists
 //
-//   - [RequiredFields]  — fields that must appear on
+//   - [RequiredFields]: fields that must appear on
 //     every user/assistant record (uuid, sessionId,
 //     timestamp, type, message, ...).
-//   - [OptionalFields]  — fields that may appear
+//   - [OptionalFields]: fields that may appear
 //     (gitBranch, todos, agentId, ...).
 //
 // # Record and Block Types
 //
-//   - [RecordUser], [RecordAssistant] — message
+//   - [RecordUser], [RecordAssistant]: message
 //     record types that carry conversation content.
-//   - [MetadataRecordTypes] — metadata-only types
+//   - [MetadataRecordTypes]: metadata-only types
 //     (no field validation): last-prompt,
 //     custom-title, attachment, tag, etc.
-//   - [InfraRecordTypes] — infrastructure types
+//   - [InfraRecordTypes]: infrastructure types
 //     skipped by the parser: progress, summary, etc.
-//   - [ParsedBlockTypes] — content blocks the
+//   - [ParsedBlockTypes]: content blocks the
 //     parser extracts (text, thinking, tool_use,
 //     tool_result).
-//   - [KnownBlockTypes] — recognized but unparsed
+//   - [KnownBlockTypes]: recognized but unparsed
 //     (server_tool_use, mcp_tool_use, ...).
 //
 // # Report Format Strings

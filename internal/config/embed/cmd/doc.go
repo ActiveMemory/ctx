@@ -11,10 +11,10 @@
 //
 // Two kinds of constants live here:
 //
-//   - **`UseXxx`** — the cobra `Use` field. The literal
+//   - **`UseXxx`**: the cobra `Use` field. The literal
 //     command word as users type it. `UseBackup = "backup"`,
 //     `UsePause = "pause"`, etc.
-//   - **`DescKeyXxx`** — the lookup key for that command's
+//   - **`DescKeyXxx`**: the lookup key for that command's
 //     short / long / example text. Resolved at run-time via
 //     [internal/assets/read/desc.Command](key) and
 //     [.Example](key), which read from the embedded YAML
@@ -26,7 +26,7 @@
 // reference is a typed Go constant so a typo fails to
 // compile.
 //
-// # File Layout — One Command per File
+// # File Layout: One Command per File
 //
 // Each file in this package corresponds to one command in
 // the cobra tree (`backup.go`, `bootstrap.go`, `connect.go`,
@@ -43,8 +43,8 @@
 // `DescKey<CommandPath>`. The dotted form of the path is
 // the YAML key (`backup`, `system.bootstrap`,
 // `hub.peer.add`). The audit suite enforces this both ways
-// so a constant without a YAML entry — or a YAML entry
-// without a constant — fails CI.
+// so a constant without a YAML entry (or a YAML entry
+// without a constant) fails CI.
 //
 // # Group Constants
 //

@@ -69,7 +69,7 @@ type marketplaceEntry struct {
 	Source marketplaceSource `json:"source"`
 }
 
-// marketplaceSource captures the origin of a marketplace —
+// marketplaceSource captures the origin of a marketplace:
 // either a github repo or a local directory (the dev
 // flow).
 type marketplaceSource struct {

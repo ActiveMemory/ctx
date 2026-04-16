@@ -119,10 +119,10 @@ End with a prioritized action list: what to fix first.
 
 ## After the Audit
 
-1. **Triage findings** — not everything needs fixing. Focus on high severity.
-2. **Merge weak pages first** — fewer pages is almost always better.
-3. **Add cross-links** — cheapest improvement, highest reader impact.
-4. **File split decisions in DECISIONS.md** — page splits are architectural.
+1. **Triage findings**: not everything needs fixing. Focus on high severity.
+2. **Merge weak pages first**: fewer pages is almost always better.
+3. **Add cross-links**: cheapest improvement, highest reader impact.
+4. **File split decisions in DECISIONS.md**: page splits are architectural.
 5. **Regenerate the site** and spot-check nav after structural changes.
 
 ## History

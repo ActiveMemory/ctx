@@ -1640,7 +1640,7 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h1 id="ctx-hub-operations"><code>ctx</code> Hub: Operations<a class="headerlink" href="#ctx-hub-operations" title="Permanent link">&para;</a></h1>
 <p>Running the ctx <code>ctx</code> Hub in production. This page is
-for <strong>operators</strong> — people running a hub for themselves or a
+for <strong>operators</strong>: people running a hub for themselves or a
 team, not people writing to a hub someone else is running.</p>
 <p>If you have not read it yet, start with the
 <a href="../../recipes/hub-overview/"><code>ctx</code> Hub overview</a>. It
@@ -1704,7 +1704,7 @@ it does <strong>not</strong> do. A client-side tour is in
 </div>
 <p><code>--stop</code> sends SIGTERM to the PID in <code>hub.pid</code>, waits for
 in-flight RPCs to drain, then exits. If the daemon is wedged,
-remove <code>hub.pid</code> and send <code>SIGKILL</code> manually — <code>entries.jsonl</code> is
+remove <code>hub.pid</code> and send <code>SIGKILL</code> manually. <code>entries.jsonl</code> is
 crash-safe, so you will not lose accepted writes.</p>
 <h2 id="systemd-unit">Systemd Unit<a class="headerlink" href="#systemd-unit" title="Permanent link">&para;</a></h2>
 <p>For production single-node deployments, run the hub as a systemd
@@ -1737,13 +1737,13 @@ service instead of <code>--daemon</code>:</p>
 </span></code></pre></div>
 <h2 id="backup-and-restore">Backup and Restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">&para;</a></h2>
 <p>Because <code>entries.jsonl</code> is append-only, backups are trivial:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Hot backup — safe while the hub is running.</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Hot backup, safe while the hub is running.</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cp<span class="w"> </span>&lt;data-dir&gt;/entries.jsonl<span class="w"> </span>backups/entries-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.jsonl
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>cp<span class="w"> </span>&lt;data-dir&gt;/meta.json<span class="w">      </span>backups/meta-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>cp<span class="w"> </span>&lt;data-dir&gt;/clients.json<span class="w">   </span>backups/clients-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
 </span></code></pre></div>
 <p>For a consistent snapshot across all three files, stop the hub,
-copy, then start again — or use a filesystem-level snapshot (LVM,
+copy, then start again, or use a filesystem-level snapshot (LVM,
 ZFS, Btrfs).</p>
 <p><strong>Restore:</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>stop<span class="w">                           </span><span class="c1"># Stop the hub</span>
@@ -1755,7 +1755,7 @@ ZFS, Btrfs).</p>
 <p>Clients that pushed sequences <strong>above</strong> the restored watermark
 will re-publish on the next <code>listen</code> reconnect, because the hub
 now reports a lower sequence than what clients have on disk. This
-is safe — the store deduplicates by entry ID.</p>
+is safe; the store deduplicates by entry ID.</p>
 <h2 id="log-rotation">Log Rotation<a class="headerlink" href="#log-rotation" title="Permanent link">&para;</a></h2>
 <p><code>entries.jsonl</code> grows unbounded. For long-lived hubs, rotate it
 offline:</p>
@@ -1777,12 +1777,12 @@ follower); non-zero means degraded. Wire this into your monitoring
 of choice.</p>
 <p>For cluster deployments, watch for:</p>
 <ul>
-<li><strong>Role flaps</strong> — the leader changing more than once per hour
+<li><strong>Role flaps</strong>: the leader changing more than once per hour
   suggests network instability or disk contention.</li>
-<li><strong>Replication lag</strong> — <code>ctx hub status</code> shows per-peer sequence
+<li><strong>Replication lag</strong>: <code>ctx hub status</code> shows per-peer sequence
   offsets. Sustained lag &gt; 100 sequences on a follower is worth
   investigating.</li>
-<li><strong><code>entries.jsonl</code> growth rate</strong> — sudden spikes often indicate a
+<li><strong><code>entries.jsonl</code> growth rate</strong>: sudden spikes often indicate a
   misbehaving <code>ctx connection listen</code> reconnect loop.</li>
 </ul>
 <h2 id="upgrading">Upgrading<a class="headerlink" href="#upgrading" title="Permanent link">&para;</a></h2>

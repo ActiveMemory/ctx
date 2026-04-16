@@ -13,16 +13,16 @@
 //
 // Errors fall into three categories:
 //
-//   - **File IO** -- TASKS.md does not exist, or
+//   - **File IO**: TASKS.md does not exist, or
 //     reading/writing it failed. Constructors:
 //     [FileNotFound], [FileRead], [FileWrite],
 //     [SnapshotWrite].
-//   - **Query** -- no task matches the search
+//   - **Query**: no task matches the search
 //     query, multiple tasks match, or no task was
 //     specified. Constructors: [NotFound],
 //     [MultipleMatches], [NoneSpecified],
 //     [NoMatch].
-//   - **Archive** -- there are no completed tasks
+//   - **Archive**: there are no completed tasks
 //     to archive. Constructor: [NoneCompleted].
 //
 // # Wrapping Strategy

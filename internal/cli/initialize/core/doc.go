@@ -17,28 +17,28 @@
 //
 // # Sub-packages
 //
-//   - backup -- creates timestamped .bak copies before
+//   - backup: creates timestamped .bak copies before
 //     overwriting existing files.
-//   - claude -- creates or merges CLAUDE.md with the
+//   - claude: creates or merges CLAUDE.md with the
 //     ctx-managed section.
-//   - claude_check -- validates CLAUDE.md structure and
+//   - claude_check: validates CLAUDE.md structure and
 //     renders diagnostic hints.
-//   - entry -- creates context file templates (TASKS.md,
+//   - entry: creates context file templates (TASKS.md,
 //     DECISIONS.md, etc.) and locates insertion points
 //     in existing files.
-//   - merge -- marker-delimited section merging for
+//   - merge: marker-delimited section merging for
 //     CLAUDE.md and prompt files.
-//   - pad -- sets up the encrypted or plaintext
+//   - pad: sets up the encrypted or plaintext
 //     scratchpad.
-//   - plugin -- detects and enables the ctx companion
+//   - plugin: detects and enables the ctx companion
 //     plugin.
-//   - project -- scaffolds project-level files like
+//   - project: scaffolds project-level files like
 //     Makefile and .gitignore.
-//   - tpl -- generic template deployment engine used
+//   - tpl: generic template deployment engine used
 //     by entry and other sub-packages.
-//   - validate -- pre-flight checks (ctx in PATH,
+//   - validate: pre-flight checks (ctx in PATH,
 //     essential files present).
-//   - vscode -- generates VS Code workspace files
+//   - vscode: generates VS Code workspace files
 //     (extensions.json, tasks.json, mcp.json).
 //
 // # Data Flow

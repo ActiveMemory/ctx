@@ -296,7 +296,7 @@ write.init-claude-absent:
       4. Re-run `ctx init` in this project to auto-enable
          the plugin for use here.
 
-    If you don't use Claude Code, ignore this — ctx works
+    If you don't use Claude Code, ignore this. ctx works
     with Cursor, Kiro, Cline, Aider, Copilot, and Windsurf
     as well (see `ctx setup --help`).
 write.init-claude-plugin-missing:
@@ -323,7 +323,7 @@ write.init-claude-plugin-missing:
       5. Back in `/plugin`, select Install and choose `ctx`.
 
          ⚠ Install at USER scope. Local plugin installs are
-         NOT auto-enabled globally by Claude Code — user
+         NOT auto-enabled globally by Claude Code; user
          scope avoids the per-project enablement gotcha.
 
       6. Re-run `ctx init` in this project to wire up the
@@ -331,7 +331,7 @@ write.init-claude-plugin-missing:
 
     This points Claude Code at the plugin source on disk, so
     changes you make to hooks or skills take effect
-    immediately — no reinstall needed.
+    immediately, no reinstall needed.
 write.init-claude-ready:
   short: |2-
 
@@ -727,9 +727,9 @@ write.trace-commit-no-context:
 write.trace-last-entry:
   short: '%s  %s  [%s]'
 write.trace-resolved-full:
-  short: '  [%s] %s — %s (%s)'
+  short: '  [%s] %s: %s (%s)'
 write.trace-resolved-title:
-  short: '  [%s] %s — %s'
+  short: '  [%s] %s: %s'
 write.trace-resolved-raw:
   short: '  [%s] %s'
 write.trace-file-entry:
@@ -871,7 +871,7 @@ write.steering-desc-workflow:
 write.steering-guidance:
   short: |-
     <!--
-      This is a ctx steering file — persistent behavioral
+      This is a ctx steering file: persistent behavioral
       rules prepended to prompts based on the frontmatter
       above.
 

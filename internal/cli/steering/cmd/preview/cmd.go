@@ -56,7 +56,7 @@ func Run(c *cobra.Command, prompt string) error {
 		return err
 	}
 
-	// Filter with no manual names — preview only shows always + auto matches.
+	// Filter with no manual names; preview only shows always + auto matches.
 	matched := steering.Filter(files, prompt, nil, "")
 
 	if len(matched) == 0 {

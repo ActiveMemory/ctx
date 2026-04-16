@@ -1140,7 +1140,7 @@ where it silently fails. Most teams stop at the first pass.</p>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>/ctx-architecture-failure-analysis
 </span></code></pre></div>
 <p>Each pass builds on the previous one. Run them in order. The
-output accumulates in <code>.context/</code> — each pass reads the prior
+output accumulates in <code>.context/</code>; each pass reads the prior
 artifacts and extends them.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
@@ -1185,15 +1185,15 @@ artifacts and extends them.</p>
 </span></code></pre></div>
 <p>Produces:</p>
 <ul>
-<li><strong>ARCHITECTURE.md</strong> — succinct project map (&lt; 4000 tokens),
+<li><strong>ARCHITECTURE.md</strong>: succinct project map (&lt; 4000 tokens),
   loaded at every session start</li>
-<li><strong>DETAILED_DESIGN*.md</strong> — deep per-module reference with
+<li><strong>DETAILED_DESIGN*.md</strong>: deep per-module reference with
   exported API, data flow, danger zones, extension points</li>
-<li><strong>CHEAT-SHEETS.md</strong> — lifecycle flow diagrams</li>
-<li><strong>map-tracking.json</strong> — coverage state with confidence scores</li>
+<li><strong>CHEAT-SHEETS.md</strong>: lifecycle flow diagrams</li>
+<li><strong>map-tracking.json</strong>: coverage state with confidence scores</li>
 </ul>
 <p>This pass forces deep code reading. No shortcuts, no code
-intelligence tools — the agent reads every module it analyzes.
+intelligence tools; the agent reads every module it analyzes.
 That forced reading is what makes the subsequent passes useful.</p>
 <p><strong>When to run</strong>: First time on a codebase, or after significant
 structural changes (new packages, moved files, changed
@@ -1213,7 +1213,7 @@ graph-backed data from GitNexus:</p>
 <li>Domain clustering validation</li>
 <li>Registration site discovery</li>
 </ul>
-<p>This pass does not replace reading — it quantifies what reading
+<p>This pass does not replace reading; it quantifies what reading
 found. If Pass 1 says "module X depends on module Y," Pass 2
 says "module X has 47 callers in module Y, and changing function
 Z would affect 12 downstream consumers."</p>
@@ -1242,7 +1242,7 @@ failure path, silence reason, and code evidence. A mandatory
 challenge phase attempts to disprove each finding before it is
 accepted. Findings carry a confidence level (High/Medium/Low) and
 explicit risk score.</p>
-<p>Produces <strong>DANGER-ZONES.md</strong> — a ranked inventory of findings
+<p>Produces <strong>DANGER-ZONES.md</strong>, a ranked inventory of findings
 split into Critical and Elevated tiers.</p>
 <p><strong>When to run</strong>: Before releases, after major refactors, when
 investigating incident categories, or when onboarding.</p>
@@ -1294,7 +1294,7 @@ new files.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Run Pass 1 with focus areas</strong> if the codebase is large.
-  The skill asks what to go deep on — name the modules you're
+  The skill asks what to go deep on, so name the modules you're
   about to change.</li>
 <li><strong>You don't need all three passes every time.</strong> Pass 1 is
   the foundation. Pass 2 and 3 are for when you need
@@ -1308,9 +1308,9 @@ new files.</p>
 </ul>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <p><em>See also: <a href="../context-health/">Detecting and Fixing Context Drift</a>
-— keep architecture artifacts fresh between deep-dive sessions.</em></p>
+to keep architecture artifacts fresh between deep-dive sessions.</em></p>
 <p><em>See also: <a href="../context-health/">Detecting and Fixing Context Drift</a>
-— structural checks that complement architecture analysis.</em></p>
+for structural checks that complement architecture analysis.</em></p>
 
 
 

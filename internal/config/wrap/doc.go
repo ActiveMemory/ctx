@@ -16,11 +16,11 @@
 //
 // # Key Constants
 //
-//   - [Marker] ("ctx-wrapped-up") — the state file
+//   - [Marker] ("ctx-wrapped-up"): the state file
 //     name written after a successful wrap-up.
-//   - [Content] ("wrapped-up") — the content stored
+//   - [Content] ("wrapped-up"): the content stored
 //     in the marker file.
-//   - [ExpiryHours] (2) — hours the marker
+//   - [ExpiryHours] (2): hours the marker
 //     suppresses further nudges. After expiry the
 //     nudge engine considers the session stale and
 //     may prompt again.

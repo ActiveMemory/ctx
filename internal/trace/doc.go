@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package trace implements **commit context tracing** — the layer
+// Package trace implements **commit context tracing**: the layer
 // that links a git commit back to the decisions, learnings,
 // conventions, tasks, and AI sessions that motivated it.
 //
@@ -21,12 +21,12 @@
 // A "ref" is a short, parseable string that points at one
 // concrete piece of context:
 //
-//   - `decision:12`   — DECISIONS.md entry #12
-//   - `learning:7`    — LEARNINGS.md entry #7
-//   - `convention:3`  — CONVENTIONS.md entry #3
-//   - `task:8`        — TASKS.md item #8
-//   - `session:abc`   — AI session ID `abc`
-//   - `"free note"`   — quoted free-form note
+//   - `decision:12`:   DECISIONS.md entry #12
+//   - `learning:7`:    LEARNINGS.md entry #7
+//   - `convention:3`:  CONVENTIONS.md entry #3
+//   - `task:8`:        TASKS.md item #8
+//   - `session:abc`:   AI session ID `abc`
+//   - `"free note"`:   quoted free-form note
 //
 // [parseRef] turns a string into (type, number, text); [Resolve]
 // looks up the entry and returns a [ResolvedRef] populated with
@@ -39,18 +39,18 @@
 // sources, **in this order**, then deduplicates while preserving
 // first-occurrence order:
 //
-//  1. **Pending records** — refs that were explicitly staged
+//  1. **Pending records**: refs that were explicitly staged
 //     ahead of time via `ctx trace tag` and stored as
 //     [PendingEntry] in `state/trace-pending.jsonl`. Cleared
 //     after the commit lands.
-//  2. **Staged file diffs** — [StagedRefs] runs `git diff
+//  2. **Staged file diffs**: [StagedRefs] runs `git diff
 //     --cached` on each of DECISIONS.md, LEARNINGS.md,
 //     CONVENTIONS.md and parses **added entries** into refs of
 //     the matching type. For TASKS.md it parses **completed
 //     tasks** (lines that flipped from `[ ]` to `[x]`). This is
 //     the source that catches "I just wrote a new decision and
 //     committed it" without any tagging.
-//  3. **Working state** — [WorkingRefs] adds in-progress task
+//  3. **Working state**: [WorkingRefs] adds in-progress task
 //     refs (from TASKS.md) plus an `session:<id>` ref derived
 //     from `$CTX_SESSION_ID` when an AI session is active.
 //
@@ -74,12 +74,12 @@
 //
 // Two append-only JSONL stores live under `state/`:
 //
-//   - **history.jsonl** — one [HistoryEntry] per commit:
+//   - **history.jsonl**: one [HistoryEntry] per commit:
 //     full commit hash, the refs that were attached, the
 //     commit message, and a UTC timestamp. Written by the
 //     `post-commit` hook so the link survives later message
 //     edits or squashes.
-//   - **overrides.jsonl** — [OverrideEntry] records that let a
+//   - **overrides.jsonl**: [OverrideEntry] records that let a
 //     human pin a different set of refs to a commit after the
 //     fact (`ctx trace tag <commit> --note "..."`). Resolution
 //     prefers the most recent override over the original

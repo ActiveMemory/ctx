@@ -14,19 +14,19 @@
 //
 // # Public Surface
 //
-//   - **[TemplateVars]** — renders a template's
+//   - **[TemplateVars]**: renders a template's
 //     placeholder variable list (the `%[1]s`-style
 //     positional parameters).
-//   - **[CtxSpecificWarning]** — the warning
+//   - **[CtxSpecificWarning]**: the warning
 //     shown when the user tries to override a
 //     ctx-specific (non-customizable) message.
-//   - **[OverrideCreated]** — the
+//   - **[OverrideCreated]**: the
 //     "wrote override at PATH" line `edit` and
 //     `reset` print after a write.
-//   - **[EditHint]** — the "run `$EDITOR PATH` to
+//   - **[EditHint]**: the "run `$EDITOR PATH` to
 //     edit" hint surfaced by `show` when no
 //     override exists yet.
-//   - **[SourceOverride] / [SourceDefault]** —
+//   - **[SourceOverride] / [SourceDefault]**:
 //     "[override]" / "[default]" badges shown
 //     next to each message in `list` so users
 //     know which entries they have customized.

@@ -14,13 +14,13 @@
 //
 // Four constructors cover the entire surface:
 //
-//   - [CreateDir] -- a setup directory could not be
+//   - [CreateDir]: a setup directory could not be
 //     created. Wraps the underlying OS error.
-//   - [MarshalConfig] -- the MCP configuration
+//   - [MarshalConfig]: the MCP configuration
 //     JSON could not be marshaled.
-//   - [WriteFile] -- a setup file could not be
+//   - [WriteFile]: a setup file could not be
 //     written to disk.
-//   - [SyncSteering] -- steering file sync failed
+//   - [SyncSteering]: steering file sync failed
 //     during the setup sequence.
 //
 // # Wrapping Strategy

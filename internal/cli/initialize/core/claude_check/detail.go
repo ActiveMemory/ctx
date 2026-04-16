@@ -22,7 +22,7 @@ import (
 // Details returns a zero-value PluginDetails and ok=false
 // if either file is missing, unreadable, or doesn't mention
 // the ctx plugin. Callers should fall back to a minimal
-// confirmation message in that case — a metadata parse
+// confirmation message in that case; a metadata parse
 // failure must never break the `ctx init` tail.
 //
 // Returns:

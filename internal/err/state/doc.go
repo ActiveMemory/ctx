@@ -15,12 +15,12 @@
 //
 // Three constructors cover the entire surface:
 //
-//   - [ReadingDir] -- the state directory could not
+//   - [ReadingDir]: the state directory could not
 //     be read. Wraps the underlying OS error.
-//   - [Load] -- a state file could not be loaded
+//   - [Load]: a state file could not be loaded
 //     (read + unmarshal). Wraps the underlying
 //     error.
-//   - [Save] -- a state file could not be saved
+//   - [Save]: a state file could not be saved
 //     (marshal + write). Wraps the underlying
 //     error.
 //

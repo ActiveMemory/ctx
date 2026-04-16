@@ -12,16 +12,16 @@
 //
 // # Public Surface
 //
-//   - [Completed] -- true when the match represents
+//   - [Completed]: true when the match represents
 //     a checked task (- [x] ...).
-//   - [Pending] -- true when the match represents
+//   - [Pending]: true when the match represents
 //     an unchecked task (- [ ] ...).
-//   - [Indent] -- returns the leading whitespace
+//   - [Indent]: returns the leading whitespace
 //     from a match, used to determine top-level
 //     versus nested tasks.
-//   - [Content] -- returns the task text from a
+//   - [Content]: returns the task text from a
 //     match, stripping the checkbox prefix.
-//   - [Sub] -- reports whether a match represents
+//   - [Sub]: reports whether a match represents
 //     a subtask (indented 2+ spaces).
 //
 // All functions operate on the result of

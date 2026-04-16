@@ -188,7 +188,7 @@ happy.
 
 Every CLI command's user-facing output lives in its own sub-package
 under `internal/write/<domain>/`. Output functions accept
-`*cobra.Command` and call `cmd.Println(...)` — never `fmt.Print*`
+`*cobra.Command` and call `cmd.Println(...)`, never `fmt.Print*`
 directly. All text strings are loaded from YAML via
 `desc.Text(text.DescKey*)`, never inline.
 
@@ -423,9 +423,9 @@ Examples:
 * Follow Go conventions (`gofmt`, `go vet`);
 * Keep functions **focused** and **small**;
 * Add tests for new functionality;
-* Handle errors explicitly — use descriptive names (`readErr`,
+* Handle errors explicitly; use descriptive names (`readErr`,
   `writeErr`) not repeated `err`;
-* No magic strings — all repeated literals go in `internal/config/`;
+* No magic strings: all repeated literals go in `internal/config/`;
 * Output goes through `internal/write/` packages, not `fmt.Print*`;
 * Errors go through `internal/err/` constructors, not inline
   `fmt.Errorf`;

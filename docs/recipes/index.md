@@ -398,7 +398,7 @@ quantified dependency data, and ranked failure hypotheses.
 
 ### [Writing Steering Files](steering.md)
 
-Tell your AI assistant **how to behave** — rule-based prompt
+Tell your AI assistant **how to behave** with rule-based prompt
 injection that fires automatically when prompts match a
 description. Walks through scaffolding a steering file,
 previewing matches, and syncing to each AI tool's native
@@ -452,8 +452,8 @@ End-to-end in under five minutes.
 projects, one hub on localhost. Records a learning in
 project A, watches it show up automatically in project B.
 Walks through a realistic day of using the hub as passive
-infrastructure — no manual `sync`, no `git push`, no
-ceremony.
+infrastructure (no manual `sync`, no `git push`, no
+ceremony).
 
 **Uses**: `ctx add --share`, `ctx connection subscribe`,
 `ctx agent --include-hub`

@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package generate builds the **top-level pages** of the
-// journal site from parsed entries — the README zensical
+// journal site from parsed entries: the README zensical
 // reads at build time, the chronological index page, and the
 // AI-generated summary insertion that decorates pages already
 // produced upstream.
@@ -17,18 +17,18 @@
 //
 // # The Surface
 //
-//   - **[SiteReadme](opts)** — produces the
+//   - **[SiteReadme](opts)**: produces the
 //     `site/README.md` zensical reads at build time.
 //     Embeds the zensical configuration block (theme,
 //     navigation, search settings) and the site-wide
 //     description. Idempotent: a call with identical
 //     `opts` produces byte-identical output.
-//   - **[Index](entries)** — produces the chronological
+//   - **[Index](entries)**: produces the chronological
 //     index page: entries grouped by month, newest at
 //     the top. Output is markdown ready to land at
 //     `site/index.md` (or `site/journal/index.md`,
 //     depending on layout).
-//   - **[InjectedSummary](existing, summary)** — splices
+//   - **[InjectedSummary](existing, summary)**: splices
 //     an AI-generated summary into existing page
 //     content **at a stable insertion point** (a
 //     marker comment) so re-running site generation

@@ -2022,8 +2022,8 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h1 id="ctx-hub-overview"><code>ctx</code> Hub: Overview<a class="headerlink" href="#ctx-hub-overview" title="Permanent link">&para;</a></h1>
 <p>Start here before the other hub recipes. This page answers <em>what</em>
-the hub is, <em>who</em> it's for, <em>why</em> you'd run one, and —
-equally important — <em>what it is not</em>.</p>
+the hub is, <em>who</em> it's for, <em>why</em> you'd run one, and,
+equally important, <em>what it is not</em>.</p>
 <h2 id="mental-model-in-one-paragraph">Mental Model in One Paragraph<a class="headerlink" href="#mental-model-in-one-paragraph" title="Permanent link">&para;</a></h2>
 <p>The hub is a <strong>fan-out channel for structured knowledge
 entries across projects</strong>. When you publish a decision, learning,
@@ -2075,23 +2075,23 @@ never rewritten.</p>
   stay local. The hub does <strong>not</strong> sync your AI session history.</li>
 <li><strong>Scratchpad</strong> (<code>.context/pad</code>) stays local. Encrypted notes
   never leave the machine they were written on.</li>
-<li><strong>Local context files</strong> as a whole — <code>TASKS.md</code>,
-  <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, <code>CONVENTIONS.md</code> — are <strong>not</strong>
+<li><strong>Local context files</strong> as a whole (<code>TASKS.md</code>,
+  <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, <code>CONVENTIONS.md</code>) are <strong>not</strong>
   mirrored wholesale. Only entries you explicitly <code>--share</code>, or
   publish later with <code>ctx connection publish</code>, cross the boundary.</li>
 <li><strong>Anything under <code>.context/</code> that isn't one of the four entry
   types above.</strong> Configuration, state, logs, memory, journal
-  metadata — all local.</li>
+  metadata: all local.</li>
 </ul>
 <p>If you were expecting "now my agent in project B can see
 everything my agent did in project A," that's not this feature.
 Local session density still lives on the local machine.</p>
 <h2 id="two-user-stories">Two User Stories<a class="headerlink" href="#two-user-stories" title="Permanent link">&para;</a></h2>
 <p>The hub makes sense in two different shapes. Pick the one that
-matches your situation — the mechanics are identical but the
+matches your situation; the mechanics are identical but the
 trust model and threat surface are very different.</p>
 <h3 id="story-1-personal-cross-project-brain">Story 1: Personal Cross-Project Brain<a class="headerlink" href="#story-1-personal-cross-project-brain" title="Permanent link">&para;</a></h3>
-<p><strong>One developer, many projects, one hub — usually on localhost.</strong></p>
+<p><strong>One developer, many projects, one hub, usually on localhost.</strong></p>
 <p>You're working across several projects on the same machine (or a
 handful of machines you own). You want a lesson learned
 debugging project A to show up when you open project B a week
@@ -2107,7 +2107,7 @@ codified in one project to be visible as-you-type in another.</p>
 <li>Cross-project conventions (e.g., "use UTC timestamps
   everywhere") live in one place and propagate.</li>
 </ul>
-<p><strong>Trust model:</strong> high — you trust every participant because every
+<p><strong>Trust model:</strong> high, because you trust every participant since every
 participant is <em>you</em>. Run the hub on localhost or on your own
 LAN, use the default single-node setup, don't worry about TLS.</p>
 <p><strong>Start here:</strong>
@@ -2177,17 +2177,17 @@ need "who wrote this," the hub is the wrong tool.</p>
   anything you wouldn't paste in a team chat.</li>
 <li><strong>Wholesale journal sharing.</strong> See "what does not flow"
   above. If that's what you want, this feature won't provide
-  it — talk to us in the issue tracker about what <em>would</em>.</li>
+  it. Talk to us in the issue tracker about what <em>would</em>.</li>
 </ul>
 <h2 id="how-entries-reach-your-agent">How Entries Reach Your Agent<a class="headerlink" href="#how-entries-reach-your-agent" title="Permanent link">&para;</a></h2>
 <p>Once a project is registered and subscribed, entries arrive by
 three mechanisms:</p>
 <ol>
-<li><strong><code>ctx connection sync</code></strong> — an on-demand pull, replays
+<li><strong><code>ctx connection sync</code></strong>: an on-demand pull, replays
    everything new since the last sequence you saw.</li>
-<li><strong><code>ctx connection listen</code></strong> — a long-lived gRPC stream that
+<li><strong><code>ctx connection listen</code></strong>: a long-lived gRPC stream that
    writes new entries to <code>.context/hub/</code> as they arrive.</li>
-<li><strong><code>check-hub-sync</code> hook</strong> — runs at session start, daily
+<li><strong><code>check-hub-sync</code> hook</strong>: runs at session start, daily
    throttled, so most users never call <code>sync</code> manually.</li>
 </ol>
 <p>Once entries exist in <code>.context/hub/</code>, <code>ctx agent

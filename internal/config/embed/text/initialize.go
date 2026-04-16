@@ -131,7 +131,7 @@ const (
 	// guidance to avoid the local-install enablement gotcha.
 	DescKeyWriteInitClaudePluginMissing = "write.init-claude-plugin-missing"
 	// DescKeyWriteInitClaudeReady is shown when claude is
-	// present and the plugin is installed and enabled — a
+	// present and the plugin is installed and enabled: a
 	// multi-line confirmation with plugin details (scope,
 	// version, source, clone path, enablement).
 	DescKeyWriteInitClaudeReady = "write.init-claude-ready"

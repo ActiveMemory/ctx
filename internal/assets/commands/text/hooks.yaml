@@ -93,10 +93,10 @@ skill-discovery.content:
   short: |-
     These skills are easy to forget mid-session:
 
-    /ctx-reflect       — checkpoint progress and learnings
-    /ctx-learning-add  — capture gotchas before moving on
-    /ctx-decision-add  — record trade-offs while fresh
-    /ctx-prompt-audit  — improve prompt clarity
+    /ctx-reflect        checkpoint progress and learnings
+    /ctx-learning-add   capture gotchas before moving on
+    /ctx-decision-add   record trade-offs while fresh
+    /ctx-prompt-audit   improve prompt clarity
 
     Use them when you hit a milestone, make a design
     choice, or discover something surprising.

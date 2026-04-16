@@ -59,7 +59,7 @@ func (f *fanOut) broadcast(entries []Entry) {
 		select {
 		case ch <- entries:
 		default:
-			// Slow listener — disconnect to prevent loss.
+			// Slow listener: disconnect to prevent loss.
 			delete(f.subs, ch)
 			close(ch)
 			f.dropped++

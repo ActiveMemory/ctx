@@ -28,8 +28,8 @@
 //
 // # Subpackages
 //
-//	cmd/add -- trigger creation and templating
-//	cmd/list -- trigger enumeration
-//	cmd/test -- mock execution
-//	cmd/enable, cmd/disable -- activation control
+//	cmd/add: trigger creation and templating
+//	cmd/list: trigger enumeration
+//	cmd/test: mock execution
+//	cmd/enable, cmd/disable: activation control
 package trigger

@@ -17,16 +17,16 @@
 //
 // # Sub-packages
 //
-//   - out -- renders drift reports as human-readable
+//   - out: renders drift reports as human-readable
 //     text (with icons and grouping) or as structured
 //     JSON for machine consumption. Exports [out.DriftText]
 //     and [out.DriftJSON].
-//   - fix -- applies automated corrections for fixable
+//   - fix: applies automated corrections for fixable
 //     drift issues. [fix.Apply] iterates the report,
 //     archiving completed tasks for staleness issues
 //     and creating files for missing-file issues.
 //     Tracks results in [fix.Result].
-//   - sanitize -- converts internal check identifiers
+//   - sanitize: converts internal check identifiers
 //     to human-readable labels via [sanitize.FormatCheckName].
 //
 // # Data Flow

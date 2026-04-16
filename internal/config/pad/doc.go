@@ -12,9 +12,9 @@
 //
 // The scratchpad lives in .context/ as two files:
 //
-//   - Enc ("scratchpad.enc") -- the encrypted file
+//   - Enc ("scratchpad.enc"): the encrypted file
 //     that is committed to the repository.
-//   - Md ("scratchpad.md") -- the plaintext working
+//   - Md ("scratchpad.md"): the plaintext working
 //     copy (gitignored).
 //
 // During merge conflicts the encrypted file may split

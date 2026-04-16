@@ -44,7 +44,7 @@ pipx install zensical
 |--------------|--------------------------------------------------|
 | `[directory]` | Directory containing a `zensical.toml` to serve |
 
-When omitted, serves `.context/journal-site` by default — the
+When omitted, serves `.context/journal-site` by default, the
 directory produced by `ctx journal site`.
 
 **Examples**:
@@ -57,9 +57,9 @@ ctx serve ./docs                  # Serve any zensical site
 
 ### See Also
 
-- [`ctx journal`](journal.md) — generate the journal site
+- [`ctx journal`](journal.md): generate the journal site
   that `ctx serve` displays.
-- [`ctx hub start`](hub.md) — for running a `ctx` Hub
+- [`ctx hub start`](hub.md): for running a `ctx` Hub
   server, not a static site.
-- [Browsing and enriching past sessions](../recipes/session-archaeology.md)
-  — the recipe that combines `ctx journal` and `ctx serve`.
+- [Browsing and enriching past sessions](../recipes/session-archaeology.md):
+  the recipe that combines `ctx journal` and `ctx serve`.

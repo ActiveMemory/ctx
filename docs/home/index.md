@@ -80,7 +80,7 @@ Flexible **configuration**: `.ctxrc`, environment variables, and CLI flags.
 ### [Hub](hub.md)
 
 A **fan-out channel** for decisions, learnings, conventions, and
-tasks that need to cross **project boundaries** — without replicating
+tasks that need to cross **project boundaries**, without replicating
 everything else.
 
 ---

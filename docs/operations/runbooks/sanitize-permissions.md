@@ -20,7 +20,7 @@ The agent may analyze and recommend, but **you** make every edit.
 
 `settings.local.json` controls what the agent can do without asking.
 An agent that can edit its own permission file is a self-escalation
-vector — especially if the skill is auto-accepted. Keep this manual.
+vector, especially if the skill is auto-accepted. Keep this manual.
 
 **When to run**: After busy sessions where you clicked "Allow" many
 times, weekly hygiene (pair with `ctx drift`), or before committing

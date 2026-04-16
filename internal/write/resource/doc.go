@@ -15,11 +15,11 @@
 //
 // # Public Surface
 //
-//   - **[Text](cmd, payload)** — renders the
-//     resource snapshot in human-readable form —
+//   - **[Text](cmd, payload)**: renders the
+//     resource snapshot in human-readable form,
 //     section headers, glyph-prefixed counts,
 //     summary line.
-//   - **[JSON](cmd, payload)** — emits the same
+//   - **[JSON](cmd, payload)**: emits the same
 //     payload as a structured JSON document with
 //     a UTC timestamp wrapper, suitable for
 //     `jq` consumption in CI.

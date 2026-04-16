@@ -16,7 +16,7 @@
 // # Set Difference
 //
 // [StringSlices] is the sole exported function. It
-// accepts two string slices -- golden and local -- and
+// accepts two string slices (golden and local) and
 // returns two result slices:
 //
 //   - restored: entries present in golden but absent

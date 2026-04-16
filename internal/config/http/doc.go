@@ -17,12 +17,12 @@
 //
 // # MIME Types
 //
-//   - MimeJSON ("application/json") -- the Content-Type
+//   - MimeJSON ("application/json"): the Content-Type
 //     header set on webhook POST requests
 //
 // # Timeouts
 //
-//   - WebhookTimeout (5 seconds) -- the HTTP client
+//   - WebhookTimeout (5 seconds): the HTTP client
 //     timeout for webhook delivery. Keeps the CLI
 //     responsive even when endpoints are slow.
 //
@@ -30,9 +30,9 @@
 //
 // Scheme identifiers for URL validation:
 //
-//   - SchemeHTTP ("http") -- plain HTTP
-//   - SchemeHTTPS ("https") -- TLS-secured HTTP
-//   - SchemeFile ("file") -- local file URLs
+//   - SchemeHTTP ("http"): plain HTTP
+//   - SchemeHTTPS ("https"): TLS-secured HTTP
+//   - SchemeFile ("file"): local file URLs
 //
 // Full scheme prefix strings for prefix matching:
 //
@@ -42,8 +42,8 @@
 //
 // # URL Path Helpers
 //
-//   - PathSep ('/') -- URL path separator as a byte
-//   - PathSepStr ("/") -- URL path separator as a
+//   - PathSep ('/'): URL path separator as a byte
+//   - PathSepStr ("/"): URL path separator as a
 //     string
 //
 // # URL Masking
@@ -52,11 +52,11 @@
 // output, ctx masks the path portion to avoid leaking
 // tokens or secrets embedded in URLs:
 //
-//   - MaskAfterSlash (3) -- number of slashes after
+//   - MaskAfterSlash (3): number of slashes after
 //     which the path is replaced (scheme://host/...)
-//   - MaskMaxLen (20) -- max visible characters when
+//   - MaskMaxLen (20): max visible characters when
 //     no third slash is found
-//   - MaskSuffix ("***") -- appended to the visible
+//   - MaskSuffix ("***"): appended to the visible
 //     portion of a masked URL
 //
 // # Why Centralized

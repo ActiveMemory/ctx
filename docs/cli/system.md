@@ -39,7 +39,7 @@ ctx system <subcommand>
 
 ## Plumbing Subcommands
 
-These are not hook handlers — they're called by skills and editor
+These are not hook handlers; they're called by skills and editor
 integrations during the session lifecycle. Safe to run manually.
 
 #### `ctx system mark-journal`

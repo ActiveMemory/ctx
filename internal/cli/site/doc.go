@@ -22,7 +22,7 @@
 //
 // # Subpackages
 //
-//	cmd/feed -- Atom feed generation from blog posts
-//	core -- blog post scanning, frontmatter parsing,
+//	cmd/feed: Atom feed generation from blog posts
+//	core: blog post scanning, frontmatter parsing,
 //	  and feed XML assembly
 package site

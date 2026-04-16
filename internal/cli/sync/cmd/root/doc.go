@@ -19,7 +19,7 @@
 //
 // # Flags
 //
-//   - **--dry-run** -- show what would change without
+//   - **--dry-run**: show what would change without
 //     modifying any files. The output lists suggested
 //     actions but does not prompt for confirmation.
 //

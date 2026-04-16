@@ -17,7 +17,7 @@
 //
 // # Key Constants
 //
-//   - [SkillManifest] — the expected filename inside
+//   - [SkillManifest]: the expected filename inside
 //     every skill directory ("SKILL.md"). The loader
 //     rejects directories that lack this file.
 //

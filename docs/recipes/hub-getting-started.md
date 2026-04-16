@@ -15,13 +15,13 @@ icon: lucide/share-2
 
 Stand up a **single-node** `ctx` Hub on localhost, register
 two projects, publish a decision from one, and see it appear in the
-other — all in under five minutes.
+other, all in under five minutes.
 
 !!! tip "Read This First"
     If you haven't already, skim the
     [`ctx` Hub overview](hub-overview.md). It explains the
     mental model, names the two user stories (personal vs small
-    team), and — importantly — lists what the hub **does not do**.
+    team), and (importantly) lists what the hub **does not do**.
     This recipe assumes you already know you want the feature.
 
 ## What You'll Get out of This Recipe
@@ -36,7 +36,7 @@ By the end, you will have:
 
 Concretely, the payoff this unlocks: a lesson you record in one
 project becomes visible to your agent the next time you open
-another project — **without** touching local files in the second
+another project, **without** touching local files in the second
 project or opening another editor window.
 
 ## What This Recipe Does *Not* Cover
@@ -46,9 +46,9 @@ project or opening another editor window.
   `convention`, and `task` entries. Everything else stays local.
 - Multi-user attribution. The hub identifies **projects**, not
   people.
-- Running over a LAN — see
+- Running over a LAN; see
   [Multi-machine setup](hub-multi-machine.md).
-- Redundancy — see [HA cluster](hub-cluster.md).
+- Redundancy; see [HA cluster](hub-cluster.md).
 
 ## Prerequisites
 
@@ -56,7 +56,7 @@ project or opening another editor window.
 - Two project directories, each already initialized with
   `ctx init`
 
-## Step 1 — Start the Hub
+## Step 1: Start the Hub
 
 In a dedicated terminal:
 
@@ -65,7 +65,7 @@ ctx hub start
 ```
 
 On first run, the hub generates an **admin token** and prints it to
-stdout. Copy it — you'll need it for each project registration:
+stdout. Copy it; you'll need it for each project registration:
 
 ```
 ctx hub listening on :9900
@@ -76,7 +76,7 @@ data dir: ~/.ctx/hub-data/
 The admin token is written to `~/.ctx/hub-data/admin.token` so you
 can recover it later. Treat it like a password.
 
-## Step 2 — Register the First Project
+## Step 2: Register the First Project
 
 ```bash
 cd ~/projects/alpha
@@ -88,7 +88,7 @@ This stores an **encrypted** connection config in
 per-project client token; the admin token itself is never persisted
 in the project.
 
-## Step 3 — Choose What to Receive
+## Step 3: Choose What to Receive
 
 ```bash
 ctx connection subscribe decision learning convention
@@ -97,7 +97,7 @@ ctx connection subscribe decision learning convention
 Only the entry types you subscribe to will be delivered by `sync`
 and `listen`.
 
-## Step 4 — Publish a Decision
+## Step 4: Publish a Decision
 
 Either use `ctx add --share` to write locally *and* push to the ctx Hub:
 
@@ -114,7 +114,7 @@ Or publish an existing entry directly:
 ctx connection publish decision "Use UTC timestamps everywhere"
 ```
 
-## Step 5 — Register a Second Project and Sync
+## Step 5: Register a Second Project and Sync
 
 ```bash
 cd ~/projects/beta
@@ -127,7 +127,7 @@ The decision from `alpha` now appears in
 `~/projects/beta/.context/hub/decisions.md` with an origin tag
 and timestamp.
 
-## Step 6 — Watch Entries Arrive Live
+## Step 6: Watch Entries Arrive Live
 
 Instead of re-running `sync`, stream new entries as they land:
 
@@ -138,7 +138,7 @@ ctx connection listen
 Leave this running in a terminal; every `--share` publish from any
 registered project will appear in `.context/hub/` immediately.
 
-## Step 7 — Feed Shared Knowledge into the Agent
+## Step 7: Feed Shared Knowledge into the Agent
 
 Once entries exist in `.context/hub/`, include them in the agent
 context packet:

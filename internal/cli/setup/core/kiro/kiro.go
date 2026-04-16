@@ -14,8 +14,8 @@ import (
 )
 
 // Deploy generates Kiro integration files:
-//  1. .kiro/settings/mcp.json — MCP server configuration
-//  2. .kiro/steering/*.md — synced steering files
+//  1. .kiro/settings/mcp.json: MCP server configuration
+//  2. .kiro/steering/*.md: synced steering files
 //
 // Skips files that already exist to avoid overwriting user customizations.
 //

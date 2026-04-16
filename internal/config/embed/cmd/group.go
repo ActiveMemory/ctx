@@ -23,7 +23,7 @@ const (
 	// GroupDiagnostics is the command group ID for diagnostics.
 	GroupDiagnostics = "diagnostics"
 	// GroupShell is the command group ID for shell-integration
-	// commands (help, completion). Kept deliberately narrow —
+	// commands (help, completion). Kept deliberately narrow:
 	// only shell-plumbing commands belong here, never
 	// domain-specific tools.
 	GroupShell = "shell"

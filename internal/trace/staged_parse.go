@@ -99,7 +99,7 @@ func parseCompletedTasks(diff string) []string {
 	return refs
 }
 
-// stagedDiff runs git diff --cached -- filePath and returns the output.
+// stagedDiff runs `git diff --cached`: filePath and returns the output.
 // Returns an empty string on any error (best-effort).
 //
 // Parameters:

@@ -34,9 +34,9 @@
 // Hook messages are rendered from Go templates. The
 // architecture hooks inject these variables:
 //
-//   - [VarLastRefreshDate] -- the ISO date of the last
+//   - [VarLastRefreshDate]: the ISO date of the last
 //     architecture refresh.
-//   - [VarModuleCount] -- the number of modules that have
+//   - [VarModuleCount]: the number of modules that have
 //     changed since the last refresh.
 //
 // # Why Centralized

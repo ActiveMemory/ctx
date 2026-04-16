@@ -16,26 +16,26 @@
 //
 // Each `tpl_*.go` file owns one rendering domain:
 //
-//   - **`tpl_entry.go`** — the canonical TASKS.md task
+//   - **`tpl_entry.go`**: the canonical TASKS.md task
 //     line and its inline tags (`#priority:`,
 //     `#session:`, `#branch:`, `#commit:`, `#added:`).
 //     Used by `ctx add task`.
-//   - **`tpl_hub_entry.go`** — markdown rendering of one
+//   - **`tpl_hub_entry.go`**: markdown rendering of one
 //     hub entry (date header + origin tag + content
 //     body + horizontal rule). Consumed by
 //     `ctx connection sync` when materializing entries
 //     into `.context/hub/`.
-//   - **`tpl_journal.go`** — the journal entry skeleton:
+//   - **`tpl_journal.go`**: the journal entry skeleton:
 //     YAML frontmatter + body shell that the importer
 //     fills in.
-//   - **`tpl_loop.go`** — the autonomous-loop shell
+//   - **`tpl_loop.go`**: the autonomous-loop shell
 //     script template (`ctx loop` output).
-//   - **`tpl_obsidian.go`** — the Obsidian vault page
+//   - **`tpl_obsidian.go`**: the Obsidian vault page
 //     templates (note frontmatter + wikilink section).
-//   - **`tpl_recall.go`** — the format the legacy
+//   - **`tpl_recall.go`**: the format the legacy
 //     `ctx recall` command used; kept here while the
 //     journal-merge transition completes.
-//   - **`tpl_trigger.go`** — the empty trigger script
+//   - **`tpl_trigger.go`**: the empty trigger script
 //     scaffold installed by `ctx trigger add`.
 //
 // # Naming Convention
@@ -49,7 +49,7 @@
 // # Migration Note
 //
 // Several templates here are migration candidates for
-// Go `text/template` — Sprintf with many positional
+// Go `text/template`; Sprintf with many positional
 // arguments is fragile. The migration is tracked in
 // TASKS.md; until then, contributors should add new
 // templates here only when the YAML text store cannot

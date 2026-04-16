@@ -16,7 +16,7 @@ icon: lucide/git-commit-horizontal
 Show the context behind git commits. Links commits back to the
 decisions, tasks, learnings, and sessions that motivated them.
 
-`git log` shows *what* changed, `git blame` shows *who* —
+`git log` shows *what* changed, `git blame` shows *who*, and
 `ctx trace` shows *why*.
 
 ```bash

@@ -12,12 +12,12 @@
 //
 // # Why Typed Errors
 //
-//   - **Stability** — error categories are part of
+//   - **Stability**: error categories are part of
 //     the public API.
-//   - **Routing** — write-side packages map error
+//   - **Routing**: write-side packages map error
 //     types to localized text via
 //     [internal/assets/read/desc].
-//   - **Wrapping** — constructors wrap the
+//   - **Wrapping**: constructors wrap the
 //     underlying cause via `%w` so callers can
 //     `errors.Is(err, os.ErrNotExist)` against
 //     system errors when needed.
@@ -33,7 +33,7 @@
 // directory the user expects to exist does not";
 // [ReadDir] wraps the underlying generic read
 // failure (permission denied, IO error, etc.).
-// The CLI surfaces them differently — the former
+// The CLI surfaces them differently: the former
 // suggests `ctx init`, the latter suggests
 // checking permissions.
 //

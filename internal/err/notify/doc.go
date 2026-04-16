@@ -14,12 +14,12 @@
 //
 // Errors fall into three categories:
 //
-//   - **Validation** -- the webhook URL is blank.
+//   - **Validation**: the webhook URL is blank.
 //     Constructor: [WebhookEmpty].
-//   - **Persistence** -- saving or loading the
+//   - **Persistence**: saving or loading the
 //     encrypted webhook configuration failed.
 //     Constructors: [SaveWebhook], [LoadWebhook].
-//   - **Delivery** -- marshaling the JSON payload
+//   - **Delivery**: marshaling the JSON payload
 //     or sending the HTTP request failed.
 //     Constructors: [MarshalPayload],
 //     [SendNotification].

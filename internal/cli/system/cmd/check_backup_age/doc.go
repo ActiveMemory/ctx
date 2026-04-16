@@ -13,11 +13,11 @@
 //
 // The hook runs two checks at session start:
 //
-//  1. **SMB mount check** -- if the CTX_BACKUP_SMB_URL
+//  1. **SMB mount check**: if the CTX_BACKUP_SMB_URL
 //     environment variable is set, verifies that the
 //     SMB share is currently mounted. If not, adds a
 //     warning.
-//  2. **Backup marker freshness** -- reads the backup
+//  2. **Backup marker freshness**: reads the backup
 //     marker file (~/.ctx-backup/last-backup) and warns
 //     if the last backup timestamp exceeds the maximum
 //     age threshold.

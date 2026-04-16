@@ -1932,22 +1932,22 @@ Instead, it defines a persistent context layer that RAG can optionally augment.<
 </ul>
 <p><code>ctx</code> is intentionally:</p>
 <ul>
-<li><strong>local-first</strong> — context lives next to your code, not
+<li><strong>local-first</strong>: context lives next to your code, not
   behind a service boundary.</li>
-<li><strong>file-based</strong> — everything important is a markdown
+<li><strong>file-based</strong>: everything important is a markdown
   file you can read, diff, grep, and version-control.</li>
-<li><strong>single-binary core</strong> — the context persistence path
+<li><strong>single-binary core</strong>: the context persistence path
   (<code>init</code>, <code>add</code>, <code>agent</code>, <code>status</code>, <code>drift</code>, <code>load</code>,
   <code>sync</code>, <code>compact</code>, <code>task</code>, <code>decision</code>, <code>learning</code>, and
   their siblings) is a single Go binary with no required
-  runtime dependencies. Optional integrations — <code>ctx
+  runtime dependencies. Optional integrations (<code>ctx
   trace</code> (needs <code>git</code>), <code>ctx serve</code> (needs <code>zensical</code>),
   the <code>ctx</code> Hub (needs a running hub), Claude Code
-  plugin (needs <code>claude</code>) — are opt-in and each declares
+  plugin (needs <code>claude</code>)) are opt-in and each declares
   its dependency explicitly.</li>
-<li><strong>CLI-driven</strong> — every feature is reachable from the
+<li><strong>CLI-driven</strong>: every feature is reachable from the
   command line and scriptable.</li>
-<li><strong>developer-controlled</strong> — no auto-updating cloud
+<li><strong>developer-controlled</strong>: no auto-updating cloud
   service, no telemetry, no account to sign up for.</li>
 </ul>
 <p>The core <code>ctx</code> binary does not require:</p>

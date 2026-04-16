@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package project handles **project-root scaffolding** during
-// `ctx init` — creating the `.context/` directory tree with
+// `ctx init`: creating the `.context/` directory tree with
 // the right permissions and deploying optional Makefile
 // integration when the host project already uses Make.
 //
@@ -15,12 +15,12 @@
 //
 // # Public Surface
 //
-//   - **[CreateDirs](contextDir)** — creates the
+//   - **[CreateDirs](contextDir)**: creates the
 //     `.context/` tree:
 //   - `.context/`          (0o755)
 //   - `.context/archive/`  for archived tasks/decisions
 //   - `.context/state/`    for per-session markers,
-//     events, trace history (mode 0o755 — readable by
+//     events, trace history (mode 0o755, readable by
 //     hooks)
 //   - `.context/journal/`  for enriched journal entries
 //   - `.context/memory/`   for the Claude-Code memory
@@ -30,7 +30,7 @@
 //     lifecycle scripts
 //     Idempotent: existing directories are left in place
 //     with their existing permissions.
-//   - **[HandleMakefileCtx](projectRoot)** — when a
+//   - **[HandleMakefileCtx](projectRoot)**: when a
 //     `Makefile` already exists at the project root,
 //     deploys `Makefile.ctx` from the embedded template
 //     so users can run `make ctx-status`, `make

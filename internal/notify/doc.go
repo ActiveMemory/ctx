@@ -21,13 +21,13 @@
 //  1. **Setup** ([SaveWebhook]) encrypts a webhook URL with
 //     AES-256-GCM ([internal/crypto]) and writes
 //     `.context/.notify.enc`. The same per-machine key
-//     protects the scratchpad — a fresh key is generated and
+//     protects the scratchpad; a fresh key is generated and
 //     saved on first use if none exists.
 //  2. **Send** ([Send]) loads + decrypts the URL via
 //     [LoadWebhook], gates on the configured event filter
 //     via [EventAllowed], builds an [entity.NotifyPayload],
 //     and ships it to [PostJSON].
-//  3. **PostJSON** does the actual HTTP — short timeout,
+//  3. **PostJSON** does the actual HTTP: short timeout,
 //     `Content-Type: application/json`, single attempt, no
 //     retry. The intent is "best-effort signal", not "guaranteed
 //     delivery".
@@ -72,5 +72,5 @@
 //
 // All exported functions are safe to call concurrently;
 // they hold no module-level state. The HTTP client is the
-// stdlib default — connection-pooled and goroutine-safe.
+// stdlib default, connection-pooled and goroutine-safe.
 package notify

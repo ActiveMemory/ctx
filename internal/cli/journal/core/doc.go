@@ -19,15 +19,15 @@
 //
 // The journal pipeline flows through these stages:
 //
-//  1. plan -- scans session files and builds an import
+//  1. plan: scans session files and builds an import
 //     plan of file actions (new, regenerate, skip).
-//  2. confirm -- presents the plan summary and prompts
+//  2. confirm: presents the plan summary and prompts
 //     for user confirmation.
-//  3. execute -- writes journal entries to disk,
+//  3. execute: writes journal entries to disk,
 //     preserving existing frontmatter on regeneration.
-//  4. normalize -- cleans up content boundaries and
+//  4. normalize: cleans up content boundaries and
 //     formatting.
-//  5. generate -- builds site indexes, maps of content,
+//  5. generate: builds site indexes, maps of content,
 //     and navigation pages.
 //
 // Each stage is idempotent and tracks progress via a
@@ -35,30 +35,30 @@
 //
 // # Sub-packages
 //
-//   - collapse -- collapses verbose tool output blocks
-//   - confirm -- user confirmation prompts
-//   - consolidate -- merges repeated tool runs
-//   - execute -- import plan execution
-//   - extract -- YAML frontmatter extraction
-//   - format -- size, slug, and link formatting
-//   - frontmatter -- frontmatter parsing and types
-//   - generate -- site and index generation
-//   - group -- entry grouping by topic
-//   - index -- journal index management
-//   - lock -- concurrent access locking
-//   - moc -- map of content generation
-//   - normalize -- content boundary normalisation
-//   - obsidian -- Obsidian vault builder
-//   - parse -- session JSONL parsing
-//   - plan -- import planning
-//   - query -- journal entry querying
-//   - reduce -- content reduction
-//   - schema -- schema validation
-//   - section -- section indexing
-//   - session -- session metadata
-//   - slug -- filename slug generation
-//   - source -- source file listing and formatting
-//   - turn -- turn header and body extraction
-//   - validate -- entry validation
-//   - wikilink -- wikilink processing
+//   - collapse: collapses verbose tool output blocks
+//   - confirm: user confirmation prompts
+//   - consolidate: merges repeated tool runs
+//   - execute: import plan execution
+//   - extract: YAML frontmatter extraction
+//   - format: size, slug, and link formatting
+//   - frontmatter: frontmatter parsing and types
+//   - generate: site and index generation
+//   - group: entry grouping by topic
+//   - index: journal index management
+//   - lock: concurrent access locking
+//   - moc: map of content generation
+//   - normalize: content boundary normalisation
+//   - obsidian: Obsidian vault builder
+//   - parse: session JSONL parsing
+//   - plan: import planning
+//   - query: journal entry querying
+//   - reduce: content reduction
+//   - schema: schema validation
+//   - section: section indexing
+//   - session: session metadata
+//   - slug: filename slug generation
+//   - source: source file listing and formatting
+//   - turn: turn header and body extraction
+//   - validate: entry validation
+//   - wikilink: wikilink processing
 package core

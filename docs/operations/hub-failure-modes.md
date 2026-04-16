@@ -34,7 +34,7 @@ its last-seen sequence; the hub replays everything newer.
 **What you should do:** nothing. If reconnects are looping, check
 firewall state on the hub and `ctx hub status` output.
 
-### Partition — Majority Side Reachable
+### Partition: Majority Side Reachable
 
 **What happens:** clients routed to the majority side continue to
 publish and listen. The minority nodes step down to followers
@@ -43,7 +43,7 @@ that cannot accept writes (Raft quorum lost).
 **What you should do:** let it heal. When the partition closes,
 followers catch up via sequence-based sync automatically.
 
-### Partition — Split Brain (No Quorum)
+### Partition: Split Brain (No Quorum)
 
 **What happens:** no node holds a majority, so no leader is
 elected. All nodes become read-only. `ctx connection publish` and
@@ -74,7 +74,7 @@ retry; followers keep their in-sync status using whatever the
 leader already wrote.
 
 **What you should do:** free disk or grow the volume, then
-nothing else — the hub resumes accepting writes on the next
+nothing else; the hub resumes accepting writes on the next
 append attempt.
 
 ### Corrupt `entries.jsonl`
@@ -95,7 +95,7 @@ someone copied one file without the other.
 
 **What you should do:** restore both files from the same backup,
 or accept the higher sequence by regenerating `meta.json` from
-`entries.jsonl` (manual for now — file a bug).
+`entries.jsonl` (manual for now; file a bug).
 
 ## Cluster
 
@@ -109,7 +109,7 @@ writes drain. Clients reconnect to the new leader transparently.
 
 **What happens:** Raft detects the missing heartbeat and elects
 a new leader within a few seconds. Writes the old leader accepted
-**but had not yet replicated** can be lost — see the Raft-lite
+**but had not yet replicated** can be lost. See the Raft-lite
 warning in [the cluster recipe](../recipes/hub-cluster.md).
 
 **What you should do:** if you need stronger durability, run
@@ -134,7 +134,7 @@ pass) and replay them with `ctx connection publish`.
 
 **What you should do:** retrieve it from
 `<data-dir>/admin.token`. If that file is also gone, stop the hub
-and regenerate — note that **all existing client tokens keep
+and regenerate. Note that **all existing client tokens keep
 working**; only new registrations need the admin token.
 
 ### Compromised Admin Token
@@ -161,7 +161,7 @@ token compromise.
 `clients.json`, restart the hub, and re-register the legitimate
 project with a fresh token. Audit `entries.jsonl` for entries
 published after the compromise timestamp and quarantine any
-that look suspicious — remember that `Origin` on those entries
+that look suspicious; remember that `Origin` on those entries
 proves nothing.
 
 ### Compromised Hub Host
@@ -194,10 +194,10 @@ clock is the culprit.
 | Symptom                           | First thing to check              |
 |-----------------------------------|-----------------------------------|
 | Client can't reach hub            | Firewall, then `ctx hub status`   |
-| "No leader" errors                | Cluster quorum — run `ctx hub status` on each peer |
+| "No leader" errors                | Cluster quorum; run `ctx hub status` on each peer |
 | Hub won't start after crash       | Last line of `entries.jsonl`      |
 | Entries missing after restore     | Check `clients.json` sequence vs local `.sync-state.json` |
-| Duplicate entries in shared feed  | Client replayed after restore — safe, dedup by ID |
+| Duplicate entries in shared feed  | Client replayed after restore, safe (dedup by ID) |
 | Followers lagging                 | Disk or network on the follower, not the leader |
 
 ## See Also

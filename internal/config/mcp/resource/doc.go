@@ -23,23 +23,23 @@
 //
 // # Key Constants
 //
-//   - [Constitution]  -- CONSTITUTION.md, the hard
+//   - [Constitution] : CONSTITUTION.md, the hard
 //     rules the agent must never violate.
-//   - [Tasks]         -- TASKS.md, the current work
+//   - [Tasks]        : TASKS.md, the current work
 //     items and their status.
-//   - [Conventions]   -- CONVENTIONS.md, coding
+//   - [Conventions]  : CONVENTIONS.md, coding
 //     patterns and standards.
-//   - [Architecture]  -- ARCHITECTURE.md, the system
+//   - [Architecture] : ARCHITECTURE.md, the system
 //     architecture overview.
-//   - [Decisions]     -- DECISIONS.md, architectural
+//   - [Decisions]    : DECISIONS.md, architectural
 //     decisions with rationale.
-//   - [Learnings]     -- LEARNINGS.md, gotchas and
+//   - [Learnings]    : LEARNINGS.md, gotchas and
 //     lessons learned.
-//   - [Glossary]      -- GLOSSARY.md, project-specific
+//   - [Glossary]     : GLOSSARY.md, project-specific
 //     terminology definitions.
-//   - [Playbook]      -- AGENT_PLAYBOOK.md, the agent
+//   - [Playbook]     : AGENT_PLAYBOOK.md, the agent
 //     operating manual.
-//   - [Agent]         -- the assembled context packet
+//   - [Agent]        : the assembled context packet
 //     (output of ctx agent).
 //
 // # Why These Are Centralized

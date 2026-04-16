@@ -11,30 +11,30 @@
 // (collated month/topic groupings) the site renderer drops
 // into the navigation tree.
 //
-// The package is one of three site-rendering helpers — the
+// The package is one of three site-rendering helpers; the
 // other two are [moc] (Maps of Content for both the site and
 // Obsidian) and [generate] (top-level page templates).
 //
 // # The Surface
 //
-//   - **[BuildTopicIndex](entries, threshold)** — buckets
+//   - **[BuildTopicIndex](entries, threshold)**: buckets
 //     entries by topic (frontmatter `topics:` list).
 //     Topics that appear in fewer than `threshold` entries
 //     are folded into a tail "other" bucket so the index
 //     stays readable as the journal grows. Returns a
 //     [TopicIndex] keyed by canonical topic slug.
-//   - **[GenerateTopicsIndex](idx)** — renders the
+//   - **[GenerateTopicsIndex](idx)**: renders the
 //     topics-overview page: every topic name + entry
 //     count, sorted by popularity descending. Output is
 //     a `string` ready to be written to
 //     `site/topics/index.md`.
-//   - **[GenerateTopicPage](topic, entries)** — renders a
+//   - **[GenerateTopicPage](topic, entries)**: renders a
 //     single topic's entry list (date + title + slug
 //     link). Used per-topic by the site builder to
 //     produce `site/topics/<slug>.md`.
-//   - **[WriteFormatted](sb, entries)** — appends a
+//   - **[WriteFormatted](sb, entries)**: appends a
 //     formatted entry list into a `*strings.Builder`.
-//   - **[WriteMonths](sb, entries)** — appends entries
+//   - **[WriteMonths](sb, entries)**: appends entries
 //     grouped by year-month with month sub-headings.
 //
 // # Popularity Threshold

@@ -15,18 +15,18 @@
 //
 // # Public Surface
 //
-//   - **[Transform](raw)** — converts a raw frontmatter
+//   - **[Transform](raw)**: converts a raw frontmatter
 //     map (untyped, just-parsed YAML) into the
 //     normalized journal frontmatter shape: enforces
 //     field types, fills in defaults, drops fields the
 //     schema does not recognize. Used by the importer
 //     when ingesting hand-edited entries.
-//   - **[ExtractStringSlice](m, key)** — safely pulls a
+//   - **[ExtractStringSlice](m, key)**: safely pulls a
 //     `[]string` from a `map[string]any`, tolerating
 //     both `[]string` and `[]any` source types (YAML
 //     decoders produce one or the other depending on
 //     content). Returns nil when the key is missing.
-//   - **[Obsidian]** — the Obsidian-vault frontmatter
+//   - **[Obsidian]**: the Obsidian-vault frontmatter
 //     struct: subset/extension of the canonical shape
 //     with additional `aliases:`, `tags:`, and graph
 //     metadata Obsidian renders.

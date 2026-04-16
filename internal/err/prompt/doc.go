@@ -14,11 +14,11 @@
 //
 // Errors fall into two categories:
 //
-//   - **Template IO** -- an embedded template could
+//   - **Template IO**: an embedded template could
 //     not be found, listed, or read.
 //     Constructors: [NoTemplate], [ListTemplates],
 //     [ReadTemplate].
-//   - **Template validation** -- a template is
+//   - **Template validation**: a template is
 //     missing required section markers (e.g. ctx
 //     or prompt markers). Constructors:
 //     [TemplateMissingMarkers], [MarkerNotFound].

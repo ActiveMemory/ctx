@@ -15,7 +15,7 @@ icon: lucide/zap
 
 Manage **lifecycle triggers**: executable scripts that fire at
 specific events during an AI session. Triggers can block tool
-calls, inject context, automate reactions — any side effect
+calls, inject context, and automate reactions: any side effect
 you want at session boundaries, tool boundaries, or file-save
 events.
 
@@ -189,7 +189,7 @@ ctx trigger disable inject-context
 # Disabled .context/hooks/session-start/inject-context.sh
 ```
 
-### Three Hooking Concepts in ctx — Don't Confuse Them
+### Three Hooking Concepts in ctx (Don't Confuse Them)
 
 This is a common source of confusion. `ctx` has three
 distinct hook-like layers, and they serve different purposes:
@@ -204,12 +204,12 @@ Use `ctx trigger` when you want project-specific automation
 that your AI tool will run at lifecycle events. Use Claude
 Code hooks for tool-specific integrations that don't need to
 be portable across tools. `ctx system` hooks are not something
-you author — they're the internal nudge machinery that ships
+you author; they're the internal nudge machinery that ships
 with ctx.
 
 ### See Also
 
-- [`ctx steering`](steering.md) — persistent AI behavioral
+- [`ctx steering`](steering.md): persistent AI behavioral
   rules (a different concept; rules vs scripts)
-- [Authoring triggers recipe](../recipes/triggers.md) — a
+- [Authoring triggers recipe](../recipes/triggers.md): a
   full walkthrough with security guidance

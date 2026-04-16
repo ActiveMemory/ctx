@@ -18,7 +18,7 @@
 //
 // # Subpackages
 //
-//	cmd/root -- cobra command definition and pause
+//	cmd/root: cobra command definition and pause
 //	  state clearing
 //
 // [Cmd] returns the cobra command that clears the pause

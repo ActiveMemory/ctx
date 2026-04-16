@@ -26,9 +26,9 @@
 //
 // # Key Constants
 //
-//   - File ("reminders.json") -- the session-scoped
+//   - File ("reminders.json"): the session-scoped
 //     reminder storage file in .context/.
-//   - VarList ("ReminderList") -- template variable
+//   - VarList ("ReminderList"): template variable
 //     for the formatted reminder list injected into
 //     hook messages.
 //

@@ -16,16 +16,16 @@
 //
 // # Public Surface
 //
-//   - **[Defs]** — the slice of tool definitions
+//   - **[Defs]**: the slice of tool definitions
 //     advertised in `tools/list`. Each definition
 //     carries a name, description, JSON-schema
 //     parameters, and an "annotations" map for
 //     UI hints.
-//   - **[MergeProps](base, extra)** — composes two
+//   - **[MergeProps](base, extra)**: composes two
 //     property maps so a tool can layer its
 //     specific arguments on top of the shared
 //     entry-attribute boilerplate.
-//   - **[EntryAttrProps]** — the canonical property
+//   - **[EntryAttrProps]**: the canonical property
 //     map shared by `ctx_add` variants (priority,
 //     branch, commit, session-id, etc.) so the
 //     four entry-add tools have an identical

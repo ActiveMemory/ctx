@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package task implements the **`ctx task`** command group:
-// task completion, archival, and snapshots — the lifecycle
+// task completion, archival, and snapshots, the lifecycle
 // operations on `TASKS.md`.
 //
 // `TASKS.md` is the project's living checklist. Phase
@@ -16,17 +16,17 @@
 //
 // # Subcommands
 //
-//   - **`ctx task complete [number|text]`** — flips a
+//   - **`ctx task complete [number|text]`**: flips a
 //     task from `[ ]` to `[x]`. Match by phase-relative
 //     number (e.g. `3`), partial text, or full text in
 //     quotes. See [internal/cli/task/cmd/complete].
-//   - **`ctx task archive [--dry-run]`** — moves
+//   - **`ctx task archive [--dry-run]`**: moves
 //     completed top-level tasks into a dated
 //     `.context/archive/tasks-YYYY-MM-DD.md` file,
 //     preserving phase structure. See
 //     [internal/cli/task/cmd/archive] (delegates to
 //     [internal/tidy.WriteArchive]).
-//   - **`ctx task snapshot [name]`** — copies the
+//   - **`ctx task snapshot [name]`**: copies the
 //     current TASKS.md verbatim to
 //     `.context/archive/snapshots/<ts>-<name>.md`. No
 //     mutation of the source. Used before a major
@@ -39,12 +39,12 @@
 //
 //   - **Tasks stay in their Phase section permanently**.
 //   - **Phase headers are never removed or renamed**.
-//   - **Tasks are never deleted** — only marked
+//   - **Tasks are never deleted**, only marked
 //     `[x]` (completed) or `[-]` (skipped).
-//   - **Archival ≠ deletion** — archived tasks land in
+//   - **Archival ≠ deletion**: archived tasks land in
 //     the archive file, not `/dev/null`.
 //
-// This package enforces all four. `ctx task complete`
+// This package enforces all four: `ctx task complete`
 // uses status flips, never moves. `ctx task archive`
 // uses [internal/tidy] which preserves phase structure
 // in the archive output.

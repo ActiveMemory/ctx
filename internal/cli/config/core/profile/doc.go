@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package profile manages **`.ctxrc` profile detection,
-// copying, and switching** — the engine behind
+// copying, and switching**, the engine behind
 // `ctx config switch` that lets a user toggle between
 // (typically) `dev` and `base` configurations without
 // hand-editing `.ctxrc`.
@@ -18,10 +18,10 @@
 // Profiles are stored as **per-profile files** in the
 // project root:
 //
-//   - `.ctxrc`             — the active configuration.
-//   - `.ctxrc.dev`         — the dev profile (verbose
+//   - `.ctxrc`: the active configuration.
+//   - `.ctxrc.dev`: the dev profile (verbose
 //     logs, webhook events, ...).
-//   - `.ctxrc.base`        — the base / production
+//   - `.ctxrc.base`: the base / production
 //     profile (clean defaults).
 //
 // `prod` is recognized as an alias for `base`. New
@@ -29,16 +29,16 @@
 //
 // # Public Surface
 //
-//   - **[Active]** — returns the name of the
+//   - **[Active]**: returns the name of the
 //     currently-active profile (read from `.ctxrc`'s
 //     `profile:` field).
-//   - **[Detect](root)** — lists every available
+//   - **[Detect](root)**: lists every available
 //     profile (by glob).
-//   - **[Switch](root, name)** — copies
+//   - **[Switch](root, name)**: copies
 //     `.ctxrc.<name>` over `.ctxrc`. Atomic via the
 //     standard write-temp-rename pattern. Refuses
 //     to switch to an unknown profile.
-//   - **[GitRoot]** — resolves the project's git
+//   - **[GitRoot]**: resolves the project's git
 //     root for path operations (the profile files
 //     live there, not in the current working
 //     subdirectory).

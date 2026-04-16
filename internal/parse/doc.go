@@ -14,23 +14,23 @@
 //
 // # Functions
 //
-//   - **[Date](s)** — parses `YYYY-MM-DD` into a
+//   - **[Date](s)**: parses `YYYY-MM-DD` into a
 //     `time.Time` at midnight UTC. Empty input returns the
 //     zero time with no error so callers can branch on
 //     `.IsZero()` instead of comparing strings.
-//   - **[SplitFrontmatter](data)** — splits a `---`-fenced
+//   - **[SplitFrontmatter](data)**: splits a `---`-fenced
 //     YAML frontmatter from the markdown body and returns
 //     the two byte slices plus a parse error. Used by the
 //     skill, steering, and journal-entry parsers.
-//   - **[StripSystemReminders](text)** — Claude Code injects
+//   - **[StripSystemReminders](text)**: Claude Code injects
 //     `<system-reminder>` tags into tool results that the
 //     user did not write. This function strips them so the
 //     journal pipeline records what the user actually said.
-//   - **[FixCodeFenceSpacing](text)** — users often type
+//   - **[FixCodeFenceSpacing](text)**: users often type
 //     `text: ```code` without proper line spacing around
 //     the fence; this function normalizes the spacing so
 //     the renderer treats it as a code block.
-//   - **[WordSet](words)** — builds a `map[string]struct{}`
+//   - **[WordSet](words)**: builds a `map[string]struct{}`
 //     from a slice for O(1) membership; used by the
 //     classifier and several lint helpers.
 //

@@ -14,9 +14,9 @@
 // The hook scans recent journal files for evidence of
 // two session ceremonies:
 //
-//   - **/ctx-remember** -- the start-of-session
+//   - **/ctx-remember**: the start-of-session
 //     context recall ceremony.
-//   - **/ctx-wrap-up** -- the end-of-session
+//   - **/ctx-wrap-up**: the end-of-session
 //     persistence ceremony.
 //
 // When either ceremony is absent from the lookback

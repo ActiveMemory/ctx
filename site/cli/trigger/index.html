@@ -1265,7 +1265,7 @@
   <a href="#three-hooking-concepts-in-ctx-dont-confuse-them" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Three Hooking Concepts in ctx — Don't Confuse Them
+        Three Hooking Concepts in ctx (Don't Confuse Them)
       
     </span>
   </a>
@@ -2068,7 +2068,7 @@
   <a href="#three-hooking-concepts-in-ctx-dont-confuse-them" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Three Hooking Concepts in ctx — Don't Confuse Them
+        Three Hooking Concepts in ctx (Don't Confuse Them)
       
     </span>
   </a>
@@ -2181,7 +2181,7 @@
 <h2 id="ctx-trigger"><code>ctx trigger</code><a class="headerlink" href="#ctx-trigger" title="Permanent link">&para;</a></h2>
 <p>Manage <strong>lifecycle triggers</strong>: executable scripts that fire at
 specific events during an AI session. Triggers can block tool
-calls, inject context, automate reactions — any side effect
+calls, inject context, and automate reactions: any side effect
 you want at session boundaries, tool boundaries, or file-save
 events.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>trigger<span class="w"> </span>&lt;subcommand&gt;
@@ -2344,7 +2344,7 @@ Searches every trigger-type directory for a script matching
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>trigger<span class="w"> </span>disable<span class="w"> </span>inject-context
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Disabled .context/hooks/session-start/inject-context.sh</span>
 </span></code></pre></div>
-<h3 id="three-hooking-concepts-in-ctx-dont-confuse-them">Three Hooking Concepts in ctx — Don't Confuse Them<a class="headerlink" href="#three-hooking-concepts-in-ctx-dont-confuse-them" title="Permanent link">&para;</a></h3>
+<h3 id="three-hooking-concepts-in-ctx-dont-confuse-them">Three Hooking Concepts in ctx (Don't Confuse Them)<a class="headerlink" href="#three-hooking-concepts-in-ctx-dont-confuse-them" title="Permanent link">&para;</a></h3>
 <p>This is a common source of confusion. <code>ctx</code> has three
 distinct hook-like layers, and they serve different purposes:</p>
 <table>
@@ -2381,13 +2381,13 @@ distinct hook-like layers, and they serve different purposes:</p>
 that your AI tool will run at lifecycle events. Use Claude
 Code hooks for tool-specific integrations that don't need to
 be portable across tools. <code>ctx system</code> hooks are not something
-you author — they're the internal nudge machinery that ships
+you author; they're the internal nudge machinery that ships
 with ctx.</p>
 <h3 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="../steering/"><code>ctx steering</code></a> — persistent AI behavioral
+<li><a href="../steering/"><code>ctx steering</code></a>: persistent AI behavioral
   rules (a different concept; rules vs scripts)</li>
-<li><a href="../../recipes/triggers/">Authoring triggers recipe</a> — a
+<li><a href="../../recipes/triggers/">Authoring triggers recipe</a>: a
   full walkthrough with security guidance</li>
 </ul>
 

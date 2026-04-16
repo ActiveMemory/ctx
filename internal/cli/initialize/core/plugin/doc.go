@@ -5,16 +5,16 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package plugin handles **Claude Code plugin enablement**
-// during `ctx init` — the read/write side of the same
+// during `ctx init`, the read/write side of the same
 // settings files that
 // [internal/cli/initialize/core/claude_check] only reads.
 //
 // Claude Code keeps two layers of plugin state:
 //
-//   - **Global** — `~/.claude/settings.json`'s
+//   - **Global**: `~/.claude/settings.json`'s
 //     `enabledPlugins` map. Affects every project on the
 //     machine.
-//   - **Local** — `<project>/.claude/settings.local.json`'s
+//   - **Local**: `<project>/.claude/settings.local.json`'s
 //     `enabledPlugins` map. Affects only this project.
 //
 // Both can independently mark a plugin as enabled. ctx
@@ -24,15 +24,15 @@
 //
 // # Public Surface
 //
-//   - **[Installed](pluginID)** — true when the plugin
+//   - **[Installed](pluginID)**: true when the plugin
 //     binary is registered in
 //     `~/.claude/plugins/installed_plugins.json`.
-//   - **[EnabledGlobally](pluginID)** — true when the
+//   - **[EnabledGlobally](pluginID)**: true when the
 //     plugin is enabled in the global settings file.
-//   - **[EnabledLocally](projectRoot, pluginID)** —
+//   - **[EnabledLocally](projectRoot, pluginID)**:
 //     true when the plugin is enabled in the project's
 //     local settings file.
-//   - **[EnableGlobally](pluginID)** — atomically merges
+//   - **[EnableGlobally](pluginID)**: atomically merges
 //     the plugin into the global `enabledPlugins` map.
 //     Idempotent. Creates the settings file if missing.
 //

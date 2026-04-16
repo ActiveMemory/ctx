@@ -28,7 +28,7 @@ func (p *Copilot) applyScalarPatch(
 		return
 	}
 
-	// Handle requests.<N>.result patches — these contain token counts
+	// Handle requests.<N>.result patches: these contain token counts
 	if path[0] == cfgCopilot.KeyRequests &&
 		len(path) == 3 && path[2] == cfgCopilot.KeyResult {
 		idx, parseErr := strconv.Atoi(path[1])

@@ -15,28 +15,28 @@
 //
 // # JSON-RPC 2.0
 //
-//   - **[Request]** — `jsonrpc`, `id`, `method`,
+//   - **[Request]**: `jsonrpc`, `id`, `method`,
 //     `params`. `id` may be string, number, or null per
 //     the spec.
-//   - **[Response]** — `jsonrpc`, `id`, plus exactly
+//   - **[Response]**: `jsonrpc`, `id`, plus exactly
 //     one of `result` / `error`.
-//   - **[Error]** — `code`, `message`, optional `data`.
+//   - **[Error]**: `code`, `message`, optional `data`.
 //     The standard error codes ([CodeParseError],
 //     [CodeInvalidRequest], etc.) are exported as
 //     constants.
-//   - **[Notification]** — `Request` without an `id`,
+//   - **[Notification]**: `Request` without an `id`,
 //     used for one-way messages (logging, progress).
 //
 // # MCP Extensions
 //
 // MCP layers these methods on top of JSON-RPC:
 //
-//   - **`tools/list` / `tools/call`** — for tool
+//   - **`tools/list` / `tools/call`**: for tool
 //     dispatch.
-//   - **`prompts/list` / `prompts/get`** — for
+//   - **`prompts/list` / `prompts/get`**: for
 //     server-curated prompts.
 //   - **`resources/list` / `resources/read` /
-//     `resources/subscribe`** — for server-exposed
+//     `resources/subscribe`**: for server-exposed
 //     resources.
 //
 // Each method has a typed request and response struct

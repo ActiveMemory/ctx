@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package state manages the **journal processing state**
-// stored in `.context/journal/.state.json` — a denormalized
+// stored in `.context/journal/.state.json`, a denormalized
 // JSON index that tracks, for each raw session source, where
 // it is in the import → normalize → enrich → wrap pipeline
 // and whether it is locked against re-import.
@@ -15,7 +15,7 @@
 // The original design embedded markers in the journal files
 // themselves (`<!-- normalized: ... -->`, etc.). That broke
 // when a journal entry's body legitimately contained one of
-// those marker strings — the parser saw a false positive and
+// those marker strings; the parser saw a false positive and
 // concluded the entry had been processed when it had not.
 //
 // Moving state out of the file body fixes the false-positive
@@ -27,23 +27,23 @@
 // `.state.json` is a `map[sourceID]Record` where each
 // [Record] tracks:
 //
-//   - **stage** — current pipeline stage (one of
+//   - **stage**: current pipeline stage (one of
 //     [ValidStages]: imported, normalized, enriched,
 //     wrapped, indexed).
-//   - **locked** — true when the entry is protected
+//   - **locked**: true when the entry is protected
 //     from re-import regeneration.
-//   - **part** — for multipart entries, which part this
+//   - **part**: for multipart entries, which part this
 //     record refers to.
-//   - **filename** — the on-disk filename the importer
+//   - **filename**: the on-disk filename the importer
 //     produced for this source.
 //
 // # Public Surface
 //
-//   - **[Load](journalDir)** — reads `.state.json` and
+//   - **[Load](journalDir)**: reads `.state.json` and
 //     returns the deserialized map. Returns an empty
-//     map (not an error) when the file is missing —
+//     map (not an error) when the file is missing;
 //     fresh projects have no state yet.
-//   - **[ValidStages]** — canonical stage names in
+//   - **[ValidStages]**: canonical stage names in
 //     pipeline order. Stage advancement is forward-only
 //     in normal flow; re-import (`--regenerate`) resets
 //     to "imported".

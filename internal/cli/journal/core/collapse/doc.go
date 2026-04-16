@@ -5,9 +5,9 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package collapse condenses **large tool-output blocks** in
-// journal markdown — the multi-thousand-line shell pastes
+// journal markdown, the multi-thousand-line shell pastes
 // and `ls`/`grep` outputs that bloat an entry without
-// adding much signal — into expandable summaries that show
+// adding much signal, into expandable summaries that show
 // the first few lines and offer the rest under a
 // `<details>` toggle.
 //
@@ -18,7 +18,7 @@
 //
 // # Public Surface
 //
-//   - **[ToolOutputs](content, opts)** — finds tool-output
+//   - **[ToolOutputs](content, opts)**: finds tool-output
 //     code blocks larger than a configurable line
 //     threshold and replaces them with a `<details>`
 //     summary block:
@@ -38,7 +38,7 @@
 // # Why Not Just Truncate?
 //
 // Truncating loses information. The journal entry is a
-// **record** — the user may need the full output later
+// **record**; the user may need the full output later
 // to reconstruct what happened. Collapsing wins on both
 // fronts: the rendered page is short and skimmable, the
 // raw markdown still contains every byte of the original

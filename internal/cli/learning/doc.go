@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package learning implements the **`ctx learning`**
-// command group for managing `LEARNINGS.md` — currently
+// command group for managing `LEARNINGS.md`, currently
 // just the `reindex` subcommand that regenerates the
 // quick-reference index table at the top of the file.
 //
@@ -18,7 +18,7 @@
 //
 // # Subcommands
 //
-//   - **`ctx learning reindex`** — rebuilds the index
+//   - **`ctx learning reindex`**: rebuilds the index
 //     table by parsing every entry header in
 //     `LEARNINGS.md` and emitting a fresh
 //     chronologically-sorted table between the

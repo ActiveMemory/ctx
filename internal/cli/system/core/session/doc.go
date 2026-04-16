@@ -11,27 +11,27 @@
 // counters that drive ceremony nudges.
 //
 // The package owns the per-session state files under
-// `.context/state/session-<id>.json` — the lightweight
+// `.context/state/session-<id>.json`, the lightweight
 // counters that hooks like `check_ceremony`,
 // `check_persistence`, and `check_context_size` evaluate
 // each time they fire.
 //
 // # Public Surface
 //
-//   - **[ReadInput]** — decodes the JSON envelope Claude
+//   - **[ReadInput]**: decodes the JSON envelope Claude
 //     Code writes to a hook's stdin. Returns a typed
 //     [HookInput] regardless of which event fired.
-//   - **[ReadID]** — convenience: pulls just the
+//   - **[ReadID]**: convenience; pulls just the
 //     session ID from the envelope.
-//   - **[FormatContext](payload)** — formats a JSON
+//   - **[FormatContext](payload)**: formats a JSON
 //     payload as the canonical "context block" that
 //     hooks emit on stdout to inject content into the
 //     agent's next prompt.
-//   - **[LatestPct](contextDir)** — returns the most
+//   - **[LatestPct](contextDir)**: returns the most
 //     recent context-window-usage percentage written by
 //     the agent CLI. Used by the size-checkpoint hook
 //     to decide whether to nudge.
-//   - **[WriteStats](sessionID, stats)** — atomically
+//   - **[WriteStats](sessionID, stats)**: atomically
 //     updates the per-session stats file. Each `check_*`
 //     hook owns a slice of the stats struct.
 //

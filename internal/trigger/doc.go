@@ -12,13 +12,13 @@
 //
 // Six lifecycle events are supported:
 //
-//   - session-start -- a new AI session begins.
-//   - session-end -- an AI session ends.
-//   - pre-tool-use -- before a tool call; can block
+//   - session-start: a new AI session begins.
+//   - session-end: an AI session ends.
+//   - pre-tool-use: before a tool call; can block
 //     the call via cancel:true.
-//   - post-tool-use -- after a tool call completes.
-//   - file-save -- a file is saved.
-//   - context-add -- a new entry was added to
+//   - post-tool-use: after a tool call completes.
+//   - file-save: a file is saved.
+//   - context-add: a new entry was added to
 //     .context/.
 //
 // Each script receives a JSON [HookInput] on stdin

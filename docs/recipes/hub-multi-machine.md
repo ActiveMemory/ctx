@@ -16,13 +16,13 @@ icon: lucide/network
 Run the hub on a **LAN host** and connect from project directories
 on other workstations. This recipe is the **Story 2 ("small trusted
 team")** shape described in the
-[`ctx` Hub overview](hub-overview.md) — read that first if
+[`ctx` Hub overview](hub-overview.md); read that first if
 you haven't, especially the trust-model warnings.
 
 This recipe assumes you've already walked through
 [Getting Started](hub-getting-started.md) and understand
 what flows through the hub (decisions, learnings, conventions,
-tasks — **not** journals, scratchpad, or raw context files).
+tasks, **not** journals, scratchpad, or raw context files).
 
 ## Topology
 
@@ -43,7 +43,7 @@ tasks — **not** journals, scratchpad, or raw context files).
               +-------------------+
 ```
 
-## Step 1 — Start the Daemon on the LAN Host
+## Step 1: Start the Daemon on the LAN Host
 
 On the machine that will hold the hub (call it `nexus`):
 
@@ -58,9 +58,9 @@ later with:
 ctx hub stop
 ```
 
-## Step 2 — Firewall and Port
+## Step 2: Firewall and Port
 
-Open port `9900/tcp` on `nexus` to the LAN only — **never** expose
+Open port `9900/tcp` on `nexus` to the LAN only. **Never** expose
 the hub to the public internet without a reverse proxy and TLS in
 front of it (see [Hub security model](../security/hub.md)).
 
@@ -87,7 +87,7 @@ Typical LAN allowlist rules:
       tcp dport 9900 accept
     ```
 
-## Step 3 — Retrieve the Admin Token
+## Step 3: Retrieve the Admin Token
 
 The daemon prints the admin token to stdout on first run. Running as
 a daemon, that output goes to the log instead:
@@ -99,7 +99,7 @@ cat ~/.ctx/hub-data/admin.token
 Copy the token over a trusted channel (SSH, password manager, or
 an encrypted note). **Do not email it or put it in chat.**
 
-## Step 4 — Register Projects from Each Workstation
+## Step 4: Register Projects from Each Workstation
 
 On workstation `A`:
 
@@ -122,7 +122,7 @@ client token**. Only the client token is persisted in
 `.context/.connect.enc`, encrypted with the same AES-256-GCM scheme
 ctx uses for notification credentials.
 
-## Step 5 — Verify
+## Step 5: Verify
 
 From either workstation:
 
@@ -157,14 +157,14 @@ Point `ctx connection register` at the public hostname and port 443.
 
 ## Handling Daemon Restarts
 
-The hub is **append-only JSONL** — restarts are safe. Clients keep
+The hub is **append-only JSONL**, so restarts are safe. Clients keep
 their last-seen sequence in `.context/hub/.sync-state.json` and
 pick up exactly where they left off on the next `sync` or `listen`
 reconnect.
 
 ## See Also
 
-- [HA cluster recipe](hub-cluster.md) — for redundancy
-- [Hub operations](../operations/hub.md) — backup, rotation
+- [HA cluster recipe](hub-cluster.md): for redundancy
+- [Hub operations](../operations/hub.md): backup, rotation
 - [Hub failure modes](../operations/hub-failure-modes.md)
 - [Hub security model](../security/hub.md)

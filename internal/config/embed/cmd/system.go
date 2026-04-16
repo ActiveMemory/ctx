@@ -14,7 +14,7 @@ package cmd
 // been promoted to top-level commands; their Use constants live in
 // their own per-command files in this package.
 //
-// `bootstrap` is intentionally NOT promoted to top-level — it is
+// `bootstrap` is intentionally NOT promoted to top-level; it is
 // invoked by AI agents on session start, not by humans. Keeping it
 // under `ctx system` keeps `ctx --help` focused on user-facing
 // commands. The canonical invocation is `ctx system bootstrap`.

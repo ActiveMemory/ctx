@@ -23,7 +23,7 @@ import (
 // NewCluster creates a Raft cluster node for leader
 // election only.
 //
-// Raft is NOT used for data consensus — entries are
+// Raft is NOT used for data consensus; entries are
 // replicated via sequence-based gRPC sync. Raft only
 // determines which node is the current master.
 //

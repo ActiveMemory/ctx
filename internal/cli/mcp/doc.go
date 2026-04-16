@@ -15,7 +15,7 @@
 //
 // # Subpackages
 //
-//	cmd/root -- MCP server bootstrap, tool registration,
+//	cmd/root: MCP server bootstrap, tool registration,
 //	  and stdio transport setup. Starts the MCP server on
 //	  stdio, registering tool handlers for context
 //	  operations. The command annotates itself with SkipInit

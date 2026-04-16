@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
-# Replace smart quotes and em-dashes with plain equivalents in all markdown files under docs/
+# Replace smart quotes and em-dashes with plain equivalents in all markdown
+# files under docs/
+#
+# Note that this is a quick hack, and it's not the best way to do this.
+#
+# Instead ask the agent to do semantic replacements as such:
+#
+# "Run ./hack/detect-ai-typography <params>; read every file fully and do
+# semantic, editorial changes. DO NOT BLINDLY CLEAN THE FILES UP.
+# Understand the context and do semantic replacements. -- if you are going to
+# write a script to blindly sed them STOP RIGHT THERE! -- sometimes you might
+# need to replace it with a ":"; sometimes with a parenthesis, sometimes with a
+# regular dash, sometimes rephrasing. -- Your constitution forbids you
+# from being lazy!"
+
 set -euo pipefail
 
 DOCS_DIR="${1:-docs}"

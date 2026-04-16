@@ -32,7 +32,7 @@ where it silently fails. Most teams stop at the first pass.
 ```
 
 Each pass builds on the previous one. Run them in order. The
-output accumulates in `.context/` — each pass reads the prior
+output accumulates in `.context/`; each pass reads the prior
 artifacts and extends them.
 
 ## Commands and Skills Used
@@ -55,15 +55,15 @@ artifacts and extends them.
 
 Produces:
 
-- **ARCHITECTURE.md** — succinct project map (< 4000 tokens),
+- **ARCHITECTURE.md**: succinct project map (< 4000 tokens),
   loaded at every session start
-- **DETAILED_DESIGN*.md** — deep per-module reference with
+- **DETAILED_DESIGN*.md**: deep per-module reference with
   exported API, data flow, danger zones, extension points
-- **CHEAT-SHEETS.md** — lifecycle flow diagrams
-- **map-tracking.json** — coverage state with confidence scores
+- **CHEAT-SHEETS.md**: lifecycle flow diagrams
+- **map-tracking.json**: coverage state with confidence scores
 
 This pass forces deep code reading. No shortcuts, no code
-intelligence tools — the agent reads every module it analyzes.
+intelligence tools; the agent reads every module it analyzes.
 That forced reading is what makes the subsequent passes useful.
 
 **When to run**: First time on a codebase, or after significant
@@ -91,7 +91,7 @@ graph-backed data from GitNexus:
 - Domain clustering validation
 - Registration site discovery
 
-This pass does not replace reading — it quantifies what reading
+This pass does not replace reading; it quantifies what reading
 found. If Pass 1 says "module X depends on module Y," Pass 2
 says "module X has 47 callers in module Y, and changing function
 Z would affect 12 downstream consumers."
@@ -127,7 +127,7 @@ challenge phase attempts to disprove each finding before it is
 accepted. Findings carry a confidence level (High/Medium/Low) and
 explicit risk score.
 
-Produces **DANGER-ZONES.md** — a ranked inventory of findings
+Produces **DANGER-ZONES.md**, a ranked inventory of findings
 split into Critical and Elevated tiers.
 
 **When to run**: Before releases, after major refactors, when
@@ -152,7 +152,7 @@ new files.
 ## Tips
 
 - **Run Pass 1 with focus areas** if the codebase is large.
-  The skill asks what to go deep on — name the modules you're
+  The skill asks what to go deep on, so name the modules you're
   about to change.
 - **You don't need all three passes every time.** Pass 1 is
   the foundation. Pass 2 and 3 are for when you need
@@ -167,7 +167,7 @@ new files.
 ## See Also
 
 *See also: [Detecting and Fixing Context Drift](context-health.md)
-— keep architecture artifacts fresh between deep-dive sessions.*
+to keep architecture artifacts fresh between deep-dive sessions.*
 
 *See also: [Detecting and Fixing Context Drift](context-health.md)
-— structural checks that complement architecture analysis.*
+for structural checks that complement architecture analysis.*

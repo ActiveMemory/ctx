@@ -42,9 +42,9 @@ your first trigger, testing it, and enabling it safely.
 You want a `pre-tool-use` trigger that blocks the AI from
 editing anything in `internal/crypto/` without explicit
 confirmation. Cryptographic code is sensitive, and accidental
-edits have caused outages before — you want a hard gate.
+edits have caused outages before, and you want a hard gate.
 
-## Step 1 — Scaffold the Script
+## Step 1: Scaffold the Script
 
 ```bash
 ctx trigger add pre-tool-use protect-crypto
@@ -70,12 +70,12 @@ path=$(echo "$payload" | jq -r '.path // empty')
 echo '{"action": "allow"}'
 ```
 
-Note: the directory is `.context/hooks/pre-tool-use/` — the
+Note: the directory is `.context/hooks/pre-tool-use/`; the
 on-disk layout still uses `hooks/` even though the command is
 `ctx trigger`. If you `ls .context/hooks/`, that's where
 your triggers live.
 
-## Step 2 — Write the Logic
+## Step 2: Write the Logic
 
 Open the file and replace the template body:
 
@@ -113,17 +113,17 @@ echo '{"action": "allow"}'
 
 A few things to note:
 
-- **`set -euo pipefail`** — any unhandled error aborts the
+- **`set -euo pipefail`**: any unhandled error aborts the
   script. Critical for a security-relevant trigger.
-- **Quote everything from `jq`** — the `path` field comes from
+- **Quote everything from `jq`**: the `path` field comes from
   the AI tool; treat it as untrusted input.
-- **Explicit `allow` case** — the default is allow. An
+- **Explicit `allow` case**: the default is allow. An
   empty or missing response is a risky default.
-- **Use `jq -n --arg`** for output construction — safer than
+- **Use `jq -n --arg`** for output construction, as it is safer than
   string concatenation when the message may contain special
   characters.
 
-## Step 3 — Test with a Mock Payload
+## Step 3: Test with a Mock Payload
 
 Before enabling the trigger, test it with a realistic mock
 input using `ctx trigger test`. This runs the script against
@@ -155,7 +155,7 @@ If any of these cases misbehave, **fix the trigger before
 enabling it.** The trigger is disabled at this point, so
 misbehavior doesn't affect real AI sessions.
 
-## Step 4 — Enable It
+## Step 4: Enable It
 
 Once the test cases pass, enable the trigger:
 
@@ -175,7 +175,7 @@ ctx trigger list
 Should show `protect-crypto` under `pre-tool-use` with an
 enabled indicator.
 
-## Step 5 — Iterate Safely
+## Step 5: Iterate Safely
 
 If you discover a bug after enabling, **disable first, fix
 second**:
@@ -187,7 +187,7 @@ ctx trigger test pre-tool-use --tool write_file --path internal/crypto/aes.go
 ctx trigger enable protect-crypto
 ```
 
-Disabling simply clears the executable bit — the script stays
+Disabling simply clears the executable bit; the script stays
 on disk, and `ctx trigger enable` re-enables it without
 rewriting anything.
 
@@ -210,7 +210,7 @@ echo '{"action":"allow"}'
 
 A `session-start` trigger can prepend text to the agent's
 initial prompt by emitting `{"action":"inject", "content": "..."}`
-— useful for injecting daily standup notes, open PRs, or
+. This is useful for injecting daily standup notes, open PRs, or
 rotating TODOs without storing them in a steering file.
 
 ### Chaining Triggers of the Same Type
@@ -240,15 +240,15 @@ strings.
 **Mixing `hook` and `trigger` vocabulary.** The command is
 `ctx trigger` but the on-disk directory is `.context/hooks/`.
 The feature was renamed; the directory name lags behind.
-Don't let this confuse you — they refer to the same thing.
+Don't let this confuse you; they refer to the same thing.
 
 ## See Also
 
-- [`ctx trigger` reference](../cli/trigger.md) — full
+- [`ctx trigger` reference](../cli/trigger.md): full
   command, flag, and event-type reference.
-- [`ctx steering`](../cli/steering.md) — persistent rules,
+- [`ctx steering`](../cli/steering.md): persistent rules,
   not scripts. Use steering when the thing you want is "tell
   the AI to always do X" rather than "run a script when Y
   happens."
-- [Writing steering files](steering.md) — the rule-based
+- [Writing steering files](steering.md): the rule-based
   equivalent of this recipe.

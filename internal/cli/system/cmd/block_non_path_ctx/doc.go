@@ -15,9 +15,9 @@
 // the command string against patterns that invoke ctx
 // through non-standard paths:
 //
-//   - **./ctx or ../ctx** -- relative path invocations
-//   - **go run ./cmd/ctx** -- source-level execution
-//   - **/absolute/path/to/ctx** -- absolute path calls
+//   - **./ctx or ../ctx**: relative path invocations
+//   - **go run ./cmd/ctx**: source-level execution
+//   - **/absolute/path/to/ctx**: absolute path calls
 //     (with an exception for test binaries)
 //
 // When a match is found, a JSON block response is

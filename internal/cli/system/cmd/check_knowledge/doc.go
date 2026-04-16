@@ -14,9 +14,9 @@
 // The hook checks three context files against their
 // respective limits:
 //
-//   - **DECISIONS.md** -- entry count threshold
-//   - **LEARNINGS.md** -- entry count threshold
-//   - **CONVENTIONS.md** -- line count threshold
+//   - **DECISIONS.md**: entry count threshold
+//   - **LEARNINGS.md**: entry count threshold
+//   - **CONVENTIONS.md**: line count threshold
 //
 // When any file exceeds its configured maximum, the
 // hook emits a nudge box recommending consolidation

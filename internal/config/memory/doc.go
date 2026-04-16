@@ -15,11 +15,11 @@
 // The bridge operates on three files inside
 // .context/memory/:
 //
-//   - Source ("MEMORY.md") -- the original Claude Code
+//   - Source ("MEMORY.md"): the original Claude Code
 //     auto-memory file.
-//   - Mirror ("mirror.md") -- a raw copy used for
+//   - Mirror ("mirror.md"): a raw copy used for
 //     diff-based change detection.
-//   - State ("memory-import.json") -- tracks which
+//   - State ("memory-import.json"): tracks which
 //     entries have been classified and imported.
 //
 // PathMemoryMirror provides the pre-joined relative
@@ -46,5 +46,5 @@
 //   - DefaultPublishBudget (80 lines total)
 //   - PublishMaxTasks (10), PublishMaxDecisions (5),
 //     PublishMaxConventions (10), PublishMaxLearnings (5)
-//   - PublishRecentDays (7) -- lookback window
+//   - PublishRecentDays (7): lookback window
 package memory

@@ -25,17 +25,17 @@
 //
 // # Action Types
 //
-//   - [ActionDeps]   — a dependency manifest changed.
-//   - [ActionConfig] — a config file changed.
-//   - [ActionNewDir] — a new important directory
+//   - [ActionDeps]: a dependency manifest changed.
+//   - [ActionConfig]: a config file changed.
+//   - [ActionNewDir]: a new important directory
 //     appeared.
 //
 // # Directory Control
 //
-//   - [ImportantDirs] — top-level directories that
+//   - [ImportantDirs]: top-level directories that
 //     should be documented in ARCHITECTURE.md (api,
 //     cmd, internal, src, ...).
-//   - [SkipDirs] — directories excluded from scanning
+//   - [SkipDirs]: directories excluded from scanning
 //     (build, dist, node_modules, vendor).
 //
 // # Package Ecosystems

@@ -2012,7 +2012,7 @@
 <p>When working with an AI agent, use <code>/ctx-task-add</code>,
 <code>/ctx-decision-add</code>, or <code>/ctx-learning-add</code> instead of raw
 <code>ctx add</code> commands. The agent automatically picks up session ID,
-branch, and commit hash from its context — no manual flags needed.</p>
+branch, and commit hash from its context, so no manual flags are needed.</p>
 </div>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Add a task</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -2174,7 +2174,7 @@ that motivated them. Enable the hook once:</p>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>trace<span class="w"> </span>hook<span class="w"> </span><span class="nb">enable</span>
 </span></code></pre></div>
 <p>From now on, every <code>git commit</code> automatically gets a <code>ctx-context</code>
-trailer linking it to relevant context. No extra steps needed —
+trailer linking it to relevant context. No extra steps needed;
 just use <code>ctx add</code>, <code>ctx task complete</code>, and commit as usual.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Later: why was this commit made?</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>trace<span class="w"> </span>abc123

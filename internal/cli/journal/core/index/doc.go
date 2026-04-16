@@ -9,31 +9,31 @@
 // when given only a session ID.
 //
 // The map matters because users (and skills) routinely refer
-// to a session by its ID — a short alphanumeric tag like
-// `abc123` — but on disk the journal entry filename is keyed
+// to a session by its ID, a short alphanumeric tag like
+// `abc123`, but on disk the journal entry filename is keyed
 // by date and slug. The mapping has to be built on demand
 // from the entry frontmatter; it cannot be derived from the
 // filename alone.
 //
 // # The Surface
 //
-//   - **[Session](dir)** — walks the journal directory,
+//   - **[Session](dir)**: walks the journal directory,
 //     reads the YAML frontmatter of every `*.md` entry,
 //     extracts each `session_id`, and returns a
 //     `map[sessionID]filename`. Entries without a
 //     `session_id` field are silently skipped.
-//   - **[ExtractSessionID](path)** — reads one file and
+//   - **[ExtractSessionID](path)**: reads one file and
 //     returns its `session_id` (empty string if not
 //     present, error if the file cannot be read or the
 //     frontmatter cannot be parsed).
-//   - **[LookupSessionFile](dir, sessionID)** — convenience
+//   - **[LookupSessionFile](dir, sessionID)**: convenience
 //     wrapper: calls [Session] and returns the matching
 //     filename, or empty string if not found.
 //
 // # Performance
 //
-// [Session] reads the frontmatter only — not the full
-// body — so the cost scales with `O(N)` files but with
+// [Session] reads the frontmatter only, not the full
+// body, so the cost scales with `O(N)` files but with
 // a small per-file constant. For a journal with a few
 // hundred entries, the build typically completes well
 // under 100 ms. Callers that need many lookups in a

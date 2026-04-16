@@ -1505,7 +1505,7 @@ within a team or homelab. It assumes:</p>
   <strong>strongly recommended</strong> but not mandatory.</li>
 <li>Client machines are trusted enough to hold a per-project client
   token. Losing a client token is roughly equivalent to losing an
-  API key — scoped damage, not total compromise.</li>
+  API key: scoped damage, not total compromise.</li>
 <li>Entry content is <strong>not</strong> secret. Decisions, learnings, and
   conventions may be indexed by AI agents, rendered in docs,
   shared across projects. Do not push credentials or PII into
@@ -1572,7 +1572,7 @@ and can impersonate any project that has ever registered.</p>
 <li>Never expose <code>&lt;data-dir&gt;</code> over NFS, SMB, or shared
   filesystems.</li>
 <li>Treat <code>&lt;data-dir&gt;</code> the same way you'd treat
-  <code>/etc/shadow</code> — back it up encrypted, never check it
+  <code>/etc/shadow</code>: back it up encrypted, never check it
   into version control.</li>
 </ul>
 <p>Hashing <code>clients.json</code> and moving to keyring-backed storage
@@ -1588,7 +1588,7 @@ compromise.</p>
 <li><strong>ID</strong> and <strong>Origin</strong> are required and non-empty.</li>
 <li><strong>Content size</strong> is capped at <strong>1 MB</strong>. Reasonable for text,
   hostile for attempts to fill the disk.</li>
-<li><strong>Duplicate project registration</strong> is rejected — a client that
+<li><strong>Duplicate project registration</strong> is rejected; a client that
   replays an old <code>Register</code> call gets an error, not a second
   token.</li>
 </ul>
@@ -1640,7 +1640,7 @@ manually by the operator (see
 </ul>
 <h2 id="responsible-disclosure">Responsible Disclosure<a class="headerlink" href="#responsible-disclosure" title="Permanent link">&para;</a></h2>
 <p>Security issues in the hub follow the same process as the rest
-of ctx — see <a href="../reporting/">Reporting</a>.</p>
+of ctx; see <a href="../reporting/">Reporting</a>.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../operations/hub/"><code>ctx</code> Hub Operations</a></li>

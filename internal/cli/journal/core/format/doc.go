@@ -16,14 +16,14 @@
 //
 // # Public Surface
 //
-//   - [Size] -- formats a byte count as a
+//   - [Size]: formats a byte count as a
 //     human-readable string (e.g. "512B", "1.5KB",
 //     "2.3MB"). Uses IEC units (1024-based).
-//   - [KeyFileSlug] -- converts a file path to a
+//   - [KeyFileSlug]: converts a file path to a
 //     URL-safe slug by replacing path separators
 //     and dots with underscores, and glob stars
 //     with "x".
-//   - [SessionLink] -- builds a markdown list item
+//   - [SessionLink]: builds a markdown list item
 //     linking to a session page with a session count
 //     (e.g. "- [topic](topic.md) (3 sessions)").
 //

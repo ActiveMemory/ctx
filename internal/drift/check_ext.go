@@ -42,7 +42,7 @@ func checkSteeringTools(report *Report) {
 
 	files, err := steering.LoadAll(steeringDir)
 	if err != nil {
-		// Directory doesn't exist or can't be read — skip silently.
+		// Directory doesn't exist or can't be read; skip silently.
 		report.Passed = append(report.Passed, cfgDrift.CheckSteeringTools)
 		return
 	}
@@ -121,7 +121,7 @@ func checkSyncStaleness(report *Report) {
 
 	files, err := steering.LoadAll(steeringDir)
 	if err != nil {
-		// No steering files — nothing to check.
+		// No steering files; nothing to check.
 		report.Passed = append(report.Passed, cfgDrift.CheckSyncStaleness)
 		return
 	}
@@ -171,7 +171,7 @@ func checkSyncStaleness(report *Report) {
 func checkRCTool(report *Report) {
 	tool := rc.Tool()
 
-	// Empty tool field is valid — it means no tool is configured.
+	// Empty tool field is valid: it means no tool is configured.
 	if tool == "" {
 		report.Passed = append(report.Passed, cfgDrift.CheckRCTool)
 		return

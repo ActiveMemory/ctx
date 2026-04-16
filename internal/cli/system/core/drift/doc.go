@@ -16,25 +16,25 @@
 //
 // # Public Surface
 //
-//   - **[CheckVersion]** — runs the full three-way
+//   - **[CheckVersion]**: runs the full three-way
 //     comparison and returns a [DriftReport].
-//   - **[ReadVersionFile]** — reads the `VERSION` file
+//   - **[ReadVersionFile]**: reads the `VERSION` file
 //     from the install dir.
-//   - **[ReadMarketplaceVersion]** — reads the
+//   - **[ReadMarketplaceVersion]**: reads the
 //     plugin manifest's pinned version from
 //     `~/.claude/marketplaces/...`.
-//   - **[FormatStaleEntries]** — formats a [DriftReport]
+//   - **[FormatStaleEntries]**: formats a [DriftReport]
 //     as the user-facing nudge body (delivered via
 //     [internal/cli/system/core/message]).
 //
 // # The Three Sources, Why They Drift
 //
-//  1. **`VERSION` file** — bumped by maintainers as part
+//  1. **`VERSION` file**: bumped by maintainers as part
 //     of the release runbook. The source of truth.
-//  2. **Installed binary** — the result of the user's
+//  2. **Installed binary**: the result of the user's
 //     last `make install` / `brew upgrade`. Drifts
 //     downward if the user has not updated.
-//  3. **Marketplace plugin manifest** — pinned by the
+//  3. **Marketplace plugin manifest**: pinned by the
 //     user's most recent `claude plugin install`.
 //     Drifts downward if the user has not run
 //     `claude plugin update`.

@@ -6,7 +6,7 @@
 
 // Package initialize provides the **terminal-output
 // helpers** the `ctx init` command uses to narrate every
-// step of the initialization workflow — directory
+// step of the initialization workflow: directory
 // creation, foundation-file deployment, plugin
 // detection, settings merge, hook installation, summary.
 //
@@ -22,20 +22,20 @@
 //
 // # Function Families
 //
-//   - **Prompts** — [InfoOverwritePrompt],
+//   - **Prompts**: [InfoOverwritePrompt],
 //     [InfoAborted] for the "should I overwrite?"
 //     dialog.
-//   - **Per-file results** — [InfoFileCreated],
+//   - **Per-file results**: [InfoFileCreated],
 //     [InfoExistsSkipped], [InfoMerged] etc., one
 //     line per artifact written.
-//   - **Plugin / tool detection** —
+//   - **Plugin / tool detection**:
 //     [InfoPluginInstalled],
 //     [InfoPluginEnabled], etc.
-//   - **Warnings & non-fatal errors** —
+//   - **Warnings & non-fatal errors**:
 //     [InfoWarnNonFatal] for issues the user
 //     should know about but that do not abort
 //     init.
-//   - **Summary** — [Initialized] (the final
+//   - **Summary**: [Initialized] (the final
 //     "ctx is ready, here's what to do next"
 //     banner).
 //

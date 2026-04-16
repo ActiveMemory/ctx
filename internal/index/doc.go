@@ -6,7 +6,7 @@
 
 // Package index generates and maintains the **quick-reference
 // index tables** at the top of `DECISIONS.md` and
-// `LEARNINGS.md` — the markdown tables wrapped in
+// `LEARNINGS.md`: the markdown tables wrapped in
 // `<!-- INDEX:START -->` / `<!-- INDEX:END -->` markers that
 // list every entry by ID, date, and title in chronological
 // order.
@@ -32,7 +32,7 @@
 //
 // [ParseHeaders] extracts the date + title pair from each
 // `## [...]` header. [ParseEntryBlocks] returns full block
-// metadata — start/end line, ID, date, title, body — so
+// metadata (start/end line, ID, date, title, body) so
 // callers can grep, render, or rewrite individual entries.
 //
 // # Updating in Place

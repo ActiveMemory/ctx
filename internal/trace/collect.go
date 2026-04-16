@@ -16,8 +16,8 @@ import (
 	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
 )
 
-// Collect gathers context refs from all three sources — pending records,
-// staged file diffs, and current working state — then deduplicates them.
+// Collect gathers context refs from all three sources (pending records,
+// staged file diffs, and current working state), then deduplicates them.
 //
 // Parameters:
 //   - contextDir: absolute path to the .context/ directory

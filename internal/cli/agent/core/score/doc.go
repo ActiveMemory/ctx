@@ -18,7 +18,7 @@
 //
 // # The Two Components
 //
-//   - **[Recency](entry)** — bucketed by age:
+//   - **[Recency](entry)**: bucketed by age;
 //
 //     ≤  7 days   → 1.0
 //     ≤ 30 days   → 0.7
@@ -29,13 +29,13 @@
 //     ordering stable across small input shifts and make
 //     the scoring trivially debuggable.
 //
-//   - **[Relevance](entry, taskKeywords)** — fraction of
+//   - **[Relevance](entry, taskKeywords)**: fraction of
 //     the entry's salient tokens that overlap with
-//     [ExtractTaskKeywords](activeTasks). Range 0.0–1.0.
+//     [ExtractTaskKeywords](activeTasks). Range 0.0-1.0.
 //     Stop words come from the embedded list in
 //     [internal/assets/read/lookup.StopWords].
 //
-// [Score](entry, taskKeywords) sums the two for a 0.0–2.0
+// [Score](entry, taskKeywords) sums the two for a 0.0-2.0
 // composite. [All](entries, taskKeywords) is the bulk
 // scorer that returns parallel slices for the budget
 // allocator.
@@ -43,7 +43,7 @@
 // # Why Bucketed Recency
 //
 // A continuous exponential decay would be technically
-// purer but produces "score jitter" — entries reorder
+// purer but produces "score jitter": entries reorder
 // minute-to-minute as their ages cross the decimal
 // boundary. Bucketed recency means an entry's relative
 // rank only changes when it crosses a real threshold

@@ -6,19 +6,19 @@
 
 // Package parse scans a journal directory and turns each
 // markdown file into a typed [entity.JournalEntry] by
-// reading and validating its YAML frontmatter — the
+// reading and validating its YAML frontmatter, the
 // upstream of every site-builder, Obsidian-exporter, MOC
 // generator, and lock-state syncer in the journal pipeline.
 //
 // # Public Surface
 //
-//   - **[ScanJournalEntries](dir)** — walks `dir`,
+//   - **[ScanJournalEntries](dir)**: walks `dir`,
 //     parses every `*.md` file, and returns
 //     `[]*JournalEntry` plus an error slice for files
 //     that failed to parse. The walk continues past
 //     bad files so a single malformed entry does not
 //     abort the whole scan.
-//   - **[JournalEntry](path)** — parses one file by
+//   - **[JournalEntry](path)**: parses one file by
 //     path. Used by single-entry callers (the
 //     `--show <slug>` lookup, the lock CLI, and the
 //     drift checker).

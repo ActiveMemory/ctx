@@ -16,15 +16,15 @@
 //
 // # Public Surface
 //
-//   - **[ConvertMarkdownLinks](text)** — rewrites every
+//   - **[ConvertMarkdownLinks](text)**: rewrites every
 //     `[text](url.md)` in `text` to `[[target|text]]`
 //     (Obsidian's display-text wikilink form).
 //     Preserves URLs that are not journal entries (raw
 //     `https://...` links, anchor-only refs).
-//   - **[Format](target, display)** — builds a single
+//   - **[Format](target, display)**: builds a single
 //     wikilink string. `display` is optional; pass
 //     empty to get `[[target]]`.
-//   - **[FormatEntry](entry)** — convenience that
+//   - **[FormatEntry](entry)**: convenience that
 //     produces the canonical wikilink for a journal
 //     entry using its slug as target and its title
 //     as display text.

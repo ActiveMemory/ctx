@@ -14,10 +14,10 @@
 //
 // Errors fall into two categories:
 //
-//   - **File IO** -- the reminders file could not
+//   - **File IO**: the reminders file could not
 //     be read or parsed. Constructors: [Read],
 //     [Parse].
-//   - **Lookup** -- no reminder matches the given
+//   - **Lookup**: no reminder matches the given
 //     ID, or no ID was provided. Constructors:
 //     [NotFound], [IDRequired].
 //

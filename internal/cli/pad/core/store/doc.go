@@ -10,20 +10,20 @@
 //
 // # Public Surface
 //
-//   - **[ScratchpadPath](contextDir)** — returns the
+//   - **[ScratchpadPath](contextDir)**: returns the
 //     absolute path of `.context/.scratchpad.enc`.
-//   - **[KeyPath]** — returns the per-machine key
+//   - **[KeyPath]**: returns the per-machine key
 //     path (`~/.ctx/.ctx.key`); shared with
 //     [internal/notify].
-//   - **[EnsureKey]** — creates the key on first use
+//   - **[EnsureKey]**: creates the key on first use
 //     and returns it. Subsequent calls just return
 //     the existing key.
-//   - **[ReadEntries](contextDir)** — decrypts the
+//   - **[ReadEntries](contextDir)**: decrypts the
 //     scratchpad, parses it via
 //     [internal/cli/pad/core/parse], returns a
 //     `[]Entry`. Returns an empty slice (not an
 //     error) when the file does not exist yet.
-//   - **[WriteEntries](contextDir, entries)** —
+//   - **[WriteEntries](contextDir, entries)**:
 //     formats, encrypts, atomically writes. Backup
 //     is unnecessary because re-encryption never
 //     produces a partial file when the rename

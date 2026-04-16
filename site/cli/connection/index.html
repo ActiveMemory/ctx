@@ -2197,7 +2197,7 @@ directory with <code>ctx connection register</code> binds a per-project client
 token in <code>.context/.connect.enc</code>. Two developers on the same
 project either share that file over a trusted channel, or each
 register under a different project name.</p>
-<p><strong>Only structured entries flow through the hub</strong> — <code>decision</code>,
+<p><strong>Only structured entries flow through the hub</strong>: <code>decision</code>,
 <code>learning</code>, <code>convention</code>, <code>task</code>. Session journals, scratchpad
 contents, and other local state stay on the machine that created
 them.</p>
@@ -2248,7 +2248,7 @@ headers. Tracks last-seen sequence for incremental sync.</p>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">&quot;UI does conversion&quot;</span>
 </span></code></pre></div>
 <p>If the hub is unreachable, the local write succeeds and a warning
-is printed. The <code>--share</code> flag is best-effort — it never blocks
+is printed. The <code>--share</code> flag is best-effort; it never blocks
 local context updates.</p>
 <h2 id="auto-sync">Auto-Sync<a class="headerlink" href="#auto-sync" title="Permanent link">&para;</a></h2>
 <p>Once registered, the <code>check-hub-sync</code> hook automatically syncs

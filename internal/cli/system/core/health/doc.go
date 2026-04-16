@@ -7,7 +7,7 @@
 // Package health holds the **shared helpers** that the
 // architecture-map staleness, knowledge-file growth, and
 // background-task cleanup hooks all use to evaluate
-// "context health" signals — things that are not strictly
+// "context health" signals, things that are not strictly
 // drift but indicate the project is drifting from its own
 // process invariants.
 //
@@ -17,20 +17,20 @@
 //
 // # Public Surface
 //
-//   - **[ReadMapTracking]** — reads the persisted
+//   - **[ReadMapTracking]**: reads the persisted
 //     architecture-map last-update tracking record.
 //     Used by `check_map_staleness` to decide whether
 //     ARCHITECTURE.md has fallen behind code changes.
-//   - **[CountModuleCommits](module, since)** — counts
+//   - **[CountModuleCommits](module, since)**: counts
 //     git commits touching a module path since a given
 //     timestamp. Used to score map staleness.
-//   - **[EmitMapStalenessWarning](staleModules)** —
+//   - **[EmitMapStalenessWarning](staleModules)**:
 //     produces the formatted nudge sent to the agent
 //     via the VERBATIM relay path.
-//   - **[UUIDPattern]** — compiled regex for matching
+//   - **[UUIDPattern]**: compiled regex for matching
 //     session UUIDs in state file names. Used by the
 //     auto-pruner.
-//   - **[AutoPrune](dir, age)** — removes per-session
+//   - **[AutoPrune](dir, age)**: removes per-session
 //     state files older than `age`. Idempotent and
 //     safe to run during a session (skips the active
 //     session's marker file).

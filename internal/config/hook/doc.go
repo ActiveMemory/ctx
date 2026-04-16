@@ -13,30 +13,30 @@
 // (`Customizable`, `CtxSpecific`), and the per-hook
 // throttling thresholds.
 //
-// The package is a constants registry — no logic. Its
+// The package is a constants registry, not logic. Its
 // existence keeps consumers free of magic strings and
 // lets the audit suite catch references to non-existent
 // hook names at compile time.
 //
 // # Constant Families
 //
-//   - **Hook names** — one per `cmd/check_*` and
+//   - **Hook names**: one per `cmd/check_*` and
 //     `cmd/block_*` package under
 //     [internal/cli/system/cmd]. Used by the
 //     `ctx hook event` query layer and the message
 //     loader.
-//   - **Lifecycle stages** — `sessionStart`,
+//   - **Lifecycle stages**: `sessionStart`,
 //     `sessionEnd`, `preToolUse`, `postToolUse`,
 //     `userPromptSubmit`, etc. The Claude Code
 //     hook config and the trigger dispatcher both
 //     speak this vocabulary.
-//   - **Tool identifiers** — `ToolClaude`,
+//   - **Tool identifiers**: `ToolClaude`,
 //     `ToolCursor`, `ToolCline`, `ToolKiro`,
-//     `ToolCodex` — the `tool:` field in `.ctxrc`
+//     `ToolCodex`: the `tool:` field in `.ctxrc`
 //     and the `tools:` filter in steering files
 //     reference these.
-//   - **Categories** — `CategoryCustomizable`,
-//     `CategoryCtxSpecific` — used by
+//   - **Categories**: `CategoryCustomizable`,
+//     `CategoryCtxSpecific`, used by
 //     [internal/assets/hooks/messages] to label
 //     each message in `ctx hook message list`.
 //

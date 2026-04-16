@@ -23,11 +23,11 @@
 //
 // # Subpackages
 //
-//	cmd/register -- device registration flow
-//	cmd/subscribe -- topic subscription management
-//	cmd/sync -- context pull from Hub
-//	cmd/publish -- context push to Hub
-//	cmd/listen -- real-time event streaming
-//	cmd/status -- connection status display
-//	core -- shared Hub client helpers
+//	cmd/register: device registration flow
+//	cmd/subscribe: topic subscription management
+//	cmd/sync: context pull from Hub
+//	cmd/publish: context push to Hub
+//	cmd/listen: real-time event streaming
+//	cmd/status: connection status display
+//	core: shared Hub client helpers
 package connection

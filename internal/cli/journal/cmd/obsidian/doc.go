@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package obsidian implements **`ctx journal obsidian`** —
+// Package obsidian implements **`ctx journal obsidian`**,
 // the subcommand that exports the project's enriched
 // journal entries as a complete **Obsidian vault** (with
 // MOC pages, wikilinks, and graph-friendly frontmatter)
@@ -13,10 +13,10 @@
 //
 // # Public Surface
 //
-//   - **[Cmd]** — cobra command with `--output` to
+//   - **[Cmd]**: cobra command with `--output` to
 //     control the destination directory (default
 //     `vault/`).
-//   - **[Run]** — delegates to
+//   - **[Run]**: delegates to
 //     [internal/cli/journal/core/obsidian.BuildVault]
 //     which handles the full file generation pipeline
 //     (scan, transform frontmatter, convert links to

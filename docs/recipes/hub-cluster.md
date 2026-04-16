@@ -19,7 +19,7 @@ redundancy. Any follower can take over if the leader dies.
 This recipe assumes you've read the
 [`ctx` Hub overview](hub-overview.md) and the
 [Multi-machine setup](hub-multi-machine.md). HA only makes
-sense in the "small trusted team" story — a personal
+sense in the "small trusted team" story; a personal
 cross-project brain on one workstation does not need three Raft
 peers.
 
@@ -36,7 +36,7 @@ peers.
 
 ## Topology
 
-A minimum HA cluster is **three** nodes. Two is worse than one —
+A minimum HA cluster is **three** nodes. Two is worse than one:
 it doubles failure probability without providing quorum.
 
 ```
@@ -56,7 +56,7 @@ it doubles failure probability without providing quorum.
         gRPC (data sync)
 ```
 
-## Step 1 — Bootstrap the First Node
+## Step 1: Bootstrap the First Node
 
 ```bash
 ctx hub start --daemon \
@@ -66,7 +66,7 @@ ctx hub start --daemon \
 
 The node starts a Raft election as soon as it sees its peers.
 
-## Step 2 — Start the Other Nodes
+## Step 2: Start the Other Nodes
 
 On `hub-b.lan`:
 
@@ -87,7 +87,7 @@ ctx hub start --daemon \
 After a few seconds, one node wins the election and becomes the
 **leader**. The other two are followers.
 
-## Step 3 — Verify Cluster State
+## Step 3: Verify Cluster State
 
 From any node:
 
@@ -106,7 +106,7 @@ entries:    1248
 uptime:     3h42m
 ```
 
-## Step 4 — Register Clients with Failover Peers
+## Step 4: Register Clients with Failover Peers
 
 When registering a client, give it the **full peer list**:
 
@@ -161,8 +161,8 @@ For the full list, see
 
 ## See Also
 
-- [Multi-machine recipe](hub-multi-machine.md) — single-node
+- [Multi-machine recipe](hub-multi-machine.md): single-node
   deployment
-- [Hub operations](../operations/hub.md) — backup and
+- [Hub operations](../operations/hub.md): backup and
   maintenance
-- [Hub security model](../security/hub.md) — TLS, tokens
+- [Hub security model](../security/hub.md): TLS, tokens

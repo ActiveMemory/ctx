@@ -14,13 +14,13 @@
 //
 // Three constructors cover the entire surface:
 //
-//   - [UnsafeURLScheme] -- a URL uses a scheme
+//   - [UnsafeURLScheme]: a URL uses a scheme
 //     other than http or https. This is a security
 //     boundary that prevents file://, ftp://, or
 //     other protocol handlers from being invoked.
-//   - [ParseURL] -- a URL string failed to parse.
+//   - [ParseURL]: a URL string failed to parse.
 //     Wraps the underlying url.Parse error.
-//   - [TooManyRedirects] -- an HTTP response chain
+//   - [TooManyRedirects]: an HTTP response chain
 //     exceeded the configured redirect limit.
 //
 // # Wrapping Strategy

@@ -23,9 +23,9 @@
 // Three tool backends are supported, tracked in the
 // ValidTools map:
 //
-//   - DefaultTool ("claude") -- Claude Code CLI.
-//   - ToolAider ("aider") -- the Aider coding agent.
-//   - ToolGeneric ("generic") -- any tool that reads
+//   - DefaultTool ("claude"): Claude Code CLI.
+//   - ToolAider ("aider"): the Aider coding agent.
+//   - ToolGeneric ("generic"): any tool that reads
 //     stdin and writes stdout.
 //
 // The generated script is written to DefaultOutput
@@ -33,9 +33,9 @@
 //
 // # Key Constants
 //
-//   - DefaultCompletionSignal -- string the loop
+//   - DefaultCompletionSignal: string the loop
 //     watches for to stop iterating.
-//   - DefaultOutput -- default output filename.
-//   - PromptMd -- path to the iteration prompt file.
-//   - ValidTools -- set of recognized tool IDs.
+//   - DefaultOutput: default output filename.
+//   - PromptMd: path to the iteration prompt file.
+//   - ValidTools: set of recognized tool IDs.
 package loop

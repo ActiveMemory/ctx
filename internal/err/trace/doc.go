@@ -13,18 +13,18 @@
 //
 // Errors fall into four categories:
 //
-//   - **Git operations** -- git rev-parse or git
+//   - **Git operations**: git rev-parse or git
 //     log failed, or a commit ref could not be
 //     resolved. Constructors: [GitDir], [GitLog],
 //     [ResolveCommit].
-//   - **Hook management** -- a non-ctx hook already
+//   - **Hook management**: a non-ctx hook already
 //     exists, or writing the hook script failed.
 //     Constructors: [HookExists], [HookWrite].
-//   - **History / override IO** -- writing the
+//   - **History / override IO**: writing the
 //     trace history or override file failed.
 //     Constructors: [WriteHistory],
 //     [WriteOverride].
-//   - **Validation** -- the --note flag is missing,
+//   - **Validation**: the --note flag is missing,
 //     or an unknown action was provided.
 //     Constructors: [NoteRequired],
 //     [UnknownAction].

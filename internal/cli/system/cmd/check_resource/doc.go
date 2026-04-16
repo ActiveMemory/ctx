@@ -35,7 +35,7 @@
 // # Throttling
 //
 // The hook respects the session pause state but has
-// no daily throttle -- resource warnings fire on every
+// no daily throttle; resource warnings fire on every
 // invocation when danger levels are detected.
 //
 // # Delegation

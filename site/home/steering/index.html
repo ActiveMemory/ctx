@@ -1725,8 +1725,8 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="steering-files">Steering Files<a class="headerlink" href="#steering-files" title="Permanent link">&para;</a></h2>
 <p><code>ctx</code> projects talk to AI assistants through several layers
-— context files, decisions, conventions, the agent context
-packet — but none of those can tell the assistant <em>how to
+(context files, decisions, conventions, the agent context
+packet) but none of those can tell the assistant <em>how to
 behave</em> when a specific kind of prompt arrives. That's what
 <strong>steering files</strong> are for.</p>
 <p>A steering file is a small markdown document with YAML
@@ -1795,14 +1795,14 @@ rather than an empty directory:</p>
 <p>Each file starts with an inline HTML comment explaining the
 three inclusion modes, priority semantics, and tool scoping.
 The comment is invisible in rendered markdown but visible
-when you open the file to edit it — it's self-documenting
+when you open the file to edit it; it's self-documenting
 scaffolding, not forever guidance. Delete the comment once
 you've customized the file.</p>
 <p>Default settings for foundation files:</p>
 <ul>
-<li><code>inclusion: always</code> — fires on every AI tool call</li>
-<li><code>priority: 10</code> — injected near the top of the prompt</li>
-<li><code>tools: []</code> — applies to every configured AI tool</li>
+<li><code>inclusion: always</code>: fires on every AI tool call</li>
+<li><code>priority: 10</code>: injected near the top of the prompt</li>
+<li><code>tools: []</code>: applies to every configured AI tool</li>
 </ul>
 <p><strong>You should open each of these files and replace the
 placeholder content with your project's actual rules.</strong>
@@ -1837,7 +1837,7 @@ frontmatter:</p>
 <p><strong>Which mode to pick depends on the AI tool you use</strong>,
 because the two tool families consume steering very
 differently.</p>
-<p><strong>Claude Code and Codex</strong> — prefer <code>inclusion: always</code>
+<p><strong>Claude Code and Codex</strong>: prefer <code>inclusion: always</code>
 for rules that must fire reliably. These tools have two
 delivery channels:</p>
 <ol>
@@ -1848,22 +1848,22 @@ delivery channels:</p>
    automatically when the ctx plugin is installed. Claude
    can call this tool mid-task to fetch <code>auto</code> or
    <code>manual</code> files matching a specific prompt. Verify
-   with <code>claude mcp list</code> — look for <code>ctx: ✓ Connected</code>.</li>
+   with <code>claude mcp list</code>; look for <code>ctx: ✓ Connected</code>.</li>
 </ol>
 <p>Use <code>always</code> for invariants and anything that <strong>must</strong>
 fire every session. Use <code>auto</code> for situational rules
 where "Claude fetches this when the prompt is relevant"
-is the right behavior — those still land, just on
+is the right behavior; those still land, just on
 Claude's judgment. Use <code>manual</code> for reference libraries
 you'll name explicitly.</p>
-<p><strong>Cursor, Cline, Kiro</strong> — <code>auto</code> is the natural default.
+<p><strong>Cursor, Cline, Kiro</strong>: <code>auto</code> is the natural default.
 These tools read <code>.cursor/rules/</code>, <code>.clinerules/</code>, or
 <code>.kiro/steering/</code> natively and resolve the description
 match on their own, so <code>auto</code> files fire when the prompt
 matches. <code>manual</code> files load on explicit invocation.
 <code>always</code> still works but consumes context budget on
 every turn.</p>
-<p><strong>Mixed setups</strong> — if a rule must fire on Claude Code,
+<p><strong>Mixed setups</strong>: if a rule must fire on Claude Code,
 pick <code>always</code>, even if it's overkill for your Cursor
 setup. The context budget cost is small; the alternative
 (silently not firing) is worse.</p>
@@ -1872,14 +1872,14 @@ setup. The context budget cost is small; the alternative
 handles two tool families differently, and it's worth
 knowing which family your editor is in before you wonder
 why a rule isn't firing.</p>
-<p><strong>Native-rules tools</strong> — <strong>Cursor</strong>, <strong>Cline</strong>, <strong>Kiro</strong> —
+<p><strong>Native-rules tools</strong> (<strong>Cursor</strong>, <strong>Cline</strong>, <strong>Kiro</strong>)
 have a built-in rules primitive. They read a specific
 directory (<code>.cursor/rules/</code>, <code>.clinerules/</code>,
 <code>.kiro/steering/</code>) and apply the rules they find there.
 ctx handles these via <code>ctx steering sync</code>, which exports
 your files into the tool-native format. Run <code>sync</code>
 whenever you edit a steering file.</p>
-<p><strong>Hook + MCP tools</strong> — <strong>Claude Code</strong>, <strong>Codex</strong> — have
+<p><strong>Hook + MCP tools</strong> (<strong>Claude Code</strong>, <strong>Codex</strong>) have
 no native rules primitive, so <code>ctx steering sync</code> is a
 <strong>no-op</strong> for them. Instead, ctx delivers steering through
 two non-sync channels:</p>
@@ -1894,49 +1894,49 @@ two non-sync channels:</p>
 <li><strong>On-demand via the <code>ctx_steering_get</code> MCP tool</strong>. The
    ctx MCP server exposes a tool Claude can call mid-task
    to fetch matching steering files for a specific prompt.
-   Claude decides when to call it — it's not automatic.</li>
+   Claude decides when to call it; it's not automatic.</li>
 </ol>
 <p>Both channels activate when you run
 <code>ctx setup claude-code --write</code>. After that, steering just
 works for Claude Code.</p>
 <p><strong>Practical takeaway</strong>:</p>
 <ul>
-<li>Using Cursor/Cline/Kiro only? → Run <code>ctx steering sync</code>
+<li>Using Cursor/Cline/Kiro only? Run <code>ctx steering sync</code>
   after edits.</li>
-<li>Using Claude Code or Codex only? → Never run <code>sync</code>; the
+<li>Using Claude Code or Codex only? Never run <code>sync</code>; the
   hook+MCP pipeline handles it.</li>
-<li>Using both? → Run <code>sync</code> for the native-rules tools; the
+<li>Using both? Run <code>sync</code> for the native-rules tools; the
   hook+MCP pipeline covers Claude Code automatically.</li>
 </ul>
 <h2 id="two-shapes-of-automation-rules-and-scripts">Two Shapes of Automation: Rules and Scripts<a class="headerlink" href="#two-shapes-of-automation-rules-and-scripts" title="Permanent link">&para;</a></h2>
 <p>Steering is one of <strong>two</strong> hook-like layers ctx provides for
 customizing AI behavior. They're complementary:</p>
 <ul>
-<li><strong>Steering</strong> — <em>persistent rules</em> that get prepended to
+<li><strong>Steering</strong>: <em>persistent rules</em> that get prepended to
   prompts. Declarative, text-only, scored by match.</li>
-<li><strong><a href="../triggers/">Triggers</a></strong> — <em>executable shell scripts</em>
+<li><strong><a href="../triggers/">Triggers</a></strong>: <em>executable shell scripts</em>
   that fire at lifecycle events. Imperative, runs arbitrary
   code, gated by exit codes.</li>
 </ul>
 <p>Pick steering when you want "always remind the AI of X."
 Pick triggers when you want "do Y when event Z happens."
-They can coexist — many projects use both.</p>
+They can coexist; many projects use both.</p>
 <h2 id="where-to-go-next">Where to Go Next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong><a href="../../recipes/steering/">Writing Steering Files</a></strong> —
+<li><strong><a href="../../recipes/steering/">Writing Steering Files</a></strong>:
   a six-step walkthrough: scaffold, write the rule, preview
   matches, list, get-rules-in-front-of-the-AI (two paths
   depending on tool family), verify.</li>
-<li><strong><a href="../../cli/steering/"><code>ctx steering</code> reference</a></strong> — full
+<li><strong><a href="../../cli/steering/"><code>ctx steering</code> reference</a></strong>: full
   command, flag, and frontmatter reference; includes the
   per-tool delivery-mechanism table and a dedicated section
   on how Claude Code and Codex consume steering.</li>
-<li><strong><a href="../../cli/setup/"><code>ctx setup</code></a></strong> — configure which AI
+<li><strong><a href="../../cli/setup/"><code>ctx setup</code></a></strong>: configure which AI
   tools receive steering. For Cursor/Cline/Kiro this is
   about sync targets; for Claude Code/Codex it installs
   the plugin that wires the <code>PreToolUse</code> hook and MCP
   server.</li>
-<li><strong><a href="../triggers/">Lifecycle Triggers</a></strong> — the imperative
+<li><strong><a href="../triggers/">Lifecycle Triggers</a></strong>: the imperative
   companion to steering files.</li>
 </ul>
 

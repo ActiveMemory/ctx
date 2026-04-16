@@ -20,7 +20,7 @@ import (
 // directory argument, serves that directory if it contains a
 // zensical.toml.
 //
-// This command does NOT start a ctx Hub — for that, use
+// This command does NOT start a ctx Hub; for that, use
 // `ctx hub start`.
 //
 // Returns:

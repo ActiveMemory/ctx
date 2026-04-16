@@ -130,7 +130,7 @@ via hooks, but the explicit ceremony gives you a **readback** to verify.
     `ctx init` (`.context/steering/product.md`, `tech.md`,
     `structure.md`, `workflow.md`), their `inclusion:
     always` rules are prepended to **every** tool call via
-    the plugin's `PreToolUse` hook — no `/ctx-remember`
+    the plugin's `PreToolUse` hook, with no `/ctx-remember`
     needed, no MCP call. Edit a file, save, and the next
     tool call in Claude Code picks it up. See
     [Steering files](steering.md) for details on the

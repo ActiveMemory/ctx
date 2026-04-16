@@ -18,12 +18,12 @@
 //
 // # Public Surface
 //
-//   - **[WriteEntries](dir, entries)** — appends
+//   - **[WriteEntries](dir, entries)**: appends
 //     each entry to the matching per-type file
 //     (`decisions.md`, `learnings.md`,
 //     `conventions.md`, `tasks.md`) under `dir`,
 //     formatting via [HubEntryMarkdown]. Idempotent
-//     by entry sequence number — re-running with
+//     by entry sequence number; re-running with
 //     the same sequence range produces no
 //     duplicates because the importer tracks last-
 //     seen sequence per file.
@@ -34,7 +34,7 @@
 //   - `.context/hub/learnings.md`
 //   - `.context/hub/conventions.md`
 //   - `.context/hub/tasks.md`
-//   - `.context/hub/.sync-state.json`  — last-seen
+//   - `.context/hub/.sync-state.json`: last-seen
 //     sequence per type so resume is exact.
 //
 // # Concurrency

@@ -42,7 +42,7 @@ import (
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	input, _, paused := coreCheck.Preamble(stdin)
 
-	// Provenance is unconditional — always print first,
+	// Provenance is unconditional: always print first,
 	// regardless of initialized/paused state.
 	coreProv.Emit(cmd, input.SessionID)
 

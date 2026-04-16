@@ -352,7 +352,7 @@ ctx setup aider
 
 ctx skills can leverage external MCP servers for web search and code
 intelligence. ctx works without them, but they significantly improve
-agent behavior across sessions — the investment is small and the
+agent behavior across sessions. The investment is small and the
 benefits compound. Skills like `/ctx-code-review`, `/ctx-explain`,
 and `/ctx-refactor` all become noticeably better with these tools
 connected.

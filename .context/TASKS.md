@@ -30,14 +30,16 @@ TASK STATUS LABELS:
 - [x] If context is not initialized, hooks should not run. Right now they run
   and give a "context diretory outside project root" (that's a side effect). But
   the issue is the project does not have a .context folder and we don't detect
-  it. **Progress 2026-04-13**: Boundary side effect resolved by git-anchored walk
+  it. **Progress 2026-04-13**: Boundary side effect resolved by git-anchored
+  walk
   (commit e24941d2). `state.Initialized()` guards added to `check_resource` and
   `check_backup_age` — the two user-visible relay-nag hooks that were missing
   them. **Completed 2026-04-16**: `state.Initialized()` guards added to
   `mark_journal`, `mark_wrapped_up`, `pause`, `resume`. `bootstrap` left
   unguarded intentionally — its job is to report context dir status, and it
   already has its own `os.Stat` guard. Safety hooks
-  (`block_dangerous_command`, `block_non_path_ctx`) intentionally run regardless.
+  (`block_dangerous_command`, `block_non_path_ctx`) intentionally run
+  regardless.
 
 - [x] Move `ctx bootstrap` back to `ctx system bootstrap` (hidden). Bootstrap is
   agent-only plumbing — no human types it interactively. It was incorrectly
@@ -95,48 +97,63 @@ TASK STATUS LABELS:
   #priority:low #added:2026-04-13
   **Skipped 2026-04-16**: Superseded by
   `docs/operations/runbooks/architecture-exploration.md`. A runbook is the right
-  weight — a CLI scaffolding command was speculative abstraction for a workflow
+  weight — a CLI scaffolding command was speculative abstraction for a
+  workflow
   that's better served by a discoverable doc with an embedded prompt.
 
 ### Runbooks
 
-- [x] Create `docs/operations/runbooks/release-checklist.md` — canonical pre-release
+- [x] Create `docs/operations/runbooks/release-checklist.md` — canonical
+  pre-release
   sequence: run codebase-audit, docs-semantic-audit, sanitize-permissions, `make
   test`, bump version, generate release notes, tag, push. Today this lives in
   the operator's head + scattered across docs/operations/. Cross-link with
   `_ctx-release` skill. #priority:high #added:2026-04-11
-  **Completed 2026-04-16**: Created at `docs/operations/runbooks/release-checklist.md`.
+  **Completed 2026-04-16**: Created at
+  `docs/operations/runbooks/release-checklist.md`.
   All runbooks moved from `hack/runbooks/` to `docs/operations/runbooks/` for
   discoverability on ctx.ist.
 
-- [x] Create `docs/operations/runbooks/breaking-migration.md` — template for users
+- [x] Create `docs/operations/runbooks/breaking-migration.md` — template for
+  users
   upgrading across breaking CLI renames. What commands changed, how to
   regenerate CLAUDE.md (`ctx init --force`), how to update personal scripts and
   hook configs. One instance per breaking release, or a generic template with a
   per-release appendix. #priority:medium #added:2026-04-11
-  **Completed 2026-04-16**: Created at `docs/operations/runbooks/breaking-migration.md`.
+  **Completed 2026-04-16**: Created at
+  `docs/operations/runbooks/breaking-migration.md`.
 
-- [x] Create `docs/operations/runbooks/hub-deployment.md` — linear runbook for setting up
+- [x] Create `docs/operations/runbooks/hub-deployment.md` — linear runbook for
+  setting up
   a ctx Hub for a team: generate admin token, distribute, register clients,
   verify sync, configure TLS (when H-01/H-02 land). Consolidates pieces
   currently scattered across hub recipes. #priority:medium #added:2026-04-11
-  **Completed 2026-04-16**: Created at `docs/operations/runbooks/hub-deployment.md`.
+  **Completed 2026-04-16**: Created at
+  `docs/operations/runbooks/hub-deployment.md`.
 
-- [x] Create `docs/operations/runbooks/new-contributor.md` — onboarding sequence: clone
+- [x] Create `docs/operations/runbooks/new-contributor.md` — onboarding
+  sequence: clone
   → `ctx init` → `make build && sudo make install` → verify hooks (`claude
   mcp list`) → run first session → verify context persistence. Currently
   scattered across README, contributing.md, and setup docs. #priority:medium
   #added:2026-04-11
-  **Completed 2026-04-16**: Created at `docs/operations/runbooks/new-contributor.md`.
+  **Completed 2026-04-16**: Created at
+  `docs/operations/runbooks/new-contributor.md`.
 
-- [x] Create `docs/operations/runbooks/plugin-release.md` — plugin-specific release
+- [x] Create `docs/operations/runbooks/plugin-release.md` — plugin-specific
+  release
   procedure: update hooks.json, bump version, test against fresh Claude Code
   install, publish to marketplace, verify `claude mcp list` shows updated
   version. Not covered by the general release checklist. #priority:low
   #added:2026-04-11
-  **Completed 2026-04-16**: Created at `docs/operations/runbooks/plugin-release.md`.
+  **Completed 2026-04-16**: Created at
+  `docs/operations/runbooks/plugin-release.md`.
 
 ### Misc
+
+- [ ] Human: Read the entire documentation page-by-page, line-by-line, with a
+  critical mind, including blog posts. Take notes for agent to rectify, or
+  directly update the docs whenever it makes sense.
 
 - [ ] Human: Do a documentation audit for AI-generated artifacts. #important
   #not-urgent
@@ -194,10 +211,13 @@ TASK STATUS LABELS:
   self-contained. Clean up docs/superpowers/ directory and any remaining
   references. #priority:high #added:2026-04-06-121002 #done:2026-04-06
 
-- [ ] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so 
-  `ctx backup` can use fstab/systemd automounts instead of requiring GVFS. 
-  Spec: specs/smb-mount-path-support.md #priority:medium
-  #added:2026-04-04-010000
+- [ ] Deprecate and remove `ctx backup`: hub handles cross-machine persistence,
+  backup is environment-specific (SMB/GVFS/rsync), and it is the wrong layer
+  for ctx to own. Replace with a backup-strategy runbook. About 60 files to
+  remove across CLI, config, hooks, docs, skills. Implementation order: runbook
+  first, then hook removal, then command removal, then docs cleanup.
+  Spec: specs/deprecate-ctx-backup.md #priority:medium
+  #added:2026-04-04-010000 #updated:2026-04-16
 
 ### Architecture Docs
 
@@ -765,19 +785,23 @@ Taxonomy (from prefix analysis):
 
 
 
-- [ ] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so
+- [-] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so
   `ctx backup` can use fstab/systemd automounts instead of requiring GVFS.
   Spec: specs/smb-mount-path-support.md #priority:medium
   #added:2026-04-04-010000
+  **Skipped 2026-04-16**: Duplicate of line 214. Superseded by
+  specs/deprecate-ctx-backup.md (full removal, not mount path fix).
 
 - [ ] Make AutoPruneStaleDays configurable via ctxrc. Currently hardcoded to 7
   days in config.AutoPruneStaleDays; add a ctxrc key (e.g., auto_prune_days) and
   fallback to the default. #priority:low #added:2026-03-07-220512
 
-- [ ] Refactor check_backup_age/run.go: move consts (lines 23-24) to config,
+- [-] Refactor check_backup_age/run.go: move consts (lines 23-24) to config,
   magic directories (line 59) to config, symbolic constants for strings (line
   72), messages to assets (lines 79, 90-91), extract non-Run functions to
   system/core, fix docstrings #priority:medium #added:2026-03-07-180020
+  **Skipped 2026-04-16**: Superseded by specs/deprecate-ctx-backup.md
+  (check_backup_age will be removed entirely, not refactored).
 
 - [ ] Add ctxrc support for recall.list.limit to make the default --limit for
   recall list configurable. Currently hardcoded as config.DefaultRecallListLimit
@@ -2092,10 +2116,23 @@ disambiguates.
 
 ### Later
 
-- [ ] Optional follow-up doc.go pass: a handful of tiny per-subcommand wrappers under internal/cli/*/cmd/* still have ~5-line bodies. Most are accurate-but-brief; expand only if the brief form proves insufficient in review. #session:4b37e2f6 #branch:feat/copilot-cli-skill-parity-rebased #commit:edaac81786c9379333b352dae0d55df0ae0f72bb #added:2026-04-14-010311
+- [ ] Optional follow-up doc.go pass: a handful of tiny per-subcommand wrappers
+  under internal/cli/*/cmd/* still have ~5-line bodies. Most are
+  accurate-but-brief; expand only if the brief form proves insufficient in
+  review. #session:4b37e2f6 #branch:feat/copilot-cli-skill-parity-rebased
+  #commit:edaac81786c9379333b352dae0d55df0ae0f72bb #added:2026-04-14-010311
 
-- [ ] Extend internal/audit/stuttery_functions_test.go to cover *ast.GenDecl (consts, vars, types). Current implementation walks *ast.FuncDecl only and missed tpl.TplEntryMarkdown (since renamed to HubEntryMarkdown). #session:4b37e2f6 #branch:feat/copilot-cli-skill-parity-rebased #commit:edaac81786c9379333b352dae0d55df0ae0f72bb #added:2026-04-14-010311
+- [ ] Extend internal/audit/stuttery_functions_test.go to cover *ast.GenDecl
+  (consts, vars, types). Current implementation walks *ast.FuncDecl only and
+  missed tpl.TplEntryMarkdown (since renamed to HubEntryMarkdown).
+  #session:4b37e2f6 #branch:feat/copilot-cli-skill-parity-rebased
+  #commit:edaac81786c9379333b352dae0d55df0ae0f72bb #added:2026-04-14-010311
 
-- [ ] Decide whether to delete docs/cli/connect.md — verified dead duplicate of docs/cli/connection.md (uses old ctx connect command name; zero inbound references; not in zensical.toml). Awaiting explicit user OK before git rm. #session:4b37e2f6 #branch:feat/copilot-cli-skill-parity-rebased #commit:edaac81786c9379333b352dae0d55df0ae0f72bb #added:2026-04-14-010311
+- [ ] Decide whether to delete docs/cli/connect.md — verified dead duplicate
+  of docs/cli/connection.md (uses old ctx connect command name; zero inbound
+  references; not in zensical.toml). Awaiting explicit user OK before git rm.
+  #session:4b37e2f6 #branch:feat/copilot-cli-skill-parity-rebased
+  #commit:edaac81786c9379333b352dae0d55df0ae0f72bb #added:2026-04-14-010311
 
-- [-] PROMPT.md design — belongs in another project; skipped here. #session:4b37e2f6 #added:2026-04-14-010311 #skipped:2026-04-14
+- [-] PROMPT.md design — belongs in another project; skipped here.
+  #session:4b37e2f6 #added:2026-04-14-010311 #skipped:2026-04-14

@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package parent provides a helper for creating pure
-// grouping commands that have no RunE, no flags -- only
+// grouping commands that have no RunE, no flags; only
 // desc-loaded descriptions and subcommand registration.
 //
 // Many ctx commands are namespace parents that exist

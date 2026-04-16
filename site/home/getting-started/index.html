@@ -2050,7 +2050,7 @@ encryption key at <code>~/.ctx/</code> for the
 For Claude Code, install the <a href="../../operations/integrations/#claude-code-full-integration">ctx plugin</a>
 for automatic hooks and skills.</p>
 <p><strong><code>ctx init</code> also scaffolds four <em>foundation steering files</em></strong> in
-<code>.context/steering/</code> — these are behavioral-rule templates that
+<code>.context/steering/</code>; these are behavioral-rule templates that
 tell your AI how to act on your project:</p>
 <table>
 <thead>
@@ -2081,11 +2081,11 @@ tell your AI how to act on your project:</p>
 <p>Each file starts with a self-documenting HTML comment
 explaining the three inclusion modes (<code>always</code> / <code>auto</code> /
 <code>manual</code>), priority, and tool scoping. The defaults are set
-to <code>inclusion: always</code> and <code>priority: 10</code> — they fire on
+to <code>inclusion: always</code> and <code>priority: 10</code>, so they fire on
 every AI tool call until you edit them.</p>
 <p><strong>You should open each of these files and replace the
 placeholder content with your project's actual rules.</strong>
-Running <code>ctx init</code> again won't clobber your edits — existing
+Running <code>ctx init</code> again won't clobber your edits; existing
 files are left alone. To opt out entirely, use
 <code>ctx init --no-steering-init</code>.</p>
 <p>See <a href="../../recipes/steering/">Writing Steering Files</a> for the
@@ -2141,13 +2141,15 @@ better agent behavior. The investment is small and the benefits compound
 over sessions:</p>
 <ul>
 <li>
-<p><strong><a href="https://github.com/nicobailon/gemini-code-search-mcp">Gemini Search</a></strong>
-  — grounded web search with citations. Skills like <code>/ctx-code-review</code>
+<dl>
+<dt><strong><a href="https://github.com/nicobailon/gemini-code-search-mcp">Gemini Search</a></strong></dt>
+<dd>grounded web search with citations. Skills like <code>/ctx-code-review</code>
   and <code>/ctx-explain</code> use it for up-to-date documentation lookups instead
-  of relying on training data.</p>
+  of relying on training data.</dd>
+</dl>
 </li>
 <li>
-<p><strong><a href="https://github.com/nicobailon/gitnexus-mcp">GitNexus</a></strong> — code
+<p><strong><a href="https://github.com/nicobailon/gitnexus-mcp">GitNexus</a></strong>: code
   knowledge graph with symbol resolution, blast radius analysis, and
   domain clustering. Skills like <code>/ctx-refactor</code> and <code>/ctx-code-review</code>
   use it for impact analysis and dependency awareness.</p>

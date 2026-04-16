@@ -78,7 +78,7 @@ func TestLatestSessionPct(t *testing.T) {
 	t.Run("reads latest pct from stats JSONL", func(t *testing.T) {
 		path := filepath.Join(tmpDir, stats.FilePrefix+sessionID+file.ExtJSONL)
 
-		// Write two stats entries — the second should win.
+		// Write two stats entries; the second should win.
 		entries := []entity.Stats{
 			{Pct: 5, Prompt: 1, Event: "silent"},
 			{Pct: 12, Prompt: 2, Event: "silent"},

@@ -14,7 +14,7 @@ import (
 )
 
 // AppendBytes opens path in append mode, writes data, and closes.
-// Errors are logged to stderr via log/warn — this is a best-effort
+// Errors are logged to stderr via log/warn; this is a best-effort
 // operation for JSONL event logs and session stats where failures
 // should not interrupt the caller.
 //

@@ -202,7 +202,7 @@ For Claude Code, install the [ctx plugin](../operations/integrations.md#claude-c
 for automatic hooks and skills.
 
 **`ctx init` also scaffolds four *foundation steering files*** in
-`.context/steering/` — these are behavioral-rule templates that
+`.context/steering/`; these are behavioral-rule templates that
 tell your AI how to act on your project:
 
 | File            | What it captures                                   |
@@ -215,12 +215,12 @@ tell your AI how to act on your project:
 Each file starts with a self-documenting HTML comment
 explaining the three inclusion modes (`always` / `auto` /
 `manual`), priority, and tool scoping. The defaults are set
-to `inclusion: always` and `priority: 10` — they fire on
+to `inclusion: always` and `priority: 10`, so they fire on
 every AI tool call until you edit them.
 
 **You should open each of these files and replace the
 placeholder content with your project's actual rules.**
-Running `ctx init` again won't clobber your edits — existing
+Running `ctx init` again won't clobber your edits; existing
 files are left alone. To opt out entirely, use
 `ctx init --no-steering-init`.
 
@@ -297,11 +297,11 @@ better agent behavior. The investment is small and the benefits compound
 over sessions:
 
 * **[Gemini Search](https://github.com/nicobailon/gemini-code-search-mcp)**
-  — grounded web search with citations. Skills like `/ctx-code-review`
+: grounded web search with citations. Skills like `/ctx-code-review`
   and `/ctx-explain` use it for up-to-date documentation lookups instead
   of relying on training data.
 
-* **[GitNexus](https://github.com/nicobailon/gitnexus-mcp)** — code
+* **[GitNexus](https://github.com/nicobailon/gitnexus-mcp)**: code
   knowledge graph with symbol resolution, blast radius analysis, and
   domain clustering. Skills like `/ctx-refactor` and `/ctx-code-review`
   use it for impact analysis and dependency awareness.

@@ -41,10 +41,10 @@
 //
 // # Public Surface
 //
-//   - MessageListFormat -- pre-computed printf format
+//   - MessageListFormat: pre-computed printf format
 //     for table rows.
 //   - MessageColHook, MessageColVariant,
-//     MessageColCategory -- column widths.
+//     MessageColCategory: column widths.
 //   - MessageSepHook, MessageSepVariant,
 //     MessageSepCategory, MessageSepOverride --
 //     separator widths for underline row.

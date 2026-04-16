@@ -19,10 +19,10 @@
 // An optional positional argument specifying the
 // target profile:
 //
-//   - dev   -- switch to the development profile
-//   - base  -- switch to the base (production) profile
-//   - prod  -- alias for base
-//   - (none) -- toggle between dev and base
+//   - dev: switch to the development profile
+//   - base: switch to the base (production) profile
+//   - prod: alias for base
+//   - (none): toggle between dev and base
 //
 // # Flags
 //

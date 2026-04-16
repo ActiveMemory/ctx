@@ -2628,9 +2628,9 @@ context packet:</p>
 <p>Two subdirectories under <code>.context/</code> are <strong>implementation details</strong> that
 are user-editable but not part of the priority read order:</p>
 <ul>
-<li><strong><code>.context/templates/</code></strong> — format templates for <code>ctx add decision</code>
+<li><strong><code>.context/templates/</code></strong>: format templates for <code>ctx add decision</code>
   and <code>ctx add learning</code>. See <a href="#templates">templates</a> below.</li>
-<li><strong><code>.context/steering/</code></strong> — behavioral rules with YAML frontmatter
+<li><strong><code>.context/steering/</code></strong>: behavioral rules with YAML frontmatter
   that get synced into each AI tool's native config. See
   <a href="#steering">steering</a> below, and the full
   <a href="../steering/">Steering files</a> page for the design and workflow.</li>
@@ -2641,10 +2641,10 @@ are user-editable but not part of the priority read order:</p>
 <ul>
 <li><strong>Skills</strong> live in <code>.claude/skills/</code> (project-local) or are provided
   by the installed <code>ctx</code> plugin. A typical project doesn't see the
-  plugin's skills at all — they ride with the plugin and are owned by
+  plugin's skills at all; they ride with the plugin and are owned by
   its update cycle. See <a href="../../cli/skill/"><code>ctx skill</code></a> and
   <a href="../../reference/skills/">Skills reference</a>.</li>
-<li><strong>Hooks</strong> are Claude Code <code>PreToolUse</code>/<code>PostToolUse</code>/
+<li><strong>Hooks</strong>: Claude Code <code>PreToolUse</code>/<code>PostToolUse</code>/
   <code>UserPromptSubmit</code> entries configured in <code>.claude/settings.json</code> or
   shipped by a plugin. The <code>ctx</code> plugin registers its own hooks
   automatically; <strong>a typical project does not author hooks by hand</strong>,
@@ -3076,8 +3076,8 @@ These control the structure of new entries appended to DECISIONS.md and
 LEARNINGS.md.</p>
 <p><code>ctx init</code> deploys two starter templates:</p>
 <ul>
-<li><code>decision.md</code> — sections: Context, Rationale, Consequence</li>
-<li><code>learning.md</code> — sections: Context, Lesson, Application</li>
+<li><code>decision.md</code>: sections Context, Rationale, Consequence</li>
+<li><code>learning.md</code>: sections Context, Lesson, Application</li>
 </ul>
 <h3 id="customizing">Customizing<a class="headerlink" href="#customizing" title="Permanent link">&para;</a></h3>
 <p>Edit the templates directly. Changes take effect immediately on the
@@ -3098,10 +3098,10 @@ Cline). <code>ctx</code> matches steering files to prompts and syncs them out to
 each tool's config.</p>
 <p><code>ctx init</code> scaffolds four foundation files:</p>
 <ul>
-<li><code>product.md</code> — who this project serves and why</li>
-<li><code>tech.md</code> — the technology stack and its constraints</li>
-<li><code>structure.md</code> — how the code is organized</li>
-<li><code>workflow.md</code> — how work moves through the system</li>
+<li><code>product.md</code>: who this project serves and why</li>
+<li><code>tech.md</code>: the technology stack and its constraints</li>
+<li><code>structure.md</code>: how the code is organized</li>
+<li><code>workflow.md</code>: how work moves through the system</li>
 </ul>
 <p>Each file carries YAML frontmatter describing <strong>when</strong> it applies
 (always, matching prompts, or manually referenced) and <strong>what</strong> tool

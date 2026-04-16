@@ -14,7 +14,7 @@
 // compatibility commitment. The only way to know whether
 // a new Claude Code release added a field, removed a type,
 // or quietly renamed a property is to compare empirical
-// reality to a frozen reference shape — which is what this
+// reality to a frozen reference shape, which is what this
 // package does.
 //
 // # The Reference Shape
@@ -29,15 +29,15 @@
 // [build.go] / [check.go] / [validate.go] walk an actual
 // JSONL file and accumulate findings into a [Collector]:
 //
-//   - **Unknown fields** — a key the reference shape does
+//   - **Unknown fields**: a key the reference shape does
 //     not list (Claude added a property).
-//   - **Missing required fields** — a key the reference
+//   - **Missing required fields**: a key the reference
 //     shape requires but the record omits (Claude
 //     removed a property; we may now silently drop data
 //     downstream).
-//   - **Unknown record types** — a `type` value not in
+//   - **Unknown record types**: a `type` value not in
 //     the reference set (a new record kind appeared).
-//   - **Unknown content block types** — same, but for
+//   - **Unknown content block types**: same, but for
 //     content blocks inside `assistant` records.
 //
 // # Strictly Informational
