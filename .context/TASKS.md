@@ -87,12 +87,16 @@ TASK STATUS LABELS:
 
 ### Agents
 
-- [ ] Add `ctx explore` command — scaffolds `.arch-explorer/` in a workspace
+- [-] Add `ctx explore` command — scaffolds `.arch-explorer/` in a workspace
   directory with manifest.json, PROMPT.md (from
   `hack/agents/architecture-explorer.md`), run-log.md, and a README. Similar to
   `ctx init` but for multi-repo architecture exploration. The prompt template
   lives in `hack/agents/architecture-explorer.md` and ships embedded.
   #priority:low #added:2026-04-13
+  **Skipped 2026-04-16**: Superseded by
+  `docs/operations/runbooks/architecture-exploration.md`. A runbook is the right
+  weight — a CLI scaffolding command was speculative abstraction for a workflow
+  that's better served by a discoverable doc with an embedded prompt.
 
 ### Runbooks
 

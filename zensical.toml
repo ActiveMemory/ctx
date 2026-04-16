@@ -197,6 +197,7 @@ nav = [
       "operations/runbooks/codebase-audit.md",
       "operations/runbooks/docs-semantic-audit.md",
       "operations/runbooks/sanitize-permissions.md",
+      "operations/runbooks/architecture-exploration.md",
     ]},
   ]},
   { "Security" = [
