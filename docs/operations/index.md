@@ -85,6 +85,7 @@ guidance on triaging the results.
 | [Codebase audit](runbooks/codebase-audit.md) | AST audits, magic strings, dead code, doc alignment | Before release, quarterly |
 | [Docs semantic audit](runbooks/docs-semantic-audit.md) | Narrative gaps, weak pages, structural problems | Before release, after adding pages |
 | [Sanitize permissions](runbooks/sanitize-permissions.md) | Clean `.claude/settings.local.json` of over-broad grants | After heavy permission granting |
+| [Architecture exploration](runbooks/architecture-exploration.md) | Systematic architecture docs across repos | New codebase onboarding, reviews |
 
 **Recommended cadence**:
 
