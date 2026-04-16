@@ -101,15 +101,4 @@
 // Parsers are stateless; the `registeredParsers` slice is read-only
 // after package init. A single parser instance is reused across all
 // calls. Concurrent [ParseFile] / [ScanDirectory] calls are safe.
-//
-// # Related Packages
-//
-//   - [github.com/ActiveMemory/ctx/internal/journal]         pipeline
-//     orchestration: import, lock, sync, site/obsidian
-//   - [github.com/ActiveMemory/ctx/internal/journal/state]   tracks
-//     which raw sources have been imported / enriched
-//   - [github.com/ActiveMemory/ctx/internal/journal/schema]  JSONL
-//     schema validation for raw session files
-//   - [github.com/ActiveMemory/ctx/internal/entity]          the
-//     Session and Message types this package produces
 package parser

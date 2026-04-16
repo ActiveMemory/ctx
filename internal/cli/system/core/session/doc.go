@@ -49,15 +49,4 @@
 // concurrency model is single-writer. The atomic
 // rename pattern in [WriteStats] guards the rare case
 // where a sibling process inspects the file mid-write.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/cmd/check_*]   — every
-//     `check_*` hook reads stdin and stats through this
-//     package.
-//   - [internal/cli/system/cmd/session_event] — writes
-//     start/end markers consumed by ceremony hooks.
-//   - [internal/cli/system/core/nudge]    — fires the
-//     actual nudge based on the stats this package
-//     maintains.
 package session

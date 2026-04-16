@@ -42,13 +42,4 @@
 // Single-process per session. The hook is
 // invoked by the AI tool's hook runtime
 // serially per turn.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/core/nudge]   — the
-//     emission helper.
-//   - [internal/cli/system/core/session] — reads
-//     and writes the per-session counters.
-//   - [internal/rc]                      — supplies
-//     the configured `context_window` budget.
 package check_context_size

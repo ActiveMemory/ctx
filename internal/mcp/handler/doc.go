@@ -97,20 +97,4 @@
 // state. Per-session state lives on [entity.MCPDeps] (passed
 // in by the server) and on the per-session files in `state/`,
 // which are written through the package's own append helpers.
-//
-// # Related Packages
-//
-//   - [github.com/ActiveMemory/ctx/internal/mcp/server] —
-//     JSON-RPC framing, tool dispatch, response wrapping.
-//   - [github.com/ActiveMemory/ctx/internal/mcp/proto] —
-//     wire-protocol types.
-//   - [github.com/ActiveMemory/ctx/internal/entity] —
-//     `MCPDeps`, `MCPSession`, and the domain types these
-//     handlers operate on.
-//   - [github.com/ActiveMemory/ctx/internal/context/load] —
-//     reads and assembles the loaded [entity.Context].
-//   - [github.com/ActiveMemory/ctx/internal/drift],
-//     [internal/tidy], [internal/journal/parser],
-//     [internal/steering] — domain packages this handler
-//     orchestrates.
 package handler

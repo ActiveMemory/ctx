@@ -46,13 +46,4 @@
 //
 // All functions are filesystem-bound and stateless.
 // Concurrent invocations never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/cmd/check_version] — the
-//     hook that fires the nudge.
-//   - [internal/cli/system/core/message]      — renders
-//     the nudge body.
-//   - [internal/bootstrap]                    — owns
-//     the `Version` constant baked into the binary.
 package drift

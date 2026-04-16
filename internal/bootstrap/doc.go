@@ -71,14 +71,4 @@
 // Bootstrap runs once at process start. Concurrent
 // execution is not a concern; cobra serializes
 // subcommand dispatch.
-//
-// # Related Packages
-//
-//   - [internal/cli/...]                 — every
-//     subcommand package this layer wires together.
-//   - [internal/config/embed/cmd]        — the typed
-//     `Use<X>` and `DescKey<X>` constants the registered
-//     commands consume.
-//   - [internal/audit]                   — enforces
-//     structural invariants on the resulting tree.
 package bootstrap

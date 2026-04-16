@@ -55,16 +55,4 @@
 //	    "github.com/ActiveMemory/ctx/internal/config/embed/text"
 //	)
 //	msg := desc.Text(text.DescKeyAgentInstruction)
-//
-// # Related Packages
-//
-//   - [internal/assets/read/desc]            — the Text /
-//     Command / Flag lookup helpers that resolve a key into
-//     a string at run-time.
-//   - [internal/assets/commands/text]        — the embedded
-//     YAML files that hold the actual strings.
-//   - [internal/config/embed/cmd] and
-//     [internal/config/embed/flag]           — sister
-//     packages with the same key/YAML pattern for command
-//     short-help and flag-help text.
 package text

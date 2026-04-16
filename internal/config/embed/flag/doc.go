@@ -48,15 +48,4 @@
 // In practice, most flag binding goes through
 // [internal/flagbind] which already knows how to look up
 // the desc key, so callers rarely call `desc.Flag` directly.
-//
-// # Related Packages
-//
-//   - [internal/assets/read/desc]    — `desc.Flag(key)`
-//     run-time lookup.
-//   - [internal/assets/commands]     — the YAML store.
-//   - [internal/flagbind]            — flag-binding
-//     helpers that consume these keys.
-//   - [internal/config/embed/text],
-//     [internal/config/embed/cmd]    — sister key
-//     registries.
 package flag

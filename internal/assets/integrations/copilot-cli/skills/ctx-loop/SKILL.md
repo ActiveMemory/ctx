@@ -1,7 +1,6 @@
 ---
 name: ctx-loop
 description: "Generate a shell script for running AI tools in autonomous iteration loops. Use when setting up unattended iteration, headless agent runs, or CI-driven AI workflows."
-tools: [bash, read, write]
 ---
 
 Generate a ready-to-use autonomous loop shell script.

@@ -48,15 +48,4 @@
 // Filesystem-bound and stateless. `ctx` is
 // single-process; concurrent switches are not a
 // design concern.
-//
-// # Related Packages
-//
-//   - [internal/cli/config/cmd/switchcmd]   — the
-//     `ctx config switch` CLI surface.
-//   - [internal/cli/config/cmd/status]      — the
-//     `ctx config status` surface that calls
-//     [Active] and [Detect].
-//   - [internal/rc]                         — the
-//     read-side cache that picks up the new
-//     `.ctxrc` after a switch.
 package profile

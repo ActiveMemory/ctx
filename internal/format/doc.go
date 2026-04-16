@@ -55,16 +55,4 @@
 //
 // All functions are pure. Concurrent callers never
 // race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/core/source/format] —
-//     domain-specific formatters that compose these
-//     primitives.
-//   - [internal/write/*]                — every
-//     terminal-output package consumes these
-//     formatters.
-//   - [internal/cli/system/core/nudge]  — uses
-//     [TimeAgo] for "last seen 3 hours ago" lines in
-//     ceremony nudges.
 package format

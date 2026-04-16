@@ -34,17 +34,4 @@
 // Single-process, sequential. The site build is
 // `O(N)` over journal entries and typically
 // completes in seconds.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/core/section] — topic
-//     index builders.
-//   - [internal/cli/journal/core/moc]     — Map of
-//     Content pages.
-//   - [internal/cli/journal/core/generate] — top-
-//     level page templates.
-//   - [internal/cli/journal/core/normalize] — runs
-//     per-entry before rendering.
-//   - [internal/cli/serve]                  — the
-//     `ctx serve` command that hosts the built site.
 package site

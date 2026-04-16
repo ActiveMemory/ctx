@@ -1,7 +1,6 @@
 ---
 name: ctx-archive
 description: "Archive completed tasks. Use when TASKS.md has many completed items cluttering the view."
-tools: [bash]
 ---
 
 Move completed tasks from TASKS.md to the archive.

@@ -35,17 +35,4 @@
 //
 // Single-process, sequential. `O(N)` over journal
 // entries.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/obsidian] — the CLI
-//     surface.
-//   - [internal/cli/journal/core/parse]    — entry
-//     scanner.
-//   - [internal/cli/journal/core/wikilink] — link
-//     conversion.
-//   - [internal/cli/journal/core/frontmatter] —
-//     vault frontmatter shape.
-//   - [internal/cli/journal/core/moc]      — MOC
-//     pages.
 package obsidian

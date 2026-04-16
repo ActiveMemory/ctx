@@ -55,13 +55,4 @@
 //
 // All functions are pure: input string → output string.
 // Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/fmt]                  — the `ctx fmt`
-//     CLI surface.
-//   - [internal/cli/journal/core/normalize] — invokes
-//     [Content] when normalizing imported journal entries.
-//   - [internal/config/wrap]              — column-width
-//     constant.
 package wrap

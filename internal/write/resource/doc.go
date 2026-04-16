@@ -37,15 +37,4 @@
 // Pure data → io.Writer transformation.
 // Concurrent calls each write to the cobra
 // command's output stream; cobra serializes them.
-//
-// # Related Packages
-//
-//   - [internal/cli/sysinfo]         — chief
-//     consumer when the resource snapshot comes
-//     from the system-resource collector.
-//   - [internal/sysinfo]             — produces
-//     the [Resource] payloads.
-//   - [internal/format]              — supplies
-//     the Number / Duration / TimeAgo formatters
-//     this package builds on.
 package resource

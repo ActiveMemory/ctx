@@ -162,7 +162,7 @@ permanent assets.
 
 ---
 
-## 11. Policies Are Encoded, not Remembered
+## 11. Policies Are Encoded, Not Remembered
 
 Alignment **must not** depend on recall or goodwill.
 

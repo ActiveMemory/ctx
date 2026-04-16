@@ -4,10 +4,36 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package task provides error constructors for task file operations.
+// Package task defines the typed error constructors
+// for TASKS.md file operations. These errors fire
+// when reading, writing, querying, or archiving
+// tasks in the context directory.
 //
-// Error constructors return structured errors with context for
-// user-facing messages routed through internal/assets text lookups.
-// Exports: [FileNotFound], [FileRead], [FileWrite],
-// [MultipleMatches], [NotFound], [NoneCompleted].
+// # Domain
+//
+// Errors fall into three categories:
+//
+//   - **File IO** -- TASKS.md does not exist, or
+//     reading/writing it failed. Constructors:
+//     [FileNotFound], [FileRead], [FileWrite],
+//     [SnapshotWrite].
+//   - **Query** -- no task matches the search
+//     query, multiple tasks match, or no task was
+//     specified. Constructors: [NotFound],
+//     [MultipleMatches], [NoneSpecified],
+//     [NoMatch].
+//   - **Archive** -- there are no completed tasks
+//     to archive. Constructor: [NoneCompleted].
+//
+// # Wrapping Strategy
+//
+// IO constructors ([FileRead], [FileWrite],
+// [SnapshotWrite]) wrap their cause with
+// fmt.Errorf %w. Query and validation constructors
+// return plain errors. All user-facing text is
+// resolved through [internal/assets/read/desc].
+//
+// # Concurrency
+//
+// Pure constructors. Concurrent callers never race.
 package task

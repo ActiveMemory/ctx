@@ -42,16 +42,4 @@
 // # Concurrency
 //
 // Single-process, sequential.
-//
-// # Related Packages
-//
-//   - [internal/cli/agent/core/budget]   — the
-//     allocator that decides what makes the cut.
-//   - [internal/cli/agent/core/score]    — entry
-//     relevance scorer.
-//   - [internal/context/load]            — the
-//     context-loading layer.
-//   - [internal/cli/hub] /
-//     [internal/cli/connection]          — supply
-//     hub entries for `--include-hub`.
 package root

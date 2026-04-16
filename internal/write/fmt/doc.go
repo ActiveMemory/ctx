@@ -4,10 +4,30 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package fmt provides output functions for the fmt command.
+// Package fmt provides terminal output for the context
+// file formatter command (ctx fmt).
 //
-// [Summary] prints how many files were formatted.
-// [NeedsFormatting] prints a per-file message in check mode.
+// # Exported Functions
 //
-// Exports: [Summary], [NeedsFormatting].
+// [Summary] prints the formatting result showing how
+// many context files were reformatted out of the total
+// number scanned. This is printed to stdout after both
+// format and check modes complete.
+//
+// [NeedsFormatting] prints a per-file message to stderr
+// in check mode, identifying each context file that
+// would need reformatting. This enables CI pipelines
+// to detect formatting drift without modifying files.
+//
+// # Message Categories
+//
+//   - Info: format summary (stdout)
+//   - Warning: per-file check-mode notices (stderr)
+//
+// # Usage
+//
+//	for _, f := range dirty {
+//	    fmt.NeedsFormatting(cmd, f.Name)
+//	}
+//	fmt.Summary(cmd, len(dirty), len(all))
 package fmt

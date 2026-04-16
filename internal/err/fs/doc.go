@@ -40,11 +40,4 @@
 // # Concurrency
 //
 // Pure constructors. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/io]              — chief producer
-//     for low-level filesystem failures.
-//   - Most CLI commands           — surface them
-//     when an expected file is missing.
 package fs

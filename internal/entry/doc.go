@@ -67,17 +67,4 @@
 // Single-process write assumption. Concurrent writes
 // to the same file would race on the append; ctx
 // CLI is single-process by design.
-//
-// # Related Packages
-//
-//   - [internal/cli/add]               — CLI surface
-//     that calls [ValidateAndWrite].
-//   - [internal/mcp/handler]           — MCP
-//     `ctx_add` tool that calls [ValidateAndWrite].
-//   - [internal/index]                 — index-table
-//     updater invoked by [Write].
-//   - [internal/rc]                    — supplies
-//     [ProvenanceConfig] for validation rules.
-//   - [internal/config/token]          — supplies
-//     the secret-pattern set for the scan.
 package entry

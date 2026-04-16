@@ -31,13 +31,4 @@
 // # Concurrency
 //
 // Pure constructors. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/journal/state]            — chief
-//     producer for state-file errors.
-//   - [internal/cli/journal/cmd/importer] — also
-//     producer.
-//   - [internal/write/journal]            — the
-//     renderer that maps these to user text.
 package journal

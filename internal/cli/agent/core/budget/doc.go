@@ -73,20 +73,4 @@
 // All functions are pure data transformations over the
 // loaded context. Concurrent callers never race; the
 // algorithm holds no module-level state.
-//
-// # Related Packages
-//
-//   - [internal/cli/agent]            — the `ctx agent`
-//     CLI surface that drives this package.
-//   - [internal/cli/agent/core/score] — the relevance
-//     scorer that ranks entries before [FillSection]
-//     consumes them.
-//   - [internal/context/load]         — produces the
-//     [entity.Context] this package consumes.
-//   - [internal/index]                — produces the
-//     index-table form used as the fallback.
-//   - [internal/steering]             — supplies matched
-//     steering files for the steering tier.
-//   - [internal/skill]                — supplies matched
-//     skill bundles for the skill tier.
 package budget

@@ -1,7 +1,6 @@
 ---
 name: ctx-prompt-audit
 description: "Audit prompting patterns. Use periodically to help users improve prompt quality and reduce clarification cycles."
-tools: [bash, read, write]
 ---
 
 Analyze recent session transcripts to identify prompts that led to

@@ -15,6 +15,54 @@ making a decision, learning something, or hitting a milestone:
 persist before continuing. Don't wait for session end; it may
 never come cleanly.
 
+## File Interaction Protocol
+
+When a task involves reading, modifying, or reasoning about a file:
+
+1. **Read before act**
+    - Read the file content directly before making any change
+    - Do not rely on memory, summaries, or prior reads
+2. **No partial reads**
+    - Do not sample the beginning or end of a file and assume the rest
+3. **Freshness requirement**
+    - A read must be recent relative to the action
+    - Do not reuse stale context from earlier in the session
+4. **No implicit scope**
+    - "This change is small" is not a valid justification
+    - "This file is large" is not a valid justification
+5. **Edit authority comes from visibility**
+    - If you haven't seen it, you don't get to modify it
+
+## Spec Requirement
+
+Do not begin implementation work without a spec.
+
+- Every implementation task must trace to a spec file
+- **If no spec exists, STOP and create one first**
+- Do not treat task text alone as a substitute for a spec
+
+## Independent Review
+
+Sub-agent review is not optional once implementation begins.
+
+A review must be invoked when ANY of the following occur:
+
+- Before the first modification to the codebase
+- After completing one or more tasks in TASKS.md
+- Before declaring the work complete
+
+Required review inputs:
+- the governing spec
+- TASKS.md
+- the current implementation
+
+Review prompt:
+- "Review <spec-file>, TASKS.md, and the current implementation for drift,
+  omissions, invalid assumptions, and incomplete requirements."
+
+Do not declare work complete until review findings are either resolved or
+explicitly recorded.
+
 ## Invoking ctx
 
 Always use `ctx` from PATH:
@@ -24,7 +72,6 @@ ctx agent         # ✓ correct
 ./dist/ctx        # ✗ avoid hardcoded paths
 go run ./cmd/ctx  # ✗ avoid unless developing ctx itself
 ```
-
 Check with `which ctx` if unsure whether it's installed.
 
 ## Context Readback

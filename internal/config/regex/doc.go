@@ -59,13 +59,4 @@
 //
 // New patterns therefore must land here; new call sites
 // reference the variable by name.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/cmd/block_dangerous_command] —
-//     consumes the safety-scanner patterns.
-//   - [internal/trace], [internal/drift] — consume the
-//     content-detection patterns.
-//   - [internal/cli/system/cmd/block_non_path_ctx] —
-//     consumes the absolute/relative ctx detection patterns.
 package regex

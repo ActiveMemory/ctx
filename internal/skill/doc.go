@@ -70,16 +70,4 @@
 //
 // All operations are filesystem-bound and stateless.
 // Callers serialize through process-level execution.
-//
-// # Related Packages
-//
-//   - [internal/cli/skill]    — the `ctx skill install /
-//     list / remove` CLI surface.
-//   - [internal/err/skill]    — typed error constructors
-//     used here and by callers for consistent messaging.
-//   - [internal/entity]       — [Skill], [Manifest]
-//     domain types.
-//   - [internal/assets/claude/skills]                 —
-//     the project's own bundled skills, deployed to
-//     user environments at `ctx init` time.
 package skill

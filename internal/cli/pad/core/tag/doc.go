@@ -36,13 +36,4 @@
 //
 // All functions are pure. Concurrent callers never
 // race.
-//
-// # Related Packages
-//
-//   - [internal/cli/pad]            — chief consumer
-//     for filtering.
-//   - [internal/cli/pad/cmd/tags]   — the dedicated
-//     tags subcommand.
-//   - [internal/cli/pad/core/parse] — supplies the
-//     entry stream this package scans.
 package tag

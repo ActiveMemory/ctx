@@ -44,13 +44,4 @@
 //
 // Filesystem-bound and stateless. Concurrent writes
 // would race on the JSONL append; ctx is single-process.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/cmd/check_reminder] — the
-//     hook that surfaces reminders at session start.
-//   - [internal/cli/remind/core/store]         — the
-//     append-only reminder store.
-//   - [internal/cli/remind/core/normalize]     — the
-//     bulk maintenance command (de-dup, validate).
 package remind

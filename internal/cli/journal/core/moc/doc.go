@@ -56,16 +56,4 @@
 //
 // All functions are pure data transformations over
 // the entry slice. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/site]      — invokes
-//     [Home] when building the zensical site.
-//   - [internal/cli/journal/cmd/obsidian]  — invokes
-//     [ObsidianTopics] / [GenerateObsidianTopicPage]
-//     when exporting the vault.
-//   - [internal/cli/journal/core/section]  — produces
-//     the [TopicIndex] this package consumes.
-//   - [internal/entity]                    — [Entry],
-//     [TopicData], [KeyFileData] domain types.
 package moc

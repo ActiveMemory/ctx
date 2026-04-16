@@ -32,14 +32,4 @@
 // # Concurrency
 //
 // Single-process, sequential.
-//
-// # Related Packages
-//
-//   - [internal/cli/site]              — parent
-//     command that hosts feed.
-//   - [internal/cli/site/core/scan]    — the
-//     blog-post scanner.
-//   - [internal/cli/journal/cmd/site]  — sister
-//     command that generates the journal site (this
-//     package targets the *blog*, not the journal).
 package feed

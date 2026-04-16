@@ -35,12 +35,4 @@
 // # Concurrency
 //
 // Pure constructors. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/backup]    — chief consumer.
-//   - [internal/cli/system/core/archive] — also
-//     returns these.
-//   - [internal/write/backup]  — the renderer that
-//     maps each error to its user-facing text.
 package backup

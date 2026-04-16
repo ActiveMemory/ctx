@@ -43,15 +43,4 @@
 // Single-process. Concurrent writers would race on
 // the temp filename collision; ctx is single-process
 // by design.
-//
-// # Related Packages
-//
-//   - [internal/cli/pad/core/parse]   — parser used
-//     during reads.
-//   - [internal/crypto]               — encrypt /
-//     decrypt primitives.
-//   - [internal/notify]               — shares the
-//     same per-machine key.
-//   - [internal/cli/pad]              — top-level
-//     CLI.
 package store

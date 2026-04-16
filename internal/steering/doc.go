@@ -120,20 +120,4 @@
 // `Written` entries the second time, just `Skipped`. Output
 // paths are validated to resolve within `projectRoot` before
 // writing.
-//
-// # Related Packages
-//
-//   - [github.com/ActiveMemory/ctx/internal/cli/steering] —
-//     CLI surface: `add`, `list`, `preview`, `init`, `sync`.
-//   - [github.com/ActiveMemory/ctx/internal/mcp/handler] —
-//     MCP `steering_get` tool that surfaces matched files to
-//     Claude Code via JSON-RPC.
-//   - [github.com/ActiveMemory/ctx/internal/config/steering]
-//     — inclusion modes and foundation file names.
-//   - [github.com/ActiveMemory/ctx/internal/config/hook] —
-//     supported tool ID constants used by [syncableTools].
-//   - [github.com/ActiveMemory/ctx/internal/err/steering] —
-//     typed error constructors with file-path context.
-//   - [github.com/ActiveMemory/ctx/internal/parse] —
-//     [SplitFrontmatter] used by [Parse].
 package steering

@@ -47,15 +47,4 @@
 //
 // Sequential per server instance; see
 // [internal/mcp/server].
-//
-// # Related Packages
-//
-//   - [internal/mcp/server]           — owner of
-//     the dispatch loop.
-//   - [internal/mcp/handler]          — handler
-//     functions tools dispatch to; also the
-//     governance trailer.
-//   - [internal/mcp/server/def/tool]  — the tool
-//     catalog this dispatcher consumes.
-//   - [internal/mcp/proto]            — wire types.
 package tool

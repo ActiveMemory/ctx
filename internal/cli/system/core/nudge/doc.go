@@ -60,17 +60,4 @@
 // per-session marker files (which are atomic on POSIX
 // for the small writes we issue). Concurrent hook fires
 // across separate sessions never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/cmd/check_*]   — the per-check
-//     hooks that call into this package.
-//   - [internal/cli/pause], [internal/cli/resume] —
-//     `ctx hook pause` / `ctx hook resume` consume
-//     [Pause] and [Resume].
-//   - [internal/notify]                   — receives the
-//     nudge as a `nudge` event when webhook
-//     notifications are configured.
-//   - [internal/write/session]            — terminal
-//     output formatters for the pause banner.
 package nudge

@@ -59,18 +59,4 @@
 //
 // All exports are immutable string constants. Safe
 // for any access pattern.
-//
-// # Related Packages
-//
-//   - [internal/cli/add]               — consumes
-//     [Task] and the inline-tag templates.
-//   - [internal/cli/hub] /
-//     [internal/cli/connection]        — consume
-//     [HubEntryMarkdown].
-//   - [internal/cli/journal/cmd/importer] — consumes
-//     the journal entry templates.
-//   - [internal/cli/loop]              — consumes the
-//     loop-script template.
-//   - [internal/cli/journal/cmd/obsidian] — consumes
-//     the Obsidian templates.
 package tpl

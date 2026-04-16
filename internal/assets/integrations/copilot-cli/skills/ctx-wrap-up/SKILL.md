@@ -1,7 +1,6 @@
 ---
 name: ctx-wrap-up
 description: "End-of-session context persistence ceremony. Use when wrapping up a session to capture learnings, decisions, conventions, and tasks."
-tools: [bash, read, write, edit]
 ---
 
 Guide end-of-session context persistence. Gather signal from the

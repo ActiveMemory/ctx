@@ -1,7 +1,6 @@
 ---
 name: ctx-remind
 description: "Manage session reminders. Use when the user says 'remind me to...' or asks about pending reminders."
-tools: [bash]
 ---
 
 Manage session-scoped reminders via `ctx remind` commands using

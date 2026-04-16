@@ -97,19 +97,4 @@
 // [Detect] concurrently as long as the [entity.Context] they
 // pass is not mutated mid-call. Filesystem reads are scoped to
 // the resolved context directory.
-//
-// # Related Packages
-//
-//   - [github.com/ActiveMemory/ctx/internal/cli/drift] — the
-//     `ctx drift` CLI surface.
-//   - [github.com/ActiveMemory/ctx/internal/cli/doctor] —
-//     `ctx doctor` consumes the same Report and adds health
-//     checks.
-//   - [github.com/ActiveMemory/ctx/internal/config/drift] —
-//     check-name constants, status types, issue-type tags.
-//   - [github.com/ActiveMemory/ctx/internal/steering] and
-//     [github.com/ActiveMemory/ctx/internal/trigger] — sources
-//     of the steering / trigger checks.
-//   - [github.com/ActiveMemory/ctx/internal/rc] — supplies
-//     thresholds (stale_age_days, entry counts).
 package drift

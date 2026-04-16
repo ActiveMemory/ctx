@@ -43,17 +43,4 @@
 // the same hub directory would race; the
 // `ctx connection listen` daemon is single-instance
 // per project by convention.
-//
-// # Related Packages
-//
-//   - [internal/cli/connection]      — the
-//     `ctx connection sync` / `listen` CLI
-//     surface that drives [WriteEntries].
-//   - [internal/hub]                 — server side;
-//     produces the entries this package writes.
-//   - [internal/assets/tpl]          — supplies
-//     [HubEntryMarkdown].
-//   - [internal/cli/agent]           —
-//     `--include-hub` reads the files this
-//     package writes.
 package render

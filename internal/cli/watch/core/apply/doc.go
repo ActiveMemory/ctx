@@ -47,15 +47,4 @@
 //
 // Single-process, sequential within a single
 // `ctx watch` invocation.
-//
-// # Related Packages
-//
-//   - [internal/cli/watch]      — the `ctx watch`
-//     CLI surface.
-//   - [internal/entry]          — backend for the
-//     four add types.
-//   - [internal/cli/task]       — backend for
-//     `complete`.
-//   - [internal/entity]         — [PendingUpdate]
-//     domain type.
 package apply

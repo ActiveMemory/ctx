@@ -42,13 +42,4 @@
 // via context cancellation. Concurrent calls to
 // `Update` are serialized through the poller's
 // mutex.
-//
-// # Related Packages
-//
-//   - [internal/mcp/server/resource]   — the
-//     `resources/subscribe` handler that creates
-//     a poller per subscription.
-//   - [internal/mcp/proto]             — the
-//     `notifications/resources/updated` message
-//     type emitted by the poller.
 package poll

@@ -38,16 +38,4 @@
 // Stateless and filesystem-bound. Concurrent calls
 // against the same directory each pay the full read
 // cost.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/site] /
-//     [internal/cli/journal/cmd/obsidian]   — chief
-//     consumers of [ScanJournalEntries].
-//   - [internal/cli/journal/core/lock]       — uses
-//     [JournalEntry] for single-file lock checks.
-//   - [internal/cli/system/cmd/check_journal] — uses
-//     the count to nudge about pending imports.
-//   - [internal/parse]                       — supplies
-//     [SplitFrontmatter] used internally.
 package parse
