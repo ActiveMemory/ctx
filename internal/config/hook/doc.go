@@ -44,16 +44,4 @@
 //
 // All exports are immutable. Safe for any access
 // pattern.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/cmd/check_*]   — hook
-//     implementations referenced by name here.
-//   - [internal/trigger]                  — uses
-//     the lifecycle-stage constants.
-//   - [internal/steering]                 —
-//     validates `tools:` against the tool ID set.
-//   - [internal/assets/hooks/messages]    — uses
-//     category constants when emitting the
-//     message catalog.
 package hook

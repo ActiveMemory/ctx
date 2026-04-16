@@ -42,17 +42,4 @@
 // # Concurrency
 //
 // All functions are pure. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/core/source]   — parent
-//     package that orchestrates the per-fragment
-//     renderers exposed here.
-//   - [internal/cli/journal/core/source/frontmatter] —
-//     sister sub-package for YAML frontmatter
-//     assembly.
-//   - [internal/format]                    — general
-//     time/number formatters this package builds on.
-//   - [internal/entity]                    — [Session],
-//     [Message], [ToolUse], [ToolResult] domain types.
 package format

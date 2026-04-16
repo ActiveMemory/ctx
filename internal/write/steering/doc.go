@@ -37,13 +37,4 @@
 //
 // Pure data → io.Writer. Concurrent calls
 // serialize through cobra's output stream.
-//
-// # Related Packages
-//
-//   - [internal/cli/steering]    — chief
-//     consumer.
-//   - [internal/steering]        — the engine
-//     this package narrates.
-//   - [internal/err/steering]    — typed
-//     errors surfaced by [SyncError].
 package steering

@@ -31,12 +31,4 @@
 //
 // Pure data transformation. Concurrent callers
 // never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/pad/core/store] — chief consumer
-//     during read/write.
-//   - [internal/cli/pad/core/tag]   — extracts
-//     `#tags` from each entry's body.
-//   - [internal/cli/pad]            — top-level CLI.
 package parse

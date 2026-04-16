@@ -47,18 +47,4 @@
 //
 // All exports are immutable. Safe for any access
 // pattern.
-//
-// # Related Packages
-//
-//   - [internal/config/embed/text],
-//     [internal/config/embed/cmd],
-//     [internal/config/embed/flag] — sister registries
-//     of typed lookup keys (text, command, flag help).
-//   - [internal/parse]              — consumes the
-//     marker constants when splitting frontmatter.
-//   - [internal/wrap], [internal/index] — consume the
-//     newline + ellipsis constants for output
-//     formatting.
-//   - [internal/drift]              — consumes
-//     [SecretPatterns] for the secret-leak check.
 package token

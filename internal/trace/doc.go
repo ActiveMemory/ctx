@@ -114,24 +114,4 @@
 // quick succession (rare but possible with parallel worktrees)
 // produce interleaved-but-valid JSONL. The package holds no
 // process-wide state.
-//
-// # Related Packages
-//
-//   - [github.com/ActiveMemory/ctx/internal/cli/trace] — CLI
-//     subcommands (`ctx trace <commit>`, `ctx trace file`,
-//     `ctx trace tag`, `ctx trace hook enable/disable`,
-//     `ctx trace collect` plumbing).
-//   - [github.com/ActiveMemory/ctx/internal/config/trace] —
-//     ref-type keywords, file names, trailer format constants.
-//   - [github.com/ActiveMemory/ctx/internal/config/dir] — state
-//     directory layout (history.jsonl, overrides.jsonl,
-//     trace-pending.jsonl all live under `state/`).
-//   - [github.com/ActiveMemory/ctx/internal/config/env] —
-//     `CTX_SESSION_ID` env var read by [WorkingRefs].
-//
-// # Background
-//
-// See `specs/commit-context-tracing.md` and
-// `docs/cli/trace.md` for the design rationale and end-user
-// documentation.
 package trace

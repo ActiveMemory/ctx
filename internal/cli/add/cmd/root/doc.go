@@ -36,16 +36,4 @@
 // # Concurrency
 //
 // Single-process, sequential.
-//
-// # Related Packages
-//
-//   - [internal/cli/add/core/insert]   — section-
-//     aware insertion at the right place in the
-//     target file.
-//   - [internal/entry]                 — shared
-//     write-side validation + write API.
-//   - [internal/index]                 — auto-
-//     updated quick-reference table.
-//   - [internal/mcp/handler]           — sister
-//     entry path for MCP tool callers.
 package root

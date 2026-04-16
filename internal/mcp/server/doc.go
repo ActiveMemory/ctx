@@ -82,17 +82,4 @@
 // to preserve request ordering. Long-running tools
 // (currently none) would need to spawn a goroutine and
 // signal completion through a channel.
-//
-// # Related Packages
-//
-//   - [internal/mcp/handler]   — domain logic for every
-//     tool the server exposes.
-//   - [internal/mcp/proto]     — JSON-RPC + MCP wire
-//     types.
-//   - [internal/cli/mcp]       — the `ctx mcp` CLI
-//     entry point that boots an instance.
-//   - [internal/cli/setup]     — writes per-tool MCP
-//     config blocks that spawn this server.
-//   - [internal/entity]        — [MCPDeps], [MCPSession]
-//     domain types.
 package server

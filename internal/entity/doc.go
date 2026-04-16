@@ -105,20 +105,4 @@
 // owned by a single goroutine at a time and must not be
 // shared across requests; see their per-type doc comments
 // for the full contract.
-//
-// # Related Packages
-//
-// Producers and consumers (non-exhaustive):
-//
-//   - [internal/context/load]      — assembles [Context].
-//   - [internal/journal/parser]    — produces [Session],
-//     [Message], [ToolUse], [ToolResult].
-//   - [internal/index]             — produces [IndexEntry]
-//     and the grouped variants.
-//   - [internal/drift]             — consumes [Context].
-//   - [internal/mcp/handler]       — consumes [MCPDeps],
-//     [MCPSession], produces [PromptEntrySpec].
-//   - [internal/trigger]           — consumes [TriggerInput]
-//     and emits trigger output.
-//   - [internal/notify]            — consumes [NotifyPayload].
 package entity

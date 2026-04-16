@@ -43,13 +43,4 @@
 // # Concurrency
 //
 // Filesystem-bound. Sequential within a single call.
-//
-// # Related Packages
-//
-//   - [internal/cli/add/cmd/root]    — chief
-//     consumer.
-//   - [internal/entry]               — calls into
-//     this package after validation.
-//   - [internal/index]               — runs after
-//     insert to update the file's index table.
 package insert

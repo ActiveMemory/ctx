@@ -45,18 +45,4 @@
 // dispatch; this package starts it and waits. No
 // in-process concurrency primitives beyond what
 // [internal/hub] and the gRPC runtime already provide.
-//
-// # Related Packages
-//
-//   - [internal/hub]                    — the actual
-//     hub implementation (storage, RPC, fan-out, raft
-//     election).
-//   - [internal/cli/hub/cmd/start] /
-//     [internal/cli/hub/cmd/stop] /
-//     [internal/cli/hub/cmd/status] /
-//     [internal/cli/hub/cmd/peer] /
-//     [internal/cli/hub/cmd/stepdown]   — CLI
-//     commands that call into this package.
-//   - [internal/config/hub]             — port,
-//     PID-file name, and data-dir constants.
 package server

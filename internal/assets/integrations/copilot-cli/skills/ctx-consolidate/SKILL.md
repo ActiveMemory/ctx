@@ -1,7 +1,6 @@
 ---
 name: ctx-consolidate
 description: "Consolidate redundant entries in LEARNINGS.md or DECISIONS.md. Use when ctx drift reports high entry counts or entries overlap."
-tools: [bash, read, write, edit]
 ---
 
 Analyze entries in LEARNINGS.md and/or DECISIONS.md, group overlapping

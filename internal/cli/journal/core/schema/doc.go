@@ -44,13 +44,4 @@
 //
 // Sequential. The validation itself is fast (a few
 // milliseconds per JSONL file).
-//
-// # Related Packages
-//
-//   - [internal/journal/schema]            — the
-//     validator engine.
-//   - [internal/cli/journal/cmd/schema]    — the
-//     standalone `ctx journal schema` CLI surface.
-//   - [internal/cli/journal/cmd/importer]  — runs
-//     this package after every import.
 package schema

@@ -1,20 +1,45 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\\
+// `.,'\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package guide provides terminal output for the help/guide command
-// that lists available skills and commands.
+// Package guide provides terminal output for the help
+// and guide commands (ctx guide, ctx help).
 //
-// Functions render two sections: skills ([InfoSkillsHeader],
-// [InfoSkillLine]) and CLI commands ([CommandsHeader], [CommandLine]).
-// [Default] outputs the combined guide when no subcommand is given.
+// # Skills Section
 //
-// Example:
+// [InfoSkillsHeader] prints the skills list heading
+// followed by a blank line. [InfoSkillLine] prints a
+// single skill entry with its name and a truncated
+// description.
 //
-//	write.InfoSkillsHeader(cmd)
+// # Commands Section
+//
+// [CommandsHeader] prints the CLI commands list heading
+// followed by a blank line. [CommandLine] prints a
+// single command entry with its name and short
+// description.
+//
+// # Default Guide
+//
+// [Default] outputs the combined default guide text
+// when no subcommand is specified. The content is
+// loaded from the embedded descriptor system and
+// printed verbatim.
+//
+// # Message Categories
+//
+//   - Info: skill and command listings, default guide
+//
+// # Nil Safety
+//
+// All functions treat a nil *cobra.Command as a no-op.
+//
+// # Usage
+//
+//	guide.InfoSkillsHeader(cmd)
 //	for _, s := range skills {
-//	    write.InfoSkillLine(cmd, s.Name, s.Description)
+//	    guide.InfoSkillLine(cmd, s.Name, s.Desc)
 //	}
 package guide

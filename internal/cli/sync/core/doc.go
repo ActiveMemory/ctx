@@ -31,14 +31,4 @@
 // Filesystem-bound and stateless. Concurrent
 // invocations against the same project each pay
 // the full scan cost.
-//
-// # Related Packages
-//
-//   - [internal/cli/sync]               — the
-//     `ctx sync` CLI surface.
-//   - [internal/cli/sync/core/validate] — the
-//     undocumented-artifact predicates.
-//   - [internal/assets/read/lookup]     — supplies
-//     the config-file pattern set the predicates
-//     consult.
 package core

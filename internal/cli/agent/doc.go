@@ -74,4 +74,9 @@
 // applies a len/4 heuristic. This deliberately overestimates, which
 // is correct for budgeting: it is better to include slightly less
 // than to overflow the context window.
+//
+// # Subpackages
+//
+//	cmd/root -- cobra command definition and flag binding
+//	core -- budget assembly, scoring, and formatting logic
 package agent

@@ -1,7 +1,6 @@
 ---
 name: ctx-journal-enrich-all
 description: "Full journal pipeline: import unimported sessions, then batch-enrich all unenriched entries. Use when the user says 'process the journal' or to catch up on the backlog."
-tools: [bash, read, write, edit]
 ---
 
 Full journal pipeline: import if needed, then batch-enrich.

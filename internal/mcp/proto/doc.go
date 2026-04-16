@@ -57,12 +57,4 @@
 // All exports are immutable types. Encoding /
 // decoding is goroutine-safe at the
 // `encoding/json` boundary.
-//
-// # Related Packages
-//
-//   - [internal/mcp/server]   — encodes and decodes
-//     these types; calls into [internal/mcp/handler]
-//     for the result.
-//   - [internal/mcp/handler]  — produces the typed
-//     payloads the server marshals into [Response].
 package proto

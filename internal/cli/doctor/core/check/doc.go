@@ -62,17 +62,4 @@
 // the slowest probe (`sysinfo` shelling out on macOS) is
 // still under 100ms and the simpler ordering keeps output
 // deterministic.
-//
-// # Related Packages
-//
-//   - [internal/cli/doctor]       — the `ctx doctor` CLI
-//     surface that consumes [Run] and renders the report.
-//   - [internal/drift]            — the drift detector
-//     this package wraps.
-//   - [internal/sysinfo]          — the resource probes
-//     this package wraps.
-//   - [internal/rc]               — supplies thresholds
-//     and feature flags.
-//   - [internal/config/check]     — probe-name
-//     constants used as keys in the report.
 package check

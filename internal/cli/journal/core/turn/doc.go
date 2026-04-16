@@ -32,14 +32,4 @@
 //
 // Pure data transformation. Concurrent callers never
 // race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/core/normalize]  — runs
-//     before this package; defines the canonical
-//     turn-header shape that [Body] looks for.
-//   - [internal/cli/journal/cmd/site] /
-//     [internal/cli/journal/cmd/obsidian]    —
-//     consumers that need per-turn slicing for
-//     anchor navigation and per-turn rendering.
 package turn

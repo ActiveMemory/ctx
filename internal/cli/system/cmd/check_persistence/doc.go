@@ -40,13 +40,4 @@
 // # Concurrency
 //
 // Single-process per session.
-//
-// # Related Packages
-//
-//   - [internal/cli/system/core/nudge]   — the
-//     emission helper.
-//   - [internal/cli/system/core/session] — reads
-//     and writes the per-session counter.
-//   - [internal/rc]                      — supplies
-//     the prompt-count threshold.
 package check_persistence

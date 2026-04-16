@@ -1,7 +1,6 @@
 ---
 name: ctx-blog-changelog
 description: "Generate themed blog post from commits. Use when writing about changes between releases or documenting a development arc."
-tools: [bash, read, write, edit, glob, grep]
 ---
 
 Generate a blog post about changes since a specific commit, with a given theme.

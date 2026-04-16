@@ -10,7 +10,7 @@
 // CLI use.
 //
 // The command lives under `ctx hook` rather than at root
-// because notifications are part of the **hook subsystem**
+// because notifications belong to the **hook subsystem**
 // (delivered when hooks fire) — see
 // `internal/cli/hook/hook.go` for the parent registration.
 //
@@ -33,13 +33,4 @@
 //
 // Stateless. The CLI command spawns one HTTP request
 // and exits.
-//
-// # Related Packages
-//
-//   - [internal/notify]      — the engine; encrypt /
-//     decrypt URL, send HTTP, evaluate event filter.
-//   - [internal/cli/hook]    — the parent command that
-//     registers this one.
-//   - [internal/cli/loop]    — autonomous loops post
-//     `loop` events through this surface.
 package notify

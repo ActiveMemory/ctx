@@ -49,15 +49,4 @@
 //
 // All exports are immutable string constants. Safe
 // for any access pattern.
-//
-// # Related Packages
-//
-//   - [internal/cli/initialize/core/merge] — the
-//     marker-aware editor that respects these
-//     constants.
-//   - [internal/index]                     — uses
-//     `INDEX:START`/`INDEX:END` to locate the
-//     index table.
-//   - [internal/drift]                     — checks
-//     marker pairs are intact (header alignment).
 package marker

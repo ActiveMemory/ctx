@@ -47,19 +47,4 @@
 //
 // All functions are pure data transformations. Concurrent
 // callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/site]   — invokes
-//     [SiteReadme] / [Index] when assembling the
-//     zensical site.
-//   - [internal/cli/journal/core/section] /
-//     [internal/cli/journal/core/moc]   — produce the
-//     topic and MOC pages that complement the
-//     top-level pages this package generates.
-//   - [internal/cli/journal/core/normalize]   — runs
-//     before generation to sanitize each entry's
-//     markdown.
-//   - [internal/entity]                 — [Entry],
-//     [GroupedIndex] domain types.
 package generate

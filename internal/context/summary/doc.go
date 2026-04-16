@@ -41,15 +41,4 @@
 // All functions are pure data transformations over
 // the input [entity.Context]. Concurrent callers
 // never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/status]              — chief
-//     consumer for the one-line summary.
-//   - [internal/cli/agent]               — uses the
-//     packet-form summary as the lead paragraph.
-//   - [internal/cli/doctor]              — uses the
-//     roll-up form for the report banner.
-//   - [internal/context/load]            — produces
-//     the [entity.Context] this package consumes.
 package summary

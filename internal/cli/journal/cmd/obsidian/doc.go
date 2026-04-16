@@ -36,17 +36,4 @@
 //
 // Single-process, sequential. `O(N)` over journal
 // entries.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/core/obsidian] — the
-//     vault-building engine.
-//   - [internal/cli/journal/core/wikilink] — markdown
-//     → wikilink conversion.
-//   - [internal/cli/journal/core/frontmatter] —
-//     Obsidian-flavored frontmatter assembly.
-//   - [internal/cli/journal/core/moc]      — MOC
-//     pages (Obsidian flavor).
-//   - [internal/cli/journal/cmd/site]      — sister
-//     command for the zensical-flavored output.
 package obsidian

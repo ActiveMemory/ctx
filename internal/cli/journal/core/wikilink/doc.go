@@ -41,16 +41,4 @@
 //
 // All functions are pure. Concurrent callers never
 // race.
-//
-// # Related Packages
-//
-//   - [internal/cli/journal/cmd/obsidian]   — chief
-//     consumer; calls [ConvertMarkdownLinks] on every
-//     entry body.
-//   - [internal/cli/journal/core/moc]       — uses
-//     [Format] / [FormatEntry] when emitting the MOC
-//     pages.
-//   - [internal/cli/journal/core/frontmatter] — the
-//     vault's per-entry frontmatter sister
-//     transformation.
 package wikilink

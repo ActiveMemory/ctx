@@ -4,11 +4,29 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package gio wraps GNOME GIO command execution.
+// Package gio wraps GNOME GIO command execution for
+// mounting network shares.
 //
-// Used for mounting SMB shares via gio mount during backup
-// operations. The mount target URL comes from user configuration.
+// # Mounting
 //
-// Key exports: [Mount].
-// Part of the exec subsystem.
+// Mount runs the "gio mount" command with the given
+// URL. This is used during backup operations to mount
+// SMB shares before copying context files.
+//
+//	err := gio.Mount("smb://host/share")
+//
+// # Dependencies
+//
+// The gio binary must be installed on the system.
+// Mount returns an error if gio is not found in PATH
+// or if the mount operation fails. The binary name
+// and subcommand are sourced from the archive config
+// package.
+//
+// # Security
+//
+// The URL argument comes from user configuration
+// (not from untrusted input). The exec.Command call
+// is annotated with a gosec nolint directive to
+// acknowledge this.
 package gio

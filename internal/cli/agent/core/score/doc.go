@@ -53,14 +53,4 @@
 // # Concurrency
 //
 // All functions are pure. Concurrent callers never race.
-//
-// # Related Packages
-//
-//   - [internal/cli/agent/core/budget]   — consumer of
-//     [All]; uses scores to allocate per-section budget
-//     and to pick top-N entries within a section.
-//   - [internal/assets/read/lookup]      — supplies
-//     [StopWords] for the keyword extractor.
-//   - [internal/entity]                  — entry domain
-//     types this package scores.
 package score

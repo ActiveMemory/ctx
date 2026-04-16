@@ -42,13 +42,4 @@
 // not cached because users frequently install /
 // uninstall mid-session and stale-cache bugs are worse
 // than the trivial re-read cost.
-//
-// # Related Packages
-//
-//   - [internal/cli/initialize]            — top-level
-//     `ctx init` orchestrator that consumes [Detect].
-//   - [internal/cli/initialize/core/plugin] — the
-//     mutator counterpart that flips the enabled bit.
-//   - [internal/cli/setup]                 — the
-//     `ctx setup claude-code` CLI surface.
 package claude_check

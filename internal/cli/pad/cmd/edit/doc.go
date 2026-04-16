@@ -26,12 +26,4 @@
 // # Concurrency
 //
 // Single-process, sequential.
-//
-// # Related Packages
-//
-//   - [internal/cli/pad/core/store]   — the scratchpad
-//     read/write helpers.
-//   - [internal/crypto]               — encrypt/decrypt
-//     primitives.
-//   - [internal/cli/pad]              — parent CLI.
 package edit
