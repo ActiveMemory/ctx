@@ -109,7 +109,7 @@ ctx/
 ├── docs/               # Documentation site source
 ├── editors/            # Editor extensions (VS Code)
 ├── examples/           # Example configurations
-├── hack/               # Build scripts and [runbooks](../operations/index.md#runbooks)
+├── hack/               # Build scripts
 ├── specs/              # Feature specifications
 └── .context/           # ctx's own context (dogfooding)
 ```

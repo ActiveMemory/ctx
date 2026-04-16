@@ -387,7 +387,7 @@ internal/
   audit/              AST-based invariant tests
   compliance/         Convention adherence tests
 docs/                 Site source (blog, cli, reference, security)
-hack/                 Build scripts + runbooks
+hack/                 Build scripts
 editors/vscode/       VS Code extension
 specs/                Feature specifications
 .context/             Project context directory

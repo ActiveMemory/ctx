@@ -1,31 +1,43 @@
-# Documentation Semantic Audit Runbook
+---
+#   /    ctx:                         https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
 
-**When to use**: Before a release, after adding several new pages, when the
-site feels sprawling, or when you suspect narrative gaps. This audit finds
-structural problems that linters and link checkers cannot: weak pages that
-should be merged, heavy pages that should be split, missing cross-links,
-and narrative arcs that don't land.
+title: Docs Semantic Audit
+icon: lucide/book-open-check
+---
 
-**Frequency**: Per release cycle, or when the docs surface area grows by
-more than 3-4 pages.
+![ctx](../../images/ctx-banner.png)
 
-**Time**: ~20-40 minutes with an LLM session.
+# Documentation Semantic Audit
+
+Find structural problems that linters and link checkers cannot:
+weak pages that should be merged, heavy pages that should be split,
+missing cross-links, and narrative arcs that don't land.
+
+**When to run**: Before a release, after adding several new pages,
+when the site feels sprawling, or when you suspect narrative gaps.
+
+**Time**: ~20-40 minutes with an agent session.
 
 ---
 
 ## Why This Is a Runbook
 
-These judgments are inherently subjective and context-dependent. A page is
-"weak" relative to its neighbors; a narrative arc only matters if the docs
-intend to tell a story. Deterministic tools (broken-link checkers, word
-counters) can't do this. An LLM reading the full doc set can.
+These judgments are inherently subjective and context-dependent.
+A page is "weak" relative to its neighbors; a narrative arc only
+matters if the docs intend to tell a story. Deterministic tools
+(broken-link checkers, word counters) can't do this. An LLM
+reading the full doc set can.
 
 ---
 
 ## Prompt
 
-Paste or adapt the following into a Claude Code session. The agent needs
-read access to `docs/` and `site/` (for nav structure).
+Paste or adapt the following into a Claude Code session. The agent
+needs read access to `docs/` and the site nav structure.
 
 ```
 Read every file under docs/ (including docs/blog/ and docs/recipes/).
@@ -72,8 +84,8 @@ For each: source page, anchor text, suggested link target.
 
 ## 4. Narrative Gaps
 
-The docs should tell a coherent story: problem → install → first session
-→ daily workflow → advanced patterns → contributing. Look for:
+The docs should tell a coherent story: problem -> install -> first session
+-> daily workflow -> advanced patterns -> contributing. Look for:
 - Gaps in the progression (e.g., no bridge from "first session" to
   "daily habits")
 - Blog posts that introduce concepts the reference docs don't cover
@@ -115,5 +127,7 @@ End with a prioritized action list: what to fix first.
 
 ## History
 
-- 2026-02-17: Created after merging `docs/re-explaining.md` into `docs/about.md`,
-  which surfaced the pattern of weak standalone pages that dilute rather than add.
+- 2026-02-17: Created after merging `docs/re-explaining.md` into
+  `docs/about.md`, which surfaced the pattern of weak standalone
+  pages that dilute rather than add.
+- 2026-04-16: Moved from `hack/runbooks/` to `docs/operations/runbooks/`.

@@ -1,19 +1,32 @@
-# Sanitize Permissions Runbook
+---
+#   /    ctx:                         https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
+title: Sanitize Permissions
+icon: lucide/shield-check
+---
+
+![ctx](../../images/ctx-banner.png)
+
+# Sanitize Permissions
 
 Manual procedure for cleaning up `.claude/settings.local.json`.
 The agent may analyze and recommend, but **you** make every edit.
 
-## Why a Runbook, Not a Skill
+## Why Manual, Not Automated
 
 `settings.local.json` controls what the agent can do without asking.
 An agent that can edit its own permission file is a self-escalation
 vector — especially if the skill is auto-accepted. Keep this manual.
 
-## When to Run
+**When to run**: After busy sessions where you clicked "Allow" many
+times, weekly hygiene (pair with `ctx drift`), or before committing
+`.claude/settings.local.json`.
 
-- After busy sessions where you clicked "Allow" many times
-- Weekly hygiene (pair with `ctx drift`)
-- Before committing `.claude/settings.local.json`
+---
 
 ## Step 1: Snapshot
 
@@ -53,6 +66,7 @@ Bash(/home/jose/WORKSPACE/ctx/ctx add decision "Use PostgreSQL" --context ...)
 ```
 
 Signs of a one-off:
+
 - Full absolute paths to specific files
 - Literal string arguments (not wildcards)
 - Very specific flag combinations
@@ -103,7 +117,7 @@ While you're in here, also flag:
 | `Bash(curl:*)`, `Bash(wget:*)` | Arbitrary network access |
 | Any write to `.claude/` paths | Agent self-modification |
 
-See the `ctx-permission-sanitize` skill SKILL.md for the full threat matrix.
+See the `/ctx-permission-sanitize` skill for the full threat matrix.
 
 ## Step 5: Edit
 
@@ -139,6 +153,13 @@ You can safely ask the agent to *analyze* the file:
 The agent can read and report. **You** do the edits.
 
 Do **not** add these to your allow list:
+
 - `Skill(ctx-permission-sanitize)`
 - `Edit(.claude/settings.local.json)`
 - Any `Bash(...)` pattern that writes to `.claude/`
+
+## History
+
+- 2026-02-15: Created as manual-only procedure after deciding
+  against a self-modifying skill.
+- 2026-04-16: Moved from `hack/runbooks/` to `docs/operations/runbooks/`.

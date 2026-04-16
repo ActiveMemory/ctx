@@ -1,19 +1,37 @@
-# Codebase Audit Runbook
+---
+#   /    ctx:                         https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
 
-**When to use**: Before a release, after a long YOLO sprint, quarterly, or when
-planning the next phase of work. Generates analysis reports that feed into task
-planning.
+title: Codebase Audit
+icon: lucide/search-code
+---
 
-**Frequency**: Periodic (not a daily workflow).
+![ctx](../../images/ctx-banner.png)
+
+# Codebase Audit
+
+A structured audit of the codebase: dead code, magic strings,
+documentation drift, security surface, and roadmap opportunities.
+
+**When to run**: Before a release, after a long YOLO sprint,
+quarterly, or when planning the next phase of work.
 
 **Time**: ~15-30 minutes with a team of agents.
 
 ---
 
-## Prompt
+## How to Use This Runbook
 
-Paste or adapt the following into a Claude Code session. The repo should be in
-a clean git state (`git stash` or commit first).
+Start a Claude Code session with a clean git state
+(`git stash` or commit first). Paste or adapt the prompt below.
+The agent does the analysis; you triage the findings.
+
+---
+
+## Prompt
 
 ```
 I want you to create an agent team to audit this codebase. Save each report as
@@ -106,13 +124,9 @@ it suits. Ground suggestions in actual project patterns, not generic advice.
 - **ideas/ is gitignored**: reports saved there won't be committed. Move
   specific findings to TASKS.md, DECISIONS.md, or LEARNINGS.md to persist them.
 
-## Changes from Original
+## History
 
-The original prompt (2026-02-08) was improved:
-- Specified read-only agents to prevent accidental code changes
-- Added report structure template for consistency across analyses
-- Scoped security review to CLI-relevant threats instead of generic OWASP
-- Added maintainability thresholds (>80 lines, >5 cases) to avoid style nitpicks
-- Fixed duplicate numbering (two #6s) and added analysis #8
-- Added concrete output expectations for each analysis
-- Removed defensive "we can revert" language in favor of preventive controls
+- 2026-02-08: Original prompt created after a codebase audit sprint.
+- 2026-02-17: Improved with read-only agents, report structure template,
+  CLI-scoped security review, and maintainability thresholds.
+- 2026-04-16: Moved from `hack/runbooks/` to `docs/operations/runbooks/`.

@@ -27,14 +27,16 @@ TASK STATUS LABELS:
 
 ### Misc
 
-- [ ] If context is not initialized, hooks should not run. Right now they run
+- [x] If context is not initialized, hooks should not run. Right now they run
   and give a "context diretory outside project root" (that's a side effect). But
   the issue is the project does not have a .context folder and we don't detect
   it. **Progress 2026-04-13**: Boundary side effect resolved by git-anchored walk
   (commit e24941d2). `state.Initialized()` guards added to `check_resource` and
   `check_backup_age` — the two user-visible relay-nag hooks that were missing
-  them. **Remaining**: audit other missing-guard hooks (`mark_journal`,
-  `mark_wrapped_up`, `pause`, `resume`, `bootstrap`) per-hook. Safety hooks
+  them. **Completed 2026-04-16**: `state.Initialized()` guards added to
+  `mark_journal`, `mark_wrapped_up`, `pause`, `resume`. `bootstrap` left
+  unguarded intentionally — its job is to report context dir status, and it
+  already has its own `os.Stat` guard. Safety hooks
   (`block_dangerous_command`, `block_non_path_ctx`) intentionally run regardless.
 
 - [x] Move `ctx bootstrap` back to `ctx system bootstrap` (hidden). Bootstrap is
@@ -94,34 +96,41 @@ TASK STATUS LABELS:
 
 ### Runbooks
 
-- [ ] Create `hack/runbooks/release-checklist.md` — canonical pre-release
+- [x] Create `docs/operations/runbooks/release-checklist.md` — canonical pre-release
   sequence: run codebase-audit, docs-semantic-audit, sanitize-permissions, `make
   test`, bump version, generate release notes, tag, push. Today this lives in
   the operator's head + scattered across docs/operations/. Cross-link with
   `_ctx-release` skill. #priority:high #added:2026-04-11
+  **Completed 2026-04-16**: Created at `docs/operations/runbooks/release-checklist.md`.
+  All runbooks moved from `hack/runbooks/` to `docs/operations/runbooks/` for
+  discoverability on ctx.ist.
 
-- [ ] Create `hack/runbooks/breaking-migration.md` — template for users
+- [x] Create `docs/operations/runbooks/breaking-migration.md` — template for users
   upgrading across breaking CLI renames. What commands changed, how to
   regenerate CLAUDE.md (`ctx init --force`), how to update personal scripts and
   hook configs. One instance per breaking release, or a generic template with a
   per-release appendix. #priority:medium #added:2026-04-11
+  **Completed 2026-04-16**: Created at `docs/operations/runbooks/breaking-migration.md`.
 
-- [ ] Create `hack/runbooks/hub-deployment.md` — linear runbook for setting up
+- [x] Create `docs/operations/runbooks/hub-deployment.md` — linear runbook for setting up
   a ctx Hub for a team: generate admin token, distribute, register clients,
   verify sync, configure TLS (when H-01/H-02 land). Consolidates pieces
   currently scattered across hub recipes. #priority:medium #added:2026-04-11
+  **Completed 2026-04-16**: Created at `docs/operations/runbooks/hub-deployment.md`.
 
-- [ ] Create `hack/runbooks/new-contributor.md` — onboarding sequence: clone
+- [x] Create `docs/operations/runbooks/new-contributor.md` — onboarding sequence: clone
   → `ctx init` → `make build && sudo make install` → verify hooks (`claude
   mcp list`) → run first session → verify context persistence. Currently
   scattered across README, contributing.md, and setup docs. #priority:medium
   #added:2026-04-11
+  **Completed 2026-04-16**: Created at `docs/operations/runbooks/new-contributor.md`.
 
-- [ ] Create `hack/runbooks/plugin-release.md` — plugin-specific release
+- [x] Create `docs/operations/runbooks/plugin-release.md` — plugin-specific release
   procedure: update hooks.json, bump version, test against fresh Claude Code
   install, publish to marketplace, verify `claude mcp list` shows updated
   version. Not covered by the general release checklist. #priority:low
   #added:2026-04-11
+  **Completed 2026-04-16**: Created at `docs/operations/runbooks/plugin-release.md`.
 
 ### Misc
 
