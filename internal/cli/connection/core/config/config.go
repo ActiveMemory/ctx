@@ -37,8 +37,12 @@ func Save(cfg Config) error {
 		return encErr
 	}
 
+	path, pathErr := filePath()
+	if pathErr != nil {
+		return pathErr
+	}
 	return io.SafeWriteFile(
-		filePath(), encrypted, fs.PermSecret,
+		path, encrypted, fs.PermSecret,
 	)
 }
 
@@ -50,9 +54,11 @@ func Save(cfg Config) error {
 func Load() (Config, error) {
 	var cfg Config
 
-	encrypted, readErr := io.SafeReadUserFile(
-		filePath(),
-	)
+	path, pathErr := filePath()
+	if pathErr != nil {
+		return cfg, pathErr
+	}
+	encrypted, readErr := io.SafeReadUserFile(path)
 	if readErr != nil {
 		return cfg, readErr
 	}

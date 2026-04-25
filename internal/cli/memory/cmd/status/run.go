@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core/count"
+	"github.com/ActiveMemory/ctx/internal/cli/memory/core/resolve"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
@@ -21,7 +22,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/format"
 	"github.com/ActiveMemory/ctx/internal/io"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	writeMem "github.com/ActiveMemory/ctx/internal/write/memory"
 )
 
@@ -34,8 +34,10 @@ import (
 // Returns:
 //   - error: on discovery failure.
 func Run(cmd *cobra.Command) error {
-	contextDir := rc.ContextDir()
-	projectRoot := filepath.Dir(contextDir)
+	contextDir, projectRoot, err := resolve.ContextAndRoot(cmd)
+	if err != nil {
+		return err
+	}
 
 	sourcePath, discoverErr := mem.DiscoverPath(projectRoot)
 	if discoverErr != nil {

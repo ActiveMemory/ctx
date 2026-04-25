@@ -18,8 +18,13 @@ import (
 //
 // Returns:
 //   - string: Absolute path to the encrypted connect file
-func filePath() string {
-	return filepath.Join(rc.ContextDir(), cfgHub.FileConnect)
+//   - error: non-nil when the context directory is not declared
+func filePath() (string, error) {
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(ctxDir, cfgHub.FileConnect), nil
 }
 
 // loadKey reads the encryption key from the global key

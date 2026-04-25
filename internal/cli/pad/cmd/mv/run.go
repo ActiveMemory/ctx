@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
@@ -24,6 +25,10 @@ import (
 // Returns:
 //   - error: Non-nil on invalid index or read/write failure
 func Run(cmd *cobra.Command, n, m int) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	entries, err := store.ReadEntries()
 	if err != nil {
 		return err

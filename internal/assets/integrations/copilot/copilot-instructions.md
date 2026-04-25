@@ -143,17 +143,17 @@ responses when governance actions are overdue. Follow this protocol:
 ### During Work
 
 - **After making a decision or discovering a gotcha**: call `ctx_add()`
-  to persist it immediately — not at session end.
+  to persist it immediately, not at session end.
 - **After completing a task**: call `ctx_complete()` or
   `ctx_check_task_completion()`.
-- **Every 10–15 tool calls or 15 minutes**: call `ctx_drift()` to
+- **Every 10-15 tool calls or 15 minutes**: call `ctx_drift()` to
   check for stale context.
 - **Before git commit**: call `ctx_status()` to verify context health.
 
 ### Responding to Warnings
 
 When a tool response contains a `⚠` warning, act on it in your next
-action. Do not ignore governance warnings — they indicate context
+action. Do not ignore governance warnings; they indicate context
 hygiene actions that are overdue.
 
 When a tool response contains a `🚨 CRITICAL` warning, **stop current
@@ -169,7 +169,7 @@ real time. The following actions are flagged as violations:
 
 - **Dangerous commands**: `sudo`, `rm -rf /`, `git push`, `git reset
   --hard`, `curl`, `wget`, `chmod 777`
-- **hack/ scripts**: Direct execution of `hack/*.sh` — use `make`
+- **hack/ scripts**: Direct execution of `hack/*.sh`; use `make`
   targets instead
 - **Sensitive files**: Editing `.env`, `.pem`, `.key`, or files
   matching `credentials` or `secret`

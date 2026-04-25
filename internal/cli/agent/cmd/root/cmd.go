@@ -56,6 +56,11 @@ func Cmd() *cobra.Command {
 		Long:    long,
 		Example: desc.Example(cmd.DescKeyAgent),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			ctxDir, ctxErr := rc.RequireContextDir()
+			if ctxErr != nil {
+				cmd.SilenceUsage = true
+				return ctxErr
+			}
 			if !cmd.Flags().Changed(cFlag.Budget) {
 				budget = rc.TokenBudget()
 			}
@@ -73,10 +78,15 @@ func Cmd() *cobra.Command {
 				skillBody = sk
 			}
 
-			// Tier 8: Load ctx Hub entries.
+			// Tier 8: Load ctx Hub entries using the already-resolved
+			// ctxDir from the top-level RequireContextDir gate.
 			var sharedBodies []string
 			if includeShare {
-				sharedBodies = coreHub.LoadBodies()
+				var hubErr error
+				sharedBodies, hubErr = coreHub.LoadBodies(ctxDir)
+				if hubErr != nil {
+					return hubErr
+				}
 			}
 
 			return Run(

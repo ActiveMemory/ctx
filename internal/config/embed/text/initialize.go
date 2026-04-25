@@ -69,6 +69,18 @@ const (
 	// DescKeyWriteInitWorkflowTips is the text key for write init workflow tips
 	// messages.
 	DescKeyWriteInitWorkflowTips = "write.init-workflow-tips"
+	// DescKeyWriteInitActivateHint is the text key for the
+	// activation hint printed after `ctx init` finishes, telling
+	// the user how to bind CTX_DIR for their shell. Template
+	// expects a single %s argument for the absolute context path
+	// (used in the `export CTX_DIR=%s` line).
+	DescKeyWriteInitActivateHint = "write.init-activate-hint"
+	// DescKeyWriteInitAnatomyPreamble is the text key for the
+	// "what is .context/" primer prepended to GETTING_STARTED.md
+	// at the project root. Names the project-root contract,
+	// the basename guard, and the one-.context-per-project rule.
+	// No format arguments.
+	DescKeyWriteInitAnatomyPreamble = "write.init-anatomy-preamble"
 	// DescKeyWriteInitNoChanges is the text key for write init no changes
 	// messages.
 	DescKeyWriteInitNoChanges = "write.init-no-changes"

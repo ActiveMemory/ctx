@@ -24,8 +24,7 @@
 // # The Root Command
 //
 // [RootCmd] returns the bare root cobra command with the
-// banner, version flag, global flags
-// (`--context-dir`, `--allow-outside-cwd`, `--tool`), and
+// banner, version flag, the `--tool` global flag, and
 // the persistent error formatter. It is intentionally
 // devoid of subcommands; [Initialize] adds them.
 //

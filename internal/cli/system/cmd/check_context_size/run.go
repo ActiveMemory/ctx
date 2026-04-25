@@ -26,8 +26,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/event"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
@@ -46,7 +48,12 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	initialized, initErr := state.Initialized()
+	if initErr != nil {
+		logWarn.Warn(warn.StateInitializedProbe, initErr)
+		return nil
+	}
+	if !initialized {
 		return nil
 	}
 	input := coreSession.ReadInput(stdin)
@@ -61,9 +68,22 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.Dir()
+	tmpDir, dirErr := state.Dir()
+	if dirErr != nil {
+		logWarn.Warn(warn.StateDirProbe, dirErr)
+		return nil
+	}
 	counterFile := filepath.Join(tmpDir, stats.ContextSizeCounterPrefix+sessionID)
-	logFile := filepath.Join(rc.ContextDir(), dir.Logs, stats.ContextSizeLogFile)
+	// Unreachable under normal flow: state.Initialized() above already
+	// proved ContextDir succeeds. Kept defensive so a future ContextDir
+	// failure mode lands on stderr instead of silently skipping the
+	// hook.
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		logWarn.Warn(warn.ContextDirResolve, err)
+		return nil
+	}
+	logFile := filepath.Join(ctxDir, dir.Logs, stats.ContextSizeLogFile)
 
 	// Increment counter
 	count := counter.Read(counterFile) + 1
@@ -86,12 +106,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	billingHit := billingThreshold > 0 &&
 		tokens >= billingThreshold
 	if billingHit {
-		writeSetup.NudgeBlock(cmd,
-			nudge.EmitBillingWarning(
-				logFile, sessionID,
-				count, tokens, billingThreshold,
-			),
+		box, billingErr := nudge.EmitBillingWarning(
+			logFile, sessionID,
+			count, tokens, billingThreshold,
 		)
+		if billingErr != nil {
+			return billingErr
+		}
+		writeSetup.NudgeBlock(cmd, box)
 	}
 
 	// Wrap-up suppression: if the user recently ran /ctx-wrap-up,
@@ -104,7 +126,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			fmt.Sprintf(
 				desc.Text(text.DescKeyCheckContextSizeSuppressedLogFormat), count),
 		)
-		coreSession.WriteStats(sessionID, entity.Stats{
+		return coreSession.WriteStats(sessionID, entity.Stats{
 			Timestamp:  time.Now().Format(time.RFC3339),
 			Prompt:     count,
 			Tokens:     tokens,
@@ -113,7 +135,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			Model:      info.Model,
 			Event:      event.Suppressed,
 		})
-		return nil
 	}
 
 	// Percentage-based triggers: checkpoint at 60% (one-shot),
@@ -132,19 +153,23 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	evt := trigger.Event
 	switch {
 	case trigger.Window:
-		writeSetup.NudgeBlock(cmd,
-			nudge.EmitWindowWarning(
-				logFile, sessionID,
-				count, tokens, pct,
-			),
+		box, windowErr := nudge.EmitWindowWarning(
+			logFile, sessionID,
+			count, tokens, pct,
 		)
+		if windowErr != nil {
+			return windowErr
+		}
+		writeSetup.NudgeBlock(cmd, box)
 	case trigger.Checkpoint:
-		writeSetup.NudgeBlock(cmd,
-			nudge.EmitCheckpoint(
-				logFile, sessionID,
-				count, tokens, pct, windowSize,
-			),
+		box, checkpointErr := nudge.EmitCheckpoint(
+			logFile, sessionID, ctxDir,
+			count, tokens, pct, windowSize,
 		)
+		if checkpointErr != nil {
+			return checkpointErr
+		}
+		writeSetup.NudgeBlock(cmd, box)
 	default:
 		log.Message(logFile, sessionID,
 			fmt.Sprintf(desc.Text(
@@ -152,7 +177,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		)
 	}
 
-	coreSession.WriteStats(sessionID, entity.Stats{
+	return coreSession.WriteStats(sessionID, entity.Stats{
 		Timestamp:  time.Now().Format(time.RFC3339),
 		Prompt:     count,
 		Tokens:     tokens,
@@ -161,6 +186,4 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		Model:      info.Model,
 		Event:      evt,
 	})
-
-	return nil
 }

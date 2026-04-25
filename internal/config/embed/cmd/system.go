@@ -10,8 +10,8 @@ package cmd
 //
 // The ctx system namespace hosts hook plumbing plus the
 // agent-only `bootstrap` command. Other user-facing maintenance
-// commands (backup, event, message, prune, resource, stats) have
-// been promoted to top-level commands; their Use constants live in
+// commands (event, message, prune, resource, stats) have been
+// promoted to top-level commands; their Use constants live in
 // their own per-command files in this package.
 //
 // `bootstrap` is intentionally NOT promoted to top-level; it is
@@ -19,15 +19,12 @@ package cmd
 // under `ctx system` keeps `ctx --help` focused on user-facing
 // commands. The canonical invocation is `ctx system bootstrap`.
 const (
-	// UseSystemBlockDangerousCommand is the cobra Use string for the system
-	// block dangerous command command.
-	UseSystemBlockDangerousCommand = "block-dangerous-command"
 	// UseSystemBlockNonPathCtx is the cobra Use string for the system block non
 	// path ctx command.
 	UseSystemBlockNonPathCtx = "block-non-path-ctx"
-	// UseSystemCheckBackupAge is the cobra Use string for the system check backup
-	// age command.
-	UseSystemCheckBackupAge = "check-backup-age"
+	// UseSystemCheckAnchorDrift is the cobra Use string for the system check
+	// anchor drift command.
+	UseSystemCheckAnchorDrift = "check-anchor-drift"
 	// UseSystemCheckCeremony is the cobra Use string for the system check
 	// ceremony command.
 	UseSystemCheckCeremony = "check-ceremony"
@@ -106,15 +103,12 @@ const (
 const (
 	// DescKeySystem is the description key for the system command.
 	DescKeySystem = "system"
-	// DescKeySystemBlockDangerousCommand is the description key for the system
-	// block dangerous command command.
-	DescKeySystemBlockDangerousCommand = "system.blockdangerouscommand"
 	// DescKeySystemBlockNonPathCtx is the description key for the system block
 	// non path ctx command.
 	DescKeySystemBlockNonPathCtx = "system.blocknonpathctx"
-	// DescKeySystemCheckBackupAge is the description key for the system check
-	// backup age command.
-	DescKeySystemCheckBackupAge = "system.checkbackupage"
+	// DescKeySystemCheckAnchorDrift is the description key for the system
+	// check anchor drift command.
+	DescKeySystemCheckAnchorDrift = "system.checkanchordrift"
 	// DescKeySystemCheckCeremony is the description key for the system check
 	// ceremony command.
 	DescKeySystemCheckCeremony = "system.checkceremony"

@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // TestAddCommand tests the add command.
@@ -28,6 +29,8 @@ func TestAddCommand(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// First init
 	initCmd := initialize.Cmd()
@@ -68,6 +71,8 @@ func TestAddDecisionAndLearning(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// First init
 	initCmd := initialize.Cmd()
@@ -216,6 +221,8 @@ func TestPrependOrder(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
+	testctx.Declare(t, tmpDir)
+
 	// First init
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -335,6 +342,8 @@ func TestAddFromFile(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// First init
 	initCmd := initialize.Cmd()

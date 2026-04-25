@@ -7,8 +7,8 @@ icon: lucide/folder-symlink
 
 ## The Problem
 
-`ctx` files contain project-specific **decisions**, **learnings**, 
-**conventions**, and **tasks**. By default, they live in 
+`ctx` files contain project-specific **decisions**, **learnings**,
+**conventions**, and **tasks**. By default, they live in
 `.context/` inside the project tree, and that works well when the context
 can be public.
 
@@ -19,42 +19,95 @@ But sometimes you need the context *outside* the project:
   repo.
 * **Compliance or IP concerns**: Context files reference sensitive design
   rationale that belongs in a separate access-controlled repository.
-* **Personal preference**: You want a single context repo that covers
-  multiple projects, or you just prefer keeping notes separate from code.
+* **Personal preference**: You want to keep notes separate from code.
 
-`ctx` supports this through three configuration methods. This recipe shows how
-to set them up and how to tell your AI assistant where to find the context.
+`ctx` supports this by letting you point `CTX_DIR` anywhere. This recipe
+shows how to set that up and how to tell your AI assistant where to find the
+context.
+
+!!! warning "One `.context/` per project"
+    The parent of the context directory is the project root by contract.
+    `ctx sync`, `ctx drift`, and the memory-drift hook all read the
+    codebase at `filepath.Dir(ContextDir())`. Pointing two projects at
+    the same directory corrupts their journals, state, and secrets. To
+    share knowledge (CONSTITUTION / CONVENTIONS / ARCHITECTURE) across
+    projects, use [`ctx hub`](hub-overview.md), not a shared `.context/`.
 
 ## TL;DR
 
-First `--allow-outside-cwd` in your project:
+Create the external context directory, initialize it, and bind it:
 
 ```bash
-mkdir ~/repos/myproject-context && cd ~/repos/myproject-context && git init
+mkdir -p ~/repos/myproject-context && cd ~/repos/myproject-context && git init
 cd ~/repos/myproject
-ctx --context-dir ~/repos/myproject-context --allow-outside-cwd init
+
+# Bind CTX_DIR to the external location, then init creates files there.
+export CTX_DIR=~/repos/myproject-context/.context
+ctx init
 ```
 
-Then, [create a `.ctxrc`](../home/configuration.md) in your **project root**
-to specify the new `.context` folder location:
+All `ctx` commands now use the external directory. If you share the
+setup across shells, add the `export CTX_DIR=...` line to your
+shell rc, or source a per-project `.envrc` with direnv.
 
-```yaml
-context_dir: ~/repos/myproject-context
-allow_outside_cwd: true
+## What Works, What Quietly Degrades
+
+The single-source-anchor contract states that
+`filepath.Dir(CTX_DIR)` is the project root. When the context
+lives outside the project tree, ctx still resolves correctly for
+every operation that reads or writes inside `.context/`. But any
+operation that scans the **codebase** scans the wrong tree, and
+does so silently:
+
+| Operation                       | Behavior with external `.context/`                |
+|---------------------------------|---------------------------------------------------|
+| `ctx status`, `agent`, `add`    | ✅ Works. Operates on files inside `CTX_DIR`.     |
+| Journal, scratchpad, hub        | ✅ Works. Same reason.                            |
+| `ctx sync`                      | ⚠️ Scans the *context repo*, not the code repo.   |
+| `ctx drift`                     | ⚠️ Same. Reports nothing useful.                  |
+| Memory-drift hook (`MEMORY.md`) | ⚠️ Looks for `MEMORY.md` next to the external `.context/`, not the code. |
+
+Nothing errors. The code-aware operations just find an empty or
+unrelated tree where the project root should be.
+
+### Workaround: symlink the `.context/` into the code tree
+
+If you want both the privacy of an external git repo *and* working
+`ctx sync` / `drift` / memory-drift, symlink the external
+`.context/` into the code repo and point `CTX_DIR` at the symlink:
+
+```bash
+# External repo holds the real files
+mkdir -p ~/repos/myproject-context && cd ~/repos/myproject-context && git init
+
+# Symlink it into the code repo
+ln -s ~/repos/myproject-context/.context ~/repos/myproject/.context
+
+# Bind CTX_DIR to the symlink path; ctx init will follow it
+export CTX_DIR=~/repos/myproject/.context
+ctx init
 ```
 
-All `ctx` commands now use the external directory automatically.
+Now `filepath.Dir(CTX_DIR)` is the **code repo**, so code-aware
+operations scan the right tree. The actual files still live in
+the external repo and commit there. Add `.context` to the code
+repo's `.gitignore` (or `.git/info/exclude`) so the symlink itself
+isn't tracked by the code repo.
+
+The basename guard is permissive about symlinks: it checks the
+declared name, not the resolved target, so a `.context` symlink
+pointing anywhere is accepted as long as the declared basename is
+`.context`.
 
 ## Commands and Skills Used
 
-| Tool                  | Type         | Purpose                                 |
-|-----------------------|--------------|-----------------------------------------|
-| `ctx init`            | CLI command  | Initialize context directory            |
-| `--context-dir`       | Global flag  | Point ctx at a non-default directory    |
-| `--allow-outside-cwd` | Global flag  | Permit context outside the project root |
-| `.ctxrc`              | Config file  | Persist the context directory setting   |
-| `CTX_DIR`             | Env variable | Override context directory per-session  |
-| `/ctx-status`         | Skill        | Verify context is loading correctly     |
+| Tool            | Type         | Purpose                                 |
+|-----------------|--------------|-----------------------------------------|
+| `ctx init`      | CLI command  | Initialize context directory            |
+| `ctx activate`  | CLI command  | Emit `export CTX_DIR=...` for the shell |
+| `CTX_DIR`       | Env variable | Declare context directory per-session   |
+| `.ctxrc`        | Config file  | Per-project configuration               |
+| `/ctx-status`   | Skill        | Verify context is loading correctly     |
 
 ## The Workflow
 
@@ -65,100 +118,79 @@ a private GitHub repo, a shared drive, a sibling directory:
 
 ```bash
 # Create the context repo
-mkdir ~/repos/myproject-context
+mkdir -p ~/repos/myproject-context
 cd ~/repos/myproject-context
 git init
 ```
 
 ### Step 2: Initialize ctx Pointing at It
 
-From your project root, initialize ctx with `--context-dir` pointing to the
-external location. Because the directory is outside your project tree, you also
-need `--allow-outside-cwd`:
+From your project root, declare `CTX_DIR` pointing to the external
+location, then initialize:
 
 ```bash
 cd ~/repos/myproject
-ctx --context-dir ~/repos/myproject-context \
-    --allow-outside-cwd \
-    init
+CTX_DIR=~/repos/myproject-context/.context ctx init
 ```
 
-This creates the full `.context/`-style file set inside
+This creates the canonical `.context/` file set inside
 `~/repos/myproject-context/` instead of `~/repos/myproject/.context/`.
-
-!!! warning "Boundary Validation"
-    `ctx` validates that the `.context` directory is within the current working
-    directory. 
-
-    If your external directory is truly outside the project root:
-
-    * Either every `ctx` command needs `--allow-outside-cwd`, 
-    * or you can persist the setting in `.ctxrc` (*next step*).
 
 ### Step 3: Make It Stick
 
-Typing `--context-dir` and `--allow-outside-cwd` on every command is tedious.
-Pick one of these methods to make the configuration permanent.
+Declaring `CTX_DIR` on every command is tedious. Pick one of these
+methods to make the configuration permanent. The context directory
+itself must be declared via `CTX_DIR`; `.ctxrc` does not carry the
+path.
 
-#### Option A: `.ctxrc` (*Recommended*)
+#### Option A: `CTX_DIR` Environment Variable (*Recommended*)
 
-Create a `.ctxrc` file in your project root:
+```bash
+# Direct path. Works for ctx status / agent / add but degrades
+# code-aware operations. See "What Works, What Quietly Degrades".
+export CTX_DIR=~/repos/myproject-context/.context
+
+# Or, with the symlink approach above, point at the symlink path
+# inside the code repo so code-aware operations stay healthy.
+export CTX_DIR=~/repos/myproject/.context
+```
+
+Put either form in your shell profile (`~/.bashrc`, `~/.zshrc`)
+or a direnv `.envrc`.
+
+For a single session, run `eval "$(ctx activate)"` from any
+directory inside the project where exactly one `.context/`
+candidate is visible (the symlink counts). `activate` does not
+accept a path argument; bind a specific path by exporting
+`CTX_DIR` directly instead.
+
+#### Option B: `.ctxrc` for Other Settings
+
+Put any settings (token budget, priority order, freshness files) in a
+`.ctxrc` at the project root (`dirname(CTX_DIR)`), which here is the
+parent of the external `.context/`:
 
 ```yaml
-# .ctxrc: committed to the project repo
-context_dir: ~/repos/myproject-context
-allow_outside_cwd: true
+# ~/repos/myproject-context/.ctxrc
+token_budget: 16000
 ```
 
-ctx reads `.ctxrc` automatically. Every command now uses the external
-directory without extra flags:
+`.ctxrc` is always read from the parent of `CTX_DIR`, so this file is
+picked up whenever `CTX_DIR` points at
+`~/repos/myproject-context/.context`.
 
-```bash
-ctx status          # reads from ~/repos/myproject-context
-ctx add learning "Redis MULTI doesn't roll back on error" \
-  --session-id abc12345 --branch main --commit 68fbc00a
-```
+#### Resolution
 
-!!! tip "Commit `.ctxrc`"
-    `.ctxrc` belongs in the project repo. It contains no secrets: It's just a
-    path and a boundary override. 
+`ctx` reads the context directory from a single channel: the
+`CTX_DIR` environment variable. When `CTX_DIR` is unset, `ctx`
+errors with a "no context directory specified" hint pointing at
+`ctx activate` and this recipe. When set, the value must be an
+absolute path with `.context` as its basename; relative paths and
+other names are rejected on first use.
 
-    `.ctxrc` lets teammates share the same configuration.
-
-#### Option B: `CTX_DIR` Environment Variable
-
-Good for CI pipelines, temporary overrides, or when you don't want to commit
-a `.ctxrc`:
-
-```bash
-# In your shell profile (~/.bashrc, ~/.zshrc)
-export CTX_DIR=~/repos/myproject-context
-```
-
-Or for a single session:
-
-```bash
-CTX_DIR=~/repos/myproject-context ctx status
-```
-
-#### Option C: Shell Alias
-
-If you prefer a shell alias over `.ctxrc`:
-
-```bash
-# ~/.bashrc or ~/.zshrc
-alias ctx='ctx --context-dir ~/repos/myproject-context --allow-outside-cwd'
-```
-
-#### Priority Order
-
-When multiple methods are set, `ctx` resolves the context directory in this
-order (*highest priority first*):
-
-1. `--context-dir` flag
-2. `CTX_DIR` environment variable
-3. `context_dir` in `.ctxrc`
-4. Default: `.context/`
+See
+[Activating a Context Directory](activating-context.md) for the full
+recipe.
 
 ### Step 4: Agent Auto-Discovery via Bootstrap
 
@@ -171,40 +203,40 @@ $ ctx system bootstrap
 ctx system bootstrap
 ====================
 
-context_dir: /home/user/repos/myproject-context
+context_dir: /home/user/repos/myproject-context/.context
 
 Files:
   CONSTITUTION.md, TASKS.md, DECISIONS.md, ...
 ```
 
 The `CLAUDE.md` template generated by `ctx init` already instructs the agent to
-run `ctx system bootstrap` at session start. Because `.ctxrc` is in the
-project root, your agent inherits the external path automatically via
-the `ctx system bootstrap` call instruction.
+run `ctx system bootstrap` at session start. Because `CTX_DIR` is inherited
+by child processes, your agent picks up the external path automatically.
 
 Here is the relevant section from `CLAUDE.md` for reference:
 
 ```markdown
 <!-- CLAUDE.md -->
 1. **Run `ctx system bootstrap`**: CRITICAL, not optional.
-   This tells you where the context directory is. If it fails or returns
-   no context_dir, STOP and warn the user.
+   This tells you where the context directory is. If it returns any
+   error, relay the error output to the user verbatim, point them at
+   https://ctx.ist/recipes/activating-context/ for setup, and STOP.
+   Do not try to recover; the user decides.
 ```
 
-Moreover, every nudge (*context checkpoint, persistence reminder, etc.*) also 
-includes a `Context: /home/user/repos/myproject-context` footer, so the agent
-remains anchored to the correct directory even in long sessions.
+Moreover, every nudge (*context checkpoint, persistence reminder, etc.*) also
+includes a `Context: /home/user/repos/myproject-context/.context` footer, so
+the agent remains anchored to the correct directory even in long sessions.
 
-If you use `CTX_DIR` instead of `.ctxrc`, export it in your shell
-profile so the hook process inherits it:
+Export `CTX_DIR` in your shell profile so every hook process inherits it:
 
 ```bash
-export CTX_DIR=~/repos/myproject-context
+export CTX_DIR=~/repos/myproject-context/.context
 ```
 
 ### Step 5: Share with Teammates
 
-Teammates clone both repos and set up `.ctxrc`:
+Teammates clone both repos and export `CTX_DIR`:
 
 ```bash
 # Clone the project
@@ -213,16 +245,10 @@ cd myproject
 
 # Clone the private context repo
 git clone git@github.com:org/myproject-context.git ~/repos/myproject-context
+export CTX_DIR=~/repos/myproject-context/.context
 ```
 
-If `.ctxrc` is already committed to the project, they're done: `ctx`
-commands will find the external context automatically.
-
-If teammates use different paths, each developer sets their own `CTX_DIR`:
-
-```bash
-export CTX_DIR=~/my-own-path/myproject-context
-```
+If teammates use different paths, each developer sets their own `CTX_DIR`.
 
 For encryption key distribution across the team, see the
 [Syncing Scratchpad Notes](scratchpad-sync.md) recipe.
@@ -230,7 +256,7 @@ For encryption key distribution across the team, see the
 ### Step 6: Day-to-Day Sync
 
 The external context repo has its own git history. Treat it like any other
-repo: Commit and push after sessions:
+repo: commit and push after sessions:
 
 ```bash
 cd ~/repos/myproject-context
@@ -263,9 +289,9 @@ You don't need to remember the flags; simply ask your assistant:
 ```text
 You: "Set up ctx to use ~/repos/myproject-context as the context directory."
 
-Agent: "I'll create a .ctxrc in the project root pointing to that path.
-       I'll also update CLAUDE.md so future sessions know where to find
-       context. Want me to initialize the context files there too?"
+Agent: "I'll set CTX_DIR to that path, run ctx init to materialize
+       it, and show you the export line to add to your shell
+       profile. Want me to seed the core context files too?"
 ```
 
 ### Configure Separate Repo for `.context` Folder Using Natural Language
@@ -273,7 +299,7 @@ Agent: "I'll create a .ctxrc in the project root pointing to that path.
 ```text
 You: "My context is in a separate repo. Can you load it?"
 
-Agent: [reads .ctxrc, finds the path, loads context from the external dir]
+Agent: [reads CTX_DIR, loads context from the external dir]
        "Loaded. You have 3 pending tasks, last session was about the auth
        refactor."
 ```
@@ -286,12 +312,10 @@ Agent: [reads .ctxrc, finds the path, loads context from the external dir]
   The default `.context/` in-tree is the easiest path. Move to an external
   repo when you have a concrete reason.
 * **One context repo per project**. Sharing a single context directory across
-  multiple projects creates confusion. Keep the mapping 1:1.
-* **Use `.ctxrc` over env vars** when the path is stable. It's committed,
-  documented, and works for the whole team without per-developer shell setup.
-* **Don't forget the boundary flag**. The most common error is
-  `Error: context directory is outside the project root`. Set
-  `allow_outside_cwd: true` in `.ctxrc` or pass `--allow-outside-cwd`.
+  multiple projects corrupts journals, state, and secrets. Use `ctx hub` for
+  cross-project knowledge sharing.
+* **Export `CTX_DIR` in your shell profile** so hooks and tools inherit the
+  path without per-command flags.
 * **Commit both repos at session boundaries**. Context without code history
   (*or code without context history*) loses half the value.
 
@@ -307,5 +331,4 @@ full ctx session from start to finish.
 * [Setting Up ctx Across AI Tools](multi-tool-setup.md): initial setup recipe
 * [Syncing Scratchpad Notes Across Machines](scratchpad-sync.md): distribute
   encryption keys when context is shared
-* [CLI Reference](../cli/index.md): all global flags including
-  `--context-dir` and `--allow-outside-cwd`
+* [CLI Reference](../cli/index.md): full command list and global options

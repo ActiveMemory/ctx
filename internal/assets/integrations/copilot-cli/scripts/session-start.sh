@@ -7,4 +7,4 @@ set -euo pipefail
 ctx system bootstrap 2>/dev/null || true
 
 # Load AI-optimized context packet
-ctx agent --budget 4000 2>/dev/null || true
+ctx agent 2>/dev/null || true

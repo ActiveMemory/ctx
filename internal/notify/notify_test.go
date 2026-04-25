@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func setupTestDir(t *testing.T) (string, func()) {
@@ -26,8 +27,7 @@ func setupTestDir(t *testing.T) (string, func()) {
 	_ = os.Chdir(tempDir)
 	_ = os.MkdirAll(filepath.Join(tempDir, ".context"), 0o750)
 
-	// Point rc to this temp dir's .context
-	rc.Reset()
+	testctx.Declare(t, tempDir)
 
 	return tempDir, func() {
 		_ = os.Chdir(origDir)

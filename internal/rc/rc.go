@@ -7,15 +7,18 @@
 package rc
 
 import (
+	"os"
 	"path/filepath"
 	"sync"
 
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/crypto"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 )
 
 // Default returns a new CtxRC with hardcoded default values.
@@ -25,7 +28,6 @@ import (
 //     (8000 token budget, 7-day archive, etc.)
 func Default() *CtxRC {
 	return &CtxRC{
-		ContextDir:          dir.Context,
 		TokenBudget:         DefaultTokenBudget,
 		PriorityOrder:       nil, // nil means use config.ReadOrder
 		AutoArchive:         true,
@@ -40,10 +42,16 @@ func Default() *CtxRC {
 	}
 }
 
-// RC returns the loaded configuration, initializing it on the first call.
+// RC returns the loaded configuration, initializing it on the first
+// call.
 //
-// It loads from .ctxrc if present, then applies environment overrides.
-// The result is cached for subsequent calls.
+// Under the single-source-anchor resolution model
+// (spec: specs/single-source-context-anchor.md), `.ctxrc` is read
+// from `filepath.Dir(ContextDir())/.ctxrc`: the project root, which
+// by contract is the parent of [ContextDir]. CWD has no say. When
+// no context directory is declared, `.ctxrc` is not read and
+// defaults apply. Environment overrides (CTX_TOKEN_BUDGET) are
+// applied afterward. The result is cached for subsequent calls.
 //
 // Returns:
 //   - *CtxRC: The loaded and cached configuration
@@ -54,34 +62,59 @@ func RC() *CtxRC {
 	return rc
 }
 
-// ContextDir returns the configured context directory as an absolute path.
+// ContextDir returns the context directory as a cleaned absolute
+// path after validating its declaration *shape*.
 //
-// Resolution order:
-//  1. CLI override (rcOverrideDir): returned as absolute, no walk.
-//  2. Configured absolute path (.ctxrc or env var): returned as-is.
-//  3. Upward walk from CWD: the first ancestor containing an existing
-//     directory whose basename matches the configured name wins.
-//  4. Fallback: filepath.Join(cwd, configuredName) as absolute. Preserves
-//     ctx init's ability to create a new context directory at CWD.
+// This is the **declaration shape** validator: it observes [env.CtxDir]
+// and checks the value is set, absolute, and canonically named. It
+// performs **no filesystem syscalls**. Diagnostic callers that must
+// describe declared state without erroring on broken state (for
+// example, the `check-anchor-drift` hook) use this directly.
 //
-// The walk allows commands and hooks invoked from project subdirectories
-// to resolve the project-root context dir instead of creating stray state
-// files inside the subdirectory. The walk result is cached for the life
-// of the process; tests can call Reset to invalidate the cache.
+// Operating callers that need a usable directory should call
+// [RequireContextDir] instead; it adds the boundary stat/IsDir
+// checks. Mixing the two is a convention violation: an operating
+// caller getting a shape-valid but non-existent path here would
+// surface as a confusing downstream error
+// (`open .../TASKS.md: no such file or directory`) instead of the
+// friendly tailored not-found error from [RequireContextDir].
+//
+// Rejection conditions, in order:
+//
+//  1. Unset/empty: [errCtx.ErrDirNotDeclared].
+//  2. Relative path (not [filepath.IsAbs]):
+//     [errCtx.ErrRelativeNotAllowed]. Absolute-only is a hardline:
+//     `filepath.Abs` *would* absolutize via cwd, exactly the silent
+//     cwd-dependency this resolver is meant to eliminate.
+//  3. Cleaned basename != [dir.Context]: [errCtx.ErrNonCanonicalBasename].
+//     Catches the common footgun `export CTX_DIR=$(pwd)` (project
+//     root instead of the `.context` subdirectory) on first use
+//     rather than letting init deposit canonical files in the
+//     project root.
+//
+// [filepath.Clean] runs unconditionally to normalize separators,
+// dot segments, and trailing slashes, but the input itself must be
+// absolute. Symlinks are not resolved: the basename guard checks
+// the *declared* name, not the symlink target name.
 //
 // Returns:
-//   - string: Absolute path to the context directory
-func ContextDir() string {
-	rcMu.RLock()
-	override := rcOverrideDir
-	rcMu.RUnlock()
-	if override != "" {
-		if abs, err := filepath.Abs(override); err == nil {
-			return abs
-		}
-		return override
+//   - string: cleaned absolute path when declared and shape-valid;
+//     "" on error.
+//   - error: [errCtx.ErrDirNotDeclared] / [errCtx.ErrRelativeNotAllowed]
+//     / [errCtx.ErrNonCanonicalBasename] depending on what failed.
+func ContextDir() (string, error) {
+	raw := os.Getenv(env.CtxDir)
+	if raw == "" {
+		return "", errCtx.ErrDirNotDeclared
 	}
-	return walkForContextDir(RC().ContextDir)
+	if !filepath.IsAbs(raw) {
+		return "", errCtx.RelativeNotAllowed(raw)
+	}
+	abs := filepath.Clean(raw)
+	if filepath.Base(abs) != dir.Context {
+		return "", errCtx.NonCanonicalBasename(filepath.Base(abs))
+	}
+	return abs, nil
 }
 
 // TokenBudget returns the configured default token budget.
@@ -218,14 +251,30 @@ func NotifyEvents() []string {
 
 // KeyPath returns the resolved encryption key file path.
 //
-// Priority: key_path in .ctxrc (explicit) > project-local
+// Under the explicit-context-dir model the caller must have a
+// declared context directory. The previous implementation silently
+// handed "" to [crypto.ResolveKeyPath] when ContextDir failed, which
+// either filepath.Join'd a CWD-relative `.ctx.key` path or fell
+// through to the global `~/.ctx/.ctx.key`: exactly the class of
+// silent-wrong-location / wrong-key-rotation bug this branch aims
+// to eliminate. The error is propagated instead so callers handle
+// the absence of a project rather than rotating encryption against
+// a surprise key.
 //
-//	(.context/.ctx.key) > global (~/.ctx/.ctx.key).
+// Within ResolveKeyPath the existing priority still applies:
+// key_path in .ctxrc (explicit) > project-local
+// (.context/.ctx.key) > global (~/.ctx/.ctx.key).
 //
 // Returns:
 //   - string: Resolved path to the encryption key file
-func KeyPath() string {
-	return crypto.ResolveKeyPath(ContextDir(), RC().KeyPathOverride)
+//   - error: [errCtx.ErrDirNotDeclared] or any other ContextDir
+//     resolver failure, propagated unchanged
+func KeyPath() (string, error) {
+	ctxDir, err := ContextDir()
+	if err != nil {
+		return "", err
+	}
+	return crypto.ResolveKeyPath(ctxDir, RC().KeyPathOverride), nil
 }
 
 // KeyRotationDays returns the configured key rotation threshold in days.
@@ -479,28 +528,6 @@ func HooksEnabled() bool {
 	return true
 }
 
-// AllowOutsideCwd returns whether boundary validation should be skipped.
-//
-// Returns false (default) when the field is not set in .ctxrc.
-//
-// Returns:
-//   - bool: True if the context directory is allowed outside the project root
-func AllowOutsideCwd() bool {
-	return RC().AllowOutsideCwd
-}
-
-// OverrideContextDir sets a CLI-provided override for the context directory.
-//
-// This takes precedence over all other configuration sources.
-//
-// Parameters:
-//   - ctxDir: Directory path to use as an override
-func OverrideContextDir(ctxDir string) {
-	rcMu.Lock()
-	defer rcMu.Unlock()
-	rcOverrideDir = ctxDir
-}
-
 // Reset clears the cached configuration, forcing
 // reload on the next access.
 func Reset() {
@@ -508,7 +535,6 @@ func Reset() {
 	defer rcMu.Unlock()
 	rcOnce = sync.Once{}
 	rc = nil
-	rcOverrideDir = ""
 }
 
 // FilePriority returns the priority of a context file.

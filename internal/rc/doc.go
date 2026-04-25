@@ -4,61 +4,52 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package rc loads, caches, and exposes the runtime
-// configuration every other ctx package depends on.
-// It is the single source of truth for context
-// directory location, token budget, encryption
-// settings, and the dozens of other knobs that shape
-// ctx behavior.
+// Package rc loads, caches, and exposes the runtime configuration
+// every other ctx package depends on. It is the single source of
+// truth for context directory location, token budget, encryption
+// settings, and the dozens of other knobs that shape ctx behavior.
 //
-// # Configuration Sources (Resolution Order)
+// # Context-Directory Resolution (explicit-only)
 //
-//  1. CLI overrides: set via ctx --context-dir
-//     (highest priority, stored in rcOverrideDir).
-//  2. Environment variables: CTX_DIR,
-//     CTX_TOKEN_BUDGET override .ctxrc fields.
-//  3. .ctxrc (YAML): read once at process start
-//     by [load]. Parse errors are logged via
-//     [internal/write/rc.ParseWarning] and defaults
-//     are kept; a malformed .ctxrc never aborts ctx.
-//  4. Defaults: every field has a hardcoded default
-//     in [Default] (8000 token budget, 7-day archive,
-//     200k context window, etc.).
+// Under the explicit-context-dir model
+// (spec: specs/explicit-context-dir.md), rc does NOT walk the
+// filesystem looking for a .context/ directory. Every non-exempt
+// command must declare the target explicitly.
 //
-// The result is the singleton [CtxRC] returned by
-// [RC], memoized via sync.Once so YAML is parsed at
-// most once per process.
+// [ContextDir] returns the declared path or the empty string:
 //
-// # Context-Directory Resolution
+//  1. CLI override set via [OverrideContextDir] (--context-dir
+//     flag) wins if present.
+//  2. CTX_DIR environment variable is consulted next.
+//  3. Otherwise the empty string is returned. Exempt callers
+//     (ctx init, activate, deactivate, system bootstrap) handle
+//     empty themselves; every other command should call
+//     [RequireContextDir] instead, which returns a tailored error
+//     whose message depends on how many .context/ candidates are
+//     visible from CWD.
 //
-// [ContextDir] resolves the .context/ path:
+// [ScanCandidates] is a read-only upward scan used by the
+// `ctx activate` subcommand and by [RequireContextDir]'s error
+// formatter. It does not resolve, bind, or select a directory.
 //
-//  1. CLI override (rcOverrideDir): return absolute.
-//  2. Configured absolute path: return as-is.
-//  3. Upward walk from CWD ([walkForContextDir]):
-//     find the first ancestor containing a matching
-//     directory, bounded by the git root.
-//  4. Fallback: filepath.Join(cwd, name) so that
-//     ctx init can create a fresh .context/.
+// # Configuration File (.ctxrc)
 //
-// # Key Accessors
+// Once [ContextDir] is declared, [load] reads `.ctxrc` from
+// `filepath.Dir(ContextDir())`: the project root, which by contract
+// is the parent of [ContextDir]. CWD has no say. When no context
+// directory is declared, `.ctxrc` is not read at all and defaults
+// apply.
 //
-//   - [TokenBudget], [ContextWindow]: budgets
-//   - [AutoArchive], [ArchiveAfterDays]: lifecycle
-//   - [ScratchpadEncrypt], [KeyPath],
-//     [KeyRotationDays]: encryption
-//   - [ClassifyRules], [SpecSignalWords]: memory
-//   - [HooksEnabled], [HooksDir], [HookTimeout] --
-//     hook system
-//   - [SteeringDir]: steering layer
-//   - [Tool], [ActiveProfile]: tool and profile
-//   - [Validate]: strict YAML validation with
-//     unknown-field warnings
+// Environment overrides (CTX_TOKEN_BUDGET) are applied after the
+// YAML merge so users can tune per-session without editing the
+// file.
+//
+// The singleton [CtxRC] returned by [RC] is memoized via
+// sync.Once so YAML is parsed at most once per process.
 //
 // # Concurrency
 //
-// [RC] serializes initialization through rcOnce.
-// Read accessors hold an RLock; the only writer is
-// the test-only [Reset]. CLI override mutation goes
-// through a brief Lock().
+// [RC] serializes initialization through rcOnce. Read accessors
+// hold an RLock; the only writer is the test-only [Reset]. CLI
+// override mutation goes through a brief Lock().
 package rc

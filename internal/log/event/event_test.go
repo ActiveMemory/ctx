@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // setupTestDir creates a temporary directory, configures rc to use it,
@@ -27,10 +28,8 @@ func setupTestDir(t *testing.T, enableLog bool) string {
 	t.Helper()
 	tmpDir := t.TempDir()
 
-	rc.Reset()
-	rc.OverrideContextDir(filepath.Join(tmpDir, dir.Context))
-
-	// Write .ctxrc to control event_log.
+	// Write .ctxrc at the project root (the parent of the .context/
+	// that testctx will declare).
 	rcContent := "event_log: false\n"
 	if enableLog {
 		rcContent = "event_log: true\n"
@@ -41,12 +40,11 @@ func setupTestDir(t *testing.T, enableLog bool) string {
 		t.Fatalf("failed to write .ctxrc: %v", writeErr)
 	}
 
-	// Change to temp dir so rc loads the .ctxrc.
 	origDir, _ := os.Getwd()
 	if chErr := os.Chdir(tmpDir); chErr != nil {
 		t.Fatalf("failed to chdir: %v", chErr)
 	}
-	rc.Reset() // force reload with new cwd
+	testctx.Declare(t, tmpDir)
 
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
@@ -60,7 +58,9 @@ func TestAppend_Disabled(t *testing.T) {
 	tmpDir := setupTestDir(t, false)
 	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLog)
 
-	Append("relay", "test message", "session-1", nil)
+	if err := Append("relay", "test message", "session-1", nil); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
 
 	if _, statErr := os.Stat(logPath); !os.IsNotExist(statErr) {
 		t.Error("Append() created log file when event_log is disabled")
@@ -72,7 +72,9 @@ func TestAppend_Basic(t *testing.T) {
 	logPath := filepath.Join(tmpDir, dir.Context, dir.State, event.FileLog)
 
 	detail := entity.NewTemplateRef("qa-reminder", "gate", nil)
-	Append("relay", "QA gate reminder", "session-1", detail)
+	if err := Append("relay", "QA gate reminder", "session-1", detail); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
 
 	data, readErr := os.ReadFile(logPath) //nolint:gosec // test file
 	if readErr != nil {
@@ -110,7 +112,9 @@ func TestAppend_CreatesStateDir(t *testing.T) {
 		t.Fatal("state dir should not exist before AppendEvent")
 	}
 
-	Append("nudge", "test", "", nil)
+	if err := Append("nudge", "test", "", nil); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
 
 	if _, statErr := os.Stat(stateDir); os.IsNotExist(statErr) {
 		t.Error("Append() did not create state directory")
@@ -138,7 +142,9 @@ func TestAppend_Rotation(t *testing.T) {
 	}
 
 	// AppendEvent should trigger rotation.
-	Append("relay", "after rotation", "", nil)
+	if err := Append("relay", "after rotation", "", nil); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
 
 	// Previous file should exist with the big content.
 	if _, statErr := os.Stat(prevPath); os.IsNotExist(statErr) {
@@ -185,7 +191,9 @@ func TestAppend_RotationOverwrite(t *testing.T) {
 		t.Fatalf("failed to write big log: %v", writeErr)
 	}
 
-	Append("relay", "new event", "", nil)
+	if err := Append("relay", "new event", "", nil); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
 
 	// The .1 file should now contain the rotated content,
 	// not "old rotated content".
@@ -213,12 +221,18 @@ func TestQuery_NoFile(t *testing.T) {
 func TestQuery_FilterHook(t *testing.T) {
 	setupTestDir(t, true)
 
-	Append("relay", "qa gate", "s1",
-		entity.NewTemplateRef("qa-reminder", "gate", nil))
-	Append("relay", "context load", "s1",
-		entity.NewTemplateRef("context-load-gate", "inject", nil))
-	Append("nudge", "ceremonies", "s1",
-		entity.NewTemplateRef("check-ceremony", "both", nil))
+	if err := Append("relay", "qa gate", "s1",
+		entity.NewTemplateRef("qa-reminder", "gate", nil)); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
+	if err := Append("relay", "context load", "s1",
+		entity.NewTemplateRef("context-load-gate", "inject", nil)); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
+	if err := Append("nudge", "ceremonies", "s1",
+		entity.NewTemplateRef("check-ceremony", "both", nil)); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
 
 	events, queryErr := Query(entity.EventQueryOpts{Hook: "qa-reminder"})
 	if queryErr != nil {
@@ -235,9 +249,15 @@ func TestQuery_FilterHook(t *testing.T) {
 func TestQuery_FilterSession(t *testing.T) {
 	setupTestDir(t, true)
 
-	Append("relay", "session one", "s1", nil)
-	Append("relay", "session two", "s2", nil)
-	Append("relay", "session one again", "s1", nil)
+	if err := Append("relay", "session one", "s1", nil); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
+	if err := Append("relay", "session two", "s2", nil); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
+	if err := Append("relay", "session one again", "s1", nil); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
 
 	events, queryErr := Query(entity.EventQueryOpts{Session: "s1"})
 	if queryErr != nil {
@@ -252,7 +272,9 @@ func TestQuery_Last(t *testing.T) {
 	setupTestDir(t, true)
 
 	for i := 0; i < 20; i++ {
-		Append("relay", "event", "", nil)
+		if err := Append("relay", "event", "", nil); err != nil {
+			t.Fatalf("Append: %v", err)
+		}
 	}
 
 	events, queryErr := Query(entity.EventQueryOpts{Last: 5})
@@ -283,7 +305,9 @@ func TestQuery_IncludeRotated(t *testing.T) {
 	}
 
 	// Write event to current file.
-	Append("relay", "new event", "", nil)
+	if err := Append("relay", "new event", "", nil); err != nil {
+		t.Fatalf("Append: %v", err)
+	}
 
 	// Without --all, only current events.
 	events, _ := Query(entity.EventQueryOpts{})

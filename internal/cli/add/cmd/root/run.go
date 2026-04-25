@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entry"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
 	"github.com/ActiveMemory/ctx/internal/hub"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/trace"
 	writeAdd "github.com/ActiveMemory/ctx/internal/write/add"
 	writeConnect "github.com/ActiveMemory/ctx/internal/write/connect"
@@ -42,6 +43,10 @@ import (
 //   - error: Non-nil if content is missing, type is invalid, required flags
 //     are missing, or file operations fail
 func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	fType := strings.ToLower(args[0])
 
 	content, extractErr := extract.Content(args, flags)
@@ -81,12 +86,17 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 
 	writeAdd.Added(cmd, fName)
 
+	stateDir, dirErr := state.Dir()
+	if dirErr != nil {
+		return dirErr
+	}
+
 	// Best-effort: publish to ctx Hub if --share is set.
 	if flags.Share {
 		pubEntry := hub.PublishEntry{
 			Type:    fType,
 			Content: content,
-			Origin:  filepath.Base(state.Dir()),
+			Origin:  filepath.Base(stateDir),
 		}
 		if pubErr := corePub.Run(
 			cmd, []hub.PublishEntry{pubEntry},
@@ -104,7 +114,7 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 	// so the new entry is always #1 in file order. This coupling is
 	// intentional: if the prepend logic changes, this must be updated.
 	if fType == cfgEntry.Decision || fType == cfgEntry.Learning {
-		_ = trace.Record(fType+cfgTrace.RefFirstEntry, state.Dir())
+		_ = trace.Record(fType+cfgTrace.RefFirstEntry, stateDir)
 	}
 
 	return nil

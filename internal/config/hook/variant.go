@@ -9,14 +9,6 @@ package hook
 // Hook variant constants: template selectors passed to Load and
 // NewTemplateRef to choose the appropriate message for each trigger type.
 const (
-	// VariantMidSudo selects the mid-command sudo block message.
-	VariantMidSudo = "mid-sudo"
-	// VariantMidGitPush selects the mid-command git push block message.
-	VariantMidGitPush = "mid-git-push"
-	// VariantCpToBin selects the cp/mv to bin block message.
-	VariantCpToBin = "cp-to-bin"
-	// VariantInstallToLocalBin selects the install to ~/.local/bin block message.
-	VariantInstallToLocalBin = "install-to-local-bin"
 	// VariantDotSlash selects the relative path (./ctx) block message.
 	VariantDotSlash = "dot-slash"
 	// VariantGoRun selects the go run block message.

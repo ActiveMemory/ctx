@@ -219,19 +219,24 @@ func SortedBlockTypes(
 // Returns:
 //   - error: non-nil if the report cannot be written
 func WriteReport(c *schema.Collector) error {
-	contextDir := rc.ContextDir()
-	if contextDir == "" {
-		return nil
+	contextDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return ctxErr
 	}
 
 	reportsDir := filepath.Join(contextDir, dir.Reports)
 	reportPath := filepath.Join(reportsDir, file.SchemaDrift)
 
 	if !c.Drift() {
-		if _, statErr := os.Stat(reportPath); statErr == nil {
+		_, statErr := os.Stat(reportPath)
+		if statErr == nil {
 			return os.Remove(reportPath)
 		}
-		return nil
+		if os.IsNotExist(statErr) {
+			// No prior report on disk, nothing to clean up.
+			return nil
+		}
+		return statErr
 	}
 
 	mkErr := ctxIo.SafeMkdirAll(reportsDir, fs.PermExec)

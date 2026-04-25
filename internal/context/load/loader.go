@@ -34,7 +34,11 @@ import (
 //   - error: NotFoundError if directory doesn't exist, or other IO errors
 func Do(dir string) (*entity.Context, error) {
 	if dir == "" {
-		dir = rc.ContextDir()
+		declared, ctxErr := rc.ContextDir()
+		if ctxErr != nil {
+			return nil, ctxErr
+		}
+		dir = declared
 	}
 
 	// Check if the directory exists
@@ -50,8 +54,8 @@ func Do(dir string) (*entity.Context, error) {
 	}
 
 	// Reject context directories that contain symlinks (M-2 defense).
-	if err := validate.Symlinks(dir); err != nil {
-		return nil, err
+	if symlinkErr := validate.Symlinks(dir); symlinkErr != nil {
+		return nil, symlinkErr
 	}
 
 	ctx := &entity.Context{

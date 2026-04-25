@@ -252,13 +252,6 @@
   
     
     
-      
-  
-  
-  
-  
-    
-    
       <li class="md-tabs__item">
         <a href="../../home/" class="md-tabs__link">
           
@@ -267,9 +260,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -548,6 +538,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -577,13 +571,11 @@
   
   
   
-    
-  
-  
-  
     <a href="../../home/" class="md-nav__link">
       
   
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
   
   <span class="md-ellipsis">
     
@@ -600,8 +592,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
   
 
       
@@ -904,6 +894,28 @@
     <span class="md-ellipsis">
       
         ctx init
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ctx-activate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx activate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ctx-deactivate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx deactivate
       
     </span>
   </a>
@@ -1301,8 +1313,6 @@
       
         
       
-        
-      
     
     
     
@@ -1570,6 +1580,8 @@
       
         
       
+        
+      
     
     
     
@@ -1646,6 +1658,28 @@
     <span class="md-ellipsis">
       
         ctx init
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ctx-activate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx activate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ctx-deactivate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx deactivate
       
     </span>
   </a>
@@ -1824,10 +1858,99 @@
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Merge into existing files</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ctx<span class="w"> </span>init<span class="w"> </span>--merge
 </span></code></pre></div>
+<p>After <code>ctx init</code> succeeds, the final output includes a hint showing
+the exact <code>eval "$(ctx activate)"</code> line to bind the new directory
+for your shell. Every other <code>ctx</code> command requires that binding
+(or an equivalent direct <code>CTX_DIR=/abs/path/.context</code> export) before
+it will run.</p>
+<hr />
+<h3 id="ctx-activate"><code>ctx activate</code><a class="headerlink" href="#ctx-activate" title="Permanent link">&para;</a></h3>
+<p>Emit a shell-native <code>export CTX_DIR=...</code> line for the target
+<code>.context/</code> directory. <code>ctx</code> does not walk the filesystem during
+operating commands; every non-exempt command requires <code>CTX_DIR</code>
+set before it will run. <code>activate</code> is the convenience that figures
+out the path and lets you bind it with one line.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Walk up from CWD, emit if exactly one candidate visible.</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--shell</code></td>
+<td>Shell dialect override. POSIX-family (<code>bash</code>, <code>zsh</code>, <code>sh</code>) all share one syntax today; the flag exists for future fish/nushell/powershell support. Auto-detected from <code>$SHELL</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Resolution</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Candidate count from CWD</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zero</td>
+<td>Error. Use <code>ctx init</code> to create one, or <code>cd</code> closer to the project root.</td>
+</tr>
+<tr>
+<td>One</td>
+<td>Emit <code>export CTX_DIR=&lt;path&gt;</code> for that candidate.</td>
+</tr>
+<tr>
+<td>Two or more</td>
+<td>Refuse. List every candidate. Re-run from a more specific cwd.</td>
+</tr>
+</tbody>
+</table>
+<p><code>activate</code> is args-free under the single-source-anchor model; the
+explicit-path mode was removed because hub-client / hub-server
+scenarios store at <code>~/.ctx/hub-data/</code> and never read <code>.context/</code>,
+so they activate from the project root like everyone else. Direct
+binding without a project-local scan is still available via
+<code>export CTX_DIR=/abs/path/.context</code> or the inline form.</p>
+<p>If the parent shell already has <code>CTX_DIR</code> set to a different value,
+the output gains a leading <code># ctx: replacing stale CTX_DIR=...</code>
+comment so the user sees the change in <code>eval</code> output before the
+replacement takes effect.</p>
+<p><strong>See also</strong>: <a href="../../recipes/activating-context/">Activating a Context Directory</a>
+for the full recipe including direnv setup and CI patterns.</p>
+<hr />
+<h3 id="ctx-deactivate"><code>ctx deactivate</code><a class="headerlink" href="#ctx-deactivate" title="Permanent link">&para;</a></h3>
+<p>Emit a shell-native <code>unset CTX_DIR</code> line. Pairs with <code>activate</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>deactivate<span class="k">)</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--shell</code></td>
+<td>Shell dialect override. POSIX-family (<code>bash</code>, <code>zsh</code>, <code>sh</code>) all share one <code>unset</code> syntax today; the flag exists for future fish/nushell/powershell support. Auto-detected from <code>$SHELL</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><code>deactivate</code> does not touch the filesystem, doesn't require a
+declared context directory, and never fails under normal operation;
+unsetting an already-unset variable is a no-op across supported
+shells.</p>
 <hr />
 <h3 id="ctx-status"><code>ctx status</code><a class="headerlink" href="#ctx-status" title="Permanent link">&para;</a></h3>
 <p>Show the current context summary.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>status<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>status<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -1860,14 +1983,14 @@
 <li>Drift warnings if any</li>
 </ul>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>status
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>status<span class="w"> </span>--json
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>status
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>status<span class="w"> </span>--json
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-agent"><code>ctx agent</code><a class="headerlink" href="#ctx-agent" title="Permanent link">&para;</a></h3>
 <p>Print an AI-ready context packet optimized for LLM consumption.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -1974,26 +2097,26 @@ their full body. Entries that don't fit get title-only summaries in an
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Default (8000 tokens, markdown)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>agent
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Smaller packet for tight context windows</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># JSON format for programmatic use</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--format<span class="w"> </span>json
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Pipe to file</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span>&gt;<span class="w"> </span>context.md
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># With cooldown (hooks/automation: requires --session)</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--session<span class="w"> </span><span class="nv">$PPID</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Default (8000 tokens, markdown)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>agent
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Smaller packet for tight context windows</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># JSON format for programmatic use</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--format<span class="w"> </span>json
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Pipe to file</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span>&gt;<span class="w"> </span>context.md
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># With cooldown (hooks/automation: requires --session)</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--session<span class="w"> </span><span class="nv">$PPID</span>
 </span></code></pre></div>
 <p><strong>Use case</strong>: Copy-paste into AI chat, pipe to system prompt, or use in hooks.</p>
 <hr />
 <h3 id="ctx-load"><code>ctx load</code><a class="headerlink" href="#ctx-load" title="Permanent link">&para;</a></h3>
 <p>Load and display assembled context as AI would see it.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>load<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>load<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -2015,9 +2138,9 @@ their full body. Entries that don't fit get title-only summaries in an
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>load
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>load<span class="w"> </span>--budget<span class="w"> </span><span class="m">16000</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ctx<span class="w"> </span>load<span class="w"> </span>--raw
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>load
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>load<span class="w"> </span>--budget<span class="w"> </span><span class="m">16000</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ctx<span class="w"> </span>load<span class="w"> </span>--raw
 </span></code></pre></div>
 
 

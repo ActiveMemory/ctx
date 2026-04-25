@@ -11,12 +11,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	writePause "github.com/ActiveMemory/ctx/internal/write/pause"
 )
 
@@ -33,21 +31,14 @@ import (
 // Returns:
 //   - error: Always nil
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	sessionID, ok := coreCheck.PausePreamble(cmd, stdin)
+	if !ok {
 		return nil
 	}
-
-	sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
-	if sessionID == "" {
-		input := coreSession.ReadInput(stdin)
-		sessionID = input.SessionID
+	if pauseErr := nudge.Pause(sessionID); pauseErr != nil {
+		logWarn.Warn(warn.StateDirProbe, pauseErr)
+		return nil
 	}
-	if sessionID == "" {
-		sessionID = session.IDUnknown
-	}
-
-	path := nudge.PauseMarkerPath(sessionID)
-	counter.Write(path, 0)
 	writePause.Confirmed(cmd, sessionID)
 	return nil
 }

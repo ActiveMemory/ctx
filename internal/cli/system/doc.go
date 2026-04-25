@@ -37,6 +37,7 @@
 // commands output JSON with a "decision" field.
 //
 // UserPromptSubmit hooks (hidden):
+//   - check-anchor-drift: stale CTX_DIR vs project anchor warning
 //   - check-context-size: adaptive prompt counter
 //   - check-persistence: context file mtime watcher
 //   - check-ceremony: session ceremony reminder
@@ -49,13 +50,11 @@
 //   - check-reminder: session reminder surfacing
 //   - check-freshness: constant staleness check
 //   - check-hub-sync: auto-sync Hub entries
-//   - check-backup-age: backup staleness check
 //   - check-skill-discovery: skill tip nudge
 //   - heartbeat: token telemetry and billing check
 //
 // PreToolUse hooks (hidden):
 //   - block-non-path-ctx: blocks non-PATH ctx calls
-//   - block-dangerous-command: blocks dangerous patterns
 //   - context-load-gate: context injection with cooldown
 //   - qa-reminder: lint/test before done reminder
 //   - specs-nudge: save plans to specs/ reminder

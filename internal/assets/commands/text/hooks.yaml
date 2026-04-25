@@ -1,44 +1,20 @@
 # Hook output text strings for ctx CLI.
 # Used by assets.TextDesc() for hook messages and checks.
 
-backup.box-title:
-  short: Backup Warning
-backup.no-marker:
-  short: No backup marker found - backup may have never run.
-backup.relay-message:
-  short: Backup warning
-backup.relay-prefix:
-  short: 'IMPORTANT: Relay this backup warning to the user VERBATIM before answering their question.'
-backup.run-hint:
-  short: 'Run: ctx backup'
-backup.smb-not-mounted:
-  short: SMB share (%s) is not mounted.
-backup.smb-unavailable:
-  short: Backups cannot run until it's available.
-backup.stale:
-  short: Last .context backup is %d days old.
 block.absolute-path:
   short: 'Use ''ctx'' from PATH, not absolute paths. Ask the user to run: make build && sudo make install'
 block.constitution-suffix:
   short: 'See CONSTITUTION.md: ctx Invocation Invariants'
-block.cp-to-bin:
-  short: Agent must not copy binaries to bin directories. Ask the user to run 'sudo make install' instead.
 block.dot-slash:
   short: 'Use ''ctx'' from PATH, not ''./ctx'' or ''./dist/ctx''. Ask the user to run: make build && sudo make install'
 block.go-run:
   short: 'Use ''ctx'' from PATH, not ''go run ./cmd/ctx''. Ask the user to run: make build && sudo make install'
-block.install-to-local-bin:
-  short: Do not copy binaries to ~/.local/bin - this overrides the system ctx in /usr/local/bin. Use 'ctx' from PATH.
-block.mid-git-push:
-  short: git push requires explicit user approval.
-block.mid-sudo:
-  short: Cannot use sudo (no password access). Use 'make build && sudo make install' manually if needed.
 block.non-path-relay-message:
   short: Blocked non-PATH ctx invocation
 bootstrap.next-steps:
   short: |-
     1. Read AGENT_PLAYBOOK.md from the context directory
-    2. Run `ctx agent --budget 4000` for a content summary
+    2. Run `ctx agent` for a content summary
 bootstrap.none:
   short: (none)
 bootstrap.plugin-warning:
@@ -113,6 +89,23 @@ check-context-size.billing-log-format:
   short: prompt#%d BILLING-WARNING tokens=%d threshold=%d
 relay.prefix-format:
   short: '%s: %s'
+check-anchor-drift.box-title:
+  short: Anchor Drift
+check-anchor-drift.content:
+  short: |-
+    CTX_DIR (your shell) and CLAUDE_PROJECT_DIR/.context
+    point at different projects.
+
+      shell:    %s
+      claude:   %s
+
+    Re-run `eval "$(ctx activate)"` from this project to
+    realign, or close this Claude Code session and reopen
+    it from the right working directory.
+check-anchor-drift.relay-message:
+  short: CTX_DIR diverges from Claude project anchor
+check-anchor-drift.relay-prefix:
+  short: 'IMPORTANT: Relay this anchor drift notice to the user VERBATIM before answering their question.'
 check-context-size.billing-relay-format:
   short: Billing threshold exceeded (%s tokens > %s)
 check-context-size.billing-relay-prefix:

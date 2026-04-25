@@ -18,9 +18,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgSync "github.com/ActiveMemory/ctx/internal/config/sync"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // CheckPackageFiles detects package manager files without dependency
@@ -127,12 +126,20 @@ func CheckConfigFiles(ctx *entity.Context) []Action {
 // Skips hidden directories and common non-code directories (node_modules,
 // vendor, dist, build).
 //
+// Returns (nil, nil) when the context directory is not declared: there is
+// no project root to scan, which is an ordinary "nothing to suggest" state
+// rather than an error. A resolver failure for any other reason, and a
+// directory read failure, are propagated so the caller does not report a
+// confident empty suggestion list when we actually failed to look.
+//
 // Parameters:
 //   - ctx: Loaded context containing the files
 //
 // Returns:
 //   - []Action: Suggested actions for undocumented directories
-func CheckNewDirectories(ctx *entity.Context) []Action {
+//   - error: non-nil on resolver failure (other than not-declared) or
+//     on a directory read failure at the project root
+func CheckNewDirectories(ctx *entity.Context) ([]Action, error) {
 	var actions []Action
 
 	// Get ARCHITECTURE.md content
@@ -141,16 +148,17 @@ func CheckNewDirectories(ctx *entity.Context) []Action {
 		archContent = strings.ToLower(string(f.Content))
 	}
 
-	// Scan top-level directories
-	cwd, cwdErr := os.Getwd()
-	if cwdErr != nil {
-		ctxLog.Warn(warn.Getwd, cwdErr)
-		return actions
+	// Scan top-level directories at the project root (parent of the
+	// declared context directory). Under the explicit-context-dir
+	// model this is authoritative; CWD may be a subdir.
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return nil, ctxErr
 	}
-	entries, readDirErr := os.ReadDir(cwd)
+	projectRoot := filepath.Dir(ctxDir)
+	entries, readDirErr := os.ReadDir(projectRoot)
 	if readDirErr != nil {
-		ctxLog.Warn(warn.Readdir, cwd, readDirErr)
-		return actions
+		return nil, readDirErr
 	}
 
 	for _, entry := range entries {
@@ -178,5 +186,5 @@ func CheckNewDirectories(ctx *entity.Context) []Action {
 		}
 	}
 
-	return actions
+	return actions, nil
 }

@@ -18,7 +18,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -39,11 +38,9 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
-		return nil
-	}
-	input, _, paused := coreCheck.Preamble(stdin)
-	if paused {
+	input, _, _, _, ok := coreCheck.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
 		return nil
 	}
 	if !strings.Contains(input.ToolInput.Command, cfgGit.Binary) {
@@ -56,14 +53,16 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	msg = ctxContext.AppendDir(msg)
+	msg, appendErr := ctxContext.AppendDir(msg)
+	if appendErr != nil {
+		return appendErr
+	}
 
 	writeSetup.Context(cmd, coreSession.FormatContext(hook.EventPreToolUse, msg))
 
 	ref := notify.NewTemplateRef(hook.QAReminder, hook.VariantGate, nil)
-	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+	return nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.QAReminder, desc.Text(text.DescKeyQaReminderRelayMessage)),
 		input.SessionID, ref,
 	)
-	return nil
 }

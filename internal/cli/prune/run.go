@@ -35,7 +35,10 @@ import (
 // Returns:
 //   - error: Non-nil on state directory read failure
 func Run(cmd *cobra.Command, days int, dryRun bool) error {
-	dir := state.Dir()
+	dir, dirErr := state.Dir()
+	if dirErr != nil {
+		return dirErr
+	}
 
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {

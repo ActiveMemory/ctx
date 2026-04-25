@@ -252,13 +252,6 @@
   
     
     
-      
-  
-  
-  
-  
-    
-    
       <li class="md-tabs__item">
         <a href="../../home/" class="md-tabs__link">
           
@@ -267,9 +260,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -548,6 +538,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -577,13 +571,11 @@
   
   
   
-    
-  
-  
-  
     <a href="../../home/" class="md-nav__link">
       
   
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
   
   <span class="md-ellipsis">
     
@@ -600,8 +592,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
   
 
       
@@ -714,6 +704,8 @@
       
         
       
+        
+      
     
     
     
@@ -732,7 +724,7 @@
   
   
   
-    <a href="../guide-your-agent/" class="md-nav__link">
+    <a href="../activating-context/" class="md-nav__link">
       
   
   
@@ -1244,10 +1236,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#no-context-directory-specified-for-this-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "No context directory specified for this project"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-not-initialized" class="md-nav__link">
     <span class="md-ellipsis">
       
         "ctx: Not Initialized"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#my-cli-and-my-claude-code-session-disagree-on-the-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "My CLI and My Claude Code Session Disagree on the Project"
       
     </span>
   </a>
@@ -1825,6 +1839,8 @@
       
         
       
+        
+      
     
     
     
@@ -1992,10 +2008,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#no-context-directory-specified-for-this-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "No context directory specified for this project"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-not-initialized" class="md-nav__link">
     <span class="md-ellipsis">
       
         "ctx: Not Initialized"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#my-cli-and-my-claude-code-session-disagree-on-the-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "My CLI and My Claude Code Session Disagree on the Project"
       
     </span>
   </a>
@@ -2301,33 +2339,85 @@ event log.</p>
 QA reminder events from that specific session.</p>
 <hr />
 <h2 id="common-problems">Common Problems<a class="headerlink" href="#common-problems" title="Permanent link">&para;</a></h2>
-<h3 id="ctx-not-initialized">"ctx: Not Initialized"<a class="headerlink" href="#ctx-not-initialized" title="Permanent link">&para;</a></h3>
+<h3 id="no-context-directory-specified-for-this-project">"No context directory specified for this project"<a class="headerlink" href="#no-context-directory-specified-for-this-project" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: Any <code>ctx</code> command fails with
-<code>ctx: not initialized - run "ctx init" first</code>.</p>
-<p><strong>Cause</strong>: You're running ctx in a directory without an initialized
-<code>.context/</code> directory. This guard runs on all user-facing commands to
-prevent confusing downstream errors.</p>
-<p><strong>Fix</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>init<span class="w">          </span><span class="c1"># create .context/ with template files</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>init<span class="w"> </span>--minimal<span class="w">  </span><span class="c1"># or just the essentials (CONSTITUTION, TASKS, DECISIONS)</span>
+<code>Error: no context directory specified for this project</code> (<em>possibly
+with a likely-candidate hint or a candidate list depending on what's
+visible from your CWD</em>).</p>
+<p><strong>Cause</strong>: <code>ctx</code> does not walk the filesystem. It requires the target
+<code>.context/</code> directory to be declared explicitly before any non-exempt
+command runs.</p>
+<p><strong>Fix</strong>: bind <code>CTX_DIR</code> for the current shell:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
 </span></code></pre></div>
-<p><strong>Commands that work without initialization</strong>: <code>ctx init</code>, <code>ctx setup</code>,
-<code>ctx doctor</code>, and help-only grouping commands (<code>ctx</code>, <code>ctx system</code>).</p>
+<p>See <a href="../activating-context/">Activating a Context Directory</a> for the
+full recipe (one-shot <code>CTX_DIR=...</code> inline form, CI patterns, direnv
+setup).</p>
+<h3 id="ctx-not-initialized">"ctx: Not Initialized"<a class="headerlink" href="#ctx-not-initialized" title="Permanent link">&para;</a></h3>
+<p><strong>Symptoms</strong>: After declaring <code>CTX_DIR</code>, the command fails with
+<code>ctx: not initialized - run "ctx init" first</code>.</p>
+<p><strong>Cause</strong>: The declared directory exists but hasn't been initialized
+with template files.</p>
+<p><strong>Fix</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>init<span class="w">          </span><span class="c1"># create .context/ with template files</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>init<span class="w"> </span>--minimal<span class="w">  </span><span class="c1"># or just the essentials (CONSTITUTION, TASKS, DECISIONS)</span>
+</span></code></pre></div>
+<p><strong>Commands that work without CTX_DIR or initialization</strong>: <code>ctx init</code>,
+<code>ctx activate</code>, <code>ctx deactivate</code>, <code>ctx setup</code>, <code>ctx doctor</code>,
+<code>ctx guide</code>, <code>ctx why</code>, <code>ctx config switch/status</code>, <code>ctx hub *</code>, and
+help-only grouping commands.</p>
+<h3 id="my-cli-and-my-claude-code-session-disagree-on-the-project">"My CLI and My Claude Code Session Disagree on the Project"<a class="headerlink" href="#my-cli-and-my-claude-code-session-disagree-on-the-project" title="Permanent link">&para;</a></h3>
+<p><strong>Symptoms</strong>: A <code>!</code>-pragma or interactive <code>ctx</code> call writes to the
+wrong <code>.context/</code>; or you ran <code>ctx remind add</code> in shell A and the
+reminder shows up in project B's notifications.</p>
+<p><strong>Cause</strong>: <code>CTX_DIR</code> is sourced from three different surfaces, and
+they can drift apart:</p>
+<table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Source of <code>CTX_DIR</code></th>
+<th>Bound when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Code hooks</td>
+<td><code>${CLAUDE_PROJECT_DIR}/.context</code> (injected)</td>
+<td>Every hook line; the project Claude is in</td>
+</tr>
+<tr>
+<td><code>!</code>-pragma in chat / interactive shell</td>
+<td>Whatever the parent shell exported</td>
+<td>When you ran <code>eval "$(ctx activate)"</code></td>
+</tr>
+<tr>
+<td>New shell tab opened mid-session</td>
+<td>Whatever your shellrc exports</td>
+<td>Login</td>
+</tr>
+</tbody>
+</table>
+<p>When these drift, the per-prompt <code>check-anchor-drift</code> hook fires a
+verbatim warning naming both values. To fix: re-run
+<code>eval "$(ctx activate)"</code> from inside the project the Claude Code
+session is editing, or close the shell tab and reopen it from the
+right working directory.</p>
 <h3 id="my-hook-isnt-firing">"My Hook Isn't Firing"<a class="headerlink" href="#my-hook-isnt-firing" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: No nudges appearing, webhook silent, event log shows no entries
 for the expected hook.</p>
 <p><strong>Diagnosis</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Check if ctx is installed and on PATH</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>which<span class="w"> </span>ctx<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>--version
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Check if the hook is registered</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>grep<span class="w"> </span><span class="s2">&quot;check-persistence&quot;</span><span class="w"> </span>~/.claude/plugins/ctx/hooks.json
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 3. Run the hook manually to see if it errors</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;session_id&quot;:&quot;test&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>system<span class="w"> </span>check-persistence
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 4. Check event log for the hook (if enabled)</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>check-persistence
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Check if ctx is installed and on PATH</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>which<span class="w"> </span>ctx<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>--version
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># 2. Check if the hook is registered</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>grep<span class="w"> </span><span class="s2">&quot;check-persistence&quot;</span><span class="w"> </span>~/.claude/plugins/ctx/hooks.json
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># 3. Run the hook manually to see if it errors</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;session_id&quot;:&quot;test&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>system<span class="w"> </span>check-persistence
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># 4. Check event log for the hook (if enabled)</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>check-persistence
 </span></code></pre></div>
 <p><strong>Common causes</strong>:</p>
 <ul>
@@ -2342,12 +2432,12 @@ for the expected hook.</p>
 <p><strong>Symptoms</strong>: The agent is overwhelmed with hook output. Context checkpoints,
 persistence reminders, and QA gates fire constantly.</p>
 <p><strong>Diagnosis</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check how often hooks fired recently</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--last<span class="w"> </span><span class="m">50</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Count fires per hook</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.detail.hook // &quot;unknown&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check how often hooks fired recently</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--last<span class="w"> </span><span class="m">50</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Count fires per hook</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.detail.hook // &quot;unknown&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
 </span></code></pre></div>
 <p><strong>Common causes</strong>:</p>
 <ul>
@@ -2368,14 +2458,14 @@ persistence reminders, and QA gates fire constantly.</p>
 <p><strong>Symptoms</strong>: The agent references outdated information, paths that don't
 exist, or decisions that were reversed.</p>
 <p><strong>Diagnosis</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Structural drift check</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>drift
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Full doctor check (includes drift + more)</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ctx<span class="w"> </span>doctor
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check when context files were last modified</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Structural drift check</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>drift
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Full doctor check (includes drift + more)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>doctor
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Check when context files were last modified</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
 </span></code></pre></div>
 <p><strong>Common causes</strong>:</p>
 <ul>
@@ -2393,11 +2483,11 @@ exist, or decisions that were reversed.</p>
 <p><strong>Symptoms</strong>: The agent ignores conventions, forgets decisions, or acts
 contrary to <code>CONSTITUTION.md</code> rules.</p>
 <p><strong>Diagnosis</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check context token size: Is it too large for the model?</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>doctor<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select(.name == &quot;context_size&quot;)&#39;</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check if context is actually being loaded</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>context-load-gate
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check context token size: Is it too large for the model?</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>doctor<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select(.name == &quot;context_size&quot;)&#39;</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check if context is actually being loaded</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ctx<span class="w"> </span>hook<span class="w"> </span>event<span class="w"> </span>--hook<span class="w"> </span>context-load-gate
 </span></code></pre></div>
 <p><strong>Common causes</strong>:</p>
 <ul>

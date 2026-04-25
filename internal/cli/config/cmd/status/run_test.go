@@ -17,11 +17,12 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 const (
 	devContent  = "profile: dev\nnotify:\n  events:\n    - loop\n"
-	baseContent = "profile: base\n# context_dir: .context\n"
+	baseContent = "profile: base\n"
 )
 
 func newTestCmd() *cobra.Command {
@@ -39,7 +40,11 @@ func chdirWithCleanup(t *testing.T, dir string) {
 	t.Helper()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(dir)
-	rc.Reset()
+	// Under the explicit-context-dir model, .ctxrc is read from
+	// `filepath.Dir(CTX_DIR)/.ctxrc`. Declaring CTX_DIR at
+	// `<dir>/.context` keeps this test's root-adjacent .ctxrc
+	// visible to the loader.
+	testctx.Declare(t, dir)
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 		rc.Reset()

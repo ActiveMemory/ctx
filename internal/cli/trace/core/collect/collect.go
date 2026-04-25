@@ -31,7 +31,10 @@ import (
 // Returns:
 //   - error: non-nil on execution failure
 func RecordCommit(commitHash string) error {
-	contextDir := rc.ContextDir()
+	contextDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return ctxErr
+	}
 
 	// Read refs from the commit trailer, the single source of truth.
 	// This matches exactly what was injected by the prepare-commit-msg hook.

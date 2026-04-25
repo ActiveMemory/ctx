@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	errSite "github.com/ActiveMemory/ctx/internal/err/site"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestCmd(t *testing.T) {
@@ -129,17 +130,20 @@ func TestRunServe_ZensicalNotFound(t *testing.T) {
 
 func TestRunServe_DefaultDir(t *testing.T) {
 	// When no args are given, serveRoot.Run uses the default
-	// journal-site directory under the resolved context dir.
+	// journal-site directory under the declared context dir.
 	//
-	// Chdir to a clean tempdir so rc.ContextDir()'s upward walk falls
-	// back to <tempdir>/.context (which does not exist), ensuring the
-	// default resolves to a nonexistent path and the run errors with
-	// "directory not found" rather than accidentally hitting a real
-	// context dir anchored by a parent repository.
+	// Declare CTX_DIR to point at a nonexistent .context/ so the
+	// default journal-site path resolves to something that does
+	// not exist on disk and the run errors with "directory not
+	// found" rather than the "context directory not declared"
+	// message.
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("CTX_DIR", filepath.Join(tempDir, ".context"))
+	rc.Reset()
+	t.Cleanup(rc.Reset)
 
 	err := serveRoot.Run([]string{})
 	if err == nil {

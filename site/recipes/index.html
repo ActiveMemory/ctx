@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://ctx.ist/recipes/">
       
       
-        <link rel="prev" href="../home/contributing/">
+        <link rel="prev" href="../home/triggers/">
       
       
-        <link rel="next" href="guide-your-agent/">
+        <link rel="next" href="activating-context/">
       
       
         
@@ -252,13 +252,6 @@
   
     
     
-      
-  
-  
-  
-  
-    
-    
       <li class="md-tabs__item">
         <a href="../home/" class="md-tabs__link">
           
@@ -267,9 +260,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -548,6 +538,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -577,13 +571,11 @@
   
   
   
-    
-  
-  
-  
     <a href="../home/" class="md-nav__link">
       
   
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
   
   <span class="md-ellipsis">
     
@@ -600,8 +592,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
   
 
       
@@ -714,6 +704,8 @@
       
         
       
+        
+      
     
     
     
@@ -732,7 +724,7 @@
   
   
   
-    <a href="guide-your-agent/" class="md-nav__link">
+    <a href="activating-context/" class="md-nav__link">
       
   
   
@@ -1390,6 +1382,8 @@
       
         
       
+        
+      
     
     
     
@@ -1860,6 +1854,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#scrutinizing-a-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scrutinizing a Plan
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2137,8 +2142,7 @@ pipeline works for Turkish, Japanese, and any other locale.</p>
 <p>Store context files <strong>outside</strong> the project tree: in a private repo,
 shared directory, or anywhere else. Useful for open source projects
 with private context or <strong>multi-repo</strong> setups.</p>
-<p><strong>Uses</strong>: <code>ctx init</code>, <code>--context-dir</code>, <code>--allow-outside-cwd</code>,
-<code>.ctxrc</code>, <code>/ctx-status</code></p>
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>CTX_DIR</code>, <code>.ctxrc</code>, <code>/ctx-status</code></p>
 <hr />
 <h2 id="sessions">Sessions<a class="headerlink" href="#sessions" title="Permanent link">&para;</a></h2>
 <h3 id="the-complete-session"><a href="session-lifecycle/">The Complete Session</a><a class="headerlink" href="#the-complete-session" title="Permanent link">&para;</a></h3>
@@ -2318,6 +2322,15 @@ Each step produces an artifact that feeds the next.</p>
 <p><strong>Uses</strong>: <code>/ctx-brainstorm</code>, <code>/ctx-spec</code>, <code>/ctx-task-add</code>,
 <code>/ctx-implement</code>, <code>/ctx-decision-add</code></p>
 <hr />
+<h3 id="scrutinizing-a-plan"><a href="scrutinizing-a-plan/">Scrutinizing a Plan</a><a class="headerlink" href="#scrutinizing-a-plan" title="Permanent link">&para;</a></h3>
+<p>Once a plan exists, run an <strong>adversarial interview</strong> to surface what's
+weak, missing, or unexamined before you commit. Walks the plan
+depth-first: assumptions, failure modes, alternatives, sequencing,
+reversibility. The complement to brainstorm: brainstorm produces
+plans, this attacks them.</p>
+<p><strong>Uses</strong>: <code>/ctx-plan</code>, <code>/ctx-spec</code>, <code>/ctx-decision-add</code>,
+<code>/ctx-learning-add</code></p>
+<hr />
 <h2 id="agents-and-automation">Agents and Automation<a class="headerlink" href="#agents-and-automation" title="Permanent link">&para;</a></h2>
 <h3 id="building-project-skills"><a href="building-skills/">Building Project Skills</a><a class="headerlink" href="#building-project-skills" title="Permanent link">&para;</a></h3>
 <p>Encode repeating workflows into reusable <strong>skills</strong> the agent loads
@@ -2465,7 +2478,7 @@ stepdown, and the Raft-lite durability caveat.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../home/contributing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contributing">
+          <a href="../home/triggers/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lifecycle Triggers">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -2475,20 +2488,20 @@ stepdown, and the Raft-lite durability caveat.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Contributing
+                Lifecycle Triggers
               </div>
             </div>
           </a>
         
         
           
-          <a href="guide-your-agent/" class="md-footer__link md-footer__link--next" aria-label="Next: Guide Your Agent">
+          <a href="activating-context/" class="md-footer__link md-footer__link--next" aria-label="Next: Activating a Context Directory">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Guide Your Agent
+                Activating a Context Directory
               </div>
             </div>
             <div class="md-footer__button md-icon">

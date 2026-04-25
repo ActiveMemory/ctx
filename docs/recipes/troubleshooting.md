@@ -137,14 +137,34 @@ QA reminder events from that specific session.
 
 ## Common Problems
 
-### "ctx: Not Initialized"
+### "No context directory specified for this project"
 
 **Symptoms**: Any `ctx` command fails with
+`Error: no context directory specified for this project` (*possibly
+with a likely-candidate hint or a candidate list depending on what's
+visible from your CWD*).
+
+**Cause**: `ctx` does not walk the filesystem. It requires the target
+`.context/` directory to be declared explicitly before any non-exempt
+command runs.
+
+**Fix**: bind `CTX_DIR` for the current shell:
+
+```bash
+eval "$(ctx activate)"
+```
+
+See [Activating a Context Directory](activating-context.md) for the
+full recipe (one-shot `CTX_DIR=...` inline form, CI patterns, direnv
+setup).
+
+### "ctx: Not Initialized"
+
+**Symptoms**: After declaring `CTX_DIR`, the command fails with
 `ctx: not initialized - run "ctx init" first`.
 
-**Cause**: You're running ctx in a directory without an initialized
-`.context/` directory. This guard runs on all user-facing commands to
-prevent confusing downstream errors.
+**Cause**: The declared directory exists but hasn't been initialized
+with template files.
 
 **Fix**:
 
@@ -153,8 +173,31 @@ ctx init          # create .context/ with template files
 ctx init --minimal  # or just the essentials (CONSTITUTION, TASKS, DECISIONS)
 ```
 
-**Commands that work without initialization**: `ctx init`, `ctx setup`,
-`ctx doctor`, and help-only grouping commands (`ctx`, `ctx system`).
+**Commands that work without CTX_DIR or initialization**: `ctx init`,
+`ctx activate`, `ctx deactivate`, `ctx setup`, `ctx doctor`,
+`ctx guide`, `ctx why`, `ctx config switch/status`, `ctx hub *`, and
+help-only grouping commands.
+
+### "My CLI and My Claude Code Session Disagree on the Project"
+
+**Symptoms**: A `!`-pragma or interactive `ctx` call writes to the
+wrong `.context/`; or you ran `ctx remind add` in shell A and the
+reminder shows up in project B's notifications.
+
+**Cause**: `CTX_DIR` is sourced from three different surfaces, and
+they can drift apart:
+
+| Surface                            | Source of `CTX_DIR`                         | Bound when                              |
+|------------------------------------|---------------------------------------------|-----------------------------------------|
+| Claude Code hooks                  | `${CLAUDE_PROJECT_DIR}/.context` (injected) | Every hook line; the project Claude is in |
+| `!`-pragma in chat / interactive shell | Whatever the parent shell exported      | When you ran `eval "$(ctx activate)"`   |
+| New shell tab opened mid-session   | Whatever your shellrc exports               | Login                                   |
+
+When these drift, the per-prompt `check-anchor-drift` hook fires a
+verbatim warning naming both values. To fix: re-run
+`eval "$(ctx activate)"` from inside the project the Claude Code
+session is editing, or close the shell tab and reopen it from the
+right working directory.
 
 ### "My Hook Isn't Firing"
 

@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 	"github.com/spf13/cobra"
 )
 
@@ -35,6 +36,8 @@ func TestApplyUpdate(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// Initialize context
 	initCmd := initialize.Cmd()
@@ -141,7 +144,11 @@ func TestApplyUpdate(t *testing.T) {
 			}
 
 			// Verify content was added
-			filePath := filepath.Join(rc.ContextDir(), tt.checkFile)
+			ctxDir, ctxErr := rc.ContextDir()
+			if ctxErr != nil {
+				t.Fatalf("ContextDir: %v", ctxErr)
+			}
+			filePath := filepath.Join(ctxDir, tt.checkFile)
 			content, err := os.ReadFile(filepath.Clean(filePath))
 			if err != nil {
 				t.Fatalf("failed to read %s: %v", tt.checkFile, err)
@@ -167,6 +174,8 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
+	testctx.Declare(t, tmpDir)
+
 	// Initialize context
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -175,7 +184,11 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	}
 
 	// Add a task to complete
-	tasksPath := filepath.Join(rc.ContextDir(), ctx.Task)
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		t.Fatalf("ContextDir: %v", ctxErr)
+	}
+	tasksPath := filepath.Join(ctxDir, ctx.Task)
 	tasksContent := `# Tasks
 
 ## Next Up
@@ -222,6 +235,8 @@ func TestProcessStream(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
+	testctx.Declare(t, tmpDir)
+
 	// Initialize context
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -245,7 +260,11 @@ More output
 	}
 
 	// Verify task was written
-	tasksPath := filepath.Join(rc.ContextDir(), ctx.Task)
+	ctxDir2, ctxErr2 := rc.ContextDir()
+	if ctxErr2 != nil {
+		t.Fatalf("ContextDir: %v", ctxErr2)
+	}
+	tasksPath := filepath.Join(ctxDir2, ctx.Task)
 	content, err := os.ReadFile(filepath.Clean(tasksPath))
 	if err != nil {
 		t.Fatalf("failed to read tasks: %v", err)
@@ -268,6 +287,8 @@ func TestProcessStreamWithAttributes(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// Initialize context
 	initCmd := initialize.Cmd()
@@ -295,7 +316,11 @@ func TestProcessStreamWithAttributes(t *testing.T) {
 	}
 
 	// Verify learning was written with structured fields
-	learningsPath := filepath.Join(rc.ContextDir(), ctx.Learning)
+	ctxDir3, ctxErr3 := rc.ContextDir()
+	if ctxErr3 != nil {
+		t.Fatalf("ContextDir: %v", ctxErr3)
+	}
+	learningsPath := filepath.Join(ctxDir3, ctx.Learning)
 	content, err := os.ReadFile(filepath.Clean(learningsPath))
 	if err != nil {
 		t.Fatalf("failed to read learnings: %v", err)
@@ -361,10 +386,9 @@ func TestProcessStream_DryRunMode(t *testing.T) {
 	}
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
-		rc.Reset()
 	})
 
-	rc.Reset()
+	testctx.Declare(t, tmpDir)
 
 	// Initialize context
 	initCmd := initialize.Cmd()
@@ -405,6 +429,8 @@ func TestProcessStream_FailedApply(t *testing.T) {
 		_ = os.Chdir(origDir)
 	})
 
+	testctx.Declare(t, tmpDir)
+
 	// Initialize context
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -441,6 +467,8 @@ func TestProcessStream_MultipleUpdates(t *testing.T) {
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 	})
+
+	testctx.Declare(t, tmpDir)
 
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -479,6 +507,8 @@ func TestProcessStream_DecisionWithAttributes(t *testing.T) {
 		_ = os.Chdir(origDir)
 	})
 
+	testctx.Declare(t, tmpDir)
+
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
@@ -502,7 +532,11 @@ func TestProcessStream_DecisionWithAttributes(t *testing.T) {
 	}
 
 	// Verify decision was written
-	decPath := filepath.Join(rc.ContextDir(), ctx.Decision)
+	ctxDir4, ctxErr4 := rc.ContextDir()
+	if ctxErr4 != nil {
+		t.Fatalf("ContextDir: %v", ctxErr4)
+	}
+	decPath := filepath.Join(ctxDir4, ctx.Decision)
 	content, err := os.ReadFile(filepath.Clean(decPath))
 	if err != nil {
 		t.Fatal(err)
@@ -525,6 +559,8 @@ func TestProcessStream_NoUpdates(t *testing.T) {
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 	})
+
+	testctx.Declare(t, tmpDir)
 
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -603,6 +639,8 @@ func TestProcessStream_CompleteUpdate(t *testing.T) {
 		_ = os.Chdir(origDir)
 	})
 
+	testctx.Declare(t, tmpDir)
+
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
@@ -610,7 +648,11 @@ func TestProcessStream_CompleteUpdate(t *testing.T) {
 	}
 
 	// Write a task to complete
-	tasksPath := filepath.Join(rc.ContextDir(), ctx.Task)
+	ctxDir5, ctxErr5 := rc.ContextDir()
+	if ctxErr5 != nil {
+		t.Fatalf("ContextDir: %v", ctxErr5)
+	}
+	tasksPath := filepath.Join(ctxDir5, ctx.Task)
 	tasksContent := "# Tasks\n\n- [ ] Implement login\n- [ ] Write tests\n"
 	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)

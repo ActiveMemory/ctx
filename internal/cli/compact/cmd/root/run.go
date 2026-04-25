@@ -34,6 +34,10 @@ import (
 // Returns:
 //   - error: Non-nil if context loading fails or .context/ is not found
 func Run(cmd *cobra.Command, archive bool) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	ctx, err := load.Do("")
 	if err != nil {
 		if _, ok := errors.AsType[*errCtx.NotFoundError](err); ok {

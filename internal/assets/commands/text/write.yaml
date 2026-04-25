@@ -11,12 +11,6 @@ write.spec-nudge-tip:
   short: 'Tip: this task may benefit from a spec. Run /ctx-spec to scaffold one.'
 write.archived:
   short: Archived previous mirror to %s
-write.backup-result:
-  short: '%s: %s (%s)'
-write.backup-skip-entry:
-  short: "skipping %s (not found)\n"
-write.backup-smb-dest:
-  short: ' → %s'
 write.bootstrap-dir:
   short: 'context_dir: %s'
 write.bootstrap-files:
@@ -67,8 +61,6 @@ write.format-bytes-raw:
   short: "%d B"
 write.format-bytes-unit:
   short: "%.1f %cB"
-write.format-gvfs-path:
-  short: "/run/user/%d/gvfs/smb-share:server=%s,share=%s"
 write.format-duration-day:
   short: "%dd"
 write.format-duration-hour:
@@ -193,6 +185,28 @@ write.init-makefile-includes:
   short: '  ○ Makefile (already includes %s)'
 write.init-merged:
   short: '  ✓ %s (merged)'
+write.init-anatomy-preamble:
+  short: |-
+    # Getting Started with ctx
+
+    The `.context/` directory is your project's persistent memory.
+    Its parent (this directory) is the project root by contract;
+    that's what `ctx sync` and drift detection scan. `CTX_DIR`
+    must be an absolute path ending in `.context`. One `.context/`
+    per project; knowledge sharing across projects goes through
+    `ctx hub`, not a shared directory.
+
+    Full reference: https://ctx.ist/recipes/activating-context/
+write.init-activate-hint:
+  short: |4-
+
+      Bind CTX_DIR for this shell (required before other ctx commands):
+
+        eval "$(ctx activate)"
+
+      Or export the absolute path directly (skip the scan):
+
+        export CTX_DIR=%s
 write.init-next-steps-block:
   short: |4-
 
@@ -252,7 +266,7 @@ write.init-getting-started-saved:
 write.init-no-changes:
   short: '  ○ %s (no changes needed)'
 write.init-overwrite-prompt:
-  short: '%s already exists. Overwrite? [y/N] '
+  short: '%s is already initialized. Re-run init? Existing files are preserved; missing ones are added. (Use --force to overwrite existing files.) [y/N] '
 write.init-perms-allow:
   short: '  ✓ %s (added ctx permissions)'
 write.init-perms-allow-deny:
@@ -581,7 +595,7 @@ write.paused:
 write.paused-message:
   short: "ctx:paused (%d turns) - resume with /ctx-resume"
 write.prefix-error:
-  short: 'Error: '
+  short: 'Error:'
 write.prefix-warn:
   short: '  ! %s: %v'
 write.publish-block:

@@ -11,11 +11,11 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/memory/core/resolve"
 	cfgMem "github.com/ActiveMemory/ctx/internal/config/memory"
 	errMem "github.com/ActiveMemory/ctx/internal/err/memory"
 	errState "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/memory"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
@@ -30,13 +30,14 @@ import (
 // Returns:
 //   - error: on discovery failure, sync failure, or state persistence failure.
 func Run(cmd *cobra.Command, dryRun bool) error {
-	contextDir := rc.ContextDir()
-	projectRoot := filepath.Dir(contextDir)
+	contextDir, projectRoot, err := resolve.ContextAndRoot(cmd)
+	if err != nil {
+		return err
+	}
 
-	sourcePath, discoverErr := memory.DiscoverPath(projectRoot)
+	sourcePath, discoverErr := resolve.DiscoverSource(cmd, projectRoot)
 	if discoverErr != nil {
-		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return errMem.NotFound()
+		return discoverErr
 	}
 
 	if dryRun {

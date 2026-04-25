@@ -13,8 +13,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/config/wrap"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/write/session"
 )
 
@@ -29,11 +31,21 @@ import (
 // Returns:
 //   - error: Non-nil if the marker file cannot be written
 func Run(cmd *cobra.Command) error {
-	if !state.Initialized() {
+	initialized, initErr := state.Initialized()
+	if initErr != nil {
+		logWarn.Warn(warn.StateInitializedProbe, initErr)
+		return nil
+	}
+	if !initialized {
 		return nil
 	}
 
-	markerPath := filepath.Join(state.Dir(), wrap.Marker)
+	stateDir, dirErr := state.Dir()
+	if dirErr != nil {
+		logWarn.Warn(warn.StateDirProbe, dirErr)
+		return nil
+	}
+	markerPath := filepath.Join(stateDir, wrap.Marker)
 
 	if writeErr := ctxIo.SafeWriteFile(
 		markerPath, []byte(wrap.Content), fs.PermSecret,

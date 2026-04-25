@@ -9,6 +9,7 @@ package health
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -25,26 +26,42 @@ import (
 	execGit "github.com/ActiveMemory/ctx/internal/exec/git"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // ReadMapTracking reads and parses the map-tracking.json file from the
 // context directory.
 //
+// ctxDir is supplied by the caller (typically a FullPreamble-gated
+// hook) so this function does not re-resolve it; a second resolution
+// would be dead code today and would pair an ambiguous (nil, err)
+// return with the genuine "no tracking yet" result.
+//
+// Returns (nil, nil) when the tracking file is simply absent: ordinary
+// "nothing to track yet" state. A read or parse failure is propagated
+// so the caller can distinguish "no tracking yet" from "tracking data
+// is corrupt".
+//
+// Parameters:
+//   - ctxDir: absolute path to the context directory
+//
 // Returns:
-//   - *MapTrackingInfo: parsed tracking info, or nil if not found or invalid
-func ReadMapTracking() *MapTrackingInfo {
-	data, readErr := io.SafeReadFile(rc.ContextDir(), architecture.MapTracking)
+//   - *MapTrackingInfo: parsed tracking info, or nil if absent
+//   - error: non-nil on I/O failure or JSON parse failure
+func ReadMapTracking(ctxDir string) (*MapTrackingInfo, error) {
+	data, readErr := io.SafeReadFile(ctxDir, architecture.MapTracking)
 	if readErr != nil {
-		return nil
+		if os.IsNotExist(readErr) {
+			return nil, nil
+		}
+		return nil, readErr
 	}
 
 	var info MapTrackingInfo
 	if jsonErr := json.Unmarshal(data, &info); jsonErr != nil {
-		return nil
+		return nil, jsonErr
 	}
 
-	return &info
+	return &info, nil
 }
 
 // CountModuleCommits counts git commits touching internal/
@@ -83,10 +100,13 @@ func CountModuleCommits(since string) int {
 //   - moduleCommits: number of commits touching modules since last refresh
 //
 // Returns:
-//   - string: formatted nudge box, or empty string if silenced
+//   - string: formatted nudge box, or empty string if silenced.
+//   - error: propagated from [nudge.EmitAndRelay] so callers can
+//     honor the log-first principle: if the relay audit entry or
+//     webhook fails, the nudge box should not be printed.
 func EmitMapStalenessWarning(
 	sessionID, dateStr string, moduleCommits int,
-) string {
+) (string, error) {
 	fallback := fmt.Sprintf(
 		desc.Text(text.DescKeyCheckMapStalenessFallback),
 		dateStr, moduleCommits,
@@ -97,7 +117,7 @@ func EmitMapStalenessWarning(
 			architecture.VarModuleCount:     moduleCommits,
 		}, fallback)
 	if content == "" {
-		return ""
+		return "", nil
 	}
 
 	box := message.NudgeBox(
@@ -115,6 +135,8 @@ func EmitMapStalenessWarning(
 		hook.CheckMapStaleness,
 		desc.Text(text.DescKeyCheckMapStalenessRelayMessage),
 	)
-	nudge.EmitAndRelay(notifyMsg, sessionID, ref)
-	return box
+	if err := nudge.EmitAndRelay(notifyMsg, sessionID, ref); err != nil {
+		return "", err
+	}
+	return box, nil
 }

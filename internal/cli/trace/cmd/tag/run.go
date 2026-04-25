@@ -41,7 +41,12 @@ func Run(cmd *cobra.Command, commitRef, note string) error {
 		return errTrace.ResolveCommit(commitRef, resolveErr)
 	}
 
-	traceDir := filepath.Join(rc.ContextDir(), dir.Trace)
+	ctxDir, ctxErr := rc.RequireContextDir()
+	if ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
+	traceDir := filepath.Join(ctxDir, dir.Trace)
 
 	entry := trace.OverrideEntry{
 		Commit: hash,

@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // TestCompleteTaskNoMatch tests complete with no matching task.
@@ -27,6 +28,8 @@ func TestCompleteTaskNoMatch(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// Initialize context
 	initCmd := initialize.Cmd()

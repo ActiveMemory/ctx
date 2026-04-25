@@ -19,7 +19,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	coreNudge "github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
@@ -41,20 +40,16 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
-		return nil
-	}
-	input, sessionID, paused := coreCheck.Preamble(stdin)
-	if paused {
-		return nil
-	}
-
 	interval := rc.TaskNudgeInterval()
 	if interval <= 0 {
 		return nil
 	}
-
-	counterPath := filepath.Join(state.Dir(), nudge.PrefixTask+sessionID)
+	input, sessionID, _, stateDir, ok := coreCheck.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
+		return nil
+	}
+	counterPath := filepath.Join(stateDir, nudge.PrefixTask+sessionID)
 	count := counter.Read(counterPath)
 	count++
 
@@ -81,10 +76,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	ref := notify.NewTemplateRef(
 		hook.CheckTaskCompletion, hook.VariantNudge, nil,
 	)
-	coreNudge.Relay(
+	return coreNudge.Relay(
 		fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 			hook.CheckTaskCompletion, nudgeMsg), input.SessionID, ref,
 	)
-
-	return nil
 }

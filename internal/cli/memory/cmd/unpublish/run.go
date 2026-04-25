@@ -7,18 +7,15 @@
 package unpublish
 
 import (
-	"path/filepath"
-
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/memory/core/resolve"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgMem "github.com/ActiveMemory/ctx/internal/config/memory"
 	ctxErr "github.com/ActiveMemory/ctx/internal/err/memory"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/memory"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/publish"
-	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
 // Run removes the ctx-managed marker block from MEMORY.md,
@@ -30,20 +27,18 @@ import (
 // Returns:
 //   - error: on discovery, read, or write failure.
 func Run(cmd *cobra.Command) error {
-	contextDir := rc.ContextDir()
-	projectRoot := filepath.Dir(contextDir)
-
-	memoryPath, discoverErr := memory.DiscoverPath(projectRoot)
-	if discoverErr != nil {
-		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return ctxErr.NotFound()
+	_, projectRoot, err := resolve.ContextAndRoot(cmd)
+	if err != nil {
+		cmd.SilenceUsage = true
+		return err
 	}
-
-	data, readErr := io.SafeReadFile(
-		filepath.Dir(memoryPath), filepath.Base(memoryPath),
-	)
+	memoryPath, discoverErr := resolve.DiscoverSource(cmd, projectRoot)
+	if discoverErr != nil {
+		return discoverErr
+	}
+	data, readErr := resolve.ReadSource(memoryPath)
 	if readErr != nil {
-		return ctxErr.Read(readErr)
+		return readErr
 	}
 
 	cleaned, found := memory.RemovePublished(string(data))

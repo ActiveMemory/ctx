@@ -99,7 +99,6 @@ what they asked: Stale backups, unimported sessions, resource warnings.
 * `ctx system check-context-size`: Context capacity warning
 * `ctx system check-resources`: Resource pressure (memory, swap, disk, load): `DANGER` only
 * `ctx system check-freshness`: Technology constant staleness warning
-* `check-backup-age.sh`: Stale backup warning (*project-local*)
 
 **Trade-off**: Noisy if overused. Every VERBATIM relay adds a preamble
 before the agent's actual answer. Throttle with once-per-day markers or

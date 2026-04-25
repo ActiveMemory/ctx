@@ -22,16 +22,25 @@ import (
 )
 
 // FromMarkers finds the second most recent ctx-loaded-* marker file.
-// The most recent is the current session's marker.
+// The most recent is the current session's marker, so the reference
+// point for change detection is the one before it.
 //
 // Returns:
-//   - time.Time: Marker file modification time
-//   - bool: True if a valid marker was found
-func FromMarkers() (time.Time, bool) {
-	stateDir := filepath.Join(rc.ContextDir(), dir.State)
+//   - time.Time: Marker file modification time on success.
+//   - error: [errCtx.ErrDirNotDeclared] when no context dir is
+//     declared; the underlying error from [os.ReadDir] when the state
+//     directory cannot be read; [os.ErrNotExist] when fewer than two
+//     marker files exist (no previous session to compare against).
+//     Callers treat any non-nil error as "try the next source".
+func FromMarkers() (time.Time, error) {
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		return time.Time{}, err
+	}
+	stateDir := filepath.Join(ctxDir, dir.State)
 	entries, readDirErr := os.ReadDir(stateDir)
 	if readDirErr != nil {
-		return time.Time{}, false
+		return time.Time{}, readDirErr
 	}
 
 	type markerInfo struct {
@@ -51,7 +60,8 @@ func FromMarkers() (time.Time, bool) {
 	}
 
 	if len(markers) < 2 {
-		return time.Time{}, false
+		// No previous-session marker on disk yet.
+		return time.Time{}, os.ErrNotExist
 	}
 
 	// Sort by modtime descending.
@@ -60,20 +70,28 @@ func FromMarkers() (time.Time, bool) {
 	})
 
 	// Second most recent = previous session.
-	return markers[1].modTime, true
+	return markers[1].modTime, nil
 }
 
 // FromEvents scans events.jsonl in reverse for the last
 // context-load-gate event.
 //
 // Returns:
-//   - time.Time: Event timestamp
-//   - bool: True if a valid event was found
-func FromEvents() (time.Time, bool) {
-	eventsPath := filepath.Join(rc.ContextDir(), dir.State, event.FileLog)
+//   - time.Time: Event timestamp on success.
+//   - error: [errCtx.ErrDirNotDeclared] when no context dir is
+//     declared; the underlying error from the event log reader when
+//     the file cannot be read; [os.ErrNotExist] when no matching
+//     load-gate event is present or its timestamp cannot be parsed.
+//     Callers treat any non-nil error as "try the next source".
+func FromEvents() (time.Time, error) {
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		return time.Time{}, err
+	}
+	eventsPath := filepath.Join(ctxDir, dir.State, event.FileLog)
 	data, readErr := io.SafeReadUserFile(eventsPath)
 	if readErr != nil {
-		return time.Time{}, false
+		return time.Time{}, readErr
 	}
 
 	lines := strings.Split(strings.TrimSpace(string(data)), token.NewlineLF)
@@ -84,9 +102,10 @@ func FromEvents() (time.Time, bool) {
 			continue
 		}
 		if t, ok := ExtractTimestamp(line); ok {
-			return t, true
+			return t, nil
 		}
 	}
 
-	return time.Time{}, false
+	// No matching load-gate event in the log.
+	return time.Time{}, os.ErrNotExist
 }

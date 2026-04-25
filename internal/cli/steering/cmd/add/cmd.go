@@ -52,7 +52,11 @@ func Cmd() *cobra.Command {
 // Returns:
 //   - error: nil on success, or a file creation error
 func Run(c *cobra.Command, name string) error {
-	contextDir := rc.ContextDir()
+	contextDir, err := rc.RequireContextDir()
+	if err != nil {
+		c.SilenceUsage = true
+		return err
+	}
 
 	// Check that .context/ directory exists.
 	if _, statErr := ctxIo.SafeStat(contextDir); os.IsNotExist(statErr) {

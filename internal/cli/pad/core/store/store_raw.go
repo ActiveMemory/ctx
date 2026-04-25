@@ -24,7 +24,10 @@ import (
 //   - []byte: Decrypted plaintext, or nil if file missing
 //   - error: Non-nil on key or decryption errors
 func readRaw() ([]byte, error) {
-	path := ScratchpadPath()
+	path, pathErr := ScratchpadPath()
+	if pathErr != nil {
+		return nil, pathErr
+	}
 	dir := filepath.Dir(path)
 	name := filepath.Base(path)
 
@@ -40,7 +43,10 @@ func readRaw() ([]byte, error) {
 		return data, nil
 	}
 
-	kp := KeyPath()
+	kp, kpErr := KeyPath()
+	if kpErr != nil {
+		return nil, kpErr
+	}
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
 		return nil, errCrypto.LoadKey(loadErr, kp)

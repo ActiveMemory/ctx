@@ -17,7 +17,6 @@ import (
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/freshness"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -43,19 +42,17 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	input, _, paused := coreCheck.Preamble(stdin)
-	if paused {
-		return nil
-	}
-
 	files := rc.FreshnessFiles()
 	if len(files) == 0 {
 		return nil
 	}
 
-	tmpDir := state.Dir()
+	input, _, _, tmpDir, ok := coreCheck.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
+		return nil
+	}
 	throttleFile := filepath.Join(tmpDir, freshness.ThrottleID)
-
 	if coreCheck.DailyThrottled(throttleFile) {
 		return nil
 	}
@@ -97,13 +94,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	staleText := drift.FormatStaleEntries(staleEntries)
 
 	vars := map[string]any{freshness.VarStaleFiles: staleText}
-	nudge.LoadAndEmit(cmd,
+	return nudge.LoadAndEmit(cmd,
 		hook.CheckFreshness, hook.VariantStale, vars, staleText,
 		desc.Text(text.DescKeyFreshnessRelayPrefix),
 		desc.Text(text.DescKeyFreshnessBoxTitle),
 		desc.Text(text.DescKeyFreshnessRelayMessage),
 		input.SessionID, throttleFile,
 	)
-
-	return nil
 }

@@ -201,12 +201,16 @@ func MissingFile(filename string) error {
 		return prompt.NoTemplate(filename, err)
 	}
 
-	targetPath := filepath.Join(rc.ContextDir(), filename)
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return ctxErr
+	}
+	targetPath := filepath.Join(ctxDir, filename)
 
 	if mkErr := ctxIo.SafeMkdirAll(
-		rc.ContextDir(), fs.PermExec,
+		ctxDir, fs.PermExec,
 	); mkErr != nil {
-		return errFs.Mkdir(rc.ContextDir(), mkErr)
+		return errFs.Mkdir(ctxDir, mkErr)
 	}
 
 	if writeErr := ctxIo.SafeWriteFile(

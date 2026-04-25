@@ -13,6 +13,7 @@ import (
 
 	coreObsidian "github.com/ActiveMemory/ctx/internal/cli/journal/core/obsidian"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -20,12 +21,21 @@ import (
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - output: Output directory for the vault
+//   - output: Output directory for the vault; when empty, defaults
+//     to <context dir>/<obsidian.DirName>
 //
 // Returns:
 //   - error: Non-nil if generation fails
 func Run(cmd *cobra.Command, output string) error {
+	ctxDir, err := rc.RequireContextDir()
+	if err != nil {
+		cmd.SilenceUsage = true
+		return err
+	}
+	if output == "" {
+		output = filepath.Join(ctxDir, obsidian.DirName)
+	}
 	return coreObsidian.BuildVault(
-		cmd, filepath.Join(rc.ContextDir(), dir.Journal), output,
+		cmd, filepath.Join(ctxDir, dir.Journal), output,
 	)
 }

@@ -252,13 +252,6 @@
   
     
     
-      
-  
-  
-  
-  
-    
-    
       <li class="md-tabs__item">
         <a href="../home/" class="md-tabs__link">
           
@@ -267,9 +260,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -548,6 +538,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -577,13 +571,11 @@
   
   
   
-    
-  
-  
-  
     <a href="../home/" class="md-nav__link">
       
   
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
   
   <span class="md-ellipsis">
     
@@ -600,8 +592,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
   
 
       
@@ -1111,8 +1101,6 @@
       
         
       
-        
-      
     
     
     
@@ -1372,6 +1360,8 @@
       
         
           
+        
+      
         
       
         
@@ -1673,25 +1663,36 @@
 <td>Show version</td>
 </tr>
 <tr>
-<td><code>--context-dir &lt;path&gt;</code></td>
-<td>Override context directory (default: <code>.context/</code>)</td>
-</tr>
-<tr>
-<td><code>--allow-outside-cwd</code></td>
-<td>Allow context directory outside current working directory</td>
-</tr>
-<tr>
 <td><code>--tool &lt;name&gt;</code></td>
 <td>Override active AI tool identifier (e.g. <code>kiro</code>, <code>cursor</code>)</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Initialization required.</strong> Most commands require a <code>.context/</code> directory
-created by <code>ctx init</code>. Running a command without one produces:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx: not initialized - run &quot;ctx init&quot; first
-</span></code></pre></div>
-<p>Commands that work before initialization: <code>ctx init</code>, <code>ctx setup</code>,
-<code>ctx doctor</code>, and grouping commands that only show help.</p>
+<p><strong>Context declaration required.</strong> ctx does not walk the filesystem
+looking for <code>.context/</code>. Every non-exempt command requires <code>CTX_DIR</code>
+to be declared explicitly before it runs. The single declaration
+channel is the environment variable:</p>
+<ul>
+<li><code>eval "$(ctx activate)"</code>: binds <code>CTX_DIR</code> for the current shell.</li>
+<li><code>CTX_DIR=/abs/path/to/.context</code> exported in the environment, or
+  inlined as <code>CTX_DIR=/abs/path/to/.context ctx &lt;command&gt;</code> for a
+  one-shot.</li>
+</ul>
+<p><code>CTX_DIR</code> must be an absolute path with <code>.context</code> as its basename.
+Relative paths and other names are rejected on first use; the
+basename guard catches the common footgun
+(<code>export CTX_DIR=$(pwd)</code>) before stray writes can leak to the
+project root.</p>
+<p>Commands fail fast with a linkable error
+(see <a href="../recipes/activating-context/">Activating a Context Directory</a>)
+when none is declared. The exempt allowlist (commands that run without
+a declared context directory) is: <code>ctx init</code>, <code>ctx activate</code>,
+<code>ctx deactivate</code>, <code>ctx version</code>, <code>ctx help</code>, <code>ctx system bootstrap</code>,
+<code>ctx doctor</code>, <code>ctx guide</code>, <code>ctx why</code>, <code>ctx config switch/status</code>,
+<code>ctx hub *</code>.</p>
+<p><strong>Initialization required.</strong> Once declared, the target must already
+have been initialized by <code>ctx init</code> (otherwise commands return
+<code>ctx: not initialized</code>).</p>
 <!-- drift-check: ctx --help | grep -c '  [a-z]' -->
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <table>
@@ -1705,6 +1706,14 @@ created by <code>ctx init</code>. Running a command without one produces:</p>
 <tr>
 <td><a href="init-status/#ctx-init"><code>ctx init</code></a></td>
 <td>Initialize <code>.context/</code> directory with templates</td>
+</tr>
+<tr>
+<td><a href="init-status/#ctx-activate"><code>ctx activate</code></a></td>
+<td>Emit <code>export CTX_DIR=...</code> to bind context for the shell</td>
+</tr>
+<tr>
+<td><a href="init-status/#ctx-deactivate"><code>ctx deactivate</code></a></td>
+<td>Emit <code>unset CTX_DIR</code> to clear the binding</td>
 </tr>
 <tr>
 <td><a href="init-status/#ctx-status"><code>ctx status</code></a></td>
@@ -1918,10 +1927,6 @@ created by <code>ctx init</code>. Running a command without one produces:</p>
 <td>Manage runtime configuration profiles</td>
 </tr>
 <tr>
-<td><a href="backup/#ctx-backup"><code>ctx backup</code></a></td>
-<td>Back up context and Claude data to tar.gz / SMB</td>
-</tr>
-<tr>
 <td><a href="prune/#ctx-prune"><code>ctx prune</code></a></td>
 <td>Clean stale per-session state files</td>
 </tr>
@@ -2000,14 +2005,6 @@ created by <code>ctx init</code>. Running a command without one produces:</p>
 <td>Override default token budget</td>
 </tr>
 <tr>
-<td><code>CTX_BACKUP_SMB_URL</code></td>
-<td>SMB share URL for backups (e.g. <code>smb://host/share</code>)</td>
-</tr>
-<tr>
-<td><code>CTX_BACKUP_SMB_SUBDIR</code></td>
-<td>Subdirectory on SMB share (default: <code>ctx-sessions</code>)</td>
-</tr>
-<tr>
 <td><code>CTX_SESSION_ID</code></td>
 <td>Active AI session ID (used by <code>ctx trace</code> for context linking)</td>
 </tr>
@@ -2016,49 +2013,47 @@ created by <code>ctx init</code>. Running a command without one produces:</p>
 <!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort) <(sed -n '/Configuration File/,/^##[^#]/p' docs/cli/index.md | grep -oP '`[a-z_]+`' | tr -d '`' | sort -u) -->
 <h2 id="configuration-file">Configuration File<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h2>
 <p>Optional <code>.ctxrc</code> (<em>YAML format</em>) at project root:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .ctxrc</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context</span><span class="w">        </span><span class="c1"># Context directory name</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">token_budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span><span class="w">           </span><span class="c1"># Default token budget</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">priority_order</span><span class="p">:</span><span class="w">              </span><span class="c1"># File loading priority</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TASKS.md</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DECISIONS.md</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONVENTIONS.md</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nt">auto_archive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">           </span><span class="c1"># Auto-archive old items</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nt">archive_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w">        </span><span class="c1"># Days before archiving tasks</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">     </span><span class="c1"># Encrypt scratchpad (default: true)</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">     </span><span class="c1"># Skip boundary check (default: false)</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nt">event_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">             </span><span class="c1"># Enable local hook event logging</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nt">companion_check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># Check companion tools at session start</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nt">entry_count_learnings</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">    </span><span class="c1"># Drift warning threshold (0 = disable)</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nt">entry_count_decisions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">    </span><span class="c1"># Drift warning threshold (0 = disable)</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="nt">convention_line_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w">   </span><span class="c1"># Line count warning for CONVENTIONS.md (0 = disable)</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nt">injection_token_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15000</span><span class="w">  </span><span class="c1"># Oversize injection warning (0 = disable)</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nt">context_window</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200000</span><span class="w">       </span><span class="c1"># Auto-detected for Claude Code; override for other tools</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nt">billing_token_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">        </span><span class="c1"># One-shot billing warning at this token count (0 = disabled)</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nt">key_rotation_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w">        </span><span class="c1"># Days before key rotation nudge</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nt">session_prefixes</span><span class="p">:</span><span class="w">            </span><span class="c1"># Recognized session header prefixes (extend for i18n)</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Session:&quot;</span><span class="w">               </span><span class="c1"># English (default)</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span><span class="c1"># - &quot;Oturum:&quot;              # Turkish (add as needed)</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span><span class="c1"># - &quot;セッション:&quot;             # Japanese (add as needed)</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="nt">freshness_files</span><span class="p">:</span><span class="w">             </span><span class="c1"># Files with technology-dependent constants (opt-in)</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config/thresholds.yaml</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="nt">desc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Model token limits and batch sizes</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">    </span><span class="nt">review_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://docs.example.com/limits</span><span class="w">  </span><span class="c1"># Optional</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="nt">notify</span><span class="p">:</span><span class="w">                      </span><span class="c1"># Webhook notification settings</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">  </span><span class="nt">events</span><span class="p">:</span><span class="w">                    </span><span class="c1"># Required: only listed events fire</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loop</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nudge</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">    </span><span class="c1"># - heartbeat            # Every-prompt session-alive signal</span>
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">                     </span><span class="c1"># Active AI tool: claude, cursor, cline, kiro, codex</span>
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="nt">steering</span><span class="p">:</span><span class="w">                    </span><span class="c1"># Steering layer configuration</span>
-</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">  </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/steering</span><span class="w">     </span><span class="c1"># Steering files directory</span>
-</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">  </span><span class="nt">default_inclusion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span><span class="w">  </span><span class="c1"># Default inclusion mode (always, auto, manual)</span>
-</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">  </span><span class="nt">default_tools</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w">          </span><span class="c1"># Default tool filter for new steering files</span>
-</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="nt">hooks</span><span class="p">:</span><span class="w">                       </span><span class="c1"># Hook system configuration</span>
-</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">  </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/hooks</span><span class="w">        </span><span class="c1"># Hook scripts directory</span>
-</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">                </span><span class="c1"># Per-hook execution timeout in seconds</span>
-</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">              </span><span class="c1"># Whether hook execution is enabled</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">token_budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span><span class="w">           </span><span class="c1"># Default token budget</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">priority_order</span><span class="p">:</span><span class="w">              </span><span class="c1"># File loading priority</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TASKS.md</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DECISIONS.md</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONVENTIONS.md</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">auto_archive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">           </span><span class="c1"># Auto-archive old items</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">archive_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w">        </span><span class="c1"># Days before archiving tasks</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">     </span><span class="c1"># Encrypt scratchpad (default: true)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nt">event_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">             </span><span class="c1"># Enable local hook event logging</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nt">companion_check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># Check companion tools at session start</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nt">entry_count_learnings</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">    </span><span class="c1"># Drift warning threshold (0 = disable)</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nt">entry_count_decisions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">    </span><span class="c1"># Drift warning threshold (0 = disable)</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nt">convention_line_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w">   </span><span class="c1"># Line count warning for CONVENTIONS.md (0 = disable)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nt">injection_token_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15000</span><span class="w">  </span><span class="c1"># Oversize injection warning (0 = disable)</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nt">context_window</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200000</span><span class="w">       </span><span class="c1"># Auto-detected for Claude Code; override for other tools</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nt">billing_token_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">        </span><span class="c1"># One-shot billing warning at this token count (0 = disabled)</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nt">key_rotation_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w">        </span><span class="c1"># Days before key rotation nudge</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nt">session_prefixes</span><span class="p">:</span><span class="w">            </span><span class="c1"># Recognized session header prefixes (extend for i18n)</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Session:&quot;</span><span class="w">               </span><span class="c1"># English (default)</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span><span class="c1"># - &quot;Oturum:&quot;              # Turkish (add as needed)</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="c1"># - &quot;セッション:&quot;             # Japanese (add as needed)</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nt">freshness_files</span><span class="p">:</span><span class="w">             </span><span class="c1"># Files with technology-dependent constants (opt-in)</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config/thresholds.yaml</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="nt">desc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Model token limits and batch sizes</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="nt">review_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://docs.example.com/limits</span><span class="w">  </span><span class="c1"># Optional</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="nt">notify</span><span class="p">:</span><span class="w">                      </span><span class="c1"># Webhook notification settings</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span><span class="nt">events</span><span class="p">:</span><span class="w">                    </span><span class="c1"># Required: only listed events fire</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loop</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nudge</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">    </span><span class="c1"># - heartbeat            # Every-prompt session-alive signal</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">                     </span><span class="c1"># Active AI tool: claude, cursor, cline, kiro, codex</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="nt">steering</span><span class="p">:</span><span class="w">                    </span><span class="c1"># Steering layer configuration</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">  </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/steering</span><span class="w">     </span><span class="c1"># Steering files directory</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">  </span><span class="nt">default_inclusion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span><span class="w">  </span><span class="c1"># Default inclusion mode (always, auto, manual)</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">  </span><span class="nt">default_tools</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w">          </span><span class="c1"># Default tool filter for new steering files</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="nt">hooks</span><span class="p">:</span><span class="w">                       </span><span class="c1"># Hook system configuration</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">  </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/hooks</span><span class="w">        </span><span class="c1"># Hook scripts directory</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">                </span><span class="c1"># Per-hook execution timeout in seconds</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">              </span><span class="c1"># Whether hook execution is enabled</span>
 </span></code></pre></div>
 <table>
 <thead>
@@ -2070,12 +2065,6 @@ created by <code>ctx init</code>. Running a command without one produces:</p>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td><code>context_dir</code></td>
-<td><code>string</code></td>
-<td><code>.context</code></td>
-<td>Context directory name (relative to project root)</td>
-</tr>
 <tr>
 <td><code>token_budget</code></td>
 <td><code>int</code></td>
@@ -2105,12 +2094,6 @@ created by <code>ctx init</code>. Running a command without one produces:</p>
 <td><code>bool</code></td>
 <td><code>true</code></td>
 <td>Encrypt scratchpad with AES-256-GCM</td>
-</tr>
-<tr>
-<td><code>allow_outside_cwd</code></td>
-<td><code>bool</code></td>
-<td><code>false</code></td>
-<td>Skip boundary check for external context dirs</td>
 </tr>
 <tr>
 <td><code>event_log</code></td>

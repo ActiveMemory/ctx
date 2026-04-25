@@ -131,11 +131,19 @@ func checkSyncStaleness(report *Report) {
 		return
 	}
 
-	cwd, cwdErr := os.Getwd()
-	if cwdErr != nil {
-		report.Passed = append(report.Passed, cfgDrift.CheckSyncStaleness)
+	// Tool-native outputs are written to the project root, which
+	// under the explicit-context-dir model is the parent of the
+	// declared context directory. Using CWD here broke checks when
+	// `ctx drift` was invoked from a subdirectory (spec:
+	// specs/explicit-context-dir.md).
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		report.Warnings = append(report.Warnings, Issue{
+			Message: ctxErr.Error(),
+		})
 		return
 	}
+	projectRoot := filepath.Dir(ctxDir)
 
 	found := false
 	// Check each syncable tool.
@@ -144,7 +152,7 @@ func checkSyncStaleness(report *Report) {
 		cfgHook.ToolKiro,
 	}
 	for _, tool := range syncTools {
-		stale := steering.StaleFiles(steeringDir, cwd, tool)
+		stale := steering.StaleFiles(steeringDir, projectRoot, tool)
 		for _, name := range stale {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,

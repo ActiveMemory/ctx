@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	errNotify "github.com/ActiveMemory/ctx/internal/err/notify"
 	iNotify "github.com/ActiveMemory/ctx/internal/notify"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/notify"
 )
 
@@ -31,6 +32,10 @@ import (
 // Returns:
 //   - error: Non-nil on empty input or save failure
 func Run(cmd *cobra.Command, stdin *os.File) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	notify.SetupPrompt(cmd)
 
 	scanner := bufio.NewScanner(stdin)

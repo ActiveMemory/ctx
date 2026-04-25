@@ -1,4 +1,4 @@
-# internal/config — Constants Package Structure
+# internal/config: Constants Package Structure
 
 ## Why 60+ Sub-Packages?
 
@@ -68,23 +68,23 @@ Each contains a `doc.go` and 1-3 files of `const`/`var` definitions.
 
 ### Multi-file thematic
 
-- **`regex/`** — 14 files of compiled `regexp.MustCompile()` objects,
+- **`regex/`**: 14 files of compiled `regexp.MustCompile()` objects,
   organized by domain (fence, task, entry, markdown, etc.)
-- **`file/`** — extensions, ignore patterns, names, limits
-- **`dep/`, `doctor/`** — multi-file domain constants
+- **`file/`**: extensions, ignore patterns, names, limits
+- **`dep/`, `doctor/`**: multi-file domain constants
 
 ### Hierarchical (nested sub-packages)
 
-- **`embed/`** — user-facing text, organized in 3 tiers:
-  - `embed/cmd/` — command Short/Long descriptions (22 files)
-  - `embed/flag/` — flag description keys (~10 files)
-  - `embed/text/` — output text DescKey constants (~100 files)
+- **`embed/`**: user-facing text, organized in 3 tiers:
+  - `embed/cmd/`: command Short/Long descriptions (22 files)
+  - `embed/flag/`: flag description keys (~10 files)
+  - `embed/text/`: output text DescKey constants (~100 files)
 
-- **`mcp/`** — MCP protocol constants, split into 12 sub-packages:
+- **`mcp/`**: MCP protocol constants, split into 12 sub-packages:
   `cfg/`, `event/`, `field/`, `governance/`, `method/`, `mime/`,
   `notify/`, `prompt/`, `resource/`, `schema/`, `server/`, `tool/`
 
-- **`memory/`** — memory bridge constants
+- **`memory/`**: memory bridge constants
 
 ## How To Find the Right Package
 
@@ -129,11 +129,11 @@ go list ./internal/config/...
 ## config/ vs entity/ for Types
 
 String-typed enums (`type IssueType string`) and their const
-values live in `config/` — the same place all other string
+values live in `config/`: the same place all other string
 constants live. The type annotation adds compile-time safety but
 does not change where the definition belongs.
 
-**When to promote to `entity/`:** When the type grows behavior —
+**When to promote to `entity/`:** When the type grows behavior:
 method receivers, interface participation, or business logic. A
 type with `func (t IssueType) Severity() int` has outgrown
 `config/` and belongs in `entity/`.
@@ -141,7 +141,7 @@ type with `func (t IssueType) Severity() int` has outgrown
 | Stage                        | Home               | Example                                           |
 |------------------------------|--------------------|---------------------------------------------------|
 | Pure value enum              | `config/<domain>/` | `type IssueType string` with const values         |
-| Cross-package value enum     | `config/<domain>/` | Same — `config/` is already importable everywhere |
+| Cross-package value enum     | `config/<domain>/` | Same; `config/` is already importable everywhere |
 | Type with methods            | `entity/`          | `func (t IssueType) Severity() int`               |
 | Type implementing interfaces | `entity/`          | `var _ fmt.Stringer = IssueType("")`              |
 

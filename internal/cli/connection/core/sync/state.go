@@ -26,7 +26,11 @@ import (
 //   - error: Non-nil on I/O or lock-contention failure
 func loadState() (state, func(), error) {
 	var s state
-	dir := filepath.Join(rc.ContextDir(), cfgHub.DirHub)
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return s, nil, ctxErr
+	}
+	dir := filepath.Join(ctxDir, cfgHub.DirHub)
 	lockPath := filepath.Join(dir, cfgHub.FileSyncLock)
 
 	if mkErr := io.SafeMkdirAll(
@@ -76,7 +80,11 @@ func loadState() (state, func(), error) {
 // Returns:
 //   - error: Non-nil on marshal or I/O failure
 func saveState(s state) error {
-	dir := filepath.Join(rc.ContextDir(), cfgHub.DirHub)
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return ctxErr
+	}
+	dir := filepath.Join(ctxDir, cfgHub.DirHub)
 	data, marshalErr := json.MarshalIndent(
 		s, "", cfgHub.JSONIndent,
 	)

@@ -41,6 +41,6 @@ ctx system bootstrap -q              # Just the context directory path
 ctx system bootstrap --json          # Structured output for automation
 ```
 
-**Scripting tip**: `CTX_DIR=$(ctx system bootstrap -q)` is the
-canonical way for skills and scripts to find the project's context
-directory without hardcoding `.context/`.
+**Note**: `-q` prints just the resolved directory path. See
+[Activating a Context Directory](../recipes/activating-context.md)
+if you hit a "*no context directory specified*" error.

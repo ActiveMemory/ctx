@@ -252,13 +252,6 @@
   
     
     
-      
-  
-  
-  
-  
-    
-    
       <li class="md-tabs__item">
         <a href="../../home/" class="md-tabs__link">
           
@@ -267,9 +260,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -548,6 +538,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -577,13 +571,11 @@
   
   
   
-    
-  
-  
-  
     <a href="../../home/" class="md-nav__link">
       
   
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
   
   <span class="md-ellipsis">
     
@@ -600,8 +592,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
   
 
       
@@ -714,6 +704,8 @@
       
         
       
+        
+      
     
     
     
@@ -732,7 +724,7 @@
   
   
   
-    <a href="../guide-your-agent/" class="md-nav__link">
+    <a href="../activating-context/" class="md-nav__link">
       
   
   
@@ -1778,6 +1770,8 @@
       
         
       
+        
+      
     
     
     
@@ -2137,6 +2131,19 @@ persisting context before you close it, so you can see how each piece connects.<
 </ol>
 <p>Read on for the full walkthrough with examples.</p>
 <div class="admonition note">
+<p class="admonition-title">Before You Start: Activate the Project</p>
+<p>ctx commands (and the skills that call them) require <code>CTX_DIR</code> to be
+declared for the shell you're working in; <code>ctx</code> does not walk the
+filesystem to find <code>.context/</code>. Once per shell (or via your shell
+rc / direnv):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p>If you skip this, every skill below will surface an error naming
+the fix. See
+<a href="../activating-context/">Activating a Context Directory</a> for the
+full recipe.</p>
+</div>
+<div class="admonition note">
 <p class="admonition-title">What Is a Readback?</p>
 <p>A <strong>readback</strong> is a <strong>structured summary</strong> where the agent plays back what
 it knows:</p>
@@ -2234,7 +2241,7 @@ might skip committing</em>), but the full arc looks like this:</p>
 <hr />
 <h3 id="step-1-load-context">Step 1: Load Context<a class="headerlink" href="#step-1-load-context" title="Permanent link">&para;</a></h3>
 <p>Start every session by loading what you know. The fastest way is a single prompt:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Do you remember what we were working on?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Do you remember what we were working on?
 </span></code></pre></div>
 <p>This triggers the <code>/ctx-remember</code> skill. Behind the scenes, the assistant
 runs <code>ctx agent --budget 4000</code>, reads the files listed in the context packet
@@ -2250,7 +2257,7 @@ health check showing file counts, token usage, and recent activity.</p>
 <hr />
 <h3 id="step-2-orient">Step 2: Orient<a class="headerlink" href="#step-2-orient" title="Permanent link">&para;</a></h3>
 <p>After loading context, verify you understand the current state.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/ctx-status
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ctx-status
 </span></code></pre></div>
 <p>The status output shows which context files are populated, how many tokens they
 consume, and which files were recently modified. Look for:</p>
@@ -2269,7 +2276,7 @@ reading the relevant file before proceeding.</p>
 <h3 id="step-3-pick-what-to-work-on">Step 3: Pick What to Work On<a class="headerlink" href="#step-3-pick-what-to-work-on" title="Permanent link">&para;</a></h3>
 <p>With context loaded, choose a task. You can pick one yourself, or ask the
 assistant to recommend:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ctx-next
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/ctx-next
 </span></code></pre></div>
 <p>The skill reads <code>TASKS.md</code>, checks recent sessions to avoid re-suggesting
 completed work, and presents 1-3 ranked recommendations <strong>with rationale</strong>.</p>
@@ -2277,7 +2284,7 @@ completed work, and presents 1-3 ranked recommendations <strong>with rationale</
 starting</em>), respects explicit priority tags, and favors momentum:
 continuing a thread from a recent session is cheaper than context-switching.</p>
 <p>If you already know what you want to work on, state it directly:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Let&#39;s work on the session enrichment feature.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Let&#39;s work on the session enrichment feature.
 </span></code></pre></div>
 <hr />
 <h3 id="step-4-do-the-work">Step 4: Do the Work<a class="headerlink" href="#step-4-do-the-work" title="Permanent link">&para;</a></h3>
@@ -2286,10 +2293,10 @@ research: whatever the task requires.</p>
 <p>During this phase, a few <code>ctx</code>-specific patterns help:</p>
 <p><strong>Check decisions before choosing</strong>: when you face a design choice, check if a
 prior decision covers it.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Is this consistent with our decisions?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Is this consistent with our decisions?
 </span></code></pre></div>
 <p><strong>Constrain scope</strong>: keep the assistant focused on the task at hand.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Only change files in internal/cli/session/. Nothing else.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Only change files in internal/cli/session/. Nothing else.
 </span></code></pre></div>
 <p><strong>Use <code>/ctx-implement</code> for multistep plans</strong>: if the task has multiple steps,
 this skill executes them one at a time with build/test verification between
@@ -2302,7 +2309,7 @@ unsaved work. No manual invocation is needed.</p>
 <hr />
 <h3 id="step-5-commit-with-context">Step 5: Commit with Context<a class="headerlink" href="#step-5-commit-with-context" title="Permanent link">&para;</a></h3>
 <p>When the work is ready, use the context-aware commit instead of raw <code>git commit</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/ctx-commit
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/ctx-commit
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">The Agent May Recommend Committing</p>
@@ -2318,11 +2325,11 @@ pick up the <code>/ctx-commit</code> skill for you.</p>
 reviews the staged changes, drafts a commit message focused on "<em>why</em>"
 rather than "<em>what</em>", and then commits.</p>
 <p>After the commit succeeds, it prompts you:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>**Any context to capture?**
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>- **Decision**: Did you make a design choice or trade-off?
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>- **Learning**: Did you hit a gotcha or discover something?
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>- **Neither**: No context to capture; we are done.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>**Any context to capture?**
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>- **Decision**: Did you make a design choice or trade-off?
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>- **Learning**: Did you hit a gotcha or discover something?
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>- **Neither**: No context to capture; we are done.
 </span></code></pre></div>
 <p>If you made a decision, the skill records it with <code>ctx add decision</code>. If you
 learned something, it records it with <code>ctx add learning</code> including context,
@@ -2334,7 +2341,7 @@ offers to check for doc drift.</p>
 <h3 id="step-6-reflect">Step 6: Reflect<a class="headerlink" href="#step-6-reflect" title="Permanent link">&para;</a></h3>
 <p>At natural breakpoints (<em>after finishing a feature, resolving a complex bug,
 or before switching tasks</em>) pause to reflect:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-reflect
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/ctx-reflect
 </span></code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Agents Reflect at Milestones</p>
@@ -2352,15 +2359,15 @@ milestones as reflection triggers on its own.</p>
 completed or created, and whether there are items worth persisting. It then
 presents a summary with specific items to persist, each with the exact command
 to run:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>I would suggest persisting:
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>- **Learning**: `$PPID` in PreToolUse hooks resolves to the Claude Code PID
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  `ctx add learning --context &quot;...&quot; --lesson &quot;...&quot; --application &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>- **Task**: mark &quot;Add cooldown to ctx agent&quot; as done
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>- **Decision**: tombstone-based cooldown with 10m default
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  `ctx add decision &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Want me to persist any of these?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>I would suggest persisting:
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>- **Learning**: `$PPID` in PreToolUse hooks resolves to the Claude Code PID
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  `ctx add learning --context &quot;...&quot; --lesson &quot;...&quot; --application &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>- **Task**: mark &quot;Add cooldown to ctx agent&quot; as done
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>- **Decision**: tombstone-based cooldown with 10m default
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  `ctx add decision &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Want me to persist any of these?
 </span></code></pre></div>
 <p>The skill asks before persisting anything. You choose what to keep.</p>
 <p>Not every commit needs reflection. A typo fix does not.
@@ -2370,7 +2377,7 @@ root cause, that is worth a reflection checkpoint.</p>
 <h3 id="step-7-persist-before-ending">Step 7: Persist Before Ending<a class="headerlink" href="#step-7-persist-before-ending" title="Permanent link">&para;</a></h3>
 <p>Before ending the session, run the wrap-up ceremony to capture outstanding
 learnings, decisions, conventions, and tasks:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>/ctx-wrap-up
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>/ctx-wrap-up
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Ceremony Skills</p>
@@ -2394,60 +2401,60 @@ browsed later with <code>ctx journal source</code> and <code>ctx journal source 
 explicit invocation. Here is a realistic example:</p>
 <p><strong>You</strong>: Do you remember what we were working on?</p>
 <p><strong>Agent</strong> <em>(loads context silently, presents structured readback)</em>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Last session (Feb 7, caching-layer): we implemented the in-memory cache with
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>TTL expiration and wrote tests for the eviction policy. 
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>You have 3 pending tasks; the biggest one is adding Redis as a backend.
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Recent decision:&lt;br&gt;
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>we chose LRU over LFU because the access pattern is mostly recency-based.
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Want to continue with the Redis backend, or tackle something else?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Last session (Feb 7, caching-layer): we implemented the in-memory cache with
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>TTL expiration and wrote tests for the eviction policy. 
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>You have 3 pending tasks; the biggest one is adding Redis as a backend.
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Recent decision:&lt;br&gt;
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>we chose LRU over LFU because the access pattern is mostly recency-based.
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>Want to continue with the Redis backend, or tackle something else?
 </span></code></pre></div>
 <p><strong>You</strong>: Let's work on the Redis caching backend.</p>
 <p><strong>Agent</strong> <em>(picks up the task, begins implementation)</em>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Got it. I see the task in TASKS.md: &quot;Add Redis backend for cache layer.&quot;
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>I will start with the connection pool setup. Only touching
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>`internal/cache/redis/` for now.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Got it. I see the task in TASKS.md: &quot;Add Redis backend for cache layer.&quot;
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>I will start with the connection pool setup. Only touching
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>`internal/cache/redis/` for now.
 </span></code></pre></div>
 <p><em>(The agent works... writes code, runs tests, iterates.)</em></p>
 <p><strong>Agent</strong> <em>(after implementing the connection pool and choosing a retry strategy)</em>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>The connection pool is working. I went with exponential backoff with jitter
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>for retries instead of fixed intervals; it handles thundering herd better
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>under reconnection storms. That is a design choice worth recording. 
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Want me to save it as a decision?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>The connection pool is working. I went with exponential backoff with jitter
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>for retries instead of fixed intervals; it handles thundering herd better
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>under reconnection storms. That is a design choice worth recording. 
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>Want me to save it as a decision?
 </span></code></pre></div>
 <p><strong>You</strong>: Yes, go ahead.</p>
 <p><strong>Agent</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Done. Added to DECISIONS.md: &quot;Exponential backoff with jitter for Redis
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>reconnection, to avoid thundering herd on pool recovery.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Done. Added to DECISIONS.md: &quot;Exponential backoff with jitter for Redis
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>reconnection, to avoid thundering herd on pool recovery.&quot;
 </span></code></pre></div>
 <p><em>(More work happens... the agent implements the cache read/write paths.)</em></p>
 <p><strong>You</strong>: What else did we learn during this session?</p>
 <p><strong>Agent</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>A few things worth capturing:
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>* **Learning**: Redis `SET` with `NX` and `PX` flags handles atomic
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  set-if-not-exists with TTL in a single call. No need for a separate
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  `EXPIRE` command. We initially did it in two calls and hit a race condition.
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>* **Learning**: The `go-redis` library&#39;s `PoolSize` default is 10 per CPU.
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  For our workload, explicit sizing at 20 was more predictable.
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>* **Task update**: The connection pool subtask is done; the read/write path
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  is implemented but needs integration tests.
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Want me to persist these?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>A few things worth capturing:
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>* **Learning**: Redis `SET` with `NX` and `PX` flags handles atomic
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  set-if-not-exists with TTL in a single call. No need for a separate
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  `EXPIRE` command. We initially did it in two calls and hit a race condition.
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>* **Learning**: The `go-redis` library&#39;s `PoolSize` default is 10 per CPU.
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  For our workload, explicit sizing at 20 was more predictable.
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>* **Task update**: The connection pool subtask is done; the read/write path
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  is implemented but needs integration tests.
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>Want me to persist these?
 </span></code></pre></div>
 <p><strong>You</strong>: Yes. And let's wrap up.</p>
 <p><strong>Agent</strong> <em>(reflects and persists... all in one flow)</em>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Persisted:
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>* 2 learnings added to LEARNINGS.md
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>* Marked &quot;connection pool setup&quot; done in TASKS.md
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>* Added &quot;write integration tests for Redis cache&quot; as a new task
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Context is up to date. You are good to close.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Persisted:
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>* 2 learnings added to LEARNINGS.md
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>* Marked &quot;connection pool setup&quot; done in TASKS.md
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>* Added &quot;write integration tests for Redis cache&quot; as a new task
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Context is up to date. You are good to close.
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Notice What Happened</p>
@@ -2502,7 +2509,7 @@ of slash commands.</p>
 </tr>
 <tr>
 <td>Work</td>
-<td>--</td>
+<td><em>(none)</em></td>
 <td>"Only change files in internal/cache/"</td>
 </tr>
 <tr>

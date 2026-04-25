@@ -37,8 +37,8 @@
 //     flag with shorthand.
 //   - [StringArrayFlagP] registers repeatable string
 //     flags (--tag x --tag y).
-//   - [PersistentBoolFlag], [PersistentStringFlag]
-//     register persistent flags inherited by children.
+//   - [PersistentBoolFlag] registers a persistent bool
+//     flag inherited by children.
 //   - [LastJSON] registers the --last/--json pair for
 //     list-style commands.
 //

@@ -4,35 +4,18 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package backup defines the **typed error constructors**
-// the backup subsystem returns. Every failure that can
-// happen during `ctx backup` flows through one of these
-// constructors so the call site upstream sees a
-// sentinel-able error and the renderer downstream knows
-// which user-facing text to surface.
+// Package backup provides error constructors for two narrow file
+// operations that still live under a historical "backup" label:
 //
-// # Why Typed Errors
+//   - [Create]: wraps `.bak` file creation during `ctx init --force`.
+//   - [CreateArchiveDir], [WriteArchive]: wrap task-archive directory
+//     and file write failures under `.context/archive/`.
+//   - [ContextDirNotFound]: the bootstrap-path "context dir missing"
+//     error.
 //
-// Three reasons:
-//
-//   - **Stability**: error categories are part of
-//     the public API; adding a constructor is an
-//     intentional change a reviewer can see.
-//   - **Routing**: the write-side
-//     ([internal/write/backup]) maps error types to
-//     localized text via [internal/assets/read/desc].
-//   - **Wrapping**: every constructor wraps its
-//     underlying cause via `%w` so callers can
-//     `errors.Is` / `errors.As` against system
-//     errors when needed.
-//
-// # Public Surface
-//
-// Constructors (one per failure mode): [Create],
-// [CreateArchive], [CreateArchiveDir],
-// [WriteArchive], [SMBConfig].
-//
-// # Concurrency
-//
-// Pure constructors. Concurrent callers never race.
+// The former `ctx backup` command (SMB-driven full-project backup)
+// was removed; see docs/operations/runbooks/backup-strategy.md for
+// the replacement guidance. The package name is kept to avoid
+// churning the non-backup callers that still use these generic
+// constructors.
 package backup

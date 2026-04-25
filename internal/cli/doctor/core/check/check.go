@@ -8,6 +8,7 @@ package check
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -32,6 +33,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context/validate"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/log/event"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -39,12 +41,23 @@ import (
 )
 
 // ContextInitialized verifies that a .context/ directory
-// exists.
+// exists. Always emits a Result of its own; a missing directory IS
+// the diagnostic and maps to StatusError. A resolver or stat failure
+// that cannot confirm either way is propagated so the runner shows
+// "did not run" instead of reporting a confident "missing."
 //
 // Parameters:
 //   - report: Report to append the result to
-func ContextInitialized(report *Report) {
-	if validate.Exists("") {
+//
+// Returns:
+//   - error: non-nil when validate.Exists cannot reach a definitive
+//     answer (resolver or stat failure).
+func ContextInitialized(report *Report) error {
+	exists, existsErr := validate.Exists("")
+	if existsErr != nil {
+		return existsErr
+	}
+	if exists {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckContextInit,
 			Category: doctor.CategoryStructure,
@@ -59,6 +72,7 @@ func ContextInitialized(report *Report) {
 			Message:  desc.Text(text.DescKeyDoctorContextInitializedError),
 		})
 	}
+	return nil
 }
 
 // RequiredFiles verifies that all required context files are
@@ -66,8 +80,16 @@ func ContextInitialized(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func RequiredFiles(report *Report) {
-	dir := rc.ContextDir()
+//
+// Returns:
+//   - error: [errCtx.ErrDirNotDeclared] when the context directory
+//     cannot be resolved; the runner renders a standard "did not run"
+//     line in that case.
+func RequiredFiles(report *Report) error {
+	dir, err := rc.ContextDir()
+	if err != nil {
+		return err
+	}
 	var missing []string
 	for _, f := range ctx.FilesRequired {
 		path := filepath.Join(dir, f)
@@ -101,6 +123,7 @@ func RequiredFiles(report *Report) {
 			),
 		})
 	}
+	return nil
 }
 
 // CtxrcValidation validates the .ctxrc file for unknown
@@ -108,7 +131,11 @@ func RequiredFiles(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func CtxrcValidation(report *Report) {
+//
+// Returns:
+//   - error: always nil; parse problems are reported as
+//     StatusError/StatusWarning entries rather than returned.
+func CtxrcValidation(report *Report) error {
 	data, readErr := io.SafeReadUserFile(file.CtxRC)
 	if readErr != nil {
 		// No .ctxrc is fine - defaults are used.
@@ -118,7 +145,7 @@ func CtxrcValidation(report *Report) {
 			Status:   stats.StatusOK,
 			Message:  desc.Text(text.DescKeyDoctorCtxrcValidationOkNoFile),
 		})
-		return
+		return nil
 	}
 
 	warnings, validateErr := rc.Validate(data)
@@ -132,7 +159,7 @@ func CtxrcValidation(report *Report) {
 				validateErr,
 			),
 		})
-		return
+		return nil
 	}
 
 	if len(warnings) > 0 {
@@ -148,7 +175,7 @@ func CtxrcValidation(report *Report) {
 				),
 			),
 		})
-		return
+		return nil
 	}
 
 	report.Results = append(report.Results, Result{
@@ -157,6 +184,7 @@ func CtxrcValidation(report *Report) {
 		Status:   stats.StatusOK,
 		Message:  desc.Text(text.DescKeyDoctorCtxrcValidationOk),
 	})
+	return nil
 }
 
 // Drift detects stale paths or missing files referenced in
@@ -164,13 +192,18 @@ func CtxrcValidation(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func Drift(report *Report) {
-	if !validate.Exists("") {
-		return // skip drift check if not initialized
-	}
-
+//
+// Returns:
+//   - error: [errCtx.ErrDirNotDeclared] when the context directory
+//     cannot be resolved via [load.Do]; the runner renders a standard
+//     "did not run" line in that case. Transient load failures are
+//     reported inline as a StatusWarning and return nil.
+func Drift(report *Report) error {
 	c, loadErr := load.Do("")
 	if loadErr != nil {
+		if errors.Is(loadErr, errCtx.ErrDirNotDeclared) {
+			return loadErr
+		}
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckDrift,
 			Category: doctor.CategoryQuality,
@@ -180,7 +213,7 @@ func Drift(report *Report) {
 				loadErr,
 			),
 		})
-		return
+		return nil
 	}
 
 	driftReport := drift.Detect(c)
@@ -194,7 +227,7 @@ func Drift(report *Report) {
 			Status:   stats.StatusOK,
 			Message:  desc.Text(text.DescKeyDoctorDriftOk),
 		})
-		return
+		return nil
 	}
 
 	var parts []string
@@ -231,6 +264,7 @@ func Drift(report *Report) {
 			strings.Join(parts, cfgToken.CommaSpace),
 		),
 	})
+	return nil
 }
 
 // CompanionConfig reports whether companion tool checks
@@ -238,7 +272,10 @@ func Drift(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func CompanionConfig(report *Report) {
+//
+// Returns:
+//   - error: always nil.
+func CompanionConfig(report *Report) error {
 	if rc.CompanionCheck() {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckCompanionConfig,
@@ -254,6 +291,7 @@ func CompanionConfig(report *Report) {
 			Message:  desc.Text(text.DescKeyDoctorCompanionConfigInfo),
 		})
 	}
+	return nil
 }
 
 // PluginEnablement checks whether the ctx plugin is
@@ -261,7 +299,10 @@ func CompanionConfig(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func PluginEnablement(report *Report) {
+//
+// Returns:
+//   - error: always nil.
+func PluginEnablement(report *Report) error {
 	installed := initCore.Installed()
 	if !installed {
 		report.Results = append(report.Results, Result{
@@ -270,7 +311,7 @@ func PluginEnablement(report *Report) {
 			Status:   stats.StatusInfo,
 			Message:  desc.Text(text.DescKeyDoctorPluginInstalledInfo),
 		})
-		return
+		return nil
 	}
 
 	report.Results = append(report.Results, Result{
@@ -313,13 +354,17 @@ func PluginEnablement(report *Report) {
 			),
 		})
 	}
+	return nil
 }
 
 // EventLogging checks whether event logging is enabled.
 //
 // Parameters:
 //   - report: Report to append the result to
-func EventLogging(report *Report) {
+//
+// Returns:
+//   - error: always nil.
+func EventLogging(report *Report) error {
 	if rc.EventLog() {
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckEventLogging,
@@ -335,6 +380,7 @@ func EventLogging(report *Report) {
 			Message:  desc.Text(text.DescKeyDoctorEventLoggingInfo),
 		})
 	}
+	return nil
 }
 
 // Webhook checks whether a webhook notification endpoint
@@ -342,8 +388,16 @@ func EventLogging(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func Webhook(report *Report) {
-	dir := rc.ContextDir()
+//
+// Returns:
+//   - error: [errCtx.ErrDirNotDeclared] when the context directory
+//     cannot be resolved; the runner renders a standard "did not run"
+//     line in that case.
+func Webhook(report *Report) error {
+	dir, err := rc.ContextDir()
+	if err != nil {
+		return err
+	}
 	encPath := filepath.Join(dir, crypto.NotifyEnc)
 	if _, statErr := os.Stat(encPath); statErr == nil {
 		report.Results = append(report.Results, Result{
@@ -360,6 +414,7 @@ func Webhook(report *Report) {
 			Message:  desc.Text(text.DescKeyDoctorWebhookInfo),
 		})
 	}
+	return nil
 }
 
 // Reminders checks for pending reminders in the context
@@ -367,18 +422,31 @@ func Webhook(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func Reminders(report *Report) {
-	dir := rc.ContextDir()
+//
+// Returns:
+//   - error: [errCtx.ErrDirNotDeclared] when the context directory
+//     cannot be resolved; the runner renders a standard "did not run"
+//     line in that case.
+func Reminders(report *Report) error {
+	dir, err := rc.ContextDir()
+	if err != nil {
+		return err
+	}
 	remindersPath := filepath.Join(dir, reminder.File)
 	data, readErr := io.SafeReadUserFile(remindersPath)
 	if readErr != nil {
-		report.Results = append(report.Results, Result{
-			Name:     doctor.CheckReminders,
-			Category: doctor.CategoryState,
-			Status:   stats.StatusOK,
-			Message:  desc.Text(text.DescKeyDoctorRemindersOk),
-		})
-		return
+		if errors.Is(readErr, os.ErrNotExist) {
+			// Legitimate: no reminders file ⇒ no pending reminders.
+			report.Results = append(report.Results, Result{
+				Name:     doctor.CheckReminders,
+				Category: doctor.CategoryState,
+				Status:   stats.StatusOK,
+				Message:  desc.Text(text.DescKeyDoctorRemindersOk),
+			})
+			return nil
+		}
+		// Permission denied, I/O error, etc.: surface it.
+		return readErr
 	}
 
 	var reminders []any
@@ -391,7 +459,7 @@ func Reminders(report *Report) {
 			Status:   stats.StatusOK,
 			Message:  desc.Text(text.DescKeyDoctorRemindersOk),
 		})
-		return
+		return nil
 	}
 
 	count := len(reminders)
@@ -413,6 +481,7 @@ func Reminders(report *Report) {
 			),
 		})
 	}
+	return nil
 }
 
 // TaskCompletion analyzes the task completion ratio and
@@ -420,12 +489,24 @@ func Reminders(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func TaskCompletion(report *Report) {
-	dir := rc.ContextDir()
+//
+// Returns:
+//   - error: [errCtx.ErrDirNotDeclared] when the context directory
+//     cannot be resolved; a missing TASKS.md ([os.ErrNotExist]) is a
+//     legitimate skip and returns nil; any other read failure
+//     (permissions, I/O) is propagated so the runner can report it.
+func TaskCompletion(report *Report) error {
+	dir, err := rc.ContextDir()
+	if err != nil {
+		return err
+	}
 	tasksPath := filepath.Join(dir, ctx.Task)
 	data, readErr := io.SafeReadUserFile(tasksPath)
 	if readErr != nil {
-		return // no tasks file, skip
+		if errors.Is(readErr, os.ErrNotExist) {
+			return nil // legitimate: no TASKS.md yet, nothing to analyze
+		}
+		return readErr
 	}
 
 	matches := regex.TaskMultiline.FindAllStringSubmatch(
@@ -442,7 +523,7 @@ func TaskCompletion(report *Report) {
 	total := completed + pending
 
 	if total == 0 {
-		return // no tasks to report on
+		return nil // no tasks to report on
 	}
 
 	ratio := completed * stats.PercentMultiplier / total
@@ -470,6 +551,7 @@ func TaskCompletion(report *Report) {
 			Message:  msg,
 		})
 	}
+	return nil
 }
 
 // ContextTokenSize estimates context token usage and
@@ -477,7 +559,12 @@ func TaskCompletion(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func ContextTokenSize(report *Report) {
+//
+// Returns:
+//   - error: [errCtx.ErrDirNotDeclared] when context load fails
+//     for that reason; the runner renders a standard "did not run"
+//     line. Other load failures return nil without emitting a Result.
+func ContextTokenSize(report *Report) error {
 	indexed := make(
 		map[string]bool, len(ctx.ReadOrder),
 	)
@@ -488,7 +575,10 @@ func ContextTokenSize(report *Report) {
 	var totalTokens int
 	c, loadErr := load.Do("")
 	if loadErr != nil {
-		return
+		if errors.Is(loadErr, errCtx.ErrDirNotDeclared) {
+			return loadErr
+		}
+		return nil
 	}
 
 	type fileTokens struct {
@@ -545,6 +635,7 @@ func ContextTokenSize(report *Report) {
 			),
 		})
 	}
+	return nil
 }
 
 // RecentEventActivity reports the most recent event log
@@ -552,22 +643,41 @@ func ContextTokenSize(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func RecentEventActivity(report *Report) {
+//
+// Returns:
+//   - error: [errCtx.ErrDirNotDeclared] when the event log path
+//     cannot be resolved because no context directory is declared;
+//     the runner renders a standard "did not run" line. Transient
+//     read or parse failures return nil and emit a StatusInfo
+//     placeholder.
+func RecentEventActivity(report *Report) error {
 	if !rc.EventLog() {
-		return // skip if logging disabled
+		return nil // skip if logging disabled
 	}
 
 	events, queryErr := event.Query(
 		entity.EventQueryOpts{Last: 1},
 	)
-	if queryErr != nil || len(events) == 0 {
+	if queryErr != nil {
+		if errors.Is(queryErr, errCtx.ErrDirNotDeclared) {
+			return queryErr
+		}
 		report.Results = append(report.Results, Result{
 			Name:     doctor.CheckRecentEvents,
 			Category: doctor.CategoryEvents,
 			Status:   stats.StatusInfo,
 			Message:  desc.Text(text.DescKeyDoctorRecentEventsInfo),
 		})
-		return
+		return nil
+	}
+	if len(events) == 0 {
+		report.Results = append(report.Results, Result{
+			Name:     doctor.CheckRecentEvents,
+			Category: doctor.CategoryEvents,
+			Status:   stats.StatusInfo,
+			Message:  desc.Text(text.DescKeyDoctorRecentEventsInfo),
+		})
+		return nil
 	}
 
 	report.Results = append(report.Results, Result{
@@ -579,6 +689,7 @@ func RecentEventActivity(report *Report) {
 			events[len(events)-1].Timestamp,
 		),
 	})
+	return nil
 }
 
 // SystemResources collects and evaluates system resource
@@ -586,9 +697,13 @@ func RecentEventActivity(report *Report) {
 //
 // Parameters:
 //   - report: Report to append the result to
-func SystemResources(report *Report) {
+//
+// Returns:
+//   - error: always nil.
+func SystemResources(report *Report) error {
 	snap := sysinfo.Collect()
 	AddResourceResults(report, snap)
+	return nil
 }
 
 // AddResourceResults appends per-metric resource results to

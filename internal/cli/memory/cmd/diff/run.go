@@ -7,13 +7,11 @@
 package diff
 
 import (
-	"path/filepath"
-
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/memory/core/resolve"
 	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/memory"
 )
 
@@ -26,8 +24,10 @@ import (
 // Returns:
 //   - error: on discovery or diff failure.
 func Run(cmd *cobra.Command) error {
-	contextDir := rc.ContextDir()
-	projectRoot := filepath.Dir(contextDir)
+	contextDir, projectRoot, err := resolve.ContextAndRoot(cmd)
+	if err != nil {
+		return err
+	}
 
 	sourcePath, discoverErr := mem.DiscoverPath(projectRoot)
 	if discoverErr != nil {

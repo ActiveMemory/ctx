@@ -26,10 +26,18 @@
 // string is passed, it falls back to the configured
 // context directory from the rc package.
 //
-//	if validate.Exists("") {
+//	exists, err := validate.Exists("")
+//	if err != nil {
+//	    return err
+//	}
+//	if exists {
 //	    // default context dir exists
 //	}
-//	if validate.Exists("/custom/path") {
+//	exists, err = validate.Exists("/custom/path")
+//	if err != nil {
+//	    return err
+//	}
+//	if exists {
 //	    // custom path exists
 //	}
 //

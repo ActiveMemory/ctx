@@ -24,11 +24,18 @@ import (
 //
 // Returns:
 //   - []Action: List of suggested actions to reconcile context with codebase
-func Detect(ctx *entity.Context) []validate.Action {
+//   - error: non-nil when a check cannot confirm its answer (e.g. the
+//     project root directory cannot be read); callers surface this
+//     rather than printing a confident empty suggestion list
+func Detect(ctx *entity.Context) ([]validate.Action, error) {
 	var actions []validate.Action
 
 	// Check for new top-level directories not mentioned in ARCHITECTURE.md
-	actions = append(actions, validate.CheckNewDirectories(ctx)...)
+	newDirs, newDirsErr := validate.CheckNewDirectories(ctx)
+	if newDirsErr != nil {
+		return nil, newDirsErr
+	}
+	actions = append(actions, newDirs...)
 
 	// Check for package manager files
 	actions = append(actions, validate.CheckPackageFiles(ctx)...)
@@ -36,5 +43,5 @@ func Detect(ctx *entity.Context) []validate.Action {
 	// Check for common config files that might need documenting
 	actions = append(actions, validate.CheckConfigFiles(ctx)...)
 
-	return actions
+	return actions, nil
 }

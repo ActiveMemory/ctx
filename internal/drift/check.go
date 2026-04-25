@@ -9,6 +9,7 @@ package drift
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -129,30 +130,30 @@ func checkStaleness(ctx *entity.Context, report *Report) {
 
 // checkConstitution performs heuristic checks for constitution violations.
 //
-// Currently, it scans the working directory for files that may contain secrets
-// (e.g., .env, credentials, api_key) and flags them as violations.
+// Scans the project root (the parent of the declared context directory)
+// for files that may contain secrets (e.g. `.env`, `credentials`,
+// `api_key`). Under the explicit-context-dir model the project root is
+// always `filepath.Dir(rc.ContextDir())` rather than the caller's CWD,
+// so `ctx drift` run from a subdirectory still audits the right tree.
 //
 // Parameters:
 //   - ctx: Loaded context (currently unused, reserved for future checks)
 //   - report: Report to append violations to (modified in place)
 func checkConstitution(_ *entity.Context, report *Report) {
-	// Basic heuristic checks for constitution violations
-	// Check for potential secrets in common config files
-
 	secretPatterns := token.SecretPatterns
 
-	// Look for common secret file patterns in the working directory
-	cwd, cwdErr := os.Getwd()
-	if cwdErr != nil {
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
 		report.Warnings = append(report.Warnings, Issue{
-			Message: fmt.Sprintf(warn.Getwd, cwdErr),
+			Message: ctxErr.Error(),
 		})
 		return
 	}
-	entries, readErr := os.ReadDir(cwd)
+	projectRoot := filepath.Dir(ctxDir)
+	entries, readErr := os.ReadDir(projectRoot)
 	if readErr != nil {
 		report.Warnings = append(report.Warnings, Issue{
-			Message: fmt.Sprintf(warn.Readdir, cwd, readErr),
+			Message: fmt.Sprintf(warn.Readdir, projectRoot, readErr),
 		})
 		return
 	}

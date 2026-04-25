@@ -17,10 +17,8 @@
 //
 // # Global Flags
 //
-//   - ContextDir ("context-dir"): override the
-//     .context/ directory path
-//   - AllowOutsideCwd ("allow-outside-cwd"): permit
-//     operations outside the working directory
+//   - Tool ("tool"): override the active AI tool
+//     identifier (e.g. claude, cursor, kiro).
 //
 // PrefixLong ("--") is the long-flag prefix used in
 // error messages and help text formatting.

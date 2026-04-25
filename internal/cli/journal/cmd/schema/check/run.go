@@ -15,6 +15,7 @@ import (
 	errSchema "github.com/ActiveMemory/ctx/internal/err/schema"
 	"github.com/ActiveMemory/ctx/internal/journal/schema"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writeSchema "github.com/ActiveMemory/ctx/internal/write/schema"
 )
 
@@ -27,6 +28,10 @@ import (
 // Returns:
 //   - error: non-nil when drift is detected or scan fails
 func Run(cmd *cobra.Command, opts coreSchema.CheckOpts) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	c, checkErr := coreSchema.Check(opts)
 	if checkErr != nil {
 		return checkErr

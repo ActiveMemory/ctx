@@ -26,12 +26,15 @@ func setupCLITest(t *testing.T) (string, func()) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(tempDir)
-	_ = os.MkdirAll(filepath.Join(tempDir, ".context"), 0o750)
+	ctxPath := filepath.Join(tempDir, ".context")
+	_ = os.MkdirAll(ctxPath, 0o750)
 	// Create required files so isInitialized returns true
 	for _, f := range ctx.FilesRequired {
-		p := filepath.Join(tempDir, ".context", f)
+		p := filepath.Join(ctxPath, f)
 		_ = os.WriteFile(p, []byte("# "+f+"\n"), 0o600)
 	}
+	// Declare context dir explicitly (explicit-context-dir model).
+	t.Setenv("CTX_DIR", ctxPath)
 	rc.Reset()
 	return tempDir, func() {
 		_ = os.Chdir(origDir)

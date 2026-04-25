@@ -33,7 +33,12 @@ func Run(cmd *cobra.Command) error {
 	last, _ := cmd.Flags().GetInt(cFlag.Last)
 	jsonOut, _ := cmd.Flags().GetBool(cFlag.JSON)
 
-	d := filepath.Join(rc.ContextDir(), dir.State)
+	ctxDir, ctxErr := rc.RequireContextDir()
+	if ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
+	d := filepath.Join(ctxDir, dir.State)
 
 	entries, readErr := coreStats.ReadDir(d, session)
 	if readErr != nil {

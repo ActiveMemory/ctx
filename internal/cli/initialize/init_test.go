@@ -32,6 +32,9 @@ func TestInitCommand(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
+	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{})
@@ -76,6 +79,7 @@ func TestInitCreatesSteeringHooksSkillsDirs(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -110,6 +114,7 @@ func TestInitSkipsExistingSteeringHooksSkillsDirs(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	// Pre-create the directories with a marker file inside each.
@@ -156,6 +161,9 @@ func TestInitMergeInsertsAfterH1(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
+	t.Setenv(env.SkipPathCheck, env.True)
 
 	existingContent := "# My Amazing Project\n\n" +
 		"This is the project description.\n\n" +
@@ -207,6 +215,9 @@ func TestInitMergeInsertsAtTopWhenNoH1(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
+	t.Setenv(env.SkipPathCheck, env.True)
 
 	existingContent := "## Build Instructions\n\nRun make build.\n\n" +
 		"## Testing\n\nRun make test.\n"
@@ -254,6 +265,9 @@ func TestInitCreatesPermissions(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
+	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{})
@@ -310,6 +324,9 @@ func TestInitMergesPermissions(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
+	t.Setenv(env.SkipPathCheck, env.True)
 
 	if err = os.MkdirAll(".claude", 0750); err != nil {
 		t.Fatalf("failed to create .claude: %v", err)
@@ -378,6 +395,9 @@ func TestInitWithExistingClaudeMdWithCtxMarker(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
+	t.Setenv(env.SkipPathCheck, env.True)
 
 	existingContent := "# My Project\n\n" +
 		"This is my existing CLAUDE.md content.\n\n" +
@@ -441,6 +461,7 @@ func TestRunInit_Minimal(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -475,6 +496,7 @@ func TestRunInit_Force(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -507,6 +529,7 @@ func TestRunInit_Merge(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	mdContent := "# My Project\n\nExisting.\n"
@@ -543,6 +566,7 @@ func TestInitScaffoldsFoundationSteeringFiles(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -589,6 +613,7 @@ func TestInitNoSteeringInitFlagSkipsScaffold(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()

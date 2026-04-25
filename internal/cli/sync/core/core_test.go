@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/context/load"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // setupSyncDir creates a temp dir, initializes context, and returns cleanup.
@@ -29,6 +30,8 @@ func setupSyncDir(t *testing.T) string {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
+
+	testctx.Declare(t, tmpDir)
 
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -47,7 +50,10 @@ func TestDetectSyncActions_NoActions(t *testing.T) {
 	}
 
 	_ = tmpDir
-	actions := action.Detect(ctx)
+	actions, detectErr := action.Detect(ctx)
+	if detectErr != nil {
+		t.Fatalf("Detect() error = %v", detectErr)
+	}
 	// Just verify it runs without error
 	_ = actions
 }
@@ -67,7 +73,10 @@ func TestCheckNewDirectories_ImportantDirs(t *testing.T) {
 		}
 	}
 
-	actions := validate.CheckNewDirectories(ctx)
+	actions, checkErr := validate.CheckNewDirectories(ctx)
+	if checkErr != nil {
+		t.Fatalf("CheckNewDirectories() error = %v", checkErr)
+	}
 	if len(actions) == 0 {
 		t.Error("expected actions for undocumented directories")
 	}
@@ -93,7 +102,10 @@ func TestCheckNewDirectories_SkipsHiddenAndVendor(t *testing.T) {
 		}
 	}
 
-	actions := validate.CheckNewDirectories(ctx)
+	actions, checkErr := validate.CheckNewDirectories(ctx)
+	if checkErr != nil {
+		t.Fatalf("CheckNewDirectories() error = %v", checkErr)
+	}
 	for _, a := range actions {
 		for _, skip := range []string{
 			".git", "node_modules", "vendor", "dist", "build",
@@ -124,7 +136,10 @@ func TestCheckNewDirectories_DocumentedDirsIgnored(t *testing.T) {
 		t.Fatal(mkErr)
 	}
 
-	actions := validate.CheckNewDirectories(ctx)
+	actions, checkErr := validate.CheckNewDirectories(ctx)
+	if checkErr != nil {
+		t.Fatalf("CheckNewDirectories() error = %v", checkErr)
+	}
 	for _, a := range actions {
 		if strings.Contains(a.Description, "'src/'") {
 			t.Error("documented directory 'src' should not produce an action")
@@ -343,7 +358,10 @@ func TestRunSync_ActionWithEmptySuggestion(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	actions := action.Detect(ctx)
+	actions, detectErr := action.Detect(ctx)
+	if detectErr != nil {
+		t.Fatalf("Detect() error = %v", detectErr)
+	}
 	for _, a := range actions {
 		// All actions should have a non-empty Description
 		if a.Description == "" {

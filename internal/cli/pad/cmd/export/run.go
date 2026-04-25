@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writeExport "github.com/ActiveMemory/ctx/internal/write/export"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
@@ -28,6 +29,10 @@ import (
 // Returns:
 //   - error: On directory creation or scratchpad read failure
 func Run(cmd *cobra.Command, dir string, force, dryRun bool) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	if !dryRun {
 		if mkErr := ctxIo.SafeMkdirAll(dir, fs.PermExec); mkErr != nil {
 			return errFs.Mkdir(dir, mkErr)

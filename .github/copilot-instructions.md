@@ -6,7 +6,7 @@
 ## Context System
 
 This project uses Context (`ctx`) for persistent AI context
-management. Your memory is NOT ephemeral — it lives in `.context/` files.
+management. Your memory is NOT ephemeral; it lives in `.context/` files.
 
 ## On Session Start
 
@@ -50,7 +50,7 @@ After completing meaningful work, save a session summary to
 Create a file named `YYYY-MM-DD-topic.md`:
 
 ```markdown
-# Session: YYYY-MM-DD — Brief Topic Description
+# Session: YYYY-MM-DD: Brief Topic Description
 
 ## What Was Done
 - Describe completed work items
@@ -90,7 +90,7 @@ Periodically ask yourself:
 
 > "If this session ended right now, would the next session know what happened?"
 
-If no — save a session file or update context files before continuing.
+If no, save a session file or update context files before continuing.
 
 ## CLI Commands
 

@@ -59,18 +59,24 @@ func ParseMajorMinor(ver string) (major, minor int, ok bool) {
 //
 // Returns:
 //   - string: formatted nudge box (with leading newline), or empty string
-func CheckKeyAge(sessionID string) string {
-	kp := rc.KeyPath()
+//   - error: propagated from [nudge.EmitAndRelay] so callers can honour
+//     the log-first principle: if the relay audit entry or webhook
+//     fails, the nudge box should not be printed.
+func CheckKeyAge(sessionID string) (string, error) {
+	kp, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		return "", kpErr
+	}
 	info, statErr := os.Stat(kp)
 	if statErr != nil {
-		return "" // no key: nothing to check
+		return "", nil // no key: nothing to check
 	}
 
 	ageDays := int(time.Since(info.ModTime()).Hours() / cfgTime.HoursPerDay)
 	threshold := rc.KeyRotationDays()
 
 	if ageDays < threshold {
-		return ""
+		return "", nil
 	}
 
 	keyFallback := fmt.Sprintf(
@@ -79,7 +85,7 @@ func CheckKeyAge(sessionID string) string {
 	keyContent := message.Load(hook.CheckVersion, hook.VariantKeyRotation,
 		map[string]any{version.VarKeyAgeDays: ageDays}, keyFallback)
 	if keyContent == "" {
-		return ""
+		return "", nil
 	}
 
 	boxTitle := desc.Text(text.DescKeyCheckVersionKeyBoxTitle)
@@ -96,6 +102,8 @@ func CheckKeyAge(sessionID string) string {
 			desc.Text(text.DescKeyCheckVersionKeyRelayFormat), ageDays,
 		),
 	)
-	nudge.EmitAndRelay(keyNotifyMsg, sessionID, keyRef)
-	return box
+	if err := nudge.EmitAndRelay(keyNotifyMsg, sessionID, keyRef); err != nil {
+		return "", err
+	}
+	return box, nil
 }

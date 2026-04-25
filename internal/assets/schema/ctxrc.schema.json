@@ -10,10 +10,6 @@
       "type": "string",
       "description": "Active configuration profile name."
     },
-    "context_dir": {
-      "type": "string",
-      "description": "Name of the context directory. Default: .context."
-    },
     "token_budget": {
       "type": "integer",
       "description": "Default token budget for context assembly. Default: 8000.",
@@ -38,10 +34,6 @@
     "scratchpad_encrypt": {
       "type": "boolean",
       "description": "Whether to encrypt the scratchpad. Default: true."
-    },
-    "allow_outside_cwd": {
-      "type": "boolean",
-      "description": "Skip boundary validation for external context dirs. Default: false."
     },
     "entry_count_learnings": {
       "type": "integer",

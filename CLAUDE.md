@@ -11,11 +11,15 @@ This project uses Context (`ctx`) for context persistence across sessions.
 ## On Session Start
 
 1. **Run `ctx system bootstrap`**: CRITICAL, not optional.
-   This tells you where the context directory is. If it fails or returns
-   no context_dir, STOP and warn the user.
+   This tells you where the context directory is.
+   If it returns any error, relay the error output to the user
+   verbatim, point them at
+   https://ctx.ist/recipes/activating-context/ for setup, and STOP.
+   Do not try to activate, initialize, or otherwise recover: **those
+   are the user's decisions**. Wait for their next instruction.
 2. **Read AGENT_PLAYBOOK.md** from the context directory: it explains
    how to use this system
-3. **Run `ctx agent --budget 4000`** for a content summary
+3. **Run `ctx agent`** for a content summary
 
 ## When Asked "Do You Remember?"
 
@@ -41,7 +45,7 @@ Read them silently, then present what you found as recall, not as a search.
 
 ```bash
 # Get AI-optimized context packet (what you should know)
-ctx agent --budget 4000
+ctx agent
 
 # Or see full status
 ctx status
@@ -58,6 +62,26 @@ ctx status
 | CONVENTIONS.md  | Code patterns and standards            |
 
 All files live in the context directory reported by `ctx system bootstrap`.
+
+## Context Directory Lives at the Project Root
+
+The project root is the parent of `.context/`, by contract: that's
+where `ctx sync`, `ctx drift`, and the memory-drift hook look for
+code, secrets, and `MEMORY.md`.
+
+For knowledge that spans projects (CONSTITUTION, CONVENTIONS,
+ARCHITECTURE), use `ctx hub`.
+
+Recommended layout:
+
+```
+~/WORKSPACE/my-project
+  ├── .git
+  ├── .context
+  ├── Makefile
+  └── specs
+      └── ...
+```
 
 ## Hook Authority
 

@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/hub"
-	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func TestWriteEntries_CreatesFiles(t *testing.T) {
@@ -28,7 +28,7 @@ func TestWriteEntries_CreatesFiles(t *testing.T) {
 		t.Fatal(chErr)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
-	rc.Reset()
+	testctx.Declare(t, tmpDir)
 
 	entries := []hub.EntryMsg{
 		{
@@ -95,7 +95,7 @@ func TestWriteEntries_AppendsToExisting(t *testing.T) {
 		t.Fatal(chErr)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
-	rc.Reset()
+	testctx.Declare(t, tmpDir)
 
 	// Pre-populate a file.
 	existing := "## Existing content\n\n"

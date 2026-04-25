@@ -369,7 +369,7 @@ library with no runtime behavior).
 
 **GLOSSARY.md**: append project-specific terms discovered during
 analysis. This captures the vocabulary that makes the codebase
-searchable — type names, internal concepts, abbreviations, and
+searchable: type names, internal concepts, abbreviations, and
 domain jargon that a new reader wouldn't know to search for.
 
 Rules:
@@ -382,7 +382,7 @@ Rules:
   "singleton"). Include terms that are unique to this codebase or
   used in a project-specific way
 - Insert alphabetically into the existing list
-- Format: `**Term** — one-line definition`
+- Format: `**Term**: one-line definition`
 - Print added terms in the convergence report under a
   "Glossary additions" line
 

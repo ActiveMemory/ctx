@@ -31,12 +31,20 @@ import (
 //
 // Returns:
 //   - string: Absolute path to the pause marker file
-func PauseMarkerPath(sessionID string) string {
-	return filepath.Join(state.Dir(), hook.PrefixPauseMarker+sessionID)
+//   - error: non-nil when the state directory cannot be resolved
+func PauseMarkerPath(sessionID string) (string, error) {
+	stateDir, dirErr := state.Dir()
+	if dirErr != nil {
+		return "", dirErr
+	}
+	return filepath.Join(stateDir, hook.PrefixPauseMarker+sessionID), nil
 }
 
 // Paused checks if the session is paused. If paused, increments the
-// turn counter and returns the current count. Returns 0 if not paused.
+// turn counter and returns the current count. Returns 0 if not paused
+// or if the state directory cannot be resolved (silent bail keeps the
+// calling hook lean; the resolver-failure warning fires once at the
+// [state.Initialized] gate those hooks check first).
 //
 // Parameters:
 //   - sessionID: Session identifier
@@ -44,7 +52,10 @@ func PauseMarkerPath(sessionID string) string {
 // Returns:
 //   - int: Turn count if paused, 0 if not paused
 func Paused(sessionID string) int {
-	path := PauseMarkerPath(sessionID)
+	path, pathErr := PauseMarkerPath(sessionID)
+	if pathErr != nil {
+		return 0
+	}
 	data, readErr := io.SafeReadUserFile(path)
 	if readErr != nil {
 		return 0
@@ -78,8 +89,16 @@ func PausedMessage(turns int) string {
 //
 // Parameters:
 //   - sessionID: Session identifier
-func Pause(sessionID string) {
-	counter.Write(PauseMarkerPath(sessionID), 0)
+//
+// Returns:
+//   - error: non-nil when the state directory cannot be resolved
+func Pause(sessionID string) error {
+	path, pathErr := PauseMarkerPath(sessionID)
+	if pathErr != nil {
+		return pathErr
+	}
+	counter.Write(path, 0)
+	return nil
 }
 
 // Resume removes the session pause marker. Exported for use by the
@@ -87,9 +106,16 @@ func Pause(sessionID string) {
 //
 // Parameters:
 //   - sessionID: Session identifier
-func Resume(sessionID string) {
-	p := PauseMarkerPath(sessionID)
+//
+// Returns:
+//   - error: non-nil when the state directory cannot be resolved
+func Resume(sessionID string) error {
+	p, pathErr := PauseMarkerPath(sessionID)
+	if pathErr != nil {
+		return pathErr
+	}
 	if removeErr := os.Remove(p); removeErr != nil {
 		ctxLog.Warn(warn.Remove, p, removeErr)
 	}
+	return nil
 }

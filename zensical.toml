@@ -27,11 +27,15 @@ nav = [
     "blog/index.md",
   ]},
   { "Home" = [
+    "home/index.md",
     { "Introduction" = [
-      "home/index.md",
       "home/about.md",
       "home/is-ctx-right.md",
       "home/faq.md",
+    ]},
+    { "Community" = [
+      "home/community.md",
+      "home/contributing.md",
     ]},
     { "Get Started" = [
       "home/getting-started.md",
@@ -53,14 +57,11 @@ nav = [
       "home/steering.md",
       "home/triggers.md",
     ]},
-    { "Community" = [
-      "home/community.md",
-      "home/contributing.md",
-    ]},
   ]},
   { "Recipes" = [
     "recipes/index.md",
     { "Getting Started" = [
+      "recipes/activating-context.md",
       "recipes/guide-your-agent.md",
       "recipes/multi-tool-setup.md",
       "recipes/multilingual-sessions.md",
@@ -154,7 +155,6 @@ nav = [
     ]},
     { "Runtime" = [
       "cli/config.md",
-      "cli/backup.md",
       "cli/prune.md",
       "cli/hook.md",
       "cli/system.md",
@@ -181,13 +181,6 @@ nav = [
       "operations/integrations.md",
       "operations/autonomous-loop.md",
     ]},
-    { "Hub" = [
-      "operations/hub.md",
-      "operations/hub-failure-modes.md",
-    ]},
-    { "Maintainers" = [
-      "operations/release.md",
-    ]},
     { "Runbooks" = [
       "operations/runbooks/release-checklist.md",
       "operations/runbooks/plugin-release.md",
@@ -199,9 +192,17 @@ nav = [
       "operations/runbooks/sanitize-permissions.md",
       "operations/runbooks/architecture-exploration.md",
     ]},
+    { "Maintainers" = [
+      "operations/release.md",
+    ]},
+    { "Hub" = [
+      "operations/hub.md",
+      "operations/hub-failure-modes.md",
+    ]},
   ]},
   { "Security" = [
     "security/index.md",
+    "security/design.md",
     "security/agent-security.md",
     "security/hub.md",
     "security/reporting.md",

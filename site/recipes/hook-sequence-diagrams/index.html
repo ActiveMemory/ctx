@@ -248,13 +248,6 @@
   
     
     
-      
-  
-  
-  
-  
-    
-    
       <li class="md-tabs__item">
         <a href="../../home/" class="md-tabs__link">
           
@@ -263,9 +256,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -542,6 +532,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -571,13 +565,11 @@
   
   
   
-    
-  
-  
-  
     <a href="../../home/" class="md-nav__link">
       
   
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
   
   <span class="md-ellipsis">
     
@@ -594,8 +586,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
   
 
       
@@ -900,6 +890,8 @@
       
         
           
+        
+      
         
       
         
@@ -1256,17 +1248,6 @@
     <span class="md-ellipsis">
       
         Block-Dangerous-Commands
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#check-backup-age" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Check-Backup-Age
       
     </span>
   </a>
@@ -1973,34 +1954,6 @@ No initialization or pause checks: always active.</p>
     Hook-&gt;&gt;Tpl: LoadMessage(hook, variant, fallback)
     Hook--&gt;&gt;CC: JSON {decision: BLOCK, reason}
     Hook-&gt;&gt;Hook: NudgeAndRelay(message)</code></pre>
-<h3 id="check-backup-age">Check-Backup-Age<a class="headerlink" href="#check-backup-age" title="Permanent link">&para;</a></h3>
-<p>Lifecycle: UserPromptSubmit.</p>
-<p>Daily check for SMB mount and backup freshness.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as check-backup-age
-    participant State as .context/state/
-    participant FS as Filesystem
-    participant Tpl as Message Template
-
-    CC-&gt;&gt;Hook: stdin {session_id}
-    Hook-&gt;&gt;Hook: Check initialized + HookPreamble
-    alt not initialized or paused
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;State: Check daily throttle marker
-    alt throttled
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;FS: Check SMB mount (if env var set)
-    Hook-&gt;&gt;FS: Check backup marker file age
-    alt no warnings
-        Hook--&gt;&gt;CC: (silent exit)
-    end
-    Hook-&gt;&gt;Tpl: LoadMessage(hook, warning, {Warnings})
-    Hook--&gt;&gt;CC: Nudge box (warnings)
-    Hook-&gt;&gt;Hook: NudgeAndRelay(message)
-    Hook-&gt;&gt;State: Touch throttle marker</code></pre>
 <hr />
 <h2 id="throttling-summary">Throttling Summary<a class="headerlink" href="#throttling-summary" title="Permanent link">&para;</a></h2>
 <table>
@@ -2127,12 +2080,6 @@ No initialization or pause checks: always active.</p>
 <td>None</td>
 <td>Every match</td>
 </tr>
-<tr>
-<td>check-backup-age</td>
-<td>UserPromptSubmit *</td>
-<td>Daily marker</td>
-<td>Once per day</td>
-</tr>
 </tbody>
 </table>
 <p>* Project-local hook (settings.local.json), not shipped with ctx.</p>
@@ -2165,11 +2112,6 @@ No initialization or pause checks: always active.</p>
 <tr>
 <td><code>freshness-checked</code></td>
 <td>check-freshness</td>
-<td>Daily throttle</td>
-</tr>
-<tr>
-<td><code>backup-reminded</code></td>
-<td>check-backup-age</td>
 <td>Daily throttle</td>
 </tr>
 <tr>

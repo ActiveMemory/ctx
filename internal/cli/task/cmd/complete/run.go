@@ -38,7 +38,11 @@ func Run(cmd *cobra.Command, args []string) error {
 	ref := fmt.Sprintf(
 		cfgTrace.RefFormat, cfgTrace.RefTypeTask, matchedNum,
 	)
-	_ = trace.Record(ref, state.Dir())
+	stateDir, dirErr := state.Dir()
+	if dirErr != nil {
+		return dirErr
+	}
+	_ = trace.Record(ref, stateDir)
 
 	return nil
 }

@@ -78,7 +78,7 @@ Save this as `.arch-explorer/PROMPT.md` and invoke with your agent.
 The prompt is self-contained: the agent reads the manifest, picks
 the next unit of work, executes it, updates tracking, and stops.
 
-````
+~~~
 You are an autonomous architecture exploration agent. Your job is to
 systematically build and evolve architecture documentation across all
 repositories in this workspace using ctx skills.
@@ -142,22 +142,38 @@ focus as input upfront.
 
 ### Step 3: Do the Work
 
-1. `cd` into the repo directory (`~/WORKSPACE/<repo-name>`)
-2. If phase is `bootstrap`:
-    - Run `ctx init`, confirm `.context/` exists
-    - Then run `/ctx-architecture` (structural baseline)
-3. If phase is `principal` or `frontier-*`:
-    - Run `/ctx-architecture` (add `principal` argument for principal phase)
-    - The skill will read existing artifacts and build on them
-4. If phase is `enriched`:
-    - Verify GitNexus is connected: call `mcp__gitnexus__list_repos`
-    - Success = non-empty list returned with no error
+1. `cd` into the sub-repo directory (`~/WORKSPACE/<repo-name>`, NOT
+   `~/WORKSPACE` itself).
+2. Verify `CTX_DIR` already points at THIS sub-repo's `.context/`:
+
+    ```bash
+    test "$CTX_DIR" = "$PWD/.context" || {
+      echo "STOP: CTX_DIR=$CTX_DIR but this sub-repo needs $PWD/.context."
+      echo "Re-launch the agent with CTX_DIR set to the sub-repo:"
+      echo "  cd $PWD && CTX_DIR=\"\$PWD/.context\" claude --print 'Follow .arch-explorer/PROMPT.md' --allowedTools '*'"
+      exit 1
+    }
+    ```
+
+    If it fails, STOP. The agent cannot change `CTX_DIR` for itself:
+    child shells and skill invocations inherit the parent Claude
+    process environment, which only the caller can control. Do not
+    proceed, do not run `ctx` commands, do not skip the check.
+3. If phase is `bootstrap`:
+    - Run `ctx init`, confirm `.context/` exists.
+    - Then run `/ctx-architecture` (structural baseline).
+4. If phase is `principal` or `frontier-*`:
+    - Run `/ctx-architecture` (add `principal` argument for principal phase).
+    - The skill will read existing artifacts and build on them.
+5. If phase is `enriched`:
+    - Verify GitNexus is connected: call `mcp__gitnexus__list_repos`.
+    - Success = non-empty list returned with no error.
     - If GitNexus unavailable, log as `enriched-skipped` and advance
-      to `frontier-1`
-    - Run `/ctx-architecture-enrich`
-5. If phase is a lens run (`lens-security`, etc.):
+      to `frontier-1`.
+    - Run `/ctx-architecture-enrich`.
+6. If phase is a lens run (`lens-security`, etc.):
     - Run `/ctx-architecture` with lens focus prepended as instruction
-      (see lens table above for exact wording)
+      (see lens table above for exact wording).
 
 ### Step 4: Extract Results
 
@@ -267,17 +283,24 @@ When every repo has reached its stopping condition, print:
   - portal: 0.87 convergence, 6 runs, 3 lenses
   ...
 ```
-````
+~~~
 
 ---
 
 ## Invocation
 
+The caller MUST set `CTX_DIR` to the sub-repo the agent will work on.
+The agent verifies this at Step 3.2 and stops if it does not match.
+The wrapper reads the manifest to pick the current sub-repo, then
+launches `claude` with `CTX_DIR` pinned to that sub-repo's `.context/`.
+
 **Single run (safest for quota):**
 
 ```bash
 cd ~/WORKSPACE
-claude --print "Follow .arch-explorer/PROMPT.md" --allowedTools '*'
+REPO=$(jq -r '.repos[.current_repo_index]' .arch-explorer/manifest.json)
+CTX_DIR="$PWD/$REPO/.context" \
+  claude --print "Follow .arch-explorer/PROMPT.md" --allowedTools '*'
 ```
 
 **Batch of N runs:**
@@ -285,15 +308,18 @@ claude --print "Follow .arch-explorer/PROMPT.md" --allowedTools '*'
 ```bash
 cd ~/WORKSPACE
 for i in $(seq 1 5); do
-  claude --print "Follow .arch-explorer/PROMPT.md" --allowedTools '*'
-  echo "--- Run $i complete ---"
+  REPO=$(jq -r '.repos[.current_repo_index]' .arch-explorer/manifest.json)
+  CTX_DIR="$PWD/$REPO/.context" \
+    claude --print "Follow .arch-explorer/PROMPT.md" --allowedTools '*'
+  echo "--- Run $i complete (repo: $REPO) ---"
 done
 ```
 
 **Resume after interruption:**
 
-Just run again. The manifest tracks state; the agent picks up where
-it left off.
+Just run the wrapper again. The manifest tracks state; the agent picks
+up where it left off. `CTX_DIR` is recomputed from the manifest on
+each invocation, so the right sub-repo is always bound.
 
 ## Tips
 
@@ -313,3 +339,6 @@ it left off.
 
 - 2026-04-07: Original prompt created as `hack/agents/architecture-explorer.md`.
 - 2026-04-16: Moved to docs as a runbook for discoverability.
+- 2026-04-20: Added `CTX_DIR` verification at Step 3.2 and per-invocation
+  `CTX_DIR` binding in the wrapper, so the agent writes artifacts to the
+  sub-repo's `.context/` instead of the inherited workspace one.

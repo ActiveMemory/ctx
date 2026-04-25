@@ -32,7 +32,11 @@ import (
 // Returns:
 //   - error: non-nil on execution failure
 func Run(cmd *cobra.Command, args []string, last int, jsonOutput bool) error {
-	contextDir := rc.ContextDir()
+	contextDir, err := rc.RequireContextDir()
+	if err != nil {
+		cmd.SilenceUsage = true
+		return err
+	}
 	traceDir := filepath.Join(contextDir, dir.Trace)
 
 	if last > 0 {

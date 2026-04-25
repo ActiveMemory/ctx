@@ -67,7 +67,10 @@ func TestExists(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := validate.Exists(tt.dir)
+			result, existsErr := validate.Exists(tt.dir)
+			if existsErr != nil {
+				t.Fatalf("Exists(%q) error = %v", tt.dir, existsErr)
+			}
 			if result != tt.expected {
 				t.Errorf("Exists(%q) = %v, want %v", tt.dir, result, tt.expected)
 			}

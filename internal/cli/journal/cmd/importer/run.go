@@ -98,7 +98,12 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	}
 
 	// 4. Ensure journal directory exists.
-	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
+	ctxDir, ctxErr := rc.RequireContextDir()
+	if ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
+	journalDir := filepath.Join(ctxDir, dir.Journal)
 	if mkErr := ctxIo.SafeMkdirAll(journalDir, fs.PermExec); mkErr != nil {
 		return errFs.Mkdir(dir.Journal, mkErr)
 	}

@@ -15,10 +15,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/health"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
@@ -36,22 +37,23 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
-		return nil
-	}
-
-	input, _, paused := check.Preamble(stdin)
-	if paused {
+	input, _, ctxDir, stateDir, ok := check.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
 		return nil
 	}
 	markerPath := filepath.Join(
-		state.Dir(), architecture.MapStalenessThrottleID,
+		stateDir, architecture.MapStalenessThrottleID,
 	)
 	if check.DailyThrottled(markerPath) {
 		return nil
 	}
 
-	info := health.ReadMapTracking()
+	info, readErr := health.ReadMapTracking(ctxDir)
+	if readErr != nil {
+		logWarn.Warn(warn.ReadMapTracking, readErr)
+		return nil
+	}
 	if info == nil || info.OptedOut {
 		return nil
 	}
@@ -74,9 +76,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	dateStr := lastRun.Format(cfgTime.DateFormat)
-	writeSetup.Nudge(cmd, health.EmitMapStalenessWarning(
+	box, emitErr := health.EmitMapStalenessWarning(
 		input.SessionID, dateStr, moduleCommits,
-	))
+	)
+	if emitErr != nil {
+		return emitErr
+	}
+	writeSetup.Nudge(cmd, box)
 
 	internalIo.TouchFile(markerPath)
 

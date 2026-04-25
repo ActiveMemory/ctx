@@ -12,7 +12,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/session"
-	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func TestMarkdownSessionParser_Tool(t *testing.T) {
@@ -236,8 +236,7 @@ func TestIsSessionHeader_CustomPrefix(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
 
-	rc.Reset()
-	t.Cleanup(rc.Reset)
+	testctx.Declare(t, ctxrcDir)
 
 	tests := []struct {
 		name string

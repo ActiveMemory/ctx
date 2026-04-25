@@ -27,15 +27,32 @@ import (
 
 // LoadWebhook reads and decrypts the webhook URL from .context/.notify.enc.
 //
-// Returns ("", nil) if either the key file or encrypted file is missing
-// (silent noop: webhook not configured).
+// Returns ("", nil) when:
+//   - the key file is missing (key was never generated),
+//   - the encrypted file is missing (webhook never configured).
+//
+// Any resolver or I/O failure is propagated (including
+// [errCtx.ErrDirNotDeclared]) so callers can distinguish
+// "no context dir" from "no webhook configured" rather than
+// being forced to treat them identically. [Send] treats any error
+// as "no webhook, silently skip"; interactive callers (e.g.
+// `ctx notify test`) can use [errors.Is] to surface a clearer
+// message when the project is not set up yet.
 //
 // Returns:
 //   - string: the decrypted webhook URL, or "" if not configured
-//   - error: non-nil only if decryption fails (missing files are silent)
+//   - error: non-nil on any resolver failure or decryption failure;
+//     missing key / encrypted file are silent
 func LoadWebhook() (string, error) {
-	kp := rc.KeyPath()
-	encPath := filepath.Join(rc.ContextDir(), cfgCrypto.NotifyEnc)
+	kp, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		return "", kpErr
+	}
+	ctxDir, pathErr := rc.ContextDir()
+	if pathErr != nil {
+		return "", pathErr
+	}
+	encPath := filepath.Join(ctxDir, cfgCrypto.NotifyEnc)
 
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
@@ -71,8 +88,15 @@ func LoadWebhook() (string, error) {
 // Returns:
 //   - error: non-nil if key generation, encryption, or file write fails
 func SaveWebhook(url string) error {
-	kp := rc.KeyPath()
-	encPath := filepath.Join(rc.ContextDir(), cfgCrypto.NotifyEnc)
+	kp, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		return kpErr
+	}
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return ctxErr
+	}
+	encPath := filepath.Join(ctxDir, cfgCrypto.NotifyEnc)
 
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
@@ -152,14 +176,9 @@ func Send(event, message, sessionID string, detail *entity.TemplateRef) error {
 		logWarn.Warn(cfgWarn.Getwd, cwdErr)
 	}
 
-	payload := entity.NotifyPayload{
-		Event:     event,
-		Message:   message,
-		Detail:    detail,
-		SessionID: sessionID,
-		Timestamp: time.Now().UTC().Format(time.RFC3339),
-		Project:   projectName,
-	}
+	payload := entity.NewNotifyPayload(
+		event, message, sessionID, projectName, detail,
+	)
 
 	body, marshalErr := json.Marshal(payload)
 	if marshalErr != nil {

@@ -8,9 +8,6 @@ package text
 
 // DescKeys for filesystem operations errors.
 const (
-	// DescKeyErrFsBoundaryViolation is the text key for err fs boundary violation
-	// messages.
-	DescKeyErrFsBoundaryViolation = "err.fs.boundary-violation"
 	// DescKeyErrFsCreateDir is the text key for err fs create dir messages.
 	DescKeyErrFsCreateDir = "err.fs.create-dir"
 	// DescKeyErrFsDirNotFound is the text key for err fs dir not found messages.
@@ -74,6 +71,27 @@ const (
 	// DescKeyErrContextDirNotFound is the text key for err context dir not found
 	// messages.
 	DescKeyErrContextDirNotFound = "err.context.dir-not-found"
+	// DescKeyErrContextNotDeclaredZero is the text key used when CTX_DIR
+	// is not set and no .context/ candidate is visible from CWD.
+	DescKeyErrContextNotDeclaredZero = "err.context.not-declared-zero"
+	// DescKeyErrContextNotDeclaredOne is the text key used when CTX_DIR
+	// is not set and exactly one .context/ candidate is visible from CWD.
+	DescKeyErrContextNotDeclaredOne = "err.context.not-declared-one"
+	// DescKeyErrContextNotDeclaredMany is the text key used when CTX_DIR
+	// is not set and two or more .context/ candidates are visible from CWD.
+	DescKeyErrContextNotDeclaredMany = "err.context.not-declared-many"
+	// DescKeyErrContextRelativeNotAllowed is the text key for the
+	// "CTX_DIR must be absolute" rejection.
+	DescKeyErrContextRelativeNotAllowed = "err.context.relative-not-allowed"
+	// DescKeyErrContextNonCanonicalBasename is the text key for the
+	// "CTX_DIR basename must be .context" rejection.
+	DescKeyErrContextNonCanonicalBasename = "err.context.non-canonical-basename"
+	// DescKeyErrContextDirNotADirectory is the text key for the
+	// "CTX_DIR points at a file, not a directory" rejection.
+	DescKeyErrContextDirNotADirectory = "err.context.dir-not-a-directory"
+	// DescKeyErrContextDirStat is the text key for stat failures
+	// other than not-exist (permission denied, I/O error).
+	DescKeyErrContextDirStat = "err.context.dir-stat"
 )
 
 // DescKeys for filesystem write output.

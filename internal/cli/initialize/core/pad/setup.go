@@ -60,7 +60,10 @@ func setupPlaintext(
 func setupEncrypted(
 	cmd *cobra.Command, contextDir string,
 ) error {
-	kPath := rc.KeyPath()
+	kPath, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		return kpErr
+	}
 	encPath := filepath.Join(contextDir, cfgPad.Enc)
 
 	// Check if the key already exists (idempotent)

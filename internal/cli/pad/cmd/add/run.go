@@ -12,6 +12,7 @@ import (
 	coreAdd "github.com/ActiveMemory/ctx/internal/cli/pad/core/add"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/parse"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
@@ -28,6 +29,10 @@ import (
 // Returns:
 //   - error: Non-nil on read/write failure or too large
 func Run(cmd *cobra.Command, text, filePath string) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	var entries []parse.Entry
 	var id int
 	var addErr error

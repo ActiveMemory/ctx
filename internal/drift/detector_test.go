@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func TestReportStatus(t *testing.T) {
@@ -92,6 +93,8 @@ func TestDetect(t *testing.T) {
 			fmt.Printf("failed to chdir: %v", chdirErr)
 		}
 	}(origDir)
+
+	testctx.Declare(t, tmpDir)
 
 	// Create a .context directory with test files
 	ctxDir := filepath.Join(tmpDir, ".context")

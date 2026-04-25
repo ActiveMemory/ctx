@@ -1,5 +1,5 @@
 <!-- gitnexus:start -->
-# GitNexus — Code Intelligence
+# GitNexus: Code Intelligence
 
 This project is indexed by GitNexus as **ctx** (13443 symbols, 67145 relationships, 257 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
@@ -11,18 +11,18 @@ This project is indexed by GitNexus as **ctx** (13443 symbols, 67145 relationshi
 - **MUST run `gitnexus_detect_changes()` before committing** to verify your changes only affect expected symbols and execution flows.
 - **MUST warn the user** if impact analysis returns HIGH or CRITICAL risk before proceeding with edits.
 - When exploring unfamiliar code, use `gitnexus_query({query: "concept"})` to find execution flows instead of grepping. It returns process-grouped results ranked by relevance.
-- When you need full context on a specific symbol — callers, callees, which execution flows it participates in — use `gitnexus_context({name: "symbolName"})`.
+- When you need full context on a specific symbol (callers, callees, which execution flows it participates in), use `gitnexus_context({name: "symbolName"})`.
 
 ## When Debugging
 
-1. `gitnexus_query({query: "<error or symptom>"})` — find execution flows related to the issue
-2. `gitnexus_context({name: "<suspect function>"})` — see all callers, callees, and process participation
-3. `READ gitnexus://repo/ctx/process/{processName}` — trace the full execution flow step by step
-4. For regressions: `gitnexus_detect_changes({scope: "compare", base_ref: "main"})` — see what your branch changed
+1. `gitnexus_query({query: "<error or symptom>"})`: find execution flows related to the issue
+2. `gitnexus_context({name: "<suspect function>"})`: see all callers, callees, and process participation
+3. `READ gitnexus://repo/ctx/process/{processName}`: trace the full execution flow step by step
+4. For regressions: `gitnexus_detect_changes({scope: "compare", base_ref: "main"})`: see what your branch changed
 
 ## When Refactoring
 
-- **Renaming**: MUST use `gitnexus_rename({symbol_name: "old", new_name: "new", dry_run: true})` first. Review the preview — graph edits are safe, text_search edits need manual review. Then run with `dry_run: false`.
+- **Renaming**: MUST use `gitnexus_rename({symbol_name: "old", new_name: "new", dry_run: true})` first. Review the preview: graph edits are safe, text_search edits need manual review. Then run with `dry_run: false`.
 - **Extracting/Splitting**: MUST run `gitnexus_context({name: "target"})` to see all incoming/outgoing refs, then `gitnexus_impact({target: "target", direction: "upstream"})` to find all external callers before moving code.
 - After any refactor: run `gitnexus_detect_changes({scope: "all"})` to verify only expected files changed.
 
@@ -30,7 +30,7 @@ This project is indexed by GitNexus as **ctx** (13443 symbols, 67145 relationshi
 
 - NEVER edit a function, class, or method without first running `gitnexus_impact` on it.
 - NEVER ignore HIGH or CRITICAL risk warnings from impact analysis.
-- NEVER rename symbols with find-and-replace — use `gitnexus_rename` which understands the call graph.
+- NEVER rename symbols with find-and-replace; use `gitnexus_rename` which understands the call graph.
 - NEVER commit changes without running `gitnexus_detect_changes()` to check affected scope.
 
 ## Tools Quick Reference
@@ -48,9 +48,9 @@ This project is indexed by GitNexus as **ctx** (13443 symbols, 67145 relationshi
 
 | Depth | Meaning | Action |
 |-------|---------|--------|
-| d=1 | WILL BREAK — direct callers/importers | MUST update these |
-| d=2 | LIKELY AFFECTED — indirect deps | Should test |
-| d=3 | MAY NEED TESTING — transitive | Test if critical path |
+| d=1 | WILL BREAK: direct callers/importers | MUST update these |
+| d=2 | LIKELY AFFECTED: indirect deps | Should test |
+| d=3 | MAY NEED TESTING: transitive | Test if critical path |
 
 ## Resources
 
@@ -83,7 +83,7 @@ If the index previously included embeddings, preserve them by adding `--embeddin
 npx gitnexus analyze --embeddings
 ```
 
-To check whether embeddings exist, inspect `.gitnexus/meta.json` — the `stats.embeddings` field shows the count (0 means no embeddings). **Running analyze without `--embeddings` will delete any previously generated embeddings.**
+To check whether embeddings exist, inspect `.gitnexus/meta.json`: the `stats.embeddings` field shows the count (0 means no embeddings). **Running analyze without `--embeddings` will delete any previously generated embeddings.**
 
 > Claude Code users: A PostToolUse hook handles this automatically after `git commit` and `git merge`.
 

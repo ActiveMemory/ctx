@@ -9,6 +9,14 @@
 #
 # See also: commands.yaml (Short/Long), flags.yaml (flag descriptions).
 
+activate:
+  short: |2-
+      eval "$(ctx activate)"
+
+deactivate:
+  short: |2-
+      eval "$(ctx deactivate)"
+
 add:
   short: |2-
       ctx add decision "Use PostgreSQL" --context "..." --rationale "..." --consequence "..."
@@ -427,22 +435,14 @@ system:
       ctx system --help         # list hidden hook plumbing
       ctx system mark-wrapped-up
 
-backup:
-  short: |2-
-      ctx backup
-      ctx backup --scope project
-
-system.blockdangerouscommand:
-  short: '  ctx system block-dangerous-command'
-
 system.blocknonpathctx:
   short: '  ctx system block-non-path-ctx'
 
 bootstrap:
   short: '  ctx system bootstrap'
 
-system.checkbackupage:
-  short: '  ctx system check-backup-age'
+system.checkanchordrift:
+  short: '  ctx system check-anchor-drift'
 
 system.checkceremony:
   short: '  ctx system check-ceremony'

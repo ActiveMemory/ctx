@@ -11,6 +11,7 @@ import (
 
 	coreEdit "github.com/ActiveMemory/ctx/internal/cli/pad/core/edit"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
@@ -24,6 +25,10 @@ import (
 //   - error: Non-nil on invalid index, type mismatch,
 //     or read/write failure
 func Run(cmd *cobra.Command, opts coreEdit.Opts) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	var entries []string
 	var editErr error
 

@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/initialize"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/watch"
 )
 
@@ -35,7 +36,15 @@ import (
 //   - error: Non-nil if the context directory is missing, the log file cannot
 //     be opened, or stream processing fails
 func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
-	if !validate.Exists("") {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
+	exists, existsErr := validate.Exists("")
+	if existsErr != nil {
+		return existsErr
+	}
+	if !exists {
 		return initialize.ContextNotInitialized()
 	}
 

@@ -770,40 +770,6 @@ sequenceDiagram
     Hook->>Hook: NudgeAndRelay(message)
 ```
 
-### Check-Backup-Age
-
-Lifecycle: UserPromptSubmit.
-
-Daily check for SMB mount and backup freshness.
-
-```mermaid
-sequenceDiagram
-    participant CC as Claude Code
-    participant Hook as check-backup-age
-    participant State as .context/state/
-    participant FS as Filesystem
-    participant Tpl as Message Template
-
-    CC->>Hook: stdin {session_id}
-    Hook->>Hook: Check initialized + HookPreamble
-    alt not initialized or paused
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>State: Check daily throttle marker
-    alt throttled
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>FS: Check SMB mount (if env var set)
-    Hook->>FS: Check backup marker file age
-    alt no warnings
-        Hook-->>CC: (silent exit)
-    end
-    Hook->>Tpl: LoadMessage(hook, warning, {Warnings})
-    Hook-->>CC: Nudge box (warnings)
-    Hook->>Hook: NudgeAndRelay(message)
-    Hook->>State: Touch throttle marker
-```
-
 ---
 
 ## Throttling Summary
@@ -829,7 +795,6 @@ sequenceDiagram
 | check-version            | UserPromptSubmit   | Daily marker          | Once per day      |
 | heartbeat                | UserPromptSubmit   | None                  | Every prompt      |
 | block-dangerous-commands | PreToolUse *       | None                  | Every match       |
-| check-backup-age         | UserPromptSubmit * | Daily marker          | Once per day      |
 
 \* Project-local hook (settings.local.json), not shipped with ctx.
 
@@ -843,7 +808,6 @@ All state files live in `.context/state/`.
 | `ctx-paused-{session}`          | (all)                 | Session pause marker                      |
 | `ctx-wrapped-up`                | check-context-size    | Suppress nudges after wrap-up (2h expiry) |
 | `freshness-checked`             | check-freshness       | Daily throttle                            |
-| `backup-reminded`               | check-backup-age      | Daily throttle                            |
 | `ceremony-reminded`             | check-ceremonies      | Daily throttle                            |
 | `journal-reminded`              | check-journal         | Daily throttle                            |
 | `knowledge-reminded`            | check-knowledge       | Daily throttle                            |

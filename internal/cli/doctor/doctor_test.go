@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/doctor/core/check"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgDir "github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/doctor"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -25,7 +26,10 @@ import (
 
 func setupContextDir(t *testing.T) string {
 	t.Helper()
-	dir := t.TempDir()
+	dir := filepath.Join(t.TempDir(), cfgDir.Context)
+	if mkErr := os.MkdirAll(dir, 0o700); mkErr != nil {
+		t.Fatal(mkErr)
+	}
 	t.Setenv("CTX_DIR", dir)
 	rc.Reset()
 
@@ -64,7 +68,10 @@ func TestDoctor_Healthy(t *testing.T) {
 }
 
 func TestDoctor_MissingRequiredFiles(t *testing.T) {
-	dir := t.TempDir()
+	dir := filepath.Join(t.TempDir(), cfgDir.Context)
+	if mkErr := os.MkdirAll(dir, 0o700); mkErr != nil {
+		t.Fatal(mkErr)
+	}
 	t.Setenv("CTX_DIR", dir)
 	rc.Reset()
 
@@ -541,7 +548,9 @@ func TestCheckCtxrcValidation_NoFile(t *testing.T) {
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
 	report := &check.Report{}
-	check.CtxrcValidation(report)
+	if err := check.CtxrcValidation(report); err != nil {
+		t.Fatalf("CtxrcValidation: %v", err)
+	}
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
@@ -574,7 +583,9 @@ func TestCheckCtxrcValidation_ValidFile(t *testing.T) {
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
 	report := &check.Report{}
-	check.CtxrcValidation(report)
+	if err := check.CtxrcValidation(report); err != nil {
+		t.Fatalf("CtxrcValidation: %v", err)
+	}
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
@@ -607,7 +618,9 @@ func TestCheckCtxrcValidation_Typo(t *testing.T) {
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
 	report := &check.Report{}
-	check.CtxrcValidation(report)
+	if err := check.CtxrcValidation(report); err != nil {
+		t.Fatalf("CtxrcValidation: %v", err)
+	}
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))

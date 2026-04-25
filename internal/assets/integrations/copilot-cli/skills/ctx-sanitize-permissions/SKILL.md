@@ -49,11 +49,11 @@ unrestricted access.
 ## Permission Audit Results
 
 ### 🔴 Critical (N)
-1. `Bash(*)` — unrestricted shell access
+1. `Bash(*)`: unrestricted shell access
    → Suggest: scope to specific commands
 
 ### 🟡 Warning (N)
-1. `Write(/etc/*)` — write access to system dirs
+1. `Write(/etc/*)`: write access to system dirs
    → Suggest: remove or scope to project
 
 ### ✅ Clean (N entries passed)

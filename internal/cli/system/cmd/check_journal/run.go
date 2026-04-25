@@ -18,13 +18,12 @@ import (
 	coreJournal "github.com/ActiveMemory/ctx/internal/cli/system/core/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
-	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
@@ -43,15 +42,11 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	input, _, ctxDir, tmpDir, ok := coreCheck.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
 		return nil
 	}
-	input, _, paused := coreCheck.Preamble(stdin)
-	if paused {
-		return nil
-	}
-
-	tmpDir := state.Dir()
 	remindedFile := filepath.Join(tmpDir, journal.ThrottleID)
 	claudeProjectsDir := filepath.Join(
 		os.Getenv(env.Home), journal.ClaudeProjectsSubdir,
@@ -63,7 +58,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Bail out if journal or Claude projects directories don't exist
-	jDir := ctxResolve.JournalDir()
+	jDir := filepath.Join(ctxDir, dir.Journal)
 	if _, statErr := os.Stat(jDir); os.IsNotExist(statErr) {
 		return nil
 	}
@@ -126,7 +121,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			desc.Text(text.DescKeyCheckJournalRelayFormat),
 			unimported, unenriched,
 		))
-	nudge.EmitAndRelay(journalMsg, input.SessionID, ref)
+	emitErr := nudge.EmitAndRelay(journalMsg, input.SessionID, ref)
+	if emitErr != nil {
+		return emitErr
+	}
 
 	internalIo.TouchFile(remindedFile)
 	return nil

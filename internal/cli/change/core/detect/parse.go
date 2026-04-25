@@ -40,12 +40,12 @@ func ReferenceTime(since string) (time.Time, string, error) {
 	}
 
 	// Try marker files.
-	if t, ok := FromMarkers(); ok {
+	if t, markersErr := FromMarkers(); markersErr == nil {
 		return t, format.DurationAgo(time.Since(t)), nil
 	}
 
 	// Try events.jsonl.
-	if t, ok := FromEvents(); ok {
+	if t, eventsErr := FromEvents(); eventsErr == nil {
 		return t, format.DurationAgo(time.Since(t)), nil
 	}
 

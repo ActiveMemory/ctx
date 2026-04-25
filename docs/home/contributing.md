@@ -139,7 +139,6 @@ never distributed to users.
 |------------------------------|---------------------------------------------------------------|
 | `/_ctx-absorb`               | Merge deltas from a parallel worktree or separate checkout    |
 | `/_ctx-audit`                | Detect code-level drift after YOLO sprints or before releases |
-| `/_ctx-backup`               | Backup context and Claude data to SMB share                   |
 | `/_ctx-qa`                   | Run QA checks before committing                               |
 | `/_ctx-release`              | Run the full release process                                  |
 | `/_ctx-release-notes`        | Generate release notes for `dist/RELEASE_NOTES.md`            |
@@ -349,17 +348,12 @@ See [Configuration](configuration.md) for the full `.ctxrc` option reference.
 
 ### Backups
 
-Back up project context and global Claude Code data with:
-
-```bash
-ctx backup                    # both project + global (default)
-ctx backup --scope project    # .context/, .claude/, ideas/ only
-ctx backup --scope global     # ~/.claude/ only
-```
-
-Archives are saved to `/tmp/`. When `CTX_BACKUP_SMB_URL` is configured,
-they are also copied to an SMB share. See
-[CLI Reference: backup](../cli/backup.md) for details.
+`ctx` does not ship a backup command. File-level backup is an OS /
+infrastructure concern; `ctx hub` handles the cross-machine
+knowledge persistence that matters most. For everything else, see
+[Backup Strategy](../operations/runbooks/backup-strategy.md):
+rsync, Time Machine, Borg, or whichever tool already handles the
+rest of your files.
 
 ### Running Tests
 

@@ -72,7 +72,7 @@ This means:
 ### The `--file` Flag
 
 The `ctx add` subcommands accept a `--file` flag that reads content from an
-arbitrary file path. **No boundary check is enforced** — any file readable by
+arbitrary file path. **No boundary check is enforced**; any file readable by
 the current user can be supplied. This is by design: `ctx` runs as the local
 user and does not elevate privileges.
 

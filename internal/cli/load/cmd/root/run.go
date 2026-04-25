@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writeLoad "github.com/ActiveMemory/ctx/internal/write/load"
 )
 
@@ -32,6 +33,10 @@ import (
 // Returns:
 //   - error: Non-nil if context loading fails or .context/ is not found
 func Run(cmd *cobra.Command, budget int, raw bool) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	ctx, err := load.Do("")
 	if err != nil {
 		if _, ok := errors.AsType[*errCtx.NotFoundError](err); ok {

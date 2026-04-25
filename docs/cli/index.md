@@ -19,33 +19,51 @@ Complete reference for all `ctx` commands, grouped by function.
 
 All commands support these flags:
 
-| Flag                   | Description                                               |
-|------------------------|-----------------------------------------------------------|
-| `--help`               | Show command help                                         |
-| `--version`            | Show version                                              |
-| `--context-dir <path>` | Override context directory (default: `.context/`)         |
-| `--allow-outside-cwd`  | Allow context directory outside current working directory |
-| `--tool <name>`        | Override active AI tool identifier (e.g. `kiro`, `cursor`) |
+| Flag            | Description                                                |
+|-----------------|------------------------------------------------------------|
+| `--help`        | Show command help                                          |
+| `--version`     | Show version                                               |
+| `--tool <name>` | Override active AI tool identifier (e.g. `kiro`, `cursor`) |
 
-**Initialization required.** Most commands require a `.context/` directory
-created by `ctx init`. Running a command without one produces:
+**Context declaration required.** ctx does not walk the filesystem
+looking for `.context/`. Every non-exempt command requires `CTX_DIR`
+to be declared explicitly before it runs. The single declaration
+channel is the environment variable:
 
-```
-ctx: not initialized - run "ctx init" first
-```
+- `eval "$(ctx activate)"`: binds `CTX_DIR` for the current shell.
+- `CTX_DIR=/abs/path/to/.context` exported in the environment, or
+  inlined as `CTX_DIR=/abs/path/to/.context ctx <command>` for a
+  one-shot.
 
-Commands that work before initialization: `ctx init`, `ctx setup`,
-`ctx doctor`, and grouping commands that only show help.
+`CTX_DIR` must be an absolute path with `.context` as its basename.
+Relative paths and other names are rejected on first use; the
+basename guard catches the common footgun
+(`export CTX_DIR=$(pwd)`) before stray writes can leak to the
+project root.
+
+Commands fail fast with a linkable error
+(see [Activating a Context Directory](../recipes/activating-context.md))
+when none is declared. The exempt allowlist (commands that run without
+a declared context directory) is: `ctx init`, `ctx activate`,
+`ctx deactivate`, `ctx version`, `ctx help`, `ctx system bootstrap`,
+`ctx doctor`, `ctx guide`, `ctx why`, `ctx config switch/status`,
+`ctx hub *`.
+
+**Initialization required.** Once declared, the target must already
+have been initialized by `ctx init` (otherwise commands return
+`ctx: not initialized`).
 
 <!-- drift-check: ctx --help | grep -c '  [a-z]' -->
 ## Getting Started
 
-| Command                                       | Description                                              |
-|-----------------------------------------------|----------------------------------------------------------|
-| [`ctx init`](init-status.md#ctx-init)         | Initialize `.context/` directory with templates          |
-| [`ctx status`](init-status.md#ctx-status)     | Show context summary (files, tokens, drift)              |
-| [`ctx guide`](guide.md#ctx-guide)             | Quick-reference cheat sheet                              |
-| [`ctx why`](why.md#ctx-why)                   | Read the philosophy behind `ctx`                         |
+| Command                                             | Description                                              |
+|-----------------------------------------------------|----------------------------------------------------------|
+| [`ctx init`](init-status.md#ctx-init)               | Initialize `.context/` directory with templates          |
+| [`ctx activate`](init-status.md#ctx-activate)       | Emit `export CTX_DIR=...` to bind context for the shell  |
+| [`ctx deactivate`](init-status.md#ctx-deactivate)   | Emit `unset CTX_DIR` to clear the binding                |
+| [`ctx status`](init-status.md#ctx-status)           | Show context summary (files, tokens, drift)              |
+| [`ctx guide`](guide.md#ctx-guide)                   | Quick-reference cheat sheet                              |
+| [`ctx why`](why.md#ctx-why)                         | Read the philosophy behind `ctx`                         |
 
 ## Context
 
@@ -107,7 +125,6 @@ Commands that work before initialization: `ctx init`, `ctx setup`,
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx config`](config.md#ctx-config)          | Manage runtime configuration profiles                    |
-| [`ctx backup`](backup.md#ctx-backup)          | Back up context and Claude data to tar.gz / SMB          |
 | [`ctx prune`](prune.md#ctx-prune)             | Clean stale per-session state files                      |
 | [`ctx hook`](hook.md#ctx-hook)                | Hook message, notification, and lifecycle controls       |
 | [`ctx system`](system.md#ctx-system)          | Hook plumbing and agent-only commands (not user-facing)  |
@@ -136,8 +153,6 @@ Commands that work before initialization: `ctx init`, `ctx setup`,
 |-------------------------|-----------------------------------------------------|
 | `CTX_DIR`               | Override default context directory path             |
 | `CTX_TOKEN_BUDGET`      | Override default token budget                       |
-| `CTX_BACKUP_SMB_URL`    | SMB share URL for backups (e.g. `smb://host/share`) |
-| `CTX_BACKUP_SMB_SUBDIR` | Subdirectory on SMB share (default: `ctx-sessions`) |
 | `CTX_SESSION_ID`        | Active AI session ID (used by `ctx trace` for context linking) |
 
 <!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort) <(sed -n '/Configuration File/,/^##[^#]/p' docs/cli/index.md | grep -oP '`[a-z_]+`' | tr -d '`' | sort -u) -->
@@ -147,7 +162,6 @@ Optional `.ctxrc` (*YAML format*) at project root:
 
 ```yaml
 # .ctxrc
-context_dir: .context        # Context directory name
 token_budget: 8000           # Default token budget
 priority_order:              # File loading priority
   - TASKS.md
@@ -156,7 +170,6 @@ priority_order:              # File loading priority
 auto_archive: true           # Auto-archive old items
 archive_after_days: 7        # Days before archiving tasks
 scratchpad_encrypt: true     # Encrypt scratchpad (default: true)
-allow_outside_cwd: false     # Skip boundary check (default: false)
 event_log: false             # Enable local hook event logging
 companion_check: true        # Check companion tools at session start
 entry_count_learnings: 30    # Drift warning threshold (0 = disable)
@@ -193,13 +206,11 @@ hooks:                       # Hook system configuration
 
 | Field                   | Type       | Default        | Description                                                                                                    |
 |-------------------------|------------|----------------|----------------------------------------------------------------------------------------------------------------|
-| `context_dir`           | `string`   | `.context`     | Context directory name (relative to project root)                                                              |
 | `token_budget`          | `int`      | `8000`         | Default token budget for `ctx agent`                                                                           |
 | `priority_order`        | `[]string` | *(all files)*  | File loading priority for context packets                                                                      |
 | `auto_archive`          | `bool`     | `true`         | Auto-archive completed tasks                                                                                   |
 | `archive_after_days`    | `int`      | `7`            | Days before completed tasks are archived                                                                       |
 | `scratchpad_encrypt`    | `bool`     | `true`         | Encrypt scratchpad with AES-256-GCM                                                                            |
-| `allow_outside_cwd`     | `bool`     | `false`        | Skip boundary check for external context dirs                                                                  |
 | `event_log`             | `bool`     | `false`        | Enable local hook event logging to `.context/state/events.jsonl`                                               |
 | `companion_check`       | `bool`     | `true`         | Check companion tool availability (Gemini Search, GitNexus) during `/ctx-remember`                             |
 | `entry_count_learnings` | `int`      | `30`           | Drift warning when `LEARNINGS.md` exceeds this count                                                           |

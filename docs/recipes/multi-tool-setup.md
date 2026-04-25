@@ -81,15 +81,31 @@ This produces the following structure:
   AGENT_PLAYBOOK.md   # How AI tools should use this system
 ```
 
-!!! tip "Using a Different `.context` Directory"
-    The `.context/` directory doesn't have to live inside your project. You can
-    point `ctx` to an external folder via `.ctxrc`, the `CTX_DIR` environment
-    variable, or the `--context-dir` CLI flag. 
+!!! note "Using a Different `.context` Directory"
+    The `.context/` directory doesn't have to live inside your project. Point
+    `ctx` to an external folder by exporting `CTX_DIR` (the only
+    declaration channel).
 
-    This is useful for monorepos or shared context across repositories.
+    Useful when context must stay private while the code is public, or
+    when you want to commit notes to a separate repo.
 
-    See [Configuration](../home/configuration.md#environment-variables) for
-    details and [External Context](external-context.md) for a full recipe.
+    **Caveats** (the recipe covers both with workarounds):
+
+    * **Code-aware operations degrade silently.** `ctx sync`, `ctx drift`,
+      and the memory-drift hook read the codebase from
+      `dirname(CTX_DIR)`. With an external `.context/`, that's the
+      context repo, not your code repo. They scan the wrong tree without
+      erroring. The recipe shows a symlink workaround that keeps both
+      healthy.
+    * **One `.context/` per project, always.** Sharing one directory
+      across multiple projects corrupts journals, state, and secrets.
+      For cross-project knowledge sharing (CONSTITUTION, CONVENTIONS,
+      ARCHITECTURE, etc.) use [`ctx hub`](hub-overview.md), not a
+      shared `.context/`.
+
+    See [External Context](external-context.md) for the full recipe
+    and [Configuration](../home/configuration.md#environment-variables)
+    for the resolver details.
 
 For Claude Code, install the **ctx plugin** to get hooks and skills:
 

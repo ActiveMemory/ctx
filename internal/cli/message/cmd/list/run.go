@@ -16,6 +16,7 @@ import (
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
@@ -27,17 +28,25 @@ import (
 // Returns:
 //   - error: Non-nil on JSON encoding failure
 func Run(cmd *cobra.Command) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	registry := messages.Registry()
 	entries := make([]entity.MessageListEntry, 0, len(registry))
 
 	for _, info := range registry {
+		hasOverride, overrideErr := message.HasOverride(info.Hook, info.Variant)
+		if overrideErr != nil {
+			return overrideErr
+		}
 		entry := entity.MessageListEntry{
 			Hook:         info.Hook,
 			Variant:      info.Variant,
 			Category:     info.Category,
 			Description:  info.Description,
 			TemplateVars: info.TemplateVars,
-			HasOverride:  message.HasOverride(info.Hook, info.Variant),
+			HasOverride:  hasOverride,
 		}
 		if entry.TemplateVars == nil {
 			entry.TemplateVars = []string{}

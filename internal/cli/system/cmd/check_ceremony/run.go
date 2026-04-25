@@ -17,11 +17,10 @@ import (
 	coreCeremony "github.com/ActiveMemory/ctx/internal/cli/system/core/ceremony"
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/ceremony"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
-	ctxResolve "github.com/ActiveMemory/ctx/internal/context/resolve"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
@@ -40,23 +39,19 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	input, _, ctxDir, stateDir, ok := coreCheck.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
 		return nil
 	}
-
-	input, _, paused := coreCheck.Preamble(stdin)
-	if paused {
-		return nil
-	}
-
-	remindedFile := filepath.Join(state.Dir(), ceremony.ThrottleID)
-
+	remindedFile := filepath.Join(stateDir, ceremony.ThrottleID)
 	if coreCheck.DailyThrottled(remindedFile) {
 		return nil
 	}
 
+	journalDir := filepath.Join(ctxDir, dir.Journal)
 	files := coreCeremony.RecentJournalFiles(
-		ctxResolve.JournalDir(), ceremony.JournalLookback,
+		journalDir, ceremony.JournalLookback,
 	)
 
 	if len(files) == 0 {
@@ -75,10 +70,17 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	ref := notify.NewTemplateRef(hook.CheckCeremony, variant, nil)
-	nudge.EmitAndRelay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
-		hook.CheckCeremony, desc.Text(text.DescKeyCeremonyRelayMessage)),
+	emitErr := nudge.EmitAndRelay(
+		fmt.Sprintf(
+			desc.Text(text.DescKeyRelayPrefixFormat),
+			hook.CheckCeremony,
+			desc.Text(text.DescKeyCeremonyRelayMessage),
+		),
 		input.SessionID, ref,
 	)
+	if emitErr != nil {
+		return emitErr
+	}
 	internalIo.TouchFile(remindedFile)
 	return nil
 }

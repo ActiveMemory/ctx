@@ -100,12 +100,34 @@ else
   PATTERN="${ENDASH}|${EMDASH}|${LSQ}|${RSQ}|${LDQ}|${RDQ}| -- |\`\`\`\`"
 fi
 
-# Files where typographic punctuation is intentional.
-# Add glob patterns here to skip specific paths.
+# Directories pruned before find descends into them. Scanning these
+# wastes I/O on files whose typography is not project-authored (git
+# metadata, vendored code, project-scoped context that may legitimately
+# contain AI-generated journal entries). Add directory basenames here;
+# they match at any depth beneath DIR via "*/<name>".
+EXCLUDE_DIRS=(
+  ".context"
+  "specs"
+  ".claude"
+  "ideas"
+  ".git"
+  "node_modules"
+  "vendor"
+)
+
+# Files where typographic punctuation is intentional. These use shell
+# glob (case-statement) matching against the full path as find emits
+# it, so patterns typically need a leading "*/" to match at any depth.
 EXCLUDE_PATTERNS=(
   "*/config/token/delim.go"   # Intentional delimiter constants (EmDash, MetaSeparator)
   "*_test.go"                 # Test files may contain intentional typographic literals
 )
+
+# Build find's -not -path arguments from EXCLUDE_DIRS.
+NOT_PATH_ARGS=()
+for d in "${EXCLUDE_DIRS[@]}"; do
+  NOT_PATH_ARGS+=(-not -path "*/${d}/*")
+done
 
 file_count=0
 hit_count=0
@@ -139,7 +161,7 @@ while IFS= read -r -d '' file; do
       done
     fi
   fi
-done < <(find "$DIR" "${FIND_ARGS[@]}" -print0 | sort -z)
+done < <(find "$DIR" "${FIND_ARGS[@]}" "${NOT_PATH_ARGS[@]}" -print0 | sort -z)
 
 echo ""
 if [[ "$file_count" -eq 0 ]]; then

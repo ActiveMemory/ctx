@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func TestCmd(t *testing.T) {
@@ -64,7 +65,7 @@ func TestRunReindex_NoFile(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	rc.Reset()
+	testctx.Declare(t, tempDir)
 	defer rc.Reset()
 
 	cmd := Cmd()
@@ -82,7 +83,7 @@ func TestRunReindex_WithFile(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	rc.Reset()
+	testctx.Declare(t, tempDir)
 	defer rc.Reset()
 
 	// Create the context directory and LEARNINGS.md file
@@ -124,7 +125,7 @@ func TestRunReindex_EmptyFile(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	rc.Reset()
+	testctx.Declare(t, tempDir)
 	defer rc.Reset()
 
 	// Create the context directory and empty LEARNINGS.md

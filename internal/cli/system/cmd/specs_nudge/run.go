@@ -17,7 +17,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
@@ -38,11 +37,9 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
-		return nil
-	}
-	input, _, paused := coreCheck.Preamble(stdin)
-	if paused {
+	input, _, _, _, ok := coreCheck.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
 		return nil
 	}
 	fallback := desc.Text(text.DescKeySpecsNudgeFallback)
@@ -52,16 +49,18 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	msg = ctxContext.AppendDir(msg)
+	msg, appendErr := ctxContext.AppendDir(msg)
+	if appendErr != nil {
+		return appendErr
+	}
 	writeSetup.Context(cmd, coreSession.FormatContext(hook.EventPreToolUse, msg))
 	nudgeMsg := desc.Text(text.DescKeySpecsNudgeNudgeMessage)
 	ref := notify.NewTemplateRef(hook.SpecsNudge, hook.VariantNudge, nil)
-	nudge.Relay(
+	return nudge.Relay(
 		fmt.Sprintf(
 			desc.Text(text.DescKeyRelayPrefixFormat),
 			hook.SpecsNudge, nudgeMsg,
 		),
 		input.SessionID, ref,
 	)
-	return nil
 }

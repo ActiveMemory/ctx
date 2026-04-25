@@ -7,22 +7,17 @@
 package importer
 
 import (
-	"path/filepath"
-
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/memory/core/resolve"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	cfgFmt "github.com/ActiveMemory/ctx/internal/config/format"
 	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
 	errState "github.com/ActiveMemory/ctx/internal/err/state"
 	"github.com/ActiveMemory/ctx/internal/format"
-	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/memory"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/ctximport"
-	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
 // Run parses MEMORY.md entries, classifies them by heuristic keyword
@@ -36,20 +31,18 @@ import (
 // Returns:
 //   - error: on discovery, read, state, or promotion failure.
 func Run(cmd *cobra.Command, dryRun bool) error {
-	contextDir := rc.ContextDir()
-	projectRoot := filepath.Dir(contextDir)
-
-	sourcePath, discoverErr := memory.DiscoverPath(projectRoot)
-	if discoverErr != nil {
-		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return errMemory.NotFound()
+	contextDir, projectRoot, err := resolve.ContextAndRoot(cmd)
+	if err != nil {
+		return err
 	}
 
-	sourceData, readErr := io.SafeReadFile(
-		filepath.Dir(sourcePath), filepath.Base(sourcePath),
-	)
+	sourcePath, discoverErr := resolve.DiscoverSource(cmd, projectRoot)
+	if discoverErr != nil {
+		return discoverErr
+	}
+	sourceData, readErr := resolve.ReadSource(sourcePath)
 	if readErr != nil {
-		return errMemory.Read(readErr)
+		return readErr
 	}
 
 	entries := memory.Entries(string(sourceData))
