@@ -24,6 +24,12 @@ ctx permission snapshot            # save golden image
 ctx permission restore             # reset to golden state
 ```
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` once per terminal in the project
+    root. If you skip it, `ctx permission ...` fails with
+    `Error: no context directory specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 ## The Solution
 
 Save a curated `settings.local.json` as a **golden image**, then restore

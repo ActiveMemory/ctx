@@ -1119,6 +1119,13 @@ summary of everything that moved since your last session.</p>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check since a specific date</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>change<span class="w"> </span>--since<span class="w"> </span><span class="m">2026</span>-03-10
 </span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> once per terminal in the project
+root. If you skip it, <code>ctx change</code> fails with <code>Error: no
+context directory specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="how-reference-time-works">How Reference Time Works<a class="headerlink" href="#how-reference-time-works" title="Permanent link">&para;</a></h2>
 <p><code>ctx change</code> needs a reference point to compare against. It tries
 these sources in order:</p>

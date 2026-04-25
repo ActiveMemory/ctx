@@ -37,6 +37,12 @@ ctx memory diff          # See what changed since last sync
 The `check-memory-drift` hook nudges automatically when MEMORY.md
 changes - you don't need to remember to sync manually.
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` once per terminal in the project
+    root. If you skip it, `ctx memory ...` fails with `Error: no
+    context directory specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 ## Commands and Skills Used
 
 | Tool                              | Type        | Purpose                                          |

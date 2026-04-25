@@ -54,7 +54,22 @@ This created your `.context/` directory with template files.
 
 For Claude Code, [install the ctx plugin](getting-started.md#installation) to get automatic hooks and skills.
 
-## Step 2: Populate Your Context
+## Step 2: Activate the Project
+
+Tell `ctx` which `.context/` directory the rest of these commands
+should use:
+
+```bash
+eval "$(ctx activate)"
+```
+
+You only need to run this once per terminal. If you skip it, the
+next steps fail with `Error: no context directory specified`. Direnv
+users can wire it into `.envrc` and forget about it. For more
+options (multiple `.context/` directories, scripts, CI), see
+[Activating a Context Directory](../recipes/activating-context.md).
+
+## Step 3: Populate Your Context
 
 Add a **task** and a **decision**: These are the entries your AI will remember:
 
@@ -76,7 +91,7 @@ ctx add decision "Use PostgreSQL for primary database" \
 These entries are what the AI will recall in future sessions. You don't need
 to populate everything now: Context grows **naturally** as you work.
 
-## Step 3: Check Your Context
+## Step 4: Check Your Context
 
 ```bash
 ctx status
@@ -112,7 +127,7 @@ Notice the **token estimate**: This is how much context your AI will load.
 The `○` next to `LEARNINGS.md` means it's still empty;
 it will fill in as you capture lessons during development.
 
-## Step 4: Start an AI Session
+## Step 5: Start an AI Session
 
 With **Claude Code** (*and the `ctx` plugin*), start every session with:
 
@@ -189,7 +204,7 @@ Generated: 2026-02-14T15:30:45Z | Budget: 8000 tokens | Used: ~2450
 
 Paste this output into your AI tool's system prompt or conversation start.
 
-## Step 5: Verify It Works
+## Step 6: Verify It Works
 
 Ask your AI: **"What are our current tasks?"**
 

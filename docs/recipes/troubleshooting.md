@@ -144,9 +144,9 @@ QA reminder events from that specific session.
 with a likely-candidate hint or a candidate list depending on what's
 visible from your CWD*).
 
-**Cause**: `ctx` does not walk the filesystem. It requires the target
-`.context/` directory to be declared explicitly before any non-exempt
-command runs.
+**Cause**: `ctx` does not search the filesystem for a `.context/`
+directory. You have to declare which one to use before running
+day-to-day commands.
 
 **Fix**: bind `CTX_DIR` for the current shell:
 

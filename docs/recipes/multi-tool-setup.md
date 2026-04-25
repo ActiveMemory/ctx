@@ -24,6 +24,7 @@ which AI tool you use.
 ```bash
 cd your-project
 ctx init                      # creates .context/
+eval "$(ctx activate)"        # bind CTX_DIR for this shell
 source <(ctx completion zsh)  # shell completion (or bash/fish)
 
 # ## Claude Code (automatic after plugin install) ##
@@ -37,6 +38,14 @@ ctx setup cursor # or: aider, copilot, windsurf
 npx gitnexus analyze          # code knowledge graph
 # Add Gemini Search MCP server for grounded web search
 ```
+
+!!! warning "Activate the Project Once Per Shell"
+    Run `eval "$(ctx activate)"` after `ctx init`. The `ctx setup`,
+    `ctx init`, and `ctx completion` commands work without it, but
+    if you skip the `eval`, most others (`ctx agent`, `ctx load`,
+    `ctx watch`, `ctx journal ...`) fail with `Error: no context
+    directory specified`. See
+    [Activating a Context Directory](activating-context.md).
 
 Create a [`.ctxrc`](../home/configuration.md) in your project root to configure
 token budgets, context directory, drift thresholds, and more.

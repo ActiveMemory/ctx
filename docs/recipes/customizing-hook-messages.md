@@ -25,6 +25,14 @@ ctx hook message edit qa-reminder gate    # copy default to .context/ for editin
 ctx hook message reset qa-reminder gate   # revert to embedded default
 ```
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` once per terminal in the project
+    root: hook message overrides live in your `.context/`
+    directory, so `ctx` needs to know which one. If you skip the
+    `eval`, `ctx hook message ...` fails with `Error: no context
+    directory specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 ## Commands Used
 
 | Tool                       | Type        | Purpose                                                  |

@@ -2089,6 +2089,13 @@ built-in way to reset to a known-good state.</p>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># ... sessions accumulate cruft ...</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>permission<span class="w"> </span>restore<span class="w">             </span><span class="c1"># reset to golden state</span>
 </span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> once per terminal in the project
+root. If you skip it, <code>ctx permission ...</code> fails with
+<code>Error: no context directory specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="the-solution">The Solution<a class="headerlink" href="#the-solution" title="Permanent link">&para;</a></h2>
 <p>Save a curated <code>settings.local.json</code> as a <strong>golden image</strong>, then restore
 from it to drop session-accumulated permissions. The golden file

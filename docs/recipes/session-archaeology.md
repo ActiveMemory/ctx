@@ -33,6 +33,12 @@ ctx journal import --all
 ctx journal site --serve
 ```
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` once per terminal in the project
+    root. If you skip it, the `ctx journal ...` commands below
+    fail with `Error: no context directory specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 **Enrich**
 
 ```text

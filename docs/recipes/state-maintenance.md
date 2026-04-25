@@ -30,6 +30,12 @@ ctx prune               # prune files older than 7 days
 ctx prune --days 1      # more aggressive: keep only today
 ```
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` once per terminal in the project
+    root. If you skip it, `ctx prune` / `ctx status` fail with
+    `Error: no context directory specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 ## Commands Used
 
 | Tool               | Type    | Purpose                                   |

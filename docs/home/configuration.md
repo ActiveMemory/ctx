@@ -57,11 +57,11 @@ always per-project.
     See [Contributing: Configuration Profiles](contributing.md#configuration-profiles).
 
 !!! tip "Using a Different `.context` Directory"
-    The context directory is declared via the `CTX_DIR` environment variable;
-    not via `.ctxrc`. `ctx` does not walk the filesystem; every non-exempt
-    command requires `CTX_DIR` to be set. Use `eval "$(ctx activate)"` to
-    bind it for your shell. `CTX_DIR` must be an absolute path with
-    `.context` as its basename.
+    You point `ctx` at a `.context/` directory by setting the
+    `CTX_DIR` environment variable, not through `.ctxrc`. `ctx`
+    does not search the filesystem. Use `eval "$(ctx activate)"`
+    to bind `CTX_DIR` for your shell. `CTX_DIR` must be an
+    absolute path with `.context` as its basename.
 
     See [Environment Variables](#environment-variables) below for details.
 

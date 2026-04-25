@@ -112,17 +112,21 @@ Zero commitment. Try it, and delete `.context/` if it's not for you.
 cd your-project
 ctx init
 
-# 2. Add one real decision from your project
+# 2. Activate the project (bind CTX_DIR for this shell).
+#    Required: ctx does not walk the filesystem to find .context/.
+eval "$(ctx activate)"
+
+# 3. Add one real decision from your project
 ctx add decision "Your actual architectural choice" \
   --context "What prompted this decision" \
   --rationale "Why you chose this approach" \
   --consequence "What changes as a result" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
-# 3. Check what the AI will see
+# 4. Check what the AI will see
 ctx status
 
-# 4. Start an AI session and ask: "Do you remember?"
+# 5. Start an AI session and ask: "Do you remember?"
 ```
 
 If the AI cites your decision back to you, it's working.

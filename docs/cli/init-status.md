@@ -63,10 +63,10 @@ it will run.
 ### `ctx activate`
 
 Emit a shell-native `export CTX_DIR=...` line for the target
-`.context/` directory. `ctx` does not walk the filesystem during
-operating commands; every non-exempt command requires `CTX_DIR`
-set before it will run. `activate` is the convenience that figures
-out the path and lets you bind it with one line.
+`.context/` directory. `ctx` does not search the filesystem during
+day-to-day commands: each one needs `CTX_DIR` set before it runs.
+`activate` is the convenience that figures out the path for you so
+you can bind it with one line.
 
 ```bash
 # Walk up from CWD, emit if exactly one candidate visible.

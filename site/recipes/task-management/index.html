@@ -2307,6 +2307,14 @@ grows cluttered with completed checkboxes that obscure the remaining work.</p>
 <code>ctx add task</code>. The agent automatically picks up session ID, branch,
 and commit hash from its context, so no manual flags are needed.</p>
 </div>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> once per terminal in the project
+root. If you skip it, the <code>ctx add task</code> / <code>ctx task ...</code>
+commands below fail with <code>Error: no context directory
+specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <p><strong>Manage Tasks</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Fix race condition&quot;</span><span class="w"> </span>--priority<span class="w"> </span>high<span class="w"> </span><span class="se">\</span>

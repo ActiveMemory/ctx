@@ -1920,10 +1920,14 @@ your development environment after a major upgrade.</p>
 <p>Or fork first on GitHub, then clone your fork.</p>
 <h2 id="step-2-initialize-context">Step 2: Initialize Context<a class="headerlink" href="#step-2-initialize-context" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>init
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
 </span></code></pre></div>
-<p>This creates the <code>.context/</code> directory with knowledge files and
-the <code>.claude/</code> directory with agent configuration. If <code>ctx</code> is
-not yet installed, proceed to Step 3 first, then come back.</p>
+<p><code>ctx init</code> creates the <code>.context/</code> directory with knowledge files
+and the <code>.claude/</code> directory with agent configuration.
+<code>eval "$(ctx activate)"</code> tells <code>ctx</code> to use that directory for the
+rest of this runbook. If you skip the second line, the later steps
+fail with <code>Error: no context directory specified</code>.</p>
+<p>If <code>ctx</code> is not yet installed, proceed to Step 3 first, then come back.</p>
 <h2 id="step-3-build-and-install">Step 3: Build and Install<a class="headerlink" href="#step-3-build-and-install" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>make<span class="w"> </span>build
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>make<span class="w"> </span>install

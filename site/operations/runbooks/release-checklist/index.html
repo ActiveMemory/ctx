@@ -2081,11 +2081,16 @@ as part of the release.</p>
 </span></code></pre></div>
 <p>All tests must pass. No exceptions.</p>
 <h3 id="5-check-context-health">5. Check Context Health<a class="headerlink" href="#5-check-context-health" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>drift<span class="w">          </span><span class="c1"># broken references, stale patterns</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>status<span class="w">         </span><span class="c1"># context file health</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>/ctx-link-check<span class="w">    </span><span class="c1"># dead links in docs</span>
+<p>Activate the project so the next commands know which <code>.context/</code>
+to read:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>drift<span class="w">          </span><span class="c1"># broken references, stale patterns</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ctx<span class="w"> </span>status<span class="w">         </span><span class="c1"># context file health</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>/ctx-link-check<span class="w">    </span><span class="c1"># dead links in docs</span>
 </span></code></pre></div>
-<p>Fix anything flagged.</p>
+<p>Fix anything flagged. If you see <code>Error: no context directory
+specified</code>, you skipped the <code>eval</code> line above. See
+<a href="../../../recipes/activating-context/">Activating a Context Directory</a>.</p>
 <h3 id="6-review-tasksmd">6. Review TASKS.md<a class="headerlink" href="#6-review-tasksmd" title="Permanent link">&para;</a></h3>
 <p>Scan for incomplete tasks tagged as release-blocking. Either
 finish them or explicitly defer with a reason in the task note.</p>

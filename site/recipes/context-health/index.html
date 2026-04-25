@@ -2304,6 +2304,13 @@ directory lean and accurate.</p>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># verify</span>
 </span></code></pre></div>
 <p>Or just ask your agent: <em>"Is our context clean?"</em></p>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> once per terminal in the project
+root. If you skip it, every command above fails with
+<code>Error: no context directory specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

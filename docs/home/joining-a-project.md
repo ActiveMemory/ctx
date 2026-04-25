@@ -35,6 +35,21 @@ top-down:
 See [Context Files](context-files.md) for detailed documentation of
 each file's structure and purpose.
 
+## Activate the Project
+
+Tell `ctx` which `.context/` directory to read from:
+
+```bash
+eval "$(ctx activate)"
+```
+
+You only need to run this once per terminal. If you skip it, the
+commands in the rest of this guide fail with
+`Error: no context directory specified`. Direnv users can wire it
+into `.envrc` and forget about it. See
+[Activating a Context Directory](../recipes/activating-context.md)
+for more options (multiple `.context/` directories, scripts, CI).
+
 ## Checking Context Health
 
 Before you start working, check whether the context is current:

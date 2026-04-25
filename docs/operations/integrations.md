@@ -16,16 +16,32 @@ icon: lucide/plug
 Context works with any AI tool that can read files. This guide covers setup 
 for popular AI coding assistants.
 
+!!! warning "Activate the Project Before Running `ctx` Commands"
+    After `ctx init`, run:
+
+    ```bash
+    eval "$(ctx activate)"
+    ```
+
+    This tells `ctx` which `.context/` directory the rest of the
+    commands on this page should use. If you skip it, you'll see
+    `Error: no context directory specified`. The `ctx setup <tool>`
+    commands work without activation, but most others (`ctx agent`,
+    `ctx add`, `ctx status`, `ctx watch`) need it. See
+    [Activating a Context Directory](../recipes/activating-context.md).
+
 ## Claude Code (Full Integration)
 
 Claude Code has the deepest integration via the **ctx plugin**.
 
 ### Setup
 
-First, install `ctx` and initialize your project:
+First, install `ctx` and initialize your project, then activate it
+for the current shell:
 
 ```bash
 ctx init
+eval "$(ctx activate)"
 ```
 
 Then, install the `ctx` plugin in Claude Code:

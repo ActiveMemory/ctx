@@ -2075,6 +2075,13 @@ sessions from all team members regardless of language.</p>
 <h3 id="verifying">Verifying<a class="headerlink" href="#verifying" title="Permanent link">&para;</a></h3>
 <p>After configuring, test with <code>ctx journal source</code>. Sessions with the new
 prefixes should appear in the output.</p>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> from the project root. If you skip
+it, <code>ctx journal ...</code> fails with <code>Error: no context directory
+specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="what-this-does-not-do">What This Does NOT Do<a class="headerlink" href="#what-this-does-not-do" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Change the interface language</strong>: <code>ctx</code> output is always English.

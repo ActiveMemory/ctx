@@ -2117,11 +2117,11 @@ See <a href="../contributing/#configuration-profiles">Contributing: Configuratio
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Using a Different <code>.context</code> Directory</p>
-<p>The context directory is declared via the <code>CTX_DIR</code> environment variable;
-not via <code>.ctxrc</code>. <code>ctx</code> does not walk the filesystem; every non-exempt
-command requires <code>CTX_DIR</code> to be set. Use <code>eval "$(ctx activate)"</code> to
-bind it for your shell. <code>CTX_DIR</code> must be an absolute path with
-<code>.context</code> as its basename.</p>
+<p>You point <code>ctx</code> at a <code>.context/</code> directory by setting the
+<code>CTX_DIR</code> environment variable, not through <code>.ctxrc</code>. <code>ctx</code>
+does not search the filesystem. Use <code>eval "$(ctx activate)"</code>
+to bind <code>CTX_DIR</code> for your shell. <code>CTX_DIR</code> must be an
+absolute path with <code>.context</code> as its basename.</p>
 <p>See <a href="#environment-variables">Environment Variables</a> below for details.</p>
 </div>
 <!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/^# \.ctxrc:/,/^```$/p' docs/home/configuration.md | grep -oP '^# ([a-z_]+):' | sed 's/^# //;s/://' | sort -u) -->

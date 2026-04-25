@@ -2046,15 +2046,22 @@ a daemon, that output goes to the log instead:</p>
 <p>Copy the token over a trusted channel (SSH, password manager, or
 an encrypted note). <strong>Do not email it or put it in chat.</strong></p>
 <h2 id="step-4-register-projects-from-each-workstation">Step 4: Register Projects from Each Workstation<a class="headerlink" href="#step-4-register-projects-from-each-workstation" title="Permanent link">&para;</a></h2>
+<p>The <code>ctx hub *</code> commands above run on the LAN host (<code>nexus</code>) and
+don't need a project. Step 4 is different: each workstation
+registers from inside a project (the encrypted hub config and the
+fan-out inbox both live under <code>.context/</code>), so you have to tell
+<code>ctx</code> which project first.</p>
 <p>On workstation <code>A</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/x
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>nexus.local:9900<span class="w"> </span>--token<span class="w"> </span>ctx_adm_...
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ctx<span class="w"> </span>connection<span class="w"> </span>subscribe<span class="w"> </span>decision<span class="w"> </span>learning<span class="w"> </span>convention
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>nexus.local:9900<span class="w"> </span>--token<span class="w"> </span>ctx_adm_...
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>ctx<span class="w"> </span>connection<span class="w"> </span>subscribe<span class="w"> </span>decision<span class="w"> </span>learning<span class="w"> </span>convention
 </span></code></pre></div>
 <p>On workstation <code>B</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/y
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>nexus.local:9900<span class="w"> </span>--token<span class="w"> </span>ctx_adm_...
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ctx<span class="w"> </span>connection<span class="w"> </span>subscribe<span class="w"> </span>decision<span class="w"> </span>learning<span class="w"> </span>convention
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>nexus.local:9900<span class="w"> </span>--token<span class="w"> </span>ctx_adm_...
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ctx<span class="w"> </span>connection<span class="w"> </span>subscribe<span class="w"> </span>decision<span class="w"> </span>learning<span class="w"> </span>convention
 </span></code></pre></div>
 <p>Each registration exchanges the admin token for a <strong>per-project
 client token</strong>. Only the client token is persisted in
