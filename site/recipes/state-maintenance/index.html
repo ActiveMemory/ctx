@@ -1151,6 +1151,13 @@ sessions entirely.</p>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>prune<span class="w">               </span><span class="c1"># prune files older than 7 days</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>prune<span class="w"> </span>--days<span class="w"> </span><span class="m">1</span><span class="w">      </span><span class="c1"># more aggressive: keep only today</span>
 </span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> once per terminal in the project
+root. If you skip it, <code>ctx prune</code> / <code>ctx status</code> fail with
+<code>Error: no context directory specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="commands-used">Commands Used<a class="headerlink" href="#commands-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

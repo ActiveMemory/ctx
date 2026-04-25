@@ -106,7 +106,11 @@ Manually add back any custom entries that the new init dropped.
 
 ### 5. Verify
 
+Activate the project first, otherwise `ctx status` and `ctx drift`
+will fail with `Error: no context directory specified`:
+
 ```bash
+eval "$(ctx activate)"
 ctx status          # context files intact
 ctx drift           # no broken references
 ```

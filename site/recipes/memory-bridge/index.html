@@ -2249,6 +2249,13 @@ token-budgeted - but Claude Code doesn't automatically write to them.</p>
 </span></code></pre></div>
 <p>The <code>check-memory-drift</code> hook nudges automatically when MEMORY.md
 changes - you don't need to remember to sync manually.</p>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> once per terminal in the project
+root. If you skip it, <code>ctx memory ...</code> fails with <code>Error: no
+context directory specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

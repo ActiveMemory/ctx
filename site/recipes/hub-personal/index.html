@@ -2047,6 +2047,17 @@ surface when you open project B next Thursday.</p>
 (see <a href="../hub-getting-started/">Getting Started</a> for the
 roughly five-minute setup). This recipe assumes the hub is already
 running and you've registered at least two projects.</p>
+<div class="admonition warning">
+<p class="admonition-title">Activate Each Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> after each <code>cd &lt;project&gt;</code> (or wire
+it into direnv). The hub server (<code>ctx hub start</code>, etc.) runs on
+the server and doesn't need this; the commands in this recipe
+(<code>ctx add --share</code>, <code>ctx agent --include-hub</code>,
+<code>ctx connection ...</code>) live inside a project and do. If you
+skip the <code>eval</code>, they'll fail with <code>Error: no context directory
+specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="the-core-loop">The Core Loop<a class="headerlink" href="#the-core-loop" title="Permanent link">&para;</a></h2>
 <p>Every day, the same three verbs matter:</p>
 <ol>

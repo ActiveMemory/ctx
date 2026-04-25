@@ -25,6 +25,16 @@ surface when you open project B next Thursday.
 roughly five-minute setup). This recipe assumes the hub is already
 running and you've registered at least two projects.
 
+!!! warning "Activate Each Project First"
+    Run `eval "$(ctx activate)"` after each `cd <project>` (or wire
+    it into direnv). The hub server (`ctx hub start`, etc.) runs on
+    the server and doesn't need this; the commands in this recipe
+    (`ctx add --share`, `ctx agent --include-hub`,
+    `ctx connection ...`) live inside a project and do. If you
+    skip the `eval`, they'll fail with `Error: no context directory
+    specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 ## The Core Loop
 
 Every day, the same three verbs matter:

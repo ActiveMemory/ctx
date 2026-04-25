@@ -952,10 +952,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-check-status" class="md-nav__link">
+  <a href="#2-activate-the-project" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Check Status
+        2. Activate the Project
       
     </span>
   </a>
@@ -963,10 +963,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-start-using-with-ai" class="md-nav__link">
+  <a href="#3-check-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Start Using with AI
+        3. Check Status
       
     </span>
   </a>
@@ -974,10 +974,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3b-set-up-for-your-ai-tool" class="md-nav__link">
+  <a href="#4-start-using-with-ai" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3B. Set Up for Your AI Tool
+        4. Start Using with AI
       
     </span>
   </a>
@@ -985,10 +985,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-verify-it-works" class="md-nav__link">
+  <a href="#4b-set-up-for-your-ai-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Verify It Works
+        4B. Set Up for Your AI Tool
       
     </span>
   </a>
@@ -996,10 +996,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-set-up-companion-tools-highly-recommended" class="md-nav__link">
+  <a href="#5-verify-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Set Up Companion Tools (Highly Recommended)
+        5. Verify It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-set-up-companion-tools-highly-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Set Up Companion Tools (Highly Recommended)
       
     </span>
   </a>
@@ -1744,10 +1755,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-check-status" class="md-nav__link">
+  <a href="#2-activate-the-project" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Check Status
+        2. Activate the Project
       
     </span>
   </a>
@@ -1755,10 +1766,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-start-using-with-ai" class="md-nav__link">
+  <a href="#3-check-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Start Using with AI
+        3. Check Status
       
     </span>
   </a>
@@ -1766,10 +1777,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3b-set-up-for-your-ai-tool" class="md-nav__link">
+  <a href="#4-start-using-with-ai" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3B. Set Up for Your AI Tool
+        4. Start Using with AI
       
     </span>
   </a>
@@ -1777,10 +1788,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-verify-it-works" class="md-nav__link">
+  <a href="#4b-set-up-for-your-ai-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Verify It Works
+        4B. Set Up for Your AI Tool
       
     </span>
   </a>
@@ -1788,10 +1799,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-set-up-companion-tools-highly-recommended" class="md-nav__link">
+  <a href="#5-verify-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Set Up Companion Tools (Highly Recommended)
+        5. Verify It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-set-up-companion-tools-highly-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Set Up Companion Tools (Highly Recommended)
       
     </span>
   </a>
@@ -2082,11 +2104,21 @@ files are left alone. To opt out entirely, use
 <p>See <a href="../../recipes/steering/">Writing Steering Files</a> for the
 full walkthrough, or <a href="../../cli/steering/"><code>ctx steering</code></a> for
 the command reference.</p>
-<h3 id="2-check-status">2. Check Status<a class="headerlink" href="#2-check-status" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>status
+<h3 id="2-activate-the-project">2. Activate the Project<a class="headerlink" href="#2-activate-the-project" title="Permanent link">&para;</a></h3>
+<p>Tell <code>ctx</code> which <code>.context/</code> directory the rest of these commands
+should use:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p>You only need to run this once per terminal. If you skip it, the
+next steps fail with <code>Error: no context directory specified</code>. Direnv
+users can wire it into <code>.envrc</code> and forget about it. For more
+options (multiple <code>.context/</code> directories, scripts, CI), see
+<a href="../../recipes/activating-context/">Activating a Context Directory</a>.</p>
+<h3 id="3-check-status">3. Check Status<a class="headerlink" href="#3-check-status" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>status
 </span></code></pre></div>
 <p>Shows context summary: files present, token estimate, and recent activity.</p>
-<h3 id="3-start-using-with-ai">3. Start Using with AI<a class="headerlink" href="#3-start-using-with-ai" title="Permanent link">&para;</a></h3>
+<h3 id="4-start-using-with-ai">4. Start Using with AI<a class="headerlink" href="#4-start-using-with-ai" title="Permanent link">&para;</a></h3>
 <p>With Claude Code (<em>and the <code>ctx</code> plugin installed</em>), context loads automatically
 via hooks.</p>
 <p>With <strong>VS Code Copilot Chat</strong>, install the
@@ -2095,26 +2127,26 @@ via hooks.</p>
 Run <code>ctx setup copilot --write</code> to generate <code>.github/copilot-instructions.md</code>
 for automatic context loading.</p>
 <p>For other tools, paste the output of:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
 </span></code></pre></div>
-<h3 id="3b-set-up-for-your-ai-tool">3B. Set Up for Your AI Tool<a class="headerlink" href="#3b-set-up-for-your-ai-tool" title="Permanent link">&para;</a></h3>
+<h3 id="4b-set-up-for-your-ai-tool">4B. Set Up for Your AI Tool<a class="headerlink" href="#4b-set-up-for-your-ai-tool" title="Permanent link">&para;</a></h3>
 <p>If you use an MCP-compatible tool, generate the integration config
 with <code>ctx setup</code>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kiro</label><label for="__tabbed_2_2">Cursor</label><label for="__tabbed_2_3">Cline</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>kiro<span class="w"> </span>--write
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Creates .kiro/settings/mcp.json and syncs steering files</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>kiro<span class="w"> </span>--write
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Creates .kiro/settings/mcp.json and syncs steering files</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cursor<span class="w"> </span>--write
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Creates .cursor/mcp.json and syncs steering files</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cursor<span class="w"> </span>--write
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Creates .cursor/mcp.json and syncs steering files</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cline<span class="w"> </span>--write
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Creates .vscode/mcp.json and syncs steering files</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cline<span class="w"> </span>--write
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Creates .vscode/mcp.json and syncs steering files</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -2122,11 +2154,11 @@ with <code>ctx setup</code>:</p>
 <p>This registers the ctx MCP server and syncs any
 <a href="../../cli/steering/">steering files</a> into the tool's
 native format. Re-run after adding or changing steering files.</p>
-<h3 id="4-verify-it-works">4. Verify It Works<a class="headerlink" href="#4-verify-it-works" title="Permanent link">&para;</a></h3>
+<h3 id="5-verify-it-works">5. Verify It Works<a class="headerlink" href="#5-verify-it-works" title="Permanent link">&para;</a></h3>
 <p>Ask your AI: <strong>"Do you remember?"</strong></p>
 <p>It should cite specific context: current tasks, recent decisions,
 or previous session topics.</p>
-<h3 id="5-set-up-companion-tools-highly-recommended">5. Set Up Companion Tools (Highly Recommended)<a class="headerlink" href="#5-set-up-companion-tools-highly-recommended" title="Permanent link">&para;</a></h3>
+<h3 id="6-set-up-companion-tools-highly-recommended">6. Set Up Companion Tools (Highly Recommended)<a class="headerlink" href="#6-set-up-companion-tools-highly-recommended" title="Permanent link">&para;</a></h3>
 <p>ctx works on its own, but two companion MCP servers unlock significantly
 better agent behavior. The investment is small and the benefits compound
 over sessions:</p>
@@ -2146,8 +2178,8 @@ over sessions:</p>
   use it for impact analysis and dependency awareness.</p>
 </li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Index your project for GitNexus (run once, then after major changes)</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Index your project for GitNexus (run once, then after major changes)</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze
 </span></code></pre></div>
 <p>Both are optional MCP servers: if they are not connected, skills degrade
 gracefully to built-in capabilities. See

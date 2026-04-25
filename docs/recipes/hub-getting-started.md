@@ -78,8 +78,14 @@ can recover it later. Treat it like a password.
 
 ## Step 2: Register the First Project
 
+`ctx hub start` above runs on the hub server and doesn't need a
+project. Step 2 is different: the encrypted hub config is stored
+inside a project at `.context/.connect.enc`, so you have to tell
+`ctx` which project first.
+
 ```bash
 cd ~/projects/alpha
+eval "$(ctx activate)"
 ctx connection register localhost:9900 --token ctx_adm_7f3a1c2d...
 ```
 
@@ -118,6 +124,7 @@ ctx connection publish decision "Use UTC timestamps everywhere"
 
 ```bash
 cd ~/projects/beta
+eval "$(ctx activate)"   # bind CTX_DIR for this project
 ctx connection register localhost:9900 --token ctx_adm_7f3a1c2d...
 ctx connection subscribe decision learning convention
 ctx connection sync

@@ -38,6 +38,12 @@ ctx status                     # verify
 
 Or just ask your agent: *"Is our context clean?"*
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` once per terminal in the project
+    root. If you skip it, every command above fails with
+    `Error: no context directory specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 ## Commands and Skills Used
 
 | Tool                | Type    | Purpose                                          |

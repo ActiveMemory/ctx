@@ -1085,6 +1085,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#activate-the-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Activate the Project
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#checking-context-health" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1611,6 +1622,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#activate-the-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Activate the Project
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#checking-context-health" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1773,13 +1795,23 @@ top-down:</p>
 </ol>
 <p>See <a href="../context-files/">Context Files</a> for detailed documentation of
 each file's structure and purpose.</p>
+<h2 id="activate-the-project">Activate the Project<a class="headerlink" href="#activate-the-project" title="Permanent link">&para;</a></h2>
+<p>Tell <code>ctx</code> which <code>.context/</code> directory to read from:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p>You only need to run this once per terminal. If you skip it, the
+commands in the rest of this guide fail with
+<code>Error: no context directory specified</code>. Direnv users can wire it
+into <code>.envrc</code> and forget about it. See
+<a href="../../recipes/activating-context/">Activating a Context Directory</a>
+for more options (multiple <code>.context/</code> directories, scripts, CI).</p>
 <h2 id="checking-context-health">Checking Context Health<a class="headerlink" href="#checking-context-health" title="Permanent link">&para;</a></h2>
 <p>Before you start working, check whether the context is current:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>status
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>status
 </span></code></pre></div>
 <p>This shows file counts, token estimates, and recent activity. If files
 haven't been touched in weeks, the context may be stale.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>drift
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>drift
 </span></code></pre></div>
 <p>This compares context files against recent code changes and flags
 potential drift: decisions that no longer match the codebase,
@@ -1788,7 +1820,7 @@ conventions that have shifted, or tasks that look outdated.</p>
 yourself on day one.</p>
 <h2 id="starting-your-first-session">Starting Your First Session<a class="headerlink" href="#starting-your-first-session" title="Permanent link">&para;</a></h2>
 <p>Generate a context packet to prime your AI:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
 </span></code></pre></div>
 <p>This outputs a token-budgeted summary of the project context, ordered
 by priority. With Claude Code and the ctx plugin, context loads
@@ -1798,19 +1830,19 @@ to get a structured readback of what the AI knows.</p>
 tasks and decisions, the context is working.</p>
 <h2 id="adding-context">Adding Context<a class="headerlink" href="#adding-context" title="Permanent link">&para;</a></h2>
 <p>As you work, you'll discover things worth recording. Use the CLI:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Record a decision you made or learned about</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use connection pooling for DB access&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;Reduces connection overhead under load&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Capture a gotcha you hit</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Redis timeout defaults to 5s&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Hit timeouts during bulk operations&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Set explicit timeout for batch jobs&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Add a convention you noticed the team follows</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>ctx<span class="w"> </span>add<span class="w"> </span>convention<span class="w"> </span><span class="s2">&quot;All API handlers return structured errors&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Record a decision you made or learned about</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use connection pooling for DB access&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;Reduces connection overhead under load&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Capture a gotcha you hit</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Redis timeout defaults to 5s&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Hit timeouts during bulk operations&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Set explicit timeout for batch jobs&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Add a convention you noticed the team follows</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ctx<span class="w"> </span>add<span class="w"> </span>convention<span class="w"> </span><span class="s2">&quot;All API handlers return structured errors&quot;</span>
 </span></code></pre></div>
 <p>You can also just tell the AI: "Record this as a learning" or
 "Add this decision to context." With the ctx plugin, context-update

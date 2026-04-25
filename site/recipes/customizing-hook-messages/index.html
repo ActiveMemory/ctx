@@ -2108,6 +2108,15 @@ just to change the <em>words</em>.</p>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># copy default to .context/ for editing</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>reset<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">   </span><span class="c1"># revert to embedded default</span>
 </span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> once per terminal in the project
+root: hook message overrides live in your <code>.context/</code>
+directory, so <code>ctx</code> needs to know which one. If you skip the
+<code>eval</code>, <code>ctx hook message ...</code> fails with <code>Error: no context
+directory specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="commands-used">Commands Used<a class="headerlink" href="#commands-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

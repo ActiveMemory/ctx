@@ -32,6 +32,12 @@ ctx journal site --serve            # 3. build and serve the journal
 /ctx-blog-changelog v0.1.0 "v0.2"   # 5. write a changelog post
 ```
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` once per terminal in the project
+    root. If you skip it, `ctx journal ...` fails with `Error: no
+    context directory specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 Read on for details on each stage.
 
 ## Commands and Skills Used

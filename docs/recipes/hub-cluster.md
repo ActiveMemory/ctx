@@ -108,9 +108,17 @@ uptime:     3h42m
 
 ## Step 4: Register Clients with Failover Peers
 
+The `ctx hub *` commands above run on the hub nodes themselves and
+don't need a project. The `ctx connection *` commands below are
+different: they live inside a project (the encrypted hub config is
+stored at `.context/.connect.enc`), so you have to tell `ctx` which
+project first.
+
 When registering a client, give it the **full peer list**:
 
 ```bash
+# In the project directory on the client:
+eval "$(ctx activate)"
 ctx connection register hub-a.lan:9900 \
   --token ctx_adm_... \
   --peers hub-b.lan:9900,hub-c.lan:9900

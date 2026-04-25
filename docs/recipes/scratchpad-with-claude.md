@@ -29,6 +29,12 @@ Entries are **encrypted at rest** and travel with `git`.
 
 Use the `/ctx-pad` skill to manage entries from inside your AI session.
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` once per terminal in the project
+    root. If you skip it, `ctx pad ...` fails with
+    `Error: no context directory specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 ## Commands and Skills Used
 
 | Tool                   | Type        | Purpose                                        |

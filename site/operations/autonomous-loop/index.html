@@ -2308,9 +2308,15 @@ independence matters, use the shell while loop instead.</p>
 <p>The watch command processes context updates from the loop output in
 real time.</p>
 <h2 id="project-setup">Project Setup<a class="headerlink" href="#project-setup" title="Permanent link">&para;</a></h2>
-<p>Initialize a project for autonomous loop operation:</p>
+<p>Initialize a project for autonomous loop operation, then activate it
+so the loop's <code>ctx</code> commands know which <code>.context/</code> to use:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>init
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
 </span></code></pre></div>
+<p>For unattended overnight runs, put the binding directly at the top
+of your loop script (<code>export CTX_DIR=/abs/path/.context</code>) so it
+survives without depending on a live shell. See
+<a href="../../recipes/activating-context/">Activating a Context Directory</a>.</p>
 <p>The loop prompt template is deployed to <code>.context/loop.md</code> during
 initialization. It instructs the agent to:</p>
 <ul>

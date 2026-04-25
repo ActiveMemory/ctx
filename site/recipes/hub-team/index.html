@@ -1998,6 +1998,14 @@ without ceremony.</p>
 <li>Each team member has <code>ctx</code> installed and has
   <code>ctx connection register</code>-ed their working projects with
   the hub.</li>
+<li>Each project on each workstation has been activated for
+  the shell with <code>eval "$(ctx activate)"</code>. The hub server
+  (<code>ctx hub start</code>, etc.) doesn't need this — but the
+  client side (<code>ctx connection ...</code>, <code>ctx add --share</code>)
+  lives in a project and does. If you skip activation,
+  those client commands fail with <code>Error: no context
+  directory specified</code>. See
+  <a href="../activating-context/">Activating a Context Directory</a>.</li>
 </ul>
 <h2 id="trust-model-read-this-first">Trust Model: Read This First<a class="headerlink" href="#trust-model-read-this-first" title="Permanent link">&para;</a></h2>
 <p>The hub assumes <strong>everyone holding a client token is

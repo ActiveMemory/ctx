@@ -2081,6 +2081,13 @@ scratchpad entries don't announce themselves.</p>
 </span></code></pre></div>
 <p>Reminders surface automatically at session start: VERBATIM, every
 session, until you dismiss them.</p>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> once per terminal in the project
+root. If you skip it, <code>ctx remind ...</code> fails with
+<code>Error: no context directory specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -2221,6 +2221,14 @@ rejected.</p>
 <code>ctx add</code> commands. The agent automatically picks up session ID,
 branch, and commit hash from its context, so no manual flags are needed.</p>
 </div>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project First</p>
+<p>Run <code>eval "$(ctx activate)"</code> once per terminal in the project
+root. If you skip it, the <code>ctx add ...</code> / <code>ctx reindex</code> /
+<code>ctx decision ...</code> / <code>ctx learning ...</code> commands below fail
+with <code>Error: no context directory specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-reflect               # surface items worth persisting
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-decision-add &quot;Title&quot;  # record with context/rationale/consequence

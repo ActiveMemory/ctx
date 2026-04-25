@@ -228,7 +228,22 @@ See [Writing Steering Files](../recipes/steering.md) for the
 full walkthrough, or [`ctx steering`](../cli/steering.md) for
 the command reference.
 
-### 2. Check Status
+### 2. Activate the Project
+
+Tell `ctx` which `.context/` directory the rest of these commands
+should use:
+
+```bash
+eval "$(ctx activate)"
+```
+
+You only need to run this once per terminal. If you skip it, the
+next steps fail with `Error: no context directory specified`. Direnv
+users can wire it into `.envrc` and forget about it. For more
+options (multiple `.context/` directories, scripts, CI), see
+[Activating a Context Directory](../recipes/activating-context.md).
+
+### 3. Check Status
 
 ```bash
 ctx status
@@ -236,7 +251,7 @@ ctx status
 
 Shows context summary: files present, token estimate, and recent activity.
 
-### 3. Start Using with AI
+### 4. Start Using with AI
 
 With Claude Code (*and the `ctx` plugin installed*), context loads automatically
 via hooks.
@@ -253,7 +268,7 @@ For other tools, paste the output of:
 ctx agent --budget 8000
 ```
 
-### 3B. Set Up for Your AI Tool
+### 4B. Set Up for Your AI Tool
 
 If you use an MCP-compatible tool, generate the integration config
 with `ctx setup`:
@@ -283,14 +298,14 @@ This registers the ctx MCP server and syncs any
 [steering files](../cli/steering.md) into the tool's
 native format. Re-run after adding or changing steering files.
 
-### 4. Verify It Works
+### 5. Verify It Works
 
 Ask your AI: **"Do you remember?"**
 
 It should cite specific context: current tasks, recent decisions,
 or previous session topics.
 
-### 5. Set Up Companion Tools (Highly Recommended)
+### 6. Set Up Companion Tools (Highly Recommended)
 
 ctx works on its own, but two companion MCP servers unlock significantly
 better agent behavior. The investment is small and the benefits compound

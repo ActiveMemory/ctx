@@ -24,6 +24,13 @@ rejected.
     `ctx add` commands. The agent automatically picks up session ID,
     branch, and commit hash from its context, so no manual flags are needed.
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` once per terminal in the project
+    root. If you skip it, the `ctx add ...` / `ctx reindex` /
+    `ctx decision ...` / `ctx learning ...` commands below fail
+    with `Error: no context directory specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 ## TL;DR
 
 ```text

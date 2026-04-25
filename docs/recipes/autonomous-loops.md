@@ -25,13 +25,23 @@ context persistence as a **first-class deliverable**, not an *afterthought*.
 
 ```bash
 ctx init                                    # 1. init context
+eval "$(ctx activate)"                      # 2. bind CTX_DIR for this shell
 # Edit TASKS.md with phased work items
-ctx loop --tool claude --max-iterations 10  # 2. generate loop.sh
-./loop.sh 2>&1 | tee /tmp/loop.log &        # 3. run the loop
-ctx watch --log /tmp/loop.log               # 4. process context updates
+ctx loop --tool claude --max-iterations 10  # 3. generate loop.sh
+./loop.sh 2>&1 | tee /tmp/loop.log &        # 4. run the loop
+ctx watch --log /tmp/loop.log               # 5. process context updates
 # Next morning:
-ctx status && ctx load                      # 5. review the results
+ctx status && ctx load                      # 6. review the results
 ```
+
+!!! warning "Activate, or Set CTX_DIR Inline for Unattended Runs"
+    `eval "$(ctx activate)"` is fine for an interactive terminal.
+    For an overnight unattended loop, put the binding at the top
+    of `loop.sh` instead (`export CTX_DIR=/abs/path/.context`) so
+    the loop doesn't depend on a live shell. If you skip both,
+    `ctx loop`, `ctx watch`, `ctx status`, and `ctx load` fail
+    with `Error: no context directory specified`. See
+    [Activating a Context Directory](activating-context.md).
 
 Read on for permissions, isolation, and completion signals.
 

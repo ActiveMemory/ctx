@@ -1668,27 +1668,28 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Context declaration required.</strong> ctx does not walk the filesystem
-looking for <code>.context/</code>. Every non-exempt command requires <code>CTX_DIR</code>
-to be declared explicitly before it runs. The single declaration
-channel is the environment variable:</p>
+<p><strong>Tell ctx which <code>.context/</code> to use.</strong> ctx does not search the
+filesystem for <code>.context/</code>: you have to declare it. Three ways:</p>
 <ul>
-<li><code>eval "$(ctx activate)"</code>: binds <code>CTX_DIR</code> for the current shell.</li>
-<li><code>CTX_DIR=/abs/path/to/.context</code> exported in the environment, or
-  inlined as <code>CTX_DIR=/abs/path/to/.context ctx &lt;command&gt;</code> for a
-  one-shot.</li>
+<li><code>eval "$(ctx activate)"</code> (recommended): binds <code>CTX_DIR</code> for the
+  current shell.</li>
+<li><code>export CTX_DIR=/abs/path/to/.context</code> directly, then run any
+  <code>ctx</code> command.</li>
+<li><code>CTX_DIR=/abs/path/to/.context ctx &lt;command&gt;</code> inline, for a
+  one-shot or CI step.</li>
 </ul>
 <p><code>CTX_DIR</code> must be an absolute path with <code>.context</code> as its basename.
 Relative paths and other names are rejected on first use; the
 basename guard catches the common footgun
 (<code>export CTX_DIR=$(pwd)</code>) before stray writes can leak to the
 project root.</p>
-<p>Commands fail fast with a linkable error
-(see <a href="../recipes/activating-context/">Activating a Context Directory</a>)
-when none is declared. The exempt allowlist (commands that run without
-a declared context directory) is: <code>ctx init</code>, <code>ctx activate</code>,
-<code>ctx deactivate</code>, <code>ctx version</code>, <code>ctx help</code>, <code>ctx system bootstrap</code>,
-<code>ctx doctor</code>, <code>ctx guide</code>, <code>ctx why</code>, <code>ctx config switch/status</code>,
+<p>If you forget, commands fail fast with a linkable
+<code>Error: no context directory specified</code> pointing at
+<a href="../recipes/activating-context/">Activating a Context Directory</a>.
+A handful of commands run without a declaration because they don't
+need a project: <code>ctx init</code>, <code>ctx activate</code>, <code>ctx deactivate</code>,
+<code>ctx version</code>, <code>ctx help</code>, <code>ctx system bootstrap</code>, <code>ctx doctor</code>,
+<code>ctx guide</code>, <code>ctx why</code>, <code>ctx config switch/status</code>, and
 <code>ctx hub *</code>.</p>
 <p><strong>Initialization required.</strong> Once declared, the target must already
 have been initialized by <code>ctx init</code> (otherwise commands return

@@ -77,10 +77,17 @@ This returns a client token. Distribute it securely to the client.
 
 ## Step 4: Connect Clients
 
-On each client machine:
+On each client machine, register the project with the hub. The
+`ctx hub *` commands above run on the hub server itself and don't
+need a project. The `ctx connection *` commands below are different:
+they live inside a project (the encrypted hub config is stored at
+`.context/.connect.enc`), so you have to tell `ctx` which project
+first.
 
 ```bash
-ctx connect <hub-address> --token <client-token>
+# In the project directory on the client machine:
+eval "$(ctx activate)"
+ctx connection register <hub-address> --token <client-token>
 ```
 
 Verify the connection:
@@ -89,15 +96,22 @@ Verify the connection:
 ctx connection status
 ```
 
+If the client doesn't have a project yet, run `ctx init` first, then
+`eval "$(ctx activate)"`. See
+[Activating a Context Directory](../../recipes/activating-context.md).
+
 ## Step 5: Verify Sync
 
-Push a test entry from one client and verify it arrives:
+Push a test entry from one client and verify it arrives. Make sure
+each client already ran `eval "$(ctx activate)"` from Step 4:
+otherwise `ctx add` and `ctx status` fail with
+`Error: no context directory specified`.
 
 ```bash
-# Client A
+# Client A (in its project directory, after activating):
 ctx add learning "Hub sync test" --context "Verifying hub setup"
 
-# Client B (after a moment)
+# Client B (in its project directory, after activating):
 ctx status   # should show the new learning
 ```
 

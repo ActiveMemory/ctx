@@ -304,11 +304,18 @@ real time.
 
 ## Project Setup
 
-Initialize a project for autonomous loop operation:
+Initialize a project for autonomous loop operation, then activate it
+so the loop's `ctx` commands know which `.context/` to use:
 
 ```bash
 ctx init
+eval "$(ctx activate)"
 ```
+
+For unattended overnight runs, put the binding directly at the top
+of your loop script (`export CTX_DIR=/abs/path/.context`) so it
+survives without depending on a live shell. See
+[Activating a Context Directory](../recipes/activating-context.md).
 
 The loop prompt template is deployed to `.context/loop.md` during
 initialization. It instructs the agent to:

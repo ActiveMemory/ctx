@@ -1987,18 +1987,31 @@ directory (default <code>~/.ctx/hub-data/</code>):</p>
 </span></code></pre></div>
 <p>This returns a client token. Distribute it securely to the client.</p>
 <h2 id="step-4-connect-clients">Step 4: Connect Clients<a class="headerlink" href="#step-4-connect-clients" title="Permanent link">&para;</a></h2>
-<p>On each client machine:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>connect<span class="w"> </span>&lt;hub-address&gt;<span class="w"> </span>--token<span class="w"> </span>&lt;client-token&gt;
+<p>On each client machine, register the project with the hub. The
+<code>ctx hub *</code> commands above run on the hub server itself and don't
+need a project. The <code>ctx connection *</code> commands below are different:
+they live inside a project (the encrypted hub config is stored at
+<code>.context/.connect.enc</code>), so you have to tell <code>ctx</code> which project
+first.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># In the project directory on the client machine:</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>&lt;hub-address&gt;<span class="w"> </span>--token<span class="w"> </span>&lt;client-token&gt;
 </span></code></pre></div>
 <p>Verify the connection:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>status
 </span></code></pre></div>
+<p>If the client doesn't have a project yet, run <code>ctx init</code> first, then
+<code>eval "$(ctx activate)"</code>. See
+<a href="../../../recipes/activating-context/">Activating a Context Directory</a>.</p>
 <h2 id="step-5-verify-sync">Step 5: Verify Sync<a class="headerlink" href="#step-5-verify-sync" title="Permanent link">&para;</a></h2>
-<p>Push a test entry from one client and verify it arrives:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Client A</span>
+<p>Push a test entry from one client and verify it arrives. Make sure
+each client already ran <code>eval "$(ctx activate)"</code> from Step 4:
+otherwise <code>ctx add</code> and <code>ctx status</code> fail with
+<code>Error: no context directory specified</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Client A (in its project directory, after activating):</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Hub sync test&quot;</span><span class="w"> </span>--context<span class="w"> </span><span class="s2">&quot;Verifying hub setup&quot;</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Client B (after a moment)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Client B (in its project directory, after activating):</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ctx<span class="w"> </span>status<span class="w">   </span><span class="c1"># should show the new learning</span>
 </span></code></pre></div>
 <h2 id="step-6-configure-backup">Step 6: Configure Backup<a class="headerlink" href="#step-6-configure-backup" title="Permanent link">&para;</a></h2>

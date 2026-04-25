@@ -2150,11 +2150,21 @@ you cannot read or write entries.</p>
 <p><strong>How do you distribute the key and keep the scratchpad in sync?</strong></p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init<span class="w">                                                  </span><span class="c1"># 1. generates key</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>scp<span class="w"> </span>~/.ctx/.ctx.key<span class="w"> </span>user@machine-b:~/.ctx/.ctx.key<span class="w">        </span><span class="c1"># 2. copy key</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ctx/.ctx.key<span class="w">                                 </span><span class="c1"># 3. secure it</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Normal git push/pull syncs the encrypted scratchpad.enc</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># On conflict: ctx pad resolve → rebuild → git add + commit</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span><span class="w">                                    </span><span class="c1"># 2. bind CTX_DIR</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>scp<span class="w"> </span>~/.ctx/.ctx.key<span class="w"> </span>user@machine-b:~/.ctx/.ctx.key<span class="w">        </span><span class="c1"># 3. copy key</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ctx/.ctx.key<span class="w">                                 </span><span class="c1"># 4. secure it</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Normal git push/pull syncs the encrypted scratchpad.enc</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># On conflict: ctx pad resolve → rebuild → git add + commit</span>
 </span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Activate Each Machine</p>
+<p>Run <code>eval "$(ctx activate)"</code> from the project root on every
+machine that reads or writes the scratchpad: after each
+<code>ctx init</code>, or after each clone on machine B. If you skip it,
+<code>ctx pad ...</code> fails with <code>Error: no context directory
+specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">Finding Your Key File</p>
 <p>The key is always at <code>~/.ctx/.ctx.key</code> - one key, one machine.</p>

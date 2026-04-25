@@ -29,6 +29,12 @@ ctx change --since 48h
 ctx change --since 2026-03-10
 ```
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` once per terminal in the project
+    root. If you skip it, `ctx change` fails with `Error: no
+    context directory specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 ## How Reference Time Works
 
 `ctx change` needs a reference point to compare against. It tries

@@ -95,6 +95,12 @@ sessions from all team members regardless of language.
 After configuring, test with `ctx journal source`. Sessions with the new
 prefixes should appear in the output.
 
+!!! warning "Activate the Project First"
+    Run `eval "$(ctx activate)"` from the project root. If you skip
+    it, `ctx journal ...` fails with `Error: no context directory
+    specified`. See
+    [Activating a Context Directory](activating-context.md).
+
 ## What This Does NOT Do
 
 - **Change the interface language**: `ctx` output is always English.

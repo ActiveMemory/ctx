@@ -25,15 +25,15 @@ All commands support these flags:
 | `--version`     | Show version                                               |
 | `--tool <name>` | Override active AI tool identifier (e.g. `kiro`, `cursor`) |
 
-**Context declaration required.** ctx does not walk the filesystem
-looking for `.context/`. Every non-exempt command requires `CTX_DIR`
-to be declared explicitly before it runs. The single declaration
-channel is the environment variable:
+**Tell ctx which `.context/` to use.** ctx does not search the
+filesystem for `.context/`: you have to declare it. Three ways:
 
-- `eval "$(ctx activate)"`: binds `CTX_DIR` for the current shell.
-- `CTX_DIR=/abs/path/to/.context` exported in the environment, or
-  inlined as `CTX_DIR=/abs/path/to/.context ctx <command>` for a
-  one-shot.
+- `eval "$(ctx activate)"` (recommended): binds `CTX_DIR` for the
+  current shell.
+- `export CTX_DIR=/abs/path/to/.context` directly, then run any
+  `ctx` command.
+- `CTX_DIR=/abs/path/to/.context ctx <command>` inline, for a
+  one-shot or CI step.
 
 `CTX_DIR` must be an absolute path with `.context` as its basename.
 Relative paths and other names are rejected on first use; the
@@ -41,12 +41,13 @@ basename guard catches the common footgun
 (`export CTX_DIR=$(pwd)`) before stray writes can leak to the
 project root.
 
-Commands fail fast with a linkable error
-(see [Activating a Context Directory](../recipes/activating-context.md))
-when none is declared. The exempt allowlist (commands that run without
-a declared context directory) is: `ctx init`, `ctx activate`,
-`ctx deactivate`, `ctx version`, `ctx help`, `ctx system bootstrap`,
-`ctx doctor`, `ctx guide`, `ctx why`, `ctx config switch/status`,
+If you forget, commands fail fast with a linkable
+`Error: no context directory specified` pointing at
+[Activating a Context Directory](../recipes/activating-context.md).
+A handful of commands run without a declaration because they don't
+need a project: `ctx init`, `ctx activate`, `ctx deactivate`,
+`ctx version`, `ctx help`, `ctx system bootstrap`, `ctx doctor`,
+`ctx guide`, `ctx why`, `ctx config switch/status`, and
 `ctx hub *`.
 
 **Initialization required.** Once declared, the target must already

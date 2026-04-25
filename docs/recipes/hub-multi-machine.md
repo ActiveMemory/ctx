@@ -101,10 +101,17 @@ an encrypted note). **Do not email it or put it in chat.**
 
 ## Step 4: Register Projects from Each Workstation
 
+The `ctx hub *` commands above run on the LAN host (`nexus`) and
+don't need a project. Step 4 is different: each workstation
+registers from inside a project (the encrypted hub config and the
+fan-out inbox both live under `.context/`), so you have to tell
+`ctx` which project first.
+
 On workstation `A`:
 
 ```bash
 cd ~/projects/x
+eval "$(ctx activate)"
 ctx connection register nexus.local:9900 --token ctx_adm_...
 ctx connection subscribe decision learning convention
 ```
@@ -113,6 +120,7 @@ On workstation `B`:
 
 ```bash
 cd ~/projects/y
+eval "$(ctx activate)"
 ctx connection register nexus.local:9900 --token ctx_adm_...
 ctx connection subscribe decision learning convention
 ```

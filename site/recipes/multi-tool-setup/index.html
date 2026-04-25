@@ -2283,19 +2283,29 @@ which AI tool you use.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>your-project
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>init<span class="w">                      </span><span class="c1"># creates .context/</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span><span class="w">  </span><span class="c1"># shell completion (or bash/fish)</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># ## Claude Code (automatic after plugin install) ##</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>marketplace<span class="w"> </span>add<span class="w"> </span>ActiveMemory/ctx
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>install<span class="w"> </span>ctx@activememory-ctx
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># ## Cursor / Aider / Copilot / Windsurf ##</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cursor<span class="w"> </span><span class="c1"># or: aider, copilot, windsurf</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># ## Companion tools (highly recommended) ##</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze<span class="w">          </span><span class="c1"># code knowledge graph</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Add Gemini Search MCP server for grounded web search</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span><span class="w">        </span><span class="c1"># bind CTX_DIR for this shell</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span><span class="w">  </span><span class="c1"># shell completion (or bash/fish)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># ## Claude Code (automatic after plugin install) ##</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>marketplace<span class="w"> </span>add<span class="w"> </span>ActiveMemory/ctx
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>install<span class="w"> </span>ctx@activememory-ctx
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># ## Cursor / Aider / Copilot / Windsurf ##</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cursor<span class="w"> </span><span class="c1"># or: aider, copilot, windsurf</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># ## Companion tools (highly recommended) ##</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze<span class="w">          </span><span class="c1"># code knowledge graph</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Add Gemini Search MCP server for grounded web search</span>
 </span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Activate the Project Once Per Shell</p>
+<p>Run <code>eval "$(ctx activate)"</code> after <code>ctx init</code>. The <code>ctx setup</code>,
+<code>ctx init</code>, and <code>ctx completion</code> commands work without it, but
+if you skip the <code>eval</code>, most others (<code>ctx agent</code>, <code>ctx load</code>,
+<code>ctx watch</code>, <code>ctx journal ...</code>) fail with <code>Error: no context
+directory specified</code>. See
+<a href="../activating-context/">Activating a Context Directory</a>.</p>
+</div>
 <p>Create a <a href="../../home/configuration/"><code>.ctxrc</code></a> in your project root to configure
 token budgets, context directory, drift thresholds, and more.</p>
 <p>Then start your AI tool and ask: "<strong>Do you remember?</strong>"</p>

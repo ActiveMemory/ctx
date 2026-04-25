@@ -303,6 +303,20 @@ You don't need the whole team to switch at once:
 
 ## Verifying It Worked
 
+### Activate the Project
+
+Tell `ctx` which `.context/` directory to use for the rest of the
+verification steps:
+
+```bash
+eval "$(ctx activate)"
+```
+
+You only need to run this once per terminal. If you skip it, the
+status check below fails with `Error: no context directory
+specified`. See
+[Activating a Context Directory](../recipes/activating-context.md).
+
 ### Check Status
 
 ```bash

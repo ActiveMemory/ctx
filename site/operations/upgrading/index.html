@@ -1852,8 +1852,11 @@ what <code>ctx init</code> provides, diff and merge:</p>
 </span></code></pre></div>
 <p>Manually add back any custom entries that the new init dropped.</p>
 <h3 id="5-verify">5. Verify<a class="headerlink" href="#5-verify" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>status<span class="w">          </span><span class="c1"># context files intact</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>drift<span class="w">           </span><span class="c1"># no broken references</span>
+<p>Activate the project first, otherwise <code>ctx status</code> and <code>ctx drift</code>
+will fail with <code>Error: no context directory specified</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>status<span class="w">          </span><span class="c1"># context files intact</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ctx<span class="w"> </span>drift<span class="w">           </span><span class="c1"># no broken references</span>
 </span></code></pre></div>
 <h3 id="6-clean-up">6. Clean Up<a class="headerlink" href="#6-clean-up" title="Permanent link">&para;</a></h3>
 <p>If you made manual backups, remove them once satisfied:</p>

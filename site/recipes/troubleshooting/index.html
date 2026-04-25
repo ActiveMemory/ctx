@@ -2344,9 +2344,9 @@ QA reminder events from that specific session.</p>
 <code>Error: no context directory specified for this project</code> (<em>possibly
 with a likely-candidate hint or a candidate list depending on what's
 visible from your CWD</em>).</p>
-<p><strong>Cause</strong>: <code>ctx</code> does not walk the filesystem. It requires the target
-<code>.context/</code> directory to be declared explicitly before any non-exempt
-command runs.</p>
+<p><strong>Cause</strong>: <code>ctx</code> does not search the filesystem for a <code>.context/</code>
+directory. You have to declare which one to use before running
+day-to-day commands.</p>
 <p><strong>Fix</strong>: bind <code>CTX_DIR</code> for the current shell:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
 </span></code></pre></div>

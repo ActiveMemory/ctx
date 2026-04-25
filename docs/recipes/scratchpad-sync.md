@@ -21,11 +21,20 @@ you cannot read or write entries.
 
 ```bash
 ctx init                                                  # 1. generates key
-scp ~/.ctx/.ctx.key user@machine-b:~/.ctx/.ctx.key        # 2. copy key
-chmod 600 ~/.ctx/.ctx.key                                 # 3. secure it
+eval "$(ctx activate)"                                    # 2. bind CTX_DIR
+scp ~/.ctx/.ctx.key user@machine-b:~/.ctx/.ctx.key        # 3. copy key
+chmod 600 ~/.ctx/.ctx.key                                 # 4. secure it
 # Normal git push/pull syncs the encrypted scratchpad.enc
 # On conflict: ctx pad resolve → rebuild → git add + commit
 ```
+
+!!! warning "Activate Each Machine"
+    Run `eval "$(ctx activate)"` from the project root on every
+    machine that reads or writes the scratchpad: after each
+    `ctx init`, or after each clone on machine B. If you skip it,
+    `ctx pad ...` fails with `Error: no context directory
+    specified`. See
+    [Activating a Context Directory](activating-context.md).
 
 !!! tip "Finding Your Key File"
     The key is always at `~/.ctx/.ctx.key` - one key, one machine.

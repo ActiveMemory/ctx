@@ -1866,10 +1866,10 @@ it will run.</p>
 <hr />
 <h3 id="ctx-activate"><code>ctx activate</code><a class="headerlink" href="#ctx-activate" title="Permanent link">&para;</a></h3>
 <p>Emit a shell-native <code>export CTX_DIR=...</code> line for the target
-<code>.context/</code> directory. <code>ctx</code> does not walk the filesystem during
-operating commands; every non-exempt command requires <code>CTX_DIR</code>
-set before it will run. <code>activate</code> is the convenience that figures
-out the path and lets you bind it with one line.</p>
+<code>.context/</code> directory. <code>ctx</code> does not search the filesystem during
+day-to-day commands: each one needs <code>CTX_DIR</code> set before it runs.
+<code>activate</code> is the convenience that figures out the path for you so
+you can bind it with one line.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Walk up from CWD, emit if exactly one candidate visible.</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
 </span></code></pre></div>
