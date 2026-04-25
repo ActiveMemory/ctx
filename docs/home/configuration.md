@@ -43,9 +43,12 @@ my-project/
 └── src/
 ```
 
-`ctx` looks for `.ctxrc` in the current working directory when any command runs.
-There is no global or user-level config file: Configuration is always
-per-project.
+`ctx` reads `.ctxrc` from the **project root** (*i.e. the parent of
+`CTX_DIR`, or `dirname(CTX_DIR)/.ctxrc`*). It does not walk up from CWD.
+That means whichever project you've activated via `eval "$(ctx activate)"`
+(or by exporting `CTX_DIR` directly), its paired `.ctxrc` is what governs the
+invocation. There is no global or user-level config file: configuration is
+always per-project.
 
 !!! note "Contributors: Dev Configuration Profile"
     The ctx repo ships two `.ctxrc` source profiles (`.ctxrc.base` and
@@ -53,13 +56,14 @@ per-project.
     via `ctx config switch dev` / `ctx config switch base`.
     See [Contributing: Configuration Profiles](contributing.md#configuration-profiles).
 
-!!! tip "Using a Different .Context Directory"
-    The default `.context/` directory can be changed per-project via the
-    `context_dir` key in `.ctxrc`, the `CTX_DIR` environment variable, or the
-    `--context-dir` CLI flag.
+!!! tip "Using a Different `.context` Directory"
+    The context directory is declared via the `CTX_DIR` environment variable;
+    not via `.ctxrc`. `ctx` does not walk the filesystem; every non-exempt
+    command requires `CTX_DIR` to be set. Use `eval "$(ctx activate)"` to
+    bind it for your shell. `CTX_DIR` must be an absolute path with
+    `.context` as its basename.
 
-    See [Environment Variables](#environment-variables)
-    and [CLI Global Flags](#cli-global-flags) below for details.
+    See [Environment Variables](#environment-variables) below for details.
 
 <!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/^# \.ctxrc:/,/^```$/p' docs/home/configuration.md | grep -oP '^# ([a-z_]+):' | sed 's/^# //;s/://' | sort -u) -->
 ### Full Reference
@@ -73,12 +77,10 @@ A commented `.ctxrc` showing all options and their defaults:
 # All settings are optional. Missing values use defaults.
 # Priority: CLI flags > environment variables > .ctxrc > defaults
 #
-# context_dir: .context
 # token_budget: 8000
 # auto_archive: true
 # archive_after_days: 7
 # scratchpad_encrypt: true
-# allow_outside_cwd: false
 # event_log: false
 # entry_count_learnings: 30
 # entry_count_decisions: 20
@@ -130,12 +132,10 @@ A commented `.ctxrc` showing all options and their defaults:
 
 | Option                  | Type       | Default       | Description                                                                                                                               |
 |-------------------------|------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| `context_dir`           | `string`   | `.context`    | Context directory name (relative to project root)                                                                                         |
 | `token_budget`          | `int`      | `8000`        | Default token budget for `ctx agent` and `ctx load`                                                                                       |
 | `auto_archive`          | `bool`     | `true`        | Auto-archive completed tasks during `ctx compact`                                                                                         |
 | `archive_after_days`    | `int`      | `7`           | Days before completed tasks are archived                                                                                                  |
 | `scratchpad_encrypt`    | `bool`     | `true`        | Encrypt scratchpad with AES-256-GCM                                                                                                       |
-| `allow_outside_cwd`     | `bool`     | `false`       | Allow context directory outside the current working directory                                                                             |
 | `event_log`             | `bool`     | `false`       | Enable local hook event logging to `.context/state/events.jsonl`                                                                          |
 | `entry_count_learnings` | `int`      | `30`          | Drift warning when `LEARNINGS.md` exceeds this entry count (0 = disable)                                                                  |
 | `entry_count_decisions` | `int`      | `20`          | Drift warning when `DECISIONS.md` exceeds this entry count (0 = disable)                                                                  |
@@ -180,10 +180,10 @@ behind this ordering.
 
 Environment variables override `.ctxrc` values but are overridden by CLI flags.
 
-| Variable           | Description                                 | Equivalent `.ctxrc` key |
-|--------------------|---------------------------------------------|-------------------------|
-| `CTX_DIR`          | Override the context directory path         | `context_dir`           |
-| `CTX_TOKEN_BUDGET` | Override the default token budget           | `token_budget`          |
+| Variable           | Description                                                 | Equivalent `.ctxrc` key |
+|--------------------|-------------------------------------------------------------|-------------------------|
+| `CTX_DIR`          | Declare the context directory path (required, no fallback)  | *(none)*                |
+| `CTX_TOKEN_BUDGET` | Override the default token budget                           | `token_budget`          |
 
 ### Examples
 
@@ -203,22 +203,17 @@ CTX_TOKEN_BUDGET=16000 ctx agent
 CLI flags have the highest priority and override both environment variables and
 `.ctxrc` settings. These flags are available on every `ctx` command.
 
-| Flag                   | Description                                               |
-|------------------------|-----------------------------------------------------------|
-| `--context-dir <path>` | Override context directory (default: `.context/`)         |
-| `--allow-outside-cwd`  | Allow context directory outside current working directory |
-| `--tool <name>`        | Override active AI tool identifier (e.g. `kiro`, `cursor`) |
-| `--version`            | Show version and exit                                     |
-| `--help`               | Show command help and exit                                |
+| Flag            | Description                                                |
+|-----------------|------------------------------------------------------------|
+| `--tool <name>` | Override active AI tool identifier (e.g. `kiro`, `cursor`) |
+| `--version`     | Show version and exit                                      |
+| `--help`        | Show command help and exit                                 |
 
 ### Examples
 
 ```bash
-# Point to a different context directory:
-ctx status --context-dir /path/to/shared/.context
-
-# Allow external context directory (skips boundary check):
-ctx status --context-dir /mnt/nas/project-context --allow-outside-cwd
+# Point to a different context directory inline:
+CTX_DIR=/path/to/project/.context ctx status
 ```
 
 ---
@@ -233,20 +228,18 @@ CLI flags  >  Environment variables  >  .ctxrc  >  Built-in defaults
 (highest)                                          (lowest)
 ```
 
-**Example resolution for `context_dir`:**
+The context directory itself is resolved differently: it lives *outside*
+this priority chain. `CTX_DIR` (env) must be declared; `.ctxrc` does not
+carry a fallback for it, and there is no built-in default. See
+[Activating a Context Directory](../recipes/activating-context.md).
 
-| Layer              | Value              | Wins? |
-|--------------------|--------------------|-------|
-| `--context-dir`    | `/tmp/ctx`         | Yes   |
-| `CTX_DIR`          | `/shared/context`  | No    |
-| `.ctxrc`           | `.my-context`      | No    |
-| Default            | `.context`         | No    |
+**Example resolution for `token_budget`:**
 
-The CLI flag `/tmp/ctx` is used because it has the highest priority.
-
-If the CLI flag were absent, `CTX_DIR=/shared/context` would win. If neither
-the flag nor the env var were set, the `.ctxrc` value `.my-context` would be
-used. With nothing configured, the default `.context` applies.
+| Layer              | Value  | Wins? |
+|--------------------|--------|-------|
+| `CTX_TOKEN_BUDGET` | `4000` | Yes   |
+| `.ctxrc`           | `8000` | No    |
+| Default            | `8000` | No    |
 
 ---
 
@@ -254,13 +247,23 @@ used. With nothing configured, the default `.context` applies.
 
 ### External `.context` Directory
 
-Store context outside the project tree (*useful for monorepos or shared context*):
+Store a project's context outside the project tree (*useful when a
+repo is read-only, or when you want to keep notes adjacent rather
+than checked in*). Declare the path via `CTX_DIR`:
 
-```yaml
-# .ctxrc
-context_dir: /home/team/shared-context
-allow_outside_cwd: true
+```bash
+export CTX_DIR=/home/you/ctx-stores/my-project/.context
 ```
+
+!!! warning "One `.context/` per project"
+    The parent of the context directory is the project root by
+    contract: `ctx sync`, `ctx drift`, and the memory-drift hook
+    all read the codebase from `filepath.Dir(ContextDir())`.
+    Pointing two projects at the same `.context/` directory will
+    collide their journals, state, and secrets. To share knowledge
+    (CONSTITUTION / CONVENTIONS / ARCHITECTURE) across projects,
+    use [`ctx hub`](../recipes/hub-overview.md), not a shared
+    `.context/`.
 
 ### Custom Token Budget
 

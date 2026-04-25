@@ -14,9 +14,11 @@ import (
 	coreState "github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgEvent "github.com/ActiveMemory/ctx/internal/config/event"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	"github.com/ActiveMemory/ctx/internal/log/event"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	wSession "github.com/ActiveMemory/ctx/internal/write/session"
 
@@ -38,7 +40,12 @@ import (
 // Returns:
 //   - error: Non-nil if eventType is invalid
 func Run(cmd *cobra.Command, eventType, caller string) error {
-	if !coreState.Initialized() {
+	initialized, initErr := coreState.Initialized()
+	if initErr != nil {
+		logWarn.Warn(warn.StateInitializedProbe, initErr)
+		return nil
+	}
+	if !initialized {
 		return nil
 	}
 
@@ -51,8 +58,21 @@ func Run(cmd *cobra.Command, eventType, caller string) error {
 	ref := entity.NewTemplateRef(cfgHook.SessionEvent, eventType,
 		map[string]any{cfgEvent.VarCaller: caller})
 
-	event.Append(cfgEvent.CategorySession, msg, "", ref)
-	_ = notify.Send(cfgEvent.CategorySession, msg, "", ref)
+	// Log-first: the event-log entry IS the authoritative record of
+	// the session lifecycle. If it cannot be written, neither the
+	// webhook nor the stdout marker should run; both would claim a
+	// session event whose audit trail never landed. See
+	// docs/security/reporting.md → "Log-First Audit Trail".
+	if appendErr := event.Append(
+		cfgEvent.CategorySession, msg, "", ref,
+	); appendErr != nil {
+		return appendErr
+	}
+	if sendErr := notify.Send(
+		cfgEvent.CategorySession, msg, "", ref,
+	); sendErr != nil {
+		return sendErr
+	}
 
 	wSession.Event(cmd, eventType, caller)
 	return nil

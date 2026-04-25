@@ -47,8 +47,7 @@ Store context files **outside** the project tree: in a private repo,
 shared directory, or anywhere else. Useful for open source projects
 with private context or **multi-repo** setups.
 
-**Uses**: `ctx init`, `--context-dir`, `--allow-outside-cwd`,
-`.ctxrc`, `/ctx-status`
+**Uses**: `ctx init`, `CTX_DIR`, `.ctxrc`, `/ctx-status`
 
 ---
 
@@ -331,6 +330,19 @@ Each step produces an artifact that feeds the next.
 
 **Uses**: `/ctx-brainstorm`, `/ctx-spec`, `/ctx-task-add`,
 `/ctx-implement`, `/ctx-decision-add`
+
+---
+
+### [Scrutinizing a Plan](scrutinizing-a-plan.md)
+
+Once a plan exists, run an **adversarial interview** to surface what's
+weak, missing, or unexamined before you commit. Walks the plan
+depth-first: assumptions, failure modes, alternatives, sequencing,
+reversibility. The complement to brainstorm: brainstorm produces
+plans, this attacks them.
+
+**Uses**: `/ctx-plan`, `/ctx-spec`, `/ctx-decision-add`,
+`/ctx-learning-add`
 
 ---
 

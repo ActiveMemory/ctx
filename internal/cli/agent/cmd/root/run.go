@@ -50,7 +50,11 @@ func Run(
 	skillBody string,
 	hubBodies []string,
 ) error {
-	if coreCooldown.Active(session, cooldown) {
+	active, cooldownErr := coreCooldown.Active(session, cooldown)
+	if cooldownErr != nil {
+		return cooldownErr
+	}
+	if active {
 		return nil
 	}
 
@@ -76,10 +80,14 @@ func Run(
 			hubBodies,
 		)
 	}
-
-	if outputErr == nil {
-		coreCooldown.TouchTombstone(session)
+	if outputErr != nil {
+		return outputErr
 	}
 
-	return outputErr
+	// Output succeeded: persist the tombstone so subsequent
+	// invocations inside the cooldown window stay silent. A
+	// failure here (disk full, permission denied) is a rare
+	// edge case we surface rather than swallow: without the
+	// marker the next run will not suppress.
+	return coreCooldown.TouchTombstone(session)
 }

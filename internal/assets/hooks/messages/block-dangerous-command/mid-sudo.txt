@@ -1,1 +1,0 @@
-Cannot use sudo (no password access). Use 'make build && sudo make install' manually if needed.

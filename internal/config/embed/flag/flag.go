@@ -8,15 +8,10 @@ package flag
 
 // DescKeys for shared flag descriptions.
 const (
-	// DescKeyAllowOutsideCwd is the description key for the allow outside cwd
-	// flag.
-	DescKeyAllowOutsideCwd = "allow-outside-cwd"
 	// DescKeyChangesSince is the description key for the changes since flag.
 	DescKeyChangesSince = "changes.since"
 	// DescKeyCompactArchive is the description key for the compact archive flag.
 	DescKeyCompactArchive = "compact.archive"
-	// DescKeyContextDir is the description key for the context dir flag.
-	DescKeyContextDir = "context-dir"
 	// DescKeyDoctorJson is the description key for the doctor json flag.
 	DescKeyDoctorJson = "doctor.json"
 	// DescKeyTriggerTestPath is the description key for the trigger test path

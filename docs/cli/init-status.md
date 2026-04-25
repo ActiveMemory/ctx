@@ -52,6 +52,77 @@ ctx init --force
 ctx init --merge
 ```
 
+After `ctx init` succeeds, the final output includes a hint showing
+the exact `eval "$(ctx activate)"` line to bind the new directory
+for your shell. Every other `ctx` command requires that binding
+(or an equivalent direct `CTX_DIR=/abs/path/.context` export) before
+it will run.
+
+---
+
+### `ctx activate`
+
+Emit a shell-native `export CTX_DIR=...` line for the target
+`.context/` directory. `ctx` does not walk the filesystem during
+operating commands; every non-exempt command requires `CTX_DIR`
+set before it will run. `activate` is the convenience that figures
+out the path and lets you bind it with one line.
+
+```bash
+# Walk up from CWD, emit if exactly one candidate visible.
+eval "$(ctx activate)"
+```
+
+**Flags**:
+
+| Flag      | Description                                                                              |
+|-----------|------------------------------------------------------------------------------------------|
+| `--shell` | Shell dialect override. POSIX-family (`bash`, `zsh`, `sh`) all share one syntax today; the flag exists for future fish/nushell/powershell support. Auto-detected from `$SHELL`. |
+
+**Resolution**:
+
+| Candidate count from CWD | Behavior                                                                 |
+|--------------------------|--------------------------------------------------------------------------|
+| Zero                     | Error. Use `ctx init` to create one, or `cd` closer to the project root. |
+| One                      | Emit `export CTX_DIR=<path>` for that candidate.                         |
+| Two or more              | Refuse. List every candidate. Re-run from a more specific cwd.           |
+
+`activate` is args-free under the single-source-anchor model; the
+explicit-path mode was removed because hub-client / hub-server
+scenarios store at `~/.ctx/hub-data/` and never read `.context/`,
+so they activate from the project root like everyone else. Direct
+binding without a project-local scan is still available via
+`export CTX_DIR=/abs/path/.context` or the inline form.
+
+If the parent shell already has `CTX_DIR` set to a different value,
+the output gains a leading `# ctx: replacing stale CTX_DIR=...`
+comment so the user sees the change in `eval` output before the
+replacement takes effect.
+
+**See also**: [Activating a Context Directory](../recipes/activating-context.md)
+for the full recipe including direnv setup and CI patterns.
+
+---
+
+### `ctx deactivate`
+
+Emit a shell-native `unset CTX_DIR` line. Pairs with `activate`.
+
+```bash
+eval "$(ctx deactivate)"
+```
+
+**Flags**:
+
+| Flag      | Description                                                                                                                                                                       |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `--shell` | Shell dialect override. POSIX-family (`bash`, `zsh`, `sh`) all share one `unset` syntax today; the flag exists for future fish/nushell/powershell support. Auto-detected from `$SHELL`. |
+
+`deactivate` does not touch the filesystem, doesn't require a
+declared context directory, and never fails under normal operation;
+unsetting an already-unset variable is a no-op across supported
+shells.
+
 ---
 
 ### `ctx status`

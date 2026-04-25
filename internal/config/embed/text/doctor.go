@@ -8,6 +8,16 @@ package text
 
 // DescKeys for doctor diagnostics.
 const (
+	// DescKeyDoctorCheckDidNotRun is the text key for the failure
+	// result emitted by the doctor runner when a check returns an
+	// error it could not handle itself.
+	DescKeyDoctorCheckDidNotRun = "doctor.check-did-not-run"
+	// DescKeyDoctorCheckDidNotRunCascade is emitted once for the
+	// first context-dependent check that fails with
+	// [errCtx.ErrDirNotDeclared]; later dependent checks are
+	// silently skipped so the report shows one loud line instead
+	// of the same message N times.
+	DescKeyDoctorCheckDidNotRunCascade = "doctor.check-did-not-run-cascade"
 	// DescKeyDoctorContextFileFormat is the text key for doctor context file
 	// format messages.
 	DescKeyDoctorContextFileFormat = "doctor.context-file.format"

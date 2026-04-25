@@ -6,6 +6,8 @@
 
 package entity
 
+import "time"
+
 // TemplateRef identifies the hook template and variables that produced a
 // notification, allowing receivers to filter, re-render, or aggregate
 // without parsing opaque rendered text.
@@ -51,4 +53,33 @@ type NotifyPayload struct {
 	SessionID string       `json:"session_id,omitempty"`
 	Timestamp string       `json:"timestamp"`
 	Project   string       `json:"project"`
+}
+
+// NewNotifyPayload constructs a NotifyPayload, stamping the current
+// UTC time in RFC 3339 format. The constructor is pure: callers
+// resolve the project name (typically via the CWD-with-fallback
+// pattern under log/event and notify) and pass it in, keeping the
+// entity package free of I/O and logging.
+//
+// Parameters:
+//   - event: event type (loop, nudge, relay, heartbeat)
+//   - message: rendered notification text
+//   - sessionID: Claude Code session ID ("" is valid)
+//   - projectName: resolved project name (fallback already applied)
+//   - detail: template reference for re-rendering; nil is valid
+//
+// Returns:
+//   - NotifyPayload: ready to serialize for the event log or webhook
+func NewNotifyPayload(
+	event, message, sessionID, projectName string,
+	detail *TemplateRef,
+) NotifyPayload {
+	return NotifyPayload{
+		Event:     event,
+		Message:   message,
+		Detail:    detail,
+		SessionID: sessionID,
+		Timestamp: time.Now().UTC().Format(time.RFC3339),
+		Project:   projectName,
+	}
 }

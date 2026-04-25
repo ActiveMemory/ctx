@@ -8,6 +8,8 @@
 #
 # See also: commands.yaml (Short/Long), examples.yaml (Example fields).
 
+activate.shell:
+  short: Shell dialect for the emitted export (bash, zsh, sh); default auto-detects from $SHELL
 add.application:
   short: 'Application for learnings: how to apply this going forward (required for learnings)'
 add.branch:
@@ -44,14 +46,10 @@ agent.skill:
   short: Include named skill content in context packet
 agent.include-hub:
   short: Include ctx Hub entries in context packet
-allow-outside-cwd:
-  short: Allow context directory outside current working directory
 changes.since:
   short: 'Time reference: duration (24h) or date (2026-03-01)'
 compact.archive:
   short: Create .context/archive/ for old content
-context-dir:
-  short: 'Override context directory path (default: .context)'
 initialize.caller:
   short: Identify the calling tool (e.g. vscode) to tailor output
 
@@ -213,10 +211,6 @@ steering.sync.all:
   short: Sync to all supported tool formats
 sync.dry-run:
   short: Show what would change without modifying
-backup.json:
-  short: Output results as JSON
-backup.scope:
-  short: 'Backup scope: project, global, or all'
 bootstrap.json:
   short: Output in JSON format
 bootstrap.quiet:

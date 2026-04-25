@@ -183,7 +183,6 @@ from customization. These are the primary targets for override.
 
 | Hook                | Variant    | Description                              |
 |---------------------|------------|------------------------------------------|
-| check-backup-age    | warning    | Backup staleness warning                 |
 | check-freshness     | stale      | Technology constant freshness warning    |
 | check-ceremonies    | both       | Both ceremonies missing                  |
 | check-ceremonies    | remember   | Start-of-session ceremony                |
@@ -225,7 +224,6 @@ them, but `edit` will warn you first.
 
 | Hook                     | Variant                | Variables                                      |
 |--------------------------|------------------------|------------------------------------------------|
-| check-backup-age         | warning                | `{{.Warnings}}`                                |
 | check-freshness          | stale                  | `{{.StaleFiles}}`                              |
 | check-context-size       | checkpoint             | *(none)*                                       |
 | check-context-size       | oversize               | `{{.TokenCount}}`                              |

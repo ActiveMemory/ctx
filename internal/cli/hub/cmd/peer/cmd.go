@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	corePeer "github.com/ActiveMemory/ctx/internal/cli/hub/core/peer"
+	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
@@ -27,6 +28,9 @@ func Cmd() *cobra.Command {
 		Long:    long,
 		Example: desc.Example(cmd.DescKeyHubPeer),
 		Args:    cobra.ExactArgs(2),
-		RunE:    corePeer.Run,
+		// Hub stores at ~/.ctx/hub-data/, not .context/.
+		// Spec: specs/single-source-context-anchor.md.
+		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
+		RunE:        corePeer.Run,
 	}
 }

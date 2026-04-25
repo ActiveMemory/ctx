@@ -47,7 +47,12 @@ func Cmd() *cobra.Command {
 // Returns:
 //   - error: nil on success, or a skill installation error
 func Run(c *cobra.Command, source string) error {
-	skillsDir := filepath.Join(rc.ContextDir(), dir.Skills)
+	ctxDir, ctxErr := rc.RequireContextDir()
+	if ctxErr != nil {
+		c.SilenceUsage = true
+		return ctxErr
+	}
+	skillsDir := filepath.Join(ctxDir, dir.Skills)
 
 	sk, err := skill.Install(source, skillsDir)
 	if err != nil {

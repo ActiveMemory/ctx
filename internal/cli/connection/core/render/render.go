@@ -25,7 +25,11 @@ import (
 // Returns:
 //   - error: non-nil if directory creation or write fails
 func WriteEntries(entries []hub.EntryMsg) error {
-	dir := filepath.Join(rc.ContextDir(), cfgHub.DirHub)
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return ctxErr
+	}
+	dir := filepath.Join(ctxDir, cfgHub.DirHub)
 	if mkErr := io.SafeMkdirAll(
 		dir, fs.PermKeyDir,
 	); mkErr != nil {

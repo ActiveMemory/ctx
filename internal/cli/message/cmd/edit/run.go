@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/fs"
 	errTrigger "github.com/ActiveMemory/ctx/internal/err/trigger"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writeMessage "github.com/ActiveMemory/ctx/internal/write/message"
 )
 
@@ -34,12 +35,19 @@ import (
 //   - error: Non-nil if the hook/variant is unknown, override exists,
 //     or file operations fail
 func Run(cmd *cobra.Command, hk, variant string) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	info := messages.Lookup(hk, variant)
 	if info == nil {
 		return errTrigger.Validate(messages.Variants(hk) != nil, hk, variant)
 	}
 
-	oPath := message.OverridePath(hk, variant)
+	oPath, pathErr := message.OverridePath(hk, variant)
+	if pathErr != nil {
+		return pathErr
+	}
 
 	if _, statErr := os.Stat(oPath); statErr == nil {
 		return errTrigger.OverrideExists(oPath, hk, variant)

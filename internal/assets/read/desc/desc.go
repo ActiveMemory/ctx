@@ -29,7 +29,7 @@ func Command(key string) (short, long string) {
 
 // Flag returns the description for a flag.
 //
-// Keys use dot notation: "add.file", "context-dir".
+// Keys use dot notation: "add.file", "compact.archive".
 // Returns an empty string if the key is not found.
 //
 // Parameters:

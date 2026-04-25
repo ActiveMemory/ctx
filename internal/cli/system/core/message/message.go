@@ -7,6 +7,7 @@
 package message
 
 import (
+	"errors"
 	"path/filepath"
 	"strings"
 
@@ -15,8 +16,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/resolve"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -43,9 +47,23 @@ func Load(hk, variant string, vars map[string]any, fallback string) string {
 	filename := variant + file.ExtTxt
 
 	// 1. User override in .context/
-	overrideDir := filepath.Join(rc.ContextDir(), dir.HooksMessages, hk)
-	if data, readErr := io.SafeReadFile(overrideDir, filename); readErr == nil {
-		return renderTemplate(string(data), vars, fallback)
+	//
+	// When no context dir is declared there is no place to look
+	// for a user override, so we fall through to the embedded
+	// default. Reading the template itself is best-effort: any
+	// read error just means "no override", same outcome. A non-
+	// declaration resolver failure gets logged because it points
+	// at a real regression (bad .ctxrc, permission issue) that
+	// would otherwise silently disable overrides.
+	ctxDir, ctxErr := rc.ContextDir()
+	switch {
+	case ctxErr == nil:
+		overrideDir := filepath.Join(ctxDir, dir.HooksMessages, hk)
+		if data, readErr := io.SafeReadFile(overrideDir, filename); readErr == nil {
+			return renderTemplate(string(data), vars, fallback)
+		}
+	case !errors.Is(ctxErr, errCtx.ErrDirNotDeclared):
+		logWarn.Warn(warn.ContextDirResolve, ctxErr)
 	}
 
 	// 2. Embedded default
@@ -97,7 +115,15 @@ func NudgeBox(relayPrefix, title, content string) string {
 		box.Top + title + token.Space +
 		strings.Repeat(box.BorderFill, pad) + token.NewlineLF
 	msg += BoxLines(content)
-	if line := ctxContext.DirLine(); line != "" {
+	// Rendering-layer swallow: [NudgeBox] returns only a string, so
+	// there is no channel to propagate a DirLine resolver error. The
+	// noisy-TUI log inside DirLine already surfaces any unexpected
+	// failure, and in hook contexts (the usual caller chain)
+	// FullPreamble already gated ContextDir, so the error path is
+	// unreachable in practice. If the line is empty or the resolver
+	// errored, skip the footer.
+	line, _ := ctxContext.DirLine()
+	if line != "" {
 		msg += box.LinePrefix + line + token.NewlineLF
 	}
 	msg += box.Bottom

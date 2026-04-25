@@ -11,11 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
-	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	writeSession "github.com/ActiveMemory/ctx/internal/write/session"
@@ -33,22 +30,13 @@ import (
 // Returns:
 //   - error: Always nil
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	sessionID, ok := coreCheck.PausePreamble(cmd, stdin)
+	if !ok {
 		return nil
 	}
-
-	sessionID, _ := cmd.Flags().GetString(cFlag.SessionID)
-	if sessionID == "" {
-		input := coreSession.ReadInput(stdin)
-		sessionID = input.SessionID
-	}
-	if sessionID == "" {
-		sessionID = session.IDUnknown
-	}
-
-	path := nudge.PauseMarkerPath(sessionID)
-	if removeErr := os.Remove(path); removeErr != nil {
-		ctxLog.Warn(warn.Remove, path, removeErr)
+	if resumeErr := nudge.Resume(sessionID); resumeErr != nil {
+		ctxLog.Warn(warn.StateDirProbe, resumeErr)
+		return nil
 	}
 	writeSession.Resumed(cmd, sessionID)
 	return nil

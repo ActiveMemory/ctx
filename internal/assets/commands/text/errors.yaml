@@ -34,36 +34,45 @@ err.fmt.no-files:
   short: 'no context files found in %s'
 err.fmt.needs-formatting:
   short: files need formatting
-err.backup.backup-global:
-  short: 'global backup: %w'
-err.backup.backup-project:
-  short: 'project backup: %w'
-err.backup.backup-smb-config:
-  short: 'parse SMB config: %w'
 err.backup.context-dir-not-found:
   short: "context directory not found: %s - run 'ctx init'"
-err.backup.create-archive:
-  short: 'create archive file: %w'
 err.backup.create-archive-dir:
   short: 'failed to create archive directory: %w'
 err.backup.create-backup:
   short: 'failed to create backup %s: %w'
-err.backup.invalid-backup-scope:
-  short: 'invalid scope %q: must be project, global, or all'
-err.backup.invalid-smb-url:
-  short: 'invalid SMB URL: %s'
-err.backup.mount-failed:
-  short: 'failed to mount %s: %w'
-err.backup.smb-missing-share:
-  short: 'SMB URL missing share name: %s'
-err.backup.source-not-found:
-  short: 'source not found: %s'
 err.backup.write-archive:
   short: 'failed to write archive: %w'
-err.backup.write-smb:
-  short: 'write to SMB: %w'
 err.context.dir-not-found:
   short: 'context directory not found: '
+err.context.not-declared-zero:
+  short: |-
+    no context directory specified for this project
+    See: https://ctx.ist/recipes/activating-context/
+err.context.not-declared-one:
+  short: |-
+    no context directory specified; a likely candidate is at %s
+    See: https://ctx.ist/recipes/activating-context/
+err.context.not-declared-many:
+  short: |-
+    no context directory specified; multiple candidates visible:
+    %s
+    See: https://ctx.ist/recipes/activating-context/
+err.context.relative-not-allowed:
+  short: |-
+    CTX_DIR must be an absolute path; got %q
+    See: https://ctx.ist/recipes/activating-context/
+err.context.non-canonical-basename:
+  short: |-
+    CTX_DIR basename must be %q; got %q
+    See: https://ctx.ist/recipes/activating-context/
+err.context.dir-not-a-directory:
+  short: 'CTX_DIR points at a file, not a directory: %s'
+err.context.dir-stat:
+  short: 'cannot stat CTX_DIR %s: %w'
+err.activate.no-candidates:
+  short: |-
+    ctx activate: no .context/ directory found from this location
+    See: https://ctx.ist/recipes/activating-context/
 err.cli.no-tool-specified:
   short: 'no tool specified: use --tool <tool> or set the tool field in .ctxrc'
 err.config.golden-not-found:
@@ -120,8 +129,6 @@ err.date.invalid-date:
   short: 'invalid %s date %q (expected YYYY-MM-DD): %w'
 err.date.invalid-date-value:
   short: invalid date %q (expected YYYY-MM-DD)
-err.fs.boundary-violation:
-  short: "%w\nUse --allow-outside-cwd to override this check"
 err.fs.create-dir:
   short: 'failed to create directory %s: %w'
 err.fs.dir-not-found:
@@ -546,8 +553,6 @@ err.validate.context-dir-symlink:
   short: 'context directory %q is a symlink'
 err.validate.context-file-symlink:
   short: 'context file %q is a symlink'
-err.validate.context-outside-root:
-  short: 'context directory %q resolves outside project root %q'
 err.validate.invalid-selection:
   short: 'invalid selection: %q (expected 1-%d)'
 err.validate.unknown-document:

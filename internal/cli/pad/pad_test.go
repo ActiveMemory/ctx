@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/spf13/cobra"
@@ -28,6 +29,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // setupEncrypted creates a temp dir with a .context/
@@ -47,8 +49,7 @@ func setupEncrypted(t *testing.T) string {
 		rc.Reset()
 	})
 
-	rc.Reset()
-	rc.OverrideContextDir(dir.Context)
+	testctx.Declare(t, tmpDir)
 
 	ctxDir := filepath.Join(tmpDir, dir.Context)
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
@@ -93,7 +94,7 @@ func setupPlaintext(t *testing.T) string {
 		t.Fatal(err)
 	}
 
-	rc.Reset()
+	testctx.Declare(t, tmpDir)
 
 	ctxDir := filepath.Join(tmpDir, dir.Context)
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
@@ -500,10 +501,10 @@ func TestNoKey_EncryptedFileExists(t *testing.T) {
 		rc.Reset()
 	})
 
-	rc.Reset()
-	rc.OverrideContextDir(dir.Context)
-
 	ctxDir := filepath.Join(tmpDir, dir.Context)
+	t.Setenv(env.CtxDir, ctxDir)
+	rc.Reset()
+
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
@@ -536,7 +537,10 @@ func TestDecryptionFailure_WrongKey(t *testing.T) {
 
 	// Replace the key with a different one
 	newKey, _ := crypto.GenerateKey()
-	kp := rc.KeyPath()
+	kp, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		t.Fatal(kpErr)
+	}
 	if err := crypto.SaveKey(kp, newKey); err != nil {
 		t.Fatal(err)
 	}
@@ -799,7 +803,10 @@ func TestEnsureGitignore_AppendToExisting(t *testing.T) {
 func TestScratchpadPath_Plaintext(t *testing.T) {
 	setupPlaintext(t)
 
-	path := store.ScratchpadPath()
+	path, err := store.ScratchpadPath()
+	if err != nil {
+		t.Fatalf("ScratchpadPath: %v", err)
+	}
 	if !strings.HasSuffix(path, pad.Md) {
 		t.Errorf("core.ScratchpadPath() = %q, want suffix %q", path, pad.Md)
 	}
@@ -808,7 +815,10 @@ func TestScratchpadPath_Plaintext(t *testing.T) {
 func TestScratchpadPath_Encrypted(t *testing.T) {
 	setupEncrypted(t)
 
-	path := store.ScratchpadPath()
+	path, err := store.ScratchpadPath()
+	if err != nil {
+		t.Fatalf("ScratchpadPath: %v", err)
+	}
 	if !strings.HasSuffix(path, pad.Enc) {
 		t.Errorf("core.ScratchpadPath() = %q, want suffix %q", path, pad.Enc)
 	}
@@ -817,7 +827,10 @@ func TestScratchpadPath_Encrypted(t *testing.T) {
 func TestKeyPath(t *testing.T) {
 	setupEncrypted(t)
 
-	path := store.KeyPath()
+	path, err := store.KeyPath()
+	if err != nil {
+		t.Fatalf("store.KeyPath() error = %v", err)
+	}
 	if !strings.HasSuffix(path, ".key") {
 		t.Errorf("core.KeyPath() = %q, want suffix %q", path, ".key")
 	}
@@ -848,10 +861,10 @@ func TestEnsureKey_EncFileExistsNoKey(t *testing.T) {
 		rc.Reset()
 	})
 
-	rc.Reset()
-	rc.OverrideContextDir(dir.Context)
-
 	ctxDir := filepath.Join(tmpDir, dir.Context)
+	t.Setenv(env.CtxDir, ctxDir)
+	rc.Reset()
+
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
@@ -883,10 +896,10 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 		rc.Reset()
 	})
 
-	rc.Reset()
-	rc.OverrideContextDir(dir.Context)
-
 	ctxDir := filepath.Join(tmpDir, dir.Context)
+	t.Setenv(env.CtxDir, ctxDir)
+	rc.Reset()
+
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
@@ -897,7 +910,10 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 		t.Fatalf("ensureKey error: %v", err)
 	}
 
-	kp := rc.KeyPath()
+	kp, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		t.Fatalf("rc.KeyPath() error = %v", kpErr)
+	}
 	if _, statErr := os.Stat(kp); statErr != nil {
 		t.Errorf("key file should have been created at %s", kp)
 	}
@@ -911,7 +927,10 @@ func TestWriteEntries_Plaintext(t *testing.T) {
 		t.Fatalf("writeEntries error: %v", err)
 	}
 
-	path := store.ScratchpadPath()
+	path, pErr := store.ScratchpadPath()
+	if pErr != nil {
+		t.Fatal(pErr)
+	}
 	data, err := os.ReadFile(path) //nolint:gosec // test temp path
 	if err != nil {
 		t.Fatal(err)
@@ -924,7 +943,10 @@ func TestWriteEntries_Plaintext(t *testing.T) {
 func TestReadEntries_Plaintext(t *testing.T) {
 	setupPlaintext(t)
 
-	path := store.ScratchpadPath()
+	path, pErr := store.ScratchpadPath()
+	if pErr != nil {
+		t.Fatal(pErr)
+	}
 	if err := os.WriteFile(path, []byte("alpha\nbeta\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -978,7 +1000,11 @@ func TestResolve_WithConflictFiles(t *testing.T) {
 	setupEncrypted(t)
 
 	// Load the key
-	key, err := crypto.LoadKey(rc.KeyPath())
+	kp, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		t.Fatal(kpErr)
+	}
+	key, err := crypto.LoadKey(kp)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1028,7 +1054,11 @@ func TestResolve_WithConflictFiles(t *testing.T) {
 func TestResolve_OnlyOursFile(t *testing.T) {
 	setupEncrypted(t)
 
-	key, err := crypto.LoadKey(rc.KeyPath())
+	kp, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		t.Fatal(kpErr)
+	}
+	key, err := crypto.LoadKey(kp)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2610,7 +2640,11 @@ func TestMerge_EncryptedInput(t *testing.T) {
 	}
 
 	// Create encrypted file using the same project key.
-	key, loadErr := crypto.LoadKey(rc.KeyPath())
+	kp, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		t.Fatal(kpErr)
+	}
+	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
 		t.Fatal(loadErr)
 	}
@@ -2654,7 +2688,11 @@ func TestMerge_PlaintextFallback(t *testing.T) {
 func TestMerge_MixedEncPlain(t *testing.T) {
 	tmpDir := setupEncrypted(t)
 
-	key, loadErr := crypto.LoadKey(rc.KeyPath())
+	kp, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		t.Fatal(kpErr)
+	}
+	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
 		t.Fatal(loadErr)
 	}
@@ -2943,7 +2981,11 @@ func TestMerge_EncryptedWithBlobDedup(t *testing.T) {
 	}
 
 	// Get the project key.
-	key, loadErr := crypto.LoadKey(rc.KeyPath())
+	kp, kpErr := rc.KeyPath()
+	if kpErr != nil {
+		t.Fatal(kpErr)
+	}
+	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
 		t.Fatal(loadErr)
 	}

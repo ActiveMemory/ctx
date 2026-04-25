@@ -33,7 +33,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/mcp/handler/task"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/stat"
 	"github.com/ActiveMemory/ctx/internal/tidy"
-	"github.com/ActiveMemory/ctx/internal/validate"
 )
 
 // Status loads context and returns a status summary.
@@ -88,17 +87,11 @@ func Status(d *entity.MCPDeps) (string, error) {
 //
 // Returns:
 //   - string: confirmation message with entry type and target file
-//   - error: boundary, validation, or write error
+//   - error: validation or write error
 func Add(
 	d *entity.MCPDeps,
 	entryType, content string, opts entity.EntryOpts,
 ) (string, error) {
-	if boundaryErr := validate.Boundary(
-		d.ContextDir,
-	); boundaryErr != nil {
-		return "", boundaryErr
-	}
-
 	if writeErr := entry.ValidateAndWrite(entity.EntryParams{
 		Type:        entryType,
 		Content:     content,
@@ -131,14 +124,8 @@ func Add(
 //
 // Returns:
 //   - string: confirmation message with completed task text
-//   - error: boundary or completion error
+//   - error: completion error
 func Complete(d *entity.MCPDeps, query string) (string, error) {
-	if boundaryErr := validate.Boundary(
-		d.ContextDir,
-	); boundaryErr != nil {
-		return "", boundaryErr
-	}
-
 	completedTask, _, completeErr := taskComplete.Complete(
 		query, d.ContextDir,
 	)
@@ -295,16 +282,11 @@ func Recall(
 //
 // Returns:
 //   - string: confirmation with file name and review status
-//   - error: boundary, validation, or write error
+//   - error: validation or write error
 func WatchUpdate(
 	d *entity.MCPDeps,
 	entryType, content string, opts entity.EntryOpts,
 ) (string, error) {
-	boundaryErr := validate.Boundary(d.ContextDir)
-	if boundaryErr != nil {
-		return "", boundaryErr
-	}
-
 	// Handle the "complete" type as a special case.
 	if entryType == cfgEntry.Complete {
 		completedTask, _, completeErr := taskComplete.Complete(
@@ -367,14 +349,8 @@ func WatchUpdate(
 //
 // Returns:
 //   - string: summary of moved tasks and cleaned sections
-//   - error: boundary, context load, or write error
+//   - error: context load or write error
 func Compact(d *entity.MCPDeps, archive bool) (string, error) {
-	if boundaryErr := validate.Boundary(
-		d.ContextDir,
-	); boundaryErr != nil {
-		return "", boundaryErr
-	}
-
 	ctx, loadErr := load.Do(d.ContextDir)
 	if loadErr != nil {
 		return "", loadErr

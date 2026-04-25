@@ -16,8 +16,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // TestDriftCommand tests the drift command.
@@ -33,6 +35,8 @@ func TestDriftCommand(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// First init
 	initCmd := initialize.Cmd()
@@ -64,6 +68,8 @@ func TestDriftJSONOutput(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
+	testctx.Declare(t, tmpDir)
+
 	// First init
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -92,6 +98,7 @@ func TestRunDrift_NoContext(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv(env.CtxDir, "")
 
 	rc.Reset()
 	defer rc.Reset()
@@ -105,7 +112,9 @@ func TestRunDrift_NoContext(t *testing.T) {
 	if runErr == nil {
 		t.Fatal("expected error when no .context/ exists")
 	}
-	if !strings.Contains(runErr.Error(), "not initialized") {
+	// Under the explicit-context-dir model, the error is "no context
+	// directory specified" because nothing declared one.
+	if !strings.Contains(runErr.Error(), "context directory") {
 		t.Errorf("unexpected error: %v", runErr)
 	}
 }
@@ -123,7 +132,7 @@ func setupContextDir(t *testing.T) (string, func()) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 
-	rc.Reset()
+	testctx.Declare(t, tmpDir)
 
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -251,6 +260,7 @@ func TestRunDrift_GenericError(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, dir.Context))
 
 	rc.Reset()
 	defer rc.Reset()

@@ -7,20 +7,25 @@
 package site
 
 import (
-	"path/filepath"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
-	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Cmd returns the journal site subcommand.
+//
+// The --output default is resolved inside [Run] against the
+// declared context directory. Computing it at construction time
+// would require rc.ContextDir() to succeed before cobra has
+// parsed the flags, which is too early under the
+// explicit-context-dir model. Leaving the default empty and
+// resolving lazily keeps the failure path clean: a missing
+// context directory surfaces as a single actionable error from
+// Run, not a silently-empty flag default.
 //
 // Returns:
 //   - *cobra.Command: Command for generating a static site from journal entries
@@ -42,10 +47,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	defaultOutput := filepath.Join(rc.ContextDir(), dir.JournalSite)
 	flagbind.StringFlagPDefault(
 		c, &output, cFlag.Output, cFlag.ShortOutput,
-		defaultOutput, flag.DescKeyJournalSiteOutput,
+		"", flag.DescKeyJournalSiteOutput,
 	)
 	flagbind.BoolFlag(c, &build, cFlag.Build, flag.DescKeyJournalSiteBuild)
 	flagbind.BoolFlag(c, &serve, cFlag.Serve, flag.DescKeyJournalSiteServe)

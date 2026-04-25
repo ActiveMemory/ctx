@@ -1,4 +1,4 @@
-# internal/cli/system — Hook Plumbing
+# internal/cli/system: Hook Plumbing
 
 The `ctx system` command hosts 7 visible subcommands and 26 hidden
 subcommands that implement Claude Code hook logic. See `doc.go`
@@ -14,7 +14,7 @@ All hook subcommands follow the same contract:
 3. The subcommand reads JSON from stdin (2-second timeout)
 4. Runs its check logic
 5. Writes advisory output to stdout (or JSON for block commands)
-6. Exits 0 — hooks never block initialization
+6. Exits 0; hooks never block initialization
 
 ### stdin JSON (from Claude Code)
 
@@ -68,7 +68,6 @@ Counter state lives in `.context/state/` via `core/counter/`.
 
 | Command | Purpose |
 |---------|---------|
-| `backup` | Timestamped tar.gz of context + Claude data |
 | `bootstrap` | Print context dir path (for agent init) |
 | `events` | Display event log entries |
 | `message` | Manage hook message templates (list/show/edit/reset) |
@@ -84,7 +83,7 @@ Counter state lives in `.context/state/` via `core/counter/`.
 | `mark-wrapped-up` | Record wrap-up ceremony timestamp |
 | `session-event` | Record session start/end lifecycle |
 
-### UserPromptSubmit hooks (hidden, 14 checks)
+### UserPromptSubmit hooks (hidden, 13 checks)
 
 | Command | Trigger | Throttle |
 |---------|---------|----------|
@@ -99,16 +98,14 @@ Counter state lives in `.context/state/` via `core/counter/`.
 | `check-memory-drift` | Every prompt | Daily |
 | `check-reminder` | Every prompt | None (always runs) |
 | `check-freshness` | Every prompt | Daily |
-| `check-backup-age` | Every prompt | Daily |
 | `check-skill-discovery` | Every prompt | One-shot |
 | `heartbeat` | Every prompt | None (telemetry) |
 
-### PreToolUse hooks (hidden, 6 matchers)
+### PreToolUse hooks (hidden, 5 matchers)
 
 | Command | Matches | Action |
 |---------|---------|--------|
 | `block-non-path-ctx` | Bash | Block bare `./ctx` invocations |
-| `block-dangerous-command` | Bash | Block destructive patterns |
 | `context-load-gate` | All tools | Inject context with cooldown |
 | `qa-reminder` | Bash | Lint/test reminder before commits |
 | `specs-nudge` | EnterPlanMode | Save plans to specs/ |
@@ -131,7 +128,6 @@ Counter state lives in `.context/state/` via `core/counter/`.
 | `core/persistence/` | Persistence state tracking |
 | `core/heartbeat/` | Heartbeat mtime management |
 | `core/load/` | Context-load-gate state |
-| `core/archive/` | Backup to SMB shares |
 
 ## Adding a New Hook
 

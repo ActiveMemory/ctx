@@ -38,7 +38,11 @@ func completeTask(query string) error {
 		return errTask.NoneSpecified()
 	}
 
-	filePath := filepath.Join(rc.ContextDir(), ctx.Task)
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return ctxErr
+	}
+	filePath := filepath.Join(ctxDir, ctx.Task)
 	nl := token.NewlineLF
 
 	content, readErr := io.SafeReadUserFile(filepath.Clean(filePath))

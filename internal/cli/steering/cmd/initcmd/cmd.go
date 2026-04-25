@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -52,8 +53,26 @@ func Cmd() *cobra.Command {
 // Returns:
 //   - error: nil on success, or if the context directory is missing
 func Run(c *cobra.Command) error {
-	contextDir := rc.ContextDir()
+	contextDir, err := rc.RequireContextDir()
+	if err != nil {
+		c.SilenceUsage = true
+		return err
+	}
+	return RunWithDir(c, contextDir)
+}
 
+// RunWithDir is the implementation of Run that accepts an explicit
+// context directory. Used by `ctx init`, which has just created the
+// directory and needs to scaffold foundation steering files without
+// requiring the user to have declared CTX_DIR first.
+//
+// Parameters:
+//   - c: The cobra command for output
+//   - contextDir: absolute path to the .context/ directory
+//
+// Returns:
+//   - error: nil on success, or a file creation error
+func RunWithDir(c *cobra.Command, contextDir string) error {
 	// Check that .context/ directory exists.
 	if _, statErr := ctxIo.SafeStat(
 		contextDir,
@@ -61,7 +80,7 @@ func Run(c *cobra.Command) error {
 		return errSteering.ContextDirMissing()
 	}
 
-	steeringDir := rc.SteeringDir()
+	steeringDir := filepath.Join(contextDir, dir.Steering)
 
 	// Ensure the steering directory exists.
 	if mkdirErr := ctxIo.SafeMkdirAll(

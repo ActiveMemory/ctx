@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // TestTasksCommands tests the tasks subcommands.
@@ -35,6 +36,8 @@ func TestTasksCommands(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// First init
 	initCmd := initialize.Cmd()
@@ -97,6 +100,8 @@ func setupTaskDir(t *testing.T) string {
 		_ = os.Chdir(origDir)
 		rc.Reset()
 	})
+
+	testctx.Declare(t, tmpDir)
 
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -163,18 +168,24 @@ func TestCountPendingTasks(t *testing.T) {
 func TestTasksFilePath(t *testing.T) {
 	setupTaskDir(t)
 
-	path := path.File()
-	if !strings.Contains(path, ctx.Task) {
-		t.Errorf("File() = %q, want to contain %q", path, ctx.Task)
+	p, err := path.File()
+	if err != nil {
+		t.Fatalf("File: %v", err)
+	}
+	if !strings.Contains(p, ctx.Task) {
+		t.Errorf("File() = %q, want to contain %q", p, ctx.Task)
 	}
 }
 
 func TestArchiveDirPath(t *testing.T) {
 	setupTaskDir(t)
 
-	path := path.ArchiveDir()
-	if !strings.Contains(path, dir.Archive) {
-		t.Errorf("ArchiveDir() = %q, want to contain %q", path, dir.Archive)
+	p, err := path.ArchiveDir()
+	if err != nil {
+		t.Fatalf("ArchiveDir: %v", err)
+	}
+	if !strings.Contains(p, dir.Archive) {
+		t.Errorf("ArchiveDir() = %q, want to contain %q", p, dir.Archive)
 	}
 }
 
@@ -186,13 +197,11 @@ func TestSnapshotCommand_NoTasks(t *testing.T) {
 	}
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
-		rc.Reset()
 	})
 
 	// Create .context but no TASKS.md
-	rc.Reset()
-	rc.OverrideContextDir(dir.Context)
-	if err := os.MkdirAll(dir.Context, 0750); err != nil {
+	ctxDir := testctx.Declare(t, tmpDir)
+	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -247,12 +256,10 @@ func TestArchiveCommand_NoTasks(t *testing.T) {
 	}
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
-		rc.Reset()
 	})
 
-	rc.Reset()
-	rc.OverrideContextDir(dir.Context)
-	if err := os.MkdirAll(dir.Context, 0750); err != nil {
+	ctxDir := testctx.Declare(t, tmpDir)
+	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 

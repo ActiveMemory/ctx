@@ -8,6 +8,41 @@
 #
 # See also: examples.yaml (Example fields), flags.yaml (flag descriptions).
 
+activate:
+  long: |-
+    Emit a shell-specific export statement that binds CTX_DIR to the
+    selected .context/ directory for the current shell.
+
+    Intended usage:
+
+        eval "$(ctx activate)"      # bind the one visible .context/
+
+    Activate scans upward from the current working directory
+    collecting every .context/ directory found. When exactly one is
+    visible it emits its path; when none or several are found it
+    refuses and prints the candidates so a human chooses explicitly
+    (typically by `cd`-ing closer to the project root).
+
+    When the parent shell already has CTX_DIR set to a different
+    value, the output gains a leading `# ctx: replacing stale ...`
+    comment so the user sees the change in `eval` output before the
+    replacement takes effect.
+
+    Activate is the only command in the CLI that walks the filesystem
+    during resolution. All other commands read CTX_DIR and error
+    loudly when it is undeclared, relative, or non-canonical.
+  short: Emit shell export to bind CTX_DIR
+deactivate:
+  long: |-
+    Emit a shell-specific `unset CTX_DIR` statement for the current
+    shell.
+
+    Intended usage:
+
+        eval "$(ctx deactivate)"
+
+    Pairs with `ctx activate` for symmetric shell integration.
+  short: Emit shell unset for CTX_DIR
 add:
   long: |-
     Add a new decision, task, learning, or convention
@@ -1065,9 +1100,9 @@ system:
     Go binaries and a small set of session-lifecycle plumbing
     commands used by skills and editor integrations.
 
-    User-facing maintenance commands (backup, bootstrap, event,
-    message, prune, resource, stats) have been promoted to
-    top-level commands. Run `ctx --help` to see them.
+    User-facing maintenance commands (bootstrap, event, message,
+    prune, resource, stats) have been promoted to top-level
+    commands. Run `ctx --help` to see them.
 
     Plumbing subcommands (used by skills and automation):
       mark-journal         Update journal processing state
@@ -1078,6 +1113,7 @@ system:
 
     Hook subcommands (Claude Code plugin - safe to run manually):
       context-load-gate           Context file read directive (PreToolUse)
+      check-anchor-drift          Stale-anchor sanity check
       check-context-size          Context size checkpoint
       check-ceremony              Session ceremony adoption nudge
       check-persistence           Context persistence nudge
@@ -1088,8 +1124,6 @@ system:
       check-version               Version update nudge
       check-map-staleness         Architecture map staleness nudge
       block-non-path-ctx          Block non-PATH ctx invocations
-      block-dangerous-command     Block dangerous command patterns (project-local)
-      check-backup-age            Backup staleness check (project-local)
       check-task-completion       Task completion nudge after edits
       post-commit                 Post-commit context capture nudge
       qa-reminder                 QA reminder before completion
@@ -1097,30 +1131,6 @@ system:
       check-memory-drift          Memory drift nudge (MEMORY.md changed)
       heartbeat                   Session heartbeat webhook (no stdout)
   short: Hook plumbing (hidden); promoted commands moved to top-level
-backup:
-  long: |-
-    Create timestamped tar.gz archives of project context and/or global
-    Claude Code data. Optionally copies archives to an SMB share.
-
-    Scopes:
-      project  .context/, .claude/, ideas/, ~/.bashrc
-      global   ~/.claude/ (excludes todos/)
-      all      Both project and global (default)
-
-    Environment:
-      CTX_BACKUP_SMB_URL    - SMB share URL (e.g. smb://host/share)
-      CTX_BACKUP_SMB_SUBDIR - Subdirectory on share (default: ctx-sessions)
-  short: Backup context and Claude data
-system.blockdangerouscommand:
-  long: |-
-    Regex safety net for commands that the deny-list cannot express.
-    Catches mid-command sudo, mid-command git push, and binary installs
-    to bin directories.
-
-    Hook event: PreToolUse (Bash)
-    Output: {"decision":"block","reason":"..."} or silent
-    Silent when: command doesn't match any dangerous pattern
-  short: Block dangerous command patterns (regex safety net)
 system.blocknonpathctx:
   long: |-
     Blocks ./ctx, go run ./cmd/ctx, and absolute-path ctx invocations.
@@ -1133,20 +1143,21 @@ system.blocknonpathctx:
   short: Block non-PATH ctx invocations
 bootstrap:
   short: Print context location for AI agents
-system.checkbackupage:
+system.checkanchordrift:
   long: |-
-    Checks if the .context backup is stale (>2 days old) or the SMB share
-    is unmounted. Outputs a VERBATIM relay warning when issues are found.
-    Throttled to once per day.
-
-    Environment:
-      CTX_BACKUP_SMB_URL - SMB share URL (e.g. smb://myhost/myshare).
-                           If unset, the SMB mount check is skipped.
+    Compares the parent shell's CTX_DIR (captured as
+    CTX_DIR_INHERITED before the standard hook injection)
+    against the Claude-injected CLAUDE_PROJECT_DIR/.context
+    anchor. When the two diverge, emits a VERBATIM warning
+    banner naming both values so the user can spot when
+    their interactive CLI / `!`-pragma calls are writing to
+    a different project than Claude Code is in.
 
     Hook event: UserPromptSubmit
-    Output: VERBATIM relay with warning box, silent otherwise
-    Silent when: backup is fresh, or already checked today
-  short: Backup staleness check hook
+    Output: VERBATIM warning (when drifted), silent otherwise
+    Silent when: CTX_DIR_INHERITED is empty (no shell-level
+    activation), or matches CTX_DIR after filepath.Clean.
+  short: Stale-anchor sanity hook
 system.checkceremony:
   long: |-
     Scans the last 3 journal entries for /ctx-remember and /ctx-wrap-up

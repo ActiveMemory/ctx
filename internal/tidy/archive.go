@@ -36,7 +36,11 @@ import (
 //   - string: Path to the written archive file
 //   - error: If creating the archive directory or writing fails
 func WriteArchive(prefix, heading, content string) (string, error) {
-	archiveDir := filepath.Join(rc.ContextDir(), dir.Archive)
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return "", ctxErr
+	}
+	archiveDir := filepath.Join(ctxDir, dir.Archive)
 	if mkErr := io.SafeMkdirAll(archiveDir, fs.PermExec); mkErr != nil {
 		return "", errBackup.CreateArchiveDir(mkErr)
 	}

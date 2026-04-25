@@ -18,14 +18,24 @@ import (
 //
 // Returns:
 //   - string: path under the active context directory
-func logFilePath() string {
-	return filepath.Join(rc.ContextDir(), dir.State, event.FileLog)
+//   - error: non-nil when the context directory is not declared
+func logFilePath() (string, error) {
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(ctxDir, dir.State, event.FileLog), nil
 }
 
 // prevLogFilePath returns the absolute path to the rotated event log.
 //
 // Returns:
 //   - string: path under the active context directory
-func prevLogFilePath() string {
-	return filepath.Join(rc.ContextDir(), dir.State, event.FileLogPrev)
+//   - error: non-nil when the context directory is not declared
+func prevLogFilePath() (string, error) {
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(ctxDir, dir.State, event.FileLogPrev), nil
 }

@@ -54,7 +54,15 @@ import (
 func Run(
 	cmd *cobra.Command, output string, build, serve bool,
 ) error {
-	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
+	ctxDir, ctxErr := rc.RequireContextDir()
+	if ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
+	if output == "" {
+		output = filepath.Join(ctxDir, dir.JournalSite)
+	}
+	journalDir := filepath.Join(ctxDir, dir.Journal)
 
 	// Check if the journal directory exists
 	if _, statErr := os.Stat(journalDir); os.IsNotExist(statErr) {

@@ -115,14 +115,17 @@ func FormatWarnings(findings []finding) string {
 //
 // Returns:
 //   - string: formatted nudge box, or empty string if silenced
-func EmitWarning(sessionID, fileWarnings string) string {
+//   - error: propagated from [nudge.EmitAndRelay] so callers can
+//     honor the log-first principle: if the relay audit entry or
+//     webhook fails, the nudge box should not be printed.
+func EmitWarning(sessionID, fileWarnings string) (string, error) {
 	fallback := fileWarnings + token.NewlineLF + desc.Text(
 		text.DescKeyCheckKnowledgeFallback,
 	)
 	content := message.Load(hook.CheckKnowledge, hook.VariantWarning,
 		map[string]any{knowledge.VarFileWarnings: fileWarnings}, fallback)
 	if content == "" {
-		return ""
+		return "", nil
 	}
 
 	box := message.NudgeBox(
@@ -134,37 +137,51 @@ func EmitWarning(sessionID, fileWarnings string) string {
 		map[string]any{knowledge.VarFileWarnings: fileWarnings})
 	notifyMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckKnowledge, desc.Text(text.DescKeyCheckKnowledgeRelayMessage))
-	nudge.EmitAndRelay(notifyMsg, sessionID, ref)
-	return box
+	if err := nudge.EmitAndRelay(notifyMsg, sessionID, ref); err != nil {
+		return "", err
+	}
+	return box, nil
 }
 
 // CheckHealth runs the full knowledge health check: scans files,
 // formats warnings, and builds output if any thresholds are exceeded.
 //
+// ctxDir is supplied by the caller (typically a FullPreamble-gated
+// hook) so this function does not re-resolve it; a second resolution
+// would be dead code today and would ambiguously pair (false, err)
+// with the genuine "no warnings found" return value.
+//
 // Parameters:
 //   - sessionID: session identifier for notifications
+//   - ctxDir: absolute path to the context directory
 //
 // Returns:
 //   - string: formatted nudge box, or empty string if no warnings
 //   - bool: true if warnings were found
-func CheckHealth(sessionID string) (string, bool) {
+//   - error: propagated from [EmitWarning] so callers can honour the
+//     log-first principle and skip printing the box when the relay
+//     audit entry could not be written.
+func CheckHealth(sessionID, ctxDir string) (string, bool, error) {
 	lrnThreshold := rc.EntryCountLearnings()
 	decThreshold := rc.EntryCountDecisions()
 	convThreshold := rc.ConventionLineCount()
 
 	// All disabled - nothing to check
 	if lrnThreshold == 0 && decThreshold == 0 && convThreshold == 0 {
-		return "", false
+		return "", false, nil
 	}
 
 	findings := ScanFiles(
-		rc.ContextDir(), decThreshold, lrnThreshold, convThreshold,
+		ctxDir, decThreshold, lrnThreshold, convThreshold,
 	)
 	if len(findings) == 0 {
-		return "", false
+		return "", false, nil
 	}
 
 	fileWarnings := FormatWarnings(findings)
-	box := EmitWarning(sessionID, fileWarnings)
-	return box, true
+	box, emitErr := EmitWarning(sessionID, fileWarnings)
+	if emitErr != nil {
+		return "", false, emitErr
+	}
+	return box, true, nil
 }

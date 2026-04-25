@@ -2,26 +2,6 @@
 # Each entry maps to a template at <hook>/<variant>.txt.
 # Fields: hook, variant, category, description, vars (optional).
 
-- hook: block-dangerous-command
-  variant: cp-to-bin
-  category: ctx-specific
-  description: Block copying binaries to bin directories
-
-- hook: block-dangerous-command
-  variant: install-to-local-bin
-  category: ctx-specific
-  description: Block copying binaries to ~/.local/bin
-
-- hook: block-dangerous-command
-  variant: mid-git-push
-  category: ctx-specific
-  description: Block git push without user approval
-
-- hook: block-dangerous-command
-  variant: mid-sudo
-  category: ctx-specific
-  description: Block sudo usage
-
 - hook: block-non-path-ctx
   variant: absolute-path
   category: ctx-specific
@@ -36,12 +16,6 @@
   variant: go-run
   category: ctx-specific
   description: Block go run ./cmd/ctx invocation
-
-- hook: check-backup-age
-  variant: warning
-  category: customizable
-  description: Backup staleness warning
-  vars: [Warnings]
 
 - hook: check-freshness
   variant: stale

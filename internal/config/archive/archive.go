@@ -20,11 +20,3 @@ const (
 	// SnapshotTimeFormat is the compact timestamp layout for snapshot filenames.
 	SnapshotTimeFormat = "2006-01-02-1504"
 )
-
-// Backup archive writer identifiers for error reporting.
-const (
-	// WriterGzip identifies the gzip compression writer.
-	WriterGzip = "gzip"
-	// WriterTar identifies the tar archive writer.
-	WriterTar = "tar"
-)

@@ -15,9 +15,9 @@ bugs, not security holes.
 maps what exists. `/ctx-architecture-enrich` improves map fidelity.
 This skill generates concrete, disprovable claims about where the
 map will break under real-world conditions. Every finding is a
-hypothesis with evidence — not a suspicion, not a vibe.
+hypothesis with evidence, not a suspicion or a vibe.
 
-The goal is to find failure modes that code review misses — the
+The goal is to find failure modes that code review misses: the
 ones that ship, pass tests, and break in production at 3am.
 
 This skill requires `/ctx-architecture` artifacts as input.
@@ -45,16 +45,16 @@ If they don't exist, stop and tell the user to run
 ## Inputs
 
 **Required** (must exist before running):
-- `.context/ARCHITECTURE.md` — system map
-- `.context/DETAILED_DESIGN*.md` — module-level detail
-- `.context/map-tracking.json` — coverage data
+- `.context/ARCHITECTURE.md`: system map
+- `.context/DETAILED_DESIGN*.md`: module-level detail
+- `.context/map-tracking.json`: coverage data
 
 **Optional** (enhances analysis):
-- `.context/DANGER-ZONES.md` — existing danger zones from
+- `.context/DANGER-ZONES.md`: existing danger zones from
   `/ctx-architecture` principal mode (used as starting points,
   not as the final word)
-- GitNexus MCP — blast radius estimation, shared-state detection
-- Gemini Search — cross-reference against known failure patterns
+- GitNexus MCP: blast radius estimation, shared-state detection
+- Gemini Search: cross-reference against known failure patterns
 
 ## Process
 
@@ -62,7 +62,7 @@ If they don't exist, stop and tell the user to run
 
 1. Check that architecture artifacts exist. If missing:
    > Architecture artifacts not found. Run `/ctx-architecture`
-   > first — this skill analyzes existing maps, it doesn't
+   > first; this skill analyzes existing maps, it doesn't
    > create them.
 2. Load `map-tracking.json` to identify which modules have
    sufficient coverage (confidence >= 0.7). Low-confidence
@@ -91,7 +91,7 @@ For each module with confidence >= 0.7:
      order, shutdown sequence)
    - State machines and transition points
 
-3. For each mutation point, read the actual source code —
+3. For each mutation point, read the actual source code,
    DETAILED_DESIGN summaries are not enough for failure
    analysis. You need to see the actual lock scope, the actual
    error check, the actual nil guard.
@@ -279,7 +279,7 @@ _Run after /ctx-architecture for full coverage._
 
 ## Critical (risk score >= 7, silent or cascading)
 
-### DZ-1: [Location] — [Failure Mode]
+### DZ-1: [Location]: [Failure Mode]
 
 **Category**: Concurrency | Ordering | Cache | Amplification
   | Ownership | Error Handling | Scaling | Idempotency
@@ -304,7 +304,7 @@ _Run after /ctx-architecture for full coverage._
 ## Unanalyzed Modules
 
 Modules with coverage < 0.7 in map-tracking.json:
-- `module/path` (confidence: 0.3) — risk unknown
+- `module/path` (confidence: 0.3): risk unknown
 ```
 
 **Confidence levels:**

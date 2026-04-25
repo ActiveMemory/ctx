@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/render"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/scan"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writeChange "github.com/ActiveMemory/ctx/internal/write/change"
 )
 
@@ -29,6 +30,10 @@ import (
 // Returns:
 //   - error: Non-nil if reference time detection fails
 func Run(cmd *cobra.Command, since string) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	refTime, refLabel, err := detect.ReferenceTime(since)
 	if err != nil {
 		return errInit.DetectReferenceTime(err)

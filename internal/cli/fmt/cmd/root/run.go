@@ -40,7 +40,11 @@ var contextFiles = []string{
 //   - error: Non-nil if context directory is missing or file
 //     operations fail; exits 1 in check mode if files would change
 func Run(cmd *cobra.Command, width int, check bool) error {
-	ctxDir := rc.ContextDir()
+	ctxDir, ctxErr := rc.RequireContextDir()
+	if ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	if _, statErr := os.Stat(ctxDir); os.IsNotExist(statErr) {
 		return errFmt.NoContextDir()
 	}

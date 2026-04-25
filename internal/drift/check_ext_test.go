@@ -15,6 +15,7 @@ import (
 	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/steering"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // **Validates: Requirements 19.7**
@@ -90,7 +91,7 @@ func TestCheckSteeringTools(t *testing.T) {
 			defer func() { _ = os.Chdir(origDir) }()
 
 			writeCtxRC(t, tmpDir, fmt.Sprintf("steering:\n  dir: %s\n", steeringDir))
-			rc.Reset()
+			testctx.Declare(t, tmpDir)
 			defer rc.Reset()
 
 			report := &Report{
@@ -284,6 +285,8 @@ func TestCheckSyncStaleness(t *testing.T) {
 			defer func() { _ = os.Chdir(origDir) }()
 
 			writeCtxRC(t, tmpDir, fmt.Sprintf("steering:\n  dir: %s\n", steeringDir))
+			// Declare CTX_DIR so rc.ContextDir() resolves (no walk-up).
+			t.Setenv("CTX_DIR", filepath.Join(tmpDir, ".context"))
 			rc.Reset()
 			defer rc.Reset()
 
@@ -351,7 +354,7 @@ func TestCheckRCTool(t *testing.T) {
 			defer func() { _ = os.Chdir(origDir) }()
 
 			writeCtxRC(t, tmpDir, tt.rcContent)
-			rc.Reset()
+			testctx.Declare(t, tmpDir)
 			defer rc.Reset()
 
 			report := &Report{

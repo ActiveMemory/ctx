@@ -27,7 +27,11 @@ import (
 //   - error: Non-nil if either file read/write fails
 func Run(cmd *cobra.Command, _ []string) error {
 	w := cmd.OutOrStdout()
-	ctxDir := rc.ContextDir()
+	ctxDir, err := rc.RequireContextDir()
+	if err != nil {
+		cmd.SilenceUsage = true
+		return err
+	}
 
 	decisionsPath := filepath.Join(ctxDir, ctx.Decision)
 	decisionsErr := index.Reindex(

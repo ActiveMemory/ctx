@@ -47,7 +47,12 @@ func Cmd() *cobra.Command {
 // Returns:
 //   - error: nil on success, or a skill removal error
 func Run(c *cobra.Command, name string) error {
-	skillsDir := filepath.Join(rc.ContextDir(), dir.Skills)
+	ctxDir, ctxErr := rc.RequireContextDir()
+	if ctxErr != nil {
+		c.SilenceUsage = true
+		return ctxErr
+	}
+	skillsDir := filepath.Join(ctxDir, dir.Skills)
 
 	if err := skill.Remove(skillsDir, name); err != nil {
 		return err

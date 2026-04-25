@@ -164,38 +164,6 @@ func DurationFlag(
 	)
 }
 
-// PersistentBoolFlag registers a persistent boolean
-// flag with no shorthand, defaulting to false.
-//
-// Parameters:
-//   - c: Cobra command to register on
-//   - p: Pointer to the bool variable
-//   - name: Flag name constant
-//   - descKey: YAML DescKey for the flag description
-func PersistentBoolFlag(
-	c *cobra.Command, p *bool, name, descKey string,
-) {
-	c.PersistentFlags().BoolVar(
-		p, name, false, desc.Flag(descKey),
-	)
-}
-
-// PersistentStringFlag registers a persistent string
-// flag with no shorthand, defaulting to empty string.
-//
-// Parameters:
-//   - c: Cobra command to register on
-//   - p: Pointer to the string variable
-//   - name: Flag name constant
-//   - descKey: YAML DescKey for the flag description
-func PersistentStringFlag(
-	c *cobra.Command, p *string, name, descKey string,
-) {
-	c.PersistentFlags().StringVar(
-		p, name, "", desc.Flag(descKey),
-	)
-}
-
 // StringArrayFlagP registers a string array flag with a shorthand
 // letter. The flag can be repeated: --tag x --tag y.
 //

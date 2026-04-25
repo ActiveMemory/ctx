@@ -35,8 +35,9 @@ by MCP clients (Claude Desktop, Cursor, VS Code Copilot), **not run
 directly from a shell**. See [Configuration](#configuration) below
 for how each host launches it.
 
-**Flags:** None. The server uses the configured context directory
-(from `--context-dir`, `CTX_DIR`, `.ctxrc`, or the default `.context`).
+**Flags:** None. The server uses the declared context directory
+from `CTX_DIR`. As with every other ctx command, that variable
+must be set: the server does not walk the filesystem.
 
 **Examples**:
 
@@ -45,7 +46,7 @@ for how each host launches it.
 ctx mcp serve
 
 # Pin a context directory for a specific workspace
-ctx --context-dir /path/to/project/.context mcp serve
+CTX_DIR=/path/to/project/.context ctx mcp serve
 
 # Verify the binary starts without a client attached (Ctrl-C to exit)
 ctx mcp serve < /dev/null

@@ -9,9 +9,6 @@ package git
 // Binary is the git executable name.
 const Binary = "git"
 
-// DotDir is the name of the git metadata directory (or file in worktrees).
-const DotDir = ".git"
-
 // Subcommand names passed as the first argument to git.
 const (
 	Branch   = "branch"

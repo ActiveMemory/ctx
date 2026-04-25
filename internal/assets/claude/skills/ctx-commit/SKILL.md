@@ -55,7 +55,7 @@ Unless the user says `--skip-qa` or "skip checks":
 **Verify before claiming ready**: map each claim to evidence.
 "Tests pass" requires test output with 0 failures. "Build succeeds"
 requires exit 0. "Lint clean" requires linter output with 0 errors.
-Run commands fresh — never reuse earlier output. Before proceeding
+Run commands fresh; never reuse earlier output. Before proceeding
 to stage, answer these self-audit questions:
 
 1. What assumptions did I make?

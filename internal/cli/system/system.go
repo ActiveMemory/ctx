@@ -10,10 +10,9 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/parent"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_dangerous_command"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_non_path_ctx"
 	sysBootstrap "github.com/ActiveMemory/ctx/internal/cli/system/cmd/bootstrap"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_backup_age"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_anchor_drift"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_ceremony"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_context_size"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_freshness"
@@ -44,10 +43,10 @@ import (
 // Cmd returns the "ctx system" parent command.
 //
 // Hosts hidden Claude Code hook plumbing and agent-only commands.
-// User-facing maintenance commands (backup, prune, sysinfo, usage)
-// are top-level; hook-facing commands (event, message, notify,
-// pause, resume) live under "ctx hook". Both groups are registered
-// in internal/bootstrap/group.go. Bootstrap remains here as
+// User-facing maintenance commands (prune, sysinfo, usage) are
+// top-level; hook-facing commands (event, message, notify, pause,
+// resume) live under "ctx hook". Both groups are registered in
+// internal/bootstrap/group.go. Bootstrap remains here as
 // agent-only plumbing.
 //
 // Hook subcommands implement Claude Code hook logic as native Go
@@ -57,10 +56,9 @@ import (
 //   - *cobra.Command: Parent command with hook plumbing subcommands
 func Cmd() *cobra.Command {
 	return parent.Cmd(cmd.DescKeySystem, cmd.UseSystem,
-		block_dangerous_command.Cmd(),
 		sysBootstrap.Cmd(),
 		block_non_path_ctx.Cmd(),
-		check_backup_age.Cmd(),
+		check_anchor_drift.Cmd(),
 		check_ceremony.Cmd(),
 		check_context_size.Cmd(),
 		check_freshness.Cmd(),

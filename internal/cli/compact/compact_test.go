@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	taskComplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // TestCompactCommand tests the compact command.
@@ -28,6 +29,8 @@ func TestCompactCommand(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// First init
 	initCmd := initialize.Cmd()
@@ -57,6 +60,8 @@ func TestCompactWithTasks(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// First init
 	initCmd := initialize.Cmd()

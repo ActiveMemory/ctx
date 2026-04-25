@@ -15,6 +15,24 @@ making a decision, learning something, or hitting a milestone:
 persist before continuing. Don't wait for session end; it may
 never come cleanly.
 
+## File Interaction Protocol
+
+When a task involves reading, modifying, or reasoning about a file:
+
+1. **Read before act**
+    - Read the file content directly before making any change
+    - Do not rely on memory, summaries, or prior reads
+2. **No partial reads**
+    - Do not sample the beginning or end of a file and assume the rest
+3. **Freshness requirement**
+    - A read must be recent relative to the action
+    - Do not reuse stale context from earlier in the session
+4. **No implicit scope**
+    - "This change is small" is not a valid justification
+    - "This file is large" is not a valid justification
+5. **Edit authority comes from visibility**
+    - If you haven't seen it, you don't get to modify it
+
 ## Spec Requirement
 
 Do not begin implementation work without a spec.
@@ -39,29 +57,11 @@ Required review inputs:
 - the current implementation
 
 Review prompt:
-- "Review <spec-file>, TASKS.md, and the current implementation for drift, 
+- "Review <spec-file>, TASKS.md, and the current implementation for drift,
   omissions, invalid assumptions, and incomplete requirements."
 
-Do not declare work complete until review findings are either resolved or 
+Do not declare work complete until review findings are either resolved or
 explicitly recorded.
-
-## File Interaction Protocol
-
-When a task involves reading, modifying, or reasoning about a file:
-
-1. **Read before act**
-    - Read the file content directly before making any change
-    - Do not rely on memory, summaries, or prior reads
-2. **No partial reads**
-    - Do not sample the beginning or end of a file and assume the rest
-3. **Freshness requirement**
-    - A read must be recent relative to the action
-    - Do not reuse stale context from earlier in the session
-4. **No implicit scope**
-    - "This change is small" is not a valid justification
-    - "This file is large" is not a valid justification
-5. **Edit authority comes from visibility**
-    - If you haven't seen it, you don't get to modify it
 
 ## Invoking ctx
 
@@ -72,8 +72,22 @@ ctx agent         # ✓ correct
 ./dist/ctx        # ✗ avoid hardcoded paths
 go run ./cmd/ctx  # ✗ avoid unless developing ctx itself
 ```
-
 Check with `which ctx` if unsure whether it's installed.
+
+### When ctx Returns an Error
+
+Triage the error before reacting:
+
+- **Invocation error**: the message points at your call: unknown
+  flag, unknown command, wrong argument count, missing required
+  flag. Read `ctx <command> --help`, fix the call, and retry.
+- **Everything else**: missing context directory, config problem,
+  hook rejection, permission denied, unexpected failure. Relay the
+  output to the user **verbatim** and stop. Do not add flags, run
+  other commands, edit files to fix the cause, or retry. Wait for
+  the user's next instruction.
+
+When unsure which kind you're looking at, treat it as the second.
 
 ## Context Readback
 
@@ -84,13 +98,35 @@ conventions." Do not begin implementation until you have done so.
 ## Supplementary Files
 
 These files live in `.context/` alongside the core context files.
-Read them when the task at hand warrants it — not on every session.
+Read them when the task at hand warrants it, not on every session.
 
 | File               | Read when                                                      |
 |--------------------|----------------------------------------------------------------|
 | ARCHITECTURE.md    | Working on structure, adding packages, or tracing flow         |
 | DETAILED_DESIGN.md | Deep-diving into internals (generated via `/ctx-architecture`) |
 | GLOSSARY.md        | Encountering unfamiliar project-specific terminology           |
+
+## Context Directory Lives at the Project Root
+
+The project root is the parent of `.context/`, by contract —
+specifically `filepath.Dir(ContextDir())`. That's where `ctx sync`,
+`ctx drift`, and the memory-drift hook look for code, secrets,
+and `MEMORY.md`.
+
+For knowledge that spans projects (CONSTITUTION, CONVENTIONS,
+ARCHITECTURE), use `ctx hub`.
+
+Recommended layout:
+
+```
+~/WORKSPACE/my-project
+  ├── .git
+  ├── .context
+  ├── Makefile
+  ├── Makefile.ctx
+  └── specs
+      └── ...
+```
 
 ## Reason Before Acting
 
@@ -148,7 +184,6 @@ Surface problems worth mentioning:
 - **Stale context files** (not modified recently): mention before
   stale context influences work
 - **Bloated token count** (over 30k): offer `ctx compact`
-- **Long single-line entries**: run `ctx fmt` to normalize line widths
 - **Drift between files and code**: spot-check paths from
   ARCHITECTURE.md against the actual file tree
 
@@ -170,14 +205,6 @@ is running long:
 
 Context compaction happens automatically, but the next window loses
 nuance. Explicit persistence is cheaper than re-discovery.
-
-### Check Available Skills
-
-Before starting any task, scan the skill list in your system
-prompt to see if a dedicated skill already handles the request.
-Prefer invoking an existing skill over ad-hoc implementation:
-skills encode project conventions, quality gates, and
-persistence steps that are easy to miss otherwise.
 
 ### Conversational Triggers
 
@@ -290,7 +317,7 @@ Never assume. If you don't see it in files, you don't know it.
 ## Planning Work
 
 Every commit requires a `Spec:` trailer (CONSTITUTION rule). This means
-every piece of work needs a spec — no exceptions, no "trivial" qualifier.
+every piece of work needs a spec; no exceptions, no "trivial" qualifier.
 A one-liner bugfix gets a one-paragraph spec; a multi-package feature gets
 a full design document. The spec exists for traceability, not ceremony.
 
@@ -389,4 +416,3 @@ re-discovering it. 5 minutes reading saves 50 minutes of wasted work.
 - [ ] DECISIONS.md has no superseded entries unmarked
 - [ ] LEARNINGS.md gotchas still relevant
 - [ ] Run `ctx drift` and address warnings
-- [ ] Run `ctx fmt` to normalize line widths

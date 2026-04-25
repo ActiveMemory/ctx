@@ -1,4 +1,4 @@
-# internal/mcp — MCP Server
+# internal/mcp: MCP Server
 
 JSON-RPC 2.0 server exposing ctx context to any MCP-compatible
 AI tool over stdin/stdout. See `doc.go` for the full resource,
@@ -44,14 +44,14 @@ mcp/
 
 Three files, always:
 
-1. **Define** in `server/def/tool/tool.go` — add entry to `Defs`
+1. **Define** in `server/def/tool/tool.go`: add entry to `Defs`
    array with name, description, and `InputSchema` (JSON Schema
    for parameters)
 
-2. **Implement** in `handler/tool.go` — add method on `Handler`
+2. **Implement** in `handler/tool.go`: add method on `Handler`
    with signature `func (h *Handler) ToolName(args...) (string, error)`
 
-3. **Route** in `server/route/tool/tool.go` — add case in the
+3. **Route** in `server/route/tool/tool.go`: add case in the
    dispatch switch calling your handler method, wrap result with
    `out.ToolResult()`
 
@@ -59,36 +59,36 @@ Three files, always:
 
 Same pattern, three files:
 
-1. **Define** in `server/def/prompt/prompt.go` — add entry to
+1. **Define** in `server/def/prompt/prompt.go`: add entry to
    `Defs` array with name, description, and arguments
 
-2. **Build** in `server/route/prompt/prompt.go` — add builder
+2. **Build** in `server/route/prompt/prompt.go`: add builder
    function returning `[]proto.PromptMessage`
 
-3. **Route** in `server/route/prompt/dispatch.go` — add case in
+3. **Route** in `server/route/prompt/dispatch.go`: add case in
    the dispatch switch
 
 ## How To Add a New Resource
 
-1. **Register** in `server/catalog/data.go` — add URI-to-file
+1. **Register** in `server/catalog/data.go`: add URI-to-file
    mapping
 
-2. **Handle** in `server/resource/resource.go` — if it needs
+2. **Handle** in `server/resource/resource.go`: if it needs
    special assembly (like the agent packet), add a reader function
 
 ## Key Design Decisions
 
-- **handler/ has no JSON-RPC coupling** — all tool methods take
+- **handler/ has no JSON-RPC coupling**: all tool methods take
   typed args and return `(string, error)`. Protocol translation
   happens in server/route/. This makes handler/ testable without
   stdin/stdout.
 
-- **Single-threaded main loop** — one request at a time. Poller
+- **Single-threaded main loop**: one request at a time. Poller
   runs in a background goroutine. Thread safety via mutex on
   stdout writer only.
 
-- **Governance is advisory** — session state tracks tool calls and
+- **Governance is advisory**: session state tracks tool calls and
   nudges (drift check, persist reminder) but never blocks execution.
 
-- **Protocol version** — 2024-11-05. Capabilities advertised:
+- **Protocol version**: 2024-11-05. Capabilities advertised:
   resources (subscribe=true), tools, prompts.

@@ -65,6 +65,13 @@ func TestBinaryIntegration(t *testing.T) {
 		t.Fatalf("failed to create test dir: %v", err)
 	}
 
+	// Under the explicit-context-dir model each subprocess invocation
+	// must declare CTX_DIR. t.Setenv mutates the current process env
+	// and exec.Cmd with cmd.Env == nil inherits that env, so a single
+	// Setenv here propagates to every child below, and is unset
+	// automatically at test end.
+	t.Setenv("CTX_DIR", filepath.Join(testDir, ".context"))
+
 	// Subtest: ctx init creates expected files
 	t.Run("init creates expected files", func(t *testing.T) {
 		initCmd := exec.Command(binaryPath, "init") //nolint:gosec // test binary

@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/merge"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
@@ -33,12 +34,19 @@ func Run(
 	keyFile string,
 	dryRun bool,
 ) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	current, readErr := store.ReadEntries()
 	if readErr != nil {
 		return readErr
 	}
 
-	key := merge.LoadKey(keyFile)
+	key, keyErr := merge.LoadKey(keyFile)
+	if keyErr != nil {
+		return keyErr
+	}
 
 	seen := make(map[string]bool, len(current))
 	for _, e := range current {

@@ -353,6 +353,7 @@ These have no CLI equivalent. They require the agent's reasoning.
 | `/ctx-reflect`            | Pause and assess session progress                                                       |
 | `/ctx-consolidate`        | Merge overlapping learnings or decisions                                                |
 | `/ctx-prompt-audit`       | Analyze prompting patterns for improvement                                              |
+| `/ctx-plan`               | Stress-test an existing plan through adversarial interview                              |
 | `/ctx-plan-import`       | Import Claude Code plan files into project specs                                        |
 | `/ctx-implement`          | Execute a plan step-by-step with verification                                           |
 | `/ctx-worktree`           | Manage parallel agent worktrees                                                         |
@@ -390,7 +391,6 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 | `ctx site`                | Site management commands                        |
 | `ctx config`              | Manage runtime configuration profiles           |
 | `ctx system`              | System diagnostics and hook commands            |
-| `ctx backup`       | Back up context and Claude data to tar.gz / SMB |
 | `ctx completion`          | Generate shell autocompletion scripts           |
 
 !!! tip "Rule of Thumb"

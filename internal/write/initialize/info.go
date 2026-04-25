@@ -152,6 +152,29 @@ func InfoNextSteps(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteInitNextStepsBlock))
 }
 
+// InfoActivateHint prints the shell-activation block shown right
+// after `ctx init` finishes. The block tells the user how to bind
+// CTX_DIR for their shell so subsequent ctx commands resolve to the
+// freshly-created context directory.
+//
+// Under the single-source-anchor resolution model
+// (specs/single-source-context-anchor.md) this step is not
+// optional: every non-exempt ctx command refuses to run without a
+// declared CTX_DIR. The hint closes the loop for new users so
+// `ctx init` → next command actually works.
+//
+// Parameters:
+//   - cmd: cobra command for output.
+//   - contextDir: absolute path to the just-created .context/
+//     directory; used in the `export CTX_DIR=...` variant of the
+//     hint. The `eval "$(ctx activate)"` variant takes no arg
+//     under the single-source-anchor model and discovers the
+//     path itself.
+func InfoActivateHint(cmd *cobra.Command, contextDir string) {
+	tpl := desc.Text(text.DescKeyWriteInitActivateHint)
+	cmd.Println(fmt.Sprintf(tpl, contextDir))
+}
+
 // InfoWorkflowTips prints the workflow tips block showing key skills
 // and the ceremony loop.
 //

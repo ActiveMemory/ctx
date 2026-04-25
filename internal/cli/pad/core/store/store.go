@@ -30,11 +30,16 @@ import (
 //
 // Returns:
 //   - string: Encrypted or plaintext path based on rc.ScratchpadEncrypt()
-func ScratchpadPath() string {
-	if rc.ScratchpadEncrypt() {
-		return filepath.Join(rc.ContextDir(), pad.Enc)
+//   - error: non-nil when the context directory is not declared
+func ScratchpadPath() (string, error) {
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		return "", err
 	}
-	return filepath.Join(rc.ContextDir(), pad.Md)
+	if rc.ScratchpadEncrypt() {
+		return filepath.Join(ctxDir, pad.Enc), nil
+	}
+	return filepath.Join(ctxDir, pad.Md), nil
 }
 
 // KeyPath returns the full path to the encryption key file.
@@ -44,7 +49,9 @@ func ScratchpadPath() string {
 //
 // Returns:
 //   - string: Resolved key file path
-func KeyPath() string {
+//   - error: propagated from [rc.KeyPath] when the context
+//     directory is not declared or otherwise unresolvable
+func KeyPath() (string, error) {
 	return rc.KeyPath()
 }
 
@@ -60,7 +67,10 @@ func KeyPath() string {
 // Returns:
 //   - error: Non-nil on missing key with existing data, or generation failure
 func EnsureKey(cmd *cobra.Command) error {
-	kp := KeyPath()
+	kp, kpErr := KeyPath()
+	if kpErr != nil {
+		return kpErr
+	}
 
 	// Key already exists - nothing to do.
 	if _, statErr := os.Stat(kp); statErr == nil {
@@ -69,7 +79,11 @@ func EnsureKey(cmd *cobra.Command) error {
 
 	// Encrypted file already exists without a key - we can't generate a new
 	// one because it wouldn't decrypt the existing data.
-	if _, statErr := os.Stat(ScratchpadPath()); statErr == nil {
+	padPath, padErr := ScratchpadPath()
+	if padErr != nil {
+		return padErr
+	}
+	if _, statErr := os.Stat(padPath); statErr == nil {
 		return errCrypto.NoKeyAt(kp)
 	}
 
@@ -152,7 +166,10 @@ func ReadEntriesWithIDs() ([]parse.Entry, error) {
 func WriteEntriesWithIDs(
 	cmd *cobra.Command, entries []parse.Entry,
 ) error {
-	path := ScratchpadPath()
+	path, pathErr := ScratchpadPath()
+	if pathErr != nil {
+		return pathErr
+	}
 	plaintext := parse.FormatEntriesWithIDs(entries)
 
 	if !rc.ScratchpadEncrypt() {
@@ -163,7 +180,10 @@ func WriteEntriesWithIDs(
 		return ensureErr
 	}
 
-	kp := KeyPath()
+	kp, kpErr := KeyPath()
+	if kpErr != nil {
+		return kpErr
+	}
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
 		return errCrypto.LoadKey(loadErr, kp)

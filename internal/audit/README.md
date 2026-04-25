@@ -40,4 +40,4 @@ directory.**
 
 If a test fails, the fix belongs in the code under test, not here.
 If you believe an exception is truly warranted, surface it to the
-user and let them decide — do not silently widen a check.
+user and let them decide; do not silently widen a check.

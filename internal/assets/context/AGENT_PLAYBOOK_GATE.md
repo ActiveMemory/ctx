@@ -8,9 +8,15 @@ lifecycle details, or anti-patterns.
 
 ```bash
 ctx status        # correct
-./dist/ctx        # wrong — never hardcode paths
-go run ./cmd/ctx  # wrong — unless developing ctx itself
-````
+./dist/ctx        # wrong: never hardcode paths
+go run ./cmd/ctx  # wrong: unless developing ctx itself
+```
+
+## When `ctx` Errors
+
+If the error names your flag, argument, or command, read
+`ctx <cmd> --help` and fix the call. Otherwise, relay verbatim
+and stop. When unsure, stop.
 
 ## File Interaction Protocol
 
@@ -30,12 +36,12 @@ When a task involves reading, modifying, or reasoning about a file:
 Do not begin implementation without a spec.
 
 Every commit requires a `Spec:` trailer. Every piece of work needs
-a spec — no exceptions. Scale the spec to the work. Use `/ctx-spec`
+a spec; no exceptions. Scale the spec to the work. Use `/ctx-spec`
 to scaffold.
 
 ## Proactive Persistence
 
-After completing a task, making a decision, or hitting a gotcha —
+After completing a task, making a decision, or hitting a gotcha,
 persist before continuing. Don't wait for session end.
 
 ## Chunk and Checkpoint

@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
-	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // setupContextDir creates a minimal .context/ for promotion tests.
@@ -24,7 +24,7 @@ func setupContextDir(t *testing.T) (string, func()) {
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
-	rc.Reset()
+	testctx.Declare(t, workDir)
 
 	contextDir := filepath.Join(workDir, dir.Context)
 	if mkErr := os.MkdirAll(contextDir, 0o755); mkErr != nil {

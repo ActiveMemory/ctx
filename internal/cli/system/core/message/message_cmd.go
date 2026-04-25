@@ -7,6 +7,7 @@
 package message
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -45,17 +46,28 @@ func FormatTemplateVars(info *messages.HookMessageInfo) string {
 
 // OverridePath returns the user override file path for a hook/variant.
 //
+// Any resolver error (including [errCtx.ErrDirNotDeclared]) is
+// propagated. The previous empty-string return silently produced a
+// CWD-relative path when joined by callers, which was exactly the
+// "silent write to wrong location" class of bug this branch aims to
+// eliminate.
+//
 // Parameters:
 //   - hook: hook name
 //   - variant: template variant name
 //
 // Returns:
 //   - string: full filesystem path to the override file
-func OverridePath(hook, variant string) string {
+//   - error: non-nil when the context directory cannot be resolved
+func OverridePath(hook, variant string) (string, error) {
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		return "", err
+	}
 	return filepath.Join(
-		rc.ContextDir(), dir.HooksMessages,
+		ctxDir, dir.HooksMessages,
 		hook, variant+file.ExtTxt,
-	)
+	), nil
 }
 
 // HasOverride checks whether a user override file exists.
@@ -66,7 +78,19 @@ func OverridePath(hook, variant string) string {
 //
 // Returns:
 //   - bool: true if an override file exists
-func HasOverride(hook, variant string) bool {
-	_, statErr := os.Stat(OverridePath(hook, variant))
-	return statErr == nil
+//   - error: non-nil when the context directory cannot be resolved
+//     or when the override file cannot be stat'd for a reason other
+//     than not-exist (permission, I/O)
+func HasOverride(hook, variant string) (bool, error) {
+	path, err := OverridePath(hook, variant)
+	if err != nil {
+		return false, err
+	}
+	if _, statErr := os.Stat(path); statErr != nil {
+		if errors.Is(statErr, os.ErrNotExist) {
+			return false, nil
+		}
+		return false, statErr
+	}
+	return true, nil
 }

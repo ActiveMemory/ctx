@@ -25,12 +25,14 @@ import (
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/inspect"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	entryType "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/entry"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // ---------------------------------------------------------------------------
@@ -659,7 +661,12 @@ func TestWriteEntry_FileNotFound(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// No .context/ directory, so files won't exist
+	// Declare a non-existent context dir so we hit "file not found"
+	// rather than "context directory not declared".
+	t.Setenv("CTX_DIR", filepath.Join(tmpDir, ".context"))
+	rc.Reset()
+	t.Cleanup(rc.Reset)
+
 	err := entry.Write(entity.EntryParams{
 		Type:    "task",
 		Content: "something",
@@ -683,6 +690,8 @@ func TestRun_UnknownType(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -715,6 +724,8 @@ func TestRun_NoContent(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
+	testctx.Declare(t, tmpDir)
+
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
@@ -744,6 +755,8 @@ func TestRun_TaskWithPriority(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
@@ -783,6 +796,8 @@ func TestRun_TaskWithSection(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})

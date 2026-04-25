@@ -14,9 +14,6 @@ const (
 	// DescKeyErrValidateContextFileSymlink is the text key for err validate
 	// context file symlink messages.
 	DescKeyErrValidateContextFileSymlink = "err.validate.context-file-symlink"
-	// DescKeyErrValidateContextOutsideRoot is the text key for err validate
-	// context outside root messages.
-	DescKeyErrValidateContextOutsideRoot = "err.validate.context-outside-root"
 	// DescKeyErrValidateInvalidSelection is the text key for err validate invalid
 	// selection messages.
 	DescKeyErrValidateInvalidSelection = "err.validate.invalid-selection"

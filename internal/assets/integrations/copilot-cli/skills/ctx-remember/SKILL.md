@@ -37,7 +37,7 @@ feel like a file search rather than genuine recall:
 
 1. **Load context packet**:
    ```bash
-   ctx agent --budget 4000
+   ctx agent
    ```
 2. **Read the files** listed in the packet's "Read These Files"
    section (TASKS.md, DECISIONS.md, LEARNINGS.md, etc.)

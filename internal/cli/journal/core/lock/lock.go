@@ -258,7 +258,12 @@ func Run(
 		return errSession.AllWithPattern()
 	}
 
-	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
+	ctxDir, ctxErr := rc.RequireContextDir()
+	if ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
+	journalDir := filepath.Join(ctxDir, dir.Journal)
 
 	jState, loadErr := state.Load(journalDir)
 	if loadErr != nil {

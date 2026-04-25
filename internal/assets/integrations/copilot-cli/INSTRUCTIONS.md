@@ -1,4 +1,4 @@
-# ctx Agent Instructions — Copilot CLI
+# ctx Agent Instructions: Copilot CLI
 
 <!-- ctx:context -->
 <!-- DO NOT REMOVE: This marker indicates ctx-managed content -->
@@ -11,11 +11,13 @@ This project uses Context (`ctx`) for context persistence across sessions.
 ## On Session Start
 
 1. **Run `ctx system bootstrap`**: CRITICAL, not optional.
-   This tells you where the context directory is. If it fails or returns
-   no context_dir, STOP and warn the user.
+   This tells you where the context directory is. If it returns any
+   error, relay the error output to the user verbatim, point them at
+   https://ctx.ist/recipes/activating-context/ for setup, and STOP.
+   Do not try to recover: the user decides.
 2. **Read AGENT_PLAYBOOK.md** from the context directory: it explains
    how to use this system
-3. **Run `ctx agent --budget 4000`** for a content summary
+3. **Run `ctx agent`** for a content summary
 
 ## When Asked "Do You Remember?"
 
@@ -41,7 +43,7 @@ Read them silently, then present what you found as recall, not as a search.
 
 ```bash
 # Get AI-optimized context packet (what you should know)
-ctx agent --budget 4000
+ctx agent
 
 # Or see full status
 ctx status
@@ -51,7 +53,7 @@ ctx status
 
 | File            | Purpose                                |
 |-----------------|----------------------------------------|
-| CONSTITUTION.md | Hard rules — NEVER violate             |
+| CONSTITUTION.md | Hard rules: NEVER violate              |
 | TASKS.md        | Current work items                     |
 | DECISIONS.md    | Architectural decisions with rationale |
 | LEARNINGS.md    | Gotchas, tips, lessons learned         |
@@ -76,7 +78,7 @@ Periodically ask yourself:
 
 > "If this session ended right now, would the next session know what happened?"
 
-If no — save a session file or update context files before continuing.
+If no, save a session file or update context files before continuing.
 
 ## Session Persistence
 

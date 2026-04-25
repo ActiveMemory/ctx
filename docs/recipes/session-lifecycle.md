@@ -29,6 +29,21 @@ persisting context before you close it, so you can see how each piece connects.
 
 Read on for the full walkthrough with examples.
 
+!!! note "Before You Start: Activate the Project"
+    ctx commands (and the skills that call them) require `CTX_DIR` to be
+    declared for the shell you're working in; `ctx` does not walk the
+    filesystem to find `.context/`. Once per shell (or via your shell
+    rc / direnv):
+
+    ```bash
+    eval "$(ctx activate)"
+    ```
+
+    If you skip this, every skill below will surface an error naming
+    the fix. See
+    [Activating a Context Directory](activating-context.md) for the
+    full recipe.
+
 !!! note "What Is a Readback?"
     A **readback** is a **structured summary** where the agent plays back what
     it knows:
@@ -437,7 +452,7 @@ Conversational equivalents: you can drive the same lifecycle with plain language
 | Load    | `/ctx-remember`     | "Do you remember?" / "What were we working on?"         |
 | Orient  | `/ctx-status`       | "How's our context looking?"                            |
 | Pick    | `/ctx-next`         | "What should we work on?" / "Let's do the caching task" |
-| Work    | --                  | "Only change files in internal/cache/"                  |
+| Work    | *(none)*            | "Only change files in internal/cache/"                  |
 | Commit  | `/ctx-commit`       | "Commit this" / "Ship it"                               |
 | Reflect | `/ctx-reflect`      | "What did we learn?" / *(agent offers at milestones)*   |
 | Wrap up | `/ctx-wrap-up`      | *(use the slash command for completeness)*              |

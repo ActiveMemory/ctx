@@ -12,6 +12,8 @@ import (
 	coreJournal "github.com/ActiveMemory/ctx/internal/cli/system/core/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	writeJournal "github.com/ActiveMemory/ctx/internal/write/mark_journal"
 )
 
@@ -28,7 +30,12 @@ import (
 // Returns:
 //   - error: Non-nil on state load/save failure or unknown stage
 func Run(cmd *cobra.Command, filename, stage string) error {
-	if !state.Initialized() {
+	initialized, initErr := state.Initialized()
+	if initErr != nil {
+		logWarn.Warn(warn.StateInitializedProbe, initErr)
+		return nil
+	}
+	if !initialized {
 		return nil
 	}
 

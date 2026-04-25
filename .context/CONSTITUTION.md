@@ -12,11 +12,13 @@ DO NOT UPDATE FOR:
 - Temporary constraints (use TASKS.md blockers)
 -->
 
-These rules are INVIOLABLE. If a task requires violating these, the task is wrong.
+These rules are INVIOLABLE. If a task requires violating these, the
+task is wrong.
 
 ## Completion Over Motion
 
-Work is only complete when it is **fully done**, not when progress has been made.
+Work is only complete when it is **fully done**, not when progress
+has been made.
 
 - The requested outcome must be delivered end-to-end.
 - Partial progress is not completion.
@@ -33,10 +35,10 @@ If you start something, you own it, you finish it.
 ## Context Integrity Invariants
 
 - [ ] **Never** modify or reason about a file based on partial or assumed content
-- [ ] If a file is the subject of an operation, its relevant contents must be 
+- [ ] If a file is the subject of an operation, its relevant contents must be
   **fully understood** before acting
-- [ ] Sampling, guessing, or relying on prior assumptions instead of 
-  reading is a **violation**
+- [ ] Sampling, guessing, or relying on prior assumptions instead of reading 
+  is a **violation**
 
 ---
 
@@ -83,27 +85,36 @@ Leave the system in a better state than you found it.
 
 - [ ] All code must pass tests before commit
 - [ ] No TODO comments in main branch (move to TASKS.md)
-- [ ] Path construction uses stdlib — no string concatenation (security: prevents path traversal)
+- [ ] Path construction uses stdlib: no string concatenation
+  (security: prevents path traversal)
 
 ## Process Invariants
 
 - [ ] All architectural changes require a decision record
-- [ ] Context loading is not a detour from your task. It IS the first step of every session. A 30-second read delay is always cheaper than a decision made without context.
-- [ ] Every commit references a spec (`Spec: specs/<name>.md` trailer) — no exceptions, no "non-trivial" qualifier. Even one-liner fixes need a spec for traceability. Use `/ctx-commit` instead of raw `git commit`.
+- [ ] Context loading is not a detour from your task. It IS the first
+  step of every session. A 30-second read delay is always cheaper
+  than a decision made without context.
+- [ ] Every commit references a spec (`Spec: specs/<name>.md` trailer):
+  no exceptions, no "non-trivial" qualifier. Even one-liner fixes
+  need a spec for traceability. Use `/ctx-commit` instead of raw
+  `git commit`.
 
 ## TASKS.md Structure Invariants
 
-TASKS.md must remain a replayable checklist. Uncheck all items and re-run = verify/redo all tasks in order.
+TASKS.md must remain a replayable checklist. Uncheck all items and
+re-run = verify/redo all tasks in order.
 
-- [ ] **Never move tasks** — tasks stay in their Phase section permanently
-- [ ] **Never remove Phase headers** — Phase labels provide structure and order
-- [ ] **Never merge or collapse Phase sections** — each phase is a logical unit
-- [ ] **Never delete tasks** — mark as `[x]` completed, or `[-]` skipped with reason
-- [ ] **Use inline labels for status** — add `#in-progress` to task text, don't move it
-- [ ] **No "In Progress" / "Next Up" sections** — these encourage moving tasks
-- [ ] **Ask before restructuring** — if structure changes seem needed, ask the user first
+- [ ] **Never move tasks**: tasks stay in their Phase section permanently
+- [ ] **Never remove Phase headers**: Phase labels provide structure and order
+- [ ] **Never merge or collapse Phase sections**: each phase is a logical unit
+- [ ] **Never delete tasks**: mark as `[x]` completed, or `[-]` skipped with reason
+- [ ] **Use inline labels for status**: add `#in-progress` to task text, don't move it
+- [ ] **No "In Progress" / "Next Up" sections**: these encourage moving tasks
+- [ ] **Ask before restructuring**: if structure changes seem needed, ask the user first
 
 ## Context Preservation Invariants
 
-- [ ] **Archival is allowed, deletion is not** — use `ctx tasks archive` to move completed tasks to `.context/archive/`, never delete context history
-- [ ] **Archive preserves structure** — archived tasks keep their Phase headers for traceability
+- [ ] **Archival is allowed, deletion is not**: use `ctx task archive` to move
+  completed tasks to `.context/archive/`, never delete context history
+- [ ] **Archive preserves structure**: archived tasks keep their Phase headers
+  for traceability

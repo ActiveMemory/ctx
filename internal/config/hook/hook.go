@@ -9,12 +9,11 @@ package hook
 // Hook name constants: used for Load, NewTemplateRef, notify.Send,
 // and log.Append to avoid magic strings.
 const (
-	// BlockDangerousCommand is the hook name for blocking dangerous commands.
-	BlockDangerousCommand = "block-dangerous-command"
 	// BlockNonPathCtx is the hook name for blocking non-PATH ctx invocations.
 	BlockNonPathCtx = "block-non-path-ctx"
-	// CheckBackupAge is the hook name for backup staleness checks.
-	CheckBackupAge = "check-backup-age"
+	// CheckAnchorDrift is the hook name for the stale-anchor sanity hook
+	// added by specs/single-source-context-anchor.md.
+	CheckAnchorDrift = "check-anchor-drift"
 	// CheckCeremony is the hook name for ceremony usage checks.
 	CheckCeremony = "check-ceremony"
 	// CheckContextSize is the hook name for context window size checks.

@@ -6,32 +6,6 @@
 
 package entity
 
-// ArchiveEntry describes a directory or file to include in a backup archive.
-type ArchiveEntry struct {
-	// SourcePath is the absolute path to the directory or file.
-	SourcePath string
-	// Prefix is the path prefix inside the tar archive.
-	Prefix string
-	// ExcludeDir is a directory name to skip (e.g. "journal-site").
-	ExcludeDir string
-	// Optional means a missing source is not an error.
-	Optional bool
-}
-
-// BackupResult holds the outcome of a single archive creation.
-//
-// Fields:
-//   - Scope: Backup scope (project, global)
-//   - Archive: Local archive file path
-//   - Size: Archive file size in bytes
-//   - SMBDest: SMB destination path (empty if not copied)
-type BackupResult struct {
-	Scope   string `json:"scope"`
-	Archive string `json:"archive"`
-	Size    int64  `json:"size"`
-	SMBDest string `json:"smb_dest,omitempty"`
-}
-
 // FileTokenEntry tracks per-file token counts during context injection.
 //
 // Fields:

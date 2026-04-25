@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://ctx.ist/security/">
       
       
-        <link rel="prev" href="../operations/runbooks/architecture-exploration/">
+        <link rel="prev" href="../operations/hub-failure-modes/">
       
       
-        <link rel="next" href="agent-security/">
+        <link rel="next" href="design/">
       
       
         
@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#securing-ai-agents" class="md-skip">
+        <a href="#security-design" class="md-skip">
           Skip to content
         </a>
       
@@ -252,13 +252,6 @@
   
     
     
-      
-  
-  
-  
-  
-    
-    
       <li class="md-tabs__item">
         <a href="../home/" class="md-tabs__link">
           
@@ -267,9 +260,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -548,6 +538,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -577,13 +571,11 @@
   
   
   
-    
-  
-  
-  
     <a href="../home/" class="md-nav__link">
       
   
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
   
   <span class="md-ellipsis">
     
@@ -600,8 +592,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
   
 
       
@@ -916,6 +906,8 @@
       
         
       
+        
+      
     
     
     
@@ -973,6 +965,36 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="design/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-half" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1zM12 22V2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1051,7 +1073,7 @@
   <span class="md-ellipsis">
     
   
-    Security Policy
+    Reporting Vulnerabilities
   
 
     
@@ -1098,6 +1120,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#security-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#securing-ai-agents" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1109,10 +1142,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-policy" class="md-nav__link">
+  <a href="#reporting-vulnerabilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security Policy
+        Reporting Vulnerabilities
       
     </span>
   </a>
@@ -1190,13 +1223,19 @@
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
 <p>Security model, <strong>agent hardening</strong>, and <strong>vulnerability reporting</strong>.</p>
 <hr />
+<h3 id="security-design"><a href="design/">Security Design</a><a class="headerlink" href="#security-design" title="Permanent link">&para;</a></h3>
+<p><strong>Trust model</strong>, what <code>ctx</code> does for security, <strong>permission
+hygiene</strong>, state file management, and the <strong>log-first audit trail</strong>
+principle. Read first to understand the security boundaries.</p>
+<hr />
 <h3 id="securing-ai-agents"><a href="agent-security/">Securing AI Agents</a><a class="headerlink" href="#securing-ai-agents" title="Permanent link">&para;</a></h3>
 <p><strong>Defense in depth</strong> for unattended AI agents: five layers of
 protection, each with a known bypass, strength in combination.</p>
 <hr />
-<h3 id="security-policy"><a href="reporting/">Security Policy</a><a class="headerlink" href="#security-policy" title="Permanent link">&para;</a></h3>
-<p><strong>Trust model</strong>, vulnerability reporting, permission hygiene,
-and <strong>security design principles</strong>.</p>
+<h3 id="reporting-vulnerabilities"><a href="reporting/">Reporting Vulnerabilities</a><a class="headerlink" href="#reporting-vulnerabilities" title="Permanent link">&para;</a></h3>
+<p>How to report a security issue: email, <strong>GitHub private reporting</strong>,
+PGP-encrypted submissions, what to include, and the response
+timeline.</p>
 
 
 
@@ -1239,7 +1278,7 @@ and <strong>security design principles</strong>.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../operations/runbooks/architecture-exploration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Architecture Exploration">
+          <a href="../operations/hub-failure-modes/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hub Failure Modes">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -1249,20 +1288,20 @@ and <strong>security design principles</strong>.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Architecture Exploration
+                Hub Failure Modes
               </div>
             </div>
           </a>
         
         
           
-          <a href="agent-security/" class="md-footer__link md-footer__link--next" aria-label="Next: Securing AI Agents">
+          <a href="design/" class="md-footer__link md-footer__link--next" aria-label="Next: Security Design">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Securing AI Agents
+                Security Design
               </div>
             </div>
             <div class="md-footer__button md-icon">

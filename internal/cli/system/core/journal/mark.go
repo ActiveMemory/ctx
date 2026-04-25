@@ -26,7 +26,10 @@ import (
 //   - CheckResult: Stage value
 //   - error: Non-nil on state load failure, unknown stage, or unset stage
 func CheckStage(filename, stage string) (CheckResult, error) {
-	journalDir := ctxResolve.JournalDir()
+	journalDir, dirErr := ctxResolve.JournalDir()
+	if dirErr != nil {
+		return CheckResult{}, dirErr
+	}
 	jState, loadErr := state.Load(journalDir)
 	if loadErr != nil {
 		return CheckResult{}, errJournal.LoadStateFailed(loadErr)
@@ -65,7 +68,10 @@ func CheckStage(filename, stage string) (CheckResult, error) {
 // Returns:
 //   - error: Non-nil on unknown stage or state load/save failure
 func MarkStage(filename, stage string) error {
-	journalDir := ctxResolve.JournalDir()
+	journalDir, dirErr := ctxResolve.JournalDir()
+	if dirErr != nil {
+		return dirErr
+	}
 	jState, loadErr := state.Load(journalDir)
 	if loadErr != nil {
 		return errJournal.LoadStateFailed(loadErr)

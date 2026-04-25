@@ -1,6 +1,10 @@
 # Doctor diagnostic text strings for ctx CLI.
 # Used by assets.TextDesc() for health check output.
 
+doctor.check-did-not-run:
+  short: 'check did not run: %v'
+doctor.check-did-not-run-cascade:
+  short: 'check did not run: %v (subsequent context-dependent checks skipped)'
 doctor.context-file.format:
   short: '%-22s ~%d tokens'
 doctor.context-initialized.error:

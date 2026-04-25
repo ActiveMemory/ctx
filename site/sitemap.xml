@@ -22,6 +22,12 @@
         <loc>https://ctx.ist/home/faq/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/home/community/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/home/contributing/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/home/getting-started/</loc>
       </url>
       <url>
@@ -58,13 +64,10 @@
         <loc>https://ctx.ist/home/triggers/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/home/community/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/home/contributing/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/recipes/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/activating-context/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/guide-your-agent/</loc>
@@ -268,9 +271,6 @@
         <loc>https://ctx.ist/cli/config/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli/backup/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/cli/prune/</loc>
       </url>
       <url>
@@ -322,15 +322,6 @@
         <loc>https://ctx.ist/operations/autonomous-loop/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/operations/hub/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/operations/hub-failure-modes/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/operations/release/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/operations/runbooks/release-checklist/</loc>
       </url>
       <url>
@@ -358,7 +349,19 @@
         <loc>https://ctx.ist/operations/runbooks/architecture-exploration/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/operations/release/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/hub/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/hub-failure-modes/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/security/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/security/design/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/security/agent-security/</loc>

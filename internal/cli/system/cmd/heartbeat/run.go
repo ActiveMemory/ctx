@@ -26,7 +26,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/heartbeat"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/log/event"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -45,7 +47,12 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(_ *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	initialized, initErr := state.Initialized()
+	if initErr != nil {
+		logWarn.Warn(warn.StateInitializedProbe, initErr)
+		return nil
+	}
+	if !initialized {
 		return nil
 	}
 	_, sessionID, paused := coreCheck.Preamble(stdin)
@@ -53,14 +60,25 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.Dir()
+	tmpDir, dirErr := state.Dir()
+	if dirErr != nil {
+		logWarn.Warn(warn.StateDirProbe, dirErr)
+		return nil
+	}
 	counterFile := filepath.Join(
 		tmpDir, heartbeat.CounterPrefix+sessionID,
 	)
 	mtimeFile := filepath.Join(
 		tmpDir, heartbeat.MtimePrefix+sessionID,
 	)
-	contextDir := rc.ContextDir()
+	// Unreachable under normal flow: state.Initialized() above already
+	// proved ContextDir succeeds. Kept defensive so a future ContextDir
+	// failure surfaces instead of the heartbeat silently going dark.
+	contextDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		logWarn.Warn(warn.ContextDirResolve, ctxErr)
+		return nil
+	}
 	logFile := filepath.Join(contextDir, dir.Logs, heartbeat.LogFile)
 
 	// Increment prompt counter.
@@ -101,8 +119,22 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 		msg = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatNotifyPlain),
 			count, contextModified)
 	}
-	_ = notify.Send(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
-	event.Append(hook.NotifyChannelHeartbeat, msg, sessionID, ref)
+	// Log-first: if the event log cannot be written, neither the
+	// webhook nor the operational log line should claim the
+	// heartbeat happened. See docs/security/reporting.md →
+	// "Log-First Audit Trail".
+	appendErr := event.Append(
+		hook.NotifyChannelHeartbeat, msg, sessionID, ref,
+	)
+	if appendErr != nil {
+		return appendErr
+	}
+	sendErr := notify.Send(
+		hook.NotifyChannelHeartbeat, msg, sessionID, ref,
+	)
+	if sendErr != nil {
+		return sendErr
+	}
 
 	var logLine string
 	if tokens > 0 {

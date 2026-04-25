@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/load"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Run imports entries into the scratchpad from a file, stdin, or directory.
@@ -25,6 +26,10 @@ import (
 // Returns:
 //   - error: Non-nil on read/write failure
 func Run(cmd *cobra.Command, path string, blobs bool) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	if blobs {
 		return load.Blobs(cmd, path)
 	}

@@ -29,7 +29,10 @@ import (
 //   - []entity.ContextChange: Modified files sorted by modtime descending
 //   - error: Non-nil if the context directory cannot be read
 func FindContextChanges(refTime time.Time) ([]entity.ContextChange, error) {
-	dir := rc.ContextDir()
+	dir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return nil, ctxErr
+	}
 	entries, readDirErr := os.ReadDir(dir)
 	if readDirErr != nil {
 		return nil, readDirErr

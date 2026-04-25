@@ -7,6 +7,7 @@
 package validate
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 
@@ -33,17 +34,34 @@ func Initialized(contextDir string) bool {
 
 // Exists checks whether a context directory exists.
 //
-// If dir is empty, it uses the configured context directory.
+// If dir is empty, it uses the configured context directory. A missing
+// context declaration is a "false, nil" result (no configured dir, so
+// nothing to check); a resolver failure for any other reason and a stat
+// failure that is not "does not exist" are both propagated so callers
+// can distinguish "the directory is not there" from "we could not find
+// out."
 //
 // Parameters:
 //   - dir: path to check, or empty string for default
 //
 // Returns:
 //   - bool: true if the path exists and is a directory
-func Exists(dir string) bool {
+//   - error: non-nil on resolver failure (other than not-declared) or
+//     stat failure (other than not-exist)
+func Exists(dir string) (bool, error) {
 	if dir == "" {
-		dir = rc.ContextDir()
+		declared, err := rc.ContextDir()
+		if err != nil {
+			return false, err
+		}
+		dir = declared
 	}
 	info, statErr := os.Stat(dir)
-	return statErr == nil && info.IsDir()
+	if statErr != nil {
+		if errors.Is(statErr, os.ErrNotExist) {
+			return false, nil
+		}
+		return false, statErr
+	}
+	return info.IsDir(), nil
 }

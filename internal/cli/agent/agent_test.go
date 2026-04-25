@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // TestAgentCommand tests the agent command.
@@ -26,6 +27,8 @@ func TestAgentCommand(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// First init
 	initCmd := initialize.Cmd()
@@ -56,6 +59,8 @@ func TestAgentJSONOutput(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// First init
 	initCmd := initialize.Cmd()

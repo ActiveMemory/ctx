@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func TestRunLockUnlock_LockSingle(t *testing.T) {
@@ -40,6 +41,8 @@ func TestRunLockUnlock_LockSingle(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, dir)
 
 	// Lock via CLI.
 	cmd := journal.Cmd()
@@ -103,6 +106,8 @@ func TestRunLockUnlock_UnlockSingle(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
+	testctx.Declare(t, dir)
+
 	cmd := journal.Cmd()
 	buf := new(strings.Builder)
 	cmd.SetOut(buf)
@@ -153,6 +158,8 @@ func TestRunLockUnlock_LockAll(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, dir)
 
 	cmd := journal.Cmd()
 	buf := new(strings.Builder)
@@ -206,6 +213,8 @@ func TestRunLockUnlock_AlreadyLocked(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, dir)
 
 	cmd := journal.Cmd()
 	buf := new(strings.Builder)
@@ -274,6 +283,8 @@ func TestRunLockUnlock_LockMultipart(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, dir)
 
 	cmd := journal.Cmd()
 	buf := new(strings.Builder)

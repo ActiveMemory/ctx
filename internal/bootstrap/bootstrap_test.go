@@ -9,11 +9,14 @@ package bootstrap
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/resolve"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/spf13/cobra"
 
@@ -43,13 +46,25 @@ func TestRootCmd(t *testing.T) {
 	if cmd.Long == "" {
 		t.Error("RootCmd().Long is empty")
 	}
+}
 
-	// Check global flags exist
-	contextDirFlag := cmd.PersistentFlags().Lookup(flag.ContextDir)
-	if contextDirFlag == nil {
-		t.Error("--context-dir flag not found")
+// TestRoot_NoContextDirFlag is the regression guard for the
+// removed --context-dir flag (spec:
+// specs/single-source-context-anchor.md). Cobra must reject
+// the flag with its standard "unknown flag" error.
+func TestRoot_NoContextDirFlag(t *testing.T) {
+	cmd := RootCmd()
+	cmd.SetOut(&discardWriter{})
+	cmd.SetErr(&discardWriter{})
+	cmd.SetArgs([]string{"--context-dir=/tmp", "status"})
+
+	err := cmd.Execute()
+	if err == nil {
+		t.Fatal("expected error for removed --context-dir flag")
 	}
-
+	if !strings.Contains(err.Error(), "unknown flag") {
+		t.Errorf("error = %q, want cobra unknown-flag error", err.Error())
+	}
 }
 
 func TestInitialize(t *testing.T) {
@@ -107,19 +122,19 @@ func TestRootCmdVersion(t *testing.T) {
 	}
 }
 
-func TestRootCmdAllowOutsideCwdFlag(t *testing.T) {
-	cmd := RootCmd()
-
-	flag := cmd.PersistentFlags().Lookup(flag.AllowOutsideCwd)
-	if flag == nil {
-		t.Fatal("--allow-outside-cwd flag not found")
+// TestRootCmdPersistentPreRun_CtxDirEnv: CTX_DIR env declares the
+// context directory; non-init annotated dummy bypasses the
+// initialized check.
+func TestRootCmdPersistentPreRun_CtxDirEnv(t *testing.T) {
+	tmp := t.TempDir()
+	ctxDir := filepath.Join(tmp, dir.Context)
+	if err := os.MkdirAll(ctxDir, 0o700); err != nil {
+		t.Fatal(err)
 	}
-	if flag.DefValue != "false" {
-		t.Errorf("--allow-outside-cwd default = %q, want %q", flag.DefValue, "false")
-	}
-}
+	t.Setenv(env.CtxDir, ctxDir)
+	rc.Reset()
+	t.Cleanup(rc.Reset)
 
-func TestRootCmdPersistentPreRun_ContextDir(t *testing.T) {
 	cmd := RootCmd()
 
 	dummy := &cobra.Command{
@@ -128,25 +143,26 @@ func TestRootCmdPersistentPreRun_ContextDir(t *testing.T) {
 		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{
-		"--context-dir", "/tmp/test-ctx",
-		"--allow-outside-cwd", "dummy",
-	})
+	cmd.SetArgs([]string{"dummy"})
 
 	err := cmd.Execute()
 	if err != nil {
 		t.Fatalf("Execute() error: %v", err)
 	}
 
-	got := rc.ContextDir()
-	if got != "/tmp/test-ctx" {
-		t.Errorf("ContextDir() = %q, want %q", got, "/tmp/test-ctx")
+	got, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		t.Fatalf("ContextDir: %v", ctxErr)
+	}
+	if got != ctxDir {
+		t.Errorf("ContextDir() = %q, want %q", got, ctxDir)
 	}
 }
 
 func TestRootCmdPersistentPreRun_DefaultFlags(t *testing.T) {
-	// Test PersistentPreRun with default flags (no --context-dir, no --no-color)
-	// --allow-outside-cwd needed since test cwd may not have .context
+	// Test PersistentPreRun with default flags.
+	// The dummy command carries AnnotationSkipInit, so PersistentPreRunE
+	// skips the context-dir declaration gate and returns immediately.
 	cmd := RootCmd()
 
 	dummy := &cobra.Command{
@@ -155,7 +171,7 @@ func TestRootCmdPersistentPreRun_DefaultFlags(t *testing.T) {
 		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--allow-outside-cwd", "dummy"})
+	cmd.SetArgs([]string{"dummy"})
 
 	err := cmd.Execute()
 	if err != nil {
@@ -182,27 +198,15 @@ func TestInitializeSubcommandCount(t *testing.T) {
 	}
 }
 
-// TestRootCmdPersistentPreRun_BoundaryViolation tests that boundary validation
-// returns an error when --context-dir is outside cwd and --allow-outside-cwd
-// is not set.
-func TestRootCmdPersistentPreRun_BoundaryViolation(t *testing.T) {
-	cmd := RootCmd()
-	dummy := &cobra.Command{
-		Use:         "dummy",
-		Annotations: map[string]string{cli.AnnotationSkipInit: "true"},
-		Run:         func(cmd *cobra.Command, args []string) {},
-	}
-	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--context-dir", "/etc/not-inside-cwd", "dummy"})
-
-	execErr := cmd.Execute()
-	if execErr == nil {
-		t.Fatal("expected error from boundary violation")
-	}
-}
-
 func TestInitGuard_BlocksUninitializedCommand(t *testing.T) {
 	tmp := t.TempDir()
+	ctxDir := filepath.Join(tmp, dir.Context)
+	if err := os.MkdirAll(ctxDir, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv(env.CtxDir, ctxDir)
+	rc.Reset()
+	t.Cleanup(rc.Reset)
 
 	cmd := RootCmd()
 	dummy := &cobra.Command{
@@ -210,7 +214,7 @@ func TestInitGuard_BlocksUninitializedCommand(t *testing.T) {
 		Run: func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--context-dir", tmp, "--allow-outside-cwd", "dummy"})
+	cmd.SetArgs([]string{"dummy"})
 
 	execErr := cmd.Execute()
 	if execErr == nil {
@@ -224,6 +228,13 @@ func TestInitGuard_BlocksUninitializedCommand(t *testing.T) {
 
 func TestInitGuard_AllowsAnnotatedCommand(t *testing.T) {
 	tmp := t.TempDir() // empty - not initialized
+	ctxDir := filepath.Join(tmp, dir.Context)
+	if err := os.MkdirAll(ctxDir, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv(env.CtxDir, ctxDir)
+	rc.Reset()
+	t.Cleanup(rc.Reset)
 
 	cmd := RootCmd()
 	dummy := &cobra.Command{
@@ -232,7 +243,7 @@ func TestInitGuard_AllowsAnnotatedCommand(t *testing.T) {
 		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--context-dir", tmp, "--allow-outside-cwd", "dummy"})
+	cmd.SetArgs([]string{"dummy"})
 
 	if execErr := cmd.Execute(); execErr != nil {
 		t.Fatalf("annotated command should succeed: %v", execErr)
@@ -241,6 +252,13 @@ func TestInitGuard_AllowsAnnotatedCommand(t *testing.T) {
 
 func TestInitGuard_AllowsHiddenCommand(t *testing.T) {
 	tmp := t.TempDir() // empty - not initialized
+	ctxDir := filepath.Join(tmp, dir.Context)
+	if err := os.MkdirAll(ctxDir, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv(env.CtxDir, ctxDir)
+	rc.Reset()
+	t.Cleanup(rc.Reset)
 
 	cmd := RootCmd()
 	dummy := &cobra.Command{
@@ -249,7 +267,7 @@ func TestInitGuard_AllowsHiddenCommand(t *testing.T) {
 		Run:    func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--context-dir", tmp, "--allow-outside-cwd", "dummy"})
+	cmd.SetArgs([]string{"dummy"})
 
 	if execErr := cmd.Execute(); execErr != nil {
 		t.Fatalf("hidden command should succeed: %v", execErr)
@@ -264,7 +282,7 @@ func TestInitGuard_AllowsGroupingCommand(t *testing.T) {
 		Short: "A grouping command",
 	}
 	cmd.AddCommand(group)
-	cmd.SetArgs([]string{"--allow-outside-cwd", "group"})
+	cmd.SetArgs([]string{"group"})
 
 	if execErr := cmd.Execute(); execErr != nil {
 		t.Fatalf("grouping command should succeed: %v", execErr)
@@ -301,15 +319,23 @@ func TestInitGuard_AllowsCompletionSubcommand(t *testing.T) {
 
 func TestInitGuard_AllowsInitializedCommand(t *testing.T) {
 	tmp := t.TempDir()
+	ctxDir := filepath.Join(tmp, dir.Context)
+	if mkErr := os.MkdirAll(ctxDir, 0o700); mkErr != nil {
+		t.Fatal(mkErr)
+	}
 
 	// Create required context files so Initialized() returns true.
 	for _, f := range ctx.FilesRequired {
-		path := filepath.Join(tmp, f)
+		path := filepath.Join(ctxDir, f)
 		content := []byte("# " + f + "\n")
 		if writeErr := os.WriteFile(path, content, 0o600); writeErr != nil {
 			t.Fatalf("setup: %v", writeErr)
 		}
 	}
+
+	t.Setenv(env.CtxDir, ctxDir)
+	rc.Reset()
+	t.Cleanup(rc.Reset)
 
 	cmd := RootCmd()
 	dummy := &cobra.Command{
@@ -317,7 +343,7 @@ func TestInitGuard_AllowsInitializedCommand(t *testing.T) {
 		Run: func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--context-dir", tmp, "--allow-outside-cwd", "dummy"})
+	cmd.SetArgs([]string{"dummy"})
 
 	if execErr := cmd.Execute(); execErr != nil {
 		t.Fatalf("initialized command should succeed: %v", execErr)
@@ -356,7 +382,7 @@ func TestResolveTool_FlagOverridesRC(t *testing.T) {
 		},
 	}
 	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--allow-outside-cwd", "--tool", "cursor", "dummy"})
+	cmd.SetArgs([]string{"--tool", "cursor", "dummy"})
 
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("Execute() error: %v", err)
@@ -383,7 +409,7 @@ func TestResolveTool_FallsBackToRC(t *testing.T) {
 		},
 	}
 	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--allow-outside-cwd", "dummy"})
+	cmd.SetArgs([]string{"dummy"})
 
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("Execute() error: %v", err)
@@ -411,7 +437,7 @@ func TestResolveTool_ErrorMessage(t *testing.T) {
 		},
 	}
 	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--allow-outside-cwd", "dummy"})
+	cmd.SetArgs([]string{"dummy"})
 
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("Execute() error: %v", err)

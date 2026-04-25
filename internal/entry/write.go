@@ -45,7 +45,11 @@ func Write(params entity.EntryParams) error {
 
 	contextDir := params.ContextDir
 	if contextDir == "" {
-		contextDir = rc.ContextDir()
+		declared, ctxErr := rc.ContextDir()
+		if ctxErr != nil {
+			return ctxErr
+		}
+		contextDir = declared
 	}
 	filePath := filepath.Join(contextDir, fileName)
 

@@ -8,6 +8,7 @@ package root
 
 import (
 	"bufio"
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -35,6 +36,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/sync"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
@@ -46,6 +48,21 @@ import (
 //
 // Creates a .context/ directory with template files. Handles existing
 // directories, minimal mode, and CLAUDE.md merge operations.
+//
+// Under the single-source-anchor resolution model
+// (spec: specs/single-source-context-anchor.md), init is exempt from
+// the require-context-dir gate. It resolves the target in priority
+// order:
+//
+//  1. CTX_DIR env var (read by rc.ContextDir).
+//  2. Fall back to `<cwd>/.context/` and create it there.
+//
+// The basename guard does not apply at init time because init
+// *creates* the canonical-named directory.
+//
+// After materializing the directory, init prints the shell activation
+// hint via InfoActivateHint so the user's next ctx call in a new
+// process finds the right CTX_DIR.
 //
 // Parameters:
 //   - cmd: Cobra command for output and input streams
@@ -73,7 +90,25 @@ func Run(
 		}
 	}
 
-	contextDir := rc.ContextDir()
+	// Under the explicit-context-dir resolution model, rc.ContextDir()
+	// returns an error when neither --context-dir nor CTX_DIR is declared.
+	// `ctx init` is an exempt command: fall back to cwd/.context so a
+	// user running `ctx init` in a fresh project gets the expected
+	// behavior. Spec: specs/explicit-context-dir.md. The fallback is
+	// reserved for the not-declared case; propagate any other resolver
+	// failure (e.g. malformed .ctxrc) so operators see the real error
+	// rather than a silent redirection to the working directory.
+	contextDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		if !errors.Is(ctxErr, errCtx.ErrDirNotDeclared) {
+			return ctxErr
+		}
+		cwd, cwdErr := os.Getwd()
+		if cwdErr != nil {
+			return errFs.ReadInput(cwdErr)
+		}
+		contextDir = filepath.Join(cwd, dir.Context)
+	}
 
 	// Check if .context/ already exists and is properly initialized.
 	// A directory with only logs/ (created by hooks before init) is
@@ -123,7 +158,8 @@ func Run(
 	// for users who want a bare init with no starter
 	// templates.
 	if !noSteeringInit {
-		if steeringErr := steeringInit.Run(cmd); steeringErr != nil {
+		steeringErr := steeringInit.RunWithDir(cmd, contextDir)
+		if steeringErr != nil {
 			// Non-fatal: the rest of init is more
 			// important than the steering templates.
 			label := desc.Text(text.DescKeyInitLabelSteering)
@@ -231,11 +267,12 @@ func Run(
 		initialize.InfoWarnNonFatal(cmd, file.FileGitignore, ignoreErr)
 	}
 
+	initialize.InfoActivateHint(cmd, contextDir)
 	initialize.InfoNextSteps(cmd)
 	initialize.InfoWorkflowTips(cmd)
 
 	// Save the quick-start reference to a project-root file.
-	coreProject.WriteGettingStarted(cmd)
+	coreProject.WriteGettingStarted(cmd, contextDir)
 
 	// Post-script: stage-aware Claude Code setup guidance.
 	// Never fatal, never an error; a friendly nudge

@@ -341,13 +341,11 @@ func TestSchemaCoversCtxRC(t *testing.T) {
 	// We marshal a struct with all fields set to get every key emitted.
 	type ctxRC struct {
 		Profile             string `yaml:"profile"`
-		ContextDir          string `yaml:"context_dir"`
 		TokenBudget         int    `yaml:"token_budget"`
 		PriorityOrder       []int  `yaml:"priority_order"`
 		AutoArchive         bool   `yaml:"auto_archive"`
 		ArchiveAfterDays    int    `yaml:"archive_after_days"`
 		ScratchpadEncrypt   *bool  `yaml:"scratchpad_encrypt"`
-		AllowOutsideCwd     bool   `yaml:"allow_outside_cwd"`
 		EntryCountLearnings int    `yaml:"entry_count_learnings"`
 		EntryCountDecisions int    `yaml:"entry_count_decisions"`
 		ConventionLineCount int    `yaml:"convention_line_count"`
@@ -435,7 +433,7 @@ func TestListHookMessages(t *testing.T) {
 	wantHooks := []string{
 		"qa-reminder",
 		"check-context-size",
-		"block-dangerous-command",
+		"block-non-path-ctx",
 	}
 	for _, exp := range wantHooks {
 		if !hookSet[exp] {

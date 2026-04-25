@@ -16,7 +16,6 @@ import (
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -37,17 +36,11 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	_, sessionID, _, tmpDir, ok := coreCheck.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
 		return nil
 	}
-
-	input, _, paused := coreCheck.Preamble(stdin)
-	if paused {
-		return nil
-	}
-
-	sessionID := input.SessionID
-	tmpDir := state.Dir()
 
 	// One-shot guard: skip if already fired this session.
 	guardFile := filepath.Join(

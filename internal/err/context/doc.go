@@ -19,10 +19,8 @@
 //     implements the error interface and supports
 //     errors.As matching. Constructor: [NotFound].
 //   - **Security validation**: the directory or a
-//     file inside it is a symlink, or the directory
-//     resolves outside the project root.
-//     Constructors: [OutsideRoot], [DirSymlink],
-//     [FileSymlink].
+//     file inside it is a symlink. Constructors:
+//     [DirSymlink], [FileSymlink].
 //
 // # Typed Error: NotFoundError
 //

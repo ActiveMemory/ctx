@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/drift"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
 
@@ -36,6 +37,10 @@ import (
 func Run(
 	cmd *cobra.Command, jsonOutput, doFix bool,
 ) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	ctx, err := load.Do("")
 	if err != nil {
 		if _, ok := errors.AsType[*errCtx.NotFoundError](err); ok {

@@ -47,22 +47,37 @@ func ReadFileEntries(path string, key []byte) ([]string, error) {
 
 // LoadKey loads the encryption key for merge input decryption.
 //
+// When keyFile is empty the project key is used, which requires a
+// declared context directory; the resolver failure is propagated so
+// a user running `ctx pad merge` without CTX_DIR gets a clear error
+// at the source instead of a confusing downstream decryption failure.
+//
+// A missing key on disk (stat/read failure) is still tolerated
+// silently because merge is designed to work on mixed plaintext /
+// encrypted inputs.
+//
 // Parameters:
 //   - keyFile: explicit key file path (empty string = use project key).
 //
 // Returns:
-//   - []byte: the loaded key, or nil if no key is available.
-func LoadKey(keyFile string) []byte {
+//   - []byte: the loaded key, or nil if the key file is absent
+//   - error: propagated when the project key path cannot be
+//     resolved (e.g. no declared context directory)
+func LoadKey(keyFile string) ([]byte, error) {
 	path := keyFile
 	if path == "" {
-		path = store.KeyPath()
+		projectKey, kpErr := store.KeyPath()
+		if kpErr != nil {
+			return nil, kpErr
+		}
+		path = projectKey
 	}
 
 	key, loadErr := crypto.LoadKey(path)
 	if loadErr != nil {
-		return nil
+		return nil, nil
 	}
-	return key
+	return key, nil
 }
 
 // BuildBlobLabelMap creates a map of blob labels to their full entry strings.

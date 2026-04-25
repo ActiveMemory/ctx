@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/tag"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
 
@@ -26,6 +27,10 @@ import (
 // Returns:
 //   - error: Non-nil on read failure or JSON marshal error
 func Run(cmd *cobra.Command, jsonOut bool) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	entries, err := store.ReadEntries()
 	if err != nil {
 		return err

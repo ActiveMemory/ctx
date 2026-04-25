@@ -42,7 +42,12 @@ func Run(
 	}
 	defer func() { _ = client.Close() }()
 
-	projectName := filepath.Base(rc.ContextDir())
+	ctxDir, ctxErr := rc.RequireContextDir()
+	if ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
+	projectName := filepath.Base(ctxDir)
 
 	resp, regErr := client.Register(
 		context.Background(),

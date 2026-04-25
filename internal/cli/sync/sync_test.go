@@ -14,6 +14,8 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/config/env"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 // runSyncCmd executes a sync command and captures output.
@@ -37,6 +39,8 @@ func setupSyncDir(t *testing.T) string {
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
 
+	testctx.Declare(t, tmpDir)
+
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
@@ -58,6 +62,8 @@ func TestSyncCommand(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// First init
 	initCmd := initialize.Cmd()
@@ -81,13 +87,16 @@ func TestSyncCommand_NoContext(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
+	t.Setenv(env.CtxDir, "")
 
 	_, err := runSyncCmd()
 	if err == nil {
 		t.Fatal("expected error when no .context/ exists")
 	}
-	if !strings.Contains(err.Error(), "ctx init") {
-		t.Errorf("error = %q, want 'ctx init' suggestion", err.Error())
+	// Under the explicit-context-dir model, the error reports that
+	// no context directory has been declared.
+	if !strings.Contains(err.Error(), "context directory") {
+		t.Errorf("error = %q, want context directory mention", err.Error())
 	}
 }
 

@@ -394,8 +394,8 @@ import → enrich → rebuild
 |--------------|----------------------------|-----------------------------------------|------------------------------------|
 | **Import**   | `ctx journal import --all`  | Converts session JSONL to Markdown      | File already exists (safe default) |
 | **Enrich**   | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics     | Frontmatter already present        |
-| **Rebuild**  | `ctx journal site --build` | Generates static HTML site              | --                                 |
-| **Obsidian** | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | --                                 |
+| **Rebuild**  | `ctx journal site --build` | Generates static HTML site              | *(never)*                          |
+| **Obsidian** | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | *(never)*                          |
 
 !!! tip "One-Command Pipeline"
     `/ctx-journal-enrich-all` handles import automatically - it detects

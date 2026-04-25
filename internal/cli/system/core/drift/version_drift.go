@@ -32,24 +32,29 @@ import (
 //
 // Returns:
 //   - string: JSON hook response to print, or empty string if no drift
-func CheckVersion(sessionID string) string {
+//   - error: propagated from [nudge.Relay] when the drift-relay event
+//     cannot be logged or its webhook cannot be sent. Callers should
+//     not emit the hook response when this is non-nil: printing a
+//     drift warning whose audit trail failed would claim a check
+//     happened without the log to prove it.
+func CheckVersion(sessionID string) (string, error) {
 	fileVer := ReadVersionFile()
 	if fileVer == "" {
-		return ""
+		return "", nil
 	}
 
 	pluginVer, pluginErr := claude.PluginVersion()
 	if pluginErr != nil || pluginVer == "" {
-		return ""
+		return "", nil
 	}
 
 	marketVer := ReadMarketplaceVersion()
 	if marketVer == "" {
-		return ""
+		return "", nil
 	}
 
 	if fileVer == pluginVer && pluginVer == marketVer {
-		return ""
+		return "", nil
 	}
 
 	vars := map[string]any{
@@ -63,17 +68,21 @@ func CheckVersion(sessionID string) string {
 	)
 	msg := message.Load(hook.VersionDrift, hook.VariantNudge, vars, fallback)
 	if msg == "" {
-		return ""
+		return "", nil
 	}
 	response := coreSession.FormatContext(hook.EventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hook.VersionDrift, hook.VariantNudge, vars)
-	nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+	relayMsg := fmt.Sprintf(
+		desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.VersionDrift,
 		desc.Text(text.DescKeyVersionDriftRelayMessage),
-	), sessionID, ref)
+	)
+	if relayErr := nudge.Relay(relayMsg, sessionID, ref); relayErr != nil {
+		return "", relayErr
+	}
 
-	return response
+	return response, nil
 }
 
 // ReadVersionFile reads and trims the VERSION file from the project root.

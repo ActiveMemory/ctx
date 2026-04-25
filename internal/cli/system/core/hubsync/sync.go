@@ -8,6 +8,7 @@ package hubsync
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -18,17 +19,36 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	"github.com/ActiveMemory/ctx/internal/hub"
-	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Connected reports whether a hub connection config exists.
 //
+// ctxDir is supplied by the caller (typically a FullPreamble-gated
+// hook) so this function does not re-resolve it; a second resolution
+// would be dead code today and would pair an ambiguous (false, err)
+// return with the genuine "no hub configured" result.
+//
+// Returns (false, nil) when the encrypted connect file is absent:
+// ordinary "no hub configured" state. A stat failure other than
+// not-exist is propagated so the caller can distinguish "no
+// connection" from "we could not check."
+//
+// Parameters:
+//   - ctxDir: absolute path to the context directory
+//
 // Returns:
 //   - bool: true if .context/.connect.enc exists
-func Connected() bool {
-	path := filepath.Join(rc.ContextDir(), cfgHub.FileConnect)
+//   - error: non-nil on stat failure other than not-exist
+func Connected(ctxDir string) (bool, error) {
+	path := filepath.Join(ctxDir, cfgHub.FileConnect)
 	_, statErr := os.Stat(path)
-	return statErr == nil
+	if statErr != nil {
+		if errors.Is(statErr, os.ErrNotExist) {
+			return false, nil
+		}
+		return false, statErr
+	}
+	return true, nil
 }
 
 // Sync pulls new entries from the hub and writes them to

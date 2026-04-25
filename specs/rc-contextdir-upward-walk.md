@@ -14,6 +14,12 @@ scope: bug fix — single function
 
 # Spec — `rc.ContextDir()` upward walk
 
+> **Status: SUPERSEDED by `specs/single-source-context-anchor.md`
+> (2026-04-24).** The upward-walk approach was rolled back in
+> `specs/explicit-context-dir.md`; the superseding spec further
+> refines the resolution model (shell-anchored CTX_DIR, basename
+> guard, no walk-up at any level). Retained as historical record.
+
 ## Problem
 
 `internal/rc/rc.go:63-70` returns the configured context directory as a

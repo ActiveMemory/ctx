@@ -99,6 +99,11 @@ instructions.
 # Initialize context directory in your project
 ctx init
 
+# Activate it for the current shell (binds CTX_DIR). Required
+# before every other command: ctx no longer walks up the
+# filesystem looking for .context/.
+eval "$(ctx activate)"
+
 # Check context status
 ctx status
 
@@ -114,16 +119,33 @@ ctx add decision "Use PostgreSQL for primary database" \
 ctx add learning "Mock functions must be hoisted in Jest"
 ```
 
+`ctx activate` emits `export CTX_DIR=...` for your shell; one-shot
+callers can prefix the binding inline as `CTX_DIR=<abs-path> ctx ...`.
+The value must be an absolute path with `.context` as its basename;
+relative paths and other names are rejected on first use. A small
+allowlist (`init`, `activate`, `deactivate`, `version`, `help`,
+`system bootstrap`, `doctor`, `guide`, `why`, `config switch/status`,
+`hub *`) runs without CTX_DIR declared; every other command exits
+with a next-step hint when it is unset.
+
 ## Documentation
+
+This README is a map, not the territory. The full documentation
+lives at **[ctx.ist](https://ctx.ist)** and carries the recipes,
+runbooks, threat model, and design rationale that this file
+intentionally doesn't try to fit. If you're past install and
+wondering "*how do I actually use this in a real session,*" the
+recipes are the right next stop.
 
 | Guide                                           | Description                            |
 |-------------------------------------------------|----------------------------------------|
 | [Getting Started](https://ctx.ist)              | Installation, quick start, first steps |
+| [Recipes](https://ctx.ist/recipes/)             | Practical workflow guides              |
 | [CLI Reference](https://ctx.ist/cli-reference/) | All commands and options               |
 | [Context Files](https://ctx.ist/context-files/) | File formats and structure             |
 | [Integrations](https://ctx.ist/integrations/)   | Claude Code, Cursor, Aider setup       |
-| [Recipes](https://ctx.ist/recipes/)             | Practical guides and workflows         |
-| [Security](https://ctx.ist/security/)           | Threat model, encryption, permissions  |
+| [Operations](https://ctx.ist/operations/)       | Runbooks, day-to-day, hub deployment   |
+| [Security](https://ctx.ist/security/)           | Trust model, audit trail, permissions  |
 
 ## Contributing
 

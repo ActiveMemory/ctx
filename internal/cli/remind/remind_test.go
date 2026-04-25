@@ -15,13 +15,15 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core/store"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// setup creates a temp dir with a .context/ directory and sets the RC override.
+// setup creates a temp dir with a .context/ directory and declares
+// CTX_DIR for the duration of the test.
 func setup(t *testing.T) string {
 	t.Helper()
 	tmpDir := t.TempDir()
@@ -34,13 +36,12 @@ func setup(t *testing.T) string {
 		rc.Reset()
 	})
 
-	rc.Reset()
-	rc.OverrideContextDir(dir.Context)
-
 	ctxDir := filepath.Join(tmpDir, dir.Context)
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
+	t.Setenv(env.CtxDir, ctxDir)
+	rc.Reset()
 
 	return tmpDir
 }
@@ -73,7 +74,11 @@ func TestAdd_Basic(t *testing.T) {
 	}
 
 	// Verify JSON file content.
-	data, readErr := os.ReadFile(store.Path())
+	path, pathErr := store.Path()
+	if pathErr != nil {
+		t.Fatalf("resolve reminders path: %v", pathErr)
+	}
+	data, readErr := os.ReadFile(path)
 	if readErr != nil {
 		t.Fatalf("read reminders file: %v", readErr)
 	}

@@ -8,15 +8,13 @@ package rc
 
 import "sync"
 
-// rc, rcOnce, rcOverrideDir, and rcMu hold the singleton runtime
-// configuration loaded once from .ctxrc via sync.Once.
+// rc, rcOnce, and rcMu hold the singleton runtime configuration
+// loaded once from .ctxrc via sync.Once.
 var (
 	// rc holds the singleton runtime configuration.
 	rc *CtxRC
 	// rcOnce guards one-time configuration loading.
 	rcOnce sync.Once
-	// rcOverrideDir overrides the config search directory.
-	rcOverrideDir string
-	// rcMu protects concurrent access to rc and rcOverrideDir.
+	// rcMu protects concurrent access to rc.
 	rcMu sync.RWMutex
 )

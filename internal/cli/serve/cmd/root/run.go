@@ -32,7 +32,11 @@ func Run(args []string) error {
 	if len(args) > 0 {
 		d = args[0]
 	} else {
-		d = filepath.Join(rc.ContextDir(), dir.JournalSite)
+		ctxDir, ctxErr := rc.RequireContextDir()
+		if ctxErr != nil {
+			return ctxErr
+		}
+		d = filepath.Join(ctxDir, dir.JournalSite)
 	}
 
 	// Verify directory exists

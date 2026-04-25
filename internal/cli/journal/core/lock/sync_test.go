@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/journal"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func TestRunSync_LocksFromFrontmatter(t *testing.T) {
@@ -40,6 +41,8 @@ func TestRunSync_LocksFromFrontmatter(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, dir)
 
 	cmd := journal.Cmd()
 	buf := new(strings.Builder)
@@ -98,6 +101,8 @@ func TestRunSync_UnlocksFromFrontmatter(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
+	testctx.Declare(t, dir)
+
 	cmd := journal.Cmd()
 	buf := new(strings.Builder)
 	cmd.SetOut(buf)
@@ -154,6 +159,8 @@ func TestRunSync_NoChanges(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
+	testctx.Declare(t, dir)
+
 	cmd := journal.Cmd()
 	buf := new(strings.Builder)
 	cmd.SetOut(buf)
@@ -181,6 +188,8 @@ func TestRunSync_EmptyDir(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, dir)
 
 	cmd := journal.Cmd()
 	buf := new(strings.Builder)
@@ -246,6 +255,8 @@ func TestRunSync_MixedFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, dir)
 
 	cmd := journal.Cmd()
 	buf := new(strings.Builder)

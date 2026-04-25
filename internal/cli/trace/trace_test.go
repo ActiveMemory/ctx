@@ -14,6 +14,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 	"github.com/ActiveMemory/ctx/internal/trace"
 )
 
@@ -25,6 +26,8 @@ func TestTraceTagAndShow(t *testing.T) {
 		t.Fatalf("chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
 
 	// Init git repo
 	run(t, "git", "init")

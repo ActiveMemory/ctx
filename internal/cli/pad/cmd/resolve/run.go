@@ -33,13 +33,21 @@ func Run(cmd *cobra.Command) error {
 		return errPad.ResolveNotEncrypted()
 	}
 
-	kp := store.KeyPath()
+	kp, kpErr := store.KeyPath()
+	if kpErr != nil {
+		cmd.SilenceUsage = true
+		return kpErr
+	}
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
 		return errCrypto.LoadKey(loadErr, kp)
 	}
 
-	dir := rc.ContextDir()
+	dir, dirErr := rc.RequireContextDir()
+	if dirErr != nil {
+		cmd.SilenceUsage = true
+		return dirErr
+	}
 
 	ours, errOurs := padCrypto.DecryptFile(
 		key, dir, pad.EncOurs,

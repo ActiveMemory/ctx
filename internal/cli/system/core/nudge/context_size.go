@@ -29,6 +29,8 @@ import (
 // Parameters:
 //   - logFile: absolute path to the log file
 //   - sessionID: session identifier
+//   - ctxDir: absolute path to the context directory (forwarded to
+//     [oversizeContent] so it does not re-resolve)
 //   - count: current prompt count
 //   - tokens: token usage count
 //   - pct: context window usage percentage
@@ -36,10 +38,13 @@ import (
 //
 // Returns:
 //   - string: formatted nudge box, or empty string if silenced
+//   - error: propagated from [EmitAndRelay] so callers can honour
+//     the log-first principle and skip printing the box when the
+//     relay audit entry could not be written.
 func EmitCheckpoint(
-	logFile, sessionID string,
+	logFile, sessionID, ctxDir string,
 	count, tokens, pct, windowSize int,
-) string {
+) (string, error) {
 	fallback := desc.Text(text.DescKeyCheckContextSizeCheckpointFallback)
 	content := message.Load(
 		hook.CheckContextSize, hook.VariantCheckpoint,
@@ -52,13 +57,17 @@ func EmitCheckpoint(
 				count,
 			),
 		)
-		return ""
+		return "", nil
 	}
 	// Append optional token usage and oversize nudge to content
 	if tokens > 0 {
 		content += token.NewlineLF + TokenUsageLine(tokens, pct, windowSize)
 	}
-	if extra := oversizeContent(); extra != "" {
+	extra, oversizeErr := oversizeContent(ctxDir)
+	if oversizeErr != nil {
+		return "", oversizeErr
+	}
+	if extra != "" {
 		content += token.NewlineLF + extra
 	}
 	box := message.NudgeBox(
@@ -82,8 +91,10 @@ func EmitCheckpoint(
 			count,
 		),
 	)
-	EmitAndRelay(checkpointMsg, sessionID, ref)
-	return box
+	if err := EmitAndRelay(checkpointMsg, sessionID, ref); err != nil {
+		return "", err
+	}
+	return box, nil
 }
 
 // EmitWindowWarning builds an independent context window warning (>80%).
@@ -97,10 +108,13 @@ func EmitCheckpoint(
 //
 // Returns:
 //   - string: formatted nudge box, or empty string if silenced
+//   - error: propagated from [EmitAndRelay] so callers can honor
+//     the log-first principle and skip printing the box when the
+//     relay audit entry could not be written.
 func EmitWindowWarning(
 	logFile, sessionID string,
 	count, tokens, pct int,
-) string {
+) (string, error) {
 	fallback := fmt.Sprintf(
 		desc.Text(text.DescKeyCheckContextSizeWindowFallback),
 		pct, coreSession.FormatTokenCount(tokens),
@@ -117,7 +131,7 @@ func EmitWindowWarning(
 				count, pct,
 			),
 		)
-		return ""
+		return "", nil
 	}
 	box := message.NudgeBox(
 		desc.Text(text.DescKeyCheckContextSizeRelayPrefix),
@@ -138,8 +152,10 @@ func EmitWindowWarning(
 	windowMsg := fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 		hook.CheckContextSize,
 		fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeWindowRelayFormat), pct))
-	EmitAndRelay(windowMsg, sessionID, ref)
-	return box
+	if err := EmitAndRelay(windowMsg, sessionID, ref); err != nil {
+		return "", err
+	}
+	return box, nil
 }
 
 // EmitBillingWarning builds a one-shot warning when token usage crosses the
@@ -154,16 +170,24 @@ func EmitWindowWarning(
 //
 // Returns:
 //   - string: formatted nudge box, or empty string if silenced or already fired
+//   - error: propagated from [EmitAndRelay] so callers can honour the
+//     log-first principle. The one-shot "warned" marker is touched
+//     only on successful emit, so a failed relay will retry next
+//     invocation rather than silently burn the one-shot chance.
 func EmitBillingWarning(
 	logFile, sessionID string,
 	count, tokens, threshold int,
-) string {
+) (string, error) {
+	stateDir, dirErr := state.Dir()
+	if dirErr != nil {
+		return "", dirErr
+	}
 	// One-shot guard: skip if already warned this session.
 	warnedFile := filepath.Join(
-		state.Dir(), stats.ContextSizeBillingWarnedPrefix+sessionID,
+		stateDir, stats.ContextSizeBillingWarnedPrefix+sessionID,
 	)
 	if _, statErr := os.Stat(warnedFile); statErr == nil {
-		return "" // already fired
+		return "", nil // already fired
 	}
 
 	fallback := fmt.Sprintf(desc.Text(text.DescKeyCheckContextSizeBillingFallback),
@@ -182,7 +206,7 @@ func EmitBillingWarning(
 			),
 		)
 		io.TouchFile(warnedFile) // silenced counts as fired
-		return ""
+		return "", nil
 	}
 
 	box := message.NudgeBox(
@@ -190,7 +214,6 @@ func EmitBillingWarning(
 		desc.Text(text.DescKeyCheckContextSizeBillingBoxTitle),
 		content)
 
-	io.TouchFile(warnedFile) // one-shot: mark as fired
 	log.Message(
 		logFile, sessionID, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckContextSizeBillingLogFormat),
@@ -211,6 +234,9 @@ func EmitBillingWarning(
 			coreSession.FormatTokenCount(threshold),
 		),
 	)
-	EmitAndRelay(billingMsg, sessionID, ref)
-	return box
+	if err := EmitAndRelay(billingMsg, sessionID, ref); err != nil {
+		return "", err
+	}
+	io.TouchFile(warnedFile) // one-shot: mark as fired only on success
+	return box, nil
 }

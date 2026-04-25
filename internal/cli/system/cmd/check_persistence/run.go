@@ -20,7 +20,6 @@ import (
 	coreNudge "github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/persistence"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -28,7 +27,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/nudge"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
@@ -45,17 +43,12 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	_, sessionID, contextDir, tmpDir, ok := coreCheck.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
 		return nil
 	}
-	_, sessionID, paused := coreCheck.Preamble(stdin)
-	if paused {
-		return nil
-	}
-
-	tmpDir := state.Dir()
 	stateFile := filepath.Join(tmpDir, nudge.PersistencePrefix+sessionID)
-	contextDir := rc.ContextDir()
 	logFile := filepath.Join(contextDir, dir.Logs, nudge.PersistenceLogFile)
 
 	// Initialize state if needed
@@ -140,7 +133,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 				nudge.VarSinceNudge:  sinceNudge,
 			},
 		)
-		_ = notify.Send(
+		sendErr := notify.Send(
 			hook.NotifyChannelNudge,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyRelayPrefixFormat),
@@ -152,7 +145,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			),
 			sessionID, ref,
 		)
-		coreNudge.Relay(
+		if sendErr != nil {
+			return sendErr
+		}
+		relayErr := coreNudge.Relay(
 			fmt.Sprintf(
 				desc.Text(text.DescKeyRelayPrefixFormat),
 				hook.CheckPersistence,
@@ -162,6 +158,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			),
 			sessionID, ref,
 		)
+		if relayErr != nil {
+			return relayErr
+		}
 		ps.LastNudge = ps.Count
 	} else {
 		log.Message(

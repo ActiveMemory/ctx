@@ -7,16 +7,15 @@
 package bootstrap
 
 import (
+	"github.com/ActiveMemory/ctx/internal/cli/activate"
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
-	"github.com/ActiveMemory/ctx/internal/cli/backup"
-
 	"github.com/ActiveMemory/ctx/internal/cli/change"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
 	"github.com/ActiveMemory/ctx/internal/cli/connection"
+	"github.com/ActiveMemory/ctx/internal/cli/deactivate"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
-
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	ctxFmt "github.com/ActiveMemory/ctx/internal/cli/fmt"
@@ -60,6 +59,8 @@ import (
 func gettingStarted() []registration {
 	return []registration{
 		{initialize.Cmd, embedCmd.GroupGettingStarted},
+		{activate.Cmd, embedCmd.GroupGettingStarted},
+		{deactivate.Cmd, embedCmd.GroupGettingStarted},
 		{status.Cmd, embedCmd.GroupGettingStarted},
 		{guide.Cmd, embedCmd.GroupGettingStarted},
 	}
@@ -125,13 +126,12 @@ func sessions() []registration {
 // runtime configuration group.
 //
 // Returns:
-//   - []registration: Config, permission, hook, backup, and prune commands
+//   - []registration: Config, permission, hook, and prune commands
 func runtimeCmds() []registration {
 	return []registration{
 		{config.Cmd, embedCmd.GroupRuntime},
 		{permission.Cmd, embedCmd.GroupRuntime},
 		{hook.Cmd, embedCmd.GroupRuntime},
-		{backup.Cmd, embedCmd.GroupRuntime},
 		{prune.Cmd, embedCmd.GroupRuntime},
 	}
 }

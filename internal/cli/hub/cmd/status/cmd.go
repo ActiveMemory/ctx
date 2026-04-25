@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreStatus "github.com/ActiveMemory/ctx/internal/cli/hub/core/status"
+	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
@@ -27,6 +28,9 @@ func Cmd() *cobra.Command {
 		Long:    long,
 		Example: desc.Example(cmd.DescKeyHubStatus),
 		Args:    cobra.NoArgs,
-		RunE:    coreStatus.Run,
+		// Hub stores at ~/.ctx/hub-data/, not .context/.
+		// Spec: specs/single-source-context-anchor.md.
+		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
+		RunE:        coreStatus.Run,
 	}
 }

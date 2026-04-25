@@ -81,15 +81,13 @@ func TestValidate_EmptyFile(t *testing.T) {
 }
 
 func TestValidate_FullValidConfig(t *testing.T) {
-	data := []byte(`context_dir: .context
-token_budget: 8000
+	data := []byte(`token_budget: 8000
 priority_order:
   - TASKS.md
   - DECISIONS.md
 auto_archive: true
 archive_after_days: 7
 scratchpad_encrypt: true
-allow_outside_cwd: false
 entry_count_learnings: 30
 entry_count_decisions: 20
 convention_line_count: 200

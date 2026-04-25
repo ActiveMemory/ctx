@@ -22,7 +22,11 @@ import (
 // Returns:
 //   - error: non-nil on execution failure
 func Run(cmd *cobra.Command) error {
-	contextDir := rc.ContextDir()
+	contextDir, err := rc.RequireContextDir()
+	if err != nil {
+		cmd.SilenceUsage = true
+		return err
+	}
 	refs := trace.Collect(contextDir)
 	trailer := trace.FormatTrailer(refs)
 	writeTrace.Trailer(cmd, trailer)

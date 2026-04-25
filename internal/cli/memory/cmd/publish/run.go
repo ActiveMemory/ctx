@@ -7,15 +7,12 @@
 package publish
 
 import (
-	"path/filepath"
-
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/memory/core/resolve"
 	errMemory "github.com/ActiveMemory/ctx/internal/err/memory"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/publish"
-	"github.com/ActiveMemory/ctx/internal/write/sync"
 )
 
 // Run selects the high-value context, formats it, and writes a marked block
@@ -29,13 +26,14 @@ import (
 // Returns:
 //   - error: on discovery, selection, or publish failure.
 func Run(cmd *cobra.Command, budget int, dryRun bool) error {
-	contextDir := rc.ContextDir()
-	projectRoot := filepath.Dir(contextDir)
+	contextDir, projectRoot, err := resolve.ContextAndRoot(cmd)
+	if err != nil {
+		return err
+	}
 
-	memoryPath, discoverErr := mem.DiscoverPath(projectRoot)
+	memoryPath, discoverErr := resolve.DiscoverSource(cmd, projectRoot)
 	if discoverErr != nil {
-		sync.ErrAutoMemoryNotActive(cmd, discoverErr)
-		return errMemory.NotFound()
+		return discoverErr
 	}
 
 	result, selectErr := mem.SelectContent(contextDir, budget)

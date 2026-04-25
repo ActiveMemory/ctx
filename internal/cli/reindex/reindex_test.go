@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func TestCmd(t *testing.T) {
@@ -46,7 +47,7 @@ func TestRunReindex_NoFiles(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	rc.Reset()
+	testctx.Declare(t, tempDir)
 	defer rc.Reset()
 
 	cmd := Cmd()
@@ -63,7 +64,7 @@ func TestRunReindex_BothFiles(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	rc.Reset()
+	testctx.Declare(t, tempDir)
 	defer rc.Reset()
 
 	ctxDir := filepath.Join(tempDir, dir.Context)
@@ -128,7 +129,7 @@ func TestRunReindex_DecisionsMissingLearningsPresent(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	rc.Reset()
+	testctx.Declare(t, tempDir)
 	defer rc.Reset()
 
 	ctxDir := filepath.Join(tempDir, dir.Context)
@@ -154,7 +155,7 @@ func TestRunReindex_EmptyFiles(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	rc.Reset()
+	testctx.Declare(t, tempDir)
 	defer rc.Reset()
 
 	ctxDir := filepath.Join(tempDir, dir.Context)

@@ -74,6 +74,21 @@ go run ./cmd/ctx  # ✗ avoid unless developing ctx itself
 ```
 Check with `which ctx` if unsure whether it's installed.
 
+### When ctx Returns an Error
+
+Triage the error before reacting:
+
+- **Invocation error**: the message points at your call: unknown
+  flag, unknown command, wrong argument count, missing required
+  flag. Read `ctx <command> --help`, fix the call, and retry.
+- **Everything else**: missing context directory, config problem,
+  hook rejection, permission denied, unexpected failure. Relay the
+  output to the user **verbatim** and stop. Do not add flags, run
+  other commands, edit files to fix the cause, or retry. Wait for
+  the user's next instruction.
+
+When unsure which kind you're looking at, treat it as the second.
+
 ## Context Readback
 
 Before starting any work, read the required context files and confirm to the
@@ -83,13 +98,35 @@ conventions." Do not begin implementation until you have done so.
 ## Supplementary Files
 
 These files live in `.context/` alongside the core context files.
-Read them when the task at hand warrants it — not on every session.
+Read them when the task at hand warrants it, not on every session.
 
 | File               | Read when                                                      |
 |--------------------|----------------------------------------------------------------|
 | ARCHITECTURE.md    | Working on structure, adding packages, or tracing flow         |
 | DETAILED_DESIGN.md | Deep-diving into internals (generated via `/ctx-architecture`) |
 | GLOSSARY.md        | Encountering unfamiliar project-specific terminology           |
+
+## Context Directory Lives at the Project Root
+
+The project root is the parent of `.context/`, by contract —
+specifically `filepath.Dir(ContextDir())`. That's where `ctx sync`,
+`ctx drift`, and the memory-drift hook look for code, secrets,
+and `MEMORY.md`.
+
+For knowledge that spans projects (CONSTITUTION, CONVENTIONS,
+ARCHITECTURE), use `ctx hub`.
+
+Recommended layout:
+
+```
+~/WORKSPACE/my-project
+  ├── .git
+  ├── .context
+  ├── Makefile
+  ├── Makefile.ctx
+  └── specs
+      └── ...
+```
 
 ## Reason Before Acting
 
@@ -280,7 +317,7 @@ Never assume. If you don't see it in files, you don't know it.
 ## Planning Work
 
 Every commit requires a `Spec:` trailer (CONSTITUTION rule). This means
-every piece of work needs a spec — no exceptions, no "trivial" qualifier.
+every piece of work needs a spec; no exceptions, no "trivial" qualifier.
 A one-liner bugfix gets a one-paragraph spec; a multi-package feature gets
 a full design document. The spec exists for traceability, not ceremony.
 

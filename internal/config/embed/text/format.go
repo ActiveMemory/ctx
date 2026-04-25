@@ -16,9 +16,6 @@ const (
 	DescKeyWriteFormatBytesUnit = "write.format-bytes-unit"
 	// DescKeyWriteFormatBytes is the text key for write format bytes messages.
 	DescKeyWriteFormatBytes = "write.format-bytes"
-	// DescKeyWriteFormatGVFSPath is the text key for write format gvfs path
-	// messages.
-	DescKeyWriteFormatGVFSPath = "write.format-gvfs-path"
 	// DescKeyWriteFormatDurationDay is the text key for write format duration day
 	// messages.
 	DescKeyWriteFormatDurationDay = "write.format-duration-day"
@@ -61,9 +58,6 @@ const (
 
 // DescKeys for miscellaneous format write output.
 const (
-	// DescKeyWriteBackupSkipEntry is the text key for write backup skip entry
-	// messages.
-	DescKeyWriteBackupSkipEntry = "write.backup-skip-entry"
 	// DescKeyWriteWikilinkListItem is the text key for write wikilink list item
 	// messages.
 	DescKeyWriteWikilinkListItem = "write.wikilink-list-item"

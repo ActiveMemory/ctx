@@ -36,7 +36,11 @@ import (
 //     operations fail
 func Complete(query, contextDir string) (string, int, error) {
 	if contextDir == "" {
-		contextDir = rc.ContextDir()
+		declared, ctxErr := rc.ContextDir()
+		if ctxErr != nil {
+			return "", 0, ctxErr
+		}
+		contextDir = declared
 	}
 
 	filePath := filepath.Join(contextDir, ctx.Task)

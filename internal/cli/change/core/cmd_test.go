@@ -212,7 +212,10 @@ func TestDetectReferenceTime_Fallback(t *testing.T) {
 }
 
 func TestDetectReferenceTime_FromMarkers(t *testing.T) {
-	tmp := t.TempDir()
+	tmp := filepath.Join(t.TempDir(), ".context")
+	if mkErr := os.MkdirAll(tmp, 0o700); mkErr != nil {
+		t.Fatalf("mkdir: %v", mkErr)
+	}
 	t.Setenv("CTX_DIR", tmp)
 	rc.Reset()
 
@@ -260,7 +263,10 @@ func TestDetectReferenceTime_FromMarkers(t *testing.T) {
 }
 
 func TestFindContextChanges(t *testing.T) {
-	tmp := t.TempDir()
+	tmp := filepath.Join(t.TempDir(), ".context")
+	if mkErr := os.MkdirAll(tmp, 0o700); mkErr != nil {
+		t.Fatalf("mkdir: %v", mkErr)
+	}
 	t.Setenv("CTX_DIR", tmp)
 	rc.Reset()
 
@@ -300,7 +306,10 @@ func TestFindContextChanges(t *testing.T) {
 }
 
 func TestFindContextChanges_EmptyDir(t *testing.T) {
-	tmp := t.TempDir()
+	tmp := filepath.Join(t.TempDir(), ".context")
+	if mkErr := os.MkdirAll(tmp, 0o700); mkErr != nil {
+		t.Fatalf("mkdir: %v", mkErr)
+	}
 	t.Setenv("CTX_DIR", tmp)
 	rc.Reset()
 

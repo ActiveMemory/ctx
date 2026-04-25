@@ -206,20 +206,6 @@ func CreateDir(dir string, cause error) error {
 	)
 }
 
-// BoundaryViolation wraps a boundary validation error with a hint
-// to use --allow-outside-cwd.
-//
-// Parameters:
-//   - cause: the underlying validation error
-//
-// Returns:
-//   - error: "<cause>\nUse --allow-outside-cwd to override this check"
-func BoundaryViolation(cause error) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrFsBoundaryViolation), cause,
-	)
-}
-
 // ReadFile wraps a file read failure.
 //
 // Parameters:

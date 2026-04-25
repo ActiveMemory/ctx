@@ -28,7 +28,9 @@ func Run(cmd *cobra.Command, sessionID string) error {
 	if sessionID == "" {
 		sessionID = coreSession.ReadID(os.Stdin)
 	}
-	nudge.Pause(sessionID)
+	if pauseErr := nudge.Pause(sessionID); pauseErr != nil {
+		return pauseErr
+	}
 	session.Paused(cmd, sessionID)
 	return nil
 }

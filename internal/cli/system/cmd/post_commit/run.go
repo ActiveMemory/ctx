@@ -19,7 +19,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	corePC "github.com/ActiveMemory/ctx/internal/cli/system/core/post_commit"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
@@ -42,11 +41,9 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
-		return nil
-	}
-	input, sessionID, paused := coreCheck.Preamble(stdin)
-	if paused {
+	input, sessionID, _, _, ok := coreCheck.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
 		return nil
 	}
 
@@ -68,25 +65,32 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	msg = ctxContext.AppendDir(msg)
+	msg, appendErr := ctxContext.AppendDir(msg)
+	if appendErr != nil {
+		return appendErr
+	}
 	writeSetup.Context(
 		cmd,
 		coreSession.FormatContext(hook.EventPostToolUse, msg),
 	)
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
-	nudge.Relay(
+	if relayErr := nudge.Relay(
 		fmt.Sprintf(
 			desc.Text(text.DescKeyRelayPrefixFormat),
 			hookName,
 			desc.Text(text.DescKeyPostCommitRelayMessage),
 		),
 		input.SessionID, ref,
-	)
+	); relayErr != nil {
+		return relayErr
+	}
 
-	if driftResponse := drift.CheckVersion(
-		sessionID,
-	); driftResponse != "" {
+	driftResponse, driftErr := drift.CheckVersion(sessionID)
+	if driftErr != nil {
+		return driftErr
+	}
+	if driftResponse != "" {
 		writeSetup.Context(cmd, driftResponse)
 	}
 

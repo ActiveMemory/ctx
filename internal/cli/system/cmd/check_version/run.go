@@ -18,7 +18,6 @@ import (
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	coreVersion "github.com/ActiveMemory/ctx/internal/cli/system/core/version"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -41,18 +40,12 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	input, _, _, tmpDir, ok := coreCheck.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
 		return nil
 	}
-
-	input, _, paused := coreCheck.Preamble(stdin)
-	if paused {
-		return nil
-	}
-
-	tmpDir := state.Dir()
 	markerFile := filepath.Join(tmpDir, version.ThrottleID)
-
 	if coreCheck.DailyThrottled(markerFile) {
 		return nil
 	}
@@ -116,12 +109,18 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		hook.CheckVersion, fmt.Sprintf(
 			desc.Text(text.DescKeyCheckVersionMismatchRelayFormat),
 			binaryVer, pluginVer))
-	nudge.EmitAndRelay(versionMsg, input.SessionID, ref)
+	if err := nudge.EmitAndRelay(versionMsg, input.SessionID, ref); err != nil {
+		return err
+	}
 
 	internalIo.TouchFile(markerFile)
 
-	// Key age check: piggyback on the daily version check
-	writeSetup.Nudge(cmd, coreVersion.CheckKeyAge(input.SessionID))
+	// Key age check: piggyback on the daily version check.
+	keyBox, keyErr := coreVersion.CheckKeyAge(input.SessionID)
+	if keyErr != nil {
+		return keyErr
+	}
+	writeSetup.Nudge(cmd, keyBox)
 
 	return nil
 }

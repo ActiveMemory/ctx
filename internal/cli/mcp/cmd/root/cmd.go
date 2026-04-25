@@ -22,6 +22,11 @@ import (
 // Returns:
 //   - error: Non-nil if the server fails to start or encounters an I/O error
 func Cmd(cmd *cobra.Command, _ []string) error {
-	srv := internalMcp.New(rc.ContextDir(), cmd.Root().Version)
+	ctxDir, err := rc.RequireContextDir()
+	if err != nil {
+		cmd.SilenceUsage = true
+		return err
+	}
+	srv := internalMcp.New(ctxDir, cmd.Root().Version)
 	return srv.Serve()
 }

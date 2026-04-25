@@ -30,7 +30,10 @@ import (
 //   - Result: Parsed archive plan
 //   - error: Non-nil if TASKS.md doesn't exist or can't be read
 func Plan() (Result, error) {
-	tasksPath := path.File()
+	tasksPath, pathErr := path.File()
+	if pathErr != nil {
+		return Result{}, pathErr
+	}
 	nl := token.NewlineLF
 
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
@@ -87,7 +90,10 @@ func Execute(r Result) (string, error) {
 		return "", writeErr
 	}
 
-	tasksPath := path.File()
+	tasksPath, pathErr := path.File()
+	if pathErr != nil {
+		return "", pathErr
+	}
 	if updateErr := io.SafeWriteFile(
 		tasksPath, []byte(r.NewTasksBody), fs.PermFile,
 	); updateErr != nil {

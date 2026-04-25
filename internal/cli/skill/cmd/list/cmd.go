@@ -45,7 +45,12 @@ func Cmd() *cobra.Command {
 // Returns:
 //   - error: nil on success, or a skill loading error
 func Run(c *cobra.Command) error {
-	skillsDir := filepath.Join(rc.ContextDir(), dir.Skills)
+	ctxDir, ctxErr := rc.RequireContextDir()
+	if ctxErr != nil {
+		c.SilenceUsage = true
+		return ctxErr
+	}
+	skillsDir := filepath.Join(ctxDir, dir.Skills)
 
 	skills, err := skill.LoadAll(skillsDir)
 	if err != nil {

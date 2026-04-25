@@ -14,7 +14,6 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	coreKnowledge "github.com/ActiveMemory/ctx/internal/cli/system/core/knowledge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
@@ -34,21 +33,21 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	_, sessionID, ctxDir, stateDir, ok := check.FullPreamble(stdin)
+	bailSilently := !ok
+	if bailSilently {
 		return nil
 	}
-
-	_, sessionID, paused := check.Preamble(stdin)
-	if paused {
-		return nil
-	}
-
-	markerPath := filepath.Join(state.Dir(), knowledge.ThrottleID)
+	markerPath := filepath.Join(stateDir, knowledge.ThrottleID)
 	if check.DailyThrottled(markerPath) {
 		return nil
 	}
 
-	if box, warned := coreKnowledge.CheckHealth(sessionID); warned {
+	box, warned, checkErr := coreKnowledge.CheckHealth(sessionID, ctxDir)
+	if checkErr != nil {
+		return checkErr
+	}
+	if warned {
 		writeSetup.Nudge(cmd, box)
 		internalIo.TouchFile(markerPath)
 	}

@@ -7,20 +7,25 @@
 package obsidian
 
 import (
-	"path/filepath"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
-	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Cmd returns the journal obsidian subcommand.
+//
+// The --output default is resolved inside [Run] against the
+// declared context directory. Computing it at construction time
+// would require rc.ContextDir() to succeed before cobra has
+// parsed the flags, which is too early under the
+// explicit-context-dir model. Leaving the default empty and
+// resolving lazily keeps the failure path clean: a missing
+// context directory surfaces as a single actionable error from
+// Run, not a silently-empty flag default.
 //
 // Returns:
 //   - *cobra.Command: Command for generating an Obsidian vault from journal
@@ -39,12 +44,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	defaultOutput := filepath.Join(
-		rc.ContextDir(), obsidian.DirName,
-	)
 	flagbind.StringFlagPDefault(
 		c, &output,
-		cFlag.Output, cFlag.ShortOutput, defaultOutput,
+		cFlag.Output, cFlag.ShortOutput, "",
 		flag.DescKeyJournalObsidianOutput,
 	)
 

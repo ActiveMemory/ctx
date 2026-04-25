@@ -26,7 +26,6 @@ ctx system <subcommand>
     Several user-facing maintenance commands used to live under
     `ctx system` and were promoted to top-level:
 
-    - `ctx system backup` → **`ctx backup`**
     - `ctx system events` → **`ctx hook event`**
     - `ctx system message` → **`ctx hook message`**
     - `ctx system prune` → **`ctx prune`**
@@ -113,7 +112,7 @@ UserPromptSubmit hooks: `context-load-gate`, `check-context-size`,
 `check-persistence`, `check-ceremony`, `check-journal`, `check-version`,
 `check-resource`, `check-knowledge`, `check-map-staleness`,
 `check-memory-drift`, `check-reminder`, `check-freshness`,
-`check-hub-sync`, `check-backup-age`, `check-skill-discovery`,
+`check-hub-sync`, `check-skill-discovery`,
 `heartbeat`.
 
 PreToolUse hooks: `block-non-path-ctx`, `block-dangerous-command`,

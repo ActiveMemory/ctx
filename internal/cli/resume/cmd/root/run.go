@@ -28,7 +28,9 @@ func Run(cmd *cobra.Command, sessionID string) error {
 	if sessionID == "" {
 		sessionID = coreSession.ReadID(os.Stdin)
 	}
-	nudge.Resume(sessionID)
+	if resumeErr := nudge.Resume(sessionID); resumeErr != nil {
+		return resumeErr
+	}
 	session.Resumed(cmd, sessionID)
 	return nil
 }

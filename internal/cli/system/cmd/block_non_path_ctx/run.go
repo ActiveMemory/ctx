@@ -82,7 +82,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		data, _ := json.Marshal(resp)
 		writeSetup.BlockResponse(cmd, string(data))
 		blockRef := notify.NewTemplateRef(hook.BlockNonPathCtx, variant, nil)
-		nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+		return nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
 			hook.BlockNonPathCtx, desc.Text(text.DescKeyBlockNonPathRelayMessage)),
 			input.SessionID, blockRef,
 		)

@@ -14,22 +14,37 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	"github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // LoadBodies reads all markdown files from .context/hub/
 // and returns their contents as strings.
 //
-// Returns nil if the shared directory does not exist or is
-// empty (shared knowledge is opt-in).
+// ctxDir is supplied by the caller so this function does not
+// re-resolve it; the caller decides whether "no context dir" is
+// benign and handles it before invoking us.
+//
+// Any directory read failure (including a missing hub directory)
+// is propagated so the caller can surface it. [LoadBodies] is only
+// invoked when the user explicitly requested shared content (e.g.
+// `ctx agent --include-share`); telling them "everything is fine,
+// here's an empty list" when the hub directory does not exist hides
+// a real setup gap.
+//
+// Per-file read failures inside an existing hub directory are still
+// tolerated silently. One unreadable sibling should not blank the
+// rest.
+//
+// Parameters:
+//   - ctxDir: absolute path to the context directory
 //
 // Returns:
 //   - []string: file contents, one per shared file
-func LoadBodies() []string {
-	dir := filepath.Join(rc.ContextDir(), cfgHub.DirHub)
+//   - error: non-nil on any directory read failure
+func LoadBodies(ctxDir string) ([]string, error) {
+	dir := filepath.Join(ctxDir, cfgHub.DirHub)
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {
-		return nil
+		return nil, readErr
 	}
 
 	var bodies []string
@@ -48,5 +63,5 @@ func LoadBodies() []string {
 		}
 		bodies = append(bodies, string(data))
 	}
-	return bodies
+	return bodies, nil
 }

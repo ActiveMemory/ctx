@@ -21,9 +21,9 @@ Move it to a YAML text entry instead.
 | `tpl_entry.go`    | 15          | ctx add entry templates (decision, learning, convention, task) |
 | `tpl_journal.go`  | 26          | Journal markdown rendering |
 | `tpl_loop.go`     | 15          | Shell script generation for autonomous loops |
-| `tpl_obsidian.go` | 1           | Obsidian vault README (borderline — could migrate) |
+| `tpl_obsidian.go` | 1           | Obsidian vault README (borderline; could migrate) |
 | `tpl_recall.go`   | 21          | Recall output rendering |
-| `tpl_trigger.go`  | 2           | Trigger script scaffold (borderline — could migrate) |
+| `tpl_trigger.go`  | 2           | Trigger script scaffold (borderline; could migrate) |
 
 ## How they will be replaced
 

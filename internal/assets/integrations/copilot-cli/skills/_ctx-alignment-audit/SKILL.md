@@ -24,7 +24,7 @@ actual agent instructions.
 
 ### Step 1: Collect Claims
 
-Read target docs. Extract every behavioral claim — statements
+Read target docs. Extract every behavioral claim: statements
 describing what an agent "will do", "may do", or "offers to do".
 
 ### Step 2: Trace Each Claim
@@ -44,7 +44,7 @@ For each claim, determine:
 | Claim (file:line) | Status | Backing instruction | Gap |
 |---|---|---|---|
 | "agent creates tasks" | Gap | None | Not taught |
-| "agent saves learnings" | Covered | Playbook | — |
+| "agent saves learnings" | Covered | Playbook | n/a |
 
 ### Step 4: Fix (if requested)
 

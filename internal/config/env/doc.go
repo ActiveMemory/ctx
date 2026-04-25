@@ -23,10 +23,6 @@
 //   - CtxTokenBudget: overrides the default token
 //     budget for context window sizing
 //     ($CTX_TOKEN_BUDGET)
-//   - BackupSMBURL: SMB share URL for backup
-//     operations ($CTX_BACKUP_SMB_URL)
-//   - BackupSMBSubdir: subdirectory within the SMB
-//     share for backups ($CTX_BACKUP_SMB_SUBDIR)
 //   - SessionID: active AI session identifier used
 //     by ctx trace ($CTX_SESSION_ID)
 //   - SkipPathCheck: skips PATH validation during
@@ -49,8 +45,8 @@
 // # Why Centralized
 //
 // Environment variable names are referenced by the init
-// command, bootstrap logic, backup routines, and test
-// helpers. Centralizing them here prevents naming drift
-// and makes it trivial to add new variables with
-// consistent documentation.
+// command, bootstrap logic, and test helpers.
+// Centralizing them here prevents naming drift and makes
+// it trivial to add new variables with consistent
+// documentation.
 package env

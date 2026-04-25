@@ -24,6 +24,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/reminder"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // Run executes the check-reminders hook logic.
@@ -46,7 +48,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// regardless of initialized/paused state.
 	coreProv.Emit(cmd, input.SessionID)
 
-	if !state.Initialized() || paused {
+	initialized, initErr := state.Initialized()
+	if initErr != nil {
+		logWarn.Warn(warn.StateInitializedProbe, initErr)
+		return nil
+	}
+	if !initialized || paused {
 		return nil
 	}
 
@@ -86,13 +93,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		desc.Text(text.DescKeyCheckReminderNudgeFormat),
 		len(due),
 	)
-	nudge.LoadAndEmit(cmd,
+	return nudge.LoadAndEmit(cmd,
 		hook.CheckReminder, hook.VariantReminders,
 		vars, fallback,
 		desc.Text(text.DescKeyCheckReminderRelayPrefix),
 		desc.Text(text.DescKeyCheckReminderBoxTitle),
 		relayMsg, input.SessionID, "",
 	)
-
-	return nil
 }

@@ -28,9 +28,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/load_gate"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
@@ -51,7 +53,12 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !state.Initialized() {
+	initialized, initErr := state.Initialized()
+	if initErr != nil {
+		logWarn.Warn(warn.StateInitializedProbe, initErr)
+		return nil
+	}
+	if !initialized {
 		return nil
 	}
 
@@ -64,7 +71,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := state.Dir()
+	tmpDir, dirErr := state.Dir()
+	if dirErr != nil {
+		logWarn.Warn(warn.StateDirProbe, dirErr)
+		return nil
+	}
 	marker := filepath.Join(tmpDir, load_gate.PrefixCtxLoaded+input.SessionID)
 
 	if _, statErr := os.Stat(marker); statErr == nil {
@@ -79,7 +90,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	// Runs once per session at startup - fast directory scan.
 	health.AutoPrune(load_gate.AutoPruneStaleDays)
 
-	dir := rc.ContextDir()
+	// Unreachable under normal flow: state.Initialized() above already
+	// proved ContextDir succeeds. Kept defensive so a future ContextDir
+	// failure mode surfaces loudly instead of silently hanging the gate.
+	dir, err := rc.ContextDir()
+	if err != nil {
+		logWarn.Warn(warn.ContextDirResolve, err)
+		return nil
+	}
 	var content strings.Builder
 	var totalTokens int
 	var filesLoaded int
@@ -133,11 +151,19 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		cmd, coreSession.FormatContext(hook.EventPreToolUse, content.String()),
 	)
 
-	// Webhook: metadata only - never send file content externally
+	// Webhook: metadata only - never send file content externally.
+	// Log-first: Relay writes the event log then sends the webhook;
+	// if either fails, the oversize flag is NOT written; we do not
+	// want an oversize nudge to fire for a gate event we never
+	// recorded.
 	webhookMsg := fmt.Sprintf(
 		desc.Text(text.DescKeyContextLoadGateWebhook),
 		filesLoaded, totalTokens)
-	nudge.Relay(webhookMsg, input.SessionID, nil)
+	if relayErr := nudge.Relay(
+		webhookMsg, input.SessionID, nil,
+	); relayErr != nil {
+		return relayErr
+	}
 
 	// Oversize nudge: write the flag for check-context-size to pick up
 	load.WriteOversizeFlag(dir, totalTokens, perFile)

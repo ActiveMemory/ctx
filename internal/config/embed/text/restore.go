@@ -35,4 +35,10 @@ const (
 	// DescKeyWriteRestoreRestoredHeader is the text key for write restore
 	// restored header messages.
 	DescKeyWriteRestoreRestoredHeader = "write.restore-restored-header"
+	// DescKeyWriteSnapshotSaved is the text key for the first-time
+	// golden snapshot save confirmation.
+	DescKeyWriteSnapshotSaved = "write.snapshot-saved"
+	// DescKeyWriteSnapshotUpdated is the text key for the subsequent
+	// golden snapshot update confirmation.
+	DescKeyWriteSnapshotUpdated = "write.snapshot-updated"
 )

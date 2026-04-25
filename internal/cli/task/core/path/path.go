@@ -18,14 +18,24 @@ import (
 //
 // Returns:
 //   - string: Full path to .context/TASKS.md
-func File() string {
-	return filepath.Join(rc.ContextDir(), ctx.Task)
+//   - error: non-nil when the context directory is not declared
+func File() (string, error) {
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(ctxDir, ctx.Task), nil
 }
 
 // ArchiveDir returns the path to the archive directory.
 //
 // Returns:
 //   - string: Full path to .context/archive/
-func ArchiveDir() string {
-	return filepath.Join(rc.ContextDir(), dir.Archive)
+//   - error: non-nil when the context directory is not declared
+func ArchiveDir() (string, error) {
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(ctxDir, dir.Archive), nil
 }

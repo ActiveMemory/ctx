@@ -8,16 +8,16 @@
 
 ## `ctx`: VS Code Chat Extension
 
-A VS Code Chat Participant that brings [ctx](https://ctx.ist) — persistent
-project context for AI coding sessions — directly into GitHub Copilot Chat.
+A VS Code Chat Participant that brings [ctx](https://ctx.ist) (persistent
+project context for AI coding sessions) directly into GitHub Copilot Chat.
 
 Type `@ctx` in the Chat view to access 45 slash commands, automatic context
-hooks, a reminder status bar, and natural language routing — all powered by
+hooks, a reminder status bar, and natural language routing, all powered by
 the ctx CLI.
 
 ## Quick Start
 
-1. Install the extension (or build from source — see [Development](#development))
+1. Install the extension (or build from source; see [Development](#development))
 2. Open a project in VS Code
 3. Open Copilot Chat and type `@ctx /init`
 
@@ -79,7 +79,7 @@ The extension auto-downloads the ctx CLI binary if it isn't on your PATH.
 | `/check-links` | Audit local links in context files |
 | `/journal` | View or export journal entries |
 | `/consolidate` | Find duplicate entries across context files |
-| `/audit` | Alignment audit — drift + convention check |
+| `/audit` | Alignment audit: drift + convention check |
 | `/worktree` | Git worktree management (list, add) |
 
 ### Context Metadata
@@ -111,7 +111,7 @@ Sub-routes for `/system`: `resources`, `doctor`, `bootstrap`, `stats`,
 ## Automatic Hooks
 
 The extension registers several VS Code event handlers that mirror
-Claude Code's hook system. These run in the background — no user action
+Claude Code's hook system. These run in the background; no user action
 needed.
 
 | Trigger | What Happens |
@@ -119,7 +119,7 @@ needed.
 | **File save** | Runs task-completion check on non-`.context/` files |
 | **Git commit** | Notification prompting to add a Decision, Learning, run Verify, or Skip |
 | **`.context/` file change** | Refreshes reminders and regenerates `.github/copilot-instructions.md` |
-| **Dependency file change** | Notification when `go.mod`, `package.json`, etc. change — offers `/map` |
+| **Dependency file change** | Notification when `go.mod`, `package.json`, etc. change; offers `/map` |
 | **Every 5 minutes** | Updates reminder status bar and writes heartbeat timestamp |
 | **Extension activate** | Fires `session-event --type start` to ctx CLI |
 | **Extension deactivate** | Fires `session-event --type end` to ctx CLI |
@@ -132,7 +132,7 @@ automatically.
 
 ## Natural Language
 
-You can also type plain English after `@ctx` — the extension routes
+You can also type plain English after `@ctx`: the extension routes
 common phrases to the correct handler:
 
 - "What should I work on next?" → `/next`
@@ -169,7 +169,7 @@ For example:
 
 - VS Code 1.93+
 - [GitHub Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) extension
-- [ctx](https://ctx.ist) CLI on PATH — or let the extension auto-download it
+- [ctx](https://ctx.ist) CLI on PATH, or let the extension auto-download it
 
 ## Configuration
 

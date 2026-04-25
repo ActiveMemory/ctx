@@ -11,6 +11,7 @@ import (
 
 	coreTest "github.com/ActiveMemory/ctx/internal/cli/notify/core/test"
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writeNotify "github.com/ActiveMemory/ctx/internal/write/notify"
 )
 
@@ -22,6 +23,10 @@ import (
 // Returns:
 //   - error: Non-nil on webhook load or HTTP failure
 func Run(cmd *cobra.Command) error {
+	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
+		cmd.SilenceUsage = true
+		return ctxErr
+	}
 	r, sendErr := coreTest.Send()
 	if sendErr != nil {
 		return sendErr

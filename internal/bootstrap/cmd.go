@@ -20,11 +20,8 @@ import (
 	embedFlag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/validate"
-	"github.com/ActiveMemory/ctx/internal/err/fs"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
-	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/validate"
 	writeBootstrap "github.com/ActiveMemory/ctx/internal/write/bootstrap"
 )
 
@@ -38,16 +35,9 @@ var version = cfgBootstrap.DefaultVersion
 // The root command provides the entry point for all ctx subcommands and
 // displays help information when invoked without arguments.
 //
-// Global flags:
-//   - --context-dir: Override the context directory path (default: .context)
-//   - --allow-outside-cwd: Allow context directory outside project root
-//
 // Returns:
 //   - *cobra.Command: The configured root command with usage and version info
 func RootCmd() *cobra.Command {
-	var contextDir string
-	var allowOutsideCwd bool
-
 	short, long := desc.Command(cmd.DescKeyCtx)
 
 	c := &cobra.Command{
@@ -56,43 +46,59 @@ func RootCmd() *cobra.Command {
 		Long:    long,
 		Example: desc.Example(cmd.DescKeyCtx),
 		Version: version,
+		// Cobra auto-prints returned errors to stderr by default;
+		// main.go also prints them via writeErr.With, producing a
+		// double-printed error. Silence cobra's path so writeErr is
+		// the sole printer. (SilenceUsage stays per-return so
+		// genuine cobra parse errors keep their help dump.)
+		SilenceErrors: true,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			// Apply global flag values
-			if contextDir != "" {
-				rc.OverrideContextDir(contextDir)
-			}
-			// Validate that the context directory stays within the project root.
-			// Skip if the CLI flag is set or .ctxrc has allow_outside_cwd: true.
-			if !allowOutsideCwd && !rc.AllowOutsideCwd() {
-				if validateErr := validate.Boundary(
-					rc.ContextDir(),
-				); validateErr != nil {
-					return fs.BoundaryViolation(validateErr)
-				}
-			}
-
-			// Skip init check for hidden commands (hooks have their own guards)
-			// and cobra's built-in completion subcommands (bash, zsh, fish,
-			// PowerShell) which must work in any directory.
+			// Skip every downstream check for administrative commands
+			// that must run without a declared or initialized context:
+			//   - Hidden commands (e.g. ctx system bootstrap; hooks
+			//     supply their own guards).
+			//   - Cobra's built-in shell-completion subcommands.
+			//   - Commands annotated with AnnotationSkipInit (init,
+			//     activate, deactivate, guide, why, doctor, config
+			//     switch/status, hub *).
+			//   - Grouping commands without a Run / RunE of their own
+			//     (they just print help for their subtree).
 			if cmd.Hidden {
 				return nil
 			}
 			if p := cmd.Parent(); p != nil && p.Name() == cli.CmdCompletion {
 				return nil
 			}
-
-			// Skip init check for annotated commands.
 			if _, ok := cmd.Annotations[cli.AnnotationSkipInit]; ok {
 				return nil
 			}
-
-			// Skip init check for grouping commands (no Run/RunE = just shows help).
 			if cmd.RunE == nil && cmd.Run == nil {
 				return nil
 			}
 
-			// Require initialization.
-			if !ctxContext.Initialized(rc.ContextDir()) {
+			// Under the single-source-anchor model, every non-exempt
+			// command requires CTX_DIR to be declared and to point at
+			// an existing .context/ directory. RequireContextDir
+			// returns a tailored error (with a next-step hint based on
+			// how many .context/ candidates are visible from CWD) when
+			// the declaration is missing or broken. The parent of the
+			// declared directory is the project root by contract; CWD
+			// has no say in project identity.
+			ctxDir, reqErr := rc.RequireContextDir()
+			if reqErr != nil {
+				// Actionable error, not a usage problem. Suppress
+				// cobra's help dump so the call-to-action stays
+				// the only thing on stderr. Genuine cobra errors
+				// (unknown subcommand, bad flag) still print usage
+				// because they happen before PreRunE runs.
+				cmd.SilenceUsage = true
+				return reqErr
+			}
+
+			// Require initialization: the declared directory must
+			// have been initialized before other commands operate.
+			if !ctxContext.Initialized(ctxDir) {
+				cmd.SilenceUsage = true
 				return errInit.NotInitialized()
 			}
 
@@ -114,16 +120,6 @@ func RootCmd() *cobra.Command {
 		}
 	})
 
-	// Global flags available to all subcommands
-	flagbind.PersistentStringFlag(
-		c, &contextDir,
-		flag.ContextDir, embedFlag.DescKeyContextDir,
-	)
-	flagbind.PersistentBoolFlag(
-		c, &allowOutsideCwd,
-		flag.AllowOutsideCwd,
-		embedFlag.DescKeyAllowOutsideCwd,
-	)
 	c.PersistentFlags().String(
 		flag.Tool,
 		"",

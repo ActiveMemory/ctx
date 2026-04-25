@@ -56,9 +56,11 @@ func LoadBodies() []string {
 //   - string: Body content of the loaded skill
 //   - error: Non-nil if the skill is missing or unreadable
 func LoadSkill(name string) (string, error) {
-	skillsDir := filepath.Join(
-		rc.ContextDir(), dir.Skills,
-	)
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		return "", ctxErr
+	}
+	skillsDir := filepath.Join(ctxDir, dir.Skills)
 
 	sk, loadErr := skill.Load(skillsDir, name)
 	if loadErr != nil {

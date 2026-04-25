@@ -30,7 +30,7 @@ For ctx plugin skills (`/ctx-status`, `/ctx-history`, etc.), see the
 ### absorb
 
 Extracts a diff between two copies of the same project and applies it as a
-patch. The companion to `/ctx-worktree` — worktree splits work apart, absorb
+patch. The companion to `/ctx-worktree`: worktree splits work apart, absorb
 merges it back. Useful when `git push/pull` isn't practical (USB copies,
 disconnected machines, worktrees without a shared remote).
 
@@ -40,19 +40,11 @@ disconnected machines, worktrees without a shared remote).
 ### audit
 
 Detects code-level drift: predicate naming, magic strings, hardcoded values,
-missing godoc. Follows the 3:1 consolidation ratio — run after every ~3
+missing godoc. Follows the 3:1 consolidation ratio; run after every ~3
 rapid implementation sessions.
 
 - **Use when**: after YOLO sprints, before releases
 - **Skip when**: mid-feature with intentionally incomplete code
-
-### backup
-
-Backs up `.context/`, `.claude/`, and global Claude data to a configured SMB
-share. Requires `CTX_BACKUP_SMB_URL` environment variable.
-
-- **Use when**: before risky operations, end of productive sessions
-- **Skip when**: SMB is not configured, or no changes since last backup
 
 ### brainstorm
 

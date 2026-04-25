@@ -122,8 +122,12 @@ func ReadID(stdin *os.File) string {
 // Returns:
 //   - int: Latest context window usage percentage (0-100), or 0 if unknown
 func LatestPct(sessionID string) int {
+	stateDir, dirErr := state.Dir()
+	if dirErr != nil {
+		return 0
+	}
 	path := filepath.Join(
-		state.Dir(),
+		stateDir,
 		cfgStats.FilePrefix+sessionID+file.ExtJSONL,
 	)
 	data, readErr := internalIo.SafeReadUserFile(path)
@@ -149,21 +153,32 @@ func LatestPct(sessionID string) int {
 
 // WriteStats appends a JSONL line to .context/state/stats-{sessionID}.jsonl.
 // The file is designed for `tail -f` monitoring of token usage across prompts.
-// Best-effort: errors are silently ignored.
+// Errors are propagated; see Returns for the rationale.
 //
 // Parameters:
 //   - sessionID: Session identifier
 //   - stats: Stats entry to write
-func WriteStats(sessionID string, stats entity.Stats) {
+//
+// Returns:
+//   - error: non-nil when marshaling or the append fails. Stats are
+//     an audit trail of per-session token usage; surfacing a write
+//     failure lets callers honour the log-first principle (do not
+//     claim success for a session action whose stats entry never
+//     landed).
+func WriteStats(sessionID string, stats entity.Stats) error {
+	stateDir, dirErr := state.Dir()
+	if dirErr != nil {
+		return dirErr
+	}
 	path := filepath.Join(
-		state.Dir(),
+		stateDir,
 		cfgStats.FilePrefix+sessionID+file.ExtJSONL,
 	)
 	data, marshalErr := json.Marshal(stats)
 	if marshalErr != nil {
-		return
+		return marshalErr
 	}
 	data = append(data, token.NewlineLF[0])
 
-	internalIo.AppendBytes(path, data, fs.PermSecret)
+	return internalIo.AppendBytes(path, data, fs.PermSecret)
 }

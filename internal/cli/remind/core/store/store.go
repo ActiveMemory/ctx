@@ -26,7 +26,11 @@ import (
 //   - []Reminder: The parsed reminders (nil when file absent)
 //   - error: Non-nil on read or parse failure
 func Read() ([]Reminder, error) {
-	data, readErr := io.SafeReadUserFile(Path())
+	path, pathErr := Path()
+	if pathErr != nil {
+		return nil, pathErr
+	}
+	data, readErr := io.SafeReadUserFile(path)
 	if readErr != nil {
 		if errors.Is(readErr, os.ErrNotExist) {
 			return nil, nil
@@ -56,7 +60,11 @@ func Write(reminders []Reminder) error {
 	if marshalErr != nil {
 		return marshalErr
 	}
-	return io.SafeWriteFile(Path(), data, fs.PermFile)
+	path, pathErr := Path()
+	if pathErr != nil {
+		return pathErr
+	}
+	return io.SafeWriteFile(path, data, fs.PermFile)
 }
 
 // NextID returns the next available reminder ID
@@ -81,6 +89,11 @@ func NextID(reminders []Reminder) int {
 //
 // Returns:
 //   - string: Absolute path to reminders.json
-func Path() string {
-	return filepath.Join(rc.ContextDir(), reminder.File)
+//   - error: non-nil when the context directory is not declared
+func Path() (string, error) {
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(ctxDir, reminder.File), nil
 }

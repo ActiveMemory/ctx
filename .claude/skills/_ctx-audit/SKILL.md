@@ -323,8 +323,6 @@ rg 'default|Default' docs/configuration.md -n
 ```
 
 Cross-check:
-- `config.DirContext` value matches the `context_dir` default in docs
-  and sample `.ctxrc`
 - `FileReadOrder` entries match the `priority_order` list in sample
   `.ctxrc` and the docs "Default priority order" section
 - `DefaultTokenBudget`, `DefaultArchiveAfterDays`, etc. in `rc.go`
