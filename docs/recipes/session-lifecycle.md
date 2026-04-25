@@ -29,7 +29,7 @@ persisting context before you close it, so you can see how each piece connects.
 
 Read on for the full walkthrough with examples.
 
-!!! note "Before You Start: Activate the Project"
+!!! warning "Before You Start: Activate the Project"
     ctx commands (and the skills that call them) require `CTX_DIR` to be
     declared for the shell you're working in; `ctx` does not walk the
     filesystem to find `.context/`. Once per shell (or via your shell
