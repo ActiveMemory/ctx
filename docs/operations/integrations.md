@@ -607,12 +607,15 @@ eval "$(ctx activate)"
 The plugin wires OpenCode lifecycle events to `ctx system`:
 
 - **`session.created`** — bootstraps context and loads the agent packet
-- **`tool.execute.before`** — blocks dangerous shell commands
-- **`tool.execute.after`** — post-commit nudges and task completion checks
+- **`tool.execute.after` (shell, on `git commit`)** — runs `ctx system post-commit`
+- **`tool.execute.after` (edit/write)** — `check-task-completion` nudge
 - **`session.idle`** — persistence and task completion nudges
 - **`shell.env`** — injects `CTX_DIR=.context`
 
-OpenCode auto-installs plugin dependencies via `bun install`.
+After running `ctx setup opencode --write`, run `bun install` inside
+`.opencode/plugins/ctx/` (or let OpenCode do it on first launch — see
+the [OpenCode plugin docs](https://opencode.ai/docs/plugins/) for the
+current behavior).
 
 ### Context Updates
 
