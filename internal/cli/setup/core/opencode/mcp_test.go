@@ -61,11 +61,25 @@ func TestEnsureMCPConfig_CreatesFile(t *testing.T) {
 	if !ok {
 		t.Fatal("missing mcp.ctx key")
 	}
-	if ctxServer["command"] != "ctx" {
-		t.Errorf("command = %q, want ctx", ctxServer["command"])
-	}
 	if ctxServer["type"] != "local" {
 		t.Errorf("type = %q, want local", ctxServer["type"])
+	}
+	cmdArr, ok := ctxServer["command"].([]interface{})
+	if !ok {
+		t.Fatalf("command must be an array per OpenCode schema, got %T", ctxServer["command"])
+	}
+	if got := len(cmdArr); got != 3 {
+		t.Errorf("command length = %d, want 3 (binary + 2 args)", got)
+	}
+	if cmdArr[0] != "ctx" {
+		t.Errorf("command[0] = %q, want ctx", cmdArr[0])
+	}
+	if _, hasArgs := ctxServer["args"]; hasArgs {
+		t.Error("args field must not be set; OpenCode schema folds args into command array")
+	}
+	enabled, ok := ctxServer["enabled"].(bool)
+	if !ok || !enabled {
+		t.Errorf("enabled = %v, want true", ctxServer["enabled"])
 	}
 }
 

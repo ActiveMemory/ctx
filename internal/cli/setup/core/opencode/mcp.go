@@ -59,11 +59,14 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 		return nil
 	}
 
-	// Add ctx MCP server.
+	// Add ctx MCP server. OpenCode's McpLocalConfig schema differs
+	// from Copilot CLI's: `command` is an Array<string> that holds
+	// both the binary and its args (no separate `args` field), and
+	// `enabled` is required at runtime.
 	servers[mcpServer.Name] = map[string]interface{}{
 		cfgHook.KeyType:    cfgHook.MCPServerType,
-		cfgHook.KeyCommand: mcpServer.Command,
-		cfgHook.KeyArgs:    mcpServer.Args(),
+		cfgHook.KeyCommand: append([]string{mcpServer.Command}, mcpServer.Args()...),
+		cfgHook.KeyEnabled: true,
 	}
 	existing[cfgHook.KeyMCP] = servers
 
