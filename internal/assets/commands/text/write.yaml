@@ -112,6 +112,21 @@ write.hook-copilot-cli-summary:
     Hooks work on all platforms:
       Linux/macOS/WSL  →  .sh scripts
       Windows          →  .ps1 scripts
+write.hook-opencode-created:
+  short: '  ✓ %s'
+write.hook-opencode-skipped:
+  short: '  ○ %s (ctx plugin exists, skipped)'
+write.hook-opencode-summary:
+  short: |-
+    OpenCode will now:
+      1. Bootstrap ctx context on session start
+      2. Block dangerous commands (tool.execute.before)
+      3. Nudge persistence on session idle
+      4. Track task completion after edits
+
+    Plugin: .opencode/plugins/ctx/
+    MCP:    opencode.json
+    Skills: .opencode/skills/
 write.hook-copilot-created:
   short: '  ✓ %s'
 write.hook-copilot-force-hint:
