@@ -36,9 +36,9 @@ export default ((ctx) => ({
       await ctx.$`ctx system check-task-completion 2>/dev/null || true`
     },
   },
-  "tool.execute.after": async ({ tool, input }) => {
+  "tool.execute.after": async ({ tool, args }) => {
     if (SHELL_TOOLS.has(tool)) {
-      const cmd = extractCommand(input)
+      const cmd = extractCommand(args)
       if (GIT_COMMIT_RE.test(cmd)) {
         await ctx.$`ctx system post-commit 2>/dev/null || true`
       }
