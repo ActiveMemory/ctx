@@ -18,7 +18,6 @@ import (
 //go:embed integrations/copilot-cli/scripts/*.sh
 //go:embed integrations/copilot-cli/scripts/*.ps1
 //go:embed integrations/copilot-cli/skills/*/SKILL.md
-//go:embed integrations/opencode/*.md
 //go:embed integrations/opencode/plugin/index.ts
 //go:embed integrations/opencode/plugin/package.json
 //go:embed integrations/opencode/skills/*/SKILL.md

@@ -7,7 +7,9 @@
 package opencode
 
 import (
+	"bytes"
 	"encoding/json"
+
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -23,7 +25,8 @@ import (
 //
 // Merge-safe: reads existing config, adds ctx server under
 // the "mcp" key, writes back. Skips if ctx server is already
-// registered.
+// registered. Treats a missing or empty file as "no existing
+// config" rather than an error.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
@@ -33,10 +36,12 @@ import (
 func ensureMCPConfig(cmd *cobra.Command) error {
 	target := cfgHook.FileOpenCodeJSON
 
-	// Read existing config if it exists.
+	// Read existing config if it exists. An empty or whitespace-only
+	// file is treated as "no existing config" so users who pre-create
+	// opencode.json don't trip an unmarshal error.
 	existing := make(map[string]interface{})
 	data, readErr := ctxIo.SafeReadUserFile(target)
-	if readErr == nil {
+	if readErr == nil && len(bytes.TrimSpace(data)) > 0 {
 		if jErr := json.Unmarshal(data, &existing); jErr != nil {
 			return jErr
 		}
@@ -62,16 +67,16 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	}
 	existing[cfgHook.KeyMCP] = servers
 
-	data, marshalErr := json.MarshalIndent(
+	out, marshalErr := json.MarshalIndent(
 		existing, "", token.Indent2,
 	)
 	if marshalErr != nil {
 		return marshalErr
 	}
-	data = append(data, token.NewlineLF...)
+	out = append(out, token.NewlineLF...)
 
 	writeFileErr := ctxIo.SafeWriteFile(
-		target, data, fs.PermFile,
+		target, out, fs.PermFile,
 	)
 	if writeFileErr != nil {
 		return writeFileErr
