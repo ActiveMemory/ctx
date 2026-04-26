@@ -104,6 +104,9 @@ const (
 	KeyCommand = "command"
 	// KeyArgs is the JSON key for MCP server args.
 	KeyArgs = "args"
+	// KeyEnabled is the JSON key for the MCP server enabled flag
+	// (used by OpenCode's McpLocalConfig schema).
+	KeyEnabled = "enabled"
 	// KeyTools is the JSON key for MCP server tools filter.
 	KeyTools = "tools"
 	// ToolsWildcard is the wildcard value for MCP tools access.
