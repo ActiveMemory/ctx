@@ -26,6 +26,10 @@ TASK STATUS LABELS:
 -->
 
 ## Phase 0 Grounding
+- [ ] Add TypeScript type-check step (bunx tsc --noEmit) for embedded editor-plugin assets to CI; nothing currently checks .opencode/plugins/ctx/index.ts before embedding #priority:low #added:2026-04-26-152912
+
+- [ ] Promote 'block-dangerous-commands' to a real ctx system Go subcommand so OpenCode and other non-Claude editor integrations can ship the safety hook #priority:medium #added:2026-04-26-152911
+
 
 - [ ] The target project (to be given to the Agent) has a good "phasing"
   mechanism for tasks; implement that; maybe `ctx task add` can have a 
