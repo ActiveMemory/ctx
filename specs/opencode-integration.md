@@ -26,9 +26,8 @@ scripts) — not a build dependency. All real logic stays in Go via `ctx system`
 ```
 internal/assets/integrations/opencode/
 ├── plugin/
-│   ├── index.ts          # Thin shim plugin (~40 lines)
+│   ├── index.ts          # Thin shim plugin (~50 lines)
 │   └── package.json      # Minimal: name, version, @opencode-ai/plugin dep
-├── INSTRUCTIONS.md       # OpenCode-specific agent instructions (adapt from copilot-cli)
 └── skills/               # ctx skills in OpenCode format
     ├── ctx-agent/SKILL.md
     ├── ctx-remember/SKILL.md
@@ -36,43 +35,23 @@ internal/assets/integrations/opencode/
     └── ctx-wrap-up/SKILL.md
 ```
 
-**`plugin/index.ts`** — the core deliverable:
-```typescript
-import type { Plugin } from "@opencode-ai/plugin"
+OpenCode reads `AGENTS.md` natively, so we deploy the shared
+`agent.AgentsMd()` template at the project root rather than shipping
+an OpenCode-specific instructions file.
 
-export default ((ctx) => ({
-  "shell.env": () => ({
-    CTX_DIR: ".context",
-  }),
-  event: {
-    "session.created": async () => {
-      await ctx.$`ctx system bootstrap 2>/dev/null || true`
-      await ctx.$`ctx agent --budget 4000 2>/dev/null || true`
-    },
-    "session.idle": async () => {
-      await ctx.$`ctx system check-persistence 2>/dev/null || true`
-      await ctx.$`ctx system check-task-completion 2>/dev/null || true`
-    },
-  },
-  "tool.execute.before": async ({ tool, input }) => {
-    if (tool === "shell" || tool === "bash") {
-      const cmd = typeof input === "string" ? input : JSON.stringify(input)
-      const result = await ctx.$`echo ${cmd} | ctx system block-dangerous-commands --caller opencode 2>/dev/null`
-      if (result.exitCode !== 0) {
-        return { blocked: true, reason: result.stdout.toString().trim() }
-      }
-    }
-  },
-  "tool.execute.after": async ({ tool }) => {
-    if (tool === "shell" || tool === "bash") {
-      await ctx.$`ctx system post-commit 2>/dev/null || true`
-    }
-    if (tool === "edit" || tool === "write" || tool === "file_edit") {
-      await ctx.$`ctx system check-task-completion 2>/dev/null || true`
-    }
-  },
-})) satisfies Plugin
-```
+**`plugin/index.ts`** — the core deliverable. Wires `session.created`
+and `session.idle` to `ctx system` nudges, runs `post-commit` after
+shell commands that contain `git commit`, and runs
+`check-task-completion` after edit/write tool calls. Tool name strings
+target `@opencode-ai/plugin` v1.4.x; unrecognized tools silently
+no-op.
+
+We deliberately do **not** ship a `tool.execute.before` hook here:
+the natural fit (block-dangerous-commands) is currently a Claude Code
+plugin-local hook, not a `ctx system` subcommand, so a shim that
+shells out to it would block every shell command on installs that
+don't have the wrapper. Add this back when block-dangerous-commands
+is promoted to the ctx Go binary.
 
 **`plugin/package.json`**:
 ```json
@@ -87,9 +66,6 @@ export default ((ctx) => ({
 }
 ```
 
-**`INSTRUCTIONS.md`** — Adapt from `copilot-cli/INSTRUCTIONS.md`, replacing
-Copilot CLI specifics with OpenCode equivalents. Same ctx session protocol.
-
 **`skills/`** — Subset of portable skills (ctx-agent, ctx-remember, ctx-status,
 ctx-wrap-up). Format: YAML frontmatter + markdown body, same as Copilot CLI skills.
 
@@ -100,9 +76,6 @@ Add functions (following `CopilotCLI*` pattern):
 ```go
 // OpenCodePlugin reads the embedded OpenCode plugin directory.
 func OpenCodePlugin() (map[string][]byte, error)  // filename -> content
-
-// OpenCodeInstructions reads INSTRUCTIONS.md for OpenCode.
-func OpenCodeInstructions() ([]byte, error)
 
 // OpenCodeSkills reads embedded OpenCode skill templates.
 func OpenCodeSkills() (map[string][]byte, error)  // skill name -> SKILL.md
@@ -188,9 +161,9 @@ write.hook-opencode-summary:
   short: |-
     OpenCode will now:
       1. Bootstrap ctx context on session start
-      2. Block dangerous commands (tool.execute.before)
-      3. Nudge persistence on session idle
-      4. Track task completion after edits
+      2. Nudge persistence on session idle
+      3. Track task completion after edits
+      4. Run post-commit capture after `git commit`
 ```
 
 ### 8. Setup Core Package (`internal/cli/setup/core/opencode/`)
