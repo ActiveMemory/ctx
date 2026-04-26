@@ -422,6 +422,24 @@ hook.copilot-cli:
     Run with --write to generate all files:
 
       ctx setup copilot-cli --write
+hook.opencode:
+  short: |
+    OpenCode Integration
+    ====================
+
+    Generate .opencode/plugins/ctx/ with ctx lifecycle hooks
+    and register the ctx MCP server in opencode.json.
+
+    This creates:
+      .opencode/plugins/ctx/index.ts      Plugin shim
+      .opencode/plugins/ctx/package.json   Dependencies
+      .opencode/skills/ctx-*/SKILL.md      ctx skills
+      opencode.json                        MCP server registration
+      AGENTS.md                            Agent instructions
+
+    Run with --write to generate all files:
+
+      ctx setup opencode --write
 hook.supported-tools:
   short: |
     Supported tools:
@@ -431,6 +449,7 @@ hook.supported-tools:
       aider        - Aider AI coding assistant
       copilot      - GitHub Copilot (VS Code extension)
       copilot-cli  - GitHub Copilot CLI (terminal agent)
+      opencode     - OpenCode terminal AI agent
       windsurf     - Windsurf IDE
 hook.windsurf:
   short: |

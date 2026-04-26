@@ -66,6 +66,7 @@ const (
 	ToolKiro       = "kiro"
 	ToolCline      = "cline"
 	ToolCodex      = "codex"
+	ToolOpenCode   = "opencode"
 	ToolWindsurf   = "windsurf"
 )
 
@@ -107,6 +108,22 @@ const (
 	KeyTools = "tools"
 	// ToolsWildcard is the wildcard value for MCP tools access.
 	ToolsWildcard = "*"
+)
+
+// OpenCode integration paths.
+const (
+	// DirOpenCode is the OpenCode project config directory.
+	DirOpenCode = ".opencode"
+	// DirOpenCodePlugins is the OpenCode plugins subdirectory.
+	DirOpenCodePlugins = "plugins"
+	// DirOpenCodeSkills is the OpenCode skills subdirectory.
+	DirOpenCodeSkills = "skills"
+	// FileOpenCodeJSON is the OpenCode project config file.
+	FileOpenCodeJSON = "opencode.json"
+	// KeyMCP is the top-level JSON key for MCP in opencode.json.
+	KeyMCP = "mcp"
+	// FileIndexTs is the OpenCode plugin entry point file.
+	FileIndexTs = "index.ts"
 )
 
 // Prefixes

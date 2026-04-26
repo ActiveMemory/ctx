@@ -191,6 +191,39 @@ func InfoAgentsSummary(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteHookAgentsSummary))
 }
 
+// InfoOpenCodeCreated reports that an OpenCode integration file was
+// created.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the created file
+func InfoOpenCodeCreated(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookOpenCodeCreated),
+		targetFile))
+}
+
+// InfoOpenCodeSkipped reports that an OpenCode integration file was
+// skipped because it already exists.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the existing file
+func InfoOpenCodeSkipped(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookOpenCodeSkipped),
+		targetFile))
+}
+
+// InfoOpenCodeSummary prints the post-write summary for OpenCode.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoOpenCodeSummary(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(desc.Text(text.DescKeyWriteHookOpenCodeSummary))
+}
+
 // InfoCopilotCLISkipped reports that copilot-cli hooks were skipped
 // because they already exist.
 //
