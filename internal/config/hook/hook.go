@@ -125,8 +125,18 @@ const (
 	FileOpenCodeJSON = "opencode.json"
 	// KeyMCP is the top-level JSON key for MCP in opencode.json.
 	KeyMCP = "mcp"
-	// FileIndexTs is the OpenCode plugin entry point file.
+	// FileIndexTs is the embedded-asset filename for the OpenCode
+	// plugin source. The setup deploys this content to a flat file
+	// under [DirOpenCodePlugins], NOT preserving the index.ts name —
+	// OpenCode only auto-loads top-level files in .opencode/plugins/,
+	// so subdirectory layouts (.opencode/plugins/<name>/index.ts)
+	// are silently ignored.
 	FileIndexTs = "index.ts"
+	// FileOpenCodePluginDeploy is the deployment filename for the
+	// OpenCode plugin under .opencode/plugins/. Must be a flat
+	// .ts/.js file directly under the plugins directory; see
+	// FileIndexTs for the auto-load discovery rule.
+	FileOpenCodePluginDeploy = "ctx.ts"
 )
 
 // Prefixes
