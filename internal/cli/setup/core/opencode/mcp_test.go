@@ -10,6 +10,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/spf13/cobra"
@@ -68,14 +69,36 @@ func TestEnsureMCPConfig_CreatesFile(t *testing.T) {
 	if !ok {
 		t.Fatalf("command must be an array per OpenCode schema, got %T", ctxServer["command"])
 	}
+	// We wrap the launch in `sh -c` so $PWD can be substituted into
+	// CTX_DIR at MCP spawn time. ctx rejects relative CTX_DIR values
+	// (see internal/rc.ContextDir), and OpenCode has no path templating
+	// in opencode.json — the shell wrapper is how we get an absolute
+	// path that follows the user's checkout.
 	if got := len(cmdArr); got != 3 {
-		t.Errorf("command length = %d, want 3 (binary + 2 args)", got)
+		t.Fatalf("command length = %d, want 3 (sh -c <script>)", got)
 	}
-	if cmdArr[0] != "ctx" {
-		t.Errorf("command[0] = %q, want ctx", cmdArr[0])
+	if cmdArr[0] != "sh" || cmdArr[1] != "-c" {
+		t.Errorf("command prefix = [%q %q], want [sh -c]", cmdArr[0], cmdArr[1])
+	}
+	script, ok := cmdArr[2].(string)
+	if !ok {
+		t.Fatalf("command[2] must be a script string, got %T", cmdArr[2])
+	}
+	wantSubs := []string{
+		`exec env`,                // replace shell with ctx
+		`CTX_DIR="$PWD/.context"`, // absolute path resolved at spawn
+		`ctx mcp serve`,           // the actual MCP server invocation
+	}
+	for _, s := range wantSubs {
+		if !strings.Contains(script, s) {
+			t.Errorf("launch script missing %q\nfull script: %s", s, script)
+		}
 	}
 	if _, hasArgs := ctxServer["args"]; hasArgs {
 		t.Error("args field must not be set; OpenCode schema folds args into command array")
+	}
+	if _, hasEnv := ctxServer["environment"]; hasEnv {
+		t.Error("environment field must not be set; CTX_DIR is computed from $PWD inside the sh wrapper. A literal CTX_DIR='.context' here would be rejected by ctx as non-absolute.")
 	}
 	enabled, ok := ctxServer["enabled"].(bool)
 	if !ok || !enabled {
