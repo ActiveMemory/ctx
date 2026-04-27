@@ -15,15 +15,23 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
-	mcpServer "github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errSetup "github.com/ActiveMemory/ctx/internal/err/setup"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
-// deployPlugin creates .opencode/plugins/ctx/ with the embedded
-// plugin files (index.ts and package.json). Skips if index.ts
+// deployPlugin writes the embedded plugin to
+// .opencode/plugins/ctx.ts. OpenCode auto-loads top-level files
+// under .opencode/plugins/; subdirectories are not scanned, so a
+// flat single-file deployment is required. Skips if the target
 // already exists.
+//
+// The package.json that v0.8.x and earlier shipped alongside
+// index.ts is no longer embedded: the plugin uses a type-only
+// import of @opencode-ai/plugin (erased at compile time) and the
+// host runtime provides the plugin context, so no runtime
+// dependency tree is needed.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
@@ -34,14 +42,12 @@ func deployPlugin(cmd *cobra.Command) error {
 	pluginDir := filepath.Join(
 		cfgHook.DirOpenCode,
 		cfgHook.DirOpenCodePlugins,
-		mcpServer.Name,
 	)
-
-	indexPath := filepath.Join(
-		pluginDir, cfgHook.FileIndexTs,
+	target := filepath.Join(
+		pluginDir, cfgHook.FileOpenCodePluginDeploy,
 	)
-	if _, statErr := os.Stat(indexPath); statErr == nil {
-		writeSetup.InfoOpenCodeSkipped(cmd, pluginDir)
+	if _, statErr := os.Stat(target); statErr == nil {
+		writeSetup.InfoOpenCodeSkipped(cmd, target)
 		return nil
 	}
 
@@ -55,16 +61,17 @@ func deployPlugin(cmd *cobra.Command) error {
 	if readErr != nil {
 		return readErr
 	}
-
-	for name, content := range files {
-		target := filepath.Join(pluginDir, name)
-		if wErr := ctxIo.SafeWriteFile(
-			target, content, fs.PermFile,
-		); wErr != nil {
-			return errFs.FileWrite(target, wErr)
-		}
-		writeSetup.InfoOpenCodeCreated(cmd, target)
+	content, ok := files[cfgHook.FileIndexTs]
+	if !ok {
+		return errSetup.MissingEmbeddedAsset(cfgHook.FileIndexTs)
 	}
+
+	if wErr := ctxIo.SafeWriteFile(
+		target, content, fs.PermFile,
+	); wErr != nil {
+		return errFs.FileWrite(target, wErr)
+	}
+	writeSetup.InfoOpenCodeCreated(cmd, target)
 
 	return nil
 }
