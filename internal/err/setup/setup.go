@@ -66,3 +66,18 @@ func SyncSteering(cause error) error {
 		desc.Text(text.DescKeyErrSetupSyncSteering), cause,
 	)
 }
+
+// MissingEmbeddedAsset reports that an asset expected to be
+// embedded in the binary is missing — typically a setup-time
+// invariant violation rather than a user-facing failure.
+//
+// Parameters:
+//   - name: the asset key that was looked up
+//
+// Returns:
+//   - error: "embedded asset missing: <name>"
+func MissingEmbeddedAsset(name string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrSetupMissingEmbeddedAsset), name,
+	)
+}

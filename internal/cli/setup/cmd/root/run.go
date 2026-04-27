@@ -20,6 +20,7 @@ import (
 	coreCopCLI "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot_cli"
 	coreCursor "github.com/ActiveMemory/ctx/internal/cli/setup/core/cursor"
 	coreKiro "github.com/ActiveMemory/ctx/internal/cli/setup/core/kiro"
+	coreOpenCode "github.com/ActiveMemory/ctx/internal/cli/setup/core/opencode"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/err/config"
@@ -96,6 +97,12 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 			return coreCopCLI.Deploy(cmd)
 		}
 		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookCopilotCLI))
+
+	case cfgHook.ToolOpenCode:
+		if writeFile {
+			return coreOpenCode.Deploy(cmd)
+		}
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookOpenCode))
 
 	case cfgHook.ToolWindsurf:
 		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookWindsurf))

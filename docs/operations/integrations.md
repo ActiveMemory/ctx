@@ -576,6 +576,59 @@ Paste output into Copilot Chat for context-aware responses.
 
 ---
 
+## OpenCode
+
+OpenCode is a terminal-first AI coding agent. ctx integrates via
+a thin lifecycle plugin, MCP server, and `AGENTS.md` instructions.
+
+### Setup
+
+```bash
+# Generate OpenCode plugin, MCP config, skills, and AGENTS.md
+ctx setup opencode --write
+
+# Initialize context
+ctx init
+eval "$(ctx activate)"
+```
+
+### What Gets Created
+
+| File | Purpose |
+|------|---------|
+| `.opencode/plugins/ctx/index.ts` | Lifecycle plugin (hooks to `ctx system`) |
+| `.opencode/plugins/ctx/package.json` | Plugin dependencies |
+| `opencode.json` | MCP server registration (merged) |
+| `AGENTS.md` | Agent instructions (read natively) |
+| `.opencode/skills/ctx-*/SKILL.md` | ctx skills |
+
+### How It Works
+
+The plugin wires OpenCode lifecycle events to `ctx system`:
+
+- **`session.created`** — bootstraps context and loads the agent packet
+- **`tool.execute.after` (shell, on `git commit`)** — runs `ctx system post-commit`
+- **`tool.execute.after` (edit/write)** — `check-task-completion` nudge
+- **`session.idle`** — persistence and task completion nudges
+- **`shell.env`** — injects `CTX_DIR=.context`
+
+After running `ctx setup opencode --write`, run `bun install` inside
+`.opencode/plugins/ctx/` (or let OpenCode do it on first launch — see
+the [OpenCode plugin docs](https://opencode.ai/docs/plugins/) for the
+current behavior).
+
+### Context Updates
+
+```bash
+# Get AI-optimized context packet
+ctx agent
+
+# Check context health
+ctx status
+```
+
+---
+
 ## Windsurf IDE
 
 Windsurf supports custom instructions and file-based context.

@@ -68,3 +68,5 @@ DO NOT UPDATE FOR:
   ```
 - **Package doc in doc.go**: Each package gets a `doc.go` with package-level documentation
 - **Copyright headers**: All source files get the project copyright header
+
+- New editor integrations include an MCP-merge test covering: create / empty file / preserve existing keys / skip when registered / reject malformed JSON

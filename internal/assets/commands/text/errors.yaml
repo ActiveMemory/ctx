@@ -441,6 +441,8 @@ err.setup.marshal-config:
   short: 'marshal mcp config: %w'
 err.setup.write-file:
   short: 'write %s: %w'
+err.setup.missing-embedded-asset:
+  short: 'embedded asset missing: %s'
 err.setup.sync-steering:
   short: 'sync steering: %w'
 err.skill.create-dest:
