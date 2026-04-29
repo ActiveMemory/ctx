@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-04-29 | BunShell ctx.$ calls echo stdout to OpenCode's process unless .quiet() is set — leaks visible noise |
 | 2026-04-29 | OpenCode plugin compaction interop is breadcrumb-mediated: own your context preservation explicitly |
 | 2026-04-29 | @opencode-ai/plugin event hook is a single dispatcher, not an object of named handlers |
 | 2026-04-29 | OpenCode plugin hooks like shell.env take (input, output) and mutate; returned objects are ignored |
@@ -32,6 +33,16 @@ DO NOT UPDATE FOR:
 <!-- INDEX:END -->
 
 <!-- Add gotchas, tips, and lessons learned here -->
+## [2026-04-29-050000] BunShell ctx.$ calls echo stdout to OpenCode's process unless .quiet() is set — leaks visible noise
+
+**Context**: After PR #72 wired session.created and session.idle to fire `ctx system bootstrap`, `ctx agent --budget 4000`, and friends, end users started seeing chunks of Markdown bleeding into the OpenCode TUI: `## Steering`, `# Product Context`, `Describe the product...`. These are the contents of `.context/steering/` template stubs that `ctx agent --budget 4000` includes in its context packet. The plugin used the shell-level `2>/dev/null || true` to swallow stderr and force exit 0, but stdout was untouched.
+
+**Lesson**: BunShell's documented behavior: *"By default, the shell will write to the current process's stdout and stderr, as well as buffering that output."* So an `await ctx.$\`...\`` call in a plugin echoes its stdout/stderr to OpenCode's process, which the TUI/agent surfaces. Shell-level `2>/dev/null` only suppresses stderr; stdout still leaks. The fix is BunShell's `.quiet()` modifier on the BunShellPromise, which configures the shell to only buffer the output rather than also writing to the parent process.
+
+**Application**: Always chain `.nothrow().quiet()` on BunShell template literals in OpenCode plugins, even for fire-and-forget calls where you discard the result: `await ctx.$\`ctx system bootstrap\`.nothrow().quiet()`. With both modifiers, you don't need shell-level `2>/dev/null || true` — `.nothrow()` swallows non-zero exits at the BunShell layer, `.quiet()` keeps every byte of output buffered. Pattern is the cooperative default for any plugin that spawns long-output commands during the agent session lifecycle.
+
+---
+
 ## [2026-04-29-040000] OpenCode plugin compaction interop is breadcrumb-mediated: own your context preservation explicitly
 
 **Context**: After PR #72 wired `session.created` / `session.idle` / `tool.execute.after` / `shell.env`, a `/compact` test in OpenCode (with `oh-my-openagent@3.17.6` also installed) recovered ctx context post-compaction *only by accident*: oh-my-openagent's `experimental.session.compacting` handler builds a structured summary template that happens to preserve `.context/`-prefixed file paths in its "Active Working Context → Files" section. Combined with our `shell.env` CTX_DIR injection, the agent had enough breadcrumbs to re-read DECISIONS.md from disk post-compaction. Without that section, our context would have evaporated silently into the compaction summary.
