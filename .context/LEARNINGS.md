@@ -17,6 +17,9 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-04-29 | @opencode-ai/plugin event hook is a single dispatcher, not an object of named handlers |
+| 2026-04-29 | OpenCode plugin hooks like shell.env take (input, output) and mutate; returned objects are ignored |
+| 2026-04-29 | OpenCode shell.env injects env only into agent's shell tool, not into plugin's own ctx.$ calls |
 | 2026-04-26 | OpenCode auto-loads only flat .ts files under .opencode/plugins/; subdirectories are ignored |
 | 2026-04-26 | OpenCode opencode.json MCP shape: command is Array<string>, no separate args field |
 | 2026-04-26 | make test exit code unreliable due to -cover covdata tooling issue |
@@ -28,6 +31,36 @@ DO NOT UPDATE FOR:
 <!-- INDEX:END -->
 
 <!-- Add gotchas, tips, and lessons learned here -->
+## [2026-04-29-030000] @opencode-ai/plugin event hook is a single dispatcher, not an object of named handlers
+
+**Context**: PR #72's first OpenCode plugin shipped with `event: { "session.created": fn, "session.idle": fn }` — an object keyed by event type. It compiled clean against `satisfies Plugin` but never fired. End-to-end trace showed neighboring hooks (`shell.env`, `tool.execute.after`) running while every event handler silently no-op'd.
+
+**Lesson**: `@opencode-ai/plugin` v1.4.x defines `event?: (input: { event: Event }) => Promise<void>` — one dispatcher called for every event with `input.event.type` discriminating. Asymmetric with neighbors because `shell.env` and `tool.execute.*` *are* top-level named keys; only the dozens of `EventX` types collapse into the single `event` slot.
+
+**Application**: Use `event: async ({event}) => { if (event.type === "session.created") { ... } else if (event.type === "session.idle") { ... } }`. Type discriminator strings live under each `EventX` type in `node_modules/@opencode-ai/sdk/dist/gen/types.gen.d.ts`.
+
+---
+
+## [2026-04-29-030100] OpenCode plugin hooks like shell.env take (input, output) and mutate; returned objects are ignored
+
+**Context**: First plugin had `"shell.env": () => ({ CTX_DIR: ".context" })`. The hook fired but the agent's bash tool never saw `CTX_DIR`; manual export was required for every ctx call. The returned object was dropped on the floor by the runtime.
+
+**Lesson**: Multiple hooks in `@opencode-ai/plugin` v1.4.x take two arguments where the second is an OUT param. Examples: `shell.env: (input, output: {env}) => void` (mutate `output.env`), `tool.execute.after: (input, output: {title, output, metadata}) => void`, `chat.params: (input, output: {temperature, ...}) => void`, `chat.headers: (input, output: {headers}) => void`. Pattern is consistent across the SDK.
+
+**Application**: Always read the type definition in `node_modules/@opencode-ai/plugin/dist/index.d.ts` for any hook before wiring. If a hook signature has two parameters where the second is an object, it's a mutation hook — return values are discarded.
+
+---
+
+## [2026-04-29-030200] OpenCode shell.env injects env only into agent's shell tool, not into plugin's own ctx.$ calls
+
+**Context**: After fixing `shell.env`'s `(input, output) => mutate output.env` signature so `CTX_DIR` reached the agent's bash tool, the plugin's own `ctx.$\`ctx system bootstrap\`` calls still failed silently — they ran without `CTX_DIR` and ctx fell back to `~/.context`. The hook fired correctly; the plugin's subprocess side-effects didn't see the env.
+
+**Lesson**: `shell.env` injects env into the agent's shell-tool invocations. The plugin's own BunShell calls (`ctx.$\`...\``) inherit OpenCode's process env, which is *separate*. Two shells, two envs.
+
+**Application**: Build an env-aware BunShell once in the plugin factory: `const $ = ctx.$.env({ ...process.env, CTX_DIR: \`${ctx.directory}/.context\` })`. Reuse it for every plugin-initiated subprocess call. `ctx.directory` is the project root from `PluginInput`.
+
+---
+
 ## [2026-04-26-180000] OpenCode auto-loads only flat .ts files under .opencode/plugins/; subdirectories are ignored
 
 **Context**: Initial OpenCode integration deployed the plugin as `.opencode/plugins/ctx/index.ts` (a directory with index.ts inside, mirroring npm package conventions). End-to-end smoke testing showed the plugin file was present and the binary was current, yet OpenCode never invoked any of the plugin's hooks (no `module-load` trace fired even with `--print-logs --log-level DEBUG`). Copying the same content to a flat `.opencode/plugins/ctx.ts` file made the plugin load and fire correctly.
