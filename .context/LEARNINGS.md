@@ -122,6 +122,7 @@ DO NOT UPDATE FOR:
 | 2026-02-22 | Permission and settings drift (consolidated) |
 | 2026-02-22 | Gitignore and filesystem hygiene (consolidated) |
 | 2026-01-28 | IDE is already the UI |
+| 2026-04-29 | OpenCode plugin compaction interop is breadcrumb-mediated: own your context preservation explicitly |
 | 2026-04-29 | @opencode-ai/plugin event hook is a single dispatcher, not an object of named handlers |
 | 2026-04-29 | OpenCode plugin hooks like shell.env take (input, output) and mutate; returned objects are ignored |
 | 2026-04-29 | OpenCode shell.env injects env only into agent's shell tool, not into plugin's own ctx.$ calls |
@@ -1742,6 +1743,16 @@ git integration, extensions - all free.
 
 *Module-specific, niche, and historical learnings:
 [learnings-reference.md](learnings-reference.md)*
+## [2026-04-29-040000] OpenCode plugin compaction interop is breadcrumb-mediated: own your context preservation explicitly
+
+**Context**: After PR #72 wired `session.created` / `session.idle` / `tool.execute.after` / `shell.env`, a `/compact` test in OpenCode (with `oh-my-openagent@3.17.6` also installed) recovered ctx context post-compaction *only by accident*: oh-my-openagent's `experimental.session.compacting` handler builds a structured summary template that happens to preserve `.context/`-prefixed file paths in its "Active Working Context → Files" section. Combined with our `shell.env` CTX_DIR injection, the agent had enough breadcrumbs to re-read DECISIONS.md from disk post-compaction. Without that section, our context would have evaporated silently into the compaction summary.
+
+**Lesson**: Two compaction-aware plugins in the same session can synergize without either knowing about the other — but the synergy is fragile because it depends on undocumented serialization choices in the *other* plugin. If the other plugin's template ever changes (e.g., drops file-path preservation, swaps the "Active Working Context" section name, condenses paths to basenames), the breadcrumbs disappear and ctx context is lost without any signal. The `Hooks` interface in `@opencode-ai/plugin` v1.4.x exposes `experimental.session.compacting?: (input, output: { context: string[]; prompt?: string }) => Promise<void>` — pushing to `output.context` is *additive* (appends to the default prompt), and replacing `output.prompt` is *destructive* (only one plugin can win that race).
+
+**Application**: Register `experimental.session.compacting` in your own plugin and push high-signal context strings (e.g., `ctx system bootstrap` output) to `output.context` so context preservation does not depend on coexisting plugins. Never set `output.prompt` from a thin shim — that would conflict with primary compaction harnesses like oh-my-openagent. Composition via `output.context` is the correct cooperative pattern.
+
+---
+
 ## [2026-04-29-030000] @opencode-ai/plugin event hook is a single dispatcher, not an object of named handlers
 
 **Context**: PR #72's first OpenCode plugin shipped with `event: { "session.created": fn, "session.idle": fn }` — an object keyed by event type. It compiled clean against `satisfies Plugin` but never fired. End-to-end trace showed neighboring hooks (`shell.env`, `tool.execute.after`) running while every event handler silently no-op'd.

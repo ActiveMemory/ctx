@@ -40,10 +40,14 @@ an OpenCode-specific instructions file.
 
 **`plugin/index.ts`** — the core deliverable. Wires `session.created`
 and `session.idle` to `ctx system` nudges, runs `post-commit` after
-shell commands that contain `git commit`, and runs
-`check-task-completion` after edit/write tool calls. Tool name strings
-target `@opencode-ai/plugin` v1.4.x; unrecognized tools silently
-no-op.
+shell commands that contain `git commit`, runs `check-task-completion`
+after edit/write tool calls, and injects `ctx system bootstrap` output
+into the compaction prompt via `experimental.session.compacting` so
+ctx context survives session compaction. The compaction hook pushes
+to `output.context` (additive) rather than replacing `output.prompt`,
+so it composes with other compaction-aware plugins like oh-my-openagent.
+Tool name strings target `@opencode-ai/plugin` v1.4.x; unrecognized
+tools silently no-op.
 
 We deliberately do **not** ship a `tool.execute.before` hook here:
 the natural fit (block-dangerous-commands) is a Claude Code

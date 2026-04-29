@@ -3,13 +3,17 @@
 // wires OpenCode lifecycle hooks to ctx system calls.
 //
 // Hook signatures match @opencode-ai/plugin v1.4.x:
-//   - shell.env and tool.execute.after take (input, output)
-//     and mutate output rather than returning a value.
+//   - shell.env, tool.execute.after, and
+//     experimental.session.compacting take (input, output) and
+//     mutate output rather than returning a value.
 //   - event is a single dispatcher keyed on input.event.type;
 //     it is NOT an object of named per-event handlers.
 // ctx subprocess calls go through a CTX_DIR-aware BunShell built
 // from ctx.directory — shell.env only injects CTX_DIR into the
 // agent's shell tool, not into the plugin's own ctx.$ calls.
+// experimental.session.compacting pushes to output.context (does
+// NOT set output.prompt) so it composes additively with other
+// compaction-aware plugins like oh-my-openagent.
 // If the upstream renames a hook or changes a signature, the
 // corresponding branch silently no-ops; verify against the
 // OpenCode plugin SDK type definitions when bumping.
@@ -55,6 +59,15 @@ export default (async (ctx) => {
       }
       if (EDIT_TOOLS.has(input.tool)) {
         await $`ctx system check-task-completion 2>/dev/null || true`
+      }
+    },
+    "experimental.session.compacting": async (_input, output) => {
+      const result = await $`ctx system bootstrap 2>/dev/null`.nothrow().quiet()
+      if (result.exitCode === 0) {
+        const text = result.stdout.toString().trim()
+        if (text.length > 0) {
+          output.context.push(`ctx context state (preserved across compaction):\n${text}`)
+        }
       }
     },
   }

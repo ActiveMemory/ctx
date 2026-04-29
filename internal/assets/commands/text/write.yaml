@@ -123,6 +123,7 @@ write.hook-opencode-summary:
       2. Nudge persistence on session idle
       3. Track task completion after edits
       4. Run post-commit capture after `git commit`
+      5. Inject ctx state into compaction prompts (preserve context)
 
     Plugin: .opencode/plugins/ctx.ts
     MCP:    opencode.json
