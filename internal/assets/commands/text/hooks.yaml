@@ -427,12 +427,11 @@ hook.opencode:
     OpenCode Integration
     ====================
 
-    Generate .opencode/plugins/ctx/ with ctx lifecycle hooks
+    Generate .opencode/plugins/ctx.ts with ctx lifecycle hooks
     and register the ctx MCP server in opencode.json.
 
     This creates:
-      .opencode/plugins/ctx/index.ts      Plugin shim
-      .opencode/plugins/ctx/package.json   Dependencies
+      .opencode/plugins/ctx.ts             Plugin shim
       .opencode/skills/ctx-*/SKILL.md      ctx skills
       opencode.json                        MCP server registration
       AGENTS.md                            Agent instructions

@@ -17,9 +17,9 @@ import (
 
 // Deploy generates all OpenCode integration files.
 //
-// Creates the .opencode/plugins/ctx/ directory with the lifecycle
-// plugin, registers the ctx MCP server in opencode.json, deploys
-// AGENTS.md with shared instructions, and copies ctx skills to
+// Creates the .opencode/plugins/ctx.ts plugin file, registers
+// the ctx MCP server in opencode.json, deploys AGENTS.md with
+// shared instructions, and copies ctx skills to
 // .opencode/skills/.
 //
 // Skips existing files (idempotent).
