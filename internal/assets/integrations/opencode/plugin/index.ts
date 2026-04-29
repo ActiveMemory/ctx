@@ -11,6 +11,10 @@
 // ctx subprocess calls go through a CTX_DIR-aware BunShell built
 // from ctx.directory — shell.env only injects CTX_DIR into the
 // agent's shell tool, not into the plugin's own ctx.$ calls.
+// All ctx.$ invocations use .nothrow().quiet(): nothrow swallows
+// non-zero exits, quiet keeps stdout/stderr in BunShell's buffer
+// instead of echoing to OpenCode's process stdout (which would
+// surface as visible noise in the TUI or agent context).
 // experimental.session.compacting pushes to output.context (does
 // NOT set output.prompt) so it composes additively with other
 // compaction-aware plugins like oh-my-openagent.
@@ -43,26 +47,26 @@ export default (async (ctx) => {
     },
     event: async ({ event }) => {
       if (event.type === "session.created") {
-        await $`ctx system bootstrap 2>/dev/null || true`
-        await $`ctx agent --budget 4000 2>/dev/null || true`
+        await $`ctx system bootstrap`.nothrow().quiet()
+        await $`ctx agent --budget 4000`.nothrow().quiet()
       } else if (event.type === "session.idle") {
-        await $`ctx system check-persistence 2>/dev/null || true`
-        await $`ctx system check-task-completion 2>/dev/null || true`
+        await $`ctx system check-persistence`.nothrow().quiet()
+        await $`ctx system check-task-completion`.nothrow().quiet()
       }
     },
     "tool.execute.after": async (input, _output) => {
       if (SHELL_TOOLS.has(input.tool)) {
         const cmd = extractCommand(input.args)
         if (GIT_COMMIT_RE.test(cmd)) {
-          await $`ctx system post-commit 2>/dev/null || true`
+          await $`ctx system post-commit`.nothrow().quiet()
         }
       }
       if (EDIT_TOOLS.has(input.tool)) {
-        await $`ctx system check-task-completion 2>/dev/null || true`
+        await $`ctx system check-task-completion`.nothrow().quiet()
       }
     },
     "experimental.session.compacting": async (_input, output) => {
-      const result = await $`ctx system bootstrap 2>/dev/null`.nothrow().quiet()
+      const result = await $`ctx system bootstrap`.nothrow().quiet()
       if (result.exitCode === 0) {
         const text = result.stdout.toString().trim()
         if (text.length > 0) {
