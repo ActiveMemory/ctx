@@ -46,11 +46,12 @@ target `@opencode-ai/plugin` v1.4.x; unrecognized tools silently
 no-op.
 
 We deliberately do **not** ship a `tool.execute.before` hook here:
-the natural fit (block-dangerous-commands) is currently a Claude Code
+the natural fit (block-dangerous-commands) is a Claude Code
 plugin-local hook, not a `ctx system` subcommand, so a shim that
 shells out to it would block every shell command on installs that
-don't have the wrapper. Add this back when block-dangerous-commands
-is promoted to the ctx Go binary.
+don't have the wrapper. Promoting it to a ctx Go subcommand was
+considered and declined — see `.context/DECISIONS.md` entry
+`2026-04-26-231517`. The omission is permanent, not deferred.
 
 **Deployment layout**: OpenCode auto-loads top-level `.ts`/`.js`
 files under `.opencode/plugins/`; subdirectories are NOT scanned.

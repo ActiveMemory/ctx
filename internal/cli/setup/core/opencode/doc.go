@@ -15,8 +15,9 @@
 // # Deployment Steps
 //
 // [Deploy] performs four operations in sequence:
-//  1. Plugin deployment: creates .opencode/plugins/ctx/ with
-//     index.ts and package.json
+//  1. Plugin deployment: writes .opencode/plugins/ctx.ts as a
+//     flat top-level file (subdirectories are ignored by
+//     OpenCode's auto-loader)
 //  2. MCP configuration: merges ctx server into opencode.json
 //  3. AGENTS.md: deploys shared agent instructions
 //  4. Skills: copies ctx skills to .opencode/skills/

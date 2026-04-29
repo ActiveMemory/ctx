@@ -115,7 +115,7 @@ write.hook-copilot-cli-summary:
 write.hook-opencode-created:
   short: '  ✓ %s'
 write.hook-opencode-skipped:
-  short: '  ○ %s (ctx plugin exists, skipped)'
+  short: '  ○ %s (already present, skipped)'
 write.hook-opencode-summary:
   short: |-
     OpenCode will now:
@@ -124,7 +124,7 @@ write.hook-opencode-summary:
       3. Track task completion after edits
       4. Run post-commit capture after `git commit`
 
-    Plugin: .opencode/plugins/ctx/
+    Plugin: .opencode/plugins/ctx.ts
     MCP:    opencode.json
     Skills: .opencode/skills/
 write.hook-copilot-created:
