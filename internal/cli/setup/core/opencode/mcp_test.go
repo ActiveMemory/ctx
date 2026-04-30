@@ -10,6 +10,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -22,38 +23,39 @@ func testCmd(buf *bytes.Buffer) *cobra.Command {
 	return cmd
 }
 
-func chdirTemp(t *testing.T) {
+func setOpenCodeHome(t *testing.T) string {
 	t.Helper()
 	tmp := t.TempDir()
-	orig, _ := os.Getwd()
-	if err := os.Chdir(tmp); err != nil {
-		t.Fatalf("chdir: %v", err)
-	}
-	t.Cleanup(func() { _ = os.Chdir(orig) })
+	t.Setenv("OPENCODE_HOME", tmp)
+	return tmp
 }
 
-func readMCP(t *testing.T) map[string]interface{} {
+func configPath(home string) string {
+	return filepath.Join(home, "opencode.json")
+}
+
+func readMCP(t *testing.T, path string) map[string]interface{} {
 	t.Helper()
-	raw, err := os.ReadFile("opencode.json")
+	raw, err := os.ReadFile(path)
 	if err != nil {
-		t.Fatalf("read opencode.json: %v", err)
+		t.Fatalf("read config: %v", err)
 	}
 	parsed := map[string]interface{}{}
 	if err := json.Unmarshal(raw, &parsed); err != nil {
-		t.Fatalf("opencode.json not valid JSON: %v", err)
+		t.Fatalf("config not valid JSON: %v", err)
 	}
 	return parsed
 }
 
 func TestEnsureMCPConfig_CreatesFile(t *testing.T) {
-	chdirTemp(t)
+	home := setOpenCodeHome(t)
 
 	var buf bytes.Buffer
 	if err := ensureMCPConfig(testCmd(&buf)); err != nil {
 		t.Fatalf("ensureMCPConfig: %v", err)
 	}
 
-	parsed := readMCP(t)
+	parsed := readMCP(t, configPath(home))
 	servers, ok := parsed["mcp"].(map[string]interface{})
 	if !ok {
 		t.Fatal("missing mcp key")
@@ -69,11 +71,6 @@ func TestEnsureMCPConfig_CreatesFile(t *testing.T) {
 	if !ok {
 		t.Fatalf("command must be an array per OpenCode schema, got %T", ctxServer["command"])
 	}
-	// We wrap the launch in `sh -c` so $PWD can be substituted into
-	// CTX_DIR at MCP spawn time. ctx rejects relative CTX_DIR values
-	// (see internal/rc.ContextDir), and OpenCode has no path templating
-	// in opencode.json — the shell wrapper is how we get an absolute
-	// path that follows the user's checkout.
 	if got := len(cmdArr); got != 3 {
 		t.Fatalf("command length = %d, want 3 (sh -c <script>)", got)
 	}
@@ -85,20 +82,24 @@ func TestEnsureMCPConfig_CreatesFile(t *testing.T) {
 		t.Fatalf("command[2] must be a script string, got %T", cmdArr[2])
 	}
 	wantSubs := []string{
-		`exec env`,                // replace shell with ctx
-		`CTX_DIR="$PWD/.context"`, // absolute path resolved at spawn
-		`ctx mcp serve`,           // the actual MCP server invocation
+		`exec env`,
+		`CTX_DIR="$PWD/.context"`,
+		`mcp serve`,
 	}
 	for _, s := range wantSubs {
 		if !strings.Contains(script, s) {
 			t.Errorf("launch script missing %q\nfull script: %s", s, script)
 		}
 	}
+	// Binary path should be absolute (resolved at setup time).
+	if !strings.Contains(script, "/") {
+		t.Errorf("binary path should be absolute, got script: %s", script)
+	}
 	if _, hasArgs := ctxServer["args"]; hasArgs {
 		t.Error("args field must not be set; OpenCode schema folds args into command array")
 	}
 	if _, hasEnv := ctxServer["environment"]; hasEnv {
-		t.Error("environment field must not be set; CTX_DIR is computed from $PWD inside the sh wrapper. A literal CTX_DIR='.context' here would be rejected by ctx as non-absolute.")
+		t.Error("environment field must not be set; CTX_DIR is computed from $PWD inside the sh wrapper")
 	}
 	enabled, ok := ctxServer["enabled"].(bool)
 	if !ok || !enabled {
@@ -107,10 +108,10 @@ func TestEnsureMCPConfig_CreatesFile(t *testing.T) {
 }
 
 func TestEnsureMCPConfig_TreatsEmptyFileAsAbsent(t *testing.T) {
-	chdirTemp(t)
+	home := setOpenCodeHome(t)
 
 	if err := os.WriteFile(
-		"opencode.json", []byte("   \n\t  "), 0o644,
+		configPath(home), []byte("   \n\t  "), 0o644,
 	); err != nil {
 		t.Fatalf("seed empty file: %v", err)
 	}
@@ -120,17 +121,17 @@ func TestEnsureMCPConfig_TreatsEmptyFileAsAbsent(t *testing.T) {
 		t.Fatalf("ensureMCPConfig on empty file: %v", err)
 	}
 
-	parsed := readMCP(t)
+	parsed := readMCP(t, configPath(home))
 	if _, ok := parsed["mcp"].(map[string]interface{}); !ok {
 		t.Fatal("mcp key not registered after empty-file path")
 	}
 }
 
 func TestEnsureMCPConfig_PreservesExistingKeys(t *testing.T) {
-	chdirTemp(t)
+	home := setOpenCodeHome(t)
 
 	seed := []byte(`{"theme":"dark","mcp":{"other":{"type":"local"}}}`)
-	if err := os.WriteFile("opencode.json", seed, 0o644); err != nil {
+	if err := os.WriteFile(configPath(home), seed, 0o644); err != nil {
 		t.Fatalf("seed: %v", err)
 	}
 
@@ -139,7 +140,7 @@ func TestEnsureMCPConfig_PreservesExistingKeys(t *testing.T) {
 		t.Fatalf("ensureMCPConfig: %v", err)
 	}
 
-	parsed := readMCP(t)
+	parsed := readMCP(t, configPath(home))
 	if parsed["theme"] != "dark" {
 		t.Errorf("theme not preserved: %v", parsed["theme"])
 	}
@@ -153,10 +154,10 @@ func TestEnsureMCPConfig_PreservesExistingKeys(t *testing.T) {
 }
 
 func TestEnsureMCPConfig_SkipsWhenCtxAlreadyRegistered(t *testing.T) {
-	chdirTemp(t)
+	home := setOpenCodeHome(t)
 
 	seed := []byte(`{"mcp":{"ctx":{"command":"custom"}}}`)
-	if err := os.WriteFile("opencode.json", seed, 0o644); err != nil {
+	if err := os.WriteFile(configPath(home), seed, 0o644); err != nil {
 		t.Fatalf("seed: %v", err)
 	}
 
@@ -165,7 +166,7 @@ func TestEnsureMCPConfig_SkipsWhenCtxAlreadyRegistered(t *testing.T) {
 		t.Fatalf("ensureMCPConfig: %v", err)
 	}
 
-	got, _ := os.ReadFile("opencode.json")
+	got, _ := os.ReadFile(configPath(home))
 	if string(got) != string(seed) {
 		t.Errorf(
 			"file rewritten when ctx already registered: %s", got,
@@ -179,10 +180,10 @@ func TestEnsureMCPConfig_SkipsWhenCtxAlreadyRegistered(t *testing.T) {
 }
 
 func TestEnsureMCPConfig_RejectsMalformedJSON(t *testing.T) {
-	chdirTemp(t)
+	home := setOpenCodeHome(t)
 
 	if err := os.WriteFile(
-		"opencode.json", []byte("{not json"), 0o644,
+		configPath(home), []byte("{not json"), 0o644,
 	); err != nil {
 		t.Fatalf("seed: %v", err)
 	}
@@ -192,8 +193,7 @@ func TestEnsureMCPConfig_RejectsMalformedJSON(t *testing.T) {
 		t.Fatal("expected error on malformed JSON, got nil")
 	}
 
-	// Verify we did not clobber the user's broken-but-extant file.
-	got, _ := os.ReadFile("opencode.json")
+	got, _ := os.ReadFile(configPath(home))
 	if !bytes.Contains(got, []byte("{not json")) {
 		t.Errorf("original malformed file overwritten: %s", got)
 	}

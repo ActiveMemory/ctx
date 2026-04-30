@@ -121,7 +121,13 @@ const (
 	DirOpenCodePlugins = "plugins"
 	// DirOpenCodeSkills is the OpenCode skills subdirectory.
 	DirOpenCodeSkills = "skills"
-	// FileOpenCodeJSON is the OpenCode project config file.
+	// DirXDGConfig is the XDG base config directory name (.config).
+	DirXDGConfig = ".config"
+	// DirOpenCodeHome is the OpenCode global config directory under $HOME/.config.
+	DirOpenCodeHome = "opencode"
+	// EnvOpenCodeHome overrides the global config directory path.
+	EnvOpenCodeHome = "OPENCODE_HOME"
+	// FileOpenCodeJSON is the OpenCode config file name.
 	FileOpenCodeJSON = "opencode.json"
 	// KeyMCP is the top-level JSON key for MCP in opencode.json.
 	KeyMCP = "mcp"

@@ -47,7 +47,7 @@ const (
 // OpenCode configuration paths.
 const (
 	// MCPConfigPathOpenCode is the OpenCode MCP config path.
-	MCPConfigPathOpenCode = "opencode.json"
+	MCPConfigPathOpenCode = "~/.config/opencode/opencode.json"
 	// SkillsPathOpenCode is the deployed skills path
 	// for OpenCode.
 	SkillsPathOpenCode = ".opencode/skills/"
