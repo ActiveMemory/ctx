@@ -269,7 +269,7 @@ type CallToolParams struct {
 //   - Text: Text content
 type ToolContent struct {
 	Type string `json:"type"`
-	Text string `json:"text,omitempty"`
+	Text string `json:"text"`
 }
 
 // CallToolResult is returned by tools/call.

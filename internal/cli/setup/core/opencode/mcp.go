@@ -10,6 +10,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -28,17 +31,25 @@ import (
 // launchCommand returns the OpenCode `command` array for the ctx
 // MCP server. The emitted argv is:
 //
-//	["sh", "-c", `exec env CTX_DIR="$PWD/.context" ctx mcp serve`]
+//	["sh", "-c", `exec env CTX_DIR="$PWD/.context" /abs/path/to/ctx mcp serve`]
 //
-// `$PWD` is set by sh to the CWD OpenCode chose when spawning the
-// MCP child — the project root that owns opencode.json. `exec`
+// The binary path is resolved to an absolute path at setup time via
+// exec.LookPath, so that OpenCode can spawn the MCP child regardless
+// of the PATH inherited by non-interactive shells. `$PWD` is set by
+// sh to the CWD OpenCode chose when spawning the MCP child. `exec`
 // replaces the shell so the MCP child becomes ctx itself, with no
 // sh process layered between OpenCode and the JSON-RPC stream.
 //
 // Returns:
 //   - []string: argv suitable for OpenCode's McpLocalConfig.command.
 func launchCommand() []string {
-	binAndArgs := append([]string{mcpServer.Command}, mcpServer.Args()...)
+	bin := mcpServer.Command
+	if resolved, err := exec.LookPath(bin); err == nil {
+		if abs, absErr := filepath.Abs(resolved); absErr == nil {
+			bin = abs
+		}
+	}
+	binAndArgs := append([]string{bin}, mcpServer.Args()...)
 	script := fmt.Sprintf(
 		cfgShell.FormatPOSIXSpawnRelativeCtxDir,
 		env.CtxDir, cfgDir.Context,
@@ -47,8 +58,28 @@ func launchCommand() []string {
 	return []string{cfgShell.Sh, cfgShell.CmdFlag, script}
 }
 
-// ensureMCPConfig registers the ctx MCP server in opencode.json
-// at the project root.
+// globalConfigPath returns the path to the OpenCode global config
+// file (~/.config/opencode/opencode.json or $OPENCODE_HOME/opencode.json).
+//
+// Returns:
+//   - string: absolute path to the OpenCode config file.
+//   - error: non-nil when the user home directory cannot be resolved.
+func globalConfigPath() (string, error) {
+	ocHome := os.Getenv(cfgHook.EnvOpenCodeHome)
+	if ocHome == "" {
+		home, homeErr := os.UserHomeDir()
+		if homeErr != nil {
+			return "", homeErr
+		}
+		ocHome = filepath.Join(
+			home, cfgHook.DirXDGConfig, cfgHook.DirOpenCodeHome,
+		)
+	}
+	return filepath.Join(ocHome, cfgHook.FileOpenCodeJSON), nil
+}
+
+// ensureMCPConfig registers the ctx MCP server in the OpenCode
+// global config file (~/.config/opencode/opencode.json).
 //
 // Merge-safe: reads existing config, adds ctx server under
 // the "mcp" key, writes back. Skips if ctx server is already
@@ -61,11 +92,11 @@ func launchCommand() []string {
 // Returns:
 //   - error: Non-nil if file read/write fails
 func ensureMCPConfig(cmd *cobra.Command) error {
-	target := cfgHook.FileOpenCodeJSON
+	target, pathErr := globalConfigPath()
+	if pathErr != nil {
+		return pathErr
+	}
 
-	// Read existing config if it exists. An empty or whitespace-only
-	// file is treated as "no existing config" so users who pre-create
-	// opencode.json don't trip an unmarshal error.
 	existing := make(map[string]interface{})
 	data, readErr := ctxIo.SafeReadUserFile(target)
 	if readErr == nil && len(bytes.TrimSpace(data)) > 0 {
@@ -74,38 +105,28 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 		}
 	}
 
-	// Get or create mcp map.
 	servers, _ := existing[cfgHook.KeyMCP].(map[string]interface{})
 	if servers == nil {
 		servers = make(map[string]interface{})
 	}
 
-	// Check if ctx is already registered.
 	if _, ok := servers[mcpServer.Name]; ok {
 		writeSetup.InfoOpenCodeSkipped(cmd, target)
 		return nil
 	}
 
-	// Add ctx MCP server. OpenCode's McpLocalConfig schema differs
-	// from Copilot CLI's: `command` is an Array<string> that holds
-	// both the binary and its args (no separate `args` field), and
-	// `enabled` is required at runtime.
-	//
-	// We wrap the launch in `sh -c` and resolve CTX_DIR to
-	// `$PWD/.context` at spawn time. ctx requires CTX_DIR to be
-	// absolute (see internal/rc.ContextDir), so a literal ".context"
-	// in the `environment` map is rejected before the JSON-RPC
-	// handshake. OpenCode also has no path templating in
-	// opencode.json, so we cannot embed an absolute path that
-	// follows the user's checkout. Computing it from $PWD at launch
-	// gives us an absolute path anchored to the project that owns
-	// this opencode.json, regardless of the user's shell CTX_DIR.
 	servers[mcpServer.Name] = map[string]interface{}{
 		cfgHook.KeyType:    cfgHook.MCPServerType,
 		cfgHook.KeyCommand: launchCommand(),
 		cfgHook.KeyEnabled: true,
 	}
 	existing[cfgHook.KeyMCP] = servers
+
+	// Ensure the directory exists.
+	dir := filepath.Dir(target)
+	if mkErr := ctxIo.SafeMkdirAll(dir, fs.PermExec); mkErr != nil {
+		return mkErr
+	}
 
 	out, marshalErr := json.MarshalIndent(
 		existing, "", token.Indent2,
