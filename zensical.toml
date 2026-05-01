@@ -39,6 +39,7 @@ nav = [
     ]},
     { "Get Started" = [
       "home/getting-started.md",
+      "home/opencode.md",
       "home/first-session.md",
       "home/common-workflows.md",
     ]},

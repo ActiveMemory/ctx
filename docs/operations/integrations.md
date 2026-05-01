@@ -596,8 +596,7 @@ eval "$(ctx activate)"
 
 | File | Purpose |
 |------|---------|
-| `.opencode/plugins/ctx/index.ts` | Lifecycle plugin (hooks to `ctx system`) |
-| `.opencode/plugins/ctx/package.json` | Plugin dependencies |
+| `.opencode/plugins/ctx.ts` | Lifecycle plugin (hooks to `ctx system`) |
 | `opencode.json` | MCP server registration (merged) |
 | `AGENTS.md` | Agent instructions (read natively) |
 | `.opencode/skills/ctx-*/SKILL.md` | ctx skills |
@@ -611,11 +610,10 @@ The plugin wires OpenCode lifecycle events to `ctx system`:
 - **`tool.execute.after` (edit/write)** — `check-task-completion` nudge
 - **`session.idle`** — persistence and task completion nudges
 - **`shell.env`** — injects `CTX_DIR=.context`
+- **`experimental.session.compacting`** — re-injects context state across compaction
 
-After running `ctx setup opencode --write`, run `bun install` inside
-`.opencode/plugins/ctx/` (or let OpenCode do it on first launch — see
-the [OpenCode plugin docs](https://opencode.ai/docs/plugins/) for the
-current behavior).
+The plugin is a single file with no runtime dependencies — no `bun install`
+needed. OpenCode loads it automatically on launch.
 
 ### Context Updates
 
