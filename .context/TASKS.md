@@ -33,4 +33,16 @@ TASK STATUS LABELS:
 - [ ] Task 1
 - [ ] Task 2
 
+### Phase CP: Ceremony Profiles `#priority:medium #added:2026-04-26`
+
+Spec: `specs/ceremony-profiles.md`
+
+- [ ] Add `Ceremony{Remember,WrapUp}` to `internal/rc/types.go`; apply defaults in `internal/rc/rc.go` from `internal/config/ceremony/ceremony.go` constants
+- [ ] Thread resolved ceremony names into `ScanJournalsForCeremonies` and `Emit` in `internal/cli/system/core/ceremony/ceremony.go` (replace direct constant reads)
+- [ ] Convert `internal/assets/hooks/messages/check-ceremony/{remember,wrapup,both}.txt` to `{REMEMBER}` / `{WRAPUP}` sentinels; audit `internal/config/embed/text` ceremony desc keys for the same
+- [ ] Add a single sentinel-substitution helper (extend `internal/cli/system/core/message.Load` or sibling) so substitution happens in one place
+- [ ] Show active ceremony profile (one line) in `ctx status` output
+- [ ] Tests: default profile renders `/ctx-remember` `/ctx-wrap-up`; project with `ceremony.remember: dp-remember` renders `/dp-remember` and scanner only counts `dp-remember` as fulfilling the open-bookend
+- [ ] Document in `docs/recipes/` with the editorial-project (DR knowledgebase) consumer as the worked example
+
 ## Blocked

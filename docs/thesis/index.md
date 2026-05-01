@@ -15,7 +15,7 @@ icon: lucide/scroll-text
 
 ## A Persistence Layer for Human-AI Cognition
 
-*Jose Alekhinne* - <jose@ctx.ist>
+*Volkan Özçelik* - <me@volkan.io>
 
 *February 2026*
 
