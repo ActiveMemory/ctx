@@ -76,7 +76,7 @@ do anything — it just works.
 
 | Event | What fires | What it does |
 |-------|-----------|--------------|
-| New session | `session.created` | Bootstraps context, loads a 4000-token AI context packet (tasks, decisions, learnings, conventions) |
+| New session | `session.created` | Bootstraps ctx in the background so tools and hooks are ready for on-demand context access |
 | Agent idle | `session.idle` | Nudges you to persist context; checks if recent edits completed any pending tasks |
 | After `git commit` | `tool.execute.after` | Captures post-commit context state |
 | After file edit | `tool.execute.after` | Detects if the edit completed a tracked task |

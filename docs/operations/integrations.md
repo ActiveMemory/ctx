@@ -605,7 +605,7 @@ eval "$(ctx activate)"
 
 The plugin wires OpenCode lifecycle events to `ctx system`:
 
-- **`session.created`** — bootstraps context and loads the agent packet
+- **`session.created`** — bootstraps ctx in the background so MCP/tools are ready for on-demand context access
 - **`tool.execute.after` (shell, on `git commit`)** — runs `ctx system post-commit`
 - **`tool.execute.after` (edit/write)** — `check-task-completion` nudge
 - **`session.idle`** — persistence and task completion nudges
