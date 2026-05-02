@@ -15,7 +15,8 @@ Recall project context and present a structured readback.
 
 **Do this FIRST (silently):**
 1. Read TASKS.md, DECISIONS.md, and LEARNINGS.md from the context directory
-2. Run `ctx agent` for the full context packet
+2. Check recent session history (for example via `.context/sessions/` or `ctx journal source --limit 5` when available)
+3. Run `ctx agent` for the full context packet
 
 **Then respond with a structured readback:**
 
