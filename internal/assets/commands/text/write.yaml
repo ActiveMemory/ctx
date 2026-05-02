@@ -119,7 +119,7 @@ write.hook-opencode-skipped:
 write.hook-opencode-summary:
   short: |-
     OpenCode will now:
-      1. Bootstrap ctx context on session start
+      1. Bootstrap ctx in the background on session start
       2. Nudge persistence on session idle
       3. Track task completion after edits
       4. Run post-commit capture after `git commit`
