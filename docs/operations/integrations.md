@@ -584,7 +584,7 @@ a thin lifecycle plugin, MCP server, and `AGENTS.md` instructions.
 ### Setup
 
 ```bash
-# Generate OpenCode plugin, MCP config, skills, and AGENTS.md
+# Generate OpenCode plugin, global MCP config, skills, and AGENTS.md
 ctx setup opencode --write
 
 # Initialize context
@@ -597,7 +597,7 @@ eval "$(ctx activate)"
 | File | Purpose |
 |------|---------|
 | `.opencode/plugins/ctx.ts` | Lifecycle plugin (hooks to `ctx system`) |
-| `opencode.json` | MCP server registration (merged) |
+| `~/.config/opencode/opencode.json` | Global MCP server registration (or `$OPENCODE_HOME/opencode.json`) |
 | `AGENTS.md` | Agent instructions (read natively) |
 | `.opencode/skills/ctx-*/SKILL.md` | ctx skills |
 
@@ -609,7 +609,7 @@ The plugin wires OpenCode lifecycle events to `ctx system`:
 - **`tool.execute.after` (shell, on `git commit`)** — runs `ctx system post-commit`
 - **`tool.execute.after` (edit/write)** — `check-task-completion` nudge
 - **`session.idle`** — persistence and task completion nudges
-- **`shell.env`** — injects `CTX_DIR=.context`
+- **`shell.env`** — injects `CTX_DIR` to the project's `.context` path
 - **`experimental.session.compacting`** — re-injects context state across compaction
 
 The plugin is a single file with no runtime dependencies — no `bun install`
