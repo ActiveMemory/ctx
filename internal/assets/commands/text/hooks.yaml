@@ -428,12 +428,14 @@ hook.opencode:
     ====================
 
     Generate .opencode/plugins/ctx.ts with ctx lifecycle hooks
-    and register the ctx MCP server in opencode.json.
+    and register the ctx MCP server in OpenCode's global config
+    (`~/.config/opencode/opencode.json` or
+    `$OPENCODE_HOME/opencode.json`).
 
     This creates:
       .opencode/plugins/ctx.ts             Plugin shim
       .opencode/skills/ctx-*/SKILL.md      ctx skills
-      opencode.json                        MCP server registration
+      ~/.config/opencode/opencode.json    MCP server registration
       AGENTS.md                            Agent instructions
 
     Run with --write to generate all files:

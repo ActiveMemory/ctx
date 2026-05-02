@@ -50,8 +50,10 @@ ctx setup opencode --write && ctx init && eval "$(ctx activate)"
 
 This does three things:
 
-1. **`ctx setup opencode --write`** — generates the OpenCode plugin, MCP config,
-   skills, and `AGENTS.md`
+1. **`ctx setup opencode --write`** — generates the project-local OpenCode plugin,
+   skills, and `AGENTS.md`, then merges the ctx MCP server into OpenCode's
+   global config (`~/.config/opencode/opencode.json` or
+   `$OPENCODE_HOME/opencode.json`)
 2. **`ctx init`** — creates the `.context/` directory with template files
 3. **`eval "$(ctx activate)"`** — binds `CTX_DIR` for your shell
 
@@ -60,7 +62,7 @@ This does three things:
 | File | Purpose |
 |------|---------|
 | `.opencode/plugins/ctx.ts` | Lifecycle plugin (hooks into `ctx system` commands) |
-| `opencode.json` | MCP server registration (merged into existing config) |
+| `~/.config/opencode/opencode.json` | Global MCP server registration (or `$OPENCODE_HOME/opencode.json`) |
 | `AGENTS.md` | Agent instructions (OpenCode reads this natively) |
 | `.opencode/skills/ctx-*/SKILL.md` | Slash command skills |
 
