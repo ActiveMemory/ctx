@@ -84,7 +84,7 @@ func TestEnsureMCPConfig_CreatesFile(t *testing.T) {
 	wantSubs := []string{
 		`exec env`,
 		`CTX_DIR="$PWD/.context"`,
-		`mcp serve`,
+		`'mcp' 'serve'`,
 	}
 	for _, s := range wantSubs {
 		if !strings.Contains(script, s) {
@@ -153,12 +153,16 @@ func TestEnsureMCPConfig_PreservesExistingKeys(t *testing.T) {
 	}
 }
 
-func TestEnsureMCPConfig_SkipsWhenCtxAlreadyRegistered(t *testing.T) {
+func TestEnsureMCPConfig_SkipsWhenCtxAlreadyMatches(t *testing.T) {
 	home := setOpenCodeHome(t)
 
-	seed := []byte(`{"mcp":{"ctx":{"command":"custom"}}}`)
-	if err := os.WriteFile(configPath(home), seed, 0o644); err != nil {
-		t.Fatalf("seed: %v", err)
+	var seedBuf bytes.Buffer
+	if err := ensureMCPConfig(testCmd(&seedBuf)); err != nil {
+		t.Fatalf("seed ensureMCPConfig: %v", err)
+	}
+	seed, err := os.ReadFile(configPath(home))
+	if err != nil {
+		t.Fatalf("read seeded config: %v", err)
 	}
 
 	var buf bytes.Buffer
@@ -169,13 +173,66 @@ func TestEnsureMCPConfig_SkipsWhenCtxAlreadyRegistered(t *testing.T) {
 	got, _ := os.ReadFile(configPath(home))
 	if string(got) != string(seed) {
 		t.Errorf(
-			"file rewritten when ctx already registered: %s", got,
+			"file rewritten when ctx config already matched: %s", got,
 		)
 	}
 	if !bytes.Contains(buf.Bytes(), []byte("skipped")) {
 		t.Errorf(
 			"expected 'skipped' in output, got %q", buf.String(),
 		)
+	}
+}
+
+func TestEnsureMCPConfig_RefreshesStaleCtxServer(t *testing.T) {
+	home := setOpenCodeHome(t)
+
+	seed := []byte(`{"mcp":{"ctx":{"type":"local","command":["ctx","mcp","serve"],"enabled":false}}}`)
+	if err := os.WriteFile(configPath(home), seed, 0o644); err != nil {
+		t.Fatalf("seed: %v", err)
+	}
+
+	var buf bytes.Buffer
+	if err := ensureMCPConfig(testCmd(&buf)); err != nil {
+		t.Fatalf("ensureMCPConfig: %v", err)
+	}
+
+	parsed := readMCP(t, configPath(home))
+	servers, _ := parsed["mcp"].(map[string]interface{})
+	ctxServer, _ := servers["ctx"].(map[string]interface{})
+	cmdArr, ok := ctxServer["command"].([]interface{})
+	if !ok || len(cmdArr) != 3 {
+		t.Fatalf("command = %T %v, want refreshed [sh -c script]", ctxServer["command"], ctxServer["command"])
+	}
+	if enabled, _ := ctxServer["enabled"].(bool); !enabled {
+		t.Fatalf("enabled = %v, want true after refresh", ctxServer["enabled"])
+	}
+	if bytes.Contains(buf.Bytes(), []byte("skipped")) {
+		t.Fatalf("expected refresh to rewrite file, got skipped output %q", buf.String())
+	}
+}
+
+func TestEnsureMCPConfig_QuotesBinaryPathInLaunchScript(t *testing.T) {
+	t.Setenv("PATH", t.TempDir())
+	cmdArr := launchCommand()
+	if got := len(cmdArr); got != 3 {
+		t.Fatalf("command length = %d, want 3", got)
+	}
+	script := cmdArr[2]
+	if !strings.Contains(script, `'ctx' 'mcp' 'serve'`) {
+		t.Fatalf("launch script not safely quoted: %s", script)
+	}
+}
+
+func TestEnsureMCPConfig_ReturnsOnNonNotExistReadError(t *testing.T) {
+	home := setOpenCodeHome(t)
+	configDir := configPath(home)
+	if err := os.Mkdir(configDir, 0o755); err != nil {
+		t.Fatalf("mkdir config path: %v", err)
+	}
+
+	var buf bytes.Buffer
+	if err := ensureMCPConfig(testCmd(&buf)); err == nil {
+		t.Fatal("expected read error for directory target, got nil")
 	}
 }
 
