@@ -3,7 +3,8 @@
 ## Context
 
 OpenCode (opencode.ai) is a terminal-first AI coding agent with 140K+ GitHub stars.
-It reads `AGENTS.md` natively, supports MCP servers via `opencode.json`, and has a
+It reads `AGENTS.md` natively, supports MCP servers via its global
+`~/.config/opencode/opencode.json` config (or `$OPENCODE_HOME/opencode.json`), and has a
 plugin system (`@opencode-ai/plugin`) with lifecycle hooks. ctx already mentions
 OpenCode as an `AGENTS.md`-compatible tool (`hooks.yaml:373`) but has no dedicated
 integration.
@@ -110,7 +111,7 @@ FileOpenCodeJSON   = "opencode.json"
 Add:
 ```go
 DisplayOpenCode      = "OpenCode"
-MCPConfigPathOpenCode = "opencode.json"
+MCPConfigPathOpenCode = "~/.config/opencode/opencode.json"
 PluginPathOpenCode    = ".opencode/plugins/ctx.ts"
 SkillsPathOpenCode    = ".opencode/skills/"
 ```
@@ -135,12 +136,12 @@ hook.opencode:
     ====================
 
     Generate .opencode/plugins/ctx.ts with ctx lifecycle hooks
-    and register the ctx MCP server in opencode.json.
+    and register the ctx MCP server in the global OpenCode config (`~/.config/opencode/opencode.json` or `$OPENCODE_HOME/opencode.json`).
 
     This creates:
       .opencode/plugins/ctx.ts             Plugin shim
       .opencode/skills/ctx-*/SKILL.md      ctx skills
-      opencode.json                        MCP server registration
+      ~/.config/opencode/opencode.json    MCP server registration (or $OPENCODE_HOME/opencode.json)
 
     Run with --write to generate all files:
 
@@ -169,11 +170,10 @@ write.hook-opencode-summary:
 ```
 internal/cli/setup/core/opencode/
 ├── doc.go           # Package documentation
-├── opencode.go      # Deploy() entry point
+├── opencode.go      # Deploy() entry point (delegates AGENTS to core/agents)
 ├── plugin.go        # deployPlugin() — writes .opencode/plugins/ctx.ts
-├── mcp.go           # ensureMCPConfig() — merges opencode.json
-├── skill.go         # deploySkills() — writes .opencode/skills/
-└── agents.go        # deployAgents() — writes AGENTS.md (shared template)
+├── mcp.go           # ensureMCPConfig() — merges global OpenCode config
+└── skill.go         # deploySkills() — writes .opencode/skills/
 ```
 
 **`opencode.go` — Deploy()**:
@@ -183,12 +183,12 @@ func Deploy(cmd *cobra.Command) error {
     if pluginErr := deployPlugin(cmd); pluginErr != nil {
         return pluginErr
     }
-    // 2. Register MCP server in opencode.json
+    // 2. Register MCP server in the global OpenCode config
     if mcpErr := ensureMCPConfig(cmd); mcpErr != nil {
         writeErr.WarnFile(cmd, cfgSetup.MCPConfigPathOpenCode, mcpErr)
     }
-    // 3. Deploy AGENTS.md (shared template, idempotent)
-    if agentsErr := deployAgents(cmd); agentsErr != nil {
+    // 3. Deploy AGENTS.md via the shared agents package
+    if agentsErr := coreAgents.Deploy(cmd); agentsErr != nil {
         writeErr.WarnFile(cmd, cfgHook.FileAgentsMd, agentsErr)
     }
     // 4. Deploy skills to .opencode/skills/
@@ -202,7 +202,7 @@ func Deploy(cmd *cobra.Command) error {
 
 **`mcp.go` — ensureMCPConfig()**:
 
-OpenCode MCP config lives in `opencode.json` at project root. Per
+OpenCode MCP config lives in the global config file `~/.config/opencode/opencode.json` (or `$OPENCODE_HOME/opencode.json`). Per
 the `@opencode-ai/sdk` `McpLocalConfig` schema, `command` is a
 single string array holding the binary and its arguments (no
 separate `args` field) and `enabled` is required:
@@ -211,15 +211,16 @@ separate `args` field) and `enabled` is required:
   "mcp": {
     "ctx": {
       "type": "local",
-      "command": ["ctx", "mcp", "serve"],
+      "command": ["sh", "-c", "exec env CTX_DIR=\"$PWD/.context\" /abs/path/to/ctx mcp serve"],
       "enabled": true
     }
   }
 }
 ```
 
-Read-merge-write pattern: read existing `opencode.json`, add/update `mcp.ctx`
-entry, write back. Preserve all other config keys.
+Read-merge-write pattern: read the existing global OpenCode config, add/update `mcp.ctx`
+entry, write back. Preserve all other config keys. The setup resolves `ctx` to an
+absolute binary path via `exec.LookPath` so OpenCode can spawn it from non-interactive shells.
 
 **`plugin.go` — deployPlugin()**:
 
@@ -303,9 +304,9 @@ case cfgHook.ToolOpenCode:
 2. **Dry run**: `ctx setup opencode` — should print integration instructions
 3. **Write**: `ctx setup opencode --write` in a test project — verify:
    - `.opencode/plugins/ctx.ts` created (flat file; no subdirectory)
-   - `opencode.json` has `mcp.ctx` entry (merged, not overwritten),
+   - `~/.config/opencode/opencode.json` (or `$OPENCODE_HOME/opencode.json`) has `mcp.ctx` entry (merged, not overwritten),
      with `command` as a string array and `enabled: true`
-   - `AGENTS.md` created (or skipped if exists with markers)
+   - `AGENTS.md` created, merged if it exists without ctx markers, or skipped if ctx markers already exist
    - `.opencode/skills/ctx-*/SKILL.md` created
    - Confirm OpenCode actually loads the plugin: launch
      `opencode --print-logs --log-level DEBUG` in the test project,

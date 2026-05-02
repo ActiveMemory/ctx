@@ -18,7 +18,9 @@
 //  1. Plugin deployment: writes .opencode/plugins/ctx.ts as a
 //     flat top-level file (subdirectories are ignored by
 //     OpenCode's auto-loader)
-//  2. MCP configuration: merges ctx server into opencode.json
+//  2. MCP configuration: merges ctx server into the global
+//     OpenCode config (~/.config/opencode/opencode.json or
+//     $OPENCODE_HOME/opencode.json)
 //  3. AGENTS.md: deploys shared agent instructions
 //  4. Skills: copies ctx skills to .opencode/skills/
 package opencode
