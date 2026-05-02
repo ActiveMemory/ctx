@@ -9,6 +9,7 @@ package opencode
 import (
 	"github.com/spf13/cobra"
 
+	coreAgents "github.com/ActiveMemory/ctx/internal/cli/setup/core/agents"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	cfgSetup "github.com/ActiveMemory/ctx/internal/config/setup"
 	writeErr "github.com/ActiveMemory/ctx/internal/write/err"
@@ -18,7 +19,9 @@ import (
 // Deploy generates all OpenCode integration files.
 //
 // Creates the .opencode/plugins/ctx.ts plugin file, registers
-// the ctx MCP server in opencode.json, deploys AGENTS.md with
+// the ctx MCP server in the global OpenCode config
+// (~/.config/opencode/opencode.json or $OPENCODE_HOME/opencode.json),
+// deploys AGENTS.md with
 // shared instructions, and copies ctx skills to
 // .opencode/skills/.
 //
@@ -41,7 +44,7 @@ func Deploy(cmd *cobra.Command) error {
 		)
 	}
 
-	if agentsErr := deployAgents(cmd); agentsErr != nil {
+	if agentsErr := coreAgents.Deploy(cmd); agentsErr != nil {
 		writeErr.WarnFile(
 			cmd, cfgHook.FileAgentsMd, agentsErr,
 		)
