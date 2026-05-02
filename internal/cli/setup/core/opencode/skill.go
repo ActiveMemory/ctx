@@ -7,6 +7,7 @@
 package opencode
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 
@@ -21,8 +22,8 @@ import (
 )
 
 // deploySkills creates .opencode/skills/<name>/SKILL.md for each
-// embedded OpenCode skill. Skips skills whose SKILL.md already
-// exists.
+// embedded OpenCode skill. Existing ctx-managed skill files are
+// refreshed when their contents differ from the embedded source.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
@@ -42,10 +43,17 @@ func deploySkills(cmd *cobra.Command) error {
 	for name, content := range skills {
 		skillDir := filepath.Join(skillsBase, name)
 		target := filepath.Join(skillDir, cfgHook.FileSKILLMd)
+		if _, validateErr := validateManagedTarget(target); validateErr != nil {
+			return validateErr
+		}
 
-		if _, statErr := os.Stat(target); statErr == nil {
-			writeSetup.InfoOpenCodeSkipped(cmd, target)
-			continue
+		if existing, statErr := ctxIo.SafeReadUserFile(target); statErr == nil {
+			if bytes.Equal(existing, content) {
+				writeSetup.InfoOpenCodeSkipped(cmd, target)
+				continue
+			}
+		} else if !os.IsNotExist(statErr) {
+			return errFs.FileRead(target, statErr)
 		}
 
 		if mkErr := ctxIo.SafeMkdirAll(
