@@ -25,7 +25,7 @@ import (
 // shared instructions, and copies ctx skills to
 // .opencode/skills/.
 //
-// Skips existing files (idempotent).
+// Refreshes stale managed files and skips ones that already match.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages

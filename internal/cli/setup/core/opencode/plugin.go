@@ -7,6 +7,7 @@
 package opencode
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 
@@ -24,8 +25,8 @@ import (
 // deployPlugin writes the embedded plugin to
 // .opencode/plugins/ctx.ts. OpenCode auto-loads top-level files
 // under .opencode/plugins/; subdirectories are not scanned, so a
-// flat single-file deployment is required. Skips if the target
-// already exists.
+// flat single-file deployment is required. If an installed ctx
+// plugin differs from the embedded one, it is refreshed in place.
 //
 // The package.json that v0.8.x and earlier shipped alongside
 // index.ts is no longer embedded: the plugin uses a type-only
@@ -46,15 +47,8 @@ func deployPlugin(cmd *cobra.Command) error {
 	target := filepath.Join(
 		pluginDir, cfgHook.FileOpenCodePluginDeploy,
 	)
-	if _, statErr := os.Stat(target); statErr == nil {
-		writeSetup.InfoOpenCodeSkipped(cmd, target)
-		return nil
-	}
-
-	if mkErr := ctxIo.SafeMkdirAll(
-		pluginDir, fs.PermExec,
-	); mkErr != nil {
-		return errFs.Mkdir(pluginDir, mkErr)
+	if _, validateErr := validateManagedTarget(target); validateErr != nil {
+		return validateErr
 	}
 
 	files, readErr := agent.OpenCodePlugin()
@@ -64,6 +58,21 @@ func deployPlugin(cmd *cobra.Command) error {
 	content, ok := files[cfgHook.FileIndexTs]
 	if !ok {
 		return errSetup.MissingEmbeddedAsset(cfgHook.FileIndexTs)
+	}
+
+	if existing, statErr := ctxIo.SafeReadUserFile(target); statErr == nil {
+		if bytes.Equal(existing, content) {
+			writeSetup.InfoOpenCodeSkipped(cmd, target)
+			return nil
+		}
+	} else if !os.IsNotExist(statErr) {
+		return errFs.FileRead(target, statErr)
+	}
+
+	if mkErr := ctxIo.SafeMkdirAll(
+		pluginDir, fs.PermExec,
+	); mkErr != nil {
+		return errFs.Mkdir(pluginDir, mkErr)
 	}
 
 	if wErr := ctxIo.SafeWriteFile(
