@@ -47,8 +47,11 @@ into the compaction prompt via `experimental.session.compacting` so
 ctx context survives session compaction. The compaction hook pushes
 to `output.context` (additive) rather than replacing `output.prompt`,
 so it composes with other compaction-aware plugins like oh-my-openagent.
-Tool name strings target `@opencode-ai/plugin` v1.4.x; unrecognized
-tools silently no-op.
+`session.created` does not visibly inject the `ctx agent` packet into chat
+because the event hook has no output channel; it prepares ctx in the
+background so tools and compaction hooks can use it on demand. Tool name
+strings target `@opencode-ai/plugin` v1.4.x; unrecognized tools silently
+no-op.
 
 We deliberately do **not** ship a `tool.execute.before` hook here:
 the natural fit (block-dangerous-commands) is a Claude Code
@@ -159,7 +162,7 @@ write.hook-opencode-skipped:
 write.hook-opencode-summary:
   short: |-
     OpenCode will now:
-      1. Bootstrap ctx context on session start
+      1. Bootstrap ctx in the background on session start
       2. Nudge persistence on session idle
       3. Track task completion after edits
       4. Run post-commit capture after `git commit`
@@ -225,8 +228,9 @@ absolute binary path via `exec.LookPath` so OpenCode can spawn it from non-inter
 **`plugin.go` — deployPlugin()**:
 
 Write the embedded `index.ts` content to a flat
-`.opencode/plugins/ctx.ts` file. Skip if the target already exists
-(idempotent). OpenCode only auto-loads top-level files under
+`.opencode/plugins/ctx.ts` file. Skip when the installed ctx-managed
+plugin already matches the embedded content; refresh it in place when
+stale. OpenCode only auto-loads top-level files under
 `.opencode/plugins/`; subdirectories are NOT scanned, which is why
 the deployment is a single flat file rather than a directory.
 No `package.json` is shipped — the plugin uses a type-only import
@@ -313,7 +317,7 @@ case cfgHook.ToolOpenCode:
      ask the agent to make an edit and run `git commit`, and verify
      the plugin's `tool.execute.after` fires the `ctx system
      post-commit` and `ctx system check-task-completion` nudges
-4. **Idempotency**: Run `ctx setup opencode --write` twice — second run skips existing
+4. **Idempotency**: Run `ctx setup opencode --write` twice — second run skips already-matching managed files and refreshes stale plugin/skill/MCP installs
 5. **Lint**: `make lint`
 6. **Test**: `make test`
 7. **Smoke**: `make smoke`
