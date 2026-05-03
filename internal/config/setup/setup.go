@@ -46,11 +46,10 @@ const (
 
 // OpenCode configuration paths.
 const (
-	// MCPConfigPathOpenCode is the OpenCode MCP config path.
+	// MCPConfigPathOpenCode is the OpenCode MCP config path used as a
+	// fallback in user-facing warnings when globalConfigPath() cannot
+	// resolve the actual path (e.g. UserHomeDir failure).
 	MCPConfigPathOpenCode = "~/.config/opencode/opencode.json"
-	// SkillsPathOpenCode is the deployed skills path
-	// for OpenCode.
-	SkillsPathOpenCode = ".opencode/skills/"
 )
 
 // Cline configuration paths.
