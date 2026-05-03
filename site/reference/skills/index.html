@@ -2782,7 +2782,7 @@ capture decisions and learnings.</p>
 <h3 id="ctx-reflect"><code>/ctx-reflect</code><a class="headerlink" href="#ctx-reflect" title="Permanent link">&para;</a></h3>
 <p>Pause and reflect on session progress. Walks through a checklist of
 learnings, decisions, task completions, and session notes to persist.</p>
-<p><strong>Wraps</strong>: chains to <code>ctx add learning</code>, <code>ctx add decision</code>,
+<p><strong>Wraps</strong>: chains to <code>ctx learning add</code>, <code>ctx decision add</code>,
 manual TASKS.md updates</p>
 <p><strong>See also</strong>: <a href="../../recipes/session-lifecycle/">The Complete Session</a>,
 <a href="../../recipes/knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a></p>
@@ -2794,8 +2794,8 @@ candidates (learnings, decisions, conventions, tasks) with complete
 structured fields for user approval, then persists via <code>ctx add</code>.
 Offers <code>/ctx-commit</code> if uncommitted changes remain.
 <strong>Ceremony skill</strong>: invoke explicitly at session end.</p>
-<p><strong>Wraps</strong>: <code>git diff --stat</code>, <code>git log</code>, <code>ctx add learning</code>,
-<code>ctx add decision</code>, <code>ctx add convention</code>, <code>ctx add task</code>,
+<p><strong>Wraps</strong>: <code>git diff --stat</code>, <code>git log</code>, <code>ctx learning add</code>,
+<code>ctx decision add</code>, <code>ctx convention add</code>, <code>ctx task add</code>,
 chains to <code>/ctx-commit</code></p>
 <p><strong>See also</strong>: <a href="../../recipes/session-ceremonies/">Session Ceremonies</a>,
 <a href="../../recipes/session-lifecycle/">The Complete Session</a></p>
@@ -2805,14 +2805,14 @@ chains to <code>/ctx-commit</code></p>
 conventions: into <code>.context/</code> files.</p>
 <h3 id="ctx-task-add"><code>/ctx-task-add</code><a class="headerlink" href="#ctx-task-add" title="Permanent link">&para;</a></h3>
 <p>Add an actionable task with optional priority and phase section.</p>
-<p><strong>Wraps</strong>: <code>ctx add task "description" [--priority high|medium|low]
+<p><strong>Wraps</strong>: <code>ctx task add "description" [--priority high|medium|low]
 --session-id ID --branch BR --commit HASH</code></p>
 <p><strong>See also</strong>: <a href="../../recipes/task-management/">Tracking Work Across Sessions</a></p>
 <hr />
 <h3 id="ctx-decision-add"><code>/ctx-decision-add</code><a class="headerlink" href="#ctx-decision-add" title="Permanent link">&para;</a></h3>
 <p>Record an architectural decision with context, rationale, and
 consequence. Supports Y-statement (lightweight) and full ADR formats.</p>
-<p><strong>Wraps</strong>: <code>ctx add decision "title" --context "..." --rationale "..."
+<p><strong>Wraps</strong>: <code>ctx decision add "title" --context "..." --rationale "..."
 --consequence "..." --session-id ID --branch BR --commit HASH</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a></p>
@@ -2821,7 +2821,7 @@ consequence. Supports Y-statement (lightweight) and full ADR formats.</p>
 <p>Record a project-specific gotcha, bug, or unexpected behavior.
 Filters for insights that are searchable, project-specific, and
 required real effort to discover.</p>
-<p><strong>Wraps</strong>: <code>ctx add learning "title" --context "..." --lesson "..."
+<p><strong>Wraps</strong>: <code>ctx learning add "title" --context "..." --lesson "..."
 --application "..." --session-id ID --branch BR --commit HASH</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a></p>
@@ -2829,7 +2829,7 @@ required real effort to discover.</p>
 <h3 id="ctx-convention-add"><code>/ctx-convention-add</code><a class="headerlink" href="#ctx-convention-add" title="Permanent link">&para;</a></h3>
 <p>Record a coding convention that should be standardized across sessions.
 Targets patterns seen 2-3+ times.</p>
-<p><strong>Wraps</strong>: <code>ctx add convention "rule" --section "Name"</code></p>
+<p><strong>Wraps</strong>: <code>ctx convention add "rule" --section "Name"</code></p>
 <p><strong>See also</strong>:
 <a href="../../recipes/knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a></p>
 <hr />

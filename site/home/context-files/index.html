@@ -2619,8 +2619,8 @@ context packet:</p>
 <p>Two subdirectories under <code>.context/</code> are <strong>implementation details</strong> that
 are user-editable but not part of the priority read order:</p>
 <ul>
-<li><strong><code>.context/templates/</code></strong>: format templates for <code>ctx add decision</code>
-  and <code>ctx add learning</code>. See <a href="#templates">templates</a> below.</li>
+<li><strong><code>.context/templates/</code></strong>: format templates for <code>ctx decision add</code>
+  and <code>ctx learning add</code>. See <a href="#templates">templates</a> below.</li>
 <li><strong><code>.context/steering/</code></strong>: behavioral rules with YAML frontmatter
   that get synced into each AI tool's native config. See
   <a href="#steering">steering</a> below, and the full
@@ -2780,7 +2780,7 @@ inline tags.</p>
 <tr>
 <td><code>#added</code></td>
 <td><code>YYYY-MM-DD-HHMMSS</code></td>
-<td>Auto-added by <code>ctx add task</code></td>
+<td>Auto-added by <code>ctx task add</code></td>
 </tr>
 <tr>
 <td><code>#started</code></td>
@@ -3062,7 +3062,7 @@ for full documentation.</p>
 <h2 id="templates"><code>templates/</code><a class="headerlink" href="#templates" title="Permanent link">&para;</a></h2>
 <p><strong>Location</strong>: <code>.context/templates/</code>.
 <strong>Status</strong>: implementation detail, user-editable.</p>
-<p><strong>Purpose</strong>: Format templates for <code>ctx add decision</code> and <code>ctx add learning</code>.
+<p><strong>Purpose</strong>: Format templates for <code>ctx decision add</code> and <code>ctx learning add</code>.
 These control the structure of new entries appended to DECISIONS.md and
 LEARNINGS.md.</p>
 <p><code>ctx init</code> deploys two starter templates:</p>

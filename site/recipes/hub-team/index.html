@@ -2095,7 +2095,7 @@ an hour she finds the culprit: a breaking change in a
 transitive gRPC dep that only manifests under high
 concurrency. Postmortem on Tuesday, but right now she
 records the learning:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span>--share<span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>add<span class="w"> </span>--share<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Payment service 3 AM incident, 2026-04-03&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--lesson<span class="w">  </span><span class="s2">&quot;grpc-go v1.62+ changes DialContext behavior under high \</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="s2">  concurrency: connections from a single channel can deadlock if the \</span>
@@ -2113,7 +2113,7 @@ without Bob having to read the incident channel.</p>
 <p>The team agrees on a new pattern for API versioning:
 header-based instead of URL-based. Platform lead Carol
 records the decision:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span>--share<span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span>--share<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need consistent API versioning across all 6 services. \</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="s2">  Current URL-based /v1/ isn&#39;t working for gradual rollouts.&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;Header-based versioning lets us route by header at the \</span>
