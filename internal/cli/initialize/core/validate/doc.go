@@ -18,7 +18,7 @@
 //
 // [CheckCtxInPath] uses exec.LookPath to verify the ctx
 // binary is reachable via PATH, warning if it is missing.
-// [EssentialFilesPresent] checks for TASKS.md,
+// [PopulatedFiles] checks for TASKS.md,
 // CONSTITUTION.md, or DECISIONS.md, treating a directory
 // without them as uninitialised.
 //
@@ -30,7 +30,7 @@
 // an error. The check can be skipped by setting the
 // CTX_SKIP_PATH_CHECK environment variable to "true".
 //
-// EssentialFilesPresent checks for the presence of any
+// PopulatedFiles checks for the presence of any
 // file in the required files list (TASKS.md,
 // CONSTITUTION.md, DECISIONS.md). A directory that
 // contains only logs or other non-essential content is

@@ -13,17 +13,47 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// InfoOverwritePrompt prints the overwrite confirmation prompt.
+// InfoResetPrompt prints the reset confirmation prompt with an
+// enumeration of the populated essential files that will be
+// overwritten. The prompt is intentionally explicit about the
+// blast radius — the silent "Overwrite existing context? [y/N]"
+// prompt destroyed thousands of lines of curated content in
+// the 2026-04-25 incident.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //   - contextDir: path to the existing .context/ directory
-func InfoOverwritePrompt(cmd *cobra.Command, contextDir string) {
-	cmd.Print(fmt.Sprintf(
-		desc.Text(text.DescKeyWriteInitOverwritePrompt),
-		contextDir))
+//   - files: basenames of populated essential files that will be
+//     backed up and overwritten
+func InfoResetPrompt(cmd *cobra.Command, contextDir string, files []string) {
+	cmd.Println(desc.Text(text.DescKeyWriteInitResetPromptHeader))
+	cmd.Println()
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitResetPromptDir), contextDir,
+	))
+	for _, f := range files {
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteInitResetPromptFile), f,
+		))
+	}
+	cmd.Println()
+	cmd.Print(desc.Text(text.DescKeyWriteInitResetPromptFooter))
+	cmd.Print(token.Space)
+}
+
+// InfoBackupWritten reports the path of the timestamped backup
+// directory that holds the pre-reset snapshot of populated files.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - backupDir: absolute path of the backup directory
+func InfoBackupWritten(cmd *cobra.Command, backupDir string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteInitBackupWritten), backupDir,
+	))
 }
 
 // InfoAborted reports that the user cancelled the init operation.
