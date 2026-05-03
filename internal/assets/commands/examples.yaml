@@ -17,36 +17,33 @@ deactivate:
   short: |2-
       eval "$(ctx deactivate)"
 
-add:
+convention.add:
   short: |2-
-      ctx add decision "Use PostgreSQL" --context "..." --rationale "..." --consequence "..."
-      ctx add task "Implement auth" --priority high
-      ctx add learning "Go embed gotcha" --context "..." --lesson "..." --application "..."
+      ctx convention add "Use camelCase for function names"
+      ctx convention add "All API responses use JSON"
 
-add.convention:
+decision.add:
   short: |2-
-      ctx add convention "Use camelCase for function names"
-      ctx add convention "All API responses use JSON"
+      ctx decision add "Use PostgreSQL for primary database" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
+        --context "Need a reliable database for production" \
+        --rationale "ACID compliance and JSON support" \
+        --consequence "Team needs PostgreSQL training"
 
-add.decision:
+learning.add:
   short: |2-
-      ctx add decision "Use PostgreSQL for primary database"
-      ctx add decision "Adopt Go 1.22 for range-over-func support"
-
-add.default:
-  short: '  ctx add <type> "your content here"'
-
-add.learning:
-  short: |2-
-      ctx add learning "Go embed requires files in same package" \
+      ctx learning add "Go embed requires files in same package" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
         --context "Tried to embed files from parent directory" \
         --lesson "go:embed only works with files in same or child directories" \
         --application "Keep embedded files in internal/templates/"
 
-add.task:
+task.add:
   short: |2-
-      ctx add task "Implement user authentication"
-      ctx add task "Fix login bug" --priority high
+      ctx task add "Implement user authentication" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
+        --priority high
+      ctx task add "Fix login bug" --session-id ... --branch ... --commit ...
 
 agent:
   short: |2-

@@ -131,10 +131,10 @@ func TestBinaryIntegration(t *testing.T) {
 		}
 	})
 
-	// Subtest: ctx add learning modifies LEARNINGS.md
-	t.Run("add learning modifies LEARNINGS.md", func(t *testing.T) {
+	// Subtest: ctx learning add modifies LEARNINGS.md
+	t.Run("learning add modifies LEARNINGS.md", func(t *testing.T) {
 		addCmd := exec.Command(binaryPath, //nolint:gosec // test binary
-			"add", "learning",
+			"learning", "add",
 			"Test learning from integration test",
 			"--session-id", "test1234", "--branch", "main", "--commit", "abc123",
 			"--context", "Testing integration",
@@ -143,7 +143,7 @@ func TestBinaryIntegration(t *testing.T) {
 		)
 		addCmd.Dir = testDir
 		if output, err := addCmd.CombinedOutput(); err != nil {
-			t.Fatalf("ctx add learning failed: %v\n%s", err, output)
+			t.Fatalf("ctx learning add failed: %v\n%s", err, output)
 		}
 
 		// Verify learning was added
