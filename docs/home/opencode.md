@@ -53,10 +53,10 @@ This does three things:
 1. **`ctx setup opencode --write`** — generates the project-local OpenCode plugin,
    skills, and `AGENTS.md`, then merges the ctx MCP server into OpenCode's
    global config (`~/.config/opencode/opencode.json` or
-   `$OPENCODE_HOME/opencode.json`). This is the only ctx integration that
-   writes a file outside the project root — it's needed because
-   non-interactive shells (like MCP subprocesses) cannot discover
-   project-local config.
+   `$OPENCODE_HOME/opencode.json`). This writes outside the project root
+   because non-interactive shells (like MCP subprocesses) cannot discover
+   project-local config — the same reason the Copilot CLI integration
+   writes to `~/.copilot/mcp-config.json`.
 2. **`ctx init`** — creates the `.context/` directory with template files
 3. **`eval "$(ctx activate)"`** — binds `CTX_DIR` for your shell
 
@@ -96,10 +96,11 @@ When your conversation exceeds the context window, OpenCode runs a
 compaction pass (you can trigger one manually with `/compact`). The
 compaction agent summarizes older messages and drops the originals. Without
 ctx, all accumulated knowledge disappears. With ctx, the plugin intercepts
-the `experimental.session.compacting` event and appends the latest context
-packet (`ctx agent --budget 4000`) into the compaction context. The result:
-the compressed summary retains your tasks, decisions, learnings, and
-conventions even though the original messages that created them are gone.
+the `experimental.session.compacting` event and appends `ctx system bootstrap`
+output (context directory path and file inventory) into the compaction
+context. The result: the compressed summary retains the breadcrumbs the
+agent needs to re-read tasks, decisions, learnings, and conventions
+on demand, even though the original messages that loaded them are gone.
 
 ### What Is *Not* Included
 
