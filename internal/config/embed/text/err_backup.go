@@ -19,7 +19,7 @@ const (
 	// archive directory creation failures.
 	DescKeyErrBackupCreateArchiveDir = "err.backup.create-archive-dir"
 	// DescKeyErrBackupCreateBackup is the text key for the `.bak`
-	// file creation failure (ctx init --force).
+	// file creation failure (ctx init --reset).
 	DescKeyErrBackupCreateBackup = "err.backup.create-backup"
 	// DescKeyErrBackupWriteArchive is the text key for task archive
 	// write failures.

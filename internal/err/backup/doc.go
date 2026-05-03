@@ -7,7 +7,7 @@
 // Package backup provides error constructors for two narrow file
 // operations that still live under a historical "backup" label:
 //
-//   - [Create]: wraps `.bak` file creation during `ctx init --force`.
+//   - [Create]: wraps `.bak` file creation during `ctx init --reset`.
 //   - [CreateArchiveDir], [WriteArchive]: wrap task-archive directory
 //     and file write failures under `.context/archive/`.
 //   - [ContextDirNotFound]: the bootstrap-path "context dir missing"

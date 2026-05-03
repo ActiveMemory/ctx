@@ -22,7 +22,7 @@ or plugin hooks and skills.
 
     The `ctx` **binary** is separate:
     [rebuild from source or download a new release](../home/getting-started.md#installation)
-    when one is available, then run `ctx init --force --merge`.
+    when one is available, then run `ctx init --reset --merge`.
     Knowledge files are preserved automatically.
 
 ## TL:DR
@@ -31,11 +31,11 @@ or plugin hooks and skills.
 # Plugin users (Claude Code)
 # /plugin → select ctx → Update now
 # Then update the binary and reinitialize:
-ctx init --force --merge
+ctx init --reset --merge
 
 # From-source / manual users
 # install new ctx binary, then:
-ctx init --force --merge
+ctx init --reset --merge
 # /plugin → select ctx → Update now   (if using Claude Code)
 ```
 
@@ -68,7 +68,7 @@ ctx --version   # verify
 ### 2. Reinitialize
 
 ```bash
-ctx init --force --merge
+ctx init --reset --merge
 ```
 
 * `--force` regenerates infrastructure files (permissions, ctx-managed
