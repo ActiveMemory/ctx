@@ -16,4 +16,9 @@ const (
 	SchemaDrift = "schema-drift.md"
 	// Violations is the governance violations file in .context/state/.
 	Violations = "violations.json"
+	// TempSuffixPattern is the os.CreateTemp pattern suffix appended
+	// to the dot-prefixed base name when staging an atomic write
+	// (e.g. ".opencode.json.tmp.*"). The trailing "*" is replaced by
+	// CreateTemp with a random unique token.
+	TempSuffixPattern = ".tmp.*"
 )

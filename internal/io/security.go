@@ -14,7 +14,9 @@ import (
 	"strings"
 	"time"
 
+	cfgFile "github.com/ActiveMemory/ctx/internal/config/file"
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgToken "github.com/ActiveMemory/ctx/internal/config/token"
 	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errHTTP "github.com/ActiveMemory/ctx/internal/err/http"
@@ -164,6 +166,61 @@ func SafeWriteFile(path string, data []byte, perm os.FileMode) error {
 	}
 	//nolint:gosec // validated by cleanAndValidate
 	return os.WriteFile(clean, data, perm)
+}
+
+// SafeWriteFileAtomic writes data to a file via a same-directory
+// temp file plus fsync plus rename, so readers and concurrent
+// writers see either the previous content or the full new content,
+// never a truncated or partially written file. Use this for
+// merge-target config files (e.g. opencode.json, mcp-config.json)
+// where a crash mid-write would leave the host tool with an empty
+// or invalid config and force the user to re-register every server.
+//
+// Parameters:
+//   - path: file path to write
+//   - data: content to write
+//   - perm: file permission bits
+//
+// Returns:
+//   - error: non-nil on validation, write, sync, or rename failure
+func SafeWriteFileAtomic(path string, data []byte, perm os.FileMode) error {
+	clean, validateErr := cleanAndValidate(path)
+	if validateErr != nil {
+		return validateErr
+	}
+	dir := filepath.Dir(clean)
+	base := filepath.Base(clean)
+	pattern := cfgToken.Dot + base + cfgFile.TempSuffixPattern
+	//nolint:gosec // dir is derived from validated clean
+	tmp, createErr := os.CreateTemp(dir, pattern)
+	if createErr != nil {
+		return createErr
+	}
+	tmpPath := tmp.Name()
+	cleanup := func() { _ = os.Remove(tmpPath) }
+	if _, writeErr := tmp.Write(data); writeErr != nil {
+		_ = tmp.Close()
+		cleanup()
+		return writeErr
+	}
+	if syncErr := tmp.Sync(); syncErr != nil {
+		_ = tmp.Close()
+		cleanup()
+		return syncErr
+	}
+	if closeErr := tmp.Close(); closeErr != nil {
+		cleanup()
+		return closeErr
+	}
+	if chmodErr := os.Chmod(tmpPath, perm); chmodErr != nil {
+		cleanup()
+		return chmodErr
+	}
+	if renameErr := os.Rename(tmpPath, clean); renameErr != nil {
+		cleanup()
+		return renameErr
+	}
+	return nil
 }
 
 // SafeStat returns file info after cleaning the path and rejecting
