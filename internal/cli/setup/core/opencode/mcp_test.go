@@ -223,6 +223,30 @@ func TestEnsureMCPConfig_QuotesBinaryPathInLaunchScript(t *testing.T) {
 	}
 }
 
+// TestEnsureMCPConfig_ResolvesBinaryToAbsolutePath covers the
+// LookPath-success branch that the QuotesBinaryPath test deliberately
+// skips. With a fake `ctx` binary on PATH, launchCommand should embed
+// the absolute path so OpenCode can spawn the MCP child even from
+// non-interactive shells whose PATH may not contain ctx.
+func TestEnsureMCPConfig_ResolvesBinaryToAbsolutePath(t *testing.T) {
+	binDir := t.TempDir()
+	fake := filepath.Join(binDir, "ctx")
+	if err := os.WriteFile(fake, []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
+		t.Fatalf("seed fake ctx: %v", err)
+	}
+	t.Setenv("PATH", binDir)
+
+	cmdArr := launchCommand()
+	if got := len(cmdArr); got != 3 {
+		t.Fatalf("command length = %d, want 3", got)
+	}
+	script := cmdArr[2]
+	wantQuoted := "'" + fake + "' 'mcp' 'serve'"
+	if !strings.Contains(script, wantQuoted) {
+		t.Fatalf("launch script does not embed absolute binary path: got %q, want substring %q", script, wantQuoted)
+	}
+}
+
 func TestEnsureMCPConfig_ReturnsOnNonNotExistReadError(t *testing.T) {
 	home := setOpenCodeHome(t)
 	configDir := configPath(home)

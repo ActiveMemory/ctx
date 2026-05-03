@@ -87,7 +87,7 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	}
 	data = append(data, token.NewlineLF...)
 
-	writeFileErr := io.SafeWriteFile(
+	writeFileErr := io.SafeWriteFileAtomic(
 		target, data, fs.PermFile,
 	)
 	if writeFileErr != nil {

@@ -24,6 +24,8 @@ import (
 	mcpServer "github.com/ActiveMemory/ctx/internal/config/mcp/server"
 	cfgShell "github.com/ActiveMemory/ctx/internal/config/shell"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errSetup "github.com/ActiveMemory/ctx/internal/err/setup"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
@@ -125,11 +127,11 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	if readErr == nil {
 		if len(bytes.TrimSpace(data)) > 0 {
 			if jErr := json.Unmarshal(data, &existing); jErr != nil {
-				return jErr
+				return errSetup.MarshalConfig(jErr)
 			}
 		}
 	} else if !os.IsNotExist(readErr) {
-		return readErr
+		return errFs.FileRead(target, readErr)
 	}
 
 	servers, _ := existing[cfgHook.KeyMCP].(map[string]interface{})
@@ -146,11 +148,11 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 		if existingMap, mapOK := existingServer.(map[string]interface{}); mapOK {
 			current, marshalErr := json.Marshal(existingMap)
 			if marshalErr != nil {
-				return marshalErr
+				return errSetup.MarshalConfig(marshalErr)
 			}
 			expected, marshalErr := json.Marshal(newServer)
 			if marshalErr != nil {
-				return marshalErr
+				return errSetup.MarshalConfig(marshalErr)
 			}
 			if bytes.Equal(current, expected) {
 				writeSetup.InfoOpenCodeSkipped(cmd, target)
@@ -165,22 +167,21 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	// Ensure the directory exists.
 	dir := filepath.Dir(target)
 	if mkErr := ctxIo.SafeMkdirAll(dir, fs.PermExec); mkErr != nil {
-		return mkErr
+		return errFs.Mkdir(dir, mkErr)
 	}
 
 	out, marshalErr := json.MarshalIndent(
 		existing, "", token.Indent2,
 	)
 	if marshalErr != nil {
-		return marshalErr
+		return errSetup.MarshalConfig(marshalErr)
 	}
 	out = append(out, token.NewlineLF...)
 
-	writeFileErr := ctxIo.SafeWriteFile(
+	if writeFileErr := ctxIo.SafeWriteFileAtomic(
 		target, out, fs.PermFile,
-	)
-	if writeFileErr != nil {
-		return writeFileErr
+	); writeFileErr != nil {
+		return errFs.FileWrite(target, writeFileErr)
 	}
 	writeSetup.InfoOpenCodeCreated(cmd, target)
 	return nil
