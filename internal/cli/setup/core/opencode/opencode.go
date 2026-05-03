@@ -39,9 +39,11 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	if mcpErr := ensureMCPConfig(cmd); mcpErr != nil {
-		writeErr.WarnFile(
-			cmd, cfgSetup.MCPConfigPathOpenCode, mcpErr,
-		)
+		mcpPath, _ := globalConfigPath()
+		if mcpPath == "" {
+			mcpPath = cfgSetup.MCPConfigPathOpenCode
+		}
+		writeErr.WarnFile(cmd, mcpPath, mcpErr)
 	}
 
 	if agentsErr := coreAgents.Deploy(cmd); agentsErr != nil {

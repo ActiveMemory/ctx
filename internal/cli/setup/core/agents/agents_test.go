@@ -79,8 +79,8 @@ Do local things.`
 	}
 
 	var buf bytes.Buffer
-	if err := Deploy(testCmd(&buf)); err != nil {
-		t.Fatalf("Deploy() error = %v", err)
+	if deployErr := Deploy(testCmd(&buf)); deployErr != nil {
+		t.Fatalf("Deploy() error = %v", deployErr)
 	}
 
 	data, err := os.ReadFile(filepath.Clean("AGENTS.md"))
@@ -110,8 +110,8 @@ custom ctx-managed section
 	}
 
 	var buf bytes.Buffer
-	if err := Deploy(testCmd(&buf)); err != nil {
-		t.Fatalf("Deploy() error = %v", err)
+	if deployErr := Deploy(testCmd(&buf)); deployErr != nil {
+		t.Fatalf("Deploy() error = %v", deployErr)
 	}
 
 	data, err := os.ReadFile(filepath.Clean("AGENTS.md"))

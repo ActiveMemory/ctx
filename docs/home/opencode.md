@@ -53,7 +53,10 @@ This does three things:
 1. **`ctx setup opencode --write`** — generates the project-local OpenCode plugin,
    skills, and `AGENTS.md`, then merges the ctx MCP server into OpenCode's
    global config (`~/.config/opencode/opencode.json` or
-   `$OPENCODE_HOME/opencode.json`)
+   `$OPENCODE_HOME/opencode.json`). This is the only ctx integration that
+   writes a file outside the project root — it's needed because
+   non-interactive shells (like MCP subprocesses) cannot discover
+   project-local config.
 2. **`ctx init`** — creates the `.context/` directory with template files
 3. **`eval "$(ctx activate)"`** — binds `CTX_DIR` for your shell
 
@@ -86,6 +89,24 @@ do anything — it just works.
 The last one matters most. When OpenCode compresses your context window to
 free up tokens, ctx re-injects the full context state. Other tools lose
 everything on compaction. ctx doesn't.
+
+### How Compaction Works
+
+When your conversation exceeds the context window, OpenCode runs a
+compaction pass (you can trigger one manually with `/compact`). The
+compaction agent summarizes older messages and drops the originals. Without
+ctx, all accumulated knowledge disappears. With ctx, the plugin intercepts
+the `experimental.session.compacting` event and appends the latest context
+packet (`ctx agent --budget 4000`) into the compaction context. The result:
+the compressed summary retains your tasks, decisions, learnings, and
+conventions even though the original messages that created them are gone.
+
+### What Is *Not* Included
+
+Note: dangerous-command blocking is Claude Code-specific and is not part of
+the OpenCode integration. OpenCode's execution model (explicit user
+approval for every shell command) makes a pre-execution blocklist
+unnecessary.
 
 ## Slash Commands
 
@@ -123,6 +144,20 @@ read and write your context files without shell commands:
 | `ctx_check_task_completion` | After a write, detect silently completed tasks |
 
 You don't invoke these yourself. The agent uses them as needed.
+
+## Refreshing the Integration
+
+If you re-run `ctx setup opencode --write` (e.g., after updating ctx), the
+plugin and skills are rewritten in place. **Restart OpenCode to pick up the
+refreshed plugin** — OpenCode only loads plugins at launch, not mid-session.
+
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| `opencode mcp list` shows `ctx ✗ failed MCP error -32000: Connection closed` | `CTX_DIR` not resolving in the MCP subprocess | Re-run `ctx setup opencode --write` to regenerate the sh-wrapper that sets `CTX_DIR` |
+| Plugin installed but no hooks fire | Flat-file vs. subdirectory discovery mismatch (OpenCode requires `.opencode/plugins/<name>.ts`, not a subfolder) | Verify the plugin is at `.opencode/plugins/ctx.ts`. Check with `opencode --print-logs --log-level DEBUG` |
+| `ctx agent` markdown leaking into the TUI | BunShell command missing `.nothrow().quiet()` | Update to the latest plugin: `ctx setup opencode --write` and restart |
 
 ## Verify It Works
 
