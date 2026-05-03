@@ -8,12 +8,12 @@ package bootstrap
 
 import (
 	"github.com/ActiveMemory/ctx/internal/cli/activate"
-	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
 	"github.com/ActiveMemory/ctx/internal/cli/change"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
 	"github.com/ActiveMemory/ctx/internal/cli/connection"
+	"github.com/ActiveMemory/ctx/internal/cli/convention"
 	"github.com/ActiveMemory/ctx/internal/cli/deactivate"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
@@ -71,15 +71,15 @@ func gettingStarted() []registration {
 //
 // These commands operate on the full set of context source-of-truth
 // files (TASKS.md, DECISIONS.md, LEARNINGS.md, CONVENTIONS.md):
-// adding entries, loading for agents, formatting, reconciling with
-// the codebase, detecting drift, and archiving completed work.
+// loading for agents, formatting, reconciling with the codebase,
+// detecting drift, and archiving completed work. Per-noun add
+// commands live under the artifacts group as ctx <noun> add.
 //
 // Returns:
-//   - []registration: Add, load, agent, skill, sync, drift,
-//     compact, and fmt commands
+//   - []registration: Load, agent, skill, sync, drift, compact,
+//     and fmt commands
 func contextCmds() []registration {
 	return []registration{
-		{add.Cmd, embedCmd.GroupContext},
 		{load.Cmd, embedCmd.GroupContext},
 		{agent.Cmd, embedCmd.GroupContext},
 		{skill.Cmd, embedCmd.GroupContext},
@@ -93,18 +93,20 @@ func contextCmds() []registration {
 // artifacts returns command registrations for the artifacts group.
 //
 // These commands operate on specific artifact files inside
-// .context/: the DECISIONS.md, LEARNINGS.md, and TASKS.md
-// stores, plus the `reindex` shortcut that rebuilds the
-// decision/learning index tables in a single call.
+// .context/: the DECISIONS.md, LEARNINGS.md, TASKS.md, and
+// CONVENTIONS.md stores, plus the `reindex` shortcut that
+// rebuilds the decision/learning index tables in a single call.
+// Each noun parent owns its add subcommand (ctx <noun> add).
 //
 // Returns:
-//   - []registration: Decision, learning, task, and reindex
-//     commands
+//   - []registration: Decision, learning, task, convention,
+//     and reindex commands
 func artifacts() []registration {
 	return []registration{
 		{decision.Cmd, embedCmd.GroupArtifacts},
 		{learning.Cmd, embedCmd.GroupArtifacts},
 		{task.Cmd, embedCmd.GroupArtifacts},
+		{convention.Cmd, embedCmd.GroupArtifacts},
 		{reindex.Cmd, embedCmd.GroupArtifacts},
 	}
 }

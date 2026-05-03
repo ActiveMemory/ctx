@@ -34,8 +34,6 @@
 //     returns its index.
 //   - [ContainsEndComment] checks for a comment close
 //     marker and returns its index.
-//   - [StartsWithCtxMarker] reports whether a string
-//     starts with a ctx start or end marker comment.
 //
 // # Design
 //

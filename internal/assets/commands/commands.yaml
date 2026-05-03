@@ -43,41 +43,29 @@ deactivate:
 
     Pairs with `ctx activate` for symmetric shell integration.
   short: Emit shell unset for CTX_DIR
-add:
+convention:
   long: |-
-    Add a new decision, task, learning, or convention
-    to the appropriate context file.
+    Manage the CONVENTIONS.md file.
 
-    Types:
-      decision    Add to DECISIONS.md (requires --session-id, --branch, --commit, --context, --rationale, --consequence)
-      learning    Add to LEARNINGS.md (requires --session-id, --branch, --commit, --context, --lesson, --application)
-      task        Add to TASKS.md (requires --session-id, --branch, --commit)
-      convention  Add to CONVENTIONS.md
+    Subcommands:
+      add    Add a new convention entry to CONVENTIONS.md
+  short: Manage CONVENTIONS.md file
+convention.add:
+  long: |-
+    Add a new convention entry to CONVENTIONS.md.
 
-    Provenance flags (--session-id, --branch, --commit) are required for
-    task, decision, and learning entries. They link entries to the AI
-    session and code state that created them.
+    Conventions capture team or project-wide coding patterns and standards.
+    They appear as list items at the end of the file.
 
     Content can be provided as:
-      - Command argument: ctx add learning "title here"
-      - File: ctx add learning --file /path/to/content.md
-      - Stdin: echo "title" | ctx add learning
+      - Command argument: ctx convention add "title here"
+      - File: ctx convention add --file /path/to/content.md
+      - Stdin: echo "title" | ctx convention add
 
     Examples:
-      ctx add decision "Use PostgreSQL" \
-        --session-id abc12345 --branch main --commit 68fbc00a \
-        --context "Need a reliable database for production" \
-        --rationale "PostgreSQL offers ACID compliance and JSON support" \
-        --consequence "Team needs PostgreSQL training"
-      ctx add learning "Go embed requires files in same package" \
-        --session-id abc12345 --branch main --commit 68fbc00a \
-        --context "Tried to embed files from parent directory" \
-        --lesson "go:embed only works with files in same or child directories" \
-        --application "Keep embedded files in internal/templates/, not project root"
-      ctx add task "Implement user authentication" \
-        --session-id abc12345 --branch main --commit 68fbc00a \
-        --priority high
-  short: Add a new item to a context file
+      ctx convention add "Use camelCase for function names"
+      ctx convention add "All API responses use JSON"
+  short: Add a new convention entry to CONVENTIONS.md
 agent:
   long: |-
     Print a concise context packet optimized for AI consumption.
@@ -265,14 +253,41 @@ decision:
     Manage the DECISIONS.md file and its quick-reference index.
 
     The decisions file maintains an auto-generated index at the top for quick
-    scanning. Use the subcommands to manage this index.
+    scanning. Use the subcommands to add entries and manage the index.
 
     Subcommands:
+      add        Add a new decision entry to DECISIONS.md
       reindex    Regenerate the quick-reference index
 
     Examples:
+      ctx decision add "Use PostgreSQL" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
+        --context "Need a reliable database" \
+        --rationale "ACID compliance and JSON support" \
+        --consequence "Team needs PostgreSQL training"
       ctx decision reindex
   short: Manage DECISIONS.md file
+decision.add:
+  long: |-
+    Add a new decision entry to DECISIONS.md.
+
+    Required flags: --session-id, --branch, --commit, --context,
+    --rationale, --consequence. These link the decision to the AI
+    session and code state that created it, and capture the
+    structured ADR-style content.
+
+    Content (the decision title) can be provided as:
+      - Command argument: ctx decision add "title here"
+      - File: ctx decision add --file /path/to/content.md
+      - Stdin: echo "title" | ctx decision add
+
+    Examples:
+      ctx decision add "Use PostgreSQL for primary database" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
+        --context "Need a reliable database for production" \
+        --rationale "PostgreSQL offers ACID compliance and JSON support" \
+        --consequence "Team needs PostgreSQL training"
+  short: Add a new decision entry to DECISIONS.md
 decision.reindex:
   long: |-
     Regenerate the quick-reference index at the top of DECISIONS.md.
@@ -542,14 +557,41 @@ learning:
     Manage the LEARNINGS.md file and its quick-reference index.
 
     The learning file maintains an auto-generated index at the top for quick
-    scanning. Use the subcommands to manage this index.
+    scanning. Use the subcommands to add entries and manage the index.
 
     Subcommands:
+      add        Add a new learning entry to LEARNINGS.md
       reindex    Regenerate the quick-reference index
 
     Examples:
+      ctx learning add "Go embed gotcha" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
+        --context "Tried to embed files from parent directory" \
+        --lesson "go:embed only works with files in same or child directories" \
+        --application "Keep embedded files in internal/templates/"
       ctx learning reindex
   short: Manage LEARNINGS.md file
+learning.add:
+  long: |-
+    Add a new learning entry to LEARNINGS.md.
+
+    Required flags: --session-id, --branch, --commit, --context,
+    --lesson, --application. These link the learning to the AI
+    session and code state that created it, and capture the
+    structured context/lesson/application content.
+
+    Content (the learning title) can be provided as:
+      - Command argument: ctx learning add "title here"
+      - File: ctx learning add --file /path/to/content.md
+      - Stdin: echo "title" | ctx learning add
+
+    Examples:
+      ctx learning add "Go embed requires files in same package" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
+        --context "Tried to embed files from parent directory" \
+        --lesson "go:embed only works with files in same or child directories" \
+        --application "Keep embedded files in internal/templates/, not project root"
+  short: Add a new learning entry to LEARNINGS.md
 learning.reindex:
   long: |-
     Regenerate the quick-reference index at the top of LEARNINGS.md.
@@ -1484,16 +1526,43 @@ usage:
   short: Show session token usage
 task:
   long: |-
-    Manage task archival and snapshots.
-
-    Tasks can be archived to move completed items out of TASKS.md while
-    preserving them for historical reference. Snapshots create point-in-time
-    copies without modifying the original.
+    Manage TASKS.md entries.
 
     Subcommands:
+      add       Add a new task entry to TASKS.md
+      complete  Mark a task as completed
       archive   Move completed tasks to timestamped archive file
       snapshot  Create point-in-time snapshot of TASKS.md
-  short: Manage task archival and snapshots
+
+    Examples:
+      ctx task add "Implement user authentication" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
+        --priority high
+      ctx task complete 3
+      ctx task archive
+  short: Manage TASKS.md entries
+task.add:
+  long: |-
+    Add a new task entry to TASKS.md.
+
+    Provenance flags (--session-id, --branch, --commit) are required;
+    they link the task to the AI session and code state that created it.
+    Use --priority to set high/medium/low and --section to target a
+    specific phase header.
+
+    Content can be provided as:
+      - Command argument: ctx task add "title here"
+      - File: ctx task add --file /path/to/content.md
+      - Stdin: echo "title" | ctx task add
+
+    Examples:
+      ctx task add "Implement user authentication" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
+        --priority high
+      ctx task add "Fix login bug" \
+        --session-id abc12345 --branch main --commit 68fbc00a \
+        --priority high --section "Phase 1"
+  short: Add a new task entry to TASKS.md
 task.archive:
   long: |-
     Move completed tasks from TASKS.md to an archive file.

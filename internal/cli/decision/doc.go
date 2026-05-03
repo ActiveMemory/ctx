@@ -15,6 +15,10 @@
 //
 // # Subcommands
 //
+//   - add: appends a new decision entry with structured
+//     ADR-style fields (context, rationale, consequence)
+//     plus required provenance metadata (session-id, branch,
+//     commit)
 //   - reindex: scans DECISIONS.md entries and regenerates
 //     the index table at the top of the file, ensuring
 //     numbering and summaries stay consistent with the
@@ -22,5 +26,6 @@
 //
 // # Subpackages
 //
+//	cmd/add: cobra command for noun-first decision addition
 //	cmd/reindex: cobra command for index regeneration
 package decision
