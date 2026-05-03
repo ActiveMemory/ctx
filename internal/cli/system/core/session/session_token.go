@@ -63,6 +63,13 @@ func ReadTokenInfo(sessionID string) (entity.TokenInfo, error) {
 // Caches the result in StateDir()/jsonl-path-{sessionID} so the glob
 // runs once per session.
 //
+// Bails when the context directory is not initialized: hooks fire
+// from many entry points (including provenance.Emit, which is
+// intentionally unconditional) and we must not materialize
+// .context/state/ as a side effect of glob caching in projects that
+// have never run ctx init. Returns ("", nil) — caller treats as
+// "no token data" and proceeds.
+//
 // Parameters:
 //   - sessionID: The Claude Code session ID
 //
@@ -70,7 +77,10 @@ func ReadTokenInfo(sessionID string) (entity.TokenInfo, error) {
 //   - string: Path to the JSONL file, or empty if not found
 //   - error: Non-nil only on unexpected errors
 func FindJSONLPath(sessionID string) (string, error) {
-	// Check cache first
+	if initialized, _ := state.Initialized(); !initialized {
+		return "", nil
+	}
+
 	stateDir, dirErr := state.Dir()
 	if dirErr != nil {
 		return "", dirErr
