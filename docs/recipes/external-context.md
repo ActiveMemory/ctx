@@ -272,7 +272,7 @@ Your AI assistant can do this too. When ending a session:
 ```text
 You: "Save what we learned and push the context repo."
 
-Agent: [runs ctx add learning, then commits and pushes the context repo]
+Agent: [runs ctx learning add, then commits and pushes the context repo]
 ```
 
 You can also set up a post-session habit: project code gets committed to the

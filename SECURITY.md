@@ -77,7 +77,7 @@ the current user can be supplied. This is by design: `ctx` runs as the local
 user and does not elevate privileges.
 
 In an AI-agent context, be aware that a confused or prompt-injected agent
-could be instructed to run `ctx add task --file /etc/shadow`, which would
+could be instructed to run `ctx task add --file /etc/shadow`, which would
 copy that file's contents into `.context/TASKS.md`. Hooks and constitution
 rules are the appropriate mitigation layer here.
 

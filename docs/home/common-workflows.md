@@ -32,18 +32,18 @@ For deeper, step-by-step guides, see [Recipes](../recipes/index.md).
 
 ```bash
 # Add a task
-ctx add task "Implement user authentication" \
+ctx task add "Implement user authentication" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Record a decision (full ADR fields required)
-ctx add decision "Use PostgreSQL for primary database" \
+ctx decision add "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
   --consequence "Team needs PostgreSQL training" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Note a learning
-ctx add learning "Mock functions must be hoisted in Jest" \
+ctx learning add "Mock functions must be hoisted in Jest" \
   --context "Tests failed with undefined mock errors" \
   --lesson "Jest hoists mock calls to top of file" \
   --application "Place jest.mock() before imports" \
@@ -326,10 +326,10 @@ agent's judgment.
 |----------------------|-----------------------|------------------------------------------------------------|
 | `ctx drift`          | `/ctx-drift`          | Semantic analysis: catches meaning drift the CLI misses    |
 | `ctx status`         | `/ctx-status`         | Interpreted summary with recommendations                   |
-| `ctx add task`       | `/ctx-task-add`       | Agent decomposes vague goals into concrete tasks           |
-| `ctx add decision`   | `/ctx-decision-add`   | Agent drafts rationale and consequences from discussion    |
-| `ctx add learning`   | `/ctx-learning-add`   | Agent extracts the lesson from a debugging session         |
-| `ctx add convention` | `/ctx-convention-add` | Agent observes a repeated pattern and codifies it          |
+| `ctx task add`       | `/ctx-task-add`       | Agent decomposes vague goals into concrete tasks           |
+| `ctx decision add`   | `/ctx-decision-add`   | Agent drafts rationale and consequences from discussion    |
+| `ctx learning add`   | `/ctx-learning-add`   | Agent extracts the lesson from a debugging session         |
+| `ctx convention add` | `/ctx-convention-add` | Agent observes a repeated pattern and codifies it          |
 | `ctx task archive`  | `/ctx-archive`        | Agent reviews which tasks are truly done                   |
 | `ctx pad`            | `/ctx-pad`            | Agent reads/writes scratchpad entries in conversation flow |
 | `ctx journal`         | `/ctx-history`         | Agent searches session history with semantic understanding |

@@ -45,27 +45,27 @@ ctx add <type> <content> [flags]
 
 ```bash
 # Add a task
-ctx add task "Implement user authentication" \
+ctx task add "Implement user authentication" \
   --session-id abc12345 --branch main --commit 68fbc00a
-ctx add task "Fix login bug" --priority high \
+ctx task add "Fix login bug" --priority high \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Record a decision (requires all ADR (Architectural Decision Record) fields)
-ctx add decision "Use PostgreSQL for primary database" \
+ctx decision add "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
   --consequence "Team needs PostgreSQL training" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Note a learning (requires context, lesson, and application)
-ctx add learning "Vitest mocks must be hoisted" \
+ctx learning add "Vitest mocks must be hoisted" \
   --context "Tests failed with undefined mock errors" \
   --lesson "Vitest hoists vi.mock() calls to top of file" \
   --application "Always place vi.mock() before imports in test files" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Add to specific section
-ctx add convention "Use kebab-case for filenames" --section "Naming"
+ctx convention add "Use kebab-case for filenames" --section "Naming"
 ```
 
 ---

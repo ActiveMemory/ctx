@@ -99,7 +99,7 @@ ctx connect status
 Use `--share` on `ctx add` to write locally AND publish to the hub:
 
 ```bash
-ctx add decision "Use UTC" --share \
+ctx decision add "Use UTC" --share \
   --context "Need consistency" \
   --rationale "Avoid timezone bugs" \
   --consequence "UI does conversion"
