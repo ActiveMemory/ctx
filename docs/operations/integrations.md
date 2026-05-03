@@ -605,12 +605,12 @@ eval "$(ctx activate)"
 
 The plugin wires OpenCode lifecycle events to `ctx system`:
 
-- **`session.created`** — bootstraps ctx in the background so MCP/tools are ready for on-demand context access
+- **`session.created`** — warms ctx state in the background (bootstrap + agent packet) so MCP queries are fast on first use
 - **`tool.execute.after` (shell, on `git commit`)** — runs `ctx system post-commit`
-- **`tool.execute.after` (edit/write)** — `check-task-completion` nudge
-- **`session.idle`** — persistence and task completion nudges
-- **`shell.env`** — injects `CTX_DIR` to the project's `.context` path
-- **`experimental.session.compacting`** — re-injects context state across compaction
+- **`tool.execute.after` (edit/write)** — runs `ctx system check-task-completion`
+- **`session.idle`** — runs persistence and task-completion checks (silent: output is buffered, not surfaced to the TUI)
+- **`shell.env`** — injects `CTX_DIR` into the agent's shell so `ctx` commands resolve to the right project
+- **`experimental.session.compacting`** — pushes `ctx system bootstrap` output into the compaction context so the agent keeps breadcrumbs back to `.context/`
 
 The plugin is a single file with no runtime dependencies — no `bun install`
 needed. OpenCode loads it automatically on launch.

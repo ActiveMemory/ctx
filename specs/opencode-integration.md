@@ -113,11 +113,15 @@ FileOpenCodeJSON   = "opencode.json"
 
 Add:
 ```go
-DisplayOpenCode      = "OpenCode"
 MCPConfigPathOpenCode = "~/.config/opencode/opencode.json"
-PluginPathOpenCode    = ".opencode/plugins/ctx.ts"
 SkillsPathOpenCode    = ".opencode/skills/"
 ```
+
+The plugin deploy path is composed at the call site from
+`cfgHook.DirOpenCode + cfgHook.DirOpenCodePlugins +
+cfgHook.FileOpenCodePluginDeploy`, not pinned as a flat constant —
+the per-component constants already exist in `cfgHook` and
+re-flattening them would create two sources of truth.
 
 ### 6. Text Description Keys (`internal/config/embed/text/hook.go`)
 
@@ -176,8 +180,11 @@ internal/cli/setup/core/opencode/
 ├── opencode.go      # Deploy() entry point (delegates AGENTS to core/agents)
 ├── plugin.go        # deployPlugin() — writes .opencode/plugins/ctx.ts
 ├── mcp.go           # ensureMCPConfig() — merges global OpenCode config
-└── skill.go         # deploySkills() — writes .opencode/skills/
+├── skill.go         # deploySkills() — writes .opencode/skills/
+└── validate.go      # validateManagedTarget() — refresh-vs-reject gate
 ```
+
+Plus colocated tests: `deploy_test.go`, `mcp_test.go`, `testmain_test.go`.
 
 **`opencode.go` — Deploy()**:
 ```go

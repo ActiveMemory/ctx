@@ -29,6 +29,12 @@ const EDIT_TOOLS = new Set(["edit", "write", "file_edit"])
 // The negative lookahead rejects `-` immediately after the boundary.
 const GIT_COMMIT_RE = /\bgit\s+commit\b(?!-)/
 
+// extractCommand pulls the shell command string out of a tool.execute.after
+// input. Today the OpenCode SDK's bash tool sends args as either a raw
+// string or { command: string }. If a future SDK bump sends command as
+// an array (e.g. ["git", "commit"]), this returns "" and the post-commit
+// regex will silently miss — verify against the SDK type definitions
+// when bumping @opencode-ai/plugin.
 function extractCommand(input: unknown): string {
   if (typeof input === "string") return input
   if (input && typeof input === "object") {

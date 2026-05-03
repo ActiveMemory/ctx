@@ -79,16 +79,18 @@ do anything — it just works.
 
 | Event | What fires | What it does |
 |-------|-----------|--------------|
-| New session | `session.created` | Bootstraps ctx in the background so tools and hooks are ready for on-demand context access |
-| Agent idle | `session.idle` | Nudges you to persist context; checks if recent edits completed any pending tasks |
-| After `git commit` | `tool.execute.after` | Captures post-commit context state |
-| After file edit | `tool.execute.after` | Detects if the edit completed a tracked task |
-| Every shell call | `shell.env` | Injects `CTX_DIR` so all `ctx` commands resolve correctly |
-| Context compaction | `experimental.session.compacting` | Re-injects context state into the compressed window — your memory survives compaction |
+| New session | `session.created` | Warms ctx state in the background (bootstrap + agent packet) so MCP queries are fast on first use |
+| Agent idle | `session.idle` | Runs persistence and task-completion checks (silent — output is buffered, not surfaced to the TUI) |
+| After `git commit` | `tool.execute.after` | Runs `ctx system post-commit` to capture context state |
+| After file edit | `tool.execute.after` | Runs `ctx system check-task-completion` to detect silent task completions |
+| Every shell call | `shell.env` | Injects `CTX_DIR` so all `ctx` commands in the agent's shell resolve to the right project |
+| Context compaction | `experimental.session.compacting` | Pushes `ctx system bootstrap` output into the compaction context so the agent retains breadcrumbs to re-read context files post-compaction |
 
-The last one matters most. When OpenCode compresses your context window to
-free up tokens, ctx re-injects the full context state. Other tools lose
-everything on compaction. ctx doesn't.
+The compaction hook matters most. When OpenCode compresses your context
+window to free up tokens, the plugin makes sure the compressed summary
+includes a pointer back to your `.context/` directory and its file
+inventory — so the agent can re-read tasks, decisions, and learnings on
+demand, even though the original messages are gone.
 
 ### How Compaction Works
 
