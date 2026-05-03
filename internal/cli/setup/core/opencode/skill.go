@@ -10,6 +10,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"github.com/spf13/cobra"
 
@@ -40,7 +41,17 @@ func deploySkills(cmd *cobra.Command) error {
 		cfgHook.DirOpenCode, cfgHook.DirOpenCodeSkills,
 	)
 
-	for name, content := range skills {
+	// Iterate in sorted order so deploy is deterministic and tests
+	// that plant blocking files at a specific skill path observe a
+	// stable filesystem state on partial-failure paths.
+	names := make([]string, 0, len(skills))
+	for name := range skills {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+
+	for _, name := range names {
+		content := skills[name]
 		skillDir := filepath.Join(skillsBase, name)
 		target := filepath.Join(skillDir, cfgHook.FileSKILLMd)
 		if _, validateErr := validateManagedTarget(target); validateErr != nil {

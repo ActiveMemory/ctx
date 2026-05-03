@@ -7,6 +7,8 @@
 package opencode
 
 import (
+	"path/filepath"
+
 	"github.com/spf13/cobra"
 
 	coreAgents "github.com/ActiveMemory/ctx/internal/cli/setup/core/agents"
@@ -53,9 +55,10 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	if skillErr := deploySkills(cmd); skillErr != nil {
-		writeErr.WarnFile(
-			cmd, cfgSetup.SkillsPathOpenCode, skillErr,
+		skillsBase := filepath.Join(
+			cfgHook.DirOpenCode, cfgHook.DirOpenCodeSkills,
 		)
+		writeErr.WarnFile(cmd, skillsBase, skillErr)
 	}
 
 	writeSetup.InfoOpenCodeSummary(cmd)
