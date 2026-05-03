@@ -101,10 +101,10 @@ For each approved candidate, run the appropriate command:
 
 | Type        | Command                                                                                                                         |
 |-------------|--------------------------------------------------------------------------------------------------------------------------------|
-| Learning    | `ctx add learning "Title" --session-id ID --branch BR --commit HASH --context "..." --lesson "..." --application "..."`    |
-| Decision    | `ctx add decision "Title" --session-id ID --branch BR --commit HASH --context "..." --rationale "..." --consequence "..."` |
-| Convention  | `ctx add convention "Description"`                                                                                               |
-| Task (new)  | `ctx add task "Description" --session-id ID --branch BR --commit HASH`                                                     |
+| Learning    | `ctx learning add "Title" --session-id ID --branch BR --commit HASH --context "..." --lesson "..." --application "..."`    |
+| Decision    | `ctx decision add "Title" --session-id ID --branch BR --commit HASH --context "..." --rationale "..." --consequence "..."` |
+| Convention  | `ctx convention add "Description"`                                                                                               |
+| Task (new)  | `ctx task add "Description" --session-id ID --branch BR --commit HASH`                                                     |
 | Task (done) | Edit TASKS.md to mark complete                                                   |
 
 Report the result of each command. If any fail, report the error

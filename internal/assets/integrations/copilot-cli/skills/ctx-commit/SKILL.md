@@ -106,7 +106,7 @@ Wait for the user's response. If they provide a decision or
 learning, record it using the appropriate command:
 
 ```bash
-ctx add decision "Use PostgreSQL" \
+ctx decision add "Use PostgreSQL" \
   --session-id abc12345 --branch main --commit 68fbc00a \
   --context "Need a reliable database" \
   --rationale "ACID compliance and JSON support" \
@@ -114,7 +114,7 @@ ctx add decision "Use PostgreSQL" \
 ```
 
 ```bash
-ctx add learning "Go embed requires files in same package" \
+ctx learning add "Go embed requires files in same package" \
   --session-id abc12345 --branch main --commit 68fbc00a \
   --context "..." --lesson "..." --application "..."
 ```

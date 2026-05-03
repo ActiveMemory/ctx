@@ -62,7 +62,7 @@ that were accepted during a specific debugging session:
 
 ```
 Bash(git -C /home/jose/WORKSPACE/ctx log --oneline --all -20)
-Bash(/home/jose/WORKSPACE/ctx/ctx add decision "Use PostgreSQL" --context ...)
+Bash(/home/jose/WORKSPACE/ctx/ctx decision add "Use PostgreSQL" --context ...)
 ```
 
 Signs of a one-off:

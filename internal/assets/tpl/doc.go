@@ -19,7 +19,7 @@
 //   - **`tpl_entry.go`**: the canonical TASKS.md task
 //     line and its inline tags (`#priority:`,
 //     `#session:`, `#branch:`, `#commit:`, `#added:`).
-//     Used by `ctx add task`.
+//     Used by `ctx task add`.
 //   - **`tpl_hub_entry.go`**: markdown rendering of one
 //     hub entry (date header + origin tag + content
 //     body + horizontal rule). Consumed by

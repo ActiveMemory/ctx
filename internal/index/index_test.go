@@ -397,7 +397,7 @@ func TestUpdateLearnings(t *testing.T) {
 
 ## [2026-01-28-191951] Required flags now enforced
 
-**Context**: Implemented ctx add learning flags
+**Context**: Implemented ctx learning add flags
 
 **Lesson**: Structured entries are more useful
 

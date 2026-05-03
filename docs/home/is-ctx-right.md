@@ -117,7 +117,7 @@ ctx init
 eval "$(ctx activate)"
 
 # 3. Add one real decision from your project
-ctx add decision "Your actual architectural choice" \
+ctx decision add "Your actual architectural choice" \
   --context "What prompted this decision" \
   --rationale "Why you chose this approach" \
   --consequence "What changes as a result" \

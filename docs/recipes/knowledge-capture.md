@@ -45,9 +45,9 @@ Or just tell your agent: *"What have we learned this session?"*
 
 | Tool                   | Type    | Purpose                                       |
 |------------------------|---------|-----------------------------------------------|
-| `ctx add decision`     | Command | Record an architectural decision              |
-| `ctx add learning`     | Command | Record a gotcha, tip, or lesson               |
-| `ctx add convention`   | Command | Record a coding pattern or standard           |
+| `ctx decision add`     | Command | Record an architectural decision              |
+| `ctx learning add`     | Command | Record a gotcha, tip, or lesson               |
+| `ctx convention add`   | Command | Record a coding pattern or standard           |
 | `ctx reindex`          | Command | Rebuild both quick-reference indices          |
 | `ctx decision reindex` | Command | Rebuild the DECISIONS.md index                |
 | `ctx learning reindex` | Command | Rebuild the LEARNINGS.md index                |
@@ -122,7 +122,7 @@ and against [alternatives], to achieve [benefit], accepting that [trade-off].*"
     use the CLI directly with structured flags:
 
     ```bash
-    ctx add decision "Use file-based cooldown tokens instead of env vars" \
+    ctx decision add "Use file-based cooldown tokens instead of env vars" \
       --context "Hook subprocesses cannot persist env vars to parent shell" \
       --rationale "File tokens survive across processes. Simpler than IPC. Cleanup is automatic via TTL." \
       --consequence "Tombstone files accumulate in /tmp. Cannot share state across machines." \
@@ -170,7 +170,7 @@ The `/ctx-learning-add` skill applies three quality filters:
     When no agent is in the loop:
 
     ```bash
-    ctx add learning "Claude Code hooks run in a subprocess" \
+    ctx learning add "Claude Code hooks run in a subprocess" \
       --context "Set env var in PreToolUse hook, but it was not visible in the main session" \
       --lesson "Hook scripts execute in a child process. Env changes do not propagate to parent." \
       --application "Use tombstone files for hook-to-session communication. Never rely on hook env vars." \
@@ -193,7 +193,7 @@ Agent: "Added to CONVENTIONS.md under Naming:
 Or from the terminal:
 
 ```bash
-ctx add convention "Use kebab-case for all CLI flag names" --section "Naming"
+ctx convention add "Use kebab-case for all CLI flag names" --section "Naming"
 ```
 
 Conventions work best for rules that come up repeatedly. Codify a pattern the
@@ -247,9 +247,9 @@ discovered that hook subprocesses cannot set env vars in the parent.
 
 I'd suggest persisting:
 - **Learning**: Hook subprocesses cannot propagate env vars
-  `ctx add learning "..." --context "..." --lesson "..." --application "..." --session-id abc12345 --branch main --commit 68fbc00a`
+  `ctx learning add "..." --context "..." --lesson "..." --application "..." --session-id abc12345 --branch main --commit 68fbc00a`
 - **Decision**: File-based cooldown tokens over env vars
-  `ctx add decision "..." --context "..." --rationale "..." --consequence "..." --session-id abc12345 --branch main --commit 68fbc00a`
+  `ctx decision add "..." --context "..." --rationale "..." --consequence "..." --session-id abc12345 --branch main --commit 68fbc00a`
 
 Want me to persist any of these?
 ```
@@ -319,21 +319,21 @@ rather than waiting for explicit instructions.
 
 ```bash
 # Decision: record the trade-off
-ctx add decision "Use PostgreSQL over SQLite" \
+ctx decision add "Use PostgreSQL over SQLite" \
   --context "Need concurrent multi-user access" \
   --rationale "SQLite locks on writes; Postgres handles concurrency" \
   --consequence "Requires a database server; team needs Postgres training" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Learning: record the gotcha
-ctx add learning "SQL migrations must be idempotent" \
+ctx learning add "SQL migrations must be idempotent" \
   --context "Deploy failed when migration ran twice after rollback" \
   --lesson "CREATE TABLE without IF NOT EXISTS fails on retry" \
   --application "Always use IF NOT EXISTS guards in migrations" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Convention: record the pattern
-ctx add convention "API handlers return structured errors" --section "API"
+ctx convention add "API handlers return structured errors" --section "API"
 
 # Reindex after manual edits
 ctx reindex
