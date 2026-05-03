@@ -24,6 +24,7 @@ and recent activity.
 
 ```text
 /ctx-status
-/ctx-status --verbose
-/ctx-status --json
 ```
+
+The slash command takes no arguments. For verbose or JSON output, ask the
+agent to run `ctx status --verbose` or `ctx status --json` directly.
