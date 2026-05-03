@@ -11,24 +11,30 @@ icon: lucide/layers
 
 ![ctx](../images/ctx-banner.png)
 
-### `ctx add`
+### Adding entries
 
-Add a new item to a context file.
+Each context-artifact noun (`task`, `decision`, `learning`,
+`convention`) owns its own `add` subcommand under the
+noun-first command tree:
 
 ```bash
-ctx add <type> <content> [flags]
+ctx task add <content> [flags]
+ctx decision add <content> [flags]
+ctx learning add <content> [flags]
+ctx convention add <content> [flags]
 ```
 
-**Types**:
+**Target files**:
 
-| Type         | Target File      |
-|--------------|------------------|
-| `task`       | `TASKS.md`       |
-| `decision`   | `DECISIONS.md`   |
-| `learning`   | `LEARNINGS.md`   |
-| `convention` | `CONVENTIONS.md` |
+| Subcommand              | Target File      |
+|-------------------------|------------------|
+| `ctx task add`          | `TASKS.md`       |
+| `ctx decision add`      | `DECISIONS.md`   |
+| `ctx learning add`      | `LEARNINGS.md`   |
+| `ctx convention add`    | `CONVENTIONS.md` |
 
-**Flags**:
+**Flags** (shared by every `add` subcommand; per-noun
+required-flag rules surface as command errors):
 
 | Flag                      | Short | Description                                                 |
 |---------------------------|-------|-------------------------------------------------------------|

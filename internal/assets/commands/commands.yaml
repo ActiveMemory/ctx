@@ -480,7 +480,8 @@ initialize:
       ctx init           # Collaborative mode (agent asks questions)
       ctx init --ralph   # Autonomous mode (agent works independently)
       ctx init --minimal # Only essential files (TASKS, DECISIONS, CONSTITUTION)
-      ctx init --force   # Overwrite existing files without prompting
+      ctx init --reset   # Reset existing populated context (interactive,
+                         # backs up to .context/.backup-init-<UTC-ISO>/)
       ctx init --merge   # Auto-merge ctx content into existing files
   short: Initialize a new .context/ directory with template files
 journal:

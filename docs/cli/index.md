@@ -70,16 +70,16 @@ have been initialized by `ctx init` (otherwise commands return
 
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
-| [`ctx add`](context.md#ctx-add)               | Add a task, decision, learning, or convention            |
 | [`ctx load`](context.md#ctx-load)             | Output assembled context in read order                   |
 | [`ctx agent`](context.md#ctx-agent)           | Print token-budgeted context packet for AI consumption   |
 | [`ctx sync`](context.md#ctx-sync)             | Reconcile context with codebase state                    |
 | [`ctx drift`](context.md#ctx-drift)           | Detect stale paths, secrets, missing files               |
 | [`ctx compact`](context.md#ctx-compact)       | Archive completed tasks, clean up files                  |
 | [`ctx fmt`](context.md#ctx-fmt)               | Format context files to 80-char line width               |
-| [`ctx decision`](context.md#ctx-decision)     | Manage `DECISIONS.md` (reindex)                          |
-| [`ctx learning`](context.md#ctx-learning)     | Manage `LEARNINGS.md` (reindex)                          |
-| [`ctx task`](context.md#ctx-task)             | Task completion, archival, and snapshots                 |
+| [`ctx task`](context.md#ctx-task)             | Add tasks, mark complete, archive, snapshot              |
+| [`ctx decision`](context.md#ctx-decision)     | Add decisions and reindex `DECISIONS.md`                 |
+| [`ctx learning`](context.md#ctx-learning)     | Add learnings and reindex `LEARNINGS.md`                 |
+| [`ctx convention`](context.md#ctx-convention) | Add conventions to `CONVENTIONS.md`                      |
 | [`ctx reindex`](context.md#ctx-reindex)       | Regenerate indices for `DECISIONS.md` and `LEARNINGS.md` |
 | [`ctx permission`](context.md#ctx-permission) | Permission snapshots (golden image)                      |
 | [`ctx change`](change.md#ctx-change)          | Show what changed since last session                     |
