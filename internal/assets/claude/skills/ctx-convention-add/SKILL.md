@@ -40,15 +40,15 @@ this alongside it or update the existing one?"*
 ## Execution
 
 ```bash
-ctx add convention "Use kebab-case for all CLI flag names" --section "Naming"
+ctx convention add "Use kebab-case for all CLI flag names" --section "Naming"
 ```
 
 ```bash
-ctx add convention "Use cmd.Printf/cmd.Println for CLI output, never fmt.Printf/fmt.Println" --section "Output"
+ctx convention add "Use cmd.Printf/cmd.Println for CLI output, never fmt.Printf/fmt.Println" --section "Output"
 ```
 
 ```bash
-ctx add convention "Colocate test files with implementation (*_test.go next to *.go)" --section "Testing"
+ctx convention add "Colocate test files with implementation (*_test.go next to *.go)" --section "Testing"
 ```
 
 If no `--section` is provided, the convention is appended to the end
