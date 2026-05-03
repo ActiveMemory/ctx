@@ -72,28 +72,6 @@ func BindBoolFlags(
 	}
 }
 
-// BindBoolFlagsP registers multiple boolean flags that each
-// have a shorthand letter, each defaulting to false. All four
-// slices must have the same length; each index i produces one
-// [BoolFlagP] call. Use this to replace repetitive sequences
-// of individual [BoolFlagP] registrations.
-//
-// Parameters:
-//   - c: Cobra command to register on
-//   - ptrs: Pointers to the bool variables
-//   - names: Flag name constants
-//   - shorts: Shorthand letters
-//   - descKeys: YAML DescKeys for the flag descriptions
-func BindBoolFlagsP(
-	c *cobra.Command,
-	ptrs []*bool,
-	names, shorts, descKeys []string,
-) {
-	for i, p := range ptrs {
-		BoolFlagP(c, p, names[i], shorts[i], descKeys[i])
-	}
-}
-
 // BindStringFlagShorts registers multiple no-pointer string
 // flags that each have a shorthand letter. All three slices
 // must have the same length; each index i produces one

@@ -48,7 +48,7 @@
 // kind in a single call via parallel slices:
 //
 //   - [BindStringFlagsP], [BindStringFlags]
-//   - [BindBoolFlags], [BindBoolFlagsP]
+//   - [BindBoolFlags]
 //   - [BindStringFlagShorts]
 //   - [BindStringFlagsPDefault]
 //
