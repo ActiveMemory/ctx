@@ -87,10 +87,10 @@ After reflecting, provide:
 > I'd suggest persisting:
 > - **Learning**: `$PPID` in PreToolUse hooks resolves to
 >   the Claude Code PID (unique per session)
->   `ctx add learning "Title" --session-id ID --branch BR --commit HASH --context "..." --lesson "..." --application "..."`
+>   `ctx learning add "Title" --session-id ID --branch BR --commit HASH --context "..." --lesson "..." --application "..."`
 > - **Task**: mark "Add cooldown to ctx agent" as done
 > - **Decision**: tombstone-based cooldown with 10m default
->   `ctx add decision "Title" --session-id ID --branch BR --commit HASH --context "..." --rationale "..." --consequence "..."`
+>   `ctx decision add "Title" --session-id ID --branch BR --commit HASH --context "..." --rationale "..." --consequence "..."`
 >
 > Want me to persist any of these?
 
@@ -106,10 +106,10 @@ After reflecting, provide:
 
 | What to persist  | Command                                                                                                                    |
 |------------------|----------------------------------------------------------------------------------------------------------------------------|
-| Learning         | `ctx add learning "Title" --session-id ID --branch BR --commit HASH --context "..." --lesson "..." --application "..."` |
-| Decision         | `ctx add decision "Title" --session-id ID --branch BR --commit HASH --context "..." --rationale "..." --consequence "..."` |
+| Learning         | `ctx learning add "Title" --session-id ID --branch BR --commit HASH --context "..." --lesson "..." --application "..."` |
+| Decision         | `ctx decision add "Title" --session-id ID --branch BR --commit HASH --context "..." --rationale "..." --consequence "..."` |
 | Task completed   | Edit TASKS.md directly                                                                                                      |
-| New task         | `ctx add task "Description" --session-id ID --branch BR --commit HASH`                                                  |
+| New task         | `ctx task add "Description" --session-id ID --branch BR --commit HASH`                                                  |
 
 ## Quality Checklist
 
