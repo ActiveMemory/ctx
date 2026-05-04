@@ -36,24 +36,28 @@ import (
 func Deploy(cmd *cobra.Command) error {
 	targetFile := cfgHook.FileAgentsMd
 
-	// Load the AGENTS.md template
 	agentsContent, readErr := agent.AgentsMd()
 	if readErr != nil {
 		return readErr
 	}
 
-	// Check if the file exists
-	existingContent, err := io.SafeReadUserFile(filepath.Clean(targetFile))
-	fileExists := err == nil
+	fileExists, validateErr := validateTargetFile(targetFile)
+	if validateErr != nil {
+		return validateErr
+	}
 
 	if fileExists {
+		existingContent, err := io.SafeReadUserFile(filepath.Clean(targetFile))
+		if err != nil {
+			return errFs.FileRead(targetFile, err)
+		}
+
 		existingStr := string(existingContent)
 		if strings.Contains(existingStr, marker.AgentsStart) {
 			writeSetup.InfoAgentsSkipped(cmd, targetFile)
 			return nil
 		}
 
-		// File exists without ctx markers: append ctx content
 		merged := existingStr + token.NewlineLF + string(agentsContent)
 		wErr := io.SafeWriteFile(
 			targetFile, []byte(merged), fs.PermFile,
@@ -65,7 +69,6 @@ func Deploy(cmd *cobra.Command) error {
 		return nil
 	}
 
-	// File doesn't exist: create it
 	wErr := io.SafeWriteFile(
 		targetFile, agentsContent, fs.PermFile,
 	)

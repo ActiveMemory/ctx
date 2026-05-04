@@ -177,6 +177,8 @@ DO NOT UPDATE FOR:
   added, renamed, or removed, and the filesystem is self-documenting
 - **Copyright headers**: All source files get the project copyright header
 
+- New editor integrations include an MCP-merge test covering: create / empty file / preserve existing keys / skip when registered / reject malformed JSON
+
 ## Blog Publishing
 
 - **Checklist for ideas/ → docs/blog/ promotion**:

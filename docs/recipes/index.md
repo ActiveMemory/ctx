@@ -21,7 +21,7 @@ Train your agent to be proactive through **ask, guide, reinforce**.
 
 ### [Setup across AI Tools](multi-tool-setup.md)
 
-Initialize `ctx` and configure hooks for Claude Code, Cursor,
+Initialize `ctx` and configure hooks for Claude Code, OpenCode, Cursor,
 Aider, Copilot, or Windsurf. Includes **shell completion**,
 **watch mode** for non-native tools, and **verification**.
 

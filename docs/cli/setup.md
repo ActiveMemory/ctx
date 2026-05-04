@@ -35,6 +35,7 @@ ctx setup <tool> [flags]
 | `cline`       | Cline (VS Code extension)                    |
 | `aider`       | Aider CLI                                    |
 | `copilot`     | GitHub Copilot                               |
+| `opencode`    | OpenCode (terminal-first AI coding agent)    |
 | `windsurf`    | Windsurf IDE                                 |
 
 !!! note "Claude Code Uses the Plugin System"
@@ -55,4 +56,7 @@ ctx setup copilot --write
 ctx setup kiro --write
 ctx setup cursor --write
 ctx setup cline --write
+
+# Generate OpenCode plugin, skills, AGENTS.md, and global MCP config
+ctx setup opencode --write
 ```

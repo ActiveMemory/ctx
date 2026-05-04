@@ -44,6 +44,14 @@ const (
 	SteeringPathCursor = DirCursor + "/rules/"
 )
 
+// OpenCode configuration paths.
+const (
+	// MCPConfigPathOpenCode is the OpenCode MCP config path used as a
+	// fallback in user-facing warnings when globalConfigPath() cannot
+	// resolve the actual path (e.g. UserHomeDir failure).
+	MCPConfigPathOpenCode = "~/.config/opencode/opencode.json"
+)
+
 // Cline configuration paths.
 const (
 	// MCPConfigPathCline is the deployed MCP config path.

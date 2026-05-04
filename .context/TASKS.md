@@ -25,6 +25,14 @@ TASK STATUS LABELS:
   `#in-progress`: currently being worked on (add inline, don't move task)
 -->
 
+### Phase 1: [Name] `#priority:high`
+- [ ] Add TypeScript type-check step (bunx tsc --noEmit) for embedded editor-plugin assets to CI; nothing currently checks .opencode/plugins/ctx/index.ts before embedding #priority:low #added:2026-04-26-152912
+
+- [-] Promote 'block-dangerous-commands' to a real ctx system Go subcommand so OpenCode and other non-Claude editor integrations can ship the safety hook #priority:medium #added:2026-04-26-152911 #skipped:2026-04-26-231517 reason: decided not to do — OpenCode's exit-code semantics make a Cobra-based block-command shim too risky, and the safety-net omission in OpenCode is now treated as permanent (see decision 2026-04-26-231517)
+
+- [ ] Task 1
+- [ ] Task 2
+
 ### Misc
 
 - [x] If context is not initialized, hooks should not run. Right now they run
