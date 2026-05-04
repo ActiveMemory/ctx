@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
@@ -22,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/extract"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
+	"github.com/ActiveMemory/ctx/internal/sanitize"
 )
 
 // add extracts MCP args and delegates to [handler.Add].
@@ -41,7 +43,20 @@ func add(
 	if extractErr != nil {
 		return out.ToolError(id, extractErr.Error())
 	}
-	t, addErr := handler.Add(d, entryType, content, extract.Opts(args))
+	// MCP-SAN.2: Reject unknown entry types before writing.
+	if _, ok := entry.CtxFile(entryType); !ok {
+		return out.ToolError(id, fmt.Sprintf(
+			desc.Text(text.DescKeyMCPErrUnknownEntryType),
+			sanitize.Reflect(entryType, cfg.MaxNameLen),
+		))
+	}
+
+	// MCP-SAN.3: Sanitize content before writing to .context/.
+	content = sanitize.Content(content)
+
+	t, addErr := handler.Add(
+		d, entryType, content, extract.SanitizedOpts(args),
+	)
 	return out.ToolResult(id, t, addErr)
 }
 
@@ -64,6 +79,7 @@ func complete(
 			id, desc.Text(text.DescKeyMCPErrQueryRequired),
 		)
 	}
+	query = sanitize.Reflect(query, cfg.MaxQueryLen)
 	t, completeErr := handler.Complete(d, query)
 	return out.ToolResult(id, t, completeErr)
 }
@@ -84,6 +100,11 @@ func journalSource(
 	limit := cfg.DefaultSourceLimit
 	if v, ok := args[field.Limit].(float64); ok && v > 0 {
 		limit = int(v)
+	}
+
+	// MCP-SAN.1: Cap source limit to a reasonable upper bound.
+	if limit > cfg.MaxSourceLimit {
+		limit = cfg.MaxSourceLimit
 	}
 
 	var since time.Time
@@ -122,8 +143,27 @@ func watchUpdate(
 	if extractErr != nil {
 		return out.ToolError(id, extractErr.Error())
 	}
+	// MCP-SAN.2: Reject unknown entry types (allow "complete" as
+	// special case handled by handler.WatchUpdate).
+	if entryType != entry.Complete {
+		if _, ok := entry.CtxFile(entryType); !ok {
+			return out.ToolError(id, fmt.Sprintf(
+				desc.Text(
+					text.DescKeyMCPErrUnknownEntryType,
+				),
+				sanitize.Reflect(
+					entryType, cfg.MaxNameLen,
+				),
+			))
+		}
+	}
+
+	// MCP-SAN.3: Sanitize content before writing to .context/.
+	content = sanitize.Content(content)
+
 	t, updateErr := handler.WatchUpdate(
-		d, entryType, content, extract.Opts(args),
+		d, entryType, content,
+		extract.SanitizedOpts(args),
 	)
 	return out.ToolResult(id, t, updateErr)
 }
@@ -189,6 +229,10 @@ func sessionEvent(
 		)
 	}
 	caller, _ := args[field.Caller].(string)
+
+	// MCP-SAN.4: Sanitize caller before reflecting in response.
+	caller = sanitize.Reflect(caller, cfg.MaxCallerLen)
+
 	t, eventErr := handler.SessionEvent(d, eventType, caller)
 	return out.ToolResult(id, t, eventErr)
 }

@@ -1386,3 +1386,341 @@ func TestToolSearchNoQuery(t *testing.T) {
 		t.Error("expected error when query is missing")
 	}
 }
+
+// --- Serve edge-case tests ---
+
+// errWriter is an io.Writer that always returns an error.
+type errWriter struct{}
+
+func (errWriter) Write([]byte) (int, error) {
+	return 0, os.ErrClosed
+}
+
+func TestServeEmptyLines(t *testing.T) {
+	srv, _ := newTestServer(t)
+
+	// Feed an empty line followed by a valid ping.
+	idBytes, _ := json.Marshal(1)
+	req := proto.Request{
+		JSONRPC: "2.0",
+		ID:      idBytes,
+		Method:  "ping",
+	}
+	line, _ := json.Marshal(req)
+
+	// Empty line + valid request.
+	input := append([]byte("\n"), line...)
+	input = append(input, '\n')
+
+	var out bytes.Buffer
+	srv.in = bytes.NewReader(input)
+	srv.out = mcpIO.NewWriter(&out)
+	if err := srv.Serve(); err != nil {
+		t.Fatalf("serve: %v", err)
+	}
+
+	var resp proto.Response
+	if err := json.Unmarshal(out.Bytes(), &resp); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if resp.Error != nil {
+		t.Errorf("unexpected error: %v", resp.Error.Message)
+	}
+}
+
+func TestServeParseErrorWriteFailure(t *testing.T) {
+	srv, _ := newTestServer(t)
+
+	// Feed invalid JSON to trigger a parse error.
+	srv.in = bytes.NewReader([]byte("not-json\n"))
+	srv.out = mcpIO.NewWriter(errWriter{})
+
+	err := srv.Serve()
+	if err == nil {
+		t.Fatal("expected write error, got nil")
+	}
+}
+
+func TestServeDispatchWriteFailure(t *testing.T) {
+	srv, _ := newTestServer(t)
+
+	// Feed a valid request but use an errWriter for output.
+	idBytes, _ := json.Marshal(1)
+	req := proto.Request{
+		JSONRPC: "2.0",
+		ID:      idBytes,
+		Method:  "ping",
+	}
+	line, _ := json.Marshal(req)
+
+	srv.in = bytes.NewReader(append(line, '\n'))
+	srv.out = mcpIO.NewWriter(errWriter{})
+
+	// The marshal itself succeeds but the write fails, triggering
+	// the fallback error path which also fails, returning the error.
+	err := srv.Serve()
+	if err == nil {
+		t.Fatal("expected write error, got nil")
+	}
+}
+
+func TestPromptAddLearning(t *testing.T) {
+	srv, _ := newTestServer(t)
+	resp := request(t, srv, "prompts/get", proto.GetPromptParams{
+		Name: "ctx-learning-add",
+		Arguments: map[string]string{
+			"content":     "Always validate inputs",
+			"context":     "MCP sanitization work",
+			"lesson":      "Never trust external input",
+			"application": "Add validation at boundaries",
+		},
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.GetPromptResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if len(result.Messages) == 0 {
+		t.Fatal("expected message in learning prompt")
+	}
+	text := result.Messages[0].Content.Text
+	if !strings.Contains(text, "Always validate inputs") {
+		t.Errorf(
+			"expected learning content in text, got: %s", text,
+		)
+	}
+}
+
+// TestServeNotificationIgnored verifies that a JSON-RPC notification
+// (no ID field) is silently consumed and produces no response.
+func TestServeNotificationIgnored(t *testing.T) {
+	srv, _ := newTestServer(t)
+	// A notification has no "id" field and expects no response.
+	notif := map[string]interface{}{
+		"jsonrpc": "2.0",
+		"method":  "notifications/initialized",
+		"params":  map[string]interface{}{},
+	}
+	line, _ := json.Marshal(notif)
+	var buf bytes.Buffer
+	srv.in = bytes.NewReader(append(line, '\n'))
+	srv.out = mcpIO.NewWriter(&buf)
+	if err := srv.Serve(); err != nil {
+		t.Fatalf("serve: %v", err)
+	}
+	if buf.Len() != 0 {
+		t.Errorf(
+			"expected no response for notification, got: %s",
+			buf.String(),
+		)
+	}
+}
+
+// TestResourcesSubscribeInvalidJSON verifies that resources/subscribe
+// returns ErrCodeInvalidArg when params cannot be unmarshalled.
+func TestResourcesSubscribeInvalidJSON(t *testing.T) {
+	srv, _ := newTestServer(t)
+	resp := request(t, srv, "resources/subscribe", "not-an-object")
+	if resp.Error == nil {
+		t.Fatal("expected RPC error for invalid params, got nil")
+	}
+	if resp.Error.Code != cfgSchema.ErrCodeInvalidArg {
+		t.Errorf(
+			"error code = %d, want %d",
+			resp.Error.Code, cfgSchema.ErrCodeInvalidArg,
+		)
+	}
+}
+
+// TestResourcesSubscribeEmptyURI verifies that resources/subscribe
+// returns ErrCodeInvalidArg when the URI field is empty.
+func TestResourcesSubscribeEmptyURI(t *testing.T) {
+	srv, _ := newTestServer(t)
+	resp := request(t, srv, "resources/subscribe", proto.SubscribeParams{
+		URI: "",
+	})
+	if resp.Error == nil {
+		t.Fatal("expected RPC error for empty URI, got nil")
+	}
+	if resp.Error.Code != cfgSchema.ErrCodeInvalidArg {
+		t.Errorf(
+			"error code = %d, want %d",
+			resp.Error.Code, cfgSchema.ErrCodeInvalidArg,
+		)
+	}
+}
+
+// TestResourcesUnsubscribeInvalidJSON verifies that
+// resources/unsubscribe returns ErrCodeInvalidArg when params cannot
+// be unmarshalled.
+func TestResourcesUnsubscribeInvalidJSON(t *testing.T) {
+	srv, _ := newTestServer(t)
+	resp := request(t, srv, "resources/unsubscribe", "not-an-object")
+	if resp.Error == nil {
+		t.Fatal("expected RPC error for invalid params, got nil")
+	}
+	if resp.Error.Code != cfgSchema.ErrCodeInvalidArg {
+		t.Errorf(
+			"error code = %d, want %d",
+			resp.Error.Code, cfgSchema.ErrCodeInvalidArg,
+		)
+	}
+}
+
+// TestResourcesUnsubscribeEmptyURI verifies that resources/unsubscribe
+// returns ErrCodeInvalidArg when the URI field is empty.
+func TestResourcesUnsubscribeEmptyURI(t *testing.T) {
+	srv, _ := newTestServer(t)
+	resp := request(t, srv, "resources/unsubscribe", proto.SubscribeParams{
+		URI: "",
+	})
+	if resp.Error == nil {
+		t.Fatal("expected RPC error for empty URI, got nil")
+	}
+	if resp.Error.Code != cfgSchema.ErrCodeInvalidArg {
+		t.Errorf(
+			"error code = %d, want %d",
+			resp.Error.Code, cfgSchema.ErrCodeInvalidArg,
+		)
+	}
+}
+
+// TestToolRemindWithActive verifies that ctx_remind formats the list
+// when at least one reminder exists.
+func TestToolRemindWithActive(t *testing.T) {
+	srv, contextDir := newTestServer(t)
+	reminders := `[{"id":1,"message":"Review auth layer","created":"2026-01-01","after":null}]`
+	p := filepath.Join(contextDir, "reminders.json")
+	if err := os.WriteFile(p, []byte(reminders), 0o644); err != nil {
+		t.Fatalf("write reminders: %v", err)
+	}
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name: "ctx_remind",
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
+	}
+	if !strings.Contains(result.Content[0].Text, "Review auth layer") {
+		t.Errorf(
+			"expected reminder message in output, got: %s",
+			result.Content[0].Text,
+		)
+	}
+}
+
+// TestToolRemindFutureDated verifies that ctx_remind annotates
+// reminders whose after date has not yet arrived.
+func TestToolRemindFutureDated(t *testing.T) {
+	srv, contextDir := newTestServer(t)
+	reminders := `[{"id":1,"message":"Scheduled check","created":"2026-01-01","after":"2099-12-31"}]`
+	p := filepath.Join(contextDir, "reminders.json")
+	if err := os.WriteFile(p, []byte(reminders), 0o644); err != nil {
+		t.Fatalf("write reminders: %v", err)
+	}
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name: "ctx_remind",
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
+	}
+	if !strings.Contains(result.Content[0].Text, "not yet due") {
+		t.Errorf(
+			"expected 'not yet due' annotation, got: %s",
+			result.Content[0].Text,
+		)
+	}
+}
+
+// TestToolDriftMissingFile verifies that ctx_drift reports violations
+// when a required context file is absent.
+func TestToolDriftMissingFile(t *testing.T) {
+	srv, contextDir := newTestServer(t)
+	p := filepath.Join(contextDir, ctx.Constitution)
+	if err := os.Remove(p); err != nil {
+		t.Fatalf("remove %s: %v", ctx.Constitution, err)
+	}
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name: "ctx_drift",
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected RPC error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
+	}
+	if !strings.Contains(result.Content[0].Text, "Warnings:") {
+		t.Errorf(
+			"expected 'Warnings:' in drift output, got: %s",
+			result.Content[0].Text,
+		)
+	}
+}
+
+// TestToolCompleteEmptyQuery verifies that ctx_complete returns a
+// tool error when the query argument is empty.
+func TestToolCompleteEmptyQuery(t *testing.T) {
+	srv, _ := newTestServer(t)
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name:      "ctx_complete",
+		Arguments: map[string]interface{}{"query": ""},
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected RPC error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if !result.IsError {
+		t.Error("expected tool error for empty query")
+	}
+}
+
+// TestToolCompleteNoMatch verifies that ctx_complete returns a tool
+// error when the query does not match any task.
+func TestToolCompleteNoMatch(t *testing.T) {
+	srv, _ := newTestServer(t)
+	resp := request(t, srv, "tools/call", proto.CallToolParams{
+		Name:      "ctx_complete",
+		Arguments: map[string]interface{}{"query": "zzznonexistent task xyz"},
+	})
+	if resp.Error != nil {
+		t.Fatalf("unexpected RPC error: %v", resp.Error.Message)
+	}
+	raw, _ := json.Marshal(resp.Result)
+	var result proto.CallToolResult
+	if err := json.Unmarshal(raw, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if !result.IsError {
+		t.Error("expected tool error for non-matching query")
+	}
+}
+
+// Ensure unused imports are referenced.
+var _ = cfgSchema.ProtocolVersion

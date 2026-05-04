@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
+	"github.com/ActiveMemory/ctx/internal/sanitize"
 )
 
 // buildEntry renders a structured entry prompt (decision or
@@ -39,9 +40,12 @@ func buildEntry(
 	sb.WriteString(token.NewlineLF)
 	sb.WriteString(token.NewlineLF)
 	for _, f := range spec.Fields {
+		// MCP-SAN.3: sanitize user-supplied content before
+		// embedding in the prompt output.
 		_, _ = fmt.Fprintf(
 			&sb,
-			fieldFmt, desc.Text(f.KeyLabel), f.Value,
+			fieldFmt, desc.Text(f.KeyLabel),
+			sanitize.Content(f.Value),
 		)
 	}
 	sb.WriteString(token.NewlineLF)

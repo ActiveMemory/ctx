@@ -5,7 +5,8 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package sanitize transforms untrusted input into
-// safe values suitable for use as filesystem names.
+// safe values suitable for use as filesystem names
+// or for writing to context files.
 //
 // Unlike validation (which rejects bad input),
 // sanitization mutates input to conform to
@@ -22,12 +23,25 @@
 //     limits the result to 50 characters. Returns
 //     "session" if the input is empty after cleaning.
 //
-// # Design
+//   - [Content] escapes Markdown structural patterns
+//     (entry headers, task checkboxes, constitution
+//     rules) and strips null bytes from untrusted
+//     content before writing to .context/.
 //
-// The function is idempotent: sanitizing an already-
-// safe string returns it unchanged. It uses config
-// constants for the replacement character, max length,
-// and default fallback rather than hardcoded literals.
+//   - [StripControl] removes ASCII control characters
+//     from a string while preserving tabs and newlines.
+//
+//   - [Reflect] strips control chars and truncates to
+//     a maximum length; used when reflecting untrusted
+//     input back in error messages.
+//
+//   - [SessionID] converts an arbitrary string into a
+//     path-safe session identifier: strips null bytes,
+//     path traversal sequences, slashes, replaces
+//     unsafe characters with hyphens, and truncates to
+//     [config/sanitize.MaxSessionIDLen].
+//
+// # Design
 //
 // All functions are pure and safe for concurrent use.
 package sanitize
