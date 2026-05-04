@@ -2331,8 +2331,8 @@ rather than "<em>what</em>", and then commits.</p>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>- **Learning**: Did you hit a gotcha or discover something?
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>- **Neither**: No context to capture; we are done.
 </span></code></pre></div>
-<p>If you made a decision, the skill records it with <code>ctx add decision</code>. If you
-learned something, it records it with <code>ctx add learning</code> including context,
+<p>If you made a decision, the skill records it with <code>ctx decision add</code>. If you
+learned something, it records it with <code>ctx learning add</code> including context,
 lesson, and application fields. This is the bridge between committing code and
 remembering why the code looks the way it does.</p>
 <p>If source code changed in areas that affect documentation, the skill also
@@ -2362,10 +2362,10 @@ to run:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>I would suggest persisting:
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>- **Learning**: `$PPID` in PreToolUse hooks resolves to the Claude Code PID
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  `ctx add learning --context &quot;...&quot; --lesson &quot;...&quot; --application &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  `ctx learning add --context &quot;...&quot; --lesson &quot;...&quot; --application &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>- **Task**: mark &quot;Add cooldown to ctx agent&quot; as done
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>- **Decision**: tombstone-based cooldown with 10m default
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  `ctx add decision &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  `ctx decision add &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
 </span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Want me to persist any of these?
 </span></code></pre></div>
@@ -2459,7 +2459,7 @@ explicit invocation. Here is a realistic example:</p>
 <div class="admonition tip">
 <p class="admonition-title">Notice What Happened</p>
 <p>In the above workflow, the user never typed <code>/ctx-reflect</code> or
-<code>ctx add learning</code>.</p>
+<code>ctx learning add</code>.</p>
 <p>The agent moved through <strong>Load</strong>, <strong>Orient</strong>, <strong>Pick</strong>, <strong>Work</strong>,
 <strong>Commit</strong>, and <strong>Reflect</strong> driven by <strong>natural conversation</strong>.</p>
 <p>"<em>Let's wrap up</em>" was enough to trigger the full reflect-and-persist flow.</p>

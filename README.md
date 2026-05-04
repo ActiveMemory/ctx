@@ -111,12 +111,12 @@ ctx status
 ctx agent --budget 4000
 
 # Add tasks, decisions, learnings
-ctx add task "Implement user authentication"
-ctx add decision "Use PostgreSQL for primary database" \
+ctx task add "Implement user authentication"
+ctx decision add "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production workloads" \
   --rationale "PostgreSQL offers ACID compliance, JSON support, and team familiarity" \
   --consequence "Team needs PostgreSQL training; must set up replication"
-ctx add learning "Mock functions must be hoisted in Jest"
+ctx learning add "Mock functions must be hoisted in Jest"
 ```
 
 `ctx activate` emits `export CTX_DIR=...` for your shell; one-shot

@@ -86,7 +86,7 @@ codified in one project to be visible as-you-type in another.
 
 **Concrete payoff:**
 
-- `ctx add learning --share "..."` in project A →
+- `ctx learning add --share "..."` in project A →
   `ctx agent --include-hub` in project B shows that learning
   in the next context packet.
 - A decision recorded in your personal "dotfiles" project is

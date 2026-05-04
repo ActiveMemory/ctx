@@ -76,6 +76,7 @@ const (
 	IncludeHub      = "include-hub"
 	Fix             = "fix"
 	Force           = "force"
+	Reset           = "reset"
 	Full            = "full"
 	Hook            = "hook"
 	JSON            = "json"

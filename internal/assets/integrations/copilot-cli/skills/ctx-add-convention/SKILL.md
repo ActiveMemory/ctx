@@ -35,7 +35,7 @@ correctly: don't create a new section if an existing one fits.
 ## Execution
 
 ```bash
-ctx add convention "Use kebab-case for all CLI flag names" --section "Naming"
+ctx convention add "Use kebab-case for all CLI flag names" --section "Naming"
 ```
 
 ## Quality Checklist

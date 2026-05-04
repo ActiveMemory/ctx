@@ -11,24 +11,30 @@ icon: lucide/layers
 
 ![ctx](../images/ctx-banner.png)
 
-### `ctx add`
+### Adding entries
 
-Add a new item to a context file.
+Each context-artifact noun (`task`, `decision`, `learning`,
+`convention`) owns its own `add` subcommand under the
+noun-first command tree:
 
 ```bash
-ctx add <type> <content> [flags]
+ctx task add <content> [flags]
+ctx decision add <content> [flags]
+ctx learning add <content> [flags]
+ctx convention add <content> [flags]
 ```
 
-**Types**:
+**Target files**:
 
-| Type         | Target File      |
-|--------------|------------------|
-| `task`       | `TASKS.md`       |
-| `decision`   | `DECISIONS.md`   |
-| `learning`   | `LEARNINGS.md`   |
-| `convention` | `CONVENTIONS.md` |
+| Subcommand              | Target File      |
+|-------------------------|------------------|
+| `ctx task add`          | `TASKS.md`       |
+| `ctx decision add`      | `DECISIONS.md`   |
+| `ctx learning add`      | `LEARNINGS.md`   |
+| `ctx convention add`    | `CONVENTIONS.md` |
 
-**Flags**:
+**Flags** (shared by every `add` subcommand; per-noun
+required-flag rules surface as command errors):
 
 | Flag                      | Short | Description                                                 |
 |---------------------------|-------|-------------------------------------------------------------|
@@ -45,27 +51,27 @@ ctx add <type> <content> [flags]
 
 ```bash
 # Add a task
-ctx add task "Implement user authentication" \
+ctx task add "Implement user authentication" \
   --session-id abc12345 --branch main --commit 68fbc00a
-ctx add task "Fix login bug" --priority high \
+ctx task add "Fix login bug" --priority high \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Record a decision (requires all ADR (Architectural Decision Record) fields)
-ctx add decision "Use PostgreSQL for primary database" \
+ctx decision add "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
   --consequence "Team needs PostgreSQL training" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Note a learning (requires context, lesson, and application)
-ctx add learning "Vitest mocks must be hoisted" \
+ctx learning add "Vitest mocks must be hoisted" \
   --context "Tests failed with undefined mock errors" \
   --lesson "Vitest hoists vi.mock() calls to top of file" \
   --application "Always place vi.mock() before imports in test files" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Add to specific section
-ctx add convention "Use kebab-case for filenames" --section "Naming"
+ctx convention add "Use kebab-case for filenames" --section "Naming"
 ```
 
 ---

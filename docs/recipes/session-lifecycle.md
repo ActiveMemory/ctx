@@ -235,8 +235,8 @@ After the commit succeeds, it prompts you:
 - **Neither**: No context to capture; we are done.
 ```
 
-If you made a decision, the skill records it with `ctx add decision`. If you
-learned something, it records it with `ctx add learning` including context,
+If you made a decision, the skill records it with `ctx decision add`. If you
+learned something, it records it with `ctx learning add` including context,
 lesson, and application fields. This is the bridge between committing code and
 remembering why the code looks the way it does.
 
@@ -278,10 +278,10 @@ to run:
 I would suggest persisting:
 
 - **Learning**: `$PPID` in PreToolUse hooks resolves to the Claude Code PID
-  `ctx add learning --context "..." --lesson "..." --application "..." --session-id abc12345 --branch main --commit 68fbc00a`
+  `ctx learning add --context "..." --lesson "..." --application "..." --session-id abc12345 --branch main --commit 68fbc00a`
 - **Task**: mark "Add cooldown to ctx agent" as done
 - **Decision**: tombstone-based cooldown with 10m default
-  `ctx add decision "..." --session-id abc12345 --branch main --commit 68fbc00a`
+  `ctx decision add "..." --session-id abc12345 --branch main --commit 68fbc00a`
 
 Want me to persist any of these?
 ```
@@ -415,7 +415,7 @@ Context is up to date. You are good to close.
 
 !!! tip "Notice What Happened"
     In the above workflow, the user never typed `/ctx-reflect` or
-    `ctx add learning`.
+    `ctx learning add`.
 
     The agent moved through **Load**, **Orient**, **Pick**, **Work**,
     **Commit**, and **Reflect** driven by **natural conversation**.

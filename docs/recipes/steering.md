@@ -353,7 +353,7 @@ narrow the descriptions so they don't overlap.
 
 **Putting decisions in steering.** "We decided to use
 PostgreSQL" is a decision, not a rule for the AI to follow on
-every prompt. Record decisions with `ctx add decision`, not
+every prompt. Record decisions with `ctx decision add`, not
 `ctx steering add`.
 
 **Committing `inclusion: always` without thinking.** Rules

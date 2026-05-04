@@ -108,7 +108,7 @@ and `listen`.
 Either use `ctx add --share` to write locally *and* push to the ctx Hub:
 
 ```bash
-ctx add decision "Use UTC timestamps everywhere" --share \
+ctx decision add "Use UTC timestamps everywhere" --share \
   --context "We had timezone drift between the API and journal" \
   --rationale "Single source of truth avoids conversion bugs" \
   --consequence "The UI does conversion at render time"

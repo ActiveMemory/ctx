@@ -261,7 +261,7 @@ Track task progress with timestamps for session correlation:
 
 | Tag        | When to Add                              | Format               |
 |------------|------------------------------------------|----------------------|
-| `#added`   | Auto-added by `ctx add task`             | `YYYY-MM-DD-HHMMSS`  |
+| `#added`   | Auto-added by `ctx task add`             | `YYYY-MM-DD-HHMMSS`  |
 | `#started` | When you begin working on the task       | `YYYY-MM-DD-HHMMSS`  |
 
 ## Collaboration Defaults

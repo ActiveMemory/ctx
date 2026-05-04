@@ -31,7 +31,7 @@ Learnings should capture **principles and heuristics**, not code snippets.
 ## Execution
 
 ```bash
-ctx add learning "Title" \
+ctx learning add "Title" \
   --context "What were you doing when you discovered this?" \
   --lesson "What's the key insight?" \
   --application "How should we handle this going forward?"

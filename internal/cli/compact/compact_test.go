@@ -10,8 +10,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	taskAdd "github.com/ActiveMemory/ctx/internal/cli/task/cmd/add"
 	taskComplete "github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
 	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
@@ -71,8 +71,8 @@ func TestCompactWithTasks(t *testing.T) {
 	}
 
 	// Add and complete a task
-	addCmd := add.Cmd()
-	addCmd.SetArgs([]string{"task", "Task to complete", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
+	addCmd := taskAdd.Cmd()
+	addCmd.SetArgs([]string{"Task to complete", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatalf("add task failed: %v", err)
 	}

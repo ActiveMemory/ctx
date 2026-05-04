@@ -2097,7 +2097,7 @@ which tools your team uses.</p>
 </tr>
 <tr>
 <td>Existing <code>CLAUDE.md</code> + <code>ctx</code> markers</td>
-<td><code>ctx init --force</code></td>
+<td><code>ctx init --reset</code></td>
 <td>Replaces the <code>ctx</code> block, leaves your content intact</td>
 </tr>
 <tr>
@@ -2214,7 +2214,7 @@ between markers and can be updated independently.</p>
 <p>If your <code>CLAUDE.md</code> already has <code>ctx</code> markers (from a previous <code>ctx init</code>), the
 default behavior is to skip it. Use <code>--force</code> to replace the <code>ctx</code> block with the
 latest template: This is useful after <strong>upgrading</strong> <code>ctx</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--reset
 </span></code></pre></div>
 <p>This only replaces content between <code>&lt;!-- ctx:context --&gt;</code> and <code>&lt;!-- ctx:end --&gt;</code>.
 Your own content outside the markers is preserved. A timestamped backup is

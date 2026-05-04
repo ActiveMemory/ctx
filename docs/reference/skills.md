@@ -157,7 +157,7 @@ capture decisions and learnings.
 Pause and reflect on session progress. Walks through a checklist of
 learnings, decisions, task completions, and session notes to persist.
 
-**Wraps**: chains to `ctx add learning`, `ctx add decision`,
+**Wraps**: chains to `ctx learning add`, `ctx decision add`,
 manual TASKS.md updates
 
 **See also**: [The Complete Session](../recipes/session-lifecycle.md),
@@ -174,8 +174,8 @@ structured fields for user approval, then persists via `ctx add`.
 Offers `/ctx-commit` if uncommitted changes remain.
 **Ceremony skill**: invoke explicitly at session end.
 
-**Wraps**: `git diff --stat`, `git log`, `ctx add learning`,
-`ctx add decision`, `ctx add convention`, `ctx add task`,
+**Wraps**: `git diff --stat`, `git log`, `ctx learning add`,
+`ctx decision add`, `ctx convention add`, `ctx task add`,
 chains to `/ctx-commit`
 
 **See also**: [Session Ceremonies](../recipes/session-ceremonies.md),
@@ -192,7 +192,7 @@ conventions: into `.context/` files.
 
 Add an actionable task with optional priority and phase section.
 
-**Wraps**: `ctx add task "description" [--priority high|medium|low]
+**Wraps**: `ctx task add "description" [--priority high|medium|low]
 --session-id ID --branch BR --commit HASH`
 
 **See also**: [Tracking Work Across Sessions](../recipes/task-management.md)
@@ -204,7 +204,7 @@ Add an actionable task with optional priority and phase section.
 Record an architectural decision with context, rationale, and
 consequence. Supports Y-statement (lightweight) and full ADR formats.
 
-**Wraps**: `ctx add decision "title" --context "..." --rationale "..."
+**Wraps**: `ctx decision add "title" --context "..." --rationale "..."
 --consequence "..." --session-id ID --branch BR --commit HASH`
 
 **See also**:
@@ -218,7 +218,7 @@ Record a project-specific gotcha, bug, or unexpected behavior.
 Filters for insights that are searchable, project-specific, and
 required real effort to discover.
 
-**Wraps**: `ctx add learning "title" --context "..." --lesson "..."
+**Wraps**: `ctx learning add "title" --context "..." --lesson "..."
 --application "..." --session-id ID --branch BR --commit HASH`
 
 **See also**:
@@ -231,7 +231,7 @@ required real effort to discover.
 Record a coding convention that should be standardized across sessions.
 Targets patterns seen 2-3+ times.
 
-**Wraps**: `ctx add convention "rule" --section "Name"`
+**Wraps**: `ctx convention add "rule" --section "Name"`
 
 **See also**:
 [Persisting Decisions, Learnings, and Conventions](../recipes/knowledge-capture.md)

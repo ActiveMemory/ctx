@@ -74,12 +74,12 @@ options (multiple `.context/` directories, scripts, CI), see
 Add a **task** and a **decision**: These are the entries your AI will remember:
 
 ```bash
-ctx add task "Implement user authentication" \
+ctx task add "Implement user authentication" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Output: ✓ Added to TASKS.md
 
-ctx add decision "Use PostgreSQL for primary database" \
+ctx decision add "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
   --consequence "Team needs PostgreSQL training" \

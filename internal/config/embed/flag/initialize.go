@@ -8,8 +8,11 @@ package flag
 
 // DescKeys for init command flags.
 const (
-	// DescKeyInitializeForce is the description key for the initialize force flag.
-	DescKeyInitializeForce = "initialize.force"
+	// DescKeyInitializeReset is the description key for the initialize reset
+	// flag (replaces the retired --force flag; reset enumerates the existing
+	// populated files, backs them up, and only proceeds on interactive
+	// y/N confirmation).
+	DescKeyInitializeReset = "initialize.reset"
 	// DescKeyInitializeMerge is the description key for the initialize merge flag.
 	DescKeyInitializeMerge = "initialize.merge"
 	// DescKeyInitializeMinimal is the description key for the initialize minimal

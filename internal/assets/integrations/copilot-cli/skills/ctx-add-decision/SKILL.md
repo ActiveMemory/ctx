@@ -33,7 +33,7 @@ Gather: Context, Alternatives, Decision, Rationale, Consequence.
 ## Execution
 
 ```bash
-ctx add decision "Use Cobra for CLI framework" \
+ctx decision add "Use Cobra for CLI framework" \
   --context "Need CLI framework for Go project" \
   --rationale "Better subcommand support, team familiarity" \
   --consequence "More boilerplate, but clearer command structure"

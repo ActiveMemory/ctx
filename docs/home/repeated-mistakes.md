@@ -116,12 +116,12 @@ team changes, and model upgrades. The context outlives any single session.
 Capture your first decision or learning right now:
 
 ```bash
-ctx add decision "Use PostgreSQL" \
+ctx decision add "Use PostgreSQL" \
   --context "Need a relational database for the project" \
   --rationale "Team expertise, JSONB support, mature ecosystem" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
-ctx add learning "Vitest mock hoisting" \
+ctx learning add "Vitest mock hoisting" \
   --context "Tests failing intermittently" \
   --lesson "vi.mock() must be at file top level" \
   --application "Use vi.doMock() for dynamic mocks" \

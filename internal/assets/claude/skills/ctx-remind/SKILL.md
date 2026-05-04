@@ -17,9 +17,9 @@ command.
 
 ## When NOT to Use
 
-- For structured tasks with status tracking (use `ctx add task`)
+- For structured tasks with status tracking (use `ctx task add`)
 - For sensitive values or quick notes (use `ctx pad`)
-- For architectural decisions (use `ctx add decision`)
+- For architectural decisions (use `ctx decision add`)
 - Create a reminder only when the user explicitly says "remind me":
   for everything else, let the conversation proceed without creating records
 

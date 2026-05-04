@@ -4,39 +4,33 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package root
+package build
 
 import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/run"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/ActiveMemory/ctx/internal/config/entry"
+	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
-// Cmd returns the "ctx add" command for appending entries to context files.
+// Cmd builds a cobra add subcommand for the given noun.
 //
-// Supported types are defined in [config.FileType] (both singular and plural
-// forms accepted, e.g., "decision" or "decisions"). Content can be provided
-// via command argument, --file flag, or stdin pipe.
-//
-// Flags:
-//   - --priority, -p: Priority level for tasks (high, medium, low)
-//   - --section, -s: Target section within the file
-//   - --file, -f: Read content from a file instead of argument
-//   - --context, -c: Context for decisions/learnings (required)
-//   - --rationale, -r: Rationale for decisions (required for decisions)
-//   - --consequence: Consequence for decisions (required for decisions)
-//   - --lesson, -l: Lesson for learnings (required for learnings)
-//   - --application, -a: Application for learnings (required for learnings)
+// Parameters:
+//   - noun: One of entry.{Task,Decision,Learning,Convention}.
+//     Prepended to args before invoking run.Run.
+//   - descKey: Description key for the embedded asset lookup
+//     (e.g., "task.add", "decision.add").
+//   - useStr: Cobra Use string (typically "add [content]").
 //
 // Returns:
-//   - *cobra.Command: Configured add command with flags registered
-func Cmd() *cobra.Command {
+//   - *cobra.Command: Configured add subcommand with all flags
+//     registered.
+func Cmd(noun, descKey, useStr string) *cobra.Command {
 	var (
 		priority    string
 		section     string
@@ -52,22 +46,16 @@ func Cmd() *cobra.Command {
 		share       bool
 	)
 
-	short, long := desc.Command(cmd.DescKeyAdd)
+	short, long := desc.Command(descKey)
 
 	c := &cobra.Command{
-		Use:     cmd.UseAdd,
+		Use:     useStr,
 		Short:   short,
 		Long:    long,
-		Example: desc.Example(cmd.DescKeyAdd),
-		Args:    cobra.MinimumNArgs(1),
-		ValidArgs: []string{
-			entry.Task,
-			entry.Decision,
-			entry.Learning,
-			entry.Convention,
-		},
+		Example: desc.Example(descKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return Run(cmd, args, entity.AddConfig{
+			withNoun := append([]string{noun}, args...)
+			return run.Run(cmd, withNoun, entity.AddConfig{
 				Priority:    priority,
 				Section:     section,
 				FromFile:    fromFile,
@@ -129,7 +117,7 @@ func Cmd() *cobra.Command {
 		cFlag.Priority, func(
 			_ *cobra.Command, _ []string, _ string,
 		) ([]string, cobra.ShellCompDirective) {
-			return entry.Priorities,
+			return cfgEntry.Priorities,
 				cobra.ShellCompDirectiveNoFileComp
 		})
 

@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package root
+package run
 
 import (
 	"path/filepath"
@@ -29,19 +29,22 @@ import (
 	writeConnect "github.com/ActiveMemory/ctx/internal/write/connect"
 )
 
-// Run executes the add command logic.
+// Run executes the add command logic for the four noun-first
+// add subcommands.
 //
-// Reads content from the specified source (argument, file, or stdin),
-// validates the entry, and writes it to the appropriate context file.
+// Reads content from the specified source (argument, file, or
+// stdin), validates the entry, and writes it to the appropriate
+// context file.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - args: Command arguments; args[0] is the entry type, args[1:] is content
+//   - args: Command arguments; args[0] is the entry type
+//     (task/decision/learning/convention) and args[1:] is content
 //   - flags: All flag values from the command
 //
 // Returns:
-//   - error: Non-nil if content is missing, type is invalid, required flags
-//     are missing, or file operations fail
+//   - error: Non-nil if content is missing, type is invalid,
+//     required flags are missing, or file operations fail
 func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 	if _, ctxErr := rc.RequireContextDir(); ctxErr != nil {
 		cmd.SilenceUsage = true
@@ -91,7 +94,6 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 		return dirErr
 	}
 
-	// Best-effort: publish to ctx Hub if --share is set.
 	if flags.Share {
 		pubEntry := hub.PublishEntry{
 			Type:    fType,
@@ -109,10 +111,6 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 		writeAdd.SpecNudge(cmd)
 	}
 
-	// Best-effort: record pending context for commit tracing.
-	// Decisions and learnings are prepended (see insert.AppendEntry),
-	// so the new entry is always #1 in file order. This coupling is
-	// intentional: if the prepend logic changes, this must be updated.
 	if fType == cfgEntry.Decision || fType == cfgEntry.Learning {
 		_ = trace.Record(fType+cfgTrace.RefFirstEntry, stateDir)
 	}

@@ -128,8 +128,8 @@ Record **architectural decisions** with **rationale**, capture **gotchas**
 and lessons learned, and **codify** conventions so they
 survive across sessions and team members.
 
-**Uses**: `ctx add decision`, `ctx add learning`,
-`ctx add convention`, `ctx decision reindex`,
+**Uses**: `ctx decision add`, `ctx learning add`,
+`ctx convention add`, `ctx decision reindex`,
 `ctx learning reindex`, `/ctx-decision-add`,
 `/ctx-learning-add`, `/ctx-convention-add`, `/ctx-reflect`
 
@@ -141,7 +141,7 @@ survive across sessions and team members.
 `TASKS.md` focused as your project evolves across dozens of
 sessions.
 
-**Uses**: `ctx add task`, `ctx task complete`, `ctx task archive`,
+**Uses**: `ctx task add`, `ctx task complete`, `ctx task archive`,
 `ctx task snapshot`, `/ctx-task-add`, `/ctx-archive`, `/ctx-next`
 
 ---

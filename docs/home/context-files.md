@@ -37,8 +37,8 @@ context packet:
 Two subdirectories under `.context/` are **implementation details** that
 are user-editable but not part of the priority read order:
 
-- **`.context/templates/`**: format templates for `ctx add decision`
-  and `ctx add learning`. See [templates](#templates) below.
+- **`.context/templates/`**: format templates for `ctx decision add`
+  and `ctx learning add`. See [templates](#templates) below.
 - **`.context/steering/`**: behavioral rules with YAML frontmatter
   that get synced into each AI tool's native config. See
   [steering](#steering) below, and the full
@@ -184,7 +184,7 @@ Use inline backtick-wrapped tags for metadata:
 
 | Tag        | Format               | When to add                        |
 |------------|----------------------|------------------------------------|
-| `#added`   | `YYYY-MM-DD-HHMMSS`  | Auto-added by `ctx add task`       |
+| `#added`   | `YYYY-MM-DD-HHMMSS`  | Auto-added by `ctx task add`       |
 | `#started` | `YYYY-MM-DD-HHMMSS`  | When beginning work on the task    |
 
 These timestamps help correlate tasks with session files and track which
@@ -481,7 +481,7 @@ for full documentation.
 **Location**: `.context/templates/`.
 **Status**: implementation detail, user-editable.
 
-**Purpose**: Format templates for `ctx add decision` and `ctx add learning`.
+**Purpose**: Format templates for `ctx decision add` and `ctx learning add`.
 These control the structure of new entries appended to DECISIONS.md and
 LEARNINGS.md.
 

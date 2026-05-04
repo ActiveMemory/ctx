@@ -73,8 +73,8 @@ trigger.test.tool:
   short: Tool name for mock input
 setup.write:
   short: Write the configuration file instead of printing
-initialize.force:
-  short: Overwrite existing context files
+initialize.reset:
+  short: Reset an existing context (interactive only; backs up existing files to .context/.backup-init-<ISO>/ before overwriting)
 initialize.merge:
   short: Auto-merge ctx content into existing CLAUDE.md
 initialize.minimal:
