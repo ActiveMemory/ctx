@@ -185,7 +185,7 @@ drift.check-required:
 drift.check-file-age:
   short: No stale files by age
 drift.stale-header:
-  short: 'comment header in %s does not match template: run ctx init --force to sync'
+  short: 'comment header in %s does not match template: run ctx init --reset to sync'
 drift.check-template-header:
   short: All context file headers match templates
 drift.invalid-tool:

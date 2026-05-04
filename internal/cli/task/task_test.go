@@ -13,8 +13,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	taskAdd "github.com/ActiveMemory/ctx/internal/cli/task/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core/count"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core/path"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -47,8 +47,8 @@ func TestTasksCommands(t *testing.T) {
 	}
 
 	// Add some tasks
-	addCmd := add.Cmd()
-	addCmd.SetArgs([]string{"task", "Test task 1", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
+	addCmd := taskAdd.Cmd()
+	addCmd.SetArgs([]string{"Test task 1", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatalf("add task failed: %v", err)
 	}
@@ -218,8 +218,8 @@ func TestSnapshotCommand_DefaultName(t *testing.T) {
 	setupTaskDir(t)
 
 	// Add a task so TASKS.md has content
-	addCmd := add.Cmd()
-	addCmd.SetArgs([]string{"task", "Test task", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
+	addCmd := taskAdd.Cmd()
+	addCmd.SetArgs([]string{"Test task", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatal(err)
 	}
@@ -272,8 +272,8 @@ func TestArchiveCommand_NoTasks(t *testing.T) {
 func TestArchiveCommand_NoCompletedTasks(t *testing.T) {
 	setupTaskDir(t)
 
-	addCmd := add.Cmd()
-	addCmd.SetArgs([]string{"task", "Pending task", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
+	addCmd := taskAdd.Cmd()
+	addCmd.SetArgs([]string{"Pending task", "--section", "Misc", "--session-id", "test1234", "--branch", "main", "--commit", "abc123"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatal(err)
 	}

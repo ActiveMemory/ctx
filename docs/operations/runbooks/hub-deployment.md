@@ -109,7 +109,7 @@ otherwise `ctx add` and `ctx status` fail with
 
 ```bash
 # Client A (in its project directory, after activating):
-ctx add learning "Hub sync test" --context "Verifying hub setup"
+ctx learning add "Hub sync test" --context "Verifying hub setup"
 
 # Client B (in its project directory, after activating):
 ctx status   # should show the new learning

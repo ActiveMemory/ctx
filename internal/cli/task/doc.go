@@ -16,6 +16,12 @@
 //
 // # Subcommands
 //
+//   - **`ctx task add [content]`**: appends a new task
+//     entry with required provenance flags (session-id,
+//     branch, commit) and optional priority/section
+//     targeting. Implementation in
+//     [internal/cli/task/cmd/add] delegates to the shared
+//     add core.
 //   - **`ctx task complete [number|text]`**: flips a
 //     task from `[ ]` to `[x]`. Match by phase-relative
 //     number (e.g. `3`), partial text, or full text in

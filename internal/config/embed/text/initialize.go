@@ -84,9 +84,50 @@ const (
 	// DescKeyWriteInitNoChanges is the text key for write init no changes
 	// messages.
 	DescKeyWriteInitNoChanges = "write.init-no-changes"
-	// DescKeyWriteInitOverwritePrompt is the text key for write init overwrite
-	// prompt messages.
-	DescKeyWriteInitOverwritePrompt = "write.init-overwrite-prompt"
+	// DescKeyWriteInitResetPromptHeader is the text key for the
+	// header line of the ctx init --reset confirmation prompt;
+	// formats the populated essential file list that follows.
+	// No format arguments.
+	DescKeyWriteInitResetPromptHeader = "write.init-reset-prompt-header"
+	// DescKeyWriteInitResetPromptDir is the text key for the
+	// "directory: <path>" line in the reset prompt. Template
+	// expects a single %s for the absolute .context/ path.
+	DescKeyWriteInitResetPromptDir = "write.init-reset-prompt-dir"
+	// DescKeyWriteInitResetPromptFile is the text key for one
+	// populated-file bullet under the reset prompt header.
+	// Template expects a single %s for the file basename.
+	DescKeyWriteInitResetPromptFile = "write.init-reset-prompt-file"
+	// DescKeyWriteInitResetPromptFooter is the text key for the
+	// trailer text after the file list (backup notice and the
+	// y/N prompt). No format arguments.
+	DescKeyWriteInitResetPromptFooter = "write.init-reset-prompt-footer"
+	// DescKeyWriteInitBackupWritten is the text key for the
+	// post-backup confirmation line printed by ctx init --reset.
+	// Template expects a single %s for the absolute backup
+	// directory path.
+	DescKeyWriteInitBackupWritten = "write.init-backup-written"
+)
+
+// DescKeys for ctx init refusal and reset error messages.
+const (
+	// DescKeyErrInitContextPopulated is the text key for the
+	// human-readable wrapper around ErrContextPopulated. Template
+	// expects four %s arguments: directory, populated file list,
+	// recovery flag name (--reset), and backup path placeholder.
+	DescKeyErrInitContextPopulated = "err.init-context-populated"
+	// DescKeyErrInitResetRequiresInteractive is the text key for
+	// the human-readable wrapper around ErrResetRequiresInteractive.
+	// No format arguments.
+	DescKeyErrInitResetRequiresInteractive = "err.init-reset-requires-interactive"
+	// DescKeyErrInitBackupMkdir is the text key for backup-dir
+	// creation failures. Template expects a %s path and a %w cause.
+	DescKeyErrInitBackupMkdir = "err.init-backup-mkdir"
+	// DescKeyErrInitBackupRead is the text key for source-read
+	// failures during backup. Template expects a %s path and a %w cause.
+	DescKeyErrInitBackupRead = "err.init-backup-read"
+	// DescKeyErrInitBackupWrite is the text key for backup-target
+	// write failures. Template expects a %s path and a %w cause.
+	DescKeyErrInitBackupWrite = "err.init-backup-write"
 )
 
 // DescKeys for init permission setup output.

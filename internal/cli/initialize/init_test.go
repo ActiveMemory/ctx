@@ -8,6 +8,7 @@ package initialize
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,6 +18,7 @@ import (
 	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/env"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 )
 
 // TestInitCommand tests the init command creates the .context directory.
@@ -129,8 +131,11 @@ func TestInitSkipsExistingSteeringHooksSkillsDirs(t *testing.T) {
 		}
 	}
 
+	// No --reset needed: pre-existing subdirs without essential files
+	// are not "populated" — init scaffolds the templates without
+	// touching the marker files.
 	cmd := Cmd()
-	cmd.SetArgs([]string{"--force"})
+	cmd.SetArgs([]string{})
 	if err = cmd.Execute(); err != nil {
 		t.Fatalf("init command failed: %v", err)
 	}
@@ -434,14 +439,14 @@ func TestCmd_Flags(t *testing.T) {
 	if cmd.Use != "init" {
 		t.Errorf("Cmd().Use = %q, want %q", cmd.Use, "init")
 	}
-	flags := []string{"force", "minimal", "merge"}
+	flags := []string{"reset", "minimal", "merge"}
 	for _, f := range flags {
 		if cmd.Flags().Lookup(f) == nil {
 			t.Errorf("missing --%s flag", f)
 		}
 	}
-	if cmd.Flags().ShorthandLookup("f") == nil {
-		t.Error("missing -f shorthand for --force")
+	if cmd.Flags().Lookup("force") != nil {
+		t.Error("--force flag should be retired (replaced by --reset)")
 	}
 	if cmd.Flags().ShorthandLookup("m") == nil {
 		t.Error("missing -m shorthand for --minimal")
@@ -483,8 +488,71 @@ func TestRunInit_Minimal(t *testing.T) {
 	}
 }
 
-func TestRunInit_Force(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "ctx-init-force-*")
+// TestRunInit_RefuseWhenPopulated verifies that a second init
+// against an already-initialized .context/ refuses with
+// errInit.ErrContextPopulated rather than silently overwriting.
+// This is the regression guard for the 2026-04-25 incident
+// (specs/ctx-init-overwrite-safety.md).
+func TestRunInit_RefuseWhenPopulated(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "ctx-init-refuse-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
+	t.Setenv(env.SkipPathCheck, env.True)
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{})
+	if err = cmd.Execute(); err != nil {
+		t.Fatalf("first init failed: %v", err)
+	}
+
+	// Mark TASKS.md so we can prove it survives the refused second init.
+	tasksPath := filepath.Join(".context", ctx.Task)
+	originalTasks, readErr := os.ReadFile(tasksPath)
+	if readErr != nil {
+		t.Fatalf("read TASKS.md before refusal: %v", readErr)
+	}
+	sentinel := make([]byte, 0, len(originalTasks)+50)
+	sentinel = append(sentinel, originalTasks...)
+	sentinel = append(sentinel, []byte("\n# CURATED USER CONTENT — must survive\n")...)
+	if writeErr := os.WriteFile(filepath.Clean(tasksPath), sentinel, 0o644); writeErr != nil { //nolint:gosec // test temp file
+		t.Fatalf("write sentinel: %v", writeErr)
+	}
+
+	cmd2 := Cmd()
+	cmd2.SetArgs([]string{})
+	err = cmd2.Execute()
+	if err == nil {
+		t.Fatal("second init without --reset must refuse, got nil error")
+	}
+	if !errors.Is(err, errInit.ErrContextPopulated) {
+		t.Errorf("got %v, want errInit.ErrContextPopulated", err)
+	}
+
+	got, readErr := os.ReadFile(tasksPath)
+	if readErr != nil {
+		t.Fatalf("read TASKS.md after refusal: %v", readErr)
+	}
+	if !strings.Contains(string(got), "CURATED USER CONTENT") {
+		t.Error("refused init must not modify TASKS.md")
+	}
+}
+
+// TestRunInit_ResetRequiresInteractive verifies that --reset
+// refuses when --caller is set (the editor / scripted entry
+// point gate). Reset is destructive; only real terminal sessions
+// may invoke it.
+func TestRunInit_ResetRequiresInteractive(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "ctx-init-reset-tty-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -506,13 +574,138 @@ func TestRunInit_Force(t *testing.T) {
 	}
 
 	cmd2 := Cmd()
-	cmd2.SetArgs([]string{"--force"})
-	if err = cmd2.Execute(); err != nil {
-		t.Fatalf("init --force failed: %v", err)
+	cmd2.SetArgs([]string{"--reset", "--caller", "vscode"})
+	err = cmd2.Execute()
+	if err == nil {
+		t.Fatal("--reset with --caller must refuse, got nil error")
+	}
+	if !errors.Is(err, errInit.ErrResetRequiresInteractive) {
+		t.Errorf("got %v, want errInit.ErrResetRequiresInteractive", err)
+	}
+}
+
+// TestRunInit_ResetWithConfirmationBacksUp verifies the happy
+// path: --reset prompts, accepts y, copies populated files into
+// a timestamped .backup-init-* subdirectory, then scaffolds
+// fresh templates.
+func TestRunInit_ResetWithConfirmationBacksUp(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "ctx-init-reset-ok-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
+	t.Setenv(env.SkipPathCheck, env.True)
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{})
+	if err = cmd.Execute(); err != nil {
+		t.Fatalf("first init failed: %v", err)
 	}
 
-	if _, err := os.Stat(filepath.Join(".context", ctx.Constitution)); err != nil {
-		t.Error("CONSTITUTION.md missing after force reinit")
+	tasksPath := filepath.Join(".context", ctx.Task)
+	curated := []byte("# Curated tasks before reset\n")
+	if writeErr := os.WriteFile(tasksPath, curated, 0o644); writeErr != nil {
+		t.Fatalf("write curated TASKS.md: %v", writeErr)
+	}
+
+	cmd2 := Cmd()
+	cmd2.SetIn(strings.NewReader("y\n"))
+	cmd2.SetArgs([]string{"--reset"})
+	if err = cmd2.Execute(); err != nil {
+		t.Fatalf("init --reset failed: %v", err)
+	}
+
+	// CONSTITUTION must be scaffolded (templates landed).
+	if _, statErr := os.Stat(filepath.Join(".context", ctx.Constitution)); statErr != nil {
+		t.Error("CONSTITUTION.md missing after reset")
+	}
+
+	// A backup directory must contain the curated TASKS.md.
+	entries, readErr := os.ReadDir(".context")
+	if readErr != nil {
+		t.Fatalf("read .context: %v", readErr)
+	}
+	var foundBackup bool
+	for _, e := range entries {
+		if !e.IsDir() || !strings.HasPrefix(e.Name(), ".backup-init-") {
+			continue
+		}
+		foundBackup = true
+		backedUp, backupErr := os.ReadFile(filepath.Join(
+			".context", e.Name(), ctx.Task,
+		))
+		if backupErr != nil {
+			t.Errorf("read backup TASKS.md: %v", backupErr)
+			continue
+		}
+		if !strings.Contains(string(backedUp), "Curated tasks before reset") {
+			t.Error("backup did not preserve curated content")
+		}
+	}
+	if !foundBackup {
+		t.Error("--reset must create .backup-init-<ISO>/ before overwriting")
+	}
+}
+
+// TestRunInit_ResetDeclinedNoChanges verifies that answering 'n'
+// at the --reset prompt aborts cleanly: no backup is written
+// and the existing files are left untouched.
+func TestRunInit_ResetDeclinedNoChanges(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "ctx-init-reset-n-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
+	t.Setenv(env.SkipPathCheck, env.True)
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{})
+	if err = cmd.Execute(); err != nil {
+		t.Fatalf("first init failed: %v", err)
+	}
+
+	tasksPath := filepath.Join(".context", ctx.Task)
+	curated := []byte("# Curated tasks must not be touched\n")
+	if writeErr := os.WriteFile(tasksPath, curated, 0o644); writeErr != nil {
+		t.Fatalf("write curated TASKS.md: %v", writeErr)
+	}
+
+	cmd2 := Cmd()
+	cmd2.SetIn(strings.NewReader("n\n"))
+	cmd2.SetArgs([]string{"--reset"})
+	if err = cmd2.Execute(); err != nil {
+		t.Fatalf("init --reset declined returned error: %v", err)
+	}
+
+	got, readErr := os.ReadFile(tasksPath)
+	if readErr != nil {
+		t.Fatalf("read TASKS.md: %v", readErr)
+	}
+	if !strings.Contains(string(got), "Curated tasks must not be touched") {
+		t.Error("declined reset must not modify TASKS.md")
+	}
+
+	entries, _ := os.ReadDir(".context")
+	for _, e := range entries {
+		if e.IsDir() && strings.HasPrefix(e.Name(), ".backup-init-") {
+			t.Errorf("declined reset must not create backup, found %s", e.Name())
+		}
 	}
 }
 

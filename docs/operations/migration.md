@@ -31,7 +31,7 @@ which tools your team uses.
 |--------------------------------------|---------------------------------------------------|------------------------------------------------------|
 | Nothing (*greenfield*)               | `ctx init`                                        | Creates `.context/`, `CLAUDE.md`, permissions        |
 | Existing `CLAUDE.md`                 | `ctx init --merge`                                | Backs up your file, inserts `ctx` block after the H1 |
-| Existing `CLAUDE.md` + `ctx` markers | `ctx init --force`                                | Replaces the `ctx` block, leaves your content intact |
+| Existing `CLAUDE.md` + `ctx` markers | `ctx init --reset`                                | Replaces the `ctx` block, leaves your content intact |
 | `.cursorrules` / `.aider.conf.yml`   | `ctx init`                                        | `ctx` ignores those files: they coexist cleanly      |
 | Team repo, first adopter             | `ctx init --merge && git add .context/ CLAUDE.md` | Initialize and commit for the team                   |
 
@@ -135,7 +135,7 @@ default behavior is to skip it. Use `--force` to replace the `ctx` block with th
 latest template: This is useful after **upgrading** `ctx`:
 
 ```bash
-ctx init --force
+ctx init --reset
 ```
 
 This only replaces content between `<!-- ctx:context -->` and `<!-- ctx:end -->`.

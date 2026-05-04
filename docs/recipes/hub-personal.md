@@ -92,7 +92,7 @@ out. This is the kind of thing you'd normally add to
 Go service you'll ever write, not just this one. So:
 
 ```bash
-ctx add learning --share \
+ctx learning add --share \
   --context "Go http.Client retries mask the final error" \
   --lesson  "Transport timeouts don't surface as errors when the retry loop re-assigns err without wrapping. Check for context.DeadlineExceeded on the request context instead." \
   --application "Any retry loop over http.Client.Do that uses a per-attempt timeout"
@@ -101,7 +101,7 @@ ctx add learning --share \
 The `--share` flag does two things:
 
 1. Writes the learning to `api/.context/LEARNINGS.md`
-   locally (as a normal `ctx add learning` would).
+   locally (as a normal `ctx learning add` would).
 2. Publishes the same entry to the ctx Hub, which stores it
    in the append-only JSONL and fans it out to every
    subscribed client.
@@ -133,7 +133,7 @@ touch. Record it in `dotfiles` (since that's your
 
 ```bash
 cd ~/projects/dotfiles
-ctx add convention --share \
+ctx convention add --share \
   "Error messages: lowercase start, no trailing period, single sentence (follows Go's stdlib style)"
 ```
 
@@ -158,11 +158,11 @@ Stripped of prose, the day's commands were:
 # Morning: nothing. Agent loads --include-hub automatically.
 
 # Mid-morning: record a learning that should cross projects
-ctx add learning --share \
+ctx learning add --share \
   --context "..." --lesson "..." --application "..."
 
 # Afternoon: codify a convention in the "standards" project
-ctx add convention --share "..."
+ctx convention add --share "..."
 
 # Evening: nothing. Everything's already propagated.
 ```

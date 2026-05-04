@@ -128,12 +128,12 @@ templates shipped with `ctx`.
 
 ### Procedure
 
-1. Create a temp directory and run `ctx init --force` inside
+1. Create a temp directory and run `ctx init --reset` inside
    it to get the latest templates:
 
    ```bash
    CTX_TPL_DIR=$(mktemp -d)
-   cd "$CTX_TPL_DIR" && ctx init --force 2>/dev/null
+   cd "$CTX_TPL_DIR" && ctx init --reset 2>/dev/null
    ```
 
 2. Compare each skill in the project against the template:
@@ -190,7 +190,7 @@ drifts independently from the codebase.
    To get the authoritative list:
 
    ```bash
-   ctx init --force 2>/dev/null  # in a temp dir
+   ctx init --reset 2>/dev/null  # in a temp dir
    ```
 
    Then compare permissions from the generated

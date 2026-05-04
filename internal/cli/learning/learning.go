@@ -9,6 +9,7 @@ package learning
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/learning/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/learning/cmd/reindex"
 	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
@@ -17,13 +18,15 @@ import (
 // Cmd returns the learning command with subcommands.
 //
 // The learning command provides utilities for managing the
-// LEARNINGS.md file, including regenerating the quick-reference
-// index.
+// LEARNINGS.md file:
+//   - add: Add a new learning entry
+//   - reindex: Regenerate the quick-reference index
 //
 // Returns:
 //   - *cobra.Command: The learning command with subcommands
 func Cmd() *cobra.Command {
 	return parent.Cmd(cmd.DescKeyLearning, cmd.UseLearning,
+		add.Cmd(),
 		reindex.Cmd(),
 	)
 }

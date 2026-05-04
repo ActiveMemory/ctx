@@ -39,7 +39,7 @@ If the user provides only a topic, ask:
 ## Execution
 
 ```bash
-ctx add task "Task description" \
+ctx task add "Task description" \
   --session-id SESSION --branch BRANCH --commit HASH \
   [--priority high|medium|low] [--section "Phase N"]
 ```
@@ -48,7 +48,7 @@ Provenance flags (`--session-id`, `--branch`, `--commit`) are **required**.
 Get these values from the hook-relayed provenance line in your context
 (e.g., `Session: abc12345 | Branch: main @ 68fbc00a`).
 
-**Prefer this skill over raw `ctx add task`**: the conversational
+**Prefer this skill over raw `ctx task add`**: the conversational
 approach lets you automatically pick up session ID, branch, and commit
 from the provenance line already in your context window.
 
@@ -58,30 +58,30 @@ a specific section (e.g., `--section "Maintenance"`).
 
 **Example: specific and actionable:**
 ```bash
-ctx add task "Add --cooldown flag to ctx agent to suppress repeated output within a time window. Use tombstone file per session for isolation." \
+ctx task add "Add --cooldown flag to ctx agent to suppress repeated output within a time window. Use tombstone file per session for isolation." \
   --session-id abc12345 --branch main --commit 68fbc00a \
   --priority medium
 ```
 
 **Example: with context for why:**
 ```bash
-ctx add task "Investigate ctx init overwriting user-generated content in context files. Commit a9df9dd wiped 18 decisions from DECISIONS.md. Need guard to prevent reinit from destroying user data." \
+ctx task add "Investigate ctx init overwriting user-generated content in context files. Commit a9df9dd wiped 18 decisions from DECISIONS.md. Need guard to prevent reinit from destroying user data." \
   --session-id abc12345 --branch main --commit 68fbc00a \
   --priority high
 ```
 
 **Example: scoped subtask:**
 ```bash
-ctx add task "Add topic-based navigation to blog when post count reaches 15+" \
+ctx task add "Add topic-based navigation to blog when post count reaches 15+" \
   --session-id abc12345 --branch main --commit 68fbc00a \
   --priority low
 ```
 
 **Bad examples (too shallow):**
 ```bash
-ctx add task "Fix bug"              # What bug? Where?
-ctx add task "Improve performance"  # Of what? How?
-ctx add task "Authentication"       # That's a topic, not a task
+ctx task add "Fix bug"              # What bug? Where?
+ctx task add "Improve performance"  # Of what? How?
+ctx task add "Authentication"       # That's a topic, not a task
 # Also bad: missing --session-id, --branch, --commit
 ```
 

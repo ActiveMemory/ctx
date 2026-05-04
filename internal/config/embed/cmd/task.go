@@ -8,6 +8,8 @@ package cmd
 
 // Use strings for task subcommands.
 const (
+	// UseTaskAdd is the cobra Use string for the task add command.
+	UseTaskAdd = "add [content]"
 	// UseTaskArchive is the cobra Use string for the task archive command.
 	UseTaskArchive = "archive"
 	// UseTaskSnapshot is the cobra Use string for the task snapshot command.
@@ -18,6 +20,8 @@ const (
 const (
 	// DescKeyTask is the description key for the task command.
 	DescKeyTask = "task"
+	// DescKeyTaskAdd is the description key for the task add command.
+	DescKeyTaskAdd = "task.add"
 	// DescKeyTaskArchive is the description key for the task archive command.
 	DescKeyTaskArchive = "task.archive"
 	// DescKeyTaskSnapshot is the description key for the task snapshot command.

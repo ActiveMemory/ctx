@@ -46,7 +46,7 @@ ctx init
 ctx init --minimal
 
 # Force overwrite existing
-ctx init --force
+ctx init --reset
 
 # Merge into existing files
 ctx init --merge

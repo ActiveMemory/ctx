@@ -17,9 +17,9 @@ command.
 
 ## When NOT to Use
 
-- For structured tasks (use `ctx add task` instead)
-- For architectural decisions (use `ctx add decision` instead)
-- For lessons learned (use `ctx add learning` instead)
+- For structured tasks (use `ctx task add` instead)
+- For architectural decisions (use `ctx decision add` instead)
+- For lessons learned (use `ctx learning add` instead)
 
 ## Command Mapping
 

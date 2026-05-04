@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/catalog"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
+	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/backup"
 	coreClaude "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
 	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude_check"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
@@ -38,6 +39,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -60,13 +62,36 @@ import (
 // The basename guard does not apply at init time because init
 // *creates* the canonical-named directory.
 //
+// # Existing-context handling
+//
+// When the target .context/ already contains a populated context
+// (any file in ctx.FilesRequired exists), behavior depends on
+// --reset:
+//
+//   - Without --reset: refuse with errInit.Populated, listing the
+//     populated files and pointing at --reset for recovery. The
+//     directory is left untouched.
+//   - With --reset and a non-interactive caller (--caller set):
+//     refuse with errInit.ResetRequiresInteractive. Reset is
+//     destructive and must come from a real terminal session.
+//   - With --reset interactively: enumerate the populated files,
+//     prompt y/N, and on confirmation copy them to
+//     .context/.backup-init-<UTC-ISO>/ before scaffolding.
+//
+// When the directory is missing or only contains state/ / hook
+// scratch (no essential files), init scaffolds the missing
+// templates as before.
+//
+// Spec: specs/ctx-init-overwrite-safety.md.
+//
 // After materializing the directory, init prints the shell activation
 // hint via InfoActivateHint so the user's next ctx call in a new
 // process finds the right CTX_DIR.
 //
 // Parameters:
 //   - cmd: Cobra command for output and input streams
-//   - force: If true, overwrite existing files without prompting
+//   - reset: If true, attempt destructive reset of an existing
+//     populated context (interactive only; backs up first)
 //   - minimal: If true, only create essential files
 //   - merge: If true, auto-merge ctx content into existing files
 //   - noPluginEnable: If true, skip auto-enabling the plugin globally
@@ -76,10 +101,11 @@ import (
 //     (e.g. "vscode") for template overrides
 //
 // Returns:
-//   - error: Non-nil if directory creation or file operations fail
+//   - error: Non-nil if refusal triggers, directory creation fails,
+//     or file operations fail
 func Run(
 	cmd *cobra.Command,
-	force, minimal, merge, noPluginEnable, noSteeringInit bool,
+	reset, minimal, merge, noPluginEnable, noSteeringInit bool,
 	caller string,
 ) error {
 	// Check if ctx is in PATH (required for hooks to work).
@@ -110,20 +136,21 @@ func Run(
 		contextDir = filepath.Join(cwd, dir.Context)
 	}
 
-	// Check if .context/ already exists and is properly initialized.
-	// A directory with only logs/ (created by hooks before init) is
-	// treated as uninitialized - no overwrite prompt needed.
+	// Existing-context handling: refuse by default; --reset takes a
+	// backup and only proceeds on interactive y/N confirmation.
 	if _, statErr := os.Stat(contextDir); statErr == nil {
-		if !force && validate.EssentialFilesPresent(contextDir) {
-			// When called from an editor (--caller), stdin is unavailable.
-			// Skip the interactive prompt to prevent hanging.
-			if caller != "" {
-				initialize.InfoAborted(cmd)
-				return nil
+		populated := validate.PopulatedFiles(contextDir)
+		if len(populated) > 0 {
+			if !reset {
+				cmd.SilenceUsage = true
+				return errInit.Populated(contextDir, populated)
 			}
-			// Prompt for confirmation
-			initialize.InfoOverwritePrompt(cmd, contextDir)
-			reader := bufio.NewReader(os.Stdin)
+			if caller != "" {
+				cmd.SilenceUsage = true
+				return errInit.ResetRequiresInteractive()
+			}
+			initialize.InfoResetPrompt(cmd, contextDir, populated)
+			reader := bufio.NewReader(cmd.InOrStdin())
 			response, readErr := reader.ReadString(token.NewlineLF[0])
 			if readErr != nil {
 				return errFs.ReadInput(readErr)
@@ -133,6 +160,11 @@ func Run(
 				initialize.InfoAborted(cmd)
 				return nil
 			}
+			backupDir, backupErr := backup.WriteSnapshot(contextDir, populated)
+			if backupErr != nil {
+				return backupErr
+			}
+			initialize.InfoBackupWritten(cmd, backupDir)
 		}
 	}
 
@@ -183,8 +215,8 @@ func Run(
 	for _, name := range templatesToCreate {
 		targetPath := filepath.Join(contextDir, name)
 
-		// Check if the file exists and --force not set
-		if _, statErr := os.Stat(targetPath); statErr == nil && !force {
+		// Check if the file exists and --reset not set
+		if _, statErr := os.Stat(targetPath); statErr == nil && !reset {
 			initialize.InfoExistsSkipped(cmd, name)
 			continue
 		}
@@ -206,7 +238,7 @@ func Run(
 	initialize.Initialized(cmd, contextDir)
 
 	// Create entry templates in .context/templates/
-	if tplErr := entry.CreateTemplates(cmd, contextDir, force); tplErr != nil {
+	if tplErr := entry.CreateTemplates(cmd, contextDir, reset); tplErr != nil {
 		// Non-fatal: warn but continue
 		label := desc.Text(text.DescKeyInitLabelEntryTemplates)
 		initialize.InfoWarnNonFatal(cmd, label, tplErr)
@@ -250,7 +282,7 @@ func Run(
 	}
 
 	// Handle CLAUDE.md creation/merge
-	if claudeErr := coreClaude.HandleMd(cmd, force, merge); claudeErr != nil {
+	if claudeErr := coreClaude.HandleMd(cmd, reset, merge); claudeErr != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, claude.Md, claudeErr)
 	}

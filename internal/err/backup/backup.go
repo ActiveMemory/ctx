@@ -14,7 +14,7 @@ import (
 )
 
 // Create wraps a failure to create a backup (.bak) file during
-// ctx init --force.
+// ctx init --reset.
 //
 // Parameters:
 //   - name: backup filename that could not be created
