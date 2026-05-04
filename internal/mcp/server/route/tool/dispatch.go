@@ -12,6 +12,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	cfgSchema "github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -19,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	defTool "github.com/ActiveMemory/ctx/internal/mcp/server/def/tool"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/out"
+	"github.com/ActiveMemory/ctx/internal/sanitize"
 )
 
 // DispatchList returns all available tools.
@@ -111,7 +113,7 @@ func DispatchCall(
 			req.ID, cfgSchema.ErrCodeNotFound,
 			fmt.Sprintf(
 				desc.Text(text.DescKeyMCPErrUnknownTool),
-				params.Name,
+				sanitize.Reflect(params.Name, cfg.MaxNameLen),
 			),
 		)
 	}

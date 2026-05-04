@@ -40,4 +40,10 @@ const (
 	DescKeyMCPErrUnknownPrompt = "mcp.err-unknown-prompt"
 	// DescKeyMCPErrURIRequired is the text key for mcp err uri required messages.
 	DescKeyMCPErrURIRequired = "mcp.err-uri-required"
+	// DescKeyMCPErrInputTooLong is the text key for mcp err
+	// input too long messages.
+	DescKeyMCPErrInputTooLong = "mcp.err-input-too-long"
+	// DescKeyMCPErrUnknownEntryType is the text key for mcp
+	// err unknown entry type messages.
+	DescKeyMCPErrUnknownEntryType = "mcp.err-unknown-entry-type"
 )

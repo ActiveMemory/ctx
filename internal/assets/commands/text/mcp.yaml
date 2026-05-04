@@ -350,6 +350,10 @@ mcp.err-unknown-prompt:
   short: 'unknown prompt: %s'
 mcp.err-uri-required:
   short: uri is required
+mcp.err-input-too-long:
+  short: '%s exceeds maximum length (%d bytes)'
+mcp.err-unknown-entry-type:
+  short: 'unknown entry type: %s'
 mcp.format-watch-completed:
   short: 'Completed: %s'
 mcp.format-wrote:
