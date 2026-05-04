@@ -140,7 +140,7 @@ concurrency. Postmortem on Tuesday, but right now she
 records the learning:
 
 ```bash
-ctx add learning --share \
+ctx learning add --share \
   --context "Payment service 3 AM incident, 2026-04-03" \
   --lesson  "grpc-go v1.62+ changes DialContext behavior under high \
   concurrency: connections from a single channel can deadlock if the \
@@ -163,7 +163,7 @@ header-based instead of URL-based. Platform lead Carol
 records the decision:
 
 ```bash
-ctx add decision --share \
+ctx decision add --share \
   --context "Need consistent API versioning across all 6 services. \
   Current URL-based /v1/ isn't working for gradual rollouts." \
   --rationale "Header-based versioning lets us route by header at the \

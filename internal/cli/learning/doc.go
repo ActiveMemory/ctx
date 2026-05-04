@@ -18,6 +18,12 @@
 //
 // # Subcommands
 //
+//   - **`ctx learning add [content]`**: appends a new
+//     learning entry with structured context, lesson, and
+//     application fields plus required provenance metadata
+//     (session-id, branch, commit). Implementation in
+//     [internal/cli/learning/cmd/add] delegates to the
+//     shared add core.
 //   - **`ctx learning reindex`**: rebuilds the index
 //     table by parsing every entry header in
 //     `LEARNINGS.md` and emitting a fresh
@@ -27,13 +33,14 @@
 //     [internal/cli/learning/cmd/reindex] for the
 //     implementation.
 //
-// # Adding Entries
+// # Shared Add Core
 //
-// New learnings are added through `ctx add learning`
-// (the `add` family lives in [internal/cli/add]); this
-// package currently only owns the index-maintenance
-// side. The `_ctx-learning-add` skill wraps the add
-// flow with a guided prompt.
+// The cmd/add subcommand is a thin adapter; the
+// validation, content extraction, formatting, and
+// insertion pipeline lives in [internal/cli/add/core]
+// (used by every noun-first add command). The
+// `_ctx-learning-add` skill wraps `ctx learning add`
+// with a guided prompt.
 //
 // # Concurrency
 //

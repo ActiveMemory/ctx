@@ -18,6 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func TestModelContextWindow(t *testing.T) {
@@ -105,4 +106,38 @@ func TestLatestSessionPct(t *testing.T) {
 			t.Errorf("LatestPct(%q) = %d, want 12", sessionID, got)
 		}
 	})
+}
+
+// TestFindJSONLPathDoesNotMaterializeContext verifies that calling
+// FindJSONLPath in a project that has not run "ctx init" does not
+// silently create a phantom .context/ (or .context/state/) directory
+// as a side effect of cache writeback.
+//
+// Provenance.Emit is intentionally unconditional, so it must be safe
+// to call from any hook regardless of init state.
+func TestFindJSONLPathDoesNotMaterializeContext(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Chdir(tmpDir)
+	ctxPath := testctx.Declare(t, tmpDir)
+
+	// Sanity: the .context/ dir does not exist yet.
+	if _, statErr := os.Stat(ctxPath); !os.IsNotExist(statErr) {
+		t.Fatalf("precondition: %s should not exist; statErr=%v",
+			ctxPath, statErr)
+	}
+
+	path, err := FindJSONLPath("any-session-id")
+	if err != nil {
+		t.Fatalf("FindJSONLPath returned error: %v", err)
+	}
+	if path != "" {
+		t.Errorf("FindJSONLPath returned %q, want empty (uninitialized project)",
+			path)
+	}
+
+	// The .context/ directory must NOT have been materialized.
+	if _, statErr := os.Stat(ctxPath); !os.IsNotExist(statErr) {
+		t.Errorf("FindJSONLPath materialized %s in an uninitialized project; statErr=%v",
+			ctxPath, statErr)
+	}
 }

@@ -23,8 +23,18 @@ import (
 // for AI coding assistants. Files include constitution rules, tasks,
 // decisions, learnings, conventions, and architecture documentation.
 //
+// When the target .context/ directory already contains a populated
+// context (any of the essential files exists), init refuses with a
+// helpful error pointing at --reset. The retired --force flag is
+// gone: it silently overwrote curated content on a quiet [y/N]
+// prompt, which destroyed thousands of lines of decisions and
+// learnings in the 2026-04-25 incident
+// (specs/ctx-init-overwrite-safety.md).
+//
 // Flags:
-//   - --force, -f: Overwrite existing context files without prompting
+//   - --reset: Reset an existing context. Interactive only; backs up
+//     populated files to .context/.backup-init-<UTC-ISO>/ before
+//     overwriting. Refuses when --caller is set.
 //   - --minimal, -m: Only create essential files
 //     (TASKS, DECISIONS, CONSTITUTION)
 //   - --merge: Auto-merge ctx content into existing CLAUDE.md
@@ -37,7 +47,7 @@ import (
 //   - *cobra.Command: Configured init command with flags registered
 func Cmd() *cobra.Command {
 	var (
-		force          bool
+		reset          bool
 		minimal        bool
 		merge          bool
 		noPluginEnable bool
@@ -54,20 +64,16 @@ func Cmd() *cobra.Command {
 		Example:     desc.Example(cmd.DescKeyInitialize),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(
-				cmd, force, minimal, merge,
+				cmd, reset, minimal, merge,
 				noPluginEnable, noSteeringInit, caller,
 			)
 		},
 	}
 
-	flagbind.BindBoolFlagsP(c,
-		[]*bool{&force, &minimal},
-		[]string{cFlag.Force, cFlag.Minimal},
-		[]string{cFlag.ShortForce, cFlag.ShortMinimal},
-		[]string{
-			flag.DescKeyInitializeForce,
-			flag.DescKeyInitializeMinimal,
-		},
+	flagbind.BoolFlag(c, &reset, cFlag.Reset, flag.DescKeyInitializeReset)
+	flagbind.BoolFlagP(c,
+		&minimal, cFlag.Minimal, cFlag.ShortMinimal,
+		flag.DescKeyInitializeMinimal,
 	)
 	flagbind.BindBoolFlags(c,
 		[]*bool{&merge, &noPluginEnable, &noSteeringInit},

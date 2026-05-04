@@ -177,7 +177,7 @@ Once validated, persist outputs:
 
 ```bash
 # Record key decisions
-ctx add decision "..." \
+ctx decision add "..." \
   --session-id ID --branch BR --commit HASH \
   --context "..." --rationale "..." --consequence "..."
 ```

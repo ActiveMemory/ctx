@@ -589,3 +589,13 @@ err.parser.missing-open-delim:
   short: missing opening frontmatter delimiter (---)
 err.parser.missing-close-delim:
   short: missing closing frontmatter delimiter (---)
+err.init-context-populated:
+  short: '%w (directory: %s; populated: %s; to discard, run `ctx init %s`, which backs up to %s before overwriting and requires interactive y/N confirmation)'
+err.init-reset-requires-interactive:
+  short: '%w (reset is destructive: run `ctx init --reset` directly from a terminal — not via --caller — so you can confirm the file list before overwriting)'
+err.init-backup-mkdir:
+  short: 'create backup dir %s: %w'
+err.init-backup-read:
+  short: 'read %s for backup: %w'
+err.init-backup-write:
+  short: 'write backup %s: %w'

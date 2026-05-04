@@ -48,7 +48,7 @@ Or use the `/_ctx-command-audit` skill after the rename.
 make build && sudo make install
 
 # Regenerate CLAUDE.md and permissions
-ctx init --force --merge
+ctx init --reset --merge
 ```
 
 `--merge` preserves your knowledge files (TASKS.md, DECISIONS.md,
@@ -118,7 +118,7 @@ in the release notes using this template:
 The old name is removed (no deprecation alias).
 
 **Action required**:
-1. Run `ctx init --force --merge` to update CLAUDE.md
+1. Run `ctx init --reset --merge` to update CLAUDE.md
 2. Update any scripts referencing `ctx old-command`
 3. Update hook configs if applicable
 

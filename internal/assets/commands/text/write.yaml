@@ -282,8 +282,20 @@ write.init-getting-started-saved:
   short: '  ✓ Quick-start reference saved to %s'
 write.init-no-changes:
   short: '  ○ %s (no changes needed)'
-write.init-overwrite-prompt:
-  short: '%s is already initialized. Re-run init? Existing files are preserved; missing ones are added. (Use --force to overwrite existing files.) [y/N] '
+write.init-reset-prompt-header:
+  short: 'ctx init --reset will OVERWRITE the following populated context files:'
+write.init-reset-prompt-dir:
+  short: '  directory: %s'
+write.init-reset-prompt-file:
+  short: '    - %s'
+write.init-reset-prompt-footer:
+  short: |-
+    Each file will first be copied to .context/.backup-init-<UTC-ISO>/
+    for recovery.
+
+    Continue? [y/N]:
+write.init-backup-written:
+  short: 'backup written to: %s'
 write.init-perms-allow:
   short: '  ✓ %s (added ctx permissions)'
 write.init-perms-allow-deny:

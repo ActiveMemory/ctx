@@ -66,15 +66,3 @@ func ContainsEndComment(content string) (bool, int) {
 	commentEnd := strings.Index(content, marker.CommentClose)
 	return commentEnd != -1, commentEnd
 }
-
-// StartsWithCtxMarker reports whether s starts with a ctx marker comment.
-//
-// Parameters:
-//   - s: String to check
-//
-// Returns:
-//   - bool: True if s starts with CtxStart or CtxEnd
-func StartsWithCtxMarker(s string) bool {
-	return strings.HasPrefix(s, marker.CtxStart) ||
-		strings.HasPrefix(s, marker.CtxEnd)
-}

@@ -4,35 +4,20 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package add provides the "ctx add" command for appending
-// entries to context files.
+// Package add hosts the shared core libraries that power
+// every noun-first add subcommand:
 //
-// The add command is the primary write interface for
-// populating .context/ files. It accepts content via
-// positional argument, --file flag, or stdin pipe and
-// routes entries to the appropriate file based on the
-// entry type argument.
+//   - ctx task add        (internal/cli/task/cmd/add)
+//   - ctx decision add    (internal/cli/decision/cmd/add)
+//   - ctx learning add    (internal/cli/learning/cmd/add)
+//   - ctx convention add  (internal/cli/convention/cmd/add)
 //
-// # Supported Entry Types
-//
-// Entry types map to [config.FileType] values:
-//
-//   - decision / decisions: appends to DECISIONS.md
-//   - task / tasks: inserts into TASKS.md before the
-//     first unchecked item, or under a named section
-//     when --section is provided
-//   - learning / learnings: appends to LEARNINGS.md
-//   - convention / conventions: appends to CONVENTIONS.md
-//
-// # Example Usage
-//
-//	ctx add decision "Use PostgreSQL for primary DB"
-//	ctx add task "Implement auth" --section "Phase 1"
-//	ctx add learning --file notes.md
-//	echo "Use camelCase" | ctx add convention
-//
-// # Subpackages
-//
-//   - cmd/root: cobra command definition and flag binding
-//   - core: file-type routing and content insertion logic
+// The directory contains no Go source at the top level. Its
+// child package core/ groups validation, content extraction,
+// markdown formatting, section-aware insertion, and section
+// normalization, plus the build/ helper that assembles a
+// noun-bound cobra command and the run/ entry point that
+// executes the add pipeline. The verb-first ctx add parent
+// was retired by specs/cli-add-symmetry.md; this directory
+// remains as a logical home for the shared add machinery.
 package add

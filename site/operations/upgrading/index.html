@@ -1773,18 +1773,18 @@ or plugin hooks and skills.</p>
 <code>/plugin</code> → select <strong>ctx</strong> → <strong>Update now</strong> (or enable auto-update).</p>
 <p>The <code>ctx</code> <strong>binary</strong> is separate:
 <a href="../../home/getting-started/#installation">rebuild from source or download a new release</a>
-when one is available, then run <code>ctx init --force --merge</code>.
+when one is available, then run <code>ctx init --reset --merge</code>.
 Knowledge files are preserved automatically.</p>
 </div>
 <h2 id="tldr">TL:DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Plugin users (Claude Code)</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># /plugin → select ctx → Update now</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Then update the binary and reinitialize:</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>init<span class="w"> </span>--reset<span class="w"> </span>--merge
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># From-source / manual users</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># install new ctx binary, then:</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>init<span class="w"> </span>--reset<span class="w"> </span>--merge
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># /plugin → select ctx → Update now   (if using Claude Code)</span>
 </span></code></pre></div>
 <h2 id="what-changes-between-versions">What Changes between Versions<a class="headerlink" href="#what-changes-between-versions" title="Permanent link">&para;</a></h2>
@@ -1822,7 +1822,7 @@ Knowledge files are yours and should never be overwritten.</p>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ctx<span class="w"> </span>--version<span class="w">   </span><span class="c1"># verify</span>
 </span></code></pre></div>
 <h3 id="2-reinitialize">2. Reinitialize<a class="headerlink" href="#2-reinitialize" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--reset<span class="w"> </span>--merge
 </span></code></pre></div>
 <ul>
 <li><code>--force</code> regenerates infrastructure files (permissions, ctx-managed

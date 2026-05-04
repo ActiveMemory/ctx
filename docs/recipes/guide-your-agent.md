@@ -6,7 +6,7 @@ icon: lucide/sparkles
 ![ctx](../images/ctx-banner.png)
 
 !!! tip "Commands vs. Skills"
-    **Commands** (`ctx status`, `ctx add task`) run in your
+    **Commands** (`ctx status`, `ctx task add`) run in your
     terminal.
 
     **Skills** (`/ctx-reflect`, `/ctx-next`) run inside

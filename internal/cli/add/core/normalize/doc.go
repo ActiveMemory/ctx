@@ -24,7 +24,7 @@
 //
 // A user runs:
 //
-//	ctx add task "fix tests" --section "Phase 1"
+//	ctx task add "fix tests" --section "Phase 1"
 //
 // The insert subpackage calls TargetSection("Phase 1")
 // which returns "## Phase 1". The insert logic then

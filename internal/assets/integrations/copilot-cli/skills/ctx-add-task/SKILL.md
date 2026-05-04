@@ -31,19 +31,19 @@ Tasks should describe **what to do and why**, not just a topic.
 ## Execution
 
 ```bash
-ctx add task "Task description" [--priority high|medium|low] [--section "Phase N"]
+ctx task add "Task description" [--priority high|medium|low] [--section "Phase N"]
 ```
 
 **Good examples:**
 ```bash
-ctx add task "Add --cooldown flag to ctx agent" --priority medium
-ctx add task "Investigate ctx init overwriting user content" --priority high
+ctx task add "Add --cooldown flag to ctx agent" --priority medium
+ctx task add "Investigate ctx init overwriting user content" --priority high
 ```
 
 **Bad examples (too shallow):**
 ```bash
-ctx add task "Fix bug"              # What bug? Where?
-ctx add task "Improve performance"  # Of what? How?
+ctx task add "Fix bug"              # What bug? Where?
+ctx task add "Improve performance"  # Of what? How?
 ```
 
 ## Quality Checklist

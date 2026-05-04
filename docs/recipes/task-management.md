@@ -18,12 +18,12 @@ How do you manage work items that span multiple sessions without losing context?
 
 !!! tip "Prefer Skills over Raw Commands"
     When working with an AI agent, use `/ctx-task-add` instead of raw
-    `ctx add task`. The agent automatically picks up session ID, branch,
+    `ctx task add`. The agent automatically picks up session ID, branch,
     and commit hash from its context, so no manual flags are needed.
 
 !!! warning "Activate the Project First"
     Run `eval "$(ctx activate)"` once per terminal in the project
-    root. If you skip it, the `ctx add task` / `ctx task ...`
+    root. If you skip it, the `ctx task add` / `ctx task ...`
     commands below fail with `Error: no context directory
     specified`. See
     [Activating a Context Directory](activating-context.md).
@@ -33,9 +33,9 @@ How do you manage work items that span multiple sessions without losing context?
 **Manage Tasks**:
 
 ```bash
-ctx add task "Fix race condition" --priority high \
+ctx task add "Fix race condition" --priority high \
   --session-id abc12345 --branch main --commit 68fbc00a  # add
-ctx add task "Write tests" --section "Phase 2" \
+ctx task add "Write tests" --section "Phase 2" \
   --session-id abc12345 --branch main --commit 68fbc00a  # add to phase
 ctx task complete "race condition"                      # mark done
 ctx task snapshot "before-refactor"               # backup
@@ -54,7 +54,7 @@ Read on for the full workflow and conversational patterns.
 
 | Tool                | Type    | Purpose                                     |
 |---------------------|---------|---------------------------------------------|
-| `ctx add task`      | Command | Add a new task to `TASKS.md`                |
+| `ctx task add`      | Command | Add a new task to `TASKS.md`                |
 | `ctx task complete` | Command | Mark a task as done by number or text       |
 | `ctx task snapshot` | Command | Create a point-in-time backup of `TASKS.md` |
 | `ctx task archive`  | Command | Move completed tasks to archive file        |
@@ -66,21 +66,21 @@ Read on for the full workflow and conversational patterns.
 
 ### Step 1: Add Tasks with Priorities
 
-Every piece of follow-up work gets a task. Use `ctx add task` from the terminal
+Every piece of follow-up work gets a task. Use `ctx task add` from the terminal
 or `/ctx-task-add` from your AI assistant. Tasks should start with a verb and be
 specific enough that someone unfamiliar with the session could act on them.
 
 ```bash
 # High-priority bug found during code review
-ctx add task "Fix race condition in session cooldown" --priority high \
+ctx task add "Fix race condition in session cooldown" --priority high \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Medium-priority feature work
-ctx add task "Add --format json flag to ctx status for CI integration" --priority medium \
+ctx task add "Add --format json flag to ctx status for CI integration" --priority medium \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Low-priority cleanup
-ctx add task "Remove deprecated --raw flag from ctx load" --priority low \
+ctx task add "Remove deprecated --raw flag from ctx load" --priority low \
   --session-id abc12345 --branch main --commit 68fbc00a
 ```
 
@@ -97,7 +97,7 @@ If you say "*fix the bug,*" it will ask you to clarify which bug and where.
     After completing a feature, the agent will often identify follow-up work:
     tests, docs, edge cases, error handling, and offer to add them as tasks.
 
-    You do not need to dictate `ctx add task` commands; the agent picks up on
+    You do not need to dictate `ctx task add` commands; the agent picks up on
     work context and suggests tasks naturally.
 
 ### Step 2: Organize with Phase Sections
@@ -114,7 +114,7 @@ status is tracked via checkboxes and inline tags.
 
 - [x] Implement ctx add command
 - [x] Implement ctx task complete command
-- [ ] Add --section flag to ctx add task `#priority:medium`
+- [ ] Add --section flag to ctx task add `#priority:medium`
 
 ## Phase 2: AI Integration
 
@@ -131,7 +131,7 @@ status is tracked via checkboxes and inline tags.
 Use `--section` when adding a task to a specific phase:
 
 ```bash
-ctx add task "Add ctx watch XML parsing" --priority medium --section \
+ctx task add "Add ctx watch XML parsing" --priority medium --section \
     "Phase 2: AI Integration" \
     --session-id abc12345 --branch main --commit 68fbc00a
 ```
@@ -163,7 +163,7 @@ The output looks like this:
     Still in-progress from yesterday's session. The tombstone file approach is
     half-built. Finishing is cheaper than context-switching.
 
-**2. Add --section flag to ctx add task** `#priority:medium`
+**2. Add --section flag to ctx task add** `#priority:medium`
 
     Last Phase 1 item. Quick win that unblocks organized task entry.
 
@@ -257,7 +257,7 @@ The steps above show the CLI commands for task management.
 In practice, most task management happens conversationally:
 
 An agent that has loaded the context files does not need you to type
-`ctx add task`. It tracks work naturally and offers the right operations.
+`ctx task add`. It tracks work naturally and offers the right operations.
 
 ### Use Natural Language Instead of Commands
 
@@ -265,11 +265,11 @@ These conversational prompts replace explicit commands during interactive sessio
 
 | Instead of typing...                   | Just say...                                        |
 |----------------------------------------|----------------------------------------------------|
-| `ctx add task "Write tests for X" --session-id ID --branch BR --commit HASH` | "We should add tests for this: track that?"        |
+| `ctx task add "Write tests for X" --session-id ID --branch BR --commit HASH` | "We should add tests for this: track that?"        |
 | `/ctx-next`                            | "What should we work on?"                          |
 | `ctx task complete "rate limiting"`    | "The rate limiter is done, what's next?"           |
 | `ctx task archive`                     | "`TASKS.md` is getting long, can you clean it up?" |
-| `ctx add task ... --session-id ID --branch BR --commit HASH && ctx add task ...` | "Add follow-ups for what we just built."           |
+| `ctx task add ... --session-id ID --branch BR --commit HASH && ctx task add ...` | "Add follow-ups for what we just built."           |
 
 The agent translates these into the right `ctx` operations behind the scenes.
 
@@ -356,7 +356,7 @@ You:
 
 Agent: 
 "Marked 'Implement ctx agent cooldown' as done. Your highest-
-priority remaining task is 'Add --section flag to ctx add task'.
+priority remaining task is 'Add --section flag to ctx task add'.
 
 It's the last item in Phase 1 and a quick win. Want to start on that?"
 ```
@@ -409,7 +409,7 @@ Agent: Nice. I'll mark "Implement ctx agent cooldown" as done.
 
 You:   Yes to both. What's next?
 Agent: Added the cleanup task as high priority. Next up is "Add --section
-       flag to ctx add task": last item in Phase 1. It should be
+       flag to ctx task add": last item in Phase 1. It should be
        straightforward since the flag parsing pattern already exists
        in the codebase. Ready?
 ```
@@ -425,11 +425,11 @@ Agent: Added the cleanup task as high priority. Next up is "Add --section
 
 ```bash
 # Add a task
-ctx add task "Implement rate limiting for API endpoints" --priority high \
+ctx task add "Implement rate limiting for API endpoints" --priority high \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # Add to a specific phase
-ctx add task "Write integration tests for rate limiter" --section "Phase 2" \
+ctx task add "Write integration tests for rate limiter" --section "Phase 2" \
   --session-id abc12345 --branch main --commit 68fbc00a
 
 # See what to work on
