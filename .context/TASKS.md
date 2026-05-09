@@ -25,6 +25,16 @@ TASK STATUS LABELS:
   `#in-progress`: currently being worked on (add inline, don't move task)
 -->
 
+## Phase 0 Grounding
+
+- [ ] The target project (to be given to the Agent) has a good "phasing"
+  mechanism for tasks; implement that; maybe `ctx task add` can have a 
+  `--phase` flag too, and we can have a auditor/normalizer for the current
+  task document; or a skill that does a semantic pass, or both too.
+- [x] bug: asking "do you remember" automatically creates a blank .context
+  directory when using cursor
+  (Spec: specs/state-dir-no-mkdir-when-uninitialized.md)
+
 ### Misc
 
 - [x] If context is not initialized, hooks should not run. Right now they run

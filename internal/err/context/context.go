@@ -71,6 +71,27 @@ var ErrContextDirNotADirectory = errors.New(cfgRc.ErrMsgContextDirNotADirectory)
 // underlying cause.
 var ErrContextDirStat = errors.New(cfgRc.ErrMsgContextDirStat)
 
+// ErrNotInitialized is the sentinel returned when CTX_DIR is
+// declared but the project lacks the required context files
+// (i.e., `ctx init` has not run there). Distinct from
+// [ErrDirNotDeclared] (no CTX_DIR at all) and from
+// [ErrContextDirNotFound] (declared dir does not exist on disk):
+// here the directory may or may not exist, but the contents do
+// not constitute a ctx project.
+//
+// The motivating bug is the cross-IDE hook leak: Cursor imports
+// Claude Code hooks and fires them in every workspace it opens.
+// With the ctx Claude plugin enabled globally, hooks resolve
+// CTX_DIR=$workspace/.context and call into ctx subcommands. Any
+// such caller that reached [state.Dir] previously mkdir'd a stub
+// `.context/state/` (mode 0750) into the workspace, even though
+// the user never ran `ctx init` there. Returning this sentinel
+// from [state.Dir] before the mkdir prevents the leak.
+//
+// Wrap via [NotInitialized] for user-facing messages so the
+// offending path is shown.
+var ErrNotInitialized = errors.New(cfgRc.ErrMsgNotInitialized)
+
 // RelativeNotAllowed wraps [ErrRelativeNotAllowed] with the
 // offending value so the user sees what they declared.
 //
@@ -149,6 +170,21 @@ func StatFailed(path string, cause error) error {
 	return fmt.Errorf(cfgRc.FmtWrapColon,
 		ErrContextDirStat,
 		fmt.Errorf(desc.Text(text.DescKeyErrContextDirStat), path, cause),
+	)
+}
+
+// NotInitialized wraps [ErrNotInitialized] with the offending
+// directory so the user sees which project is not initialized.
+//
+// Parameters:
+//   - path: absolute path to the (declared but uninitialized) context dir
+//
+// Returns:
+//   - error: wrapping [ErrNotInitialized] for [errors.Is] matches
+func NotInitialized(path string) error {
+	return fmt.Errorf(cfgRc.FmtWrapColon,
+		ErrNotInitialized,
+		fmt.Sprintf(desc.Text(text.DescKeyErrContextNotInitialized), path),
 	)
 }
 

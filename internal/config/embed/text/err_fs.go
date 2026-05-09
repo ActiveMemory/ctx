@@ -92,6 +92,11 @@ const (
 	// DescKeyErrContextDirStat is the text key for stat failures
 	// other than not-exist (permission denied, I/O error).
 	DescKeyErrContextDirStat = "err.context.dir-stat"
+	// DescKeyErrContextNotInitialized is the text key for the
+	// "context directory exists but ctx init has not run" rejection.
+	// Used when state.Dir() is invoked in a project that has CTX_DIR
+	// declared but lacks the required context files.
+	DescKeyErrContextNotInitialized = "err.context.not-initialized"
 )
 
 // DescKeys for filesystem write output.
