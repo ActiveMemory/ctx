@@ -28,6 +28,12 @@ const (
 	// ErrMsgContextDirStat is the sentinel message for stat failures
 	// other than not-exist (permission denied, I/O error).
 	ErrMsgContextDirStat = "context directory stat failed"
+	// ErrMsgNotInitialized is the sentinel message for the
+	// "context directory exists but ctx init has not run" rejection.
+	// Used by [state.Dir] to refuse mkdir in an uninitialized project,
+	// which would otherwise leak a stub `.context/state/` (mode 0750)
+	// into any directory a hook subprocess runs in.
+	ErrMsgNotInitialized = "context not initialized"
 )
 
 // Format strings for sentinel-wrapping in err/context constructors.

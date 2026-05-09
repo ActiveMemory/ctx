@@ -69,6 +69,11 @@ err.context.dir-not-a-directory:
   short: 'CTX_DIR points at a file, not a directory: %s'
 err.context.dir-stat:
   short: 'cannot stat CTX_DIR %s: %w'
+err.context.not-initialized:
+  short: |-
+    ctx is not initialized in this project: %s
+    Run 'ctx init' from the project root to set up context here.
+    See: https://ctx.ist/recipes/activating-context/
 err.activate.no-candidates:
   short: |-
     ctx activate: no .context/ directory found from this location

@@ -12,11 +12,10 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
-	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Active checks whether the cooldown tombstone for the given
@@ -86,21 +85,18 @@ func TouchTombstone(session string) error {
 //
 // Returns:
 //   - string: absolute path under the context state directory.
-//   - error: non-nil when the context directory is not declared or
-//     the state directory cannot be created. Previously this helper
-//     logged the mkdir error and returned the path anyway, guaranteeing
-//     a second failure on the subsequent write; propagating keeps the
-//     first failure authoritative.
+//   - error: non-nil when the context directory is not declared,
+//     the project is not initialized, or the state directory cannot
+//     be created. Delegates to [state.Dir] so the
+//     [errCtx.ErrNotInitialized] gate applies here too — see
+//     specs/state-dir-no-mkdir-when-uninitialized.md. Without this,
+//     a hook-driven `ctx agent` invocation in a non-ctx project
+//     (the cross-IDE Cursor leak path) would mkdir `.context/state/`
+//     directly here, bypassing [state.Dir]'s gate.
 func TombstonePath(session string) (string, error) {
-	ctxDir, err := rc.ContextDir()
-	if err != nil {
-		return "", err
-	}
-	stateDir := filepath.Join(ctxDir, dir.State)
-	if mkdirErr := ctxIo.SafeMkdirAll(
-		stateDir, fs.PermRestrictedDir,
-	); mkdirErr != nil {
-		return "", mkdirErr
+	stateDir, dirErr := state.Dir()
+	if dirErr != nil {
+		return "", dirErr
 	}
 	return filepath.Join(stateDir, agent.TombstonePrefix+session), nil
 }

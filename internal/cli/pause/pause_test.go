@@ -13,6 +13,7 @@ import (
 	"strings"
 	"testing"
 
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -22,6 +23,17 @@ func setupStateDir(t *testing.T) string {
 	ctxDir := filepath.Join(t.TempDir(), dir.Context)
 	if mkErr := os.MkdirAll(ctxDir, 0o750); mkErr != nil {
 		t.Fatal(mkErr)
+	}
+	// Seed the required files so state.Dir() considers the project
+	// initialized. Without these, state.Dir() returns
+	// errCtx.ErrNotInitialized to prevent the cross-IDE hook leak
+	// (see specs/state-dir-no-mkdir-when-uninitialized.md).
+	for _, f := range cfgCtx.FilesRequired {
+		if wrErr := os.WriteFile(
+			filepath.Join(ctxDir, f), []byte("# stub"), 0o600,
+		); wrErr != nil {
+			t.Fatalf("seed required file %s: %v", f, wrErr)
+		}
 	}
 	t.Setenv("CTX_DIR", ctxDir)
 	rc.Reset()
