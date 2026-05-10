@@ -90,22 +90,53 @@ func Opts(args map[string]interface{}) entity.EntryOpts {
 }
 
 // SanitizedOpts builds EntryOpts with content sanitization applied
-// to all text fields.
+// to all text fields. Returns an error if any secondary field
+// exceeds [cfg.MaxOptsFieldLen]; length is checked on raw input
+// before sanitization to prevent abuse via large payloads.
 //
 // Parameters:
 //   - args: MCP tool arguments with optional entry fields
 //
 // Returns:
 //   - entity.EntryOpts: sanitized options struct
+//   - error: non-nil if any secondary field exceeds MaxOptsFieldLen
 func SanitizedOpts(
 	args map[string]interface{},
-) entity.EntryOpts {
+) (entity.EntryOpts, error) {
 	opts := Opts(args)
+	// MCP-SAN.1: Enforce length on secondary prose fields before
+	// sanitization. Order is fixed so error messages are
+	// deterministic for tests.
+	if len(opts.Context) > cfg.MaxOptsFieldLen {
+		return entity.EntryOpts{}, errMcp.InputTooLong(
+			cli.AttrContext, cfg.MaxOptsFieldLen,
+		)
+	}
+	if len(opts.Rationale) > cfg.MaxOptsFieldLen {
+		return entity.EntryOpts{}, errMcp.InputTooLong(
+			cli.AttrRationale, cfg.MaxOptsFieldLen,
+		)
+	}
+	if len(opts.Consequence) > cfg.MaxOptsFieldLen {
+		return entity.EntryOpts{}, errMcp.InputTooLong(
+			cli.AttrConsequence, cfg.MaxOptsFieldLen,
+		)
+	}
+	if len(opts.Lesson) > cfg.MaxOptsFieldLen {
+		return entity.EntryOpts{}, errMcp.InputTooLong(
+			cli.AttrLesson, cfg.MaxOptsFieldLen,
+		)
+	}
+	if len(opts.Application) > cfg.MaxOptsFieldLen {
+		return entity.EntryOpts{}, errMcp.InputTooLong(
+			cli.AttrApplication, cfg.MaxOptsFieldLen,
+		)
+	}
 	opts.Context = sanitize.Content(opts.Context)
 	opts.Rationale = sanitize.Content(opts.Rationale)
 	opts.Consequence = sanitize.Content(opts.Consequence)
 	opts.Lesson = sanitize.Content(opts.Lesson)
 	opts.Application = sanitize.Content(opts.Application)
 	opts.SessionID = sanitize.SessionID(opts.SessionID)
-	return opts
+	return opts, nil
 }
