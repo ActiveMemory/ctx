@@ -1715,12 +1715,12 @@ Spec: `specs/ceremony-profiles.md`
 
 ### Phase SK: Skill Surface Polish (Phase 0a; prerequisite for Phase KB) `#priority:high #added:2026-05-09`
 
-Spec: TBD (design ref: `ideas/002-editorial-pipeline-and-skill-rigor.md` §3 "Reframing the wishy-washy skills")
+Spec: `specs/skill-surface-polish.md` (design ref: `ideas/002-editorial-pipeline-and-skill-rigor.md` §3 "Reframing the wishy-washy skills")
 
 Tightens existing capture skills to sibling-project rigor before the editorial pipeline (Phase KB) lifts that pattern wholesale. Independent of Phase RG; both can ship in parallel.
 
-- [ ] Add `MarkFlagRequired` to `ctx decision add` for `--context`, `--rationale`, `--consequence`; reject placeholder values (`TBD`, `see chat`, whitespace-only) at CLI level
-- [ ] Add `MarkFlagRequired` to `ctx learning add` for `--context`, `--lesson`, `--application`; same placeholder rejection
+- [x] Add `MarkFlagRequired` to `ctx decision add` for `--context`, `--rationale`, `--consequence`; reject placeholder values (`TBD`, `see chat`, whitespace-only) at CLI level
+- [x] Add `MarkFlagRequired` to `ctx learning add` for `--context`, `--lesson`, `--application`; same placeholder rejection
 - [ ] Add `--brief <path>` flag to `/ctx-spec` skill: when present, read the file as authoritative source per the sibling's authority order (frozen contracts > recorded decisions > debrief > agent inference labeled `TBD`); skip the fresh template Q&A
 - [ ] Update `/ctx-plan` skill to always offer to write the debated brief to `.context/briefs/<TS>-<slug>.md` at the end of an interview (creating `.context/briefs/` if absent)
 - [ ] Add an `Authority boundary (vs other skills)` section to `/ctx-decision-add`, `/ctx-learning-add`, `/ctx-task-add`, `/ctx-convention-add` skill files (prevent silent promotion handover→decision, learning→convention, etc., without explicit user ask)
