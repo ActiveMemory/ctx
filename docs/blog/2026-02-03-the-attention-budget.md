@@ -1,7 +1,7 @@
 ---
 title: "The Attention Budget: Why Your AI Forgets What You Just Told It"
 date: 2026-02-03
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - attention mechanics
@@ -24,7 +24,7 @@ topics:
 
 ## Why Your AI Forgets What You Just Told It
 
-*Jose Alekhinne / 2026-02-03*
+*Volkan Özçelik / 2026-02-03*
 
 !!! question "Ever Wondered Why AI Gets Worse the Longer You Talk?"
     You paste a 2000-line file, explain the bug in detail, provide three

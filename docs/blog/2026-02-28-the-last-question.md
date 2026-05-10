@@ -7,7 +7,7 @@
 
 title: "The Last Question"
 date: 2026-02-28
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - context continuity
@@ -23,7 +23,7 @@ topics:
 
 ## The System That Never Forgets
 
-*Jose Alekhinne / February 28, 2026*
+*Volkan Özçelik / February 28, 2026*
 
 !!! quote "The Origin"
     *"The last question was asked for the first time, half in jest..."*

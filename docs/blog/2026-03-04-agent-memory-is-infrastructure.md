@@ -7,7 +7,7 @@
 
 title: "Agent Memory Is Infrastructure"
 date: 2026-03-04
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - context engineering
@@ -23,7 +23,7 @@ topics:
 
 ## The Problem Isn't Forgetting: It's Not Building Anything That Lasts.
 
-*Jose Alekhinne / March 4, 2026*
+*Volkan Özçelik / March 4, 2026*
 
 !!! question "A New Developer Joins Your Team Tomorrow and Clones the Repo: What Do They Know?"
     If the answer depends on which machine they're using, which

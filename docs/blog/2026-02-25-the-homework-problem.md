@@ -7,7 +7,7 @@
 
 title: "The Dog Ate My Homework: Teaching AI Agents to Read Before They Write"
 date: 2026-02-25
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - hooks
@@ -24,7 +24,7 @@ topics:
 
 ## Teaching AI Agents to Read Before They Write
 
-*Jose Alekhinne / February 25, 2026*
+*Volkan Özçelik / February 25, 2026*
 
 !!! question "Does Your AI Actually Read the Instructions?"
     You wrote the playbook. You organized the files. You even put

@@ -1,7 +1,7 @@
 ---
 title: "Skills That Fight the Platform"
 date: 2026-02-04
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - context engineering
@@ -17,7 +17,7 @@ topics:
 
 ## When Your Custom Prompts Work against You
 
-*Jose Alekhinne / 2026-02-04*
+*Volkan Özçelik / 2026-02-04*
 
 !!! question "Have You Ever Written a Skill That Made Your AI Worse?"
     You craft detailed instructions. You add examples. You build elaborate

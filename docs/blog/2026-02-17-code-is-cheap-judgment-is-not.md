@@ -7,7 +7,7 @@
 
 title: "Code Is Cheap. Judgment Is Not."
 date: 2026-02-17
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - AI and expertise
@@ -23,7 +23,7 @@ topics:
 
 ## Why AI Replaces Effort, Not Expertise
 
-*Jose Alekhinne / February 17, 2026*
+*Volkan Özçelik / February 17, 2026*
 
 !!! question "Are You Worried about AI Taking Your Job?"
     You might be confusing the thing that's *cheap* with the

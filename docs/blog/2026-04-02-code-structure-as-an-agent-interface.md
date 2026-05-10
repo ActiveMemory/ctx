@@ -8,7 +8,7 @@
 title: "Code Structure as an Agent Interface:
   What 19 AST Tests Taught Us About Agent-Readable Code"
 date: 2026-04-02
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - ast
@@ -29,7 +29,7 @@ against the millions of `strings.Split(s, "/")` calls in its training data
 and coast on statistical inference. It has to actually look up what 
 `token.Slash` is.**
 
-*Jose Alekhinne / April 2, 2026*
+*Volkan Özçelik / April 2, 2026*
 
 ## How It Began
 
