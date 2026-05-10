@@ -8,12 +8,17 @@ package extract
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
+	"github.com/ActiveMemory/ctx/internal/sanitize"
 )
 
 // EntryArgs extracts required type/content from MCP args.
+//
+// Validates that both fields are present and that content does not
+// exceed MaxContentLen.
 //
 // Parameters:
 //   - args: MCP tool arguments
@@ -21,7 +26,7 @@ import (
 // Returns:
 //   - string: extracted entry type
 //   - string: extracted content string
-//   - error: non-nil if type or content is missing
+//   - error: non-nil if type or content is missing, or content too long
 func EntryArgs(
 	args map[string]interface{},
 ) (string, string, error) {
@@ -30,6 +35,13 @@ func EntryArgs(
 
 	if entryType == "" || content == "" {
 		return "", "", errMcp.TypeContentRequired()
+	}
+
+	// MCP-SAN.1: Enforce input length limits.
+	if len(content) > cfg.MaxContentLen {
+		return "", "", errMcp.InputTooLong(
+			field.Content, cfg.MaxContentLen,
+		)
 	}
 
 	return entryType, content, nil
@@ -74,5 +86,26 @@ func Opts(args map[string]interface{}) entity.EntryOpts {
 	if v, ok := args[field.Commit].(string); ok {
 		opts.Commit = v
 	}
+	return opts
+}
+
+// SanitizedOpts builds EntryOpts with content sanitization applied
+// to all text fields.
+//
+// Parameters:
+//   - args: MCP tool arguments with optional entry fields
+//
+// Returns:
+//   - entity.EntryOpts: sanitized options struct
+func SanitizedOpts(
+	args map[string]interface{},
+) entity.EntryOpts {
+	opts := Opts(args)
+	opts.Context = sanitize.Content(opts.Context)
+	opts.Rationale = sanitize.Content(opts.Rationale)
+	opts.Consequence = sanitize.Content(opts.Consequence)
+	opts.Lesson = sanitize.Content(opts.Lesson)
+	opts.Application = sanitize.Content(opts.Application)
+	opts.SessionID = sanitize.SessionID(opts.SessionID)
 	return opts
 }

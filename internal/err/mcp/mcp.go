@@ -65,3 +65,19 @@ func UnknownEventType(eventType string) error {
 		eventType,
 	)
 }
+
+// InputTooLong returns an error indicating that a field exceeds the
+// maximum allowed byte length.
+//
+// Parameters:
+//   - field: the name of the field that was too long
+//   - maxLen: the maximum allowed byte length
+//
+// Returns:
+//   - error: "<field> exceeds maximum length (<maxLen> bytes)"
+func InputTooLong(field string, maxLen int) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyMCPErrInputTooLong),
+		field, maxLen,
+	)
+}
