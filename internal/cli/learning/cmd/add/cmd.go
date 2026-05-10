@@ -28,11 +28,8 @@ import (
 //   - *cobra.Command: Configured learning add subcommand
 func Cmd() *cobra.Command {
 	c := build.Cmd(entry.Learning, cmd.DescKeyLearningAdd, cmd.UseLearningAdd)
-	if err := validate.RequireBodyFlags(
+	validate.RequireBodyFlags(
 		c, cFlag.Context, cFlag.Lesson, cFlag.Application,
-	); err != nil {
-		// Programming error — see decision/cmd/add for rationale.
-		panic(err)
-	}
+	)
 	return c
 }

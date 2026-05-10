@@ -85,7 +85,7 @@ This skill records principle-level lessons discovered through real
 work. It does not unilaterally promote material from adjacent skills:
 
 - **Do not promote a learning into a convention.** A learning is
-  "this gotcha cost us time" — generalising it into "we always do
+  "this gotcha cost us time" — generalizing it into "we always do
   X" is `/ctx-convention-add`'s job and requires explicit user ask.
 - **Do not promote a learning into a decision.** Even when the
   lesson clarifies a trade-off, the trade-off itself belongs in

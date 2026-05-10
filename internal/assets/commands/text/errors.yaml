@@ -578,10 +578,6 @@ err.validation.flag-empty:
   short: 'flag --%s is required and cannot be empty or whitespace-only'
 err.validation.flag-placeholder:
   short: 'flag --%s rejected placeholder value %q; provide concrete content'
-err.validation.flag-unregistered:
-  short: 'flag %q not registered on command %q'
-err.validation.mark-required:
-  short: 'mark flag %q required: %w'
 err.hub.generate-token:
   short: 'generate token: %w'
 err.hub.internal:

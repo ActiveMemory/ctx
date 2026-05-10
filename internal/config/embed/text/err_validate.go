@@ -44,11 +44,4 @@ const (
 	// DescKeyErrValidateFlagPlaceholder is the text key for a
 	// placeholder-valued required body flag.
 	DescKeyErrValidateFlagPlaceholder = "err.validation.flag-placeholder"
-	// DescKeyErrValidateFlagUnregistered is the text key for a
-	// programming-error case where RequireBodyFlags is asked to
-	// require a flag that does not exist on the command.
-	DescKeyErrValidateFlagUnregistered = "err.validation.flag-unregistered"
-	// DescKeyErrValidateMarkRequired is the text key for a failure
-	// when calling cobra.Command.MarkFlagRequired.
-	DescKeyErrValidateMarkRequired = "err.validation.mark-required"
 )

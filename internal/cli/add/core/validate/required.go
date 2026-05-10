@@ -15,34 +15,29 @@ import (
 	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
 )
 
-// RequireBodyFlags marks each named flag as cobra-required and
-// wraps the command's PreRunE to reject placeholder values
-// (TBD, see chat, n/a, etc., plus whitespace-only) on those
-// flags. Existing PreRunE is preserved and runs after the
-// placeholder check.
+// RequireBodyFlags wraps the command's PreRunE so each named flag
+// is read and rejected when its value is empty, whitespace-only,
+// or matches the closed placeholder set (TBD, see chat, n/a,
+// etc.). Existing PreRunE is preserved and runs after the check.
+//
+// The check is the single enforcement point: there is no
+// [cobra.Command.MarkFlagRequired] call, so help text does not
+// gain a "(required)" annotation. Cobra defaults string flags to
+// the empty string, which the empty check rejects with a clear
+// message — making the marker redundant and the discarded error
+// it returns avoidable.
 //
 // Parameters:
 //   - c: cobra command to mutate
-//   - flags: names of body flags to require and policy-check
-//
-// Returns:
-//   - error: non-nil if any named flag does not exist on c, in
-//     which case the command is left unmodified
-func RequireBodyFlags(c *cobra.Command, flags ...string) error {
-	for _, name := range flags {
-		if c.Flag(name) == nil {
-			return errCli.FlagUnregistered(name, c.Name())
-		}
-	}
-	for _, name := range flags {
-		if markErr := c.MarkFlagRequired(name); markErr != nil {
-			return errCli.MarkRequiredFailed(name, markErr)
-		}
-	}
+//   - flags: names of body flags to read and policy-check
+func RequireBodyFlags(c *cobra.Command, flags ...string) {
 	prev := c.PreRunE
 	c.PreRunE = func(cmd *cobra.Command, args []string) error {
 		for _, name := range flags {
-			value, _ := cmd.Flags().GetString(name)
+			value, getErr := cmd.Flags().GetString(name)
+			if getErr != nil {
+				return getErr
+			}
 			if rejectErr := RejectPlaceholder(
 				name, value,
 			); rejectErr != nil {
@@ -54,7 +49,6 @@ func RequireBodyFlags(c *cobra.Command, flags ...string) error {
 		}
 		return nil
 	}
-	return nil
 }
 
 // RejectPlaceholder returns an error if value is a placeholder

@@ -56,13 +56,13 @@ of the file. Prefer specifying a section for organization.
 
 ## Authority boundary (vs other skills)
 
-This skill records standardised patterns the project follows. It
+This skill records standardized patterns the project follows. It
 does not unilaterally promote material from adjacent skills:
 
 - **Do not promote a one-off choice into a convention.** A single
   decision with rationale is `/ctx-decision-add`'s territory; a
   convention requires the pattern to recur and warrant codifying.
-  Ask before generalising.
+  Ask before generalizing.
 - **Do not promote a learning into a convention.** "Always do X
   going forward" is a convention; "we got bitten by Y" is a
   learning. The user must explicitly say "codify that" before

@@ -28,13 +28,8 @@ import (
 //   - *cobra.Command: Configured decision add subcommand
 func Cmd() *cobra.Command {
 	c := build.Cmd(entry.Decision, cmd.DescKeyDecisionAdd, cmd.UseDecisionAdd)
-	if err := validate.RequireBodyFlags(
+	validate.RequireBodyFlags(
 		c, cFlag.Context, cFlag.Rationale, cFlag.Consequence,
-	); err != nil {
-		// Programming error — every body flag we name must exist
-		// on the shared add command. Panic at command-construction
-		// time rather than silently shipping a half-wired command.
-		panic(err)
-	}
+	)
 	return c
 }
