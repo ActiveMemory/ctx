@@ -21,15 +21,19 @@ import (
 // Adds a new learning entry to LEARNINGS.md with the
 // required provenance, context, lesson, and application
 // flags. Implementation lives in the shared add core; this
-// noun-level constructor additionally enforces that the
-// three body flags are present and non-placeholder.
+// noun-level constructor installs a PreRunE that calls
+// [validate.BodyFlags] to reject empty or placeholder values
+// on the three body flags.
 //
 // Returns:
 //   - *cobra.Command: Configured learning add subcommand
 func Cmd() *cobra.Command {
 	c := build.Cmd(entry.Learning, cmd.DescKeyLearningAdd, cmd.UseLearningAdd)
-	validate.RequireBodyFlags(
-		c, cFlag.Context, cFlag.Lesson, cFlag.Application,
-	)
+	c.PreRunE = func(cobraCmd *cobra.Command, _ []string) error {
+		return validate.BodyFlags(
+			cobraCmd,
+			cFlag.Context, cFlag.Lesson, cFlag.Application,
+		)
+	}
 	return c
 }

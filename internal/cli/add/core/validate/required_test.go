@@ -67,104 +67,86 @@ func TestRejectPlaceholderTrimsBeforeMatching(t *testing.T) {
 	}
 }
 
-func TestRequireBodyFlagsRejectsPlaceholderViaPreRunE(t *testing.T) {
-	ran := false
+// newCmd builds a minimal cobra command with two string flags and
+// a no-op RunE — the standard test fixture for the BodyFlags
+// PreRunE pattern that the noun-level constructors use.
+func newCmd() *cobra.Command {
 	c := &cobra.Command{
-		Use: "test",
-		RunE: func(_ *cobra.Command, _ []string) error {
-			ran = true
-			return nil
-		},
+		Use:  "test",
+		RunE: func(_ *cobra.Command, _ []string) error { return nil },
 	}
 	c.Flags().String("context", "", "")
 	c.Flags().String("rationale", "", "")
-	RequireBodyFlags(c, "context", "rationale")
+	c.SetOut(&strings.Builder{})
+	c.SetErr(&strings.Builder{})
+	return c
+}
+
+func TestBodyFlagsAcceptsLegitimateValues(t *testing.T) {
+	c := newCmd()
+	c.SetArgs([]string{
+		"--context", "real context",
+		"--rationale", "real rationale",
+	})
+	if execErr := c.Execute(); execErr != nil {
+		t.Fatalf("parse: %v", execErr)
+	}
+	if err := BodyFlags(c, "context", "rationale"); err != nil {
+		t.Errorf("BodyFlags rejected legitimate input: %v", err)
+	}
+}
+
+func TestBodyFlagsRejectsPlaceholder(t *testing.T) {
+	c := newCmd()
 	c.SetArgs([]string{
 		"--context", "TBD",
 		"--rationale", "good reason",
 	})
-	c.SetOut(&strings.Builder{})
-	c.SetErr(&strings.Builder{})
-	err := c.Execute()
+	if execErr := c.Execute(); execErr != nil {
+		t.Fatalf("parse: %v", execErr)
+	}
+	err := BodyFlags(c, "context", "rationale")
 	if err == nil {
 		t.Fatal("expected placeholder rejection")
 	}
 	if !strings.Contains(err.Error(), "context") {
 		t.Errorf("error should name the offending flag: %v", err)
 	}
-	if ran {
-		t.Error("RunE should not have executed after PreRunE rejected input")
-	}
 }
 
-func TestRequireBodyFlagsAllowsLegitimateInput(t *testing.T) {
-	ran := false
-	c := &cobra.Command{
-		Use: "test",
-		RunE: func(_ *cobra.Command, _ []string) error {
-			ran = true
-			return nil
-		},
+func TestBodyFlagsRejectsMissingFlag(t *testing.T) {
+	// Cobra defaults --context to "" when omitted; the empty-value
+	// check catches it through the same path as a placeholder.
+	c := newCmd()
+	c.SetArgs([]string{"--rationale", "ok"})
+	if execErr := c.Execute(); execErr != nil {
+		t.Fatalf("parse: %v", execErr)
 	}
-	c.Flags().String("context", "", "")
-	c.Flags().String("rationale", "", "")
-	RequireBodyFlags(c, "context", "rationale")
-	c.SetArgs([]string{
-		"--context", "real context",
-		"--rationale", "real rationale",
-	})
-	c.SetOut(&strings.Builder{})
-	c.SetErr(&strings.Builder{})
-	if err := c.Execute(); err != nil {
-		t.Fatalf("legitimate input rejected: %v", err)
-	}
-	if !ran {
-		t.Error("RunE should have executed")
-	}
-}
-
-func TestRequireBodyFlagsPreservesExistingPreRunE(t *testing.T) {
-	preRan := false
-	c := &cobra.Command{
-		Use: "test",
-		PreRunE: func(_ *cobra.Command, _ []string) error {
-			preRan = true
-			return nil
-		},
-		RunE: func(_ *cobra.Command, _ []string) error { return nil },
-	}
-	c.Flags().String("context", "", "")
-	RequireBodyFlags(c, "context")
-	c.SetArgs([]string{"--context", "legitimate"})
-	c.SetOut(&strings.Builder{})
-	c.SetErr(&strings.Builder{})
-	if err := c.Execute(); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if !preRan {
-		t.Error("existing PreRunE should still execute")
-	}
-}
-
-// TestRequireBodyFlagsRejectsMissingFlag verifies that omitting
-// the body flag entirely is rejected by PreRunE — cobra's default
-// for string flags is "", which trips the empty-value check. No
-// separate MarkFlagRequired is needed.
-func TestRequireBodyFlagsRejectsMissingFlag(t *testing.T) {
-	c := &cobra.Command{
-		Use:  "test",
-		RunE: func(_ *cobra.Command, _ []string) error { return nil },
-	}
-	c.Flags().String("context", "", "")
-	RequireBodyFlags(c, "context")
-	c.SetArgs([]string{})
-	c.SetOut(&strings.Builder{})
-	c.SetErr(&strings.Builder{})
-	err := c.Execute()
+	err := BodyFlags(c, "context", "rationale")
 	if err == nil {
 		t.Fatal("expected rejection when --context is missing")
 	}
 	if !strings.Contains(err.Error(), "context") {
 		t.Errorf("error should name --context: %v", err)
+	}
+}
+
+func TestBodyFlagsStopsAtFirstFailure(t *testing.T) {
+	// Flag order in the call determines which failure is reported
+	// when multiple flags fail.
+	c := newCmd()
+	c.SetArgs([]string{
+		"--context", "TBD",
+		"--rationale", "n/a",
+	})
+	if execErr := c.Execute(); execErr != nil {
+		t.Fatalf("parse: %v", execErr)
+	}
+	err := BodyFlags(c, "rationale", "context")
+	if err == nil {
+		t.Fatal("expected rejection")
+	}
+	if !strings.Contains(err.Error(), "rationale") {
+		t.Errorf("expected --rationale to be reported first, got %v", err)
 	}
 }
