@@ -54,9 +54,11 @@ func add(
 	// MCP-SAN.3: Sanitize content before writing to .context/.
 	content = sanitize.Content(content)
 
-	t, addErr := handler.Add(
-		d, entryType, content, extract.SanitizedOpts(args),
-	)
+	opts, optsErr := extract.SanitizedOpts(args)
+	if optsErr != nil {
+		return out.ToolError(id, optsErr.Error())
+	}
+	t, addErr := handler.Add(d, entryType, content, opts)
 	return out.ToolResult(id, t, addErr)
 }
 
@@ -161,10 +163,11 @@ func watchUpdate(
 	// MCP-SAN.3: Sanitize content before writing to .context/.
 	content = sanitize.Content(content)
 
-	t, updateErr := handler.WatchUpdate(
-		d, entryType, content,
-		extract.SanitizedOpts(args),
-	)
+	opts, optsErr := extract.SanitizedOpts(args)
+	if optsErr != nil {
+		return out.ToolError(id, optsErr.Error())
+	}
+	t, updateErr := handler.WatchUpdate(d, entryType, content, opts)
 	return out.ToolResult(id, t, updateErr)
 }
 

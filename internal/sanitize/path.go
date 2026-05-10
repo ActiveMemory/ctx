@@ -29,8 +29,5 @@ func SessionID(s string) string {
 	s = strings.ReplaceAll(s, cfgSan.Backslash, "")
 	s = regex.SanSessionIDUnsafe.ReplaceAllString(s, cfgSan.HyphenReplace)
 	s = strings.Trim(s, cfgSan.HyphenReplace)
-	if len(s) > cfgSan.MaxSessionIDLen {
-		s = s[:cfgSan.MaxSessionIDLen]
-	}
-	return s
+	return truncate(s, cfgSan.MaxSessionIDLen)
 }
