@@ -3,6 +3,12 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-10 | Editorial constitution at .context/ingest/KB-RULES.md, not CONSTITUTION.md |
+| 2026-05-10 | Phase KB ships handover plus editorial paired, not split |
+| 2026-05-10 | KB ontology is pipeline-only-writer; no /ctx-kb-decide parallel skill |
+| 2026-05-10 | Mandate git as architectural precondition |
+| 2026-05-10 | Lift sibling editorial pipeline shape into ctx as v1, paired with handover |
+| 2026-05-08 | Gate mkdir inside state.Dir() rather than per-caller |
 | 2026-04-16 | Deprecate and remove ctx backup |
 | 2026-04-14 | doc.go quality floor: behavior-grounded, ~25-100 body lines, related-packages section required |
 | 2026-04-14 | Bootstrap stays under ctx system bootstrap (reverted experimental top-level promotion) |
@@ -127,6 +133,90 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-10-001857] Editorial constitution at .context/ingest/KB-RULES.md, not CONSTITUTION.md
+
+**Status**: Accepted
+
+**Context**: things-wtf hand-rolled an editorial pipeline at the repo root with 10-CONSTITUTION.md, colliding with .context/CONSTITUTION.md. CLAUDE.md spent paragraphs explaining the layer split (workflow infra at repo root vs ctx layer at .context/ vs domain content at docs/). The naming collision is the core friction.
+
+**Decision**: Editorial constitution at .context/ingest/KB-RULES.md, not CONSTITUTION.md
+
+**Rationale**: Sibling project hit and named-their-way-out-of this exact conflict (their file is 10-INGEST_RULES.md, with an explicit naming-by-rename rule recorded in their domain-decisions.md schema header: 'KB-side filename is domain-decisions.md to disambiguate from the root file'). Lift the rename, not just the feature; learn from their resolved wound rather than re-fight the conflict.
+
+**Consequence**: Pipeline templates use KB-RULES.md throughout (specs/kb-editorial-pipeline.md and brief reflect this); ctx CONSTITUTION.md retains its singular meaning as the project-level invariants file; no layer-bleed documentation needed in CLAUDE.md to cover an avoided collision; same naming discipline carries through to domain-decisions.md (kept separate from DECISIONS.md by the same logic).
+
+---
+
+## [2026-05-10-001856] Phase KB ships handover plus editorial paired, not split
+
+**Status**: Accepted
+
+**Context**: Trade-off considered: handover and editorial pipeline are technically separable. Handover alone gives narrative thread between sessions. Editorial alone piles up closeouts that 'do you remember?' reads via the postdated-unfolded-closeout path. Either could ship without the other; question was whether to split into two ships for smaller risk per release.
+
+**Decision**: Phase KB ships handover plus editorial paired, not split
+
+**Rationale**: The closeout/fold mechanism is the integration point between the two features. Shipping paired guarantees the fold gets real-world stress on day one rather than being added retroactively when the second feature lands. Better-together over smaller-ship; integration coherence over delivery cadence; the user's lift-the-whole-shape posture extends to shipping coherence.
+
+**Consequence**: Phase KB is bigger than either feature alone; KB-2 sub-phase covers things-wtf port as the integration regression suite; ideas/001 handover work folds into Phase KB rather than shipping as its own phase; the polish-PR (Phase SK) and git-mandate (Phase RG) Phase 0 prerequisites land first to keep Phase KB clean.
+
+---
+
+## [2026-05-10-001856] KB ontology is pipeline-only-writer; no /ctx-kb-decide parallel skill
+
+**Status**: Accepted
+
+**Context**: Designing the KB editorial layer raised the question of whether KB editorial decisions need a parallel /ctx-kb-decide skill mirroring /ctx-decision-add. Three resolutions tested: alpha) skill surface doubles (every capture skill gets a kb sibling); beta) capture skills become mode-aware routers; gamma) capture skills stay single-purpose with user discipline.
+
+**Decision**: KB ontology is pipeline-only-writer; no /ctx-kb-decide parallel skill
+
+**Rationale**: All three rejected after a deeper reframe surfaced by the user: in a KB you don't decide, you increase confidence. A claim with confidence greater than 0.9 is fact-by-contract; lower confidence needs more evidence. Even natural-language assertions ('we are spinning off X, anchor on this') are semantically evidence-capture events, not decision-capture events. The sibling pipeline-only-writer model is not rigid; it is the ontologically correct surface for evidence-tracked knowledge.
+
+**Consequence**: KB skill surface stays small: 4 mode skills (ingest/ask/site-review/ground) plus 1 lightweight ctx kb note for capture-without-pipeline; existing /ctx-decision-add etc. unchanged in authority; users who want to record a KB editorial framing instead drop a finding into the inbox or hand-edit the markdown directly. No router question on every capture; no parallel skill maintenance burden.
+
+---
+
+## [2026-05-10-001856] Mandate git as architectural precondition
+
+**Status**: Accepted
+
+**Context**: ctx today silently degrades without git via commit:none sentinels in provenance flags; doctor effectively says 'git required for this to work properly' without enforcing. Sibling project mandates git architecturally and says so explicitly. User confirmed N approximately 0 ctx projects in practice run without git. Editorial pipeline lift inherits the git-required assumption (closeout sha:/branch:, evidence-index SHA-pinned in-repo citations, handover Provenance from git HEAD).
+
+**Decision**: Mandate git as architectural precondition
+
+**Rationale**: Persistent-memory promise is dishonest without an undo layer: LLM agents are not trustworthy stewards of files; git reflog is the recovery path. Eliminates dead-code branches across every git-touching path. Trust boundary: refuse-on-no-git rather than auto-git-init (ctx never modifies user filesystem outside .context/). User: we should have done this on day zero.
+
+**Consequence**: Breaking change in next minor release; specs/require-git.md written; commit:none sentinel becomes unreachable across gitmeta and doctor advisories; CONSTITUTION.md amendment + DECISIONS.md entry will land during Phase RG implementation; release notes carry one-command migration ('run git init in any pre-existing git-less ctx project before upgrading').
+
+---
+
+## [2026-05-10-001820] Lift sibling editorial pipeline shape into ctx as v1, paired with handover
+
+**Status**: Accepted
+
+**Context**: Sibling clean-room project (analyzed undercover; not named to avoid carryover) ships a battle-tested editorial pipeline (4 modes, 9 KB artifacts, closeout/fold mechanism, browseable site rendering). things-wtf-disaster-recovery has been hand-rolling the same shape for weeks at workaround cost: CLAUDE.md disables half of ctx code-dev skills, 10-CONSTITUTION.md at repo root collides with .context/CONSTITUTION.md, hand-typed 8-item closeouts, hand-managed 20-INBOX.md. Considered lift-intact vs hedge-and-defer.
+
+**Decision**: Lift sibling editorial pipeline shape into ctx as v1, paired with handover
+
+**Rationale**: The sibling design is field-tested under production use; things-wtf is a live validation corpus already paying the workaround tax (N=1 lived validation beats hypothetical user research). Initial defer-on-uncertainty instinct corrected by user pushback to lift the whole shape with a non-colliding rename (KB-RULES.md, not CONSTITUTION.md). Two organizing principles (P1: LLM is the migration tool; P2: a KB of KBs is a KB) make lift-the-whole-shape rational rather than reckless.
+
+**Consequence**: specs/kb-editorial-pipeline.md written; three TASKS.md phases added (SK polish, RG require-git, KB editorial+handover); KB has its own write authority separate from canonical files; closeout/fold mechanism integrates editorial work with session continuity via handover; ideas/003 brief produced as design source.
+
+---
+
+## [2026-05-08-195040] Gate mkdir inside state.Dir() rather than per-caller
+
+**Status**: Accepted
+
+**Context**: Closing the cross-IDE Cursor leak required preventing state.Dir() from materializing .context/state/ in uninitialized projects. Two viable options: (A) gate inside state.Dir itself; (B) require every caller to check Initialized() first.
+
+**Decision**: Gate mkdir inside state.Dir() rather than per-caller
+
+**Rationale**: Option (A) makes the invariant ('no .context/state/ in uninitialized projects') structurally enforced. The leak's root cause was exactly the (B)-style assumption — check_reminder.Run deliberately skipped the gate to print provenance unconditionally, and that path silently produced the leak via Preamble -> nudge.Paused -> PauseMarkerPath -> state.Dir. As long as Dir() mkdirs unconditionally, every future caller is one missed gate away from re-introducing the bug.
+
+**Consequence**: state.Dir() now returns errCtx.ErrNotInitialized for uninit projects. Hook callers' existing 'if dirErr != nil { return nil }' branches absorb it silently; interactive callers (ctx add, task complete, prune) surface a path-bearing message via cobra. cooldown.TombstonePath was refactored to delegate to state.Dir so the gate also covers the PreToolUse 'ctx agent' path. memory.SaveState/LoadState were left alone because they use 0755 (different leak class) and are user-initiated, not auto-triggered.
+
+---
 
 ## [2026-04-16-011520] Deprecate and remove ctx backup
 

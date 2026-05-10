@@ -17,6 +17,12 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-10 | An ongoing user's concrete workaround tax is the strongest validation evidence |
+| 2026-05-10 | Lift renames alongside features when borrowing from battle-tested external designs |
+| 2026-05-10 | KB epistemology: in a KB you do not decide, you increase confidence |
+| 2026-05-10 | P2: A KB of KBs is a KB |
+| 2026-05-10 | P1: The LLM is the migration tool |
+| 2026-05-08 | Cursor imports Claude Code hooks and sets CLAUDE_PROJECT_DIR per workspace |
 | 2026-04-14 | Constitution forbids context window as a deferral excuse |
 | 2026-04-14 | docs/cli/system.md and embed/cmd/system.go diverged on bootstrap promotion intent |
 | 2026-04-14 | Raft-lite trade-off is the load-bearing choice in internal/hub |
@@ -120,6 +126,66 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-10-001859] An ongoing user's concrete workaround tax is the strongest validation evidence
+
+**Context**: When extracting the editorial pipeline, the user pointed at things-wtf-disaster-recovery as a project where they were already running the editorial pattern manually — but at concrete cost: CLAUDE.md disabling half of ctx code-dev skills (/ctx-commit, /ctx-implement, /ctx-spec, /ctx-architecture, /ctx-brainstorm, /ctx-wrap-up), 10-CONSTITUTION.md at repo root colliding with .context/CONSTITUTION.md, hand-typed 8-item closeouts, hand-managed 20-INBOX.md, dedicated reference/vcf/external-grounding.md for ground-mode. The workaround was visible and the pain was specific.
+
+**Lesson**: An ongoing user paying concrete workaround tax is the strongest validation evidence — it beats hypothetical user research, beats N=2 design discussion, beats 'this seems useful.' The shape of the workaround maps directly to the gap the feature should fill. Validation is essentially complete before any code is written; the new feature mechanizes what already works manually.
+
+**Application**: When deciding whether to ship a feature, prefer 'a real user is paying real workaround cost right now' over 'this seems valuable.' Use the workaround details (which files they created, which conventions they bent, which skills they disabled) as the inverse-spec of what to build. Ship the feature shape that exactly matches what they hand-rolled, and use their project as the regression test corpus (Phase KB-2 ports things-wtf as the validation step).
+
+---
+
+## [2026-05-10-001859] Lift renames alongside features when borrowing from battle-tested external designs
+
+**Context**: When extracting the editorial pipeline from the sibling project, noticed they named their editorial constitution 10-INGEST_RULES.md (not 10-CONSTITUTION.md), and explicitly recorded a 'domain-decisions.md is named to disambiguate from .anchor/DECISIONS.md (naming-by-rename rule)' note in their schemas. They had hit and resolved naming conflicts that things-wtf was actively re-fighting (with 10-CONSTITUTION.md at repo root colliding with .context/CONSTITUTION.md).
+
+**Lesson**: When lifting from a battle-tested external design, lift the renames and disambiguation moves alongside the features. Intentional renames encode resolved conflicts; treating them as cosmetic preferences re-litigates the underlying fight in your codebase. The aesthetic difference between two names often hides hard-won architectural learning.
+
+**Application**: ctx editorial pipeline uses KB-RULES.md (not CONSTITUTION.md) and domain-decisions.md (not DECISIONS.md) explicitly because the sibling did. For any future external-design lift, scan the source for renames as signal of resolved-conflict knowledge — and copy them with the rationale (in DECISIONS.md) so future maintainers don't 'simplify' the names back into the conflict zone.
+
+---
+
+## [2026-05-10-001859] KB epistemology: in a KB you do not decide, you increase confidence
+
+**Context**: Considered whether KB editorial decisions need a parallel /ctx-kb-decide skill mirroring /ctx-decision-add. Got stuck on three resolutions (skill surface doubles, mode-aware router, manual discipline) until the user reframed: do you really decide in a KB, or do you just learn and improve confidence? A claim with confidence greater than 0.9 is decided by contract; lower confidence requires more evidence.
+
+**Lesson**: In a knowledge base, the correct ontology has no 'decide' moment — there are only evidence-capture events with confidence bands. Even natural-language assertions like 'we are spinning off X, anchor on this' are semantically evidence-capture (a high-confidence claim arriving), not decision-capture (a choice between alternatives). The pipeline-only-writer model is not rigid; it is the ontologically correct surface for evidence-tracked knowledge.
+
+**Application**: When a feature seems to require a parallel skill mirroring an existing canonical capture skill, check whether the underlying domain has the same ontology. If the new domain operates by 'increase confidence' rather than 'pick a choice,' the parallel skill is the wrong shape and the pipeline approach is right. Useful general check: is this 'I made a call between alternatives' or 'I learned something about the world'? Different ontologies call for different surfaces.
+
+---
+
+## [2026-05-10-001859] P2: A KB of KBs is a KB
+
+**Context**: User raised 'KB of KBs' as a wished-for federation feature for multi-team consolidation (research-master KB pulling several team KBs together). Initial framing treated this as a v2 feature that might require v1 schema decisions like KB-prefixed IDs (research-master/EV-019) or federation roots. User reframed: 'kb is knowledge; knowledge is source; source is ingestable; that's also what makes kb of kbs composable; because kb of kbs is a kb.'
+
+**Lesson**: Recursive composability eliminates whole feature classes. When a 'thing-of-things' feature comes up, ask whether the standard pipeline applied to its own output covers the case before designing a new mechanism. Federation as 'pipeline pointed at another instance of its own input shape' is dramatically simpler than federation as a separate subsystem.
+
+**Application**: Federation does not need v1 schema lockout: source-map kind: kb plus the standard ingest pipeline covers it. Same insight applies to taxonomy-was-wrong recovery (start fresh KB; ingest old as source; discard irrelevant parts at extraction time) and multi-team consolidation (each team owns a KB; master ingests them). Watch for this pattern in future ctx feature design — the 'thing-of-things is a thing' shortcut may collapse the design problem entirely.
+
+---
+
+## [2026-05-10-001859] P1: The LLM is the migration tool
+
+**Context**: Designing schemas for the editorial pipeline raised the question of whether to commit to specific aesthetic choices (EV-### IDs, four named modes, four-band confidence) or hedge with abstract types that could absorb future change. The unwind-cost analysis during /ctx-plan showed every category of being-wrong is essentially cheap because the LLM absorbs the migration: wholesale ID renumbering (LLM cleanup), taxonomy reshuffles (start-fresh-and-ingest-old), schema-band remapping (mathematical and scriptable), path renames (single sweep).
+
+**Lesson**: When designing AI-assisted persistent storage, expensive migrations are absorbed by LLM cleanup passes. Commit to the readable, opinionated, aesthetic schema in v1 instead of hedging with abstract types. Be wrong cheaply: the alternative (hedging upfront) ships a generic shape that nobody loves, and migrations were never as expensive as we feared.
+
+**Application**: For any future ctx feature where the schema-vs-flexibility question arises, default to the specific shape; trust LLM cleanup as the migration story. Surface dirty state via doctor advisories so the agent has a work surface to operate on. Applies broadly: editorial KB schemas, closeout shapes, future feature surfaces. Pair with the discipline of doctor flagging duplicates / divergences so the LLM has clear cases to resolve.
+
+---
+
+## [2026-05-08-195031] Cursor imports Claude Code hooks and sets CLAUDE_PROJECT_DIR per workspace
+
+**Context**: Investigating why .context/state/ appeared in non-ctx projects opened in Cursor. Hypothesis was a Cursor extension or shell hook; turned out to be Cursor's documented Claude-compatibility behavior (https://cursor.com/docs/hooks): it loads ~/.claude hooks and injects CLAUDE_PROJECT_DIR=workspace_root so they 'just work'. Globally-enabled Claude plugins therefore fire in every Cursor workspace.
+
+**Lesson**: When debugging cross-tool side effects, check whether the host tool advertises compatibility with the implicated tool's config format. The leak surface of any global Claude plugin is now 'every Cursor workspace + every Claude Code project', not just 'every Claude Code project'.
+
+**Application**: Hooks must be safe to fire in non-ctx projects: silent bail when state.Initialized() is false, no filesystem side effects. The ctx code-side fix lives in state.Dir's Initialized gate; the design rule is broader — assume hooks may run anywhere, not just where the user invoked ctx init.
 
 ---
 
