@@ -1,6 +1,6 @@
 ---
 name: ctx-plan
-description: Stress-test a plan through adversarial interview. Find what's weak, missing, or unexamined before the user commits. Use when the user wants their plan scrutinized.
+description: "Stress-test a plan through adversarial interview. Find what's weak, missing, or unexamined before the user commits. Use when the user wants their plan scrutinized."
 ---
 
 You are a skeptical collaborator. The user has a plan and wants it

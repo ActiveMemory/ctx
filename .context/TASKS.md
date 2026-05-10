@@ -31,71 +31,14 @@ TASK STATUS LABELS:
   mechanism for tasks; implement that; maybe `ctx task add` can have a 
   `--phase` flag too, and we can have a auditor/normalizer for the current
   task document; or a skill that does a semantic pass, or both too.
-- [x] bug: asking "do you remember" automatically creates a blank .context
-  directory when using cursor
-  (Spec: specs/state-dir-no-mkdir-when-uninitialized.md)
 
 ### Misc
 
-- [x] If context is not initialized, hooks should not run. Right now they run
-  and give a "context diretory outside project root" (that's a side effect). But
-  the issue is the project does not have a .context folder and we don't detect
-  it. **Progress 2026-04-13**: Boundary side effect resolved by git-anchored
-  walk
-  (commit e24941d2). `state.Initialized()` guards added to `check_resource` and
-  `check_backup_age` — the two user-visible relay-nag hooks that were missing
-  them. **Completed 2026-04-16**: `state.Initialized()` guards added to
-  `mark_journal`, `mark_wrapped_up`, `pause`, `resume`. `bootstrap` left
-  unguarded intentionally — its job is to report context dir status, and it
-  already has its own `os.Stat` guard. Safety hooks
-  (`block_dangerous_command`, `block_non_path_ctx`) intentionally run
-  regardless.
 
-- [x] Move `ctx bootstrap` back to `ctx system bootstrap` (hidden). Bootstrap is
-  agent-only plumbing — no human types it interactively. It was incorrectly
-  promoted to top-level in the namespace cleanup. Move the package back to
-  `internal/cli/system/cmd/bootstrap/`, restore
-  `UseSystemBootstrap`/`DescKeySystemBootstrap` constants, re-add `Hidden:
-  true`, update CLAUDE.md templates and skills back to `ctx system bootstrap`,
-  remove from `docs/cli/bootstrap.md` and `docs/cli/index.md` Diagnostics group,
-  remove from `zensical.toml` nav. Spec: specs/cli-namespace-cleanup.md
-  #priority:high #added:2026-04-11 #done:2026-04-12
 
-- [x] Rename `ctx stats` to `ctx usage`. "Stats for what?" — the current name
-  lost its anchor when promoted from `ctx system stats`. `ctx usage`
-  communicates intent: "show me my token usage." `ctx session stats` was
-  considered but rejected as premature — a parent with one child is worse than
-  a flat command. Revisit when `ctx session` has 2+ children. Spec:
-  specs/cli-namespace-cleanup.md #priority:medium #added:2026-04-11
-  #done:2026-04-12
 
-- [x] Rename `ctx resource` to `ctx sysinfo`. Without the `system` prefix,
-  "resource" sounds like it manages project resources (files, assets,
-  infrastructure). It's actually a system-health snapshot: memory, swap, disk,
-  CPU load. `sysinfo` matches the internal package name (`internal/sysinfo`) and
-  is unambiguous. `health` was considered but rejected — too similar to `ctx
-  doctor` and `ctx doctor health` reads wrong. Same rename pattern. Spec:
-  specs/cli-namespace-cleanup.md #priority:medium #added:2026-04-11
-  #done:2026-04-12
 
-- [x] Remove `ctx dep`. Utility is marginal: agents rarely need a flat
-  dependency inventory to make decisions, and `go list -m all` / `npm ls`
-  already cover the use case. Doesn't clear the "would I miss it if it
-  vanished?" bar. Removed command, all support packages, docs, and recipes.
-  #priority:low #added:2026-04-11 #done:2026-04-12
 
-- [x] Introduce `ctx hook` parent command — consolidate hook-related
-  user-facing commands under a single namespace: `ctx hook message
-  list/show/edit/reset` (currently `ctx message`), `ctx hook notify` (currently
-  `ctx notify`), `ctx hook pause` / `ctx hook resume` (currently top-level `ctx
-  pause` / `ctx resume`). "What are we pausing?" — hooks. The current
-  top-level `pause` loses that context. Clarifies the `ctx trigger` vs `ctx
-  hook` distinction: `trigger` = user-authored scripts, `hook` = plugin-shipped
-  machinery + its user-facing controls. Future children: `ctx hook status`
-  (which hooks fired recently), `ctx hook test` (dry-run), `ctx hook event`
-  (currently `ctx event`). Same rename pattern as previous namespace cleanups.
-  Spec: specs/cli-namespace-cleanup.md #priority:medium #added:2026-04-11
-  #done:2026-04-12
 
 ### Agents
 
@@ -113,51 +56,10 @@ TASK STATUS LABELS:
 
 ### Runbooks
 
-- [x] Create `docs/operations/runbooks/release-checklist.md` — canonical
-  pre-release
-  sequence: run codebase-audit, docs-semantic-audit, sanitize-permissions, `make
-  test`, bump version, generate release notes, tag, push. Today this lives in
-  the operator's head + scattered across docs/operations/. Cross-link with
-  `_ctx-release` skill. #priority:high #added:2026-04-11
-  **Completed 2026-04-16**: Created at
-  `docs/operations/runbooks/release-checklist.md`.
-  All runbooks moved from `hack/runbooks/` to `docs/operations/runbooks/` for
-  discoverability on ctx.ist.
 
-- [x] Create `docs/operations/runbooks/breaking-migration.md` — template for
-  users
-  upgrading across breaking CLI renames. What commands changed, how to
-  regenerate CLAUDE.md (`ctx init --force`), how to update personal scripts and
-  hook configs. One instance per breaking release, or a generic template with a
-  per-release appendix. #priority:medium #added:2026-04-11
-  **Completed 2026-04-16**: Created at
-  `docs/operations/runbooks/breaking-migration.md`.
 
-- [x] Create `docs/operations/runbooks/hub-deployment.md` — linear runbook for
-  setting up
-  a ctx Hub for a team: generate admin token, distribute, register clients,
-  verify sync, configure TLS (when H-01/H-02 land). Consolidates pieces
-  currently scattered across hub recipes. #priority:medium #added:2026-04-11
-  **Completed 2026-04-16**: Created at
-  `docs/operations/runbooks/hub-deployment.md`.
 
-- [x] Create `docs/operations/runbooks/new-contributor.md` — onboarding
-  sequence: clone
-  → `ctx init` → `make build && sudo make install` → verify hooks (`claude
-  mcp list`) → run first session → verify context persistence. Currently
-  scattered across README, contributing.md, and setup docs. #priority:medium
-  #added:2026-04-11
-  **Completed 2026-04-16**: Created at
-  `docs/operations/runbooks/new-contributor.md`.
 
-- [x] Create `docs/operations/runbooks/plugin-release.md` — plugin-specific
-  release
-  procedure: update hooks.json, bump version, test against fresh Claude Code
-  install, publish to marketplace, verify `claude mcp list` shows updated
-  version. Not covered by the general release checklist. #priority:low
-  #added:2026-04-11
-  **Completed 2026-04-16**: Created at
-  `docs/operations/runbooks/plugin-release.md`.
 
 ### Misc
 
@@ -215,11 +117,6 @@ TASK STATUS LABELS:
   real-time via the server-streaming Listen RPC, writing to .context/shared/ as
   entries arrive. #priority:high #added:2026-04-08-194415
 
-- [x] Remove any superpowers library references and implement all needed
-  workflow mechanisms (brainstorm, plan, execute, review, subagent dispatch)
-  natively in ctx. No external plugin libraries should be used — ctx must be
-  self-contained. Clean up docs/superpowers/ directory and any remaining
-  references. #priority:high #added:2026-04-06-121002 #done:2026-04-06
 
 - [ ] Deprecate and remove `ctx backup`: hub handles cross-machine persistence,
   backup is environment-specific (SMB/GVFS/rsync), and it is the wrong layer
@@ -247,43 +144,20 @@ TASK STATUS LABELS:
 ### Code Cleanup Findings
 
 
-- [x] Extend flagbind helpers (IntFlag, DurationFlag, DurationFlagP, StringP, 
-  BoolP) and migrate ~50 call sites to unblock TestNoFlagBindOutsideFlagbind 
-  #added:2026-04-01-233250
 
 - [ ] Implement journal compaction: Elastic-style tiered storage with tar.gz 
   backup. Spec: specs/journal-compact.md #added:2026-03-31-110005
 
-- [x] Refactor 28 grandfathered cmd/ purity violations found by 
-  TestCmdDirPurity: move unexported helpers, exported non-Cmd/Run functions, 
-  and types from cmd/ directories to core/. See grandfathered map in 
-  compliance_test.go for the full list. #priority:medium
-  #added:2026-03-31-005115
 
 
-- [x] PD.4.5: Update AGENT_PLAYBOOK.md — add generic "check available skills"
-  instruction #priority:medium #added:2026-03-25-203340
 
 **PD.5 — Validate:**
 
 
 ### Phase -3: DevEx
 
-- [x] Plugin enablement gap: Ref:
-  `ideas/plugin-enablement-gap.md`. Local-installed plugins get
-  registered in `installed_plugins.json` but not auto-added to
-  `enabledPlugins`, so slash commands are invisible in non-ctx
-  projects.
 
-- [x] Add cobra Example fields to CLI commands via
-  examples.yaml #added:2026-03-20-163413
 
-- [x] Add CLI YAML drift detection test: verify flag names in
-  examples.yaml match actual registered flags, and Use: patterns
-  in commands.yaml match Use constants. Structural linkage is
-  already tested; this covers content-level drift. Semantic
-  accuracy (does the description match behavior?) needs periodic
-  LLM audit — not automatable. #priority:medium #added:2026-04-05
 
 - [-] Create ctx-docstrings skill: audit and fix docstrings
   against CONVENTIONS.md Documentation section. Superseded by
@@ -293,8 +167,6 @@ TASK STATUS LABELS:
 
 ### Phase -2: Task completion nudge:
 
-- [x] Move 6 grandfathered cross-package MCP types to entity/ #session:cc97cb0d
-  #branch:main #commit:e8d5c60a #added:2026-04-08-074620
 
 - [ ] Design UserPromptSubmit hook that runs `make audit` at
   session start and surfaces failures as a consolidation-debt
@@ -417,14 +289,6 @@ Session-start checks, suppressibility, and registry for companion MCP tools.
 
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
-- [x] Bug: ctx add task appends to the last Phase section instead of a dedicated
-  location. Tasks added via CLI land inside whatever Phase happens to be last in
-  TASKS.md, breaking Phase structure. Fix: add mandatory --section flag to ctx
-  add
-  task. If the named section does not exist, create it. If --section is
-  omitted, error with message. Heading level fixed from ## to ### to match
-  TASKS.md structure.
-  #priority:high #added:2026-03-25-234813 #done:2026-04-06
 
 ### Phase BLOG: Blog Posts
 
@@ -1209,123 +1073,29 @@ Not a fit (keep in `ctx`):
   contract (query, context, impact). Spec:
   `ideas/spec-mcp-warm-up-ceremony.md` #added:2026-03-25-120000
 
-- [x] HUB-1: Define hub.proto — gRPC service definition with Register,
-  Publish, Sync, Listen, Status RPCs. Generate Go code. Spec:
-  specs/context-hub.md #priority:high #added:2026-04-06-113020 #done:2026-04-06
 
-- [x] HUB-2: Implement internal/hub/store.go — JSONL append-only entry storage
-  with sequence assignment, type filtering, and since-sequence queries. Spec:
-  specs/hub_implementation.md #priority:high #added:2026-04-06-113021
-  #done:2026-04-06
 
-- [x] HUB-3: Implement internal/hub/auth.go — admin token generation on first
-  run, client token issuance via Register RPC, gRPC interceptor for Bearer token
-  validation. Spec: specs/context-hub.md #priority:high #added:2026-04-06-113022
-  #done:2026-04-06
 
-- [x] HUB-4: Implement internal/hub/server.go — gRPC server with Register,
-  Publish, Sync RPCs. Wire auth interceptor, JSONL store, TLS support. Spec:
-  specs/context-hub.md #priority:high #added:2026-04-06-113024 #done:2026-04-06
 
-- [x] HUB-5: Implement ctx serve --shared CLI command — starts gRPC hub server
-  on specified port, generates admin token on first run, supports
-  --tls-cert/--tls-key flags. Spec: specs/context-hub.md #priority:high
-  #added:2026-04-06-113030 #done:2026-04-06
 
-- [x] HUB-6: Implement internal/hub/client.go — gRPC client with Register,
-  Sync, Publish, Listen methods. Connection config encrypted storage via
-  internal/crypto (same pattern as notify). Spec: specs/context-hub.md
-  #priority:high #added:2026-04-06-113032 #done:2026-04-06
 
-- [x] HUB-7: Implement ctx connect register — one-time registration with hub,
-  stores encrypted connection config in .context/.connect.enc. Spec:
-  specs/context-hub.md #priority:high #added:2026-04-06-113033 #done:2026-04-06
 
-- [x] HUB-8: Implement ctx connect subscribe — set entry type filters
-  (decisions, learnings, conventions), persist in local connection config. Spec:
-  specs/context-hub.md #priority:medium #added:2026-04-06-113035
-  #done:2026-04-07
 
-- [x] HUB-9: Implement ctx connect sync — initial full pull of matching
-  entries from hub, write to .context/shared/ as markdown files with origin
-  tags, record last-seen sequence in .sync-state.json. Spec:
-  specs/context-hub.md #priority:medium #added:2026-04-06-113041
-  #done:2026-04-07
 
-- [x] HUB-10: Implement ctx connect publish and --share flag — push local
-  entries to hub. Add --share flag to ctx add so entries go to local file AND
-  hub simultaneously. Spec: specs/context-hub.md #priority:medium
-  #added:2026-04-06-113043 #done:2026-04-07
 
-- [x] HUB-11: Implement Listen RPC with fan-out — server-streaming RPC that
-  pushes new entries to connected clients in real-time. ctx connect listen with
-  auto-reconnect on disconnect. Spec: specs/context-hub.md #priority:medium
-  #added:2026-04-06-113044 #done:2026-04-07
 
-- [x] HUB-12: Implement ctx connect status — show server address, connection
-  state, last sync time, subscription config, entry counts by type. Includes
-  hub-side Status RPC. Spec: specs/context-hub.md #priority:medium
-  #added:2026-04-06-113046 #done:2026-04-07
 
-- [x] HUB-13: Implement ctx agent --include-shared — add Tier 8 budget for
-  shared knowledge in agent packet assembly. Shared entries from
-  .context/shared/ included when --include-shared flag is passed. Spec:
-  specs/context-hub.md #priority:medium #added:2026-04-06-113053
-  #done:2026-04-07
 
-- [x] HUB-14: Implement --daemon flag for ctx serve --shared — background
-  process with PID file, --stop to kill, graceful shutdown. Required for
-  federation. Spec: specs/hub-federation.md #priority:medium
-  #added:2026-04-06-113054
 
-- [x] HUB-15: Integrate hashicorp/raft for leader election — Raft-lite: use
-  Raft ONLY for master election, not data consensus. --peers flag for cluster
-  membership. Single-node mode auto-elects. Spec: specs/hub-federation.md
-  #priority:medium #added:2026-04-06-113056
 
-- [x] HUB-16: Implement master-to-follower replication — master pushes entries
-  to followers via gRPC stream. Followers catch up via sequence-based sync on
-  reconnect. Spec: specs/hub-federation.md #priority:medium
-  #added:2026-04-06-113058
 
-- [x] HUB-17: Implement client failover — clients maintain ordered peer list,
-  auto-reconnect to new master on connection failure. Follower redirects client
-  to current master address. Spec: specs/hub-federation.md #priority:medium
-  #added:2026-04-06-113104
 
-- [x] HUB-18: Implement ctx hub status/peer/stepdown — cluster status display
-  (role, peers, sync state, entries, uptime), runtime peer add/remove, graceful
-  leadership transfer. Spec: specs/hub-federation.md #priority:low
-  #added:2026-04-06-113106
 
-- [x] HUB-19: Update compliance test — add internal/hub/ to allowed-net-import
-  list alongside internal/notify/. Core packages remain network-free. Spec:
-  specs/hub_implementation.md #priority:high #added:2026-04-06-113107
 
-- [x] HUB-20: End-to-end integration test — spin up hub, register 2 clients,
-  publish from one, verify sync on other. Test --share flag, Listen stream, and
-  reconnect behavior. Spec: specs/context-hub.md #priority:medium
-  #added:2026-04-06-113109
 
-- [x] HUB-2a: Implement hub client registry and meta persistence —
-  clients.json for registered client tokens/project names, meta.json for
-  sequence counter and hub metadata. Separate from entries.jsonl. Spec:
-  specs/context-hub.md #priority:high #added:2026-04-06-114131
 
-- [x] HUB-9a: Implement shared file renderer — convert Entry objects to
-  markdown with origin tags and date headers, create/append to
-  .context/shared/*.md files. Reused by both ctx connect sync and ctx connect
-  listen. Spec: specs/context-hub.md #priority:medium #added:2026-04-06-114131
 
-- [x] HUB-21: Unit tests for internal/hub/ — store (append, query, rotation),
-  auth (token generation, validation, interceptor), client (connect, reconnect),
-  renderer (markdown output). Each package tested independently. Spec:
-  specs/hub_implementation.md #priority:medium #added:2026-04-06-114131
 
-- [x] HUB-22: Documentation — create docs/cli/connect.md and docs/cli/serve.md
-  for new commands, update docs/cli/agent.md for --include-shared flag and
-  --shared-budget option. Spec: specs/context-hub.md #priority:low
-  #added:2026-04-06-114131
 
 ### Phase: ctx Hub follow-ups (PR #60)
 
@@ -1339,13 +1109,6 @@ https://github.com/ActiveMemory/ctx/pull/60#pullrequestreview-PRR_kwDOQ9VoNc7ze3
 
 #### Build / platform
 
-- [x] Fix Windows build: `internal/exec/daemon/daemon.go` uses
-  `syscall.SysProcAttr{Setsid: true}` (Unix-only). Split into
-  `daemon.go` (platform-agnostic), `detach_unix.go` (`//go:build !windows`,
-  `Setsid`), `detach_windows.go` (`//go:build windows`,
-  `CREATE_NEW_PROCESS_GROUP | HideWindow`). Verified with
-  `GOOS=windows go build ./...`. #priority:high #added:2026-04-11 #pr:60
-  #done:2026-04-11
 - [ ] Add Windows job to CI so this class of regression is caught at PR time,
   not by reviewers running local builds. #priority:high #added:2026-04-11 #pr:60
 - [ ] Triage the 16 package-level test failures @bilersan reported on Windows
@@ -1353,11 +1116,6 @@ https://github.com/ActiveMemory/ctx/pull/60#pullrequestreview-PRR_kwDOQ9VoNc7ze3
 
 #### Convention drift
 
-- [x] Fix 38 `types.go` convention violations introduced by `internal/hub`
-  and related packages. Resolved upstream in commit `9efe1a94 fix: reconcile
-  hub code with main's audit tests after rebase` — `make audit` now reports
-  "All checks passed!" on Linux, and `make lint` is 0 issues.
-  #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
 - [ ] Audit `internal/hub`, `internal/cli/connect`, `internal/cli/hub`,
   `internal/cli/serve` against CONVENTIONS.md (godoc format, import aliases,
   error wrapping, package layout). #added:2026-04-11 #pr:60
@@ -1368,55 +1126,14 @@ https://github.com/ActiveMemory/ctx/pull/60#pullrequestreview-PRR_kwDOQ9VoNc7ze3
 
 #### User-facing docs (cornerstone — scope first)
 
-- [x] Enumerate all doc surfaces touched by the hub: `docs/cli/connect.md`,
-  `docs/cli/hub.md`, `docs/cli/serve.md`, `docs/cli/init-status.md`,
-  `docs/cli/index.md` already existed from the PR but the three new CLI
-  pages were NOT wired into `zensical.toml` nav — fixed. Added three new
-  recipes, two operations docs, and one security doc; wired all into nav.
-  #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Write a **Getting Started: Shared Hub** recipe: single-node hub on
-  localhost, register first project, publish a decision, sync from a second
-  project, `ctx agent --include-shared`. Written to
-  `docs/recipes/hub-getting-started.md` and wired into nav.
-  #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Write a **Multi-machine hub** recipe: `ctx serve --shared --daemon`
-  on a LAN host, firewall/port guidance, bearer token provisioning,
-  `.connect.enc` distribution, `ctx connect register` from clients.
-  Written to `docs/recipes/hub-multi-machine.md`, wired into nav.
-  #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Write a **High-availability cluster** recipe: Raft peers with
-  `--peers`, `ctx hub peer add/remove`, `ctx hub stepdown`, failure-mode
-  walkthrough (leader loss, split brain, recovery). Written to
-  `docs/recipes/hub-cluster.md`, wired into nav.
-  #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Write a **Security model** doc: bearer token lifecycle, AES-256-GCM
-  `.connect.enc` at-rest, constant-time comparison, 1 MB content cap, type
-  allowlist. Threat model and operational hardening checklist. Written to
-  `docs/security/hub.md`, wired into nav. #priority:high
-  #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Write an **Operations** doc: starting/stopping the daemon, log
-  locations, `ctx serve --stop`, `ctx hub status`, JSONL store layout,
-  backup/restore of the append-only log, systemd unit, log rotation.
-  Written to `docs/operations/hub.md`, wired into nav.
-  #added:2026-04-11 #pr:60 #done:2026-04-11
 - [ ] Document the auto-sync-on-session-start hook: what it does, how to
   opt out, interaction with existing UserPromptSubmit hooks, performance
   impact on large hubs. Partially covered in connect.md (`check-hub-sync`
   mention); a dedicated section is still owed. #added:2026-04-11 #pr:60
-- [x] Document `ctx add --share` and `ctx agent --include-shared` — already
-  covered in `docs/cli/connect.md` (`--share`) and `docs/cli/init-status.md`
-  (`--include-shared` flag + Tier 8 explanation); playbook update deferred
-  until a dedicated "shared knowledge in agent packets" section is written.
-  #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
 - [ ] Add an **architecture** section to `ARCHITECTURE.md` /
   `DETAILED_DESIGN.md` covering: JSONL append-only store, JSON-over-gRPC
   codec (no protoc), fan-out broadcaster, Raft-lite (election only, data
   via gRPC sync), sequence-based replication. #added:2026-04-11 #pr:60
-- [x] Add a **failure analysis** page for the hub: what happens on network
-  partition, disk full, corrupted JSONL, token rotation during active
-  streams, clock skew between peers. Written to
-  `docs/operations/hub-failure-modes.md`, wired into nav. Covers
-  reminder [7]. #added:2026-04-11 #pr:60 #done:2026-04-11
 - [ ] Record a DECISION explaining why we merged PR #60 with known Windows
   breakage and convention drift — trade-off, author context, mitigation
   plan (this task group). #added:2026-04-11 #pr:60
@@ -1426,38 +1143,6 @@ https://github.com/ActiveMemory/ctx/pull/60#pullrequestreview-PRR_kwDOQ9VoNc7ze3
 
 #### Framing and mental model (2026-04-11 follow-up)
 
-- [x] Write `docs/recipes/hub-overview.md` — mental model in one
-  paragraph, what flows / what does not flow, two explicit user stories
-  (personal cross-project brain vs small trusted team), "when not to
-  use it" section. Wired as the first entry in the ctx Hub
-  nav section. #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Rewrite the opening of `docs/recipes/hub-getting-started.md`
-  to plant stakes ("what you'll get out of this recipe", "what this
-  recipe does not cover") and point at the overview before any commands.
-  #priority:high #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Add a "read the overview first" signpost to the top of
-  `hub-multi-machine.md` and `hub-cluster.md`, naming
-  each recipe as Story 2 (trusted team) shape. #added:2026-04-11 #pr:60
-  #done:2026-04-11
-- [x] Give `docs/cli/connect.md` a real "what is this" intro — unit of
-  identity is a project not a user, only four entry types flow, link
-  to the recipes. #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Give `docs/cli/hub.md` a real "who needs this page" intro —
-  operator commands only, link to `ctx connect` for clients and to the
-  overview for the mental model. #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Give `docs/operations/hub.md` an operator-cheat-sheet
-  intro (four entry types, project identity, append-only model) and
-  link to the overview. #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Fix factual error in `docs/security/hub.md`:
-  `clients.json` stores client tokens **plaintext**, not hashed.
-  Replaced the "hashed" claim with a prominent warning admonition,
-  listed filesystem-level mitigations, and referenced the follow-up
-  task for hashing / keyring storage. Updated
-  `docs/operations/hub-failure-modes.md` compromise scenarios
-  to match (including a new "Compromised hub host" entry). Also
-  documented that `Origin` is self-asserted on publish, so attribution
-  cannot be trusted after token compromise. #priority:high
-  #added:2026-04-11 #pr:60 #done:2026-04-11
 
 #### Design follow-ups surfaced by the brainstorm (2026-04-11)
 
@@ -1474,15 +1159,6 @@ https://github.com/ActiveMemory/ctx/pull/60#pullrequestreview-PRR_kwDOQ9VoNc7ze3
   keyring (reuse `internal/crypto`). Removes the plaintext-token
   footgun documented in the security page.
   #priority:high #added:2026-04-11 #pr:60
-- [x] Decide the fate of `Entry.Author`: keep, drop, or promote to
-  a real identity field. **Decided**: server-authoritative. The
-  server stamps Author from the authenticated identity source on
-  every publish; client input is ignored. Pre-registry: stamp with
-  `ClientInfo.ProjectName`. Registry MVP: stamp with
-  `users.json.user_id`. PKI stretch: stamp with signed-claim `sub`.
-  See `.context/DECISIONS.md` [2026-04-11-180000]. Implementation
-  tasks land under H-22 in the security audit phase.
-  #added:2026-04-11 #pr:60 #done:2026-04-11
 - [ ] Explore journal-entry → `learning` export path: the density
   users expect from "shared context" lives in enriched journal
   entries, not in manually written `ctx add learning`. Would let
@@ -1670,15 +1346,6 @@ This framing is load-bearing: it communicates the
 design intent (nothing you don't opt into) without
 claiming a literal falsehood.
 
-- [x] Update `docs/reference/comparison.md` bullet list
-  from "dependency-free" to "single-binary core" with
-  an explicit list of optional integrations and their
-  dependencies. #added:2026-04-11 #done:2026-04-11
-- [x] Update `docs/thesis/index.md:73` (the five-property
-  claim) from "zero runtime dependencies" to "a
-  single-binary core with zero required runtime
-  dependencies for the persistence path".
-  #added:2026-04-11 #done:2026-04-11
 - [-] `docs/thesis/index.md:412` (the primitive
   comparison table saying "Document: Zero-dependency:
   Yes"): left intact. The claim is about the document
@@ -1816,11 +1483,6 @@ links back to the spec for detail.
   `audits.jsonl`. Merged with the Hub identity layer
   phase implementation. #priority:high #added:2026-04-11
   #pr:60 #audit:H-19
-- [x] **H-22 (decide)** Decide `Entry.Author` fate.
-  **Decided** 2026-04-11: server-authoritative — stamp
-  from the authenticated identity source, ignore client
-  input. See `.context/DECISIONS.md` [2026-04-11-180000].
-  #added:2026-04-11 #pr:60 #audit:H-22 #done:2026-04-11
 - [ ] **H-22 (implement)** Implement server-authoritative
   `Entry.Author`. Identical mechanism to H-04 (Origin
   enforcement): `validateBearer` attaches `ClientInfo`
@@ -1840,40 +1502,6 @@ links back to the spec for detail.
   `pe.Author` from local config and remove them (or
   document them as ignored). #priority:high
   #added:2026-04-11 #pr:60 #audit:H-22
-- [x] **H-22 (meta type + wire + validation)** Schema
-  update landed on the `feature/ctx-hub-next` branch:
-
-  - `EntryMeta` struct defined in
-    `internal/hub/types.go` with fields `DisplayName`,
-    `Host`, `Tool`, `Via` (all optional strings).
-  - `Entry.Author`, `PublishEntry.Author`,
-    `EntryMsg.Author` all **removed**. Replaced with
-    `Meta EntryMeta` on each of the three structs.
-  - `handler.go publish()` copies `pe.Meta` into
-    `entries[i].Meta` verbatim.
-  - `message.go entryToMsg()` copies `e.Meta` into the
-    wire `EntryMsg.Meta`.
-  - `sync_helper.go replicateOnce()` copies
-    `msg.Meta` into the replicated `Entry.Meta`.
-  - `entry_validate.go` enforces:
-    `maxMetaFieldLen = 256` per field,
-    `maxMetaTotalLen = 2048` total, no C0 control
-    characters (newline, carriage return, NUL, DEL,
-    bell, etc.) except horizontal tab.
-  - `internal/hub/entry_validate_test.go` added with
-    six regression tests: empty accepted, round-trip,
-    field oversize rejected, total at cap accepted,
-    each control char rejected (nul/lf/cr/bell/del),
-    tab allowed.
-  - JSON wire key is `"meta"` on all three structs.
-    Pre-existing `entries.jsonl` entries with `author`
-    fields load cleanly (JSON ignores unknown fields)
-    and silently lose the hint — acceptable on the
-    feature branch with no production data.
-
-  Still open as follow-up tasks below (H-22 a through
-  e). #priority:high #added:2026-04-11 #pr:60
-  #audit:H-22 #done:2026-04-11
 - [ ] **H-22a (server-authoritative Origin stamping)**
   Implement H-04-style server-enforcement for
   `Entry.Origin`: `validateBearer` attaches
@@ -2049,80 +1677,6 @@ mental model in docs. `ctx` Hub is the canonical name; `Hub` is
 used alone in nav and operator contexts where surrounding text
 disambiguates.
 
-- [x] Rename nav entries: Recipes subsection "Shared Context Hub"
-  → "Hub"; add `docs/home/hub.md` as a home-level intro; split
-  Operations section into `Hub` / `Operating ctx` / `Maintainers`
-  subsections. `zensical.toml` updated. #added:2026-04-11 #pr:60
-  #done:2026-04-11
-- [x] Create `docs/home/hub.md` — home-level introduction, names
-  the two user stories, lists what flows vs what does not,
-  points readers at recipes/overview for the five-minute
-  walkthrough. #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Rewrite `docs/operations/index.md` with three audience-keyed
-  sections (Hub / Operating ctx / Maintainers). Matches the new
-  nav structure. #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Rename doc files: `docs/recipes/shared-hub-*.md` →
-  `docs/recipes/hub-*.md`, `docs/operations/shared-hub*.md` →
-  `docs/operations/hub*.md`, `docs/security/shared-hub.md` →
-  `docs/security/hub.md`. Updated all internal cross-links.
-  #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Rename spec files: `specs/shared-context-hub.md` →
-  `specs/context-hub.md`, `specs/shared-hub-federation.md` →
-  `specs/hub-federation.md`. Updated prose and cross-refs in
-  remaining spec files (`hub_implementation.md`,
-  `task-allocation.md`, `hub-federation.md`). #added:2026-04-11
-  #pr:60 #done:2026-04-11
-- [x] Rename Go packages: `internal/cli/agent/core/shared` →
-  `internal/cli/agent/core/hub`; `internal/cli/serve/core/shared`
-  → `internal/cli/serve/core/hub`. Resolved the package-name
-  collision with `internal/hub` by aliasing the inner import to
-  `hublib` in the two files that need both. Updated audit-test
-  exempt lists (`magic_strings_test.go`, `magic_values_test.go`)
-  to match. #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Rename Go constants and flag definitions:
-  `cFlag.Shared` → `cFlag.Hub`, `cFlag.IncludeShared` →
-  `cFlag.IncludeHub`, `DescKeyServeShared` → `DescKeyServeHub`,
-  `DescKeyAgentIncludeShared` → `DescKeyAgentIncludeHub`.
-  YAML keys in `flags.yaml` and `commands.yaml` updated to
-  match. #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Rename CLI flags: `ctx serve --shared` → `ctx serve --hub`,
-  `ctx agent --include-shared` → `ctx agent --include-hub`.
-  `ctx add --share` kept (verb form is still correct).
-  #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Rename on-disk directory: `.context/shared/` →
-  `.context/hub/`. Updated constants (`sharedDir` → `hubDir` in
-  `agent/core/hub/load.go` and `connect/core/render/render.go`),
-  path literals in `connect/core/sync/state.go`, and all test
-  fixtures in `connect/core/render/render_test.go`.
-  #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Rename `packet.Shared` / `AssembledPacket.Shared` struct
-  field → `Hub`, with matching json tag. Updated
-  `assemble.go`, `out.go`, `render.go`, `types.go` in
-  `internal/cli/agent/core/budget`. Tier 8 comment updated.
-  #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Fix a bug surfaced by the rename: `internal/cli/serve/core/hub/daemon.go`
-  was spawning child processes with the stale flag
-  `ctx serve --shared` — now correctly passes `--hub`. Without
-  this fix, `ctx serve --hub --daemon` would have failed silently
-  on the re-exec. #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Fix stuttery function name flagged by audit:
-  `hub.hubDir()` → `hub.defaultDataDir()` in
-  `internal/cli/serve/core/hub/setup.go`. #added:2026-04-11
-  #pr:60 #done:2026-04-11
-- [x] Prose sweep across all hub docs: "Shared Context Hub" →
-  "`ctx` Hub", "shared hub" → "hub", `--shared` → `--hub`,
-  `.context/shared/` → `.context/hub/`. Covered
-  `docs/home/`, `docs/recipes/`, `docs/operations/`,
-  `docs/security/`, `docs/cli/`. #added:2026-04-11 #pr:60
-  #done:2026-04-11
-- [x] Verify all nav targets exist after rename. All sixteen
-  hub-related paths referenced in `zensical.toml` resolve to
-  real files. #added:2026-04-11 #pr:60 #done:2026-04-11
-- [x] Full QA gate: `go build ./...` (Linux),
-  `GOOS=windows go build ./...`, `make lint` (0 issues),
-  `make test` (0 failures including the audit exempt-list
-  update and the `gofmt` round-trip on `serve/cmd/root/cmd.go`).
-  #added:2026-04-11 #pr:60 #done:2026-04-11
 
 ### Later
 
@@ -2158,3 +1712,107 @@ Spec: `specs/ceremony-profiles.md`
 - [ ] Show active ceremony profile (one line) in `ctx status` output
 - [ ] Tests: default profile renders `/ctx-remember` `/ctx-wrap-up`; project with `ceremony.remember: dp-remember` renders `/dp-remember` and scanner only counts `dp-remember` as fulfilling the open-bookend
 - [ ] Document in `docs/recipes/` with the editorial-project (DR knowledgebase) consumer as the worked example
+
+### Phase SK: Skill Surface Polish (Phase 0a; prerequisite for Phase KB) `#priority:high #added:2026-05-09`
+
+Spec: TBD (design ref: `ideas/002-editorial-pipeline-and-skill-rigor.md` §3 "Reframing the wishy-washy skills")
+
+Tightens existing capture skills to sibling-project rigor before the editorial pipeline (Phase KB) lifts that pattern wholesale. Independent of Phase RG; both can ship in parallel.
+
+- [ ] Add `MarkFlagRequired` to `ctx decision add` for `--context`, `--rationale`, `--consequence`; reject placeholder values (`TBD`, `see chat`, whitespace-only) at CLI level
+- [ ] Add `MarkFlagRequired` to `ctx learning add` for `--context`, `--lesson`, `--application`; same placeholder rejection
+- [ ] Add `--brief <path>` flag to `/ctx-spec` skill: when present, read the file as authoritative source per the sibling's authority order (frozen contracts > recorded decisions > debrief > agent inference labeled `TBD`); skip the fresh template Q&A
+- [ ] Update `/ctx-plan` skill to always offer to write the debated brief to `.context/briefs/<TS>-<slug>.md` at the end of an interview (creating `.context/briefs/` if absent)
+- [ ] Add an `Authority boundary (vs other skills)` section to `/ctx-decision-add`, `/ctx-learning-add`, `/ctx-task-add`, `/ctx-convention-add` skill files (prevent silent promotion handover→decision, learning→convention, etc., without explicit user ask)
+- [ ] Standardize "light compression for clarity is allowed; new facts are not" wording across capture skills (decide / learn primarily); same wording lands in `/ctx-handover` once Phase KB ships
+- [ ] Document the `--brief` contract in `docs/skills.md`
+
+### Phase RG: Require Git as Architectural Precondition (Phase 0b; prerequisite for Phase KB) `#priority:high #added:2026-05-09`
+
+Spec: `specs/require-git.md`
+
+Promotes the de facto invariant ("ctx works properly only with git") to a de jure one. Breaking change for any pre-existing git-less ctx project (N≈0 in practice). Independent of Phase SK; both can ship in parallel.
+
+- [ ] Add `internal/gitmeta/require.go` with `RequireGitTree(projectRoot string) error` and typed `MissingGitError`
+- [ ] Wire `RequireGitTree` into root command PersistentPreRunE; opt-out list `--help`, `--version`, `ctx system bootstrap`; audit other read-only/help-shaped commands during implementation (default: git-required)
+- [ ] Update `ctx init` to call `RequireGitTree` first; emit the documented error verbatim
+- [ ] Remove `commit:none` fallback from `internal/gitmeta/resolvehead.go` (state now unreachable)
+- [ ] Remove `commit:none` advisory + counts from `internal/cli/doctor/advisory.go`
+- [ ] Audit `internal/cli/<various>/cmd.go` for any other `commit:none` fallback handling; remove
+- [ ] Add CONSTITUTION.md amendment ("Git is required") under Process Invariants
+- [ ] Add DECISIONS.md entry: "Mandate git as architectural precondition" (Accepted; context = LLM-safety + provenance honesty + dead-code elimination; consequence = breaking change for pre-existing git-less projects, N≈0)
+- [ ] Update `docs/recipes/bootstrap-a-project.md`, `README.md`, `docs/cli/init.md` to show `git init` before `ctx init`
+- [ ] Tag as breaking change in `dist/RELEASE_NOTES.md` with one-command migration ("Run `git init` in any pre-existing git-less ctx projects before upgrading")
+- [ ] Tests: `.git` dir → nil; `.git` file (worktree pointer) → nil; absent → typed error; root PreRunE refuses without git; opt-out list allowed
+- [ ] Compliance test: no remaining `commit:none` literal in `internal/` (catches future regressions)
+
+### Phase KB: Editorial Pipeline + Handover (depends on Phase SK + Phase RG) `#priority:high #added:2026-05-09`
+
+Spec: `specs/kb-editorial-pipeline.md`
+
+Brief: `ideas/003-editorial-pipeline-debated-brief.md`
+
+Background analysis: `ideas/001-sibling-project-undercover-analysis.md`, `ideas/002-editorial-pipeline-and-skill-rigor.md`
+
+Validation corpus: `things-wtf-disaster-recovery` (live regression suite; hand-rolled the shape for weeks).
+
+Path constants and embedded templates:
+
+- [ ] Extend `internal/path/path.go` with new constants: `HandoversDir`, `KBDir` + per-artifact paths, `IngestDir` + per-template paths, `CloseoutsSubdir`, `ArchiveCloseoutsSubdir`, `SiteDir`, `SiteKBDir`, `SiteConfigDir`
+- [ ] Embed templates under `internal/assets/kb/templates/ingest/`: `KB-RULES.md`, `00-GROUND.md`, `30-INGEST.md`, `40-ASK.md`, `50-SITE_REVIEW.md`, `INBOX.md`, `SESSION_LOG.md`, `grounding-sources.md`, `OPERATOR.md`, `PROMPT.md` (no domain content)
+- [ ] Embed schemas under `internal/assets/kb/templates/ingest/schemas/`: `evidence-index.md`, `glossary.md`, `contradictions.md`, `outstanding-questions.md`, `domain-decisions.md`, `timeline.md`, `source-map.md`, `relationship-map.md`, `session-log.md` (each: fields list + one worked example)
+
+Store layer:
+
+- [ ] Implement `internal/store/handover.go`: `WriteHandover`, `LatestHandoverCursor`, `UnconsumedCloseouts`, `ArchiveCloseouts`
+- [ ] Implement `internal/store/closeout.go`: `WriteCloseout` with required frontmatter (`sha`, `branch`, `mode`, `generated-at`); cursor-extracting reader
+- [ ] Implement `internal/store/kb.go`: per-artifact writers (evidence-index append-never-renumber; glossary; contradictions; outstanding-questions; domain-decisions; timeline; source-map; relationship-map); demotion API; `EvidenceRow` includes `occurred:` field per spec schema delta
+
+CLI commands:
+
+- [ ] `ctx handover write` — `MarkFlagRequired` on `--summary` and `--next`; reject placeholder values (parity with Phase SK pattern); calls handover writer + closeout fold; supports `--no-fold`, `--commit`, `--highlights`, `--open-questions`
+- [ ] `ctx kb` parent command + `ingest` / `ask` / `site-review` / `ground` / `note` subcommands; refuse-on-empty for `ingest` / `ask` / `ground`
+- [ ] `ctx kb site` (`build` / `serve` / `customize`) — mirror existing `ctx journal site` shell-out pattern with zensical
+- [ ] Extend `ctx init` to lay down `handovers/`, `kb/.gitkeep`, `ingest/` (full template tree), `site/` (gitignored); add `--upgrade` flag (idempotent on byte-identical existing content; refuse on divergent)
+
+Skills:
+
+- [ ] Add `internal/assets/claude/skills/ctx-handover/SKILL.md` per spec (input contract, authority boundary, edge cases)
+- [ ] Add `ctx-kb-ingest`, `ctx-kb-ask`, `ctx-kb-site-review`, `ctx-kb-ground`, `ctx-kb-note` SKILL.md files
+- [ ] Modify `internal/assets/claude/skills/ctx-wrap-up/SKILL.md`: branch on `.context/kb/` existence (surface editorial state — pending closeouts, outstanding-questions count); mandatorily drive `/ctx-handover` as final step regardless of capture outcomes
+- [ ] Modify `/ctx-remember` skill (or equivalent): read latest handover + any postdated unfolded closeouts; fold KB state into readback if `.context/kb/` exists
+
+Doctor / status / .gitignore:
+
+- [ ] Extend `internal/cli/doctor/advisory.go`: duplicate-`EV-###` detection; `dated:` source missing `occurred:` rows; malformed-closeout-frontmatter detection
+- [ ] Mode-aware reads: thread `KBExists()` check through `/ctx-remember` (or equivalent), `ctx status`, `ctx agent`, session-start hook nudges (cross-cutting; manageable but explicit v1 surface area)
+- [ ] Update project root `.gitignore`: append `.context/site/` (idempotent; match existing `.context/journal/.imported.json` pattern)
+
+Tests:
+
+- [ ] Unit tests per package (handover, closeout, kb writers, mode CLIs, doctor advisories)
+- [ ] Integration: `internal/cli/initcmd/init_test.go` covers full new directory tree + `--upgrade` idempotency / divergence refusal
+- [ ] `hack/smoke-kb.sh`: end-to-end shell smoke (init → kb ingest → kb ask → kb site-review → kb ground → handover write → archive populated → doctor clean)
+- [ ] Edge-case fixtures: aborted-session recovery (closeout without handover); temporal misordering (occurred-vs-extracted ordering enforces precedence rule); concurrent dupe IDs (LLM-resolution fixture); render filter (speculative excluded; low paired with outstanding-questions)
+
+Phase KB-2 (validation against live corpus):
+
+- [ ] Port `things-wtf-disaster-recovery` from its hand-rolled shape to the shipped one. Each divergence is either a Phase KB bug or a `DECISIONS.md` entry explaining why the formal shape differs from what worked manually
+- [ ] Document divergences (if any) in `docs/recipes/build-a-knowledge-base.md`
+
+Phase KB-3 (documentation):
+
+- [ ] Write `docs/recipes/build-a-knowledge-base.md` (mirrors sibling's recipe shape)
+- [ ] Write `docs/recipes/typical-kb-session.md`
+- [ ] Write `docs/recipes/recover-aborted-session.md`
+- [ ] Update `docs/cli-reference.md` with new `ctx kb` and `ctx handover` commands
+- [ ] Update `docs/skills.md` with new skills
+- [ ] Document MemPalace-as-ground-source recipe in `docs/recipes/build-a-knowledge-base.md` — uses already-specced `mcp:<server>:<resource>` syntax in `grounding-sources.md`; zero new ctx code
+
+### Phase JR: Cold-Start Memory Recovery (semantic recall over journal history) `#priority:medium #added:2026-05-10`
+
+Idea: `ideas/004-cold-start-memory-recovery.md`
+
+Pain point: today's "can you check recent journal entries?" workaround forces brute-force parsing of the journal corpus or precise user pointers to specific files/dates. ctx has journal management but no semantic recall layer. MemPalace (https://github.com/MemPalace/mempalace) does this exact use case at 96.6% R@5 raw on LongMemEval. Three options to evaluate: A) native ctx journal search (vector-store dep, breaks single-Go-binary identity); B) defer-to-MemPalace recipe (zero ctx-side work; coupling to young project); C) pluggable journal-search hook following the zensical shell-out pattern (recommended).
+
+- [ ] Spec out cold-start memory recovery: pick approach (A vs B vs C); ideas/004 leans toward C. Distinct from Phase KB ground-mode `mcp:` source kinds (which cover the KB-grounding angle for free); this phase is specifically about journal-corpus semantic recall (`ctx journal search "<query>"` shape).
