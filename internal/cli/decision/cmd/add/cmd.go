@@ -10,18 +10,31 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/build"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 )
 
 // Cmd returns the "ctx decision add" subcommand.
 //
 // Adds a new decision entry to DECISIONS.md with the
 // required provenance, context, rationale, and consequence
-// flags. Implementation lives in the shared add core.
+// flags. Implementation lives in the shared add core; this
+// noun-level constructor additionally enforces that the
+// three body flags are present and non-placeholder.
 //
 // Returns:
 //   - *cobra.Command: Configured decision add subcommand
 func Cmd() *cobra.Command {
-	return build.Cmd(entry.Decision, cmd.DescKeyDecisionAdd, cmd.UseDecisionAdd)
+	c := build.Cmd(entry.Decision, cmd.DescKeyDecisionAdd, cmd.UseDecisionAdd)
+	if err := validate.RequireBodyFlags(
+		c, cFlag.Context, cFlag.Rationale, cFlag.Consequence,
+	); err != nil {
+		// Programming error — every body flag we name must exist
+		// on the shared add command. Panic at command-construction
+		// time rather than silently shipping a half-wired command.
+		panic(err)
+	}
+	return c
 }

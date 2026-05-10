@@ -71,7 +71,10 @@ func TestLearningAdd(t *testing.T) {
 }
 
 // TestLearningAddRequiresFlags verifies that omitting
-// required flags produces an error.
+// required body flags produces an error. The placeholder
+// check fires first (PreRunE runs before cobra's required-
+// flag validation), so the message names the first empty
+// body flag rather than --session-id.
 func TestLearningAddRequiresFlags(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "cli-learning-add-req-*")
 	if err != nil {
@@ -99,8 +102,92 @@ func TestLearningAddRequiresFlags(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error when adding learning without required flags")
 	}
-	if !strings.Contains(err.Error(), "--session-id") {
-		t.Errorf("error should mention missing --session-id flag: %v", err)
+	if !strings.Contains(err.Error(), "--context") {
+		t.Errorf("error should mention missing --context flag: %v", err)
+	}
+}
+
+// TestLearningAddRejectsPlaceholderLesson verifies placeholder
+// rejection on --lesson.
+func TestLearningAddRejectsPlaceholderLesson(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-learning-add-ph-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	addCmd := Cmd()
+	addCmd.SetArgs([]string{
+		"Learning body",
+		"--session-id", "test1234",
+		"--branch", "main",
+		"--commit", "abc123",
+		"--context", "real context",
+		"--lesson", "see chat",
+		"--application", "real application",
+	})
+	err = addCmd.Execute()
+	if err == nil {
+		t.Fatal("expected placeholder rejection for --lesson=\"see chat\"")
+	}
+	if !strings.Contains(err.Error(), "lesson") {
+		t.Errorf("error should name --lesson: %v", err)
+	}
+	if !strings.Contains(err.Error(), "placeholder") {
+		t.Errorf("error should explain placeholder rejection: %v", err)
+	}
+}
+
+// TestLearningAddAcceptsSubstringMatchingPlaceholder verifies
+// that values containing a placeholder word as a substring are
+// NOT rejected (only exact whole-value matches are placeholders).
+func TestLearningAddAcceptsSubstringMatchingPlaceholder(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-learning-add-substr-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	addCmd := Cmd()
+	addCmd.SetArgs([]string{
+		"Learning body",
+		"--session-id", "test1234",
+		"--branch", "main",
+		"--commit", "abc123",
+		"--context", "we left this as TBD originally then resolved it",
+		"--lesson", "real lesson",
+		"--application", "real application",
+	})
+	if err = addCmd.Execute(); err != nil {
+		t.Errorf("substring match should be accepted: %v", err)
 	}
 }
 
