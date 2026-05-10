@@ -15,40 +15,33 @@ import (
 	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
 )
 
-// RequireBodyFlags wraps the command's PreRunE so each named flag
-// is read and rejected when its value is empty, whitespace-only,
-// or matches the closed placeholder set (TBD, see chat, n/a,
-// etc.). Existing PreRunE is preserved and runs after the check.
+// BodyFlags reads each named flag from c and returns an error if
+// the value is empty, whitespace-only, or matches the closed
+// placeholder set (TBD, see chat, n/a, etc.). It is a pure
+// function: it does not mutate c, does not register PreRunE, and
+// does not call [cobra.Command.MarkFlagRequired].
 //
-// The check is the single enforcement point: there is no
-// [cobra.Command.MarkFlagRequired] call, so help text does not
-// gain a "(required)" annotation. Cobra defaults string flags to
-// the empty string, which the empty check rejects with a clear
-// message — making the marker redundant and the discarded error
-// it returns avoidable.
+// Callers invoke this directly from their own PreRunE so the
+// wiring is visible at the noun-level command constructor.
 //
 // Parameters:
-//   - c: cobra command to mutate
+//   - c: cobra command whose flags are being checked
 //   - flags: names of body flags to read and policy-check
-func RequireBodyFlags(c *cobra.Command, flags ...string) {
-	prev := c.PreRunE
-	c.PreRunE = func(cmd *cobra.Command, args []string) error {
-		for _, name := range flags {
-			value, getErr := cmd.Flags().GetString(name)
-			if getErr != nil {
-				return getErr
-			}
-			if rejectErr := RejectPlaceholder(
-				name, value,
-			); rejectErr != nil {
-				return rejectErr
-			}
+//
+// Returns:
+//   - error: non-nil on the first flag that fails the check;
+//     nil if every flag passes
+func BodyFlags(c *cobra.Command, flags ...string) error {
+	for _, name := range flags {
+		value, getErr := c.Flags().GetString(name)
+		if getErr != nil {
+			return getErr
 		}
-		if prev != nil {
-			return prev(cmd, args)
+		if rejectErr := RejectPlaceholder(name, value); rejectErr != nil {
+			return rejectErr
 		}
-		return nil
 	}
+	return nil
 }
 
 // RejectPlaceholder returns an error if value is a placeholder
