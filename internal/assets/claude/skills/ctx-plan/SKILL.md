@@ -52,4 +52,18 @@ Stop when the user can describe, without your help:
 - the cheapest way to validate the bet
 - what becomes expensive to unwind
 
-Then offer to write the debated brief.
+## Always offer to save the debated brief
+
+After the interview concludes, always offer to write the debated
+brief to `.context/briefs/<TS>-<slug>.md` (create `.context/briefs/`
+if absent). The brief is the canonical handoff to `/ctx-spec
+--brief <path>` and the next session's starting point.
+
+The brief is not a paraphrase of the conversation. It is a
+written record of the *bet, the rejections, the failure modes,
+the validation route, and the unwind cost* — in the user's
+words, lightly compressed for clarity. New facts are not added.
+
+If the user declines to save, do not push. The bet still lives
+in their head; the brief is for the next session, and they may
+not need one.

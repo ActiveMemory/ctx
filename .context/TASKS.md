@@ -1721,11 +1721,11 @@ Tightens existing capture skills to sibling-project rigor before the editorial p
 
 - [x] Add `MarkFlagRequired` to `ctx decision add` for `--context`, `--rationale`, `--consequence`; reject placeholder values (`TBD`, `see chat`, whitespace-only) at CLI level
 - [x] Add `MarkFlagRequired` to `ctx learning add` for `--context`, `--lesson`, `--application`; same placeholder rejection
-- [ ] Add `--brief <path>` flag to `/ctx-spec` skill: when present, read the file as authoritative source per the sibling's authority order (frozen contracts > recorded decisions > debrief > agent inference labeled `TBD`); skip the fresh template Q&A
-- [ ] Update `/ctx-plan` skill to always offer to write the debated brief to `.context/briefs/<TS>-<slug>.md` at the end of an interview (creating `.context/briefs/` if absent)
-- [ ] Add an `Authority boundary (vs other skills)` section to `/ctx-decision-add`, `/ctx-learning-add`, `/ctx-task-add`, `/ctx-convention-add` skill files (prevent silent promotion handover→decision, learning→convention, etc., without explicit user ask)
-- [ ] Standardize "light compression for clarity is allowed; new facts are not" wording across capture skills (decide / learn primarily); same wording lands in `/ctx-handover` once Phase KB ships
-- [ ] Document the `--brief` contract in `docs/skills.md`
+- [x] Add `--brief <path>` flag to `/ctx-spec` skill: when present, read the file as authoritative source per the sibling's authority order (frozen contracts > recorded decisions > debrief > agent inference labeled `TBD`); skip the fresh template Q&A
+- [x] Update `/ctx-plan` skill to always offer to write the debated brief to `.context/briefs/<TS>-<slug>.md` at the end of an interview (creating `.context/briefs/` if absent)
+- [x] Add an `Authority boundary (vs other skills)` section to `/ctx-decision-add`, `/ctx-learning-add`, `/ctx-task-add`, `/ctx-convention-add` skill files (prevent silent promotion handover→decision, learning→convention, etc., without explicit user ask)
+- [x] Standardize "light compression for clarity is allowed; new facts are not" wording across capture skills (decide / learn primarily); same wording lands in `/ctx-handover` once Phase KB ships
+- [x] Document the `--brief` contract in `docs/skills.md` (landed in `docs/reference/skills.md` — the actual location)
 
 ### Phase RG: Require Git as Architectural Precondition (Phase 0b; prerequisite for Phase KB) `#priority:high #added:2026-05-09`
 

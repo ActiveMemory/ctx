@@ -94,6 +94,26 @@ ctx decision add "Use PostgreSQL for primary database" \
   --consequence "Single database handles transactions and search. Team needs PostgreSQL-specific training."
 ```
 
+## Authority boundary (vs other skills)
+
+This skill records architectural decisions — moments where a
+trade-off between alternatives was deliberately resolved. It does
+not unilaterally promote material from adjacent skills:
+
+- **Do not promote a learning into a decision.** A gotcha or
+  debugging insight is a learning; if the user wants it elevated
+  to a decision, they must say so. Pattern-cross-promotion drifts
+  the file's authority over time.
+- **Do not promote a handover or wrap-up note into a decision.**
+  Session-end summaries can mention decisions, but those decisions
+  must have been captured at the time they were made. Backfilling
+  silently rewrites the trade-off record.
+- **Do not invent alternatives.** If the user did not consider an
+  alternative, do not fabricate one to fill the section. Ask, or
+  use the Y-statement format that does not require alternatives.
+
+Light compression for clarity is allowed; new facts are not.
+
 ## Quality Checklist
 
 Before recording, verify:
