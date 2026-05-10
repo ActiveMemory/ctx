@@ -26,9 +26,48 @@ each section with the user to produce a complete design document.
 /ctx-spec
 /ctx-spec (session checkpointing)
 /ctx-spec (rss feed generation)
+/ctx-spec --brief ideas/003-editorial-pipeline-debated-brief.md
 ```
 
-## Process
+## --brief contract
+
+When invoked with `--brief <path>`, the skill treats the file at
+`<path>` as the authoritative source and skips the fresh-template
+Q&A. Two preconditions and an authority order govern the read:
+
+**Preconditions**
+
+- The brief file must exist; if it does not, stop and report the
+  missing path without falling back to the interactive flow.
+- The brief file should be the output of a prior `/ctx-plan`
+  session or a hand-written equivalent. A casual idea note is not
+  a brief.
+
+**Authority order** when the brief, recorded decisions, frozen
+docs, or your inference disagree:
+
+1. Frozen contracts in `docs/` (release notes, public CLI docs)
+2. Recorded decisions in `.context/DECISIONS.md`
+3. The brief at `<path>`
+4. Your own inference — only when steps 1–3 are silent, and
+   labeled `TBD` in the spec so it stands out for review.
+
+Never invert this order. If the brief contradicts a frozen
+contract, surface the contradiction to the user; do not silently
+follow the brief.
+
+**Flow when `--brief` is set**
+
+1. Read the brief in full. Do not paraphrase it back to the user.
+2. Read `specs/tpl/spec-template.md` to get the section list.
+3. For each template section, lift content from the brief
+   verbatim where the brief speaks to it. Light compression for
+   clarity is allowed; new facts are not.
+4. Where the brief is silent, write `TBD` rather than inventing.
+5. Write the spec to `specs/{feature-name}.md` and surface the
+   `TBD` entries for the user to fill in next.
+
+## Process (interactive, when `--brief` is absent)
 
 ### 1. Gather the Feature Name
 

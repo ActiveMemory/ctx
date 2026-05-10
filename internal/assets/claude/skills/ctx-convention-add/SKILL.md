@@ -54,6 +54,24 @@ ctx convention add "Colocate test files with implementation (*_test.go next to *
 If no `--section` is provided, the convention is appended to the end
 of the file. Prefer specifying a section for organization.
 
+## Authority boundary (vs other skills)
+
+This skill records standardised patterns the project follows. It
+does not unilaterally promote material from adjacent skills:
+
+- **Do not promote a one-off choice into a convention.** A single
+  decision with rationale is `/ctx-decision-add`'s territory; a
+  convention requires the pattern to recur and warrant codifying.
+  Ask before generalising.
+- **Do not promote a learning into a convention.** "Always do X
+  going forward" is a convention; "we got bitten by Y" is a
+  learning. The user must explicitly say "codify that" before
+  the cross-promotion happens.
+- **Do not duplicate.** If a similar rule already exists, surface
+  it and ask whether to update or add alongside.
+
+Light compression for clarity is allowed; new facts are not.
+
 ## Quality Checklist
 
 Before recording, verify:

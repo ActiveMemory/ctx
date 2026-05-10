@@ -85,6 +85,24 @@ ctx task add "Authentication"       # That's a topic, not a task
 # Also bad: missing --session-id, --branch, --commit
 ```
 
+## Authority boundary (vs other skills)
+
+This skill records actionable follow-up work. It does not
+unilaterally promote material from adjacent skills:
+
+- **Do not promote a casual "we should..." into a task.** If the
+  user hasn't agreed it's worth tracking, ask before recording.
+  Speculative TODOs clutter the file and degrade everyone's trust
+  in it.
+- **Do not duplicate.** If the user describes work already covered
+  by an open task (even loosely), reference the existing task
+  instead of adding a near-duplicate. Drift accumulates fast here.
+- **Do not silently promote a decision or learning into a task.**
+  "We should write this up" is a different ask from "track this
+  work item"; route to the correct skill.
+
+Light compression for clarity is allowed; new facts are not.
+
 ## Quality Checklist
 
 Before recording, verify:
