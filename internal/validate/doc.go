@@ -5,7 +5,8 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package validate provides input-validation helpers
-// that ctx uses at filesystem and security boundaries.
+// that ctx uses at filesystem, security, and CLI
+// boundaries.
 //
 // # Path Validation
 //
@@ -23,18 +24,28 @@
 //     found. Non-existent directories are not an
 //     error (let the caller handle that).
 //
+// # CLI Body-Flag Validation
+//
+//   - [BodyFlags] reads each named flag from a cobra
+//     command and rejects empty, whitespace-only, or
+//     placeholder values (TBD, see chat, n/a, etc.).
+//     Pure function: does not mutate the command.
+//     Called from a noun-level command's own PreRunE
+//     so the wiring is visible at the call site.
+//   - [RejectPlaceholder] is the per-value primitive
+//     used by [BodyFlags]; exported for tests and
+//     ad-hoc reuse. Placeholder values live in
+//     [internal/config/validate].
+//
 // # Design Philosophy
 //
 // Unlike [internal/sanitize] (which transforms bad
 // input into safe values), this package rejects bad
 // input outright. Unlike [internal/io] (which guards
 // against system directory access), this package
-// guards against project-boundary escapes and
-// symlink-based traversal.
-//
-// The validate.go file currently contains only the
-// package declaration, serving as an anchor for
-// future non-path validators.
+// guards against project-boundary escapes,
+// symlink-based traversal, and missing or
+// placeholder CLI body fields.
 //
 // # Concurrency
 //

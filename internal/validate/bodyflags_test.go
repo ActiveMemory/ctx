@@ -67,10 +67,10 @@ func TestRejectPlaceholderTrimsBeforeMatching(t *testing.T) {
 	}
 }
 
-// newCmd builds a minimal cobra command with two string flags and
-// a no-op RunE — the standard test fixture for the BodyFlags
-// PreRunE pattern that the noun-level constructors use.
-func newCmd() *cobra.Command {
+// newBodyFlagsCmd builds a minimal cobra command with two string
+// flags and a no-op RunE — the standard test fixture for the
+// BodyFlags PreRunE pattern that the noun-level constructors use.
+func newBodyFlagsCmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:  "test",
 		RunE: func(_ *cobra.Command, _ []string) error { return nil },
@@ -83,7 +83,7 @@ func newCmd() *cobra.Command {
 }
 
 func TestBodyFlagsAcceptsLegitimateValues(t *testing.T) {
-	c := newCmd()
+	c := newBodyFlagsCmd()
 	c.SetArgs([]string{
 		"--context", "real context",
 		"--rationale", "real rationale",
@@ -97,7 +97,7 @@ func TestBodyFlagsAcceptsLegitimateValues(t *testing.T) {
 }
 
 func TestBodyFlagsRejectsPlaceholder(t *testing.T) {
-	c := newCmd()
+	c := newBodyFlagsCmd()
 	c.SetArgs([]string{
 		"--context", "TBD",
 		"--rationale", "good reason",
@@ -117,7 +117,7 @@ func TestBodyFlagsRejectsPlaceholder(t *testing.T) {
 func TestBodyFlagsRejectsMissingFlag(t *testing.T) {
 	// Cobra defaults --context to "" when omitted; the empty-value
 	// check catches it through the same path as a placeholder.
-	c := newCmd()
+	c := newBodyFlagsCmd()
 	c.SetArgs([]string{"--rationale", "ok"})
 	if execErr := c.Execute(); execErr != nil {
 		t.Fatalf("parse: %v", execErr)
@@ -134,7 +134,7 @@ func TestBodyFlagsRejectsMissingFlag(t *testing.T) {
 func TestBodyFlagsStopsAtFirstFailure(t *testing.T) {
 	// Flag order in the call determines which failure is reported
 	// when multiple flags fail.
-	c := newCmd()
+	c := newBodyFlagsCmd()
 	c.SetArgs([]string{
 		"--context", "TBD",
 		"--rationale", "n/a",
