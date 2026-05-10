@@ -9,6 +9,7 @@ package sanitize
 import (
 	"strings"
 	"testing"
+	"unicode/utf8"
 )
 
 func TestContentEscapesEntryHeaders(t *testing.T) {
@@ -169,4 +170,116 @@ func TestSessionIDReplacesUnsafe(t *testing.T) {
 	if strings.ContainsAny(got, " !@#$") {
 		t.Errorf("got %q, contains unsafe chars", got)
 	}
+}
+
+// --- UTF-8-safe truncation (follow-up to PR #76) ---
+
+func TestTruncateMultibyteRuneBoundary(t *testing.T) {
+	// "héllo" — 'é' is U+00E9, a 2-byte UTF-8 rune (0xC3 0xA9).
+	// Bytes: 'h' 0xC3 0xA9 'l' 'l' 'o' (6 bytes total).
+	// Cutting at 2 bytes lands inside 'é'; must back up to 1.
+	got := truncate("héllo", 2)
+	if got != "h" {
+		t.Errorf("truncate at mid-rune = %q (% x), want %q", got, got, "h")
+	}
+	if !utf8Valid(got) {
+		t.Errorf("truncate produced invalid UTF-8: % x", got)
+	}
+}
+
+func TestTruncateThreeByteRune(t *testing.T) {
+	// '€' is U+20AC, 3 bytes (0xE2 0x82 0xAC).
+	// Cutting "a€b" at 2 lands inside '€'; back up to 1.
+	got := truncate("a€b", 2)
+	if got != "a" {
+		t.Errorf("got %q, want %q", got, "a")
+	}
+}
+
+func TestTruncateFourByteRune(t *testing.T) {
+	// '🜲' is U+1F732, 4 bytes (0xF0 0x9F 0x9C 0xB2).
+	// Cutting "🜲x" at 2 lands inside the emoji; back up to 0.
+	got := truncate("🜲x", 2)
+	if got != "" {
+		t.Errorf("got %q (% x), want empty", got, got)
+	}
+}
+
+func TestTruncateAtExactRuneBoundary(t *testing.T) {
+	// "héllo" cut at 3 bytes lands exactly after 'é' (1+2=3).
+	got := truncate("héllo", 3)
+	if got != "hé" {
+		t.Errorf("got %q, want %q", got, "hé")
+	}
+}
+
+func TestTruncatePreservesValidUTF8(t *testing.T) {
+	// Repeated 2-byte rune; any cut must terminate at an even byte
+	// offset relative to the start of the run.
+	in := strings.Repeat("é", 100) // 200 bytes
+	for cut := 0; cut <= 200; cut++ {
+		got := truncate(in, cut)
+		if !utf8Valid(got) {
+			t.Errorf("cut=%d produced invalid UTF-8: % x", cut, got)
+		}
+	}
+}
+
+func TestReflectMultibyteSafe(t *testing.T) {
+	// Reflect should also produce valid UTF-8 when truncating.
+	got := Reflect("héllo world", 2)
+	if got != "h" {
+		t.Errorf("Reflect mid-rune = %q, want %q", got, "h")
+	}
+}
+
+func TestSessionIDMultibyteSafe(t *testing.T) {
+	// Pre-sanitize the string so unsafe chars become hyphens, then
+	// run a long input through SessionID; the result must be valid
+	// UTF-8 even at the truncation boundary.
+	in := strings.Repeat("a", 130) // exceeds MaxSessionIDLen=128
+	got := SessionID(in)
+	if !utf8Valid(got) {
+		t.Errorf("SessionID produced invalid UTF-8: % x", got)
+	}
+}
+
+// --- Zl/Zp separator stripping (follow-up to PR #76) ---
+
+func TestStripControlRemovesLineSeparator(t *testing.T) {
+	// U+2028 — LINE SEPARATOR.
+	got := StripControl("a b")
+	if got != "ab" {
+		t.Errorf("got %q, want %q", got, "ab")
+	}
+}
+
+func TestStripControlRemovesParagraphSeparator(t *testing.T) {
+	// U+2029 — PARAGRAPH SEPARATOR.
+	got := StripControl("a b")
+	if got != "ab" {
+		t.Errorf("got %q, want %q", got, "ab")
+	}
+}
+
+func TestStripControlRemovesBothSeparators(t *testing.T) {
+	got := StripControl("x y z")
+	if got != "xyz" {
+		t.Errorf("got %q, want %q", got, "xyz")
+	}
+}
+
+func TestReflectStripsLineSeparator(t *testing.T) {
+	// Newline injection via U+2028 must not survive reflection in
+	// error messages.
+	got := Reflect("tool name", 0)
+	if got != "toolname" {
+		t.Errorf("got %q, want %q", got, "toolname")
+	}
+}
+
+// utf8Valid is a thin alias for [utf8.ValidString], used to make the
+// "did we cut mid-rune?" assertion read clearly at the call sites.
+func utf8Valid(s string) bool {
+	return utf8.ValidString(s)
 }

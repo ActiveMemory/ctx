@@ -32,4 +32,9 @@ const (
 	MaxCallerLen = 128
 	// MaxURILen is the maximum byte length for resource URIs.
 	MaxURILen = 512
+	// MaxOptsFieldLen is the maximum byte length for secondary entry
+	// option fields (context, rationale, consequence, lesson,
+	// application). Tighter than MaxContentLen because these are
+	// qualifiers, not primary content.
+	MaxOptsFieldLen = 4_000
 )

@@ -106,8 +106,88 @@ func TestSanitizedOpts(t *testing.T) {
 		"context":   "safe text",
 		"rationale": "good reason",
 	}
-	opts := SanitizedOpts(args)
+	opts, err := SanitizedOpts(args)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	if opts.Context != "safe text" {
 		t.Errorf("context = %q", opts.Context)
+	}
+}
+
+func TestSanitizedOptsEmpty(t *testing.T) {
+	opts, err := SanitizedOpts(map[string]interface{}{})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if opts.Context != "" || opts.Rationale != "" {
+		t.Errorf("expected empty opts, got %+v", opts)
+	}
+}
+
+func TestSanitizedOptsContextTooLong(t *testing.T) {
+	args := map[string]interface{}{
+		"context": strings.Repeat("x", cfg.MaxOptsFieldLen+1),
+	}
+	_, err := SanitizedOpts(args)
+	if err == nil {
+		t.Fatal("expected InputTooLong error for context")
+	}
+	if !strings.Contains(err.Error(), "context") {
+		t.Errorf("error should name field 'context', got %q", err.Error())
+	}
+}
+
+func TestSanitizedOptsRationaleTooLong(t *testing.T) {
+	args := map[string]interface{}{
+		"rationale": strings.Repeat("y", cfg.MaxOptsFieldLen+1),
+	}
+	_, err := SanitizedOpts(args)
+	if err == nil {
+		t.Fatal("expected InputTooLong error for rationale")
+	}
+	if !strings.Contains(err.Error(), "rationale") {
+		t.Errorf("error should name field 'rationale', got %q", err.Error())
+	}
+}
+
+func TestSanitizedOptsConsequenceTooLong(t *testing.T) {
+	args := map[string]interface{}{
+		"consequence": strings.Repeat("z", cfg.MaxOptsFieldLen+1),
+	}
+	_, err := SanitizedOpts(args)
+	if err == nil {
+		t.Fatal("expected InputTooLong error for consequence")
+	}
+}
+
+func TestSanitizedOptsLessonTooLong(t *testing.T) {
+	args := map[string]interface{}{
+		"lesson": strings.Repeat("a", cfg.MaxOptsFieldLen+1),
+	}
+	_, err := SanitizedOpts(args)
+	if err == nil {
+		t.Fatal("expected InputTooLong error for lesson")
+	}
+}
+
+func TestSanitizedOptsApplicationTooLong(t *testing.T) {
+	args := map[string]interface{}{
+		"application": strings.Repeat("b", cfg.MaxOptsFieldLen+1),
+	}
+	_, err := SanitizedOpts(args)
+	if err == nil {
+		t.Fatal("expected InputTooLong error for application")
+	}
+}
+
+func TestSanitizedOptsAtBoundary(t *testing.T) {
+	// Exactly MaxOptsFieldLen bytes — must be accepted.
+	args := map[string]interface{}{
+		"rationale": strings.Repeat("ok", cfg.MaxOptsFieldLen/2),
+	}
+	_, err := SanitizedOpts(args)
+	if err != nil {
+		t.Errorf("boundary value rejected: %v", err)
 	}
 }

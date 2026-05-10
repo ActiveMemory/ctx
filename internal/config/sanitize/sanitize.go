@@ -32,3 +32,15 @@ const (
 	// identifier.
 	MaxSessionIDLen = 128
 )
+
+// Unicode line/paragraph separators that [unicode.IsControl] does
+// not match but which Markdown renderers may interpret as line
+// breaks. Stripped from reflected content alongside ASCII control
+// characters to close a newline injection path.
+const (
+	// LineSeparator is U+2028 (LINE SEPARATOR, category Zl).
+	LineSeparator = ' '
+
+	// ParagraphSeparator is U+2029 (PARAGRAPH SEPARATOR, category Zp).
+	ParagraphSeparator = ' '
+)
