@@ -32,6 +32,19 @@ TASK STATUS LABELS:
   `--phase` flag too, and we can have a auditor/normalizer for the current
   task document; or a skill that does a semantic pass, or both too.
 
+- [ ] Localize the placeholder set used by `RejectPlaceholder`
+  (decision add / learning add and any future body-flag validators).
+  Move the shipped defaults out of `internal/config/validate/placeholder.go`
+  Go constants into an embedded YAML asset, add a `.ctxrc placeholders:`
+  override with EXTEND semantics (user list is appended to defaults, not
+  replacing them — Tarzan Turkish is the dominant case), and replace the
+  current `strings.ToLower` with proper Unicode case folding via
+  `golang.org/x/text/cases` so İ/i, ß/SS, and similar fold correctly.
+  Ship `en` only in v1; ctx has no locale-specific assets yet, so the
+  structure is established but no `tr.yaml` lands in this work.
+  Spec: `specs/placeholder-i18n.md` #priority:high #added:2026-05-11
+  #prerequisite-for-locale-work
+
 ### Misc
 
 
