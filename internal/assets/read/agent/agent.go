@@ -96,6 +96,66 @@ func CopilotCLIScripts() (map[string][]byte, error) {
 	return scripts, nil
 }
 
+// OpenCodePlugin reads all embedded OpenCode plugin files.
+// Returns a map of filename to content for files in
+// integrations/opencode/plugin/.
+//
+// Returns:
+//   - map[string][]byte: Filename -> content for each plugin file
+//   - error: Non-nil if the directory read fails
+func OpenCodePlugin() (map[string][]byte, error) {
+	files := make(map[string][]byte)
+	entries, dirErr := fs.ReadDir(
+		assets.FS, asset.DirIntegrationsOpenCodePlugin)
+	if dirErr != nil {
+		return nil, dirErr
+	}
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		p := path.Join(asset.DirIntegrationsOpenCodePlugin, name)
+		content, readErr := assets.FS.ReadFile(p)
+		if readErr != nil {
+			return nil, readErr
+		}
+		files[name] = content
+	}
+	return files, nil
+}
+
+// OpenCodeSkills reads all embedded OpenCode skill templates.
+// Returns a map of skill directory name to SKILL.md content for skills
+// in integrations/opencode/skills/.
+//
+// Returns:
+//   - map[string][]byte: Skill name -> SKILL.md content
+//   - error: Non-nil if the directory read fails
+func OpenCodeSkills() (map[string][]byte, error) {
+	skills := make(map[string][]byte)
+	entries, dirErr := fs.ReadDir(
+		assets.FS, asset.DirIntegrationsOpenCodeSkill)
+	if dirErr != nil {
+		return nil, dirErr
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		skillPath := path.Join(
+			asset.DirIntegrationsOpenCodeSkill,
+			name, asset.FileSKILLMd)
+		content, readErr := assets.FS.ReadFile(skillPath)
+		if readErr != nil {
+			return nil, readErr
+		}
+		skills[name] = content
+	}
+	return skills, nil
+}
+
 // CopilotCLISkills reads all embedded Copilot CLI skill templates.
 // Returns a map of skill directory name to SKILL.md content for skills
 // in integrations/copilot-cli/skills/.

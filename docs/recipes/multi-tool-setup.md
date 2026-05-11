@@ -31,6 +31,9 @@ source <(ctx completion zsh)  # shell completion (or bash/fish)
 claude /plugin marketplace add ActiveMemory/ctx
 claude /plugin install ctx@activememory-ctx
 
+# ## OpenCode ##
+ctx setup opencode --write && ctx init && eval "$(ctx activate)"
+
 # ## Cursor / Aider / Copilot / Windsurf ##
 ctx setup cursor # or: aider, copilot, windsurf
 
@@ -164,6 +167,23 @@ as `ActiveMemory/ctx`.
     automatically. The `PreToolUse` hook runs
     `ctx agent --budget 4000` on every tool call
     (*with a 10-minute cooldown so it only fires once per window*).
+
+#### OpenCode
+
+Run the one-liner from the project root:
+
+```bash
+ctx setup opencode --write && ctx init && eval "$(ctx activate)"
+```
+
+This deploys a lifecycle plugin, slash command skills, `AGENTS.md`, and
+registers the ctx MCP server globally. See
+[ctx for OpenCode](../home/opencode.md) for full details.
+
+!!! tip "OpenCode Is a First-Class Citizen"
+    With the plugin installed, OpenCode gets lifecycle hooks and skills
+    automatically. Context loads at session start, survives compaction,
+    and persists at session end — no manual steps needed.
 
 #### Cursor
 
@@ -337,6 +357,10 @@ source <(ctx completion zsh)       # or bash/fish
 
 # ## Claude Code (automatic, just verify) ##
 # Start Claude Code, then ask: "Do you remember?"
+
+# ## OpenCode ##
+ctx setup opencode --write
+# Start OpenCode, then ask: "Do you remember?"
 
 # ## Cursor ##
 ctx setup cursor

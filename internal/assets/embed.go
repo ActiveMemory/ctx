@@ -18,6 +18,8 @@ import (
 //go:embed integrations/copilot-cli/scripts/*.sh
 //go:embed integrations/copilot-cli/scripts/*.ps1
 //go:embed integrations/copilot-cli/skills/*/SKILL.md
+//go:embed integrations/opencode/plugin/index.ts
+//go:embed integrations/opencode/skills/*/SKILL.md
 //go:embed hooks/messages/*/*.txt hooks/messages/registry.yaml hooks/trace/*.sh
 //go:embed schema/*.json why/*.md
 //go:embed permissions/*.txt commands/*.yaml commands/text/*.yaml journal/*.css

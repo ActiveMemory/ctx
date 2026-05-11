@@ -65,3 +65,17 @@ const (
 	// embedded single quote: `'\''` (close, escape, reopen).
 	SingleQuoteEscaped = `'\''`
 )
+
+// Inline-script flags and templates for /bin/sh.
+const (
+	// CmdFlag is the POSIX-shell flag that runs the next argument
+	// as an inline script (`sh -c <script>`).
+	CmdFlag = "-c"
+	// FormatPOSIXSpawnRelativeCtxDir is the inline script we hand to
+	// `sh -c` when an MCP host (e.g. OpenCode) lacks path templating
+	// in its config schema. It resolves `$PWD/<relCtxDir>` at spawn
+	// time, exports it as the named env var (CTX_DIR), and `exec`s
+	// the wrapped command so the shell does not stay in the process
+	// tree. Expects (envName, relCtxDir, joinedCmd).
+	FormatPOSIXSpawnRelativeCtxDir = `exec env %s="$PWD/%s" %s`
+)
