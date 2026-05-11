@@ -70,7 +70,10 @@ func TestDecisionAdd(t *testing.T) {
 }
 
 // TestDecisionAddRequiresFlags verifies that omitting
-// required flags produces an error.
+// required body flags produces an error. The placeholder
+// check fires first (PreRunE runs before cobra's required-
+// flag validation), so the message names the first empty
+// body flag rather than --session-id.
 func TestDecisionAddRequiresFlags(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "cli-decision-add-req-*")
 	if err != nil {
@@ -98,7 +101,95 @@ func TestDecisionAddRequiresFlags(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error when adding decision without required flags")
 	}
-	if !strings.Contains(err.Error(), "--session-id") {
-		t.Errorf("error should mention missing --session-id flag: %v", err)
+	if !strings.Contains(err.Error(), "--context") {
+		t.Errorf("error should mention missing --context flag: %v", err)
+	}
+}
+
+// TestDecisionAddRejectsPlaceholderRationale verifies that
+// passing a placeholder body-flag value (TBD, see chat, etc.)
+// fails fast at PreRunE.
+func TestDecisionAddRejectsPlaceholderRationale(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-decision-add-ph-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	addCmd := Cmd()
+	addCmd.SetArgs([]string{
+		"Decision body",
+		"--session-id", "test1234",
+		"--branch", "main",
+		"--commit", "abc123",
+		"--context", "real context",
+		"--rationale", "TBD",
+		"--consequence", "real consequence",
+	})
+	err = addCmd.Execute()
+	if err == nil {
+		t.Fatal("expected placeholder rejection for --rationale=TBD")
+	}
+	if !strings.Contains(err.Error(), "rationale") {
+		t.Errorf("error should name --rationale: %v", err)
+	}
+	if !strings.Contains(err.Error(), "placeholder") {
+		t.Errorf("error should explain placeholder rejection: %v", err)
+	}
+}
+
+// TestDecisionAddRejectsWhitespaceContext verifies whitespace-
+// only values are rejected at PreRunE.
+func TestDecisionAddRejectsWhitespaceContext(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-decision-add-ws-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	addCmd := Cmd()
+	addCmd.SetArgs([]string{
+		"Decision body",
+		"--session-id", "test1234",
+		"--branch", "main",
+		"--commit", "abc123",
+		"--context", "   ",
+		"--rationale", "real rationale",
+		"--consequence", "real consequence",
+	})
+	err = addCmd.Execute()
+	if err == nil {
+		t.Fatal("expected rejection for whitespace --context")
+	}
+	if !strings.Contains(err.Error(), "context") {
+		t.Errorf("error should name --context: %v", err)
 	}
 }

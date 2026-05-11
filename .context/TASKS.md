@@ -32,6 +32,19 @@ TASK STATUS LABELS:
   `--phase` flag too, and we can have a auditor/normalizer for the current
   task document; or a skill that does a semantic pass, or both too.
 
+- [ ] Localize the placeholder set used by `RejectPlaceholder`
+  (decision add / learning add and any future body-flag validators).
+  Move the shipped defaults out of `internal/config/validate/placeholder.go`
+  Go constants into an embedded YAML asset, add a `.ctxrc placeholders:`
+  override with EXTEND semantics (user list is appended to defaults, not
+  replacing them — Tarzan Turkish is the dominant case), and replace the
+  current `strings.ToLower` with proper Unicode case folding via
+  `golang.org/x/text/cases` so İ/i, ß/SS, and similar fold correctly.
+  Ship `en` only in v1; ctx has no locale-specific assets yet, so the
+  structure is established but no `tr.yaml` lands in this work.
+  Spec: `specs/placeholder-i18n.md` #priority:high #added:2026-05-11
+  #prerequisite-for-locale-work
+
 ### Misc
 
 
@@ -1715,17 +1728,17 @@ Spec: `specs/ceremony-profiles.md`
 
 ### Phase SK: Skill Surface Polish (Phase 0a; prerequisite for Phase KB) `#priority:high #added:2026-05-09`
 
-Spec: TBD (design ref: `ideas/002-editorial-pipeline-and-skill-rigor.md` §3 "Reframing the wishy-washy skills")
+Spec: `specs/skill-surface-polish.md` (design ref: `ideas/002-editorial-pipeline-and-skill-rigor.md` §3 "Reframing the wishy-washy skills")
 
 Tightens existing capture skills to sibling-project rigor before the editorial pipeline (Phase KB) lifts that pattern wholesale. Independent of Phase RG; both can ship in parallel.
 
-- [ ] Add `MarkFlagRequired` to `ctx decision add` for `--context`, `--rationale`, `--consequence`; reject placeholder values (`TBD`, `see chat`, whitespace-only) at CLI level
-- [ ] Add `MarkFlagRequired` to `ctx learning add` for `--context`, `--lesson`, `--application`; same placeholder rejection
-- [ ] Add `--brief <path>` flag to `/ctx-spec` skill: when present, read the file as authoritative source per the sibling's authority order (frozen contracts > recorded decisions > debrief > agent inference labeled `TBD`); skip the fresh template Q&A
-- [ ] Update `/ctx-plan` skill to always offer to write the debated brief to `.context/briefs/<TS>-<slug>.md` at the end of an interview (creating `.context/briefs/` if absent)
-- [ ] Add an `Authority boundary (vs other skills)` section to `/ctx-decision-add`, `/ctx-learning-add`, `/ctx-task-add`, `/ctx-convention-add` skill files (prevent silent promotion handover→decision, learning→convention, etc., without explicit user ask)
-- [ ] Standardize "light compression for clarity is allowed; new facts are not" wording across capture skills (decide / learn primarily); same wording lands in `/ctx-handover` once Phase KB ships
-- [ ] Document the `--brief` contract in `docs/skills.md`
+- [x] Add `MarkFlagRequired` to `ctx decision add` for `--context`, `--rationale`, `--consequence`; reject placeholder values (`TBD`, `see chat`, whitespace-only) at CLI level
+- [x] Add `MarkFlagRequired` to `ctx learning add` for `--context`, `--lesson`, `--application`; same placeholder rejection
+- [x] Add `--brief <path>` flag to `/ctx-spec` skill: when present, read the file as authoritative source per the sibling's authority order (frozen contracts > recorded decisions > debrief > agent inference labeled `TBD`); skip the fresh template Q&A
+- [x] Update `/ctx-plan` skill to always offer to write the debated brief to `.context/briefs/<TS>-<slug>.md` at the end of an interview (creating `.context/briefs/` if absent)
+- [x] Add an `Authority boundary (vs other skills)` section to `/ctx-decision-add`, `/ctx-learning-add`, `/ctx-task-add`, `/ctx-convention-add` skill files (prevent silent promotion handover→decision, learning→convention, etc., without explicit user ask)
+- [x] Standardize "light compression for clarity is allowed; new facts are not" wording across capture skills (decide / learn primarily); same wording lands in `/ctx-handover` once Phase KB ships
+- [x] Document the `--brief` contract in `docs/skills.md` (landed in `docs/reference/skills.md` — the actual location)
 
 ### Phase RG: Require Git as Architectural Precondition (Phase 0b; prerequisite for Phase KB) `#priority:high #added:2026-05-09`
 

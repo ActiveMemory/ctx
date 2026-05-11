@@ -1,7 +1,7 @@
 ---
 title: "Defense in Depth: Securing AI Agents"
 date: 2026-02-09
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - agent security
@@ -17,7 +17,7 @@ topics:
 
 ## When Markdown Is Not a Security Boundary
 
-*Jose Alekhinne / 2026-02-09*
+*Volkan Özçelik / 2026-02-09*
 
 !!! question "What Happens When Your AI Agent Runs Overnight and Nobody Is Watching?"
     It follows instructions: **That is the problem**.

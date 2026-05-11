@@ -1,7 +1,7 @@
 ---
 title: "You Can't Import Expertise"
 date: 2026-02-05
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - skill adaptation
@@ -17,7 +17,7 @@ topics:
 
 ## Why Good Skills Can't Be Copy-Pasted
 
-*Jose Alekhinne / 2026-02-05*
+*Volkan Özçelik / 2026-02-05*
 
 !!! question "Have You Ever Dropped a Well-Crafted Template into a Project and Had It Do... Nothing Useful?"
     * The template was **thorough**, 

@@ -79,6 +79,23 @@ ctx learning add "ctx init overwrites user content without guard" \
   --application "Skip existing files by default, only overwrite with --force"
 ```
 
+## Authority boundary (vs other skills)
+
+This skill records principle-level lessons discovered through real
+work. It does not unilaterally promote material from adjacent skills:
+
+- **Do not promote a learning into a convention.** A learning is
+  "this gotcha cost us time" — generalizing it into "we always do
+  X" is `/ctx-convention-add`'s job and requires explicit user ask.
+- **Do not promote a learning into a decision.** Even when the
+  lesson clarifies a trade-off, the trade-off itself belongs in
+  `/ctx-decision-add` if the user wants it elevated.
+- **Do not record general programming knowledge.** Anything
+  Googleable in five minutes is not a learning for this codebase
+  (the "Before Recording" check enforces this).
+
+Light compression for clarity is allowed; new facts are not.
+
 ## Quality Checklist
 
 Before recording, verify:

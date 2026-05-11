@@ -7,7 +7,7 @@
 
 title: "We Broke the 3:1 Rule"
 date: 2026-03-23
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - consolidation
@@ -24,7 +24,7 @@ topics:
 **The best time to consolidate was after every third session.
 The second best time is now.**
 
-*Jose Alekhinne / March 23, 2026*
+*Volkan Özçelik / March 23, 2026*
 
 The rule was simple: three feature sessions, then one
 consolidation session. 

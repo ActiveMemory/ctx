@@ -12,16 +12,41 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/build"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
+	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/validate"
 )
 
 // Cmd returns the "ctx learning add" subcommand.
 //
 // Adds a new learning entry to LEARNINGS.md with the
 // required provenance, context, lesson, and application
-// flags. Implementation lives in the shared add core.
+// flags. Implementation lives in the shared add core; this
+// noun-level constructor installs a PreRunE that reads each
+// body flag and calls [validate.RejectPlaceholder] to reject
+// empty or placeholder values.
 //
 // Returns:
 //   - *cobra.Command: Configured learning add subcommand
 func Cmd() *cobra.Command {
-	return build.Cmd(entry.Learning, cmd.DescKeyLearningAdd, cmd.UseLearningAdd)
+	c := build.Cmd(entry.Learning, cmd.DescKeyLearningAdd, cmd.UseLearningAdd)
+	c.PreRunE = func(cobraCmd *cobra.Command, _ []string) error {
+		flags := cobraCmd.Flags()
+		names := []string{
+			cFlag.Context,
+			cFlag.Lesson,
+			cFlag.Application,
+		}
+		for _, name := range names {
+			value, getErr := flags.GetString(name)
+			if getErr != nil {
+				return getErr
+			}
+			rejectErr := validate.RejectPlaceholder(name, value)
+			if rejectErr != nil {
+				return rejectErr
+			}
+		}
+		return nil
+	}
+	return c
 }

@@ -8,7 +8,7 @@
 title: "The Watermelon-Rind Anti-Pattern:
   Why Smarter Tools Make Shallower Agents"
 date: 2026-04-06
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - architecture
@@ -27,7 +27,7 @@ topics:
 **Give an agent a graph query tool, and it will tell you everything
 about your codebase except what actually matters.**
 
-*Jose Alekhinne / April 6, 2026*
+*Volkan Özçelik / April 6, 2026*
 
 ## A Turkish Proverb Walks into a Codebase
 

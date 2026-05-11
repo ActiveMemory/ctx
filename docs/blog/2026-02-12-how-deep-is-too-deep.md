@@ -1,7 +1,7 @@
 ---
 title: "How Deep Is Too Deep?"
 date: 2026-02-12
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - AI foundations
@@ -17,7 +17,7 @@ topics:
 
 ## When "Master ML" Is the Wrong Next Step
 
-*Jose Alekhinne / 2026-02-12*
+*Volkan Özçelik / 2026-02-12*
 
 !!! question "Have You Ever Felt like You Should Understand More of the Stack beneath You?"
     You can talk about transformers at a whiteboard.

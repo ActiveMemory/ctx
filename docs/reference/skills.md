@@ -481,8 +481,30 @@ optionally chains to `/ctx-task-add`
 **Trigger phrases**: "spec this out", "write a spec", "create a spec",
 "design document"
 
+#### `--brief <path>` flag
+
+When invoked as `/ctx-spec --brief <path>`, the skill treats the
+file at `<path>` as the authoritative source and skips the
+interactive Q&A. Use this when a prior `/ctx-plan` session
+produced a debated brief that already covers the design.
+
+The skill enforces this **authority order** when sources disagree:
+
+1. Frozen contracts in `docs/` (release notes, public CLI docs)
+2. Recorded decisions in `.context/DECISIONS.md`
+3. The brief at `<path>`
+4. Agent inference — only when 1–3 are silent, and labeled `TBD`
+   in the resulting spec so it stands out for review.
+
+Light compression for clarity is allowed; new facts are not.
+Where the brief is silent, the spec writes `TBD` rather than
+filling the gap from inference. If the brief contradicts a
+frozen contract, the contradiction is surfaced to the user
+rather than silently followed.
+
 **See also**:
 [`/ctx-brainstorm`](#ctx-brainstorm),
+[`/ctx-plan`](#ctx-plan),
 [`/ctx-plan-import`](#ctx-plan-import)
 
 ---

@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-10 | Go compile/tool version mismatch comes from the cached toolchain, not the system Go |
 | 2026-05-10 | An ongoing user's concrete workaround tax is the strongest validation evidence |
 | 2026-05-10 | Lift renames alongside features when borrowing from battle-tested external designs |
 | 2026-05-10 | KB epistemology: in a KB you do not decide, you increase confidence |
@@ -126,6 +127,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-10-181418] Go compile/tool version mismatch comes from the cached toolchain, not the system Go
+
+**Context**: Hit 'compile: version "go1.26.1" does not match go tool version "go1.26.2"' on every go build / go test / make lint, even with my changes stashed out. System Go was 1.26.2 (healthy); go.mod pinned 1.26.1, so Go's auto-toolchain feature had downloaded 1.26.1 to ~/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.26.1.darwin-arm64/. That cached toolchain was internally inconsistent: its compile binary and stdlib export data disagreed on version.
+
+**Lesson**: When the compile-vs-tool version error appears, the bug is the cached toolchain dir, not the installed Go. Reinstalling Go (brew, installer, etc.) does NOT touch the cached download, so the error persists after reinstall. Three real fixes: (1) rm -rf ~/go/pkg/mod/golang.org/toolchain@v0.0.1-go<X>.<platform>/ to force a clean re-download (~30s); (2) bump go.mod to match the system Go so the cached one is bypassed; (3) GOTOOLCHAIN=go<system version> to override the pin per-invocation. go clean -cache and GOTOOLCHAIN=local do not help.
+
+**Application**: First diagnostic on this error: check go env GOROOT — if it points to ~/go/pkg/mod/golang.org/toolchain@... the cached toolchain is in play. Then either delete the cached dir (most surgical) or bump go.mod (one-line diff, but lands in a commit). Do not waste time reinstalling Go.
 
 ---
 

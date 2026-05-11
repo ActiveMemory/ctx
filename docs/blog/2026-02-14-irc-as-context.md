@@ -1,7 +1,7 @@
 ---
 title: "Before Context Windows, We Had Bouncers"
 date: 2026-02-14
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - context engineering

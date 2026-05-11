@@ -7,7 +7,7 @@
 
 title: "Context as Infrastructure"
 date: 2026-02-17
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - context engineering
@@ -23,7 +23,7 @@ topics:
 
 ## Why Your AI Needs a Filesystem, Not a Prompt
 
-*Jose Alekhinne / February 17, 2026*
+*Volkan Özçelik / February 17, 2026*
 
 !!! question "Where Does Your AI's Knowledge Live between Sessions?"
     If the answer is "in a prompt I paste at the start," you are treating

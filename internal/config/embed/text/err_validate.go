@@ -38,4 +38,10 @@ const (
 	// DescKeyErrValidateWorkingDirectory is the text key for err validate working
 	// directory messages.
 	DescKeyErrValidateWorkingDirectory = "err.validation.working-directory"
+	// DescKeyErrValidateFlagEmpty is the text key for an empty or
+	// whitespace-only required body flag.
+	DescKeyErrValidateFlagEmpty = "err.validation.flag-empty"
+	// DescKeyErrValidateFlagPlaceholder is the text key for a
+	// placeholder-valued required body flag.
+	DescKeyErrValidateFlagPlaceholder = "err.validation.flag-placeholder"
 )

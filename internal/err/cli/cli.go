@@ -79,3 +79,35 @@ func NoToolSpecified() error {
 		desc.Text(text.DescKeyErrCliNoToolSpecified),
 	)
 }
+
+// FlagEmpty returns an error for a required body flag that was
+// empty or whitespace-only after trimming.
+//
+// Parameters:
+//   - name: the flag name (without leading dashes)
+//
+// Returns:
+//   - error: "flag --<name> is required and cannot be empty or
+//     whitespace-only"
+func FlagEmpty(name string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrValidateFlagEmpty), name,
+	)
+}
+
+// FlagPlaceholder returns an error for a required body flag whose
+// value matched the closed placeholder set.
+//
+// Parameters:
+//   - name: the flag name (without leading dashes)
+//   - value: the offending value, included verbatim in the message
+//
+// Returns:
+//   - error: "flag --<name> rejected placeholder value <value>;
+//     provide concrete content"
+func FlagPlaceholder(name, value string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrValidateFlagPlaceholder),
+		name, value,
+	)
+}

@@ -1,7 +1,7 @@
 ---
 title: "Parallel Agents, Merge Debt, and the Myth of Overnight Progress"
 date: 2026-02-17
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - agent workflows
@@ -17,7 +17,7 @@ topics:
 
 ## When the Screen Looks like Progress
 
-*Jose Alekhinne / 2026-02-17*
+*Volkan Özçelik / 2026-02-17*
 
 !!! question "How Many Terminals Are Too Many?"
     You discover agents can run in parallel.

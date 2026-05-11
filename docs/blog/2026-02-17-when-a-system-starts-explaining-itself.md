@@ -7,7 +7,7 @@
 
 title: "When a System Starts Explaining Itself"
 date: 2026-02-17
-author: Jose Alekhinne
+author: Volkan Özçelik
 reviewed_and_finalized: true
 topics:
   - field notes
@@ -23,7 +23,7 @@ topics:
 
 ## Field Notes from the Moment a Private Workflow Becomes Portable
 
-*Jose Alekhinne / February 17, 2026*
+*Volkan Özçelik / February 17, 2026*
 
 !!! question "How Do You Know Something Is Working?"
     **Not** from metrics. **Not** from GitHub stars. **Not** from praise.
