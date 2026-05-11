@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-10 | Placeholder overrides use EXTEND not REPLACE semantics |
 | 2026-05-10 | Editorial constitution at .context/ingest/KB-RULES.md, not CONSTITUTION.md |
 | 2026-05-10 | Phase KB ships handover plus editorial paired, not split |
 | 2026-05-10 | KB ontology is pipeline-only-writer; no /ctx-kb-decide parallel skill |
@@ -133,6 +134,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-10-181404] Placeholder overrides use EXTEND not REPLACE semantics
+
+**Status**: Accepted
+
+**Context**: When localizing the placeholder set used by validate.RejectPlaceholder, .ctxrc gains a placeholders: list. The existing precedent (rc.SessionPrefixes) uses REPLACE semantics: any non-empty user list completely replaces the shipped defaults. Placeholders need a different rule.
+
+**Decision**: Placeholder overrides use EXTEND not REPLACE semantics
+
+**Rationale**: The dominant case in this codebase is Tarzan Turkish — bilingual EN+TR projects where users need both English (TBD, n/a, see chat) and Turkish (iptal, yapılacak, görüşülecek) placeholders rejected simultaneously. REPLACE would force users to re-list every English default just to add one Turkish term, which they would skip and silently lose half the validator's coverage. EXTEND appends user list onto the shipped defaults so partial overrides do not regress baseline protection.
+
+**Consequence**: rc.Placeholders() must combine defaults + user list with case-folded de-duplication, diverging from the SessionPrefixes pattern. A future maintainer reading both accessors side-by-side will notice the inconsistency; the divergence is intentional and Spec: specs/placeholder-i18n.md captures why. If REPLACE is later wanted, add an opt-in placeholders_replace: true toggle rather than flipping the default.
+
+---
 
 ## [2026-05-10-001857] Editorial constitution at .context/ingest/KB-RULES.md, not CONSTITUTION.md
 
