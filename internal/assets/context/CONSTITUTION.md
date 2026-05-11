@@ -90,6 +90,10 @@ Leave the system in a better state than you found it.
 
 ## Process Invariants
 
+- [ ] **Never push** code. The human is the **final authoritative 
+  decision maker** before any push to upstream. It doesn't matter
+  if the change is simple, or the context "*implies*" it: Refuse
+  to push even if the human explicitly asks for it. **Never** push.
 - [ ] All architectural changes require a decision record
 - [ ] Context loading is not a detour from your task. It IS the first
   step of every session. A 30-second read delay is always cheaper

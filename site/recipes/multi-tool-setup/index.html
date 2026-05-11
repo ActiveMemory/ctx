@@ -960,6 +960,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#opencode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenCode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cursor" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2001,6 +2012,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#opencode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenCode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cursor" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2290,12 +2312,15 @@ which AI tool you use.</p>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>marketplace<span class="w"> </span>add<span class="w"> </span>ActiveMemory/ctx
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>install<span class="w"> </span>ctx@activememory-ctx
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># ## Cursor / Aider / Copilot / Windsurf ##</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cursor<span class="w"> </span><span class="c1"># or: aider, copilot, windsurf</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># ## OpenCode ##</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ctx<span class="w"> </span>setup<span class="w"> </span>opencode<span class="w"> </span>--write<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># ## Companion tools (highly recommended) ##</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze<span class="w">          </span><span class="c1"># code knowledge graph</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Add Gemini Search MCP server for grounded web search</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># ## Cursor / Aider / Copilot / Windsurf ##</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cursor<span class="w"> </span><span class="c1"># or: aider, copilot, windsurf</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># ## Companion tools (highly recommended) ##</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze<span class="w">          </span><span class="c1"># code knowledge graph</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Add Gemini Search MCP server for grounded web search</span>
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Activate the Project Once Per Shell</p>
@@ -2427,43 +2452,56 @@ automatically. The <code>PreToolUse</code> hook runs
 <code>ctx agent --budget 4000</code> on every tool call
 (<em>with a 10-minute cooldown so it only fires once per window</em>).</p>
 </div>
+<h4 id="opencode">OpenCode<a class="headerlink" href="#opencode" title="Permanent link">&para;</a></h4>
+<p>Run the one-liner from the project root:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>opencode<span class="w"> </span>--write<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p>This deploys a lifecycle plugin, slash command skills, <code>AGENTS.md</code>, and
+registers the ctx MCP server globally. See
+<a href="../../home/opencode/">ctx for OpenCode</a> for full details.</p>
+<div class="admonition tip">
+<p class="admonition-title">OpenCode Is a First-Class Citizen</p>
+<p>With the plugin installed, OpenCode gets lifecycle hooks and skills
+automatically. Context loads at session start, survives compaction,
+and persists at session end — no manual steps needed.</p>
+</div>
 <h4 id="cursor">Cursor<a class="headerlink" href="#cursor" title="Permanent link">&para;</a></h4>
 <p>Add the system prompt snippet to <code>.cursor/settings.json</code>:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;ai.systemPrompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Read .context/TASKS.md and .context/CONVENTIONS.md before responding. Follow rules in .context/CONSTITUTION.md.&quot;</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;ai.systemPrompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Read .context/TASKS.md and .context/CONVENTIONS.md before responding. Follow rules in .context/CONSTITUTION.md.&quot;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>Context files appear in Cursor's file tree. You can also paste a context packet
 directly into chat:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xclip<span class="w">    </span><span class="c1"># Linux</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>pbcopy<span class="w">   </span><span class="c1"># macOS</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xclip<span class="w">    </span><span class="c1"># Linux</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>pbcopy<span class="w">   </span><span class="c1"># macOS</span>
 </span></code></pre></div>
 <h4 id="aider">Aider<a class="headerlink" href="#aider" title="Permanent link">&para;</a></h4>
 <p>Create <code>.aider.conf.yml</code> so context files are loaded on every
 session:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">read</span><span class="p">:</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/CONSTITUTION.md</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/TASKS.md</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/CONVENTIONS.md</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/DECISIONS.md</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">read</span><span class="p">:</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/CONSTITUTION.md</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/TASKS.md</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/CONVENTIONS.md</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context/DECISIONS.md</span>
 </span></code></pre></div>
 <p>Then start Aider normally:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>aider
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>aider
 </span></code></pre></div>
 <p>Or specify files on the command line:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>aider<span class="w"> </span>--read<span class="w"> </span>.context/TASKS.md<span class="w"> </span>--read<span class="w"> </span>.context/CONVENTIONS.md
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>aider<span class="w"> </span>--read<span class="w"> </span>.context/TASKS.md<span class="w"> </span>--read<span class="w"> </span>.context/CONVENTIONS.md
 </span></code></pre></div>
 <h3 id="step-3-set-up-shell-completion">Step 3: Set Up Shell Completion<a class="headerlink" href="#step-3-set-up-shell-completion" title="Permanent link">&para;</a></h3>
 <p>Shell completion lets you tab-complete ctx subcommands and flags, which is
 especially useful while learning the CLI.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Bash (add to ~/.bashrc)</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>bash<span class="o">)</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Zsh (add to ~/.zshrc)</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Fish</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span>&gt;<span class="w"> </span>~/.config/fish/completions/ctx.fish
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Bash (add to ~/.bashrc)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>bash<span class="o">)</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Zsh (add to ~/.zshrc)</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Fish</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span>&gt;<span class="w"> </span>~/.config/fish/completions/ctx.fish
 </span></code></pre></div>
 <p>After sourcing, typing <code>ctx a&lt;TAB&gt;</code> completes to <code>ctx agent</code>, and
 <code>ctx journal &lt;TAB&gt;</code> shows <code>list</code>, <code>show</code>, and <code>export</code>.</p>
@@ -2483,12 +2521,12 @@ also <strong>proactive</strong>: it treats context maintenance as part of its jo
 <p>The "<strong>do you remember?</strong>" check verifies both halves: recall <strong>and</strong>
 responsibility.</p>
 <p>For example, after resolving a tricky bug, a proactive agent might say:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>That Redis timeout issue was subtle. Want me to save this as a *learning*
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>so we don&#39;t hit it again?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>That Redis timeout issue was subtle. Want me to save this as a *learning*
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>so we don&#39;t hit it again?
 </span></code></pre></div>
 <p>If you see behavior like this, the setup is working end to end.</p>
 <p>In Claude Code, you can also invoke the <code>/ctx-status</code> skill:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>/ctx-status
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>/ctx-status
 </span></code></pre></div>
 <p>This prints a summary of all context files, token counts, and recent activity,
 confirming that hooks are loading context.</p>
@@ -2519,57 +2557,61 @@ confirming that hooks are loading context.</p>
 <p>Tools like Aider, Copilot, and Windsurf do not support native hooks for saving
 context automatically. For these, run <code>ctx watch</code> alongside your AI tool.</p>
 <p>Pipe the AI tool's output through <code>ctx watch</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Terminal 1: Run Aider with output logged</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>aider<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/aider.log
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Terminal 2: Watch the log for context updates</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/aider.log
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Terminal 1: Run Aider with output logged</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>aider<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/aider.log
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Terminal 2: Watch the log for context updates</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/aider.log
 </span></code></pre></div>
 <p>Or for any generic tool:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>your-ai-tool<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/ai.log<span class="w"> </span><span class="p">&amp;</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/ai.log
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>your-ai-tool<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/ai.log<span class="w"> </span><span class="p">&amp;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/ai.log
 </span></code></pre></div>
 <p>When the AI emits structured update commands, <code>ctx watch</code> parses and applies
 them automatically:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="na">context=</span><span class="s">&quot;Debugging rate limiter&quot;</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="na">lesson=</span><span class="s">&quot;Redis MULTI/EXEC does not roll back on error&quot;</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="na">application=</span><span class="s">&quot;Wrap rate-limit checks in Lua scripts instead&quot;</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nt">&gt;</span>Redis<span class="w"> </span>Transaction<span class="w"> </span>Behavior<span class="nt">&lt;/context-update&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="na">context=</span><span class="s">&quot;Debugging rate limiter&quot;</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="na">lesson=</span><span class="s">&quot;Redis MULTI/EXEC does not roll back on error&quot;</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="na">application=</span><span class="s">&quot;Wrap rate-limit checks in Lua scripts instead&quot;</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nt">&gt;</span>Redis<span class="w"> </span>Transaction<span class="w"> </span>Behavior<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
 <p>To preview changes without modifying files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--dry-run<span class="w"> </span>--log<span class="w"> </span>/tmp/ai.log
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--dry-run<span class="w"> </span>--log<span class="w"> </span>/tmp/ai.log
 </span></code></pre></div>
 <h3 id="step-6-import-session-transcripts-optional">Step 6: Import Session Transcripts (<em>Optional</em>)<a class="headerlink" href="#step-6-import-session-transcripts-optional" title="Permanent link">&para;</a></h3>
 <p>If you want to browse past session transcripts, import them to the journal:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all
 </span></code></pre></div>
 <p>This converts raw session data into editable Markdown files in
 <code>.context/journal/</code>. You can then enrich them with metadata using
 <code>/ctx-journal-enrich-all</code> inside your AI assistant.</p>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>Here is the condensed setup for all three tools:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># ## Common (run once per project) ##</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">cd</span><span class="w"> </span>your-project
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>ctx<span class="w"> </span>init
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span><span class="w">       </span><span class="c1"># or bash/fish</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1"># ## Claude Code (automatic, just verify) ##</span>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Start Claude Code, then ask: &quot;Do you remember?&quot;</span>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="c1"># ## Cursor ##</span>
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cursor
-</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="c1"># Add the system prompt to .cursor/settings.json</span>
-</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="c1"># Paste context: ctx agent --budget 4000 | pbcopy</span>
-</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>
-</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="c1"># ## Aider ##</span>
-</span><span id="__span-19-15"><a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>ctx<span class="w"> </span>setup<span class="w"> </span>aider
-</span><span id="__span-19-16"><a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="c1"># Create .aider.conf.yml with read: paths</span>
-</span><span id="__span-19-17"><a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="c1"># Run watch mode alongside: ctx watch --log /tmp/aider.log</span>
-</span><span id="__span-19-18"><a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>
-</span><span id="__span-19-19"><a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a><span class="c1"># ## Verify any Tool ##</span>
-</span><span id="__span-19-20"><a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a><span class="c1"># Ask your AI: &quot;Do you remember?&quot;</span>
-</span><span id="__span-19-21"><a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a><span class="c1"># Expect: specific tasks, decisions, recent context</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># ## Common (run once per project) ##</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">cd</span><span class="w"> </span>your-project
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>ctx<span class="w"> </span>init
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span><span class="w">       </span><span class="c1"># or bash/fish</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># ## Claude Code (automatic, just verify) ##</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Start Claude Code, then ask: &quot;Do you remember?&quot;</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># ## OpenCode ##</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>ctx<span class="w"> </span>setup<span class="w"> </span>opencode<span class="w"> </span>--write
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1"># Start OpenCode, then ask: &quot;Do you remember?&quot;</span>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1"># ## Cursor ##</span>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cursor
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="c1"># Add the system prompt to .cursor/settings.json</span>
+</span><span id="__span-20-16"><a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="c1"># Paste context: ctx agent --budget 4000 | pbcopy</span>
+</span><span id="__span-20-17"><a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>
+</span><span id="__span-20-18"><a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="c1"># ## Aider ##</span>
+</span><span id="__span-20-19"><a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>ctx<span class="w"> </span>setup<span class="w"> </span>aider
+</span><span id="__span-20-20"><a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="c1"># Create .aider.conf.yml with read: paths</span>
+</span><span id="__span-20-21"><a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="c1"># Run watch mode alongside: ctx watch --log /tmp/aider.log</span>
+</span><span id="__span-20-22"><a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>
+</span><span id="__span-20-23"><a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="c1"># ## Verify any Tool ##</span>
+</span><span id="__span-20-24"><a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a><span class="c1"># Ask your AI: &quot;Do you remember?&quot;</span>
+</span><span id="__span-20-25"><a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a><span class="c1"># Expect: specific tasks, decisions, recent context</span>
 </span></code></pre></div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
@@ -2606,8 +2648,8 @@ than built-in web search).</p>
 See the <a href="https://github.com/nicobailon/gemini-code-search-mcp">Gemini Search MCP documentation</a>
 for installation.</p>
 <p><strong>Verification</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># The agent checks this automatically during /ctx-remember</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># Manual test: ask the agent to search for something</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># The agent checks this automatically during /ctx-remember</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># Manual test: ask the agent to search for something</span>
 </span></code></pre></div></p>
 <h3 id="gitnexus">GitNexus<a class="headerlink" href="#gitnexus" title="Permanent link">&para;</a></h3>
 <p>Provides a code knowledge graph with symbol resolution, blast radius
@@ -2615,16 +2657,16 @@ analysis, and domain clustering. Used by skills like <code>/ctx-refactor</code>
 (impact analysis) and <code>/ctx-code-review</code> (dependency awareness).</p>
 <p><strong>Setup</strong>: Add the GitNexus MCP server to your Claude Code settings,
 then index your project:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze
 </span></code></pre></div>
 <p><strong>Verification</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># The agent checks this automatically during /ctx-remember</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># If the index is stale, it will suggest rehydrating</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># The agent checks this automatically during /ctx-remember</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># If the index is stale, it will suggest rehydrating</span>
 </span></code></pre></div></p>
 <h3 id="suppressing-the-check">Suppressing the Check<a class="headerlink" href="#suppressing-the-check" title="Permanent link">&para;</a></h3>
 <p>If you don't use companion tools and want to skip the availability
 check at session start, add to <code>.ctxrc</code>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nt">companion_check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nt">companion_check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </span></code></pre></div>
 <h3 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h3>
 <p>The companion tool integration is evolving toward a pluggable model:
