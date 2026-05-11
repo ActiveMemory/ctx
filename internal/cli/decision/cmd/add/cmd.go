@@ -21,19 +21,32 @@ import (
 // Adds a new decision entry to DECISIONS.md with the
 // required provenance, context, rationale, and consequence
 // flags. Implementation lives in the shared add core; this
-// noun-level constructor installs a PreRunE that calls
-// [validate.BodyFlags] to reject empty or placeholder values
-// on the three body flags.
+// noun-level constructor installs a PreRunE that reads each
+// body flag and calls [validate.RejectPlaceholder] to reject
+// empty or placeholder values.
 //
 // Returns:
 //   - *cobra.Command: Configured decision add subcommand
 func Cmd() *cobra.Command {
 	c := build.Cmd(entry.Decision, cmd.DescKeyDecisionAdd, cmd.UseDecisionAdd)
 	c.PreRunE = func(cobraCmd *cobra.Command, _ []string) error {
-		return validate.BodyFlags(
-			cobraCmd,
-			cFlag.Context, cFlag.Rationale, cFlag.Consequence,
-		)
+		flags := cobraCmd.Flags()
+		names := []string{
+			cFlag.Context,
+			cFlag.Rationale,
+			cFlag.Consequence,
+		}
+		for _, name := range names {
+			value, getErr := flags.GetString(name)
+			if getErr != nil {
+				return getErr
+			}
+			rejectErr := validate.RejectPlaceholder(name, value)
+			if rejectErr != nil {
+				return rejectErr
+			}
+		}
+		return nil
 	}
 	return c
 }

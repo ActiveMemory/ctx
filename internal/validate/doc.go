@@ -26,16 +26,15 @@
 //
 // # CLI Body-Flag Validation
 //
-//   - [BodyFlags] reads each named flag from a cobra
-//     command and rejects empty, whitespace-only, or
+//   - [RejectPlaceholder] checks a single (flag, value)
+//     pair and rejects empty, whitespace-only, or
 //     placeholder values (TBD, see chat, n/a, etc.).
-//     Pure function: does not mutate the command.
-//     Called from a noun-level command's own PreRunE
-//     so the wiring is visible at the call site.
-//   - [RejectPlaceholder] is the per-value primitive
-//     used by [BodyFlags]; exported for tests and
-//     ad-hoc reuse. Placeholder values live in
-//     [internal/config/validate].
+//     Matching is case-insensitive after trimming;
+//     substring matches are not rejected. Noun-level
+//     add commands loop over their body flags in their
+//     own PreRunE and call this per pair, so the wiring
+//     is visible at the call site. The placeholder set
+//     lives in [internal/config/validate].
 //
 // # Design Philosophy
 //
