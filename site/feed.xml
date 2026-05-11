@@ -12,7 +12,7 @@
     <updated>2026-04-06T00:00:00Z</updated>
     <summary>about your codebase except what actually matters.**</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="architecture"></category>
     <category term="code intelligence"></category>
@@ -27,7 +27,7 @@
     <updated>2026-04-02T00:00:00Z</updated>
     <summary>against the millions of `strings.Split(s, &#34;/&#34;)` calls in its training data</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="ast"></category>
     <category term="code quality"></category>
@@ -42,7 +42,7 @@
     <updated>2026-03-23T00:00:00Z</updated>
     <summary>The second best time is now.**</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="consolidation"></category>
     <category term="technical debt"></category>
@@ -72,7 +72,7 @@
     <updated>2026-03-04T00:00:00Z</updated>
     <summary>If the answer depends on which machine they&#39;re using, which</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="context engineering"></category>
     <category term="agent memory"></category>
@@ -87,7 +87,7 @@
     <updated>2026-02-28T00:00:00Z</updated>
     <summary>- Isaac Asimov, [The Last Question][asimov] (1956)</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="context continuity"></category>
     <category term="long-lived systems"></category>
@@ -102,7 +102,7 @@
     <updated>2026-02-25T00:00:00Z</updated>
     <summary>You wrote the playbook. You organized the files. You even put</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="hooks"></category>
     <category term="agent behavior"></category>
@@ -118,7 +118,7 @@
     <updated>2026-02-17T00:00:00Z</updated>
     <summary>You know, deep in your heart, that it works</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="field notes"></category>
     <category term="adoption signals"></category>
@@ -133,7 +133,7 @@
     <updated>2026-02-17T00:00:00Z</updated>
     <summary>Every developer knows technical debt exists. Every developer</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="consolidation"></category>
     <category term="technical debt"></category>
@@ -148,7 +148,7 @@
     <updated>2026-02-17T00:00:00Z</updated>
     <summary>You discover agents can run in parallel.</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="agent workflows"></category>
     <category term="parallelism"></category>
@@ -163,7 +163,7 @@
     <updated>2026-02-17T00:00:00Z</updated>
     <summary>If the answer is &#34;in a prompt I paste at the start,&#34; you are treating</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="context engineering"></category>
     <category term="infrastructure"></category>
@@ -178,7 +178,7 @@
     <updated>2026-02-17T00:00:00Z</updated>
     <summary>You might be confusing the thing that&#39;s *cheap* with the</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="AI and expertise"></category>
     <category term="context engineering"></category>
@@ -267,7 +267,7 @@
     <updated>2026-02-14T00:00:00Z</updated>
     <summary>[IRC][irc] is **stateless**.</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="context engineering"></category>
     <category term="infrastructure"></category>
@@ -282,7 +282,7 @@
     <updated>2026-02-12T00:00:00Z</updated>
     <summary>You can talk about transformers at a whiteboard.</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="AI foundations"></category>
     <category term="abstraction boundaries"></category>
@@ -297,7 +297,7 @@
     <updated>2026-02-09T00:00:00Z</updated>
     <summary>It follows instructions: **That is the problem**.</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="agent security"></category>
     <category term="defense in depth"></category>
@@ -342,7 +342,7 @@
     <updated>2026-02-05T00:00:00Z</updated>
     <summary>...and yet it sat there, inert, while the same old problems kept drifting in.</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="skill adaptation"></category>
     <category term="E/A/R framework"></category>
@@ -357,7 +357,7 @@
     <updated>2026-02-04T00:00:00Z</updated>
     <summary>You craft detailed instructions. You add examples. You build elaborate</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="context engineering"></category>
     <category term="skill design"></category>
@@ -372,7 +372,7 @@
     <updated>2026-02-03T00:00:00Z</updated>
     <summary>As of `v0.4.0`, `ctx` consolidated sessions into the journal mechanism.</summary>
     <author>
-      <name>Jose Alekhinne</name>
+      <name>Volkan Özçelik</name>
     </author>
     <category term="attention mechanics"></category>
     <category term="context engineering"></category>

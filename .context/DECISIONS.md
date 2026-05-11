@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-11 | Embedded foreign-language assets under internal/assets/ are intentional, not a smell |
 | 2026-05-10 | Placeholder overrides use EXTEND not REPLACE semantics |
 | 2026-05-10 | Editorial constitution at .context/ingest/KB-RULES.md, not CONSTITUTION.md |
 | 2026-05-10 | Phase KB ships handover plus editorial paired, not split |
@@ -137,6 +138,26 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-11-000000] Embedded foreign-language assets under internal/assets/ are intentional, not a smell
+
+**Status**: Accepted
+
+**Context**: A diagnostic conversation surfaced that `internal/assets/integrations/` contains TypeScript (`opencode/plugin/index.ts`), Bash and PowerShell scripts (`copilot-cli/scripts/`), JSON, YAML, and Markdown — none of it Go source. The first-glance read was "internal/ has become a dumping ground for non-Go tooling; lift integrations/ out." Audit of `embed.go` proved otherwise: every file under `integrations/` is captured by an explicit `//go:embed` directive and shipped inside the ctx binary as raw bytes, then written to the user's filesystem at `ctx setup` time. The smell was real (no contract document existed to explain this) but the architectural diagnosis was wrong.
+
+**Decision**: Embedded foreign-language assets stay under `internal/assets/`. The `internal/` directory is honoring Go's import-privacy convention; the contract is "everything in this tree is `//go:embed`'d into the binary as bytes." A `README.md` at `internal/assets/README.md` documents the contract; `internal/assets/doc.go` continues to serve the Go-doc audience.
+
+**Rationale**: Three reasons against lifting:
+
+1. **Hard Go constraint**: `//go:embed` directives cannot reference parents (no `../`). Moving assets out of the embed.go directory tree forces moving (or duplicating) the embed package itself, with import-path blast radius across every consumer. The relocation cost is disproportionate to the readability win.
+2. **Idiomatic Go**: `internal/` is about import privacy, not source language. Projects like Kubernetes and Cobra ship embedded foreign-language payloads from `internal/` without considering it a smell.
+3. **The actual fix is cheaper**: the smell was a missing contract document, not a misplaced directory. A README that names the rule ("everything here is `//go:embed`'d; foreign-language files are intentional payload") resolves the legibility problem at zero structural cost. Dev tooling *about* the embedded payload (e.g. `tsconfig.json` for the TS plugin) is what does not belong inside the embed tree — that goes in a sibling tooling directory.
+
+**Consequence**: Future contributors who feel the same "internal/ is a dumping ground" instinct will find a README documenting why the layout is correct. The README also enumerates current quality gates (presence, format parse, schema integrity) and the known gaps (TypeScript type-check, shellcheck, PSScriptAnalyzer, skill frontmatter validation) — gaps now spawned as discrete Phase 0 tasks. The line-30 `tsc --noEmit` task is redirected: its tooling files must live in a sibling directory outside `internal/assets/` to honor the embed contract.
+
+**Related**: Spec: specs/internal-assets-readme.md
+
+---
 
 ## [2026-05-10-181404] Placeholder overrides use EXTEND not REPLACE semantics
 

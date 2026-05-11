@@ -1380,6 +1380,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="&#x2f;ctx-spec">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-brief-path-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        --brief &lt;path&gt; flag
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2268,6 +2285,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="&#x2f;ctx-spec">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-brief-path-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        --brief &lt;path&gt; flag
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2988,8 +3022,27 @@ and error handling.</p>
 optionally chains to <code>/ctx-task-add</code></p>
 <p><strong>Trigger phrases</strong>: "spec this out", "write a spec", "create a spec",
 "design document"</p>
+<h4 id="-brief-path-flag"><code>--brief &lt;path&gt;</code> flag<a class="headerlink" href="#-brief-path-flag" title="Permanent link">&para;</a></h4>
+<p>When invoked as <code>/ctx-spec --brief &lt;path&gt;</code>, the skill treats the
+file at <code>&lt;path&gt;</code> as the authoritative source and skips the
+interactive Q&amp;A. Use this when a prior <code>/ctx-plan</code> session
+produced a debated brief that already covers the design.</p>
+<p>The skill enforces this <strong>authority order</strong> when sources disagree:</p>
+<ol>
+<li>Frozen contracts in <code>docs/</code> (release notes, public CLI docs)</li>
+<li>Recorded decisions in <code>.context/DECISIONS.md</code></li>
+<li>The brief at <code>&lt;path&gt;</code></li>
+<li>Agent inference — only when 1–3 are silent, and labeled <code>TBD</code>
+   in the resulting spec so it stands out for review.</li>
+</ol>
+<p>Light compression for clarity is allowed; new facts are not.
+Where the brief is silent, the spec writes <code>TBD</code> rather than
+filling the gap from inference. If the brief contradicts a
+frozen contract, the contradiction is surfaced to the user
+rather than silently followed.</p>
 <p><strong>See also</strong>:
 <a href="#ctx-brainstorm"><code>/ctx-brainstorm</code></a>,
+<a href="#ctx-plan"><code>/ctx-plan</code></a>,
 <a href="#ctx-plan-import"><code>/ctx-plan-import</code></a></p>
 <hr />
 <h3 id="ctx-plan-import"><code>/ctx-plan-import</code><a class="headerlink" href="#ctx-plan-import" title="Permanent link">&para;</a></h3>
