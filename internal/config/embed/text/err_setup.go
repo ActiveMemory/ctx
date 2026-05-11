@@ -18,4 +18,7 @@ const (
 	// DescKeyErrSetupSyncSteering is the text key for err setup sync steering
 	// messages.
 	DescKeyErrSetupSyncSteering = "err.setup.sync-steering"
+	// DescKeyErrSetupMissingEmbeddedAsset is the text key for the
+	// "embedded asset missing" setup error.
+	DescKeyErrSetupMissingEmbeddedAsset = "err.setup.missing-embedded-asset"
 )

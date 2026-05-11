@@ -66,6 +66,7 @@ const (
 	ToolKiro       = "kiro"
 	ToolCline      = "cline"
 	ToolCodex      = "codex"
+	ToolOpenCode   = "opencode"
 	ToolWindsurf   = "windsurf"
 )
 
@@ -103,10 +104,45 @@ const (
 	KeyCommand = "command"
 	// KeyArgs is the JSON key for MCP server args.
 	KeyArgs = "args"
+	// KeyEnabled is the JSON key for the MCP server enabled flag
+	// (used by OpenCode's McpLocalConfig schema).
+	KeyEnabled = "enabled"
 	// KeyTools is the JSON key for MCP server tools filter.
 	KeyTools = "tools"
 	// ToolsWildcard is the wildcard value for MCP tools access.
 	ToolsWildcard = "*"
+)
+
+// OpenCode integration paths.
+const (
+	// DirOpenCode is the OpenCode project config directory.
+	DirOpenCode = ".opencode"
+	// DirOpenCodePlugins is the OpenCode plugins subdirectory.
+	DirOpenCodePlugins = "plugins"
+	// DirOpenCodeSkills is the OpenCode skills subdirectory.
+	DirOpenCodeSkills = "skills"
+	// DirXDGConfig is the XDG base config directory name (.config).
+	DirXDGConfig = ".config"
+	// DirOpenCodeHome is the OpenCode global config directory under $HOME/.config.
+	DirOpenCodeHome = "opencode"
+	// EnvOpenCodeHome overrides the global config directory path.
+	EnvOpenCodeHome = "OPENCODE_HOME"
+	// FileOpenCodeJSON is the OpenCode config file name.
+	FileOpenCodeJSON = "opencode.json"
+	// KeyMCP is the top-level JSON key for MCP in opencode.json.
+	KeyMCP = "mcp"
+	// FileIndexTs is the embedded-asset filename for the OpenCode
+	// plugin source. The setup deploys this content to a flat file
+	// under [DirOpenCodePlugins], NOT preserving the index.ts name —
+	// OpenCode only auto-loads top-level files in .opencode/plugins/,
+	// so subdirectory layouts (.opencode/plugins/<name>/index.ts)
+	// are silently ignored.
+	FileIndexTs = "index.ts"
+	// FileOpenCodePluginDeploy is the deployment filename for the
+	// OpenCode plugin under .opencode/plugins/. Must be a flat
+	// .ts/.js file directly under the plugins directory; see
+	// FileIndexTs for the auto-load discovery rule.
+	FileOpenCodePluginDeploy = "ctx.ts"
 )
 
 // Prefixes
