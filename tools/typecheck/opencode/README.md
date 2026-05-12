@@ -16,12 +16,12 @@ Bun loads the plugin on a user's machine.
 
 This directory holds the tooling that gates that risk:
 
-- `package.json` — declares dependencies on `@opencode-ai/plugin`
+- `package.json`: declares dependencies on `@opencode-ai/plugin`
   (for the `Plugin` type), `@types/bun` (for `Bun.$` / BunShell
   globals), and `typescript`.
-- `tsconfig.json` — `noEmit: true`, strict, with `include`
+- `tsconfig.json`: `noEmit: true`, strict, with `include`
   pointing at the embedded TS file via relative path.
-- `package-lock.json` — committed; pinned for reproducibility.
+- `package-lock.json`: committed; pinned for reproducibility.
 
 The directory sits **outside** `internal/assets/` deliberately: it
 is *about* the embedded payload, not part of it. If it lived
@@ -47,13 +47,13 @@ only needs `tsc` and the `@types/bun` declarations.
 
 ## What this does **not** check
 
-- **Runtime behavior** — `tsc --noEmit` is a *static* check. It
+- **Runtime behavior:** `tsc --noEmit` is a *static* check. It
   catches type errors, not logic bugs. Runtime issues still
   surface only when OpenCode loads the deployed plugin.
-- **The other embedded TypeScript assets** — there are none
+- **The other embedded TypeScript assets:** there are none
   today. If new `.ts` assets are added to `internal/assets/`,
   extend the `include` glob in `tsconfig.json` to cover them.
-- **Embed coverage** — that lives in `internal/assets/embed_test.go`.
+- **Embed coverage:** that lives in `internal/assets/embed_test.go`.
   The two checks are complementary: this verifies the bytes are
   valid TypeScript; that verifies the bytes are actually
   embedded.
@@ -62,5 +62,5 @@ only needs `tsc` and the `@types/bun` declarations.
 
 Bump `@opencode-ai/plugin` when the OpenCode SDK releases a
 version that changes hook signatures. The plugin source itself
-documents the SDK version it targets in its own header comment
-— keep that comment and this dependency in sync.
+documents the SDK version it targets in its own header comment.
+Keep that comment and this dependency in sync.

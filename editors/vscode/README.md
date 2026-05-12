@@ -228,11 +228,11 @@ CI guardrails that protect this manual publish (`vscode-extension`
 job in `.github/workflows/ci.yml`) run on every PR and push to
 `main`:
 
-- `npm ci` — clean dependency install from the committed lockfile.
-- `npm run build` — esbuild bundles `src/extension.ts` to
+- `npm ci`: clean dependency install from the committed lockfile.
+- `npm run build`: esbuild bundles `src/extension.ts` to
   `dist/extension.js`. Catches bundler errors and missing imports
   at the JavaScript level.
-- `npx tsc --noEmit -p tsconfig.ci.json` — type-checks the
+- `npx tsc --noEmit -p tsconfig.ci.json`: type-checks the
   production source (`src/**/*.ts` minus test files). Catches type
   errors that esbuild silently passes through.
 

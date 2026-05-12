@@ -81,9 +81,8 @@ A file belongs under `internal/assets/` if and only if:
 
 If a file is meant to be compiled, generated, fetched, linted,
 type-checked, or transformed before reaching a user, it does
-**not** belong here — or, more precisely, only its
-post-transformation output does. The directory is a *payload
-manifest*, not a workspace.
+**not** belong here. More precisely: only its post-transformation
+output does. The directory is a *payload manifest*, not a workspace.
 
 ### Hard Go Constraint
 
@@ -141,8 +140,7 @@ sibling `read/*/...test.go` files):
   `.ctxrc` schema parse as YAML/JSON Schema.
 * **Schema integrity**: `TestSchemaCoversCtxRC` asserts a
   bidirectional match between `.ctxrc` schema properties and the
-  Go struct that consumes them — drift in either direction
-  fails CI.
+  Go struct that consumes them. Drift in either direction fails CI.
 * **Spot-content**: targeted substring checks on a handful of
   representative files (e.g. CLAUDE.md contains "Context",
   ctx-history SKILL.md contains "history").
@@ -186,8 +184,8 @@ structure.
 
 * **Go source** that isn't an accessor for `FS`: put it where
   its package belongs.
-* **Generated documentation**, transient build artifacts, or
-  caches — these have no business in source control here.
+* **Generated documentation**, transient build artifacts, and
+  caches have no business in source control here.
 * **Runtime configuration** read from the user's environment
   (the user's `.ctxrc`, secrets, keys). User-owned state lives
   outside the binary.
