@@ -2398,7 +2398,7 @@ token budgets, context directory, drift thresholds, and more.</p>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-initialize-ctx">Step 1: Initialize <code>ctx</code><a class="headerlink" href="#step-1-initialize-ctx" title="Permanent link">&para;</a></h3>
 <p>Run <code>ctx init</code> in your project root. This creates the <code>.context/</code> directory
-with all template files and seeds ctx permissions in <code>settings.local.json</code>.</p>
+with all template files and seeds <code>ctx</code> permissions in <code>settings.local.json</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>your-project
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>init
 </span></code></pre></div>
@@ -2438,7 +2438,7 @@ when you want to commit notes to a separate repo.</p>
 and <a href="../../home/configuration/#environment-variables">Configuration</a>
 for the resolver details.</p>
 </div>
-<p>For Claude Code, install the <strong>ctx plugin</strong> to get hooks and skills:</p>
+<p>For Claude Code, install the <strong><code>ctx</code> plugin</strong> to get hooks and skills:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>marketplace<span class="w"> </span>add<span class="w"> </span>ActiveMemory/ctx
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>install<span class="w"> </span>ctx@activememory-ctx
 </span></code></pre></div>
@@ -2479,8 +2479,8 @@ automatically. The <code>PreToolUse</code> hook runs
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>opencode<span class="w"> </span>--write<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
 </span></code></pre></div>
 <p>This deploys a lifecycle plugin, slash command skills, <code>AGENTS.md</code>, and
-registers the ctx MCP server globally. See
-<a href="../../home/opencode/">ctx for OpenCode</a> for full details.</p>
+registers the <code>ctx</code> MCP server globally. See
+<a href="../../home/opencode/"><code>ctx</code> for OpenCode</a> for full details.</p>
 <div class="admonition tip">
 <p class="admonition-title">OpenCode Is a First-Class Citizen</p>
 <p>With the plugin installed, OpenCode gets lifecycle hooks and skills
@@ -2488,14 +2488,14 @@ automatically. Context loads at session start, survives compaction,
 and persists at session end — no manual steps needed.</p>
 </div>
 <h4 id="vs-code">VS Code<a class="headerlink" href="#vs-code" title="Permanent link">&para;</a></h4>
-<p>Install the <strong>ctx</strong> extension from the
+<p>Install the <strong><code>ctx</code></strong> extension from the
 <a href="https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context">VS Code Marketplace</a>
 (publisher: <code>activememory</code>). Then, from your project root:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
 </span></code></pre></div>
 <p>Open Copilot Chat and type <code>@ctx /init</code> to verify. The extension
-auto-downloads the ctx CLI if it isn't on PATH. See
-<a href="../../home/vscode/">ctx for VS Code</a> for full details.</p>
+auto-downloads the <code>ctx</code> CLI if it isn't on PATH. See
+<a href="../../home/vscode/"><code>ctx</code> for VS Code</a> for full details.</p>
 <div class="admonition tip">
 <p class="admonition-title">VS Code Is a First-Class Citizen</p>
 <p>The extension carries its own runtime. No <code>ctx setup</code> step is
@@ -2532,7 +2532,7 @@ session:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>aider<span class="w"> </span>--read<span class="w"> </span>.context/TASKS.md<span class="w"> </span>--read<span class="w"> </span>.context/CONVENTIONS.md
 </span></code></pre></div>
 <h3 id="step-3-set-up-shell-completion">Step 3: Set Up Shell Completion<a class="headerlink" href="#step-3-set-up-shell-completion" title="Permanent link">&para;</a></h3>
-<p>Shell completion lets you tab-complete ctx subcommands and flags, which is
+<p>Shell completion lets you tab-complete <code>ctx</code> subcommands and flags, which is
 especially useful while learning the CLI.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Bash (add to ~/.bashrc)</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>bash<span class="o">)</span>
@@ -2581,7 +2581,7 @@ confirming that hooks are loading context.</p>
 <tbody>
 <tr>
 <td><code>ctx: command not found</code></td>
-<td>Ensure ctx is in your PATH: <code>which ctx</code></td>
+<td>Ensure <code>ctx</code> is in your PATH: <code>which ctx</code></td>
 </tr>
 <tr>
 <td>Hook errors</td>
@@ -2662,7 +2662,7 @@ them automatically:</p>
   To customize, adjust the <code>--budget</code> flag in the <code>ctx agent</code> hook command.</li>
 <li>The <code>--session $PPID</code> flag isolates cooldowns per Claude Code process, so
   parallel sessions do not suppress each other.</li>
-<li>Commit your <code>.context/</code> directory to version control. Several ctx features
+<li>Commit your <code>.context/</code> directory to version control. Several <code>ctx</code> features
   (journals, changelogs, blog generation) rely on git history.</li>
 <li>For Cursor and Copilot, keep <code>CONVENTIONS.md</code> visible. These tools treat
   open files as higher-priority context.</li>
@@ -2674,8 +2674,8 @@ them automatically:</p>
   after a debugging session goes a long way.</li>
 </ul>
 <h2 id="companion-tools-highly-recommended">Companion Tools (Highly Recommended)<a class="headerlink" href="#companion-tools-highly-recommended" title="Permanent link">&para;</a></h2>
-<p>ctx skills can leverage external MCP servers for web search and code
-intelligence. ctx works without them, but they significantly improve
+<p><code>ctx</code> skills can leverage external MCP servers for web search and code
+intelligence. <code>ctx</code> works without them, but they significantly improve
 agent behavior across sessions. The investment is small and the
 benefits compound. Skills like <code>/ctx-code-review</code>, <code>/ctx-explain</code>,
 and <code>/ctx-refactor</code> all become noticeably better with these tools

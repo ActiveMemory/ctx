@@ -18,9 +18,9 @@ Claude Code maintains per-project auto memory at
 
 - **Outside the repo** - not version-controlled, not portable
 - **Machine-specific** - tied to one `~/.claude/` directory
-- **Invisible to ctx** - context loading and hooks don't read it
+- **Invisible to `ctx`** - context loading and hooks don't read it
 
-Meanwhile, ctx maintains structured context files (DECISIONS.md,
+Meanwhile, `ctx` maintains structured context files (DECISIONS.md,
 LEARNINGS.md, CONVENTIONS.md) that are git-tracked, portable, and
 token-budgeted - but Claude Code doesn't automatically write to them.
 
@@ -150,7 +150,7 @@ ctx memory sync --dry-run
 | Auto memory not active | `sync` exits 1 with message. `status` reports "not active". Hook skips silently. |
 | First sync (no mirror) | Creates mirror without archiving.                                                |
 | MEMORY.md is empty     | Syncs to empty mirror (valid).                                                   |
-| Not initialized        | Init guard rejects (same as all ctx commands).                                   |
+| Not initialized        | Init guard rejects (same as all `ctx` commands).                                   |
 
 ## Importing Entries
 
@@ -213,7 +213,7 @@ Published content is wrapped in markers:
 
 **Rules:**
 
-- ctx owns everything **between** the markers
+- `ctx` owns everything **between** the markers
 - Claude owns everything **outside** the markers
 - `ctx memory import` reads only outside the markers
 - `ctx memory publish` replaces only inside the markers

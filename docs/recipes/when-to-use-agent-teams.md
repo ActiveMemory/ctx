@@ -155,9 +155,9 @@ communication are cheaper.
 A team of 4 agents each reading 4000 tokens of context = 16000 tokens
 before anyone does any work. For small tasks, that overhead dominates.
 
-## What ctx Gives You at Each Level
+## What `ctx` Gives You at Each Level
 
-| ctx Feature         | Single Agent         | Worktrees            | Team                   |
+| `ctx` Feature         | Single Agent         | Worktrees            | Team                   |
 |---------------------|----------------------|----------------------|------------------------|
 | `.context/` files   | Full access          | Shared via git       | Shared via filesystem  |
 | `TASKS.md`          | Work queue           | Split by track       | Assigned by lead       |

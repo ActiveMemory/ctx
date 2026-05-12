@@ -305,7 +305,7 @@ inside your coding assistant.
 
 Commands and skills are **not interchangeable**: Each has a distinct role.
 
-|                | ctx CLI command                    | ctx AI skill                                      |
+|                | `ctx` CLI command                    | `ctx` AI skill                                      |
 |----------------|------------------------------------|---------------------------------------------------|
 | **Runs where** | Your terminal                      | Inside the AI assistant                           |
 | **Speed**      | Fast (*milliseconds*)              | Slower (*LLM round-trip*)                         |
@@ -314,7 +314,7 @@ Commands and skills are **not interchangeable**: Each has a distinct role.
 | **Best for**   | Quick checks, scripting, CI        | Deep analysis, generation, workflow orchestration |
 
 <!-- drift-check: diff <(ls internal/assets/claude/skills/ | sort) <(sed -n '/Paired Commands/,/CLI-Only Commands/p' docs/home/common-workflows.md | grep -oP 'ctx-[a-z-]+' | sort -u) -->
-<!-- drift-check: diff <(ctx --help 2>&1 | sed -n '/Available Commands/,/Flags/p' | grep -oP '^\s+\K\w+' | sort) <(sed -n '/CLI-Only Commands/,/Rule of Thumb/p' docs/home/common-workflows.md | grep -oP 'ctx \K[a-z]+' | sort -u) -->
+<!-- drift-check: diff <(`ctx` --help 2>&1 | sed -n '/Available Commands/,/Flags/p' | grep -oP '^\s+\K\w+' | sort) <(sed -n '/CLI-Only Commands/,/Rule of Thumb/p' docs/home/common-workflows.md | grep -oP '`ctx` \K[a-z]+' | sort -u) -->
 
 ### Paired Commands
 
@@ -386,7 +386,7 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 | `ctx decision`            | List and filter decisions                       |
 | `ctx learning`            | List and filter learnings                       |
 | `ctx task`                | List tasks, manage archival and snapshots       |
-| `ctx why`                 | Read the philosophy behind ctx                  |
+| `ctx why`                 | Read the philosophy behind `ctx`                  |
 | `ctx guide`               | Quick-reference cheat sheet                     |
 | `ctx site`                | Site management commands                        |
 | `ctx config`              | Manage runtime configuration profiles           |

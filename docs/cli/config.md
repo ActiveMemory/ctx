@@ -19,7 +19,7 @@ Manage runtime configuration profiles.
 ctx config <subcommand>
 ```
 
-The ctx repo ships two `.ctxrc` source profiles (`.ctxrc.base` and
+The `ctx` repo ships two `.ctxrc` source profiles (`.ctxrc.base` and
 `.ctxrc.dev`). The working copy (`.ctxrc`) is gitignored and switched
 between them using subcommands below.
 

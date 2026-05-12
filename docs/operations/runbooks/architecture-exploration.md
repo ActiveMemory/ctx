@@ -14,7 +14,7 @@ icon: lucide/map
 # Architecture Exploration
 
 Systematically build architecture documentation across one or
-more repositories using ctx skills. Each invocation does one
+more repositories using `ctx` skills. Each invocation does one
 unit of work; a simple loop drives the agent through all phases.
 
 **When to use**: When onboarding to a new codebase, performing
@@ -81,7 +81,7 @@ the next unit of work, executes it, updates tracking, and stops.
 ~~~
 You are an autonomous architecture exploration agent. Your job is to
 systematically build and evolve architecture documentation across all
-repositories in this workspace using ctx skills.
+repositories in this workspace using `ctx` skills.
 
 ## Execution Protocol
 
@@ -258,7 +258,7 @@ it, produce no further output. Execution is complete.
 5. **Fail gracefully.** If a skill fails (missing GitNexus, broken repo,
    etc.), log the failure with reason and advance to the next phase or
    repo. Don't retry in the same invocation.
-6. **Respect ctx conventions.** Each repo gets its own `.context/`
+6. **Respect `ctx` conventions.** Each repo gets its own `.context/`
    directory. Never write architecture artifacts outside `.context/`.
 
 ## Stopping Logic

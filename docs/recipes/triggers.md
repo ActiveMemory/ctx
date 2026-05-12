@@ -233,7 +233,7 @@ surprising ways.
 script live immediately. Always `ctx trigger test` first.
 
 **Outputting non-JSON.** The trigger's stdout must be valid
-JSON or ctx's trigger runner will log a parse error. Use
+JSON or `ctx`'s trigger runner will log a parse error. Use
 `jq -n` to construct output rather than hand-writing JSON
 strings.
 

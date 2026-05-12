@@ -260,7 +260,7 @@ practice:
 
 ## The Arc
 
-This is the eighth post in the ctx blog series:
+This is the eighth post in the `ctx` blog series:
 
 1. [The Attention Budget](2026-02-03-the-attention-budget.md):
    why context windows are a scarce resource

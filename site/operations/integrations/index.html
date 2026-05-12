@@ -2900,7 +2900,7 @@ commands work without activation, but most others (<code>ctx agent</code>,
 <a href="../../recipes/activating-context/">Activating a Context Directory</a>.</p>
 </div>
 <h2 id="claude-code-full-integration">Claude Code (Full Integration)<a class="headerlink" href="#claude-code-full-integration" title="Permanent link">&para;</a></h2>
-<p>Claude Code has the deepest integration via the <strong>ctx plugin</strong>.</p>
+<p>Claude Code has the deepest integration via the <strong><code>ctx</code> plugin</strong>.</p>
 <h3 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h3>
 <p>First, install <code>ctx</code> and initialize your project, then activate it
 for the current shell:</p>
@@ -2967,8 +2967,8 @@ projects. Running <code>ctx init</code> auto-enables the plugin; use
 </ol>
 <h3 id="plugin-hooks">Plugin Hooks<a class="headerlink" href="#plugin-hooks" title="Permanent link">&para;</a></h3>
 <!-- drift-check: cat internal/assets/claude/hooks/hooks.json | grep -c '"command"' -->
-<!-- drift-check: diff <(grep -oP '"ctx system \K[^"]+' internal/assets/claude/hooks/hooks.json | sort) <(sed -n '/Plugin Hooks/,/Hook Configuration/p' docs/operations/integrations.md | grep -oP 'ctx system \K[a-z-]+' | sort) -->
-<p>The ctx plugin provides lifecycle hooks implemented as Go subcommands
+<!-- drift-check: diff <(grep -oP '"`ctx` system \K[^"]+' internal/assets/claude/hooks/hooks.json | sort) <(sed -n '/Plugin Hooks/,/Hook Configuration/p' docs/operations/integrations.md | grep -oP '`ctx` system \K[a-z-]+' | sort) -->
+<p>The <code>ctx</code> plugin provides lifecycle hooks implemented as Go subcommands
 (<code>ctx system *</code>):</p>
 <table>
 <thead>
@@ -3206,7 +3206,7 @@ both together.</p>
 <!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
 <!-- drift-check: diff <(ls internal/assets/claude/skills/ | sort) <(sed -n '/Agent Skills/,/Usage Examples/p' docs/operations/integrations.md | grep -oP '/\Kctx-[a-z-]+' | sort -u) -->
 <h3 id="agent-skills">Agent Skills<a class="headerlink" href="#agent-skills" title="Permanent link">&para;</a></h3>
-<p>The ctx plugin ships Agent Skills following the
+<p>The <code>ctx</code> plugin ships Agent Skills following the
 <a href="https://agentskills.io">agentskills.io specification</a>.</p>
 <p>These are invoked in Claude Code with <code>/skill-name</code>.</p>
 <h4 id="session-lifecycle-skills">Session Lifecycle Skills<a class="headerlink" href="#session-lifecycle-skills" title="Permanent link">&para;</a></h4>
@@ -3365,7 +3365,7 @@ which is essentially what a <em>release note</em> is for.</p>
 <tbody>
 <tr>
 <td><code>/ctx-doctor</code></td>
-<td>Troubleshoot ctx behavior with structural health checks</td>
+<td>Troubleshoot <code>ctx</code> behavior with structural health checks</td>
 </tr>
 <tr>
 <td><code>/ctx-drift</code></td>
@@ -3512,21 +3512,21 @@ copy-paste.</p>
 <p>Re-run <code>ctx setup copilot --write</code> after updating your <code>.context/</code> files
 to regenerate the instructions.</p>
 <h3 id="vs-code-chat-extension-ctx">VS Code Chat Extension (<code>@ctx</code>)<a class="headerlink" href="#vs-code-chat-extension-ctx" title="Permanent link">&para;</a></h3>
-<p>The <strong>ctx VS Code extension</strong> adds a <code>@ctx</code> chat participant to
+<p>The <strong><code>ctx</code> VS Code extension</strong> adds a <code>@ctx</code> chat participant to
 GitHub Copilot Chat, giving you direct access to 45 context commands
 from within the editor, plus automatic hooks on file save / git commit /
 <code>.context/</code> changes / dependency-file edits, and a reminder status-bar
 indicator.</p>
 <div class="admonition tip">
-<p class="admonition-title">Full guide: <a href="../../home/vscode/">ctx for VS Code</a></p>
+<p class="admonition-title">Full guide: <a href="../../home/vscode/"><code>ctx</code> for VS Code</a></p>
 <p>The home-page guide covers daily workflows, the full command list,
-natural-language routing, auto-bootstrap of the ctx CLI, troubleshooting,
+natural-language routing, auto-bootstrap of the <code>ctx</code> CLI, troubleshooting,
 and "Verify It Works." This subsection is the install-and-pointers
 overview; the dedicated page is the authoritative reference.</p>
 </div>
 <h4 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h4>
 <p>The extension ships to the <a href="https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context">VS Code Marketplace</a>
-under publisher <code>activememory</code> (display name: <em>ctx — Persistent Context
+under publisher <code>activememory</code> (display name: <em><code>ctx</code> — Persistent Context
 for AI</em>). Install via the Extensions view or <code>code --install-extension</code>.</p>
 <p>To build from source instead (requires Node.js 20+):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">cd</span><span class="w"> </span>editors/vscode
@@ -3559,11 +3559,11 @@ for AI</em>). Install via the Extensions view or <code>code --install-extension<
 files beyond <code>.context/</code> and the Copilot instructions are added.</p>
 <h4 id="how-it-works_1">How It Works<a class="headerlink" href="#how-it-works_1" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Chat participant:</strong> <code>@ctx</code> is registered with VS Code's Chat API; 45 slash commands route to dedicated handlers that shell out to the ctx CLI.</li>
+<li><strong>Chat participant:</strong> <code>@ctx</code> is registered with VS Code's Chat API; 45 slash commands route to dedicated handlers that shell out to the <code>ctx</code> CLI.</li>
 <li><strong>Automatic hooks:</strong> file save → task-completion check; git commit → decision/learning prompt; <code>.context/</code> change → regenerate Copilot instructions; dependency-file change → <code>/map</code> prompt.</li>
 <li><strong>Status-bar reminder:</strong> a <code>$(bell) ctx</code> indicator surfaces pending session reminders, refreshing every 5 minutes.</li>
 <li><strong>Natural language:</strong> plain English after <code>@ctx</code> is routed to the nearest matching command.</li>
-<li><strong>Auto-bootstrap:</strong> if the ctx CLI isn't on PATH, the extension downloads the correct platform binary from GitHub Releases and caches it.</li>
+<li><strong>Auto-bootstrap:</strong> if the <code>ctx</code> CLI isn't on PATH, the extension downloads the correct platform binary from GitHub Releases and caches it.</li>
 </ul>
 <h4 id="configuration_2">Configuration<a class="headerlink" href="#configuration_2" title="Permanent link">&para;</a></h4>
 <table>
@@ -3578,7 +3578,7 @@ files beyond <code>.context/</code> and the Copilot instructions are added.</p>
 <tr>
 <td><code>ctx.executablePath</code></td>
 <td><code>ctx</code></td>
-<td>Path to the ctx binary. Set this if <code>ctx</code> is not in your <code>PATH</code>.</td>
+<td>Path to the <code>ctx</code> binary. Set this if <code>ctx</code> is not in your <code>PATH</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -3606,7 +3606,7 @@ file awareness:</p>
 <p>Paste output into Copilot Chat for context-aware responses.</p>
 <hr />
 <h2 id="opencode">OpenCode<a class="headerlink" href="#opencode" title="Permanent link">&para;</a></h2>
-<p>OpenCode is a terminal-first AI coding agent. ctx integrates via
+<p>OpenCode is a terminal-first AI coding agent. <code>ctx</code> integrates via
 a thin lifecycle plugin, MCP server, and <code>AGENTS.md</code> instructions.</p>
 <h3 id="setup_4">Setup<a class="headerlink" href="#setup_4" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Generate OpenCode plugin, global MCP config, skills, and AGENTS.md</span>
@@ -3639,14 +3639,14 @@ a thin lifecycle plugin, MCP server, and <code>AGENTS.md</code> instructions.</p
 </tr>
 <tr>
 <td><code>.opencode/skills/ctx-*/SKILL.md</code></td>
-<td>ctx skills</td>
+<td><code>ctx</code> skills</td>
 </tr>
 </tbody>
 </table>
 <h3 id="how-it-works_2">How It Works<a class="headerlink" href="#how-it-works_2" title="Permanent link">&para;</a></h3>
 <p>The plugin wires OpenCode lifecycle events to <code>ctx system</code>:</p>
 <ul>
-<li><strong><code>session.created</code></strong> — warms ctx state in the background (bootstrap + agent packet) so MCP queries are fast on first use</li>
+<li><strong><code>session.created</code></strong> — warms <code>ctx</code> state in the background (bootstrap + agent packet) so MCP queries are fast on first use</li>
 <li><strong><code>tool.execute.after</code> (shell, on <code>git commit</code>)</strong> — runs <code>ctx system post-commit</code></li>
 <li><strong><code>tool.execute.after</code> (edit/write)</strong> — runs <code>ctx system check-task-completion</code></li>
 <li><strong><code>session.idle</code></strong> — runs persistence and task-completion checks (silent: output is buffered, not surfaced to the TUI)</li>

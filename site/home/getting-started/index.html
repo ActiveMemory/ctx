@@ -2008,7 +2008,7 @@ Without it, the data is gone.</p>
 <code>git</code> history directly.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>Every setup starts with <strong>the <code>ctx</code> binary</strong>: the CLI tool itself.</p>
-<p>If you use <strong>Claude Code</strong>, you also install the <strong>ctx plugin</strong>, which
+<p>If you use <strong>Claude Code</strong>, you also install the <strong><code>ctx</code> plugin</strong>, which
 adds hooks (context autoloading, persistence nudges) and 25+ <code>/ctx-*</code>
 skills. For other AI tools, <code>ctx</code> integrates via generated instruction
 files or manual context pasting: see
@@ -2146,7 +2146,7 @@ full hook and skill reference.</p>
 <p>This creates a <code>.context/</code> directory with template files and an
 encryption key at <code>~/.ctx/</code> for the
 <a href="../../reference/scratchpad/">encrypted scratchpad</a>.
-For Claude Code, install the <a href="../../operations/integrations/#claude-code-full-integration">ctx plugin</a>
+For Claude Code, install the <a href="../../operations/integrations/#claude-code-full-integration"><code>ctx</code> plugin</a>
 for automatic hooks and skills.</p>
 <p><code>ctx init</code> also scaffolds four <strong>foundation steering files</strong> in
 <code>.context/steering/</code> — <code>product.md</code>, <code>tech.md</code>, <code>structure.md</code>,
@@ -2159,7 +2159,7 @@ buried here.</p>
 prompt</strong> — the layer that tells your AI <em>how to act</em> on this
 specific project. They are distinct from decisions (<em>what</em> was
 chosen) and conventions (<em>how</em> the codebase is written); see
-<a href="../../recipes/steering/">ctx for Steering Files</a> for the full
+<a href="../../recipes/steering/"><code>ctx</code> for Steering Files</a> for the full
 model.</p>
 <p><code>ctx init</code> scaffolded four foundation files; open each and
 fill it in:</p>
@@ -2226,7 +2226,7 @@ options (multiple <code>.context/</code> directories, scripts, CI), see
 <p>With Claude Code (<em>and the <code>ctx</code> plugin installed</em>), context loads automatically
 via hooks.</p>
 <p>With <strong>VS Code Copilot Chat</strong>, install the
-<a href="../../operations/integrations/#vs-code-chat-extension-ctx">ctx extension</a> and use
+<a href="../../operations/integrations/#vs-code-chat-extension-ctx"><code>ctx</code> extension</a> and use
 <code>@ctx /status</code>, <code>@ctx /agent</code>, and other slash commands directly in chat.
 Run <code>ctx setup copilot --write</code> to generate <code>.github/copilot-instructions.md</code>
 for automatic context loading.</p>
@@ -2255,7 +2255,7 @@ with <code>ctx setup</code>:</p>
 </div>
 </div>
 </div>
-<p>This registers the ctx MCP server and syncs any
+<p>This registers the <code>ctx</code> MCP server and syncs any
 <a href="../../cli/steering/">steering files</a> into the tool's
 native format. Re-run after adding or changing steering files.</p>
 <h3 id="6-verify-it-works">6. Verify It Works<a class="headerlink" href="#6-verify-it-works" title="Permanent link">&para;</a></h3>
@@ -2263,7 +2263,7 @@ native format. Re-run after adding or changing steering files.</p>
 <p>It should cite specific context: current tasks, recent decisions,
 or previous session topics.</p>
 <h3 id="7-set-up-companion-tools-highly-recommended">7. Set Up Companion Tools (Highly Recommended)<a class="headerlink" href="#7-set-up-companion-tools-highly-recommended" title="Permanent link">&para;</a></h3>
-<p>ctx works on its own, but two companion MCP servers unlock significantly
+<p><code>ctx</code> works on its own, but two companion MCP servers unlock significantly
 better agent behavior. The investment is small and the benefits compound
 over sessions:</p>
 <ul>

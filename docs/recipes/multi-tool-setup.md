@@ -72,7 +72,7 @@ Then start your AI tool and ask: "**Do you remember?**"
 ### Step 1: Initialize `ctx`
 
 Run `ctx init` in your project root. This creates the `.context/` directory
-with all template files and seeds ctx permissions in `settings.local.json`.
+with all template files and seeds `ctx` permissions in `settings.local.json`.
 
 ```bash
 cd your-project
@@ -119,7 +119,7 @@ This produces the following structure:
     and [Configuration](../home/configuration.md#environment-variables)
     for the resolver details.
 
-For Claude Code, install the **ctx plugin** to get hooks and skills:
+For Claude Code, install the **`ctx` plugin** to get hooks and skills:
 
 ```bash
 claude /plugin marketplace add ActiveMemory/ctx
@@ -177,8 +177,8 @@ ctx setup opencode --write && ctx init && eval "$(ctx activate)"
 ```
 
 This deploys a lifecycle plugin, slash command skills, `AGENTS.md`, and
-registers the ctx MCP server globally. See
-[ctx for OpenCode](../home/opencode.md) for full details.
+registers the `ctx` MCP server globally. See
+[`ctx` for OpenCode](../home/opencode.md) for full details.
 
 !!! tip "OpenCode Is a First-Class Citizen"
     With the plugin installed, OpenCode gets lifecycle hooks and skills
@@ -187,7 +187,7 @@ registers the ctx MCP server globally. See
 
 #### VS Code
 
-Install the **ctx** extension from the
+Install the **`ctx`** extension from the
 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context)
 (publisher: `activememory`). Then, from your project root:
 
@@ -196,8 +196,8 @@ ctx init && eval "$(ctx activate)"
 ```
 
 Open Copilot Chat and type `@ctx /init` to verify. The extension
-auto-downloads the ctx CLI if it isn't on PATH. See
-[ctx for VS Code](../home/vscode.md) for full details.
+auto-downloads the `ctx` CLI if it isn't on PATH. See
+[`ctx` for VS Code](../home/vscode.md) for full details.
 
 !!! tip "VS Code Is a First-Class Citizen"
     The extension carries its own runtime. No `ctx setup` step is
@@ -252,7 +252,7 @@ aider --read .context/TASKS.md --read .context/CONVENTIONS.md
 
 ### Step 3: Set Up Shell Completion
 
-Shell completion lets you tab-complete ctx subcommands and flags, which is
+Shell completion lets you tab-complete `ctx` subcommands and flags, which is
 especially useful while learning the CLI.
 
 ```bash
@@ -312,7 +312,7 @@ If context is not loading, check the basics:
 
 | Symptom                         | Fix                                                           |
 |---------------------------------|---------------------------------------------------------------|
-| `ctx: command not found`        | Ensure ctx is in your PATH: `which ctx`                       |
+| `ctx: command not found`        | Ensure `ctx` is in your PATH: `which ctx`                       |
 | Hook errors                     | Verify plugin is installed: `claude /plugin list`             |
 | Context not refreshing          | Cooldown may be active; wait 10 minutes or set `--cooldown 0` |
 
@@ -408,7 +408,7 @@ ctx setup aider
   To customize, adjust the `--budget` flag in the `ctx agent` hook command.
 * The `--session $PPID` flag isolates cooldowns per Claude Code process, so
   parallel sessions do not suppress each other.
-* Commit your `.context/` directory to version control. Several ctx features
+* Commit your `.context/` directory to version control. Several `ctx` features
   (journals, changelogs, blog generation) rely on git history.
 * For Cursor and Copilot, keep `CONVENTIONS.md` visible. These tools treat
   open files as higher-priority context.
@@ -421,8 +421,8 @@ ctx setup aider
 
 ## Companion Tools (Highly Recommended)
 
-ctx skills can leverage external MCP servers for web search and code
-intelligence. ctx works without them, but they significantly improve
+`ctx` skills can leverage external MCP servers for web search and code
+intelligence. `ctx` works without them, but they significantly improve
 agent behavior across sessions. The investment is small and the
 benefits compound. Skills like `/ctx-code-review`, `/ctx-explain`,
 and `/ctx-refactor` all become noticeably better with these tools

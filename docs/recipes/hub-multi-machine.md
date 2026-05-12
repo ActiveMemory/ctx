@@ -128,7 +128,7 @@ ctx connection subscribe decision learning convention
 Each registration exchanges the admin token for a **per-project
 client token**. Only the client token is persisted in
 `.context/.connect.enc`, encrypted with the same AES-256-GCM scheme
-ctx uses for notification credentials.
+`ctx` uses for notification credentials.
 
 ## Step 5: Verify
 
@@ -138,7 +138,7 @@ From either workstation:
 ctx connection status
 ```
 
-You should see the ctx Hub address, role (`leader` for single-node),
+You should see the `ctx` Hub address, role (`leader` for single-node),
 subscription filters, and the sequence number you're synced to.
 
 ## TLS (Recommended)

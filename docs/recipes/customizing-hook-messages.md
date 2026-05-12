@@ -59,7 +59,7 @@ decides to speak.
 
 ### Finding the Original Templates
 
-The default templates live in the ctx source tree at:
+The default templates live in the `ctx` source tree at:
 
 ```
 internal/assets/hooks/messages/{hook}/{variant}.txt
@@ -209,7 +209,7 @@ from customization. These are the primary targets for override.
 
 ### ctx-Specific (10 Messages)
 
-Messages specific to ctx's own development workflow. You *can* customize
+Messages specific to `ctx`'s own development workflow. You *can* customize
 them, but `edit` will warn you first.
 
 | Hook                     | Variant              | Description                    |

@@ -2091,13 +2091,13 @@
 what you were doing, the AI repeats yesterday's mistakes, and decisions
 you spent an hour reasoning through last week get rediscovered instead
 of remembered.</p>
-<p><strong>Without ctx:</strong></p>
+<p><strong>Without <code>ctx</code>:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@workspace add the validation middleware we discussed
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>I don&#39;t have context about previous discussions. Could you describe
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>what validation middleware you&#39;re referring to?
 </span></code></pre></div>
-<p><strong>With ctx:</strong></p>
+<p><strong>With <code>ctx</code>:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@ctx Do you remember?
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Last session (2026-05-09): you decided on Zod schemas at the route level
@@ -2112,10 +2112,10 @@ already work in.</p>
 <ol>
 <li><strong>Install the extension</strong> from the
    <a href="https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context">VS Code Marketplace</a>
-   (publisher: <code>activememory</code>, display name: <em>ctx — Persistent Context
+   (publisher: <code>activememory</code>, display name: <em><code>ctx</code> — Persistent Context
    for AI</em>). Or build from source (see
    <a href="https://github.com/ActiveMemory/ctx/blob/main/editors/vscode/README.md#development">editors/vscode/README.md</a>).</li>
-<li><strong>Install the ctx CLI</strong> if you haven't already
+<li><strong>Install the <code>ctx</code> CLI</strong> if you haven't already
    (<a href="../getting-started/#installation">installation docs</a>). If you skip
    this step, the extension will auto-download the right binary for
    your platform on first use (see <a href="#auto-bootstrap">Auto-Bootstrap</a>
@@ -2315,7 +2315,7 @@ in <a href="https://github.com/ActiveMemory/ctx/blob/main/editors/vscode/README.
 <p>If the phrase doesn't match a known pattern, the extension surfaces a
 short menu of likely matches.</p>
 <h2 id="auto-bootstrap">Auto-Bootstrap<a class="headerlink" href="#auto-bootstrap" title="Permanent link">&para;</a></h2>
-<p>If the ctx CLI isn't on PATH (or at a path configured via
+<p>If the <code>ctx</code> CLI isn't on PATH (or at a path configured via
 <code>ctx.executablePath</code>), the extension auto-downloads the right binary:</p>
 <ol>
 <li>Detects OS and architecture (darwin / linux / windows, amd64 / arm64).</li>
@@ -2330,7 +2330,7 @@ set <code>ctx.executablePath</code> in your VS Code settings.</p>
 <ul>
 <li><strong>VS Code 1.93+</strong></li>
 <li><strong><a href="https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat">GitHub Copilot Chat</a></strong> extension</li>
-<li><strong>ctx CLI</strong> on PATH, or let the extension auto-download it</li>
+<li><strong><code>ctx</code> CLI</strong> on PATH, or let the extension auto-download it</li>
 </ul>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <table>
@@ -2345,17 +2345,17 @@ set <code>ctx.executablePath</code> in your VS Code settings.</p>
 <tr>
 <td><code>ctx.executablePath</code></td>
 <td><code>ctx</code></td>
-<td>Path to the ctx CLI binary. Set this if ctx isn't on PATH and you don't want auto-download.</td>
+<td>Path to the <code>ctx</code> CLI binary. Set this if <code>ctx</code> isn't on PATH and you don't want auto-download.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="refreshing-the-integration">Refreshing the Integration<a class="headerlink" href="#refreshing-the-integration" title="Permanent link">&para;</a></h2>
 <p>The extension updates through the VS Code Marketplace like any other
 extension; install new versions via the Extensions view. Updates to
-the <strong>ctx CLI</strong> are independent: bump it via your package manager, or
+the <strong><code>ctx</code> CLI</strong> are independent: bump it via your package manager, or
 let the auto-bootstrap fetch the latest release.</p>
 <p>Unlike the OpenCode integration, there is <strong>no <code>ctx setup</code> step</strong> for
-VS Code. The extension carries its own runtime; ctx's role is only to
+VS Code. The extension carries its own runtime; <code>ctx</code>'s role is only to
 provide the CLI it shells out to.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
@@ -2373,9 +2373,9 @@ provide the CLI it shells out to.</p>
 <td>Install <a href="https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat">GitHub Copilot Chat</a> and ensure you're signed in to a Copilot-eligible account</td>
 </tr>
 <tr>
-<td><code>@ctx /status</code> says ctx not found</td>
+<td><code>@ctx /status</code> says <code>ctx</code> not found</td>
 <td>CLI not on PATH and auto-download disabled</td>
-<td>Either add ctx to PATH (<code>brew install activememory/tap/ctx</code> or download from <a href="https://github.com/ActiveMemory/ctx/releases">Releases</a>), or unset <code>ctx.executablePath</code> to let the extension auto-download</td>
+<td>Either add <code>ctx</code> to PATH (<code>brew install activememory/tap/ctx</code> or download from <a href="https://github.com/ActiveMemory/ctx/releases">Releases</a>), or unset <code>ctx.executablePath</code> to let the extension auto-download</td>
 </tr>
 <tr>
 <td>Status-bar reminder never updates</td>
@@ -2405,7 +2405,7 @@ and recent session topics. If you instead see "I don't have memory" or
   tracking context, checking health, and browsing history.</li>
 <li><a href="../context-files/">Context Files</a>: what lives in <code>.context/</code> and how
   each file is used.</li>
-<li><a href="../../recipes/multi-tool-setup/">Setup across AI Tools</a>: wiring ctx
+<li><a href="../../recipes/multi-tool-setup/">Setup across AI Tools</a>: wiring <code>ctx</code>
   for Claude Code, OpenCode, Cursor, Aider, Copilot, or Windsurf
   alongside VS Code.</li>
 </ul>

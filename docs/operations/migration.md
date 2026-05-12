@@ -16,8 +16,8 @@ icon: lucide/package-plus
 !!! tip "Claude Code User?"
     You probably want the plugin instead of this page.
 
-    Install ctx from the marketplace:<br />
-    (*`/plugin` → search "ctx" → Install*)<br />
+    Install `ctx` from the marketplace:<br />
+    (*`/plugin` → search "`ctx`" → Install*)<br />
     and you're done: hooks, skills, and updates are handled for you.
 
     See [Getting Started](../home/getting-started.md) for the full walkthrough.
@@ -61,7 +61,7 @@ lose them.
 
 ### What `ctx init` Does
 
-When `ctx init` detects an existing `CLAUDE.md`, it checks for ctx markers
+When `ctx init` detects an existing `CLAUDE.md`, it checks for `ctx` markers
 (`<!-- ctx:context -->` ... `<!-- ctx:end -->`):
 
 | State                      | Default behavior         | With `--merge`            | With `--force`                  |
@@ -79,7 +79,7 @@ When `ctx init` detects an existing `CLAUDE.md`, it checks for ctx markers
 3. **Inserts** the `ctx` block immediately after it;
 4. **Preserves** everything else untouched.
 
-Your content before and after the ctx block remains exactly as it was.
+Your content before and after the `ctx` block remains exactly as it was.
 
 ### Before / After Example
 
@@ -180,8 +180,8 @@ git checkout CLAUDE.md
 |                                                                                             | `.windsurfrules`                  |
 |                                                                                             | Any other tool-specific config    |
 
-Claude Code hooks and skills are provided by the **ctx plugin**,
-installed from the Claude Code marketplace (`/plugin` → search "ctx" → Install).
+Claude Code hooks and skills are provided by the **`ctx` plugin**,
+installed from the Claude Code marketplace (`/plugin` → search "`ctx`" → Install).
 
 ### Running `ctx` Alongside Other Tools
 

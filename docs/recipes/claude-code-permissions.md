@@ -36,7 +36,7 @@ See [Recommended Defaults](#recommended-defaults) for the full list.
 
 | Command/Skill               | Role in this workflow                            |
 |-----------------------------|--------------------------------------------------|
-| `ctx init`                  | Populates default ctx permissions                |
+| `ctx init`                  | Populates default `ctx` permissions                |
 | `/ctx-drift`                | Detects missing or stale permission entries      |
 | `/ctx-permission-sanitize` | Audits for dangerous patterns (security-focused) |
 
@@ -44,7 +44,7 @@ See [Recommended Defaults](#recommended-defaults) for the full list.
 
 After running `ctx init`, your `settings.local.json` will have the `ctx`
 defaults pre-populated. Here is an opinionated safe starting point for a Go
-project using ctx:
+project using `ctx`:
 
 ```json
 {
@@ -141,7 +141,7 @@ commands (`git log`, `git status`) and destructive ones (`git reset --hard`,
 `git clean -f`). Listing safe commands individually prevents accidentally
 pre-approving dangerous ones.
 
-**Pre-approve all `ctx-` skills**: Skills shipped with ctx (`Skill(ctx-*)`) are
+**Pre-approve all `ctx-` skills**: Skills shipped with `ctx` (`Skill(ctx-*)`) are
 safe to pre-approve. They are part of your project and you control their
 content. This prevents the agent from prompting on every skill invocation.
 
@@ -192,17 +192,17 @@ The defaults block:
 Deny rules handle prefix-based blocking natively. Hooks complement them by
 catching patterns that require regex matching: Things deny rules can't express.
 
-The ctx plugin ships these blocking hooks:
+The `ctx` plugin ships these blocking hooks:
 
 | Hook                              | What it blocks                   |
 |-----------------------------------|----------------------------------|
-| `ctx system block-non-path-ctx`   | Running ctx from wrong path      |
+| `ctx system block-non-path-ctx`   | Running `ctx` from wrong path      |
 
 Project-local hooks (not part of the plugin) catch regex edge cases:
 
 | Hook                          | What it blocks                                                                    |
 |-------------------------------|-----------------------------------------------------------------------------------|
-| `block-dangerous-commands.sh` | Mid-command `sudo`/`git push` (after `&&`), copies to bin dirs, absolute-path ctx |
+| `block-dangerous-commands.sh` | Mid-command `sudo`/`git push` (after `&&`), copies to bin dirs, absolute-path `ctx` |
 
 
 !!! warning "Pre-Approved + Hook-Blocked = Silent Block"
@@ -301,7 +301,7 @@ permission baselines for reproducible setups.
 
 ## See Also
 
-* [Setting Up ctx Across AI Tools](multi-tool-setup.md): full setup recipe
+* [Setting Up `ctx` Across AI Tools](multi-tool-setup.md): full setup recipe
   including `settings.local.json` creation
 * [Context Health](context-health.md): keeping `.context/` files accurate
 * [Sanitize Permissions runbook](../operations/runbooks/sanitize-permissions.md):

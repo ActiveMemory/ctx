@@ -2635,11 +2635,11 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="ctx-mcp"><code>ctx mcp</code><a class="headerlink" href="#ctx-mcp" title="Permanent link">&para;</a></h2>
-<p>Run ctx as a <a href="https://modelcontextprotocol.io">Model Context Protocol</a>
+<p>Run <code>ctx</code> as a <a href="https://modelcontextprotocol.io">Model Context Protocol</a>
 (MCP) server. MCP is a standard protocol that lets AI tools discover
 and consume context from external sources via JSON-RPC 2.0 over
 stdin/stdout.</p>
-<p>This makes ctx accessible to <strong>any MCP-compatible AI tool</strong> without
+<p>This makes <code>ctx</code> accessible to <strong>any MCP-compatible AI tool</strong> without
 custom hooks or integrations:</p>
 <ul>
 <li>Claude Desktop</li>
@@ -2655,7 +2655,7 @@ by MCP clients (Claude Desktop, Cursor, VS Code Copilot), <strong>not run
 directly from a shell</strong>. See <a href="#configuration">Configuration</a> below
 for how each host launches it.</p>
 <p><strong>Flags:</strong> None. The server uses the declared context directory
-from <code>CTX_DIR</code>. As with every other ctx command, that variable
+from <code>CTX_DIR</code>. As with every other <code>ctx</code> command, that variable
 must be set: the server does not walk the filesystem.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Normal invocation (by an MCP client via stdio transport)</span>
@@ -2766,7 +2766,7 @@ emits <code>notifications/resources/updated</code> when a subscribed file
 changes on disk.</p>
 <hr />
 <h2 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h2>
-<p>Tools expose ctx commands as callable operations. Each tool accepts
+<p>Tools expose <code>ctx</code> commands as callable operations. Each tool accepts
 JSON arguments and returns text results.</p>
 <h3 id="ctx_status"><code>ctx_status</code><a class="headerlink" href="#ctx_status" title="Permanent link">&para;</a></h3>
 <p>Show context health: file count, token estimate, and per-file summary.</p>

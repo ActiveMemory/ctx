@@ -51,7 +51,7 @@ when to skip it:
   centralized context services, `ctx` may duplicate that layer.
 
 For a deeper technical comparison with RAG, prompt management tools, and
-agent frameworks, see [ctx and Similar Tools](../reference/comparison.md).
+agent frameworks, see [`ctx` and Similar Tools](../reference/comparison.md).
 
 ---
 

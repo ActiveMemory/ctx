@@ -27,7 +27,7 @@ Also, several `ctx` features (*journal changelog, blog generation*) also use
 
 Every setup starts with **the `ctx` binary**: the CLI tool itself.
 
-If you use **Claude Code**, you also install the **ctx plugin**, which
+If you use **Claude Code**, you also install the **`ctx` plugin**, which
 adds hooks (context autoloading, persistence nudges) and 25+ `/ctx-*`
 skills. For other AI tools, `ctx` integrates via generated instruction
 files or manual context pasting: see
@@ -198,7 +198,7 @@ ctx init
 This creates a `.context/` directory with template files and an
 encryption key at `~/.ctx/` for the
 [encrypted scratchpad](../reference/scratchpad.md).
-For Claude Code, install the [ctx plugin](../operations/integrations.md#claude-code-full-integration)
+For Claude Code, install the [`ctx` plugin](../operations/integrations.md#claude-code-full-integration)
 for automatic hooks and skills.
 
 `ctx init` also scaffolds four **foundation steering files** in
@@ -214,7 +214,7 @@ Steering files are **behavioral rules prepended to every AI
 prompt** — the layer that tells your AI *how to act* on this
 specific project. They are distinct from decisions (*what* was
 chosen) and conventions (*how* the codebase is written); see
-[ctx for Steering Files](../recipes/steering.md) for the full
+[`ctx` for Steering Files](../recipes/steering.md) for the full
 model.
 
 `ctx init` scaffolded four foundation files; open each and
@@ -279,7 +279,7 @@ With Claude Code (*and the `ctx` plugin installed*), context loads automatically
 via hooks.
 
 With **VS Code Copilot Chat**, install the
-[ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx) and use
+[`ctx` extension](../operations/integrations.md#vs-code-chat-extension-ctx) and use
 `@ctx /status`, `@ctx /agent`, and other slash commands directly in chat.
 Run `ctx setup copilot --write` to generate `.github/copilot-instructions.md`
 for automatic context loading.
@@ -316,7 +316,7 @@ with `ctx setup`:
     # Creates .vscode/mcp.json and syncs steering files
     ```
 
-This registers the ctx MCP server and syncs any
+This registers the `ctx` MCP server and syncs any
 [steering files](../cli/steering.md) into the tool's
 native format. Re-run after adding or changing steering files.
 
@@ -329,7 +329,7 @@ or previous session topics.
 
 ### 7. Set Up Companion Tools (Highly Recommended)
 
-ctx works on its own, but two companion MCP servers unlock significantly
+`ctx` works on its own, but two companion MCP servers unlock significantly
 better agent behavior. The investment is small and the benefits compound
 over sessions:
 

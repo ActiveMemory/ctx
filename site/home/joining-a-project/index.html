@@ -1827,7 +1827,7 @@ yourself on day one.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
 </span></code></pre></div>
 <p>This outputs a token-budgeted summary of the project context, ordered
-by priority. With Claude Code and the ctx plugin, context loads
+by priority. With Claude Code and the <code>ctx</code> plugin, context loads
 automatically via hooks. You can also use the <code>/ctx-remember</code> skill
 to get a structured readback of what the AI knows.</p>
 <p>The readback is your verification step: if the AI can cite specific
@@ -1849,7 +1849,7 @@ tasks and decisions, the context is working.</p>
 </span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ctx<span class="w"> </span>convention<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;All API handlers return structured errors&quot;</span>
 </span></code></pre></div>
 <p>You can also just tell the AI: "Record this as a learning" or
-"Add this decision to context." With the ctx plugin, context-update
+"Add this decision to context." With the <code>ctx</code> plugin, context-update
 commands handle the file writes.</p>
 <p>See the <a href="../../recipes/knowledge-capture/">Knowledge Capture recipe</a> for
 the full workflow.</p>
@@ -1874,7 +1874,7 @@ it with the team instead of working around the constraint.</p>
 <p><strong>Deleting tasks.</strong> Never delete a task from TASKS.md. Mark it <code>[x]</code>
 (done) or <code>[-]</code> (skipped with a reason). The history matters for
 session replay and audit.</p>
-<p><strong>Bypassing hooks.</strong> If the project uses ctx hooks (pre-commit nudges,
+<p><strong>Bypassing hooks.</strong> If the project uses <code>ctx</code> hooks (pre-commit nudges,
 context autoloading), don't disable them. They exist to keep context
 fresh. If a hook is noisy or broken, fix it or file a task.</p>
 <p><strong>Over-contributing on day one.</strong> Read first, then contribute. Adding
@@ -1888,7 +1888,7 @@ noise, not signal.</p>
 <li><a href="../../recipes/knowledge-capture/">Knowledge Capture</a>: recording decisions, 
   learnings, and conventions</li>
 <li><a href="../../recipes/session-lifecycle/">Session Lifecycle</a>: how a typical AI 
-  session flows with ctx</li>
+  session flows with <code>ctx</code></li>
 </ul>
 
 

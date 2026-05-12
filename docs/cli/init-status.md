@@ -30,7 +30,7 @@ ctx init [flags]
 **Creates**:
 
 - `.context/` directory with all template files
-- `.claude/settings.local.json` with pre-approved ctx permissions
+- `.claude/settings.local.json` with pre-approved `ctx` permissions
 - `CLAUDE.md` with bootstrap instructions (or merges into existing)
 
 Claude Code hooks and skills are provided by the **`ctx` plugin**

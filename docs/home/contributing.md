@@ -147,7 +147,7 @@ never distributed to users.
 | `/_ctx-command-audit`        | Audit CLI surface after renames, moves, or deletions          |
 
 Six skills previously in this list have been promoted to bundled plugin skills
-and are now available to all ctx users: `/ctx-brainstorm`, `/ctx-link-check`,
+and are now available to all `ctx` users: `/ctx-brainstorm`, `/ctx-link-check`,
 `/ctx-permission-sanitize`, `/ctx-skill-create`, `/ctx-spec`.
 
 ----
@@ -179,7 +179,7 @@ Pattern to follow: `internal/cli/pad/pad.go` (parent with subcommands) or
 
 ### Package Taxonomy
 
-ctx separates concerns into a strict package taxonomy. Knowing where
+`ctx` separates concerns into a strict package taxonomy. Knowing where
 things go prevents code review friction and keeps the AST lint tests
 happy.
 
@@ -334,7 +334,7 @@ is gitignored and swapped between them:
 | `.ctxrc.dev`  | Dev profile: notify events enabled, verbose logging       |
 | `.ctxrc`      | Working copy (*gitignored*: copied from one of the above) |
 
-Use ctx commands to switch:
+Use `ctx` commands to switch:
 
 ```bash
 ctx config switch dev      # switch to dev profile

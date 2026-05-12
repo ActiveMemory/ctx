@@ -2192,7 +2192,7 @@ register under a different project name.</p>
 contents, and other local state stay on the machine that created
 them.</p>
 <h3 id="ctx-connection-register"><code>ctx connection register</code><a class="headerlink" href="#ctx-connection-register" title="Permanent link">&para;</a></h3>
-<p>One-time registration with a ctx Hub. Requires the ctx Hub address and
+<p>One-time registration with a <code>ctx</code> Hub. Requires the <code>ctx</code> Hub address and
 admin token (printed by <code>ctx hub start</code> on first run).</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>localhost:9900<span class="w"> </span>--token<span class="w"> </span>ctx_adm_7f3a...
@@ -2200,38 +2200,38 @@ admin token (printed by <code>ctx hub start</code> on first run).</p>
 <p>On success, stores an encrypted connection config in
 <code>.context/.connect.enc</code> for future RPCs.</p>
 <h3 id="ctx-connection-subscribe"><code>ctx connection subscribe</code><a class="headerlink" href="#ctx-connection-subscribe" title="Permanent link">&para;</a></h3>
-<p>Set which entry types to receive from the ctx Hub. Only matching types
+<p>Set which entry types to receive from the <code>ctx</code> Hub. Only matching types
 are returned by sync and listen.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>subscribe<span class="w"> </span>decision<span class="w"> </span>learning
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>connection<span class="w"> </span>subscribe<span class="w"> </span>decision<span class="w"> </span>learning<span class="w"> </span>convention
 </span></code></pre></div>
 <h3 id="ctx-connection-sync"><code>ctx connection sync</code><a class="headerlink" href="#ctx-connection-sync" title="Permanent link">&para;</a></h3>
-<p>Pull matching entries from the ctx Hub and write them to
+<p>Pull matching entries from the <code>ctx</code> Hub and write them to
 <code>.context/hub/</code> as markdown files with origin tags and date
 headers. Tracks last-seen sequence for incremental sync.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>sync
 </span></code></pre></div>
 <h3 id="ctx-connection-publish"><code>ctx connection publish</code><a class="headerlink" href="#ctx-connection-publish" title="Permanent link">&para;</a></h3>
-<p>Push entries to the ctx Hub. Specify type and content as arguments.</p>
+<p>Push entries to the <code>ctx</code> Hub. Specify type and content as arguments.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>publish<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use UTC timestamps everywhere&quot;</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>connection<span class="w"> </span>publish<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Go embed requires files in same package&quot;</span>
 </span></code></pre></div>
 <h3 id="ctx-connection-listen"><code>ctx connection listen</code><a class="headerlink" href="#ctx-connection-listen" title="Permanent link">&para;</a></h3>
-<p>Stream new entries from the ctx Hub in real-time. Writes to
+<p>Stream new entries from the <code>ctx</code> Hub in real-time. Writes to
 <code>.context/hub/</code> as entries arrive. Press Ctrl-C to stop.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>listen
 </span></code></pre></div>
 <h3 id="ctx-connection-status"><code>ctx connection status</code><a class="headerlink" href="#ctx-connection-status" title="Permanent link">&para;</a></h3>
-<p>Show ctx Hub connection state and entry statistics.</p>
+<p>Show <code>ctx</code> Hub connection state and entry statistics.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>status
 </span></code></pre></div>
 <h2 id="automatic-sharing">Automatic Sharing<a class="headerlink" href="#automatic-sharing" title="Permanent link">&para;</a></h2>
-<p>Use <code>--share</code> on <code>ctx add</code> to write locally AND publish to the ctx Hub:</p>
+<p>Use <code>--share</code> on <code>ctx add</code> to write locally AND publish to the <code>ctx</code> Hub:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Use UTC&quot;</span><span class="w"> </span>--share<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need consistency&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;Avoid timezone bugs&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -2242,10 +2242,10 @@ is printed. The <code>--share</code> flag is best-effort; it never blocks
 local context updates.</p>
 <h2 id="auto-sync">Auto-Sync<a class="headerlink" href="#auto-sync" title="Permanent link">&para;</a></h2>
 <p>Once registered, the <code>check-hub-sync</code> hook automatically syncs
-new entries from the ctx Hub at the start of each session (daily
+new entries from the <code>ctx</code> Hub at the start of each session (daily
 throttled). No manual <code>ctx connection sync</code> needed.</p>
 <h2 id="shared-files">Shared Files<a class="headerlink" href="#shared-files" title="Permanent link">&para;</a></h2>
-<p>Entries from the ctx Hub are stored in <code>.context/hub/</code>:</p>
+<p>Entries from the <code>ctx</code> Hub are stored in <code>.context/hub/</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>.context/hub/
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  decisions.md      # Shared decisions with origin tags
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  learnings.md      # Shared learnings

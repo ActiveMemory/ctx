@@ -29,7 +29,7 @@ other, all in under five minutes.
 By the end, you will have:
 
 1. A local hub process running on port `9900`.
-2. Two project directories both registered with the ctx Hub.
+2. Two project directories both registered with the `ctx` Hub.
 3. A decision published from project `alpha` that appears
    automatically in project `beta`'s `.context/hub/` and in
    `ctx agent --include-hub` output.
@@ -105,7 +105,7 @@ and `listen`.
 
 ## Step 4: Publish a Decision
 
-Either use `ctx add --share` to write locally *and* push to the ctx Hub:
+Either use `ctx add --share` to write locally *and* push to the `ctx` Hub:
 
 ```bash
 ctx decision add "Use UTC timestamps everywhere" --share \

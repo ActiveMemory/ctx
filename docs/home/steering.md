@@ -95,7 +95,7 @@ delivery channels:
    with an **empty prompt**, so only `always` files match
    and get injected automatically on every tool call.
 2. **The `ctx_steering_get` MCP tool**, registered
-   automatically when the ctx plugin is installed. Claude
+   automatically when the `ctx` plugin is installed. Claude
    can call this tool mid-task to fetch `auto` or
    `manual` files matching a specific prompt. Verify
    with `claude mcp list`; look for `ctx: ✓ Connected`.
@@ -122,7 +122,7 @@ setup. The context budget cost is small; the alternative
 
 ## Two Families of AI Tools, Two Delivery Paths
 
-Not every AI tool consumes steering the same way. ctx
+Not every AI tool consumes steering the same way. `ctx`
 handles two tool families differently, and it's worth
 knowing which family your editor is in before you wonder
 why a rule isn't firing.
@@ -131,13 +131,13 @@ why a rule isn't firing.
 have a built-in rules primitive. They read a specific
 directory (`.cursor/rules/`, `.clinerules/`,
 `.kiro/steering/`) and apply the rules they find there.
-ctx handles these via `ctx steering sync`, which exports
+`ctx` handles these via `ctx steering sync`, which exports
 your files into the tool-native format. Run `sync`
 whenever you edit a steering file.
 
 **Hook + MCP tools** (**Claude Code**, **Codex**) have
 no native rules primitive, so `ctx steering sync` is a
-**no-op** for them. Instead, ctx delivers steering through
+**no-op** for them. Instead, `ctx` delivers steering through
 two non-sync channels:
 
 1. **Automatic injection via a `PreToolUse` hook**. The
@@ -148,7 +148,7 @@ two non-sync channels:
    context packet it prints. Claude Code feeds that output
    back into its context. Every tool call, automatically.
 2. **On-demand via the `ctx_steering_get` MCP tool**. The
-   ctx MCP server exposes a tool Claude can call mid-task
+   `ctx` MCP server exposes a tool Claude can call mid-task
    to fetch matching steering files for a specific prompt.
    Claude decides when to call it; it's not automatic.
 
@@ -167,7 +167,7 @@ works for Claude Code.
 
 ## Two Shapes of Automation: Rules and Scripts
 
-Steering is one of **two** hook-like layers ctx provides for
+Steering is one of **two** hook-like layers `ctx` provides for
 customizing AI behavior. They're complementary:
 
 - **Steering**: *persistent rules* that get prepended to

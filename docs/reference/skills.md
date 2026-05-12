@@ -72,7 +72,7 @@ opinionated behavior on top.
 | [`/ctx-architecture`](#ctx-architecture)                 | Build and maintain architecture maps                            | user-invocable |
 | [`/ctx-architecture-failure-analysis`](#ctx-architecture-failure-analysis) | Adversarial failure analysis for correctness bugs | user-invocable |
 | [`/ctx-remind`](#ctx-remind)                             | Manage session-scoped reminders                                 | user-invocable |
-| [`/ctx-doctor`](#ctx-doctor)                             | Troubleshoot ctx behavior with health checks and event analysis | user-invocable |
+| [`/ctx-doctor`](#ctx-doctor)                             | Troubleshoot `ctx` behavior with health checks and event analysis | user-invocable |
 | [`/ctx-skill-audit`](#ctx-skill-audit)                   | Audit skills against Anthropic prompting best practices         | user-invocable |
 | [`/ctx-skill-create`](#ctx-skill-create)               | Create, improve, and test skills                                | user-invocable |
 | [`/ctx-pause`](#ctx-pause)                               | Pause context hooks for this session                            | user-invocable |
@@ -385,7 +385,7 @@ positive observations.
 
 ### `/ctx-doctor`
 
-Troubleshoot ctx behavior. Runs structural health checks via `ctx doctor`,
+Troubleshoot `ctx` behavior. Runs structural health checks via `ctx doctor`,
 analyzes event log patterns via `ctx hook event`, and presents findings
 with suggested actions. The CLI provides the structural baseline; the agent
 adds semantic analysis of event patterns and correlations.
@@ -682,7 +682,7 @@ don't need ceremony overhead.
 
 **Wraps**: `ctx hook pause`
 
-**Trigger phrases**: "pause ctx", "pause context", "stop the nudges",
+**Trigger phrases**: "pause `ctx`", "pause context", "stop the nudges",
 "quiet mode"
 
 **See also**:
@@ -697,7 +697,7 @@ and ceremony behavior. Silent no-op if not paused.
 
 **Wraps**: `ctx hook resume`
 
-**Trigger phrases**: "resume ctx", "resume context", "turn nudges back on",
+**Trigger phrases**: "resume `ctx`", "resume context", "turn nudges back on",
 "unpause"
 
 **See also**:
@@ -707,7 +707,7 @@ and ceremony behavior. Silent no-op if not paused.
 
 ## Project-Specific Skills
 
-The ctx plugin ships the skills listed above.
+The `ctx` plugin ships the skills listed above.
 Teams can add their own project-specific skills to `.claude/skills/` in the
 project root: These are separate from plugin-shipped skills and are scoped
 to the project.

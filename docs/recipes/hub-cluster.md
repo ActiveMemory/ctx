@@ -24,7 +24,7 @@ cross-project brain on one workstation does not need three Raft
 peers.
 
 !!! warning "Raft-Lite"
-    ctx uses Raft **only for leader election**, not for data
+    `ctx` uses Raft **only for leader election**, not for data
     consensus. Entry replication happens via sequence-based gRPC
     sync on the append-only JSONL store. This is simpler than full
     Raft log replication and is possible because the store is

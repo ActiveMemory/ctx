@@ -17,7 +17,7 @@ Every OpenCode session starts from zero. You re-explain your architecture,
 the AI repeats mistakes it made yesterday, and decisions get rediscovered
 instead of remembered.
 
-**Without ctx:**
+**Without `ctx`:**
 
 ```
 > "Add the validation middleware we discussed"
@@ -26,7 +26,7 @@ I don't have context about previous discussions. Could you describe
 what validation middleware you're referring to?
 ```
 
-**With ctx:**
+**With `ctx`:**
 
 ```
 > "Add the validation middleware we discussed"
@@ -51,7 +51,7 @@ ctx setup opencode --write && ctx init && eval "$(ctx activate)"
 This does three things:
 
 1. **`ctx setup opencode --write`** — generates the project-local OpenCode plugin,
-   skills, and `AGENTS.md`, then merges the ctx MCP server into OpenCode's
+   skills, and `AGENTS.md`, then merges the `ctx` MCP server into OpenCode's
    global config (`~/.config/opencode/opencode.json` or
    `$OPENCODE_HOME/opencode.json`). This writes outside the project root
    because non-interactive shells (like MCP subprocesses) cannot discover
@@ -79,7 +79,7 @@ do anything — it just works.
 
 | Event | What fires | What it does |
 |-------|-----------|--------------|
-| New session | `session.created` | Warms ctx state in the background (bootstrap + agent packet) so MCP queries are fast on first use |
+| New session | `session.created` | Warms `ctx` state in the background (bootstrap + agent packet) so MCP queries are fast on first use |
 | Agent idle | `session.idle` | Runs persistence and task-completion checks (silent — output is buffered, not surfaced to the TUI) |
 | After `git commit` | `tool.execute.after` | Runs `ctx system post-commit` to capture context state |
 | After file edit | `tool.execute.after` | Runs `ctx system check-task-completion` to detect silent task completions |
@@ -97,7 +97,7 @@ demand, even though the original messages are gone.
 When your conversation exceeds the context window, OpenCode runs a
 compaction pass (you can trigger one manually with `/compact`). The
 compaction agent summarizes older messages and drops the originals. Without
-ctx, all accumulated knowledge disappears. With ctx, the plugin intercepts
+`ctx`, all accumulated knowledge disappears. With `ctx`, the plugin intercepts
 the `experimental.session.compacting` event and appends `ctx system bootstrap`
 output (context directory path and file inventory) into the compaction
 context. The result: the compressed summary retains the breadcrumbs the
@@ -127,7 +127,7 @@ automatically. These are for when you want explicit control.
 
 ## MCP Tools
 
-The ctx MCP server exposes tools directly to the agent. These let the AI
+The `ctx` MCP server exposes tools directly to the agent. These let the AI
 read and write your context files without shell commands:
 
 | Tool | Purpose |
@@ -150,7 +150,7 @@ You don't invoke these yourself. The agent uses them as needed.
 
 ## Refreshing the Integration
 
-If you re-run `ctx setup opencode --write` (e.g., after updating ctx), the
+If you re-run `ctx setup opencode --write` (e.g., after updating `ctx`), the
 plugin and skills are rewritten in place. **Restart OpenCode to pick up the
 refreshed plugin** — OpenCode only loads plugins at launch, not mid-session.
 

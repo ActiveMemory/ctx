@@ -314,9 +314,9 @@ keyboard.
 ## See Also
 
 * [Session Journal](../reference/session-journal.md): journal system, enrichment schema
-* [CLI Reference: ctx journal](../cli/journal.md#ctx-journal): import, list, show session history
-* [CLI Reference: ctx journal site](../cli/journal.md#ctx-journal-site): static site generation
-* [CLI Reference: ctx journal obsidian](../cli/journal.md#ctx-journal-obsidian): Obsidian vault export
-* [CLI Reference: ctx serve](../cli/journal.md#ctx-serve): serve-only (no regeneration)
+* [CLI Reference: `ctx` journal](../cli/journal.md#ctx-journal): import, list, show session history
+* [CLI Reference: `ctx` journal site](../cli/journal.md#ctx-journal-site): static site generation
+* [CLI Reference: `ctx` journal obsidian](../cli/journal.md#ctx-journal-obsidian): Obsidian vault export
+* [CLI Reference: `ctx` serve](../cli/journal.md#ctx-serve): serve-only (no regeneration)
 * [Browsing and Enriching Past Sessions](session-archaeology.md): journal browsing workflow
 * [The Complete Session](session-lifecycle.md): capturing context during a session

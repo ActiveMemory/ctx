@@ -1571,10 +1571,10 @@ registered clients.</p>
 <h3 id="client-side-encryption-at-rest">Client-Side Encryption at Rest<a class="headerlink" href="#client-side-encryption-at-rest" title="Permanent link">&para;</a></h3>
 <p><code>.context/.connect.enc</code> stores the client token and hub address,
 encrypted with <strong>AES-256-GCM</strong> using the same scheme the
-notification subsystem uses. The key is derived from ctx's local
+notification subsystem uses. The key is derived from <code>ctx</code>'s local
 keyring (see <code>internal/crypto</code>).</p>
 <p>An attacker with read access to the project directory cannot
-learn the client token without also breaking ctx's local
+learn the client token without also breaking <code>ctx</code>'s local
 keyring.</p>
 <h3 id="hub-side-token-storage">Hub-Side Token Storage<a class="headerlink" href="#hub-side-token-storage" title="Permanent link">&para;</a></h3>
 <div class="admonition warning">
@@ -1662,7 +1662,7 @@ manually by the operator (see
 </ul>
 <h2 id="responsible-disclosure">Responsible Disclosure<a class="headerlink" href="#responsible-disclosure" title="Permanent link">&para;</a></h2>
 <p>Security issues in the hub follow the same process as the rest
-of ctx; see <a href="../reporting/">Reporting</a>.</p>
+of <code>ctx</code>; see <a href="../reporting/">Reporting</a>.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../operations/hub/"><code>ctx</code> Hub Operations</a></li>

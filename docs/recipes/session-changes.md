@@ -120,5 +120,5 @@ otherwise miss in the commit log.
   filesystem mtime, not git. Code changes require git.
 - **Hook integration.** The `context-load-gate` hook writes the
   session marker that `ctx change` uses for auto-detection. If
-  you're not using the ctx plugin, markers won't exist and it falls
+  you're not using the `ctx` plugin, markers won't exist and it falls
   back to the event log or 24h window.

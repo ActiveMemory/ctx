@@ -12,16 +12,16 @@ title: Hook Sequence Diagrams
 
 ## Hook Lifecycle
 
-This page documents the **ctx system hooks**: the built-in
+This page documents the **`ctx` system hooks**: the built-in
 `ctx system *` subcommands that Claude Code invokes via
 `.claude/hooks.json` at lifecycle events. These are owned by
-ctx itself, not authored by users.
+`ctx` itself, not authored by users.
 
 !!! info "Not to Be Confused with `ctx trigger`"
     `ctx` has **three distinct hook-like layers**:
 
     - **`ctx system` hooks** (this page): built-in, owned
-      by ctx, wired into Claude Code via
+      by `ctx`, wired into Claude Code via
       `internal/assets/claude/hooks/hooks.json`.
     - **`ctx trigger`**: user-authored shell scripts in
       `.context/hooks/<type>/*.sh`. See
@@ -42,7 +42,7 @@ on stdout.
 
 ---
 
-<!-- drift-check: jq -r '.hooks.PreToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep 'ctx system' | sed 's/ctx system //' | sort -->
+<!-- drift-check: jq -r '.hooks.PreToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep '`ctx` system' | sed 's/ctx system //' | sort -->
 
 ## PreToolUse Hooks
 
@@ -100,7 +100,7 @@ sequenceDiagram
 
 Matcher: `Bash`
 
-Blocks `./ctx`, `go run ./cmd/ctx`, or absolute-path ctx
+Blocks `./ctx`, `go run ./cmd/ctx`, or absolute-path `ctx`
 invocations. Constitutionally enforced.
 
 ```mermaid
@@ -178,7 +178,7 @@ sequenceDiagram
 
 ---
 
-<!-- drift-check: jq -r '.hooks.PostToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep 'ctx system' | sed 's/ctx system //' | sort -->
+<!-- drift-check: jq -r '.hooks.PostToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep '`ctx` system' | sed 's/ctx system //' | sort -->
 
 ## PostToolUse Hooks
 

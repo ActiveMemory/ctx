@@ -185,7 +185,7 @@ Choose the right output pattern for your Claude Code hooks: `VERBATIM`
 relay for user-facing reminders, **hard gates** for invariants, agent
 directives for nudges, and five more patterns across the spectrum.
 
-**Uses**: ctx plugin hooks, `settings.local.json`
+**Uses**: `ctx` plugin hooks, `settings.local.json`
 
 ---
 
@@ -379,7 +379,7 @@ without losing context or intent.
 worktrees, and a full agent team.
 
 This recipe covers the file overlap test, when teams make things worse, and
-what ctx provides at each level.
+what `ctx` provides at each level.
 
 **Uses**: `/ctx-worktree`, `/ctx-next`, `ctx status`
 

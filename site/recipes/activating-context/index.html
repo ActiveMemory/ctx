@@ -2118,7 +2118,7 @@
 <p>You ran a <code>ctx</code> command and got:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Error: no context directory specified for this project
 </span></code></pre></div>
-<p>This means ctx doesn't know which <code>.context/</code> directory to operate
+<p>This means <code>ctx</code> doesn't know which <code>.context/</code> directory to operate
 on. It will not guess, and it will not walk up from your current
 working directory looking for one; that behavior was removed
 deliberately, because silent inference was the source of several
@@ -2147,8 +2147,8 @@ declaration methods below with its absolute path.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Error: no context directory specified; a likely candidate is at
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    /Users/you/repos/myproject/.context
 </span></code></pre></div>
-<p>ctx found a single <code>.context/</code> on the way up from here but won't
-bind to it automatically. Run <code>eval "$(ctx activate)"</code> and ctx
+<p><code>ctx</code> found a single <code>.context/</code> on the way up from here but won't
+bind to it automatically. Run <code>eval "$(ctx activate)"</code> and <code>ctx</code>
 will emit the <code>export</code> for the candidate. Or set <code>CTX_DIR</code> by hand.</p>
 <h3 id="multiple-candidates">Multiple Candidates<a class="headerlink" href="#multiple-candidates" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Error: no context directory specified; multiple candidates visible:
@@ -2214,9 +2214,9 @@ explicitly at the top of the script:</p>
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>ctx<span class="w"> </span>drift
 </span></code></pre></div>
 <h2 id="for-claude-code-users">For Claude Code Users<a class="headerlink" href="#for-claude-code-users" title="Permanent link">&para;</a></h2>
-<p>The ctx plugin's hooks are generated with
+<p>The <code>ctx</code> plugin's hooks are generated with
 <code>CTX_DIR="$CLAUDE_PROJECT_DIR/.context"</code> prefixed to each command,
-so hook-driven ctx invocations resolve correctly without any
+so hook-driven <code>ctx</code> invocations resolve correctly without any
 per-session setup. You only need to activate manually when running
 <code>ctx</code> yourself in a terminal.</p>
 <h2 id="one-project-one-context">One Project, One <code>.context/</code><a class="headerlink" href="#one-project-one-context" title="Permanent link">&para;</a></h2>
@@ -2236,8 +2236,8 @@ and <code>MEMORY.md</code> respectively.</p>
   where they belong.</li>
 <li><strong>The <code>CTX_DIR</code> you activate is implicitly a project-root
   declaration.</strong> Setting <code>CTX_DIR=/weird/place/.context</code> means
-  you're telling ctx the project root is <code>/weird/place/</code>. That's
-  your call to make; ctx does not police it.</li>
+  you're telling <code>ctx</code> the project root is <code>/weird/place/</code>. That's
+  your call to make; <code>ctx</code> does not police it.</li>
 </ul>
 <h3 id="recommended-layout">Recommended Layout<a class="headerlink" href="#recommended-layout" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>~/WORKSPACE/my-to-do-list
@@ -2251,7 +2251,7 @@ and <code>MEMORY.md</code> respectively.</p>
 </span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>      └── ...
 </span></code></pre></div>
 <p><code>.context/</code> sits at the project root, next to <code>.git</code>. <code>ctx activate</code>
-binds to it; every ctx subsystem reads the project from its parent.</p>
+binds to it; every <code>ctx</code> subsystem reads the project from its parent.</p>
 <h2 id="why-not-walk-up-automatically">Why Not Walk Up Automatically?<a class="headerlink" href="#why-not-walk-up-automatically" title="Permanent link">&para;</a></h2>
 <p>Nested projects, submodules, rogue agent-created <code>.context/</code>
 directories, and sub-agent sessions all produced silent misrouting
@@ -2259,7 +2259,7 @@ under the old walk-up model. See the
 <a href="https://github.com/ActiveMemory/ctx/blob/main/specs/explicit-context-dir.md">explicit-context-dir spec</a>
 and <a href="https://github.com/ActiveMemory/ctx/blob/main/specs/context-resolution-analysis.md">the analysis doc</a>
 for the full reasoning.</p>
-<p>The short version: ctx decided to stop guessing and require the
+<p>The short version: <code>ctx</code> decided to stop guessing and require the
 caller to declare. Every other decision flows from there.</p>
 
 

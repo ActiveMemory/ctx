@@ -259,7 +259,7 @@ are running, audit what they do, and get alerted when they go silent.
 
 ## See Also
 
-* [CLI Reference: ctx hook notify](../cli/notify.md):
+* [CLI Reference: `ctx` hook notify](../cli/notify.md):
   full command reference
 * [Configuration](../home/configuration.md): `.ctxrc` settings including
   `notify` options

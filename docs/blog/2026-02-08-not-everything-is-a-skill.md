@@ -14,7 +14,7 @@ topics:
 # Not Everything Is a Skill
 
 !!! note "Update (2026-02-11)"
-    As of v0.4.0, ctx consolidated sessions into the journal mechanism.
+    As of v0.4.0, `ctx` consolidated sessions into the journal mechanism.
     References to `/ctx-save`, `.context/sessions/`, and session auto-save
     in this post reflect the architecture at the time of writing.
 

@@ -1840,7 +1840,7 @@ delivery channels:</p>
    with an <strong>empty prompt</strong>, so only <code>always</code> files match
    and get injected automatically on every tool call.</li>
 <li><strong>The <code>ctx_steering_get</code> MCP tool</strong>, registered
-   automatically when the ctx plugin is installed. Claude
+   automatically when the <code>ctx</code> plugin is installed. Claude
    can call this tool mid-task to fetch <code>auto</code> or
    <code>manual</code> files matching a specific prompt. Verify
    with <code>claude mcp list</code>; look for <code>ctx: ✓ Connected</code>.</li>
@@ -1863,7 +1863,7 @@ pick <code>always</code>, even if it's overkill for your Cursor
 setup. The context budget cost is small; the alternative
 (silently not firing) is worse.</p>
 <h2 id="two-families-of-ai-tools-two-delivery-paths">Two Families of AI Tools, Two Delivery Paths<a class="headerlink" href="#two-families-of-ai-tools-two-delivery-paths" title="Permanent link">&para;</a></h2>
-<p>Not every AI tool consumes steering the same way. ctx
+<p>Not every AI tool consumes steering the same way. <code>ctx</code>
 handles two tool families differently, and it's worth
 knowing which family your editor is in before you wonder
 why a rule isn't firing.</p>
@@ -1871,12 +1871,12 @@ why a rule isn't firing.</p>
 have a built-in rules primitive. They read a specific
 directory (<code>.cursor/rules/</code>, <code>.clinerules/</code>,
 <code>.kiro/steering/</code>) and apply the rules they find there.
-ctx handles these via <code>ctx steering sync</code>, which exports
+<code>ctx</code> handles these via <code>ctx steering sync</code>, which exports
 your files into the tool-native format. Run <code>sync</code>
 whenever you edit a steering file.</p>
 <p><strong>Hook + MCP tools</strong> (<strong>Claude Code</strong>, <strong>Codex</strong>) have
 no native rules primitive, so <code>ctx steering sync</code> is a
-<strong>no-op</strong> for them. Instead, ctx delivers steering through
+<strong>no-op</strong> for them. Instead, <code>ctx</code> delivers steering through
 two non-sync channels:</p>
 <ol>
 <li><strong>Automatic injection via a <code>PreToolUse</code> hook</strong>. The
@@ -1887,7 +1887,7 @@ two non-sync channels:</p>
    context packet it prints. Claude Code feeds that output
    back into its context. Every tool call, automatically.</li>
 <li><strong>On-demand via the <code>ctx_steering_get</code> MCP tool</strong>. The
-   ctx MCP server exposes a tool Claude can call mid-task
+   <code>ctx</code> MCP server exposes a tool Claude can call mid-task
    to fetch matching steering files for a specific prompt.
    Claude decides when to call it; it's not automatic.</li>
 </ol>
@@ -1904,7 +1904,7 @@ works for Claude Code.</p>
   hook+MCP pipeline covers Claude Code automatically.</li>
 </ul>
 <h2 id="two-shapes-of-automation-rules-and-scripts">Two Shapes of Automation: Rules and Scripts<a class="headerlink" href="#two-shapes-of-automation-rules-and-scripts" title="Permanent link">&para;</a></h2>
-<p>Steering is one of <strong>two</strong> hook-like layers ctx provides for
+<p>Steering is one of <strong>two</strong> hook-like layers <code>ctx</code> provides for
 customizing AI behavior. They're complementary:</p>
 <ul>
 <li><strong>Steering</strong>: <em>persistent rules</em> that get prepended to

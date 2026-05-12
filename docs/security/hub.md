@@ -58,11 +58,11 @@ registered clients.
 
 `.context/.connect.enc` stores the client token and hub address,
 encrypted with **AES-256-GCM** using the same scheme the
-notification subsystem uses. The key is derived from ctx's local
+notification subsystem uses. The key is derived from `ctx`'s local
 keyring (see `internal/crypto`).
 
 An attacker with read access to the project directory cannot
-learn the client token without also breaking ctx's local
+learn the client token without also breaking `ctx`'s local
 keyring.
 
 ### Hub-Side Token Storage
@@ -158,7 +158,7 @@ manually by the operator (see
 ## Responsible Disclosure
 
 Security issues in the hub follow the same process as the rest
-of ctx; see [Reporting](reporting.md).
+of `ctx`; see [Reporting](reporting.md).
 
 ## See Also
 

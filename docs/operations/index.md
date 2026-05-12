@@ -80,7 +80,7 @@ guidance on triaging the results.
 | [Release checklist](runbooks/release-checklist.md) | Full pre-release sequence | Before every release |
 | [Plugin release](runbooks/plugin-release.md) | Plugin-specific release steps | Plugin changes ship |
 | [Breaking migration](runbooks/breaking-migration.md) | Guide users across breaking changes | Releases with renames |
-| [Hub deployment](runbooks/hub-deployment.md) | Set up a ctx Hub end-to-end | First-time hub setup |
+| [Hub deployment](runbooks/hub-deployment.md) | Set up a `ctx` Hub end-to-end | First-time hub setup |
 | [New contributor](runbooks/new-contributor.md) | Onboarding: clone to first session | New contributors |
 | [Codebase audit](runbooks/codebase-audit.md) | AST audits, magic strings, dead code, doc alignment | Before release, quarterly |
 | [Docs semantic audit](runbooks/docs-semantic-audit.md) | Narrative gaps, weak pages, structural problems | Before release, after adding pages |

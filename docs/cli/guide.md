@@ -13,7 +13,7 @@ icon: lucide/book-open
 
 ## `ctx guide`
 
-Quick-reference cheat sheet for common ctx commands and skills.
+Quick-reference cheat sheet for common `ctx` commands and skills.
 
 ```bash
 ctx guide [flags]

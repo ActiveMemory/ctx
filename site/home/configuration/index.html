@@ -2083,7 +2083,7 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<p>ctx uses three layers of configuration. Each layer overrides the one below it:</p>
+<p><code>ctx</code> uses three layers of configuration. Each layer overrides the one below it:</p>
 <ol>
 <li><strong>CLI flags</strong>: Per-invocation overrides (<em>highest priority</em>)</li>
 <li><strong>Environment variables</strong>: Shell or CI/CD overrides</li>
@@ -2114,7 +2114,7 @@ invocation. There is no global or user-level config file: configuration is
 always per-project.</p>
 <div class="admonition note">
 <p class="admonition-title">Contributors: Dev Configuration Profile</p>
-<p>The ctx repo ships two <code>.ctxrc</code> source profiles (<code>.ctxrc.base</code> and
+<p>The <code>ctx</code> repo ships two <code>.ctxrc</code> source profiles (<code>.ctxrc.base</code> and
 <code>.ctxrc.dev</code>). The working copy is gitignored and swapped between them
 via <code>ctx config switch dev</code> / <code>ctx config switch base</code>.
 See <a href="../contributing/#configuration-profiles">Contributing: Configuration Profiles</a>.</p>
@@ -2402,7 +2402,7 @@ behind this ordering.</p>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">CTX_TOKEN_BUDGET</span><span class="o">=</span><span class="m">16000</span><span class="w"> </span>ctx<span class="w"> </span>agent
 </span></code></pre></div>
 <hr />
-<!-- drift-check: diff <(ctx --help 2>&1 | grep -oP '^\s+--[a-z-]+' | sed 's/^\s*//' | sort) <(sed -n '/CLI Global Flags/,/^---$/p' docs/home/configuration.md | grep -oP '`(--[a-z-]+)`' | tr -d '`' | sort -u) -->
+<!-- drift-check: diff <(`ctx` --help 2>&1 | grep -oP '^\s+--[a-z-]+' | sed 's/^\s*//' | sort) <(sed -n '/CLI Global Flags/,/^---$/p' docs/home/configuration.md | grep -oP '`(--[a-z-]+)`' | tr -d '`' | sort -u) -->
 <h2 id="cli-global-flags">CLI Global Flags<a class="headerlink" href="#cli-global-flags" title="Permanent link">&para;</a></h2>
 <p>CLI flags have the highest priority and override both environment variables and
 <code>.ctxrc</code> settings. These flags are available on every <code>ctx</code> command.</p>

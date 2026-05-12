@@ -113,7 +113,7 @@ Use `restic` if you prefer S3-compatible targets.
 
 For these, pick one strategy above and forget about it.
 
-## Why ctx No Longer Ships a Backup Command
+## Why `ctx` No Longer Ships a Backup Command
 
 Backup is inherently environment-specific: SMB, NFS, S3, rsync,
 Time Machine, Borg, restic. Every user has a different story. The

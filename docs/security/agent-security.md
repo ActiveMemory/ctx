@@ -329,7 +329,7 @@ Before running an unattended AI agent:
 ## Further Reading
 
 * [Running an Unattended AI Agent](../recipes/autonomous-loops.md): the
-  ctx recipe for autonomous loops, including step-by-step permissions
+  `ctx` recipe for autonomous loops, including step-by-step permissions
   and isolation setup
 * [Security](reporting.md): `ctx`'s own trust model and vulnerability
   reporting

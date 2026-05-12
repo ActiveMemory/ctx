@@ -1311,16 +1311,16 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="hook-lifecycle">Hook Lifecycle<a class="headerlink" href="#hook-lifecycle" title="Permanent link">&para;</a></h2>
-<p>This page documents the <strong>ctx system hooks</strong>: the built-in
+<p>This page documents the <strong><code>ctx</code> system hooks</strong>: the built-in
 <code>ctx system *</code> subcommands that Claude Code invokes via
 <code>.claude/hooks.json</code> at lifecycle events. These are owned by
-ctx itself, not authored by users.</p>
+<code>ctx</code> itself, not authored by users.</p>
 <div class="admonition info">
 <p class="admonition-title">Not to Be Confused with <code>ctx trigger</code></p>
 <p><code>ctx</code> has <strong>three distinct hook-like layers</strong>:</p>
 <ul>
 <li><strong><code>ctx system</code> hooks</strong> (this page): built-in, owned
-  by ctx, wired into Claude Code via
+  by <code>ctx</code>, wired into Claude Code via
   <code>internal/assets/claude/hooks/hooks.json</code>.</li>
 <li><strong><code>ctx trigger</code></strong>: user-authored shell scripts in
   <code>.context/hooks/&lt;type&gt;/*.sh</code>. See
@@ -1339,7 +1339,7 @@ runs, can block), <code>PostToolUse</code> (after a tool completes), or
 run). Hooks receive JSON on stdin and emit JSON or plain text
 on stdout.</p>
 <hr />
-<!-- drift-check: jq -r '.hooks.PreToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep 'ctx system' | sed 's/ctx system //' | sort -->
+<!-- drift-check: jq -r '.hooks.PreToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep '`ctx` system' | sed 's/ctx system //' | sort -->
 
 <h2 id="pretooluse-hooks">PreToolUse Hooks<a class="headerlink" href="#pretooluse-hooks" title="Permanent link">&para;</a></h2>
 <p>These fire <strong>before</strong> a tool executes. They can block, gate, or
@@ -1387,7 +1387,7 @@ One-shot per session.</p>
     Hook-&gt;&gt;State: Write oversize flag if tokens &gt; threshold</code></pre>
 <h3 id="block-non-path-ctx">Block-Non-Path-ctx<a class="headerlink" href="#block-non-path-ctx" title="Permanent link">&para;</a></h3>
 <p>Matcher: <code>Bash</code></p>
-<p>Blocks <code>./ctx</code>, <code>go run ./cmd/ctx</code>, or absolute-path ctx
+<p>Blocks <code>./ctx</code>, <code>go run ./cmd/ctx</code>, or absolute-path <code>ctx</code>
 invocations. Constitutionally enforced.</p>
 <pre class="mermaid"><code>sequenceDiagram
     participant CC as Claude Code
@@ -1448,7 +1448,7 @@ invocations. Constitutionally enforced.</p>
     Hook--&gt;&gt;CC: JSON {additionalContext: specs nudge}
     Hook-&gt;&gt;Hook: Relay(message)</code></pre>
 <hr />
-<!-- drift-check: jq -r '.hooks.PostToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep 'ctx system' | sed 's/ctx system //' | sort -->
+<!-- drift-check: jq -r '.hooks.PostToolUse[].hooks[].command' internal/assets/claude/hooks/hooks.json | grep '`ctx` system' | sed 's/ctx system //' | sort -->
 
 <h2 id="posttooluse-hooks">PostToolUse Hooks<a class="headerlink" href="#posttooluse-hooks" title="Permanent link">&para;</a></h2>
 <p>These fire <strong>after</strong> a tool completes. They observe, nudge, and

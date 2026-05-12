@@ -1668,7 +1668,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Tell ctx which <code>.context/</code> to use.</strong> ctx does not search the
+<p><strong>Tell <code>ctx</code> which <code>.context/</code> to use.</strong> <code>ctx</code> does not search the
 filesystem for <code>.context/</code>: you have to declare it. Three ways:</p>
 <ul>
 <li><code>eval "$(ctx activate)"</code> (recommended): binds <code>CTX_DIR</code> for the
@@ -1694,7 +1694,7 @@ need a project: <code>ctx init</code>, <code>ctx activate</code>, <code>ctx deac
 <p><strong>Initialization required.</strong> Once declared, the target must already
 have been initialized by <code>ctx init</code> (otherwise commands return
 <code>ctx: not initialized</code>).</p>
-<!-- drift-check: ctx --help | grep -c '  [a-z]' -->
+<!-- drift-check: `ctx` --help | grep -c '  [a-z]' -->
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

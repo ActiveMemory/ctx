@@ -13,12 +13,12 @@ icon: lucide/plug
 
 ## `ctx mcp`
 
-Run ctx as a [Model Context Protocol](https://modelcontextprotocol.io)
+Run `ctx` as a [Model Context Protocol](https://modelcontextprotocol.io)
 (MCP) server. MCP is a standard protocol that lets AI tools discover
 and consume context from external sources via JSON-RPC 2.0 over
 stdin/stdout.
 
-This makes ctx accessible to **any MCP-compatible AI tool** without
+This makes `ctx` accessible to **any MCP-compatible AI tool** without
 custom hooks or integrations:
 
 - Claude Desktop
@@ -36,7 +36,7 @@ directly from a shell**. See [Configuration](#configuration) below
 for how each host launches it.
 
 **Flags:** None. The server uses the declared context directory
-from `CTX_DIR`. As with every other ctx command, that variable
+from `CTX_DIR`. As with every other `ctx` command, that variable
 must be set: the server does not walk the filesystem.
 
 **Examples**:
@@ -133,7 +133,7 @@ changes on disk.
 
 ## Tools
 
-Tools expose ctx commands as callable operations. Each tool accepts
+Tools expose `ctx` commands as callable operations. Each tool accepts
 JSON arguments and returns text results.
 
 ### `ctx_status`

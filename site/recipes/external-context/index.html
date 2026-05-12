@@ -2299,7 +2299,7 @@ shell rc, or source a per-project <code>.envrc</code> with direnv.</p>
 <h2 id="what-works-what-quietly-degrades">What Works, What Quietly Degrades<a class="headerlink" href="#what-works-what-quietly-degrades" title="Permanent link">&para;</a></h2>
 <p>The single-source-anchor contract states that
 <code>filepath.Dir(CTX_DIR)</code> is the project root. When the context
-lives outside the project tree, ctx still resolves correctly for
+lives outside the project tree, <code>ctx</code> still resolves correctly for
 every operation that reads or writes inside <code>.context/</code>. But any
 operation that scans the <strong>codebase</strong> scans the wrong tree, and
 does so silently:</p>
@@ -2404,7 +2404,7 @@ a private GitHub repo, a shared drive, a sibling directory:</p>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">cd</span><span class="w"> </span>~/repos/myproject-context
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>git<span class="w"> </span>init
 </span></code></pre></div>
-<h3 id="step-2-initialize-ctx-pointing-at-it">Step 2: Initialize ctx Pointing at It<a class="headerlink" href="#step-2-initialize-ctx-pointing-at-it" title="Permanent link">&para;</a></h3>
+<h3 id="step-2-initialize-ctx-pointing-at-it">Step 2: Initialize <code>ctx</code> Pointing at It<a class="headerlink" href="#step-2-initialize-ctx-pointing-at-it" title="Permanent link">&para;</a></h3>
 <p>From your project root, declare <code>CTX_DIR</code> pointing to the external
 location, then initialize:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>~/repos/myproject
@@ -2547,10 +2547,10 @@ project repo, context gets committed to the context repo.</p>
 <hr />
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
 <p><strong><a href="../session-lifecycle/">The Complete Session →</a></strong>: Walk through a
-full ctx session from start to finish.</p>
+full <code>ctx</code> session from start to finish.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../multi-tool-setup/">Setting Up ctx Across AI Tools</a>: initial setup recipe</li>
+<li><a href="../multi-tool-setup/">Setting Up <code>ctx</code> Across AI Tools</a>: initial setup recipe</li>
 <li><a href="../scratchpad-sync/">Syncing Scratchpad Notes Across Machines</a>: distribute
   encryption keys when context is shared</li>
 <li><a href="../../cli/">CLI Reference</a>: full command list and global options</li>
