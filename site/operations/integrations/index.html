@@ -3527,7 +3527,7 @@ overview; the dedicated page is the authoritative reference.</p>
 <h4 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h4>
 <p>The extension ships to the <a href="https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context">VS Code Marketplace</a>
 under publisher <code>activememory</code> (display name: <em>ctx — Persistent Context
-for AI</em>) — install it via the Extensions view or <code>code --install-extension</code>.</p>
+for AI</em>). Install via the Extensions view or <code>code --install-extension</code>.</p>
 <p>To build from source instead (requires Node.js 20+):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">cd</span><span class="w"> </span>editors/vscode
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>npm<span class="w"> </span>ci
@@ -3559,11 +3559,11 @@ for AI</em>) — install it via the Extensions view or <code>code --install-exte
 files beyond <code>.context/</code> and the Copilot instructions are added.</p>
 <h4 id="how-it-works_1">How It Works<a class="headerlink" href="#how-it-works_1" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Chat participant</strong> — <code>@ctx</code> is registered with VS Code's Chat API; 45 slash commands route to dedicated handlers that shell out to the ctx CLI.</li>
-<li><strong>Automatic hooks</strong> — file save → task-completion check; git commit → decision/learning prompt; <code>.context/</code> change → regenerate Copilot instructions; dependency-file change → <code>/map</code> prompt.</li>
-<li><strong>Status-bar reminder</strong> — a <code>$(bell) ctx</code> indicator surfaces pending session reminders, refreshing every 5 minutes.</li>
-<li><strong>Natural language</strong> — plain English after <code>@ctx</code> is routed to the nearest matching command.</li>
-<li><strong>Auto-bootstrap</strong> — if the ctx CLI isn't on PATH, the extension downloads the correct platform binary from GitHub Releases and caches it.</li>
+<li><strong>Chat participant:</strong> <code>@ctx</code> is registered with VS Code's Chat API; 45 slash commands route to dedicated handlers that shell out to the ctx CLI.</li>
+<li><strong>Automatic hooks:</strong> file save → task-completion check; git commit → decision/learning prompt; <code>.context/</code> change → regenerate Copilot instructions; dependency-file change → <code>/map</code> prompt.</li>
+<li><strong>Status-bar reminder:</strong> a <code>$(bell) ctx</code> indicator surfaces pending session reminders, refreshing every 5 minutes.</li>
+<li><strong>Natural language:</strong> plain English after <code>@ctx</code> is routed to the nearest matching command.</li>
+<li><strong>Auto-bootstrap:</strong> if the ctx CLI isn't on PATH, the extension downloads the correct platform binary from GitHub Releases and caches it.</li>
 </ul>
 <h4 id="configuration_2">Configuration<a class="headerlink" href="#configuration_2" title="Permanent link">&para;</a></h4>
 <table>

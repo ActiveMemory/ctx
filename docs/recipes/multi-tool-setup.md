@@ -200,7 +200,7 @@ auto-downloads the ctx CLI if it isn't on PATH. See
 [ctx for VS Code](../home/vscode.md) for full details.
 
 !!! tip "VS Code Is a First-Class Citizen"
-    The extension carries its own runtime — no `ctx setup` step is
+    The extension carries its own runtime. No `ctx setup` step is
     needed. It registers a `@ctx` chat participant with 45 slash
     commands, automatic hooks (file save, git commit, `.context/`
     change, dependency-file edit), and a reminder status-bar

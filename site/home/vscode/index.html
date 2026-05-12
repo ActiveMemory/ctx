@@ -2147,16 +2147,16 @@ already work in.</p>
 </tr>
 </tbody>
 </table>
-<p>The extension itself lives in VS Code's extension storage — no project
+<p>The extension itself lives in VS Code's extension storage. No project
 files are added beyond <code>.context/</code> and the Copilot instructions.</p>
 <h2 id="how-you-use-it">How You Use It<a class="headerlink" href="#how-you-use-it" title="Permanent link">&para;</a></h2>
 <p>Type <code>@ctx</code> in the Copilot Chat view to invoke the chat participant.
 Then either:</p>
 <ul>
-<li><strong>Use a slash command</strong> — <code>@ctx /status</code>, <code>@ctx /wrapup</code>, etc. There
+<li><strong>Use a slash command:</strong> <code>@ctx /status</code>, <code>@ctx /wrapup</code>, etc. There
   are 45 commands; the most common ones live in the <a href="#slash-commands">Slash Commands</a>
   table below.</li>
-<li><strong>Use natural language</strong> — <code>@ctx what should I work on?</code> routes to
+<li><strong>Use natural language:</strong> <code>@ctx what should I work on?</code> routes to
   <code>/next</code>; <code>@ctx time to wrap up</code> routes to <code>/wrapup</code>. See
   <a href="#natural-language">Natural Language</a>.</li>
 </ul>
@@ -2262,7 +2262,7 @@ commonly used:</p>
 </tr>
 <tr>
 <td><code>/remember</code></td>
-<td>"Do you remember?" — structured readback from tasks, decisions, learnings, recent journal</td>
+<td>Structured readback (trigger: "Do you remember?") from tasks, decisions, learnings, recent journal</td>
 </tr>
 <tr>
 <td><code>/reflect</code></td>
@@ -2352,7 +2352,7 @@ set <code>ctx.executablePath</code> in your VS Code settings.</p>
 <h2 id="refreshing-the-integration">Refreshing the Integration<a class="headerlink" href="#refreshing-the-integration" title="Permanent link">&para;</a></h2>
 <p>The extension updates through the VS Code Marketplace like any other
 extension; install new versions via the Extensions view. Updates to
-the <strong>ctx CLI</strong> are independent — bump it via your package manager or
+the <strong>ctx CLI</strong> are independent: bump it via your package manager, or
 let the auto-bootstrap fetch the latest release.</p>
 <p>Unlike the OpenCode integration, there is <strong>no <code>ctx setup</code> step</strong> for
 VS Code. The extension carries its own runtime; ctx's role is only to
@@ -2395,17 +2395,17 @@ provide the CLI it shells out to.</p>
 </span></code></pre></div>
 <p>You should see a structured readback citing specific tasks, decisions,
 and recent session topics. If you instead see "I don't have memory" or
-"Let me check," something went wrong — confirm the CLI is reachable
+"Let me check," something went wrong: confirm the CLI is reachable
 (<code>@ctx /system doctor</code>) and <code>.context/</code> has files in it.</p>
 <h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../first-session/">Your First Session</a> — step-by-step walkthrough from
+<li><a href="../first-session/">Your First Session</a>: step-by-step walkthrough from
   <code>ctx init</code> to verified recall.</li>
-<li><a href="../common-workflows/">Common Workflows</a> — day-to-day commands for
+<li><a href="../common-workflows/">Common Workflows</a>: day-to-day commands for
   tracking context, checking health, and browsing history.</li>
-<li><a href="../context-files/">Context Files</a> — what lives in <code>.context/</code> and how
+<li><a href="../context-files/">Context Files</a>: what lives in <code>.context/</code> and how
   each file is used.</li>
-<li><a href="../../recipes/multi-tool-setup/">Setup across AI Tools</a> — wiring ctx
+<li><a href="../../recipes/multi-tool-setup/">Setup across AI Tools</a>: wiring ctx
   for Claude Code, OpenCode, Cursor, Aider, Copilot, or Windsurf
   alongside VS Code.</li>
 </ul>

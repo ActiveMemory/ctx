@@ -71,7 +71,7 @@ Install the extension and the `ctx` binary, then `ctx init` your project:
 | `.context/` | Project-local context directory (created by `ctx init`) |
 | `.github/copilot-instructions.md` | Repository instructions Copilot reads natively; regenerated automatically whenever `.context/` files change |
 
-The extension itself lives in VS Code's extension storage — no project
+The extension itself lives in VS Code's extension storage. No project
 files are added beyond `.context/` and the Copilot instructions.
 
 ## How You Use It
@@ -79,10 +79,10 @@ files are added beyond `.context/` and the Copilot instructions.
 Type `@ctx` in the Copilot Chat view to invoke the chat participant.
 Then either:
 
-- **Use a slash command** — `@ctx /status`, `@ctx /wrapup`, etc. There
+- **Use a slash command:** `@ctx /status`, `@ctx /wrapup`, etc. There
   are 45 commands; the most common ones live in the [Slash Commands](#slash-commands)
   table below.
-- **Use natural language** — `@ctx what should I work on?` routes to
+- **Use natural language:** `@ctx what should I work on?` routes to
   `/next`; `@ctx time to wrap up` routes to `/wrapup`. See
   [Natural Language](#natural-language).
 
@@ -133,7 +133,7 @@ commonly used:
 | Command | When to use |
 |---------|-------------|
 | `/wrapup` | End-of-session ceremony: status, drift, journal audit |
-| `/remember` | "Do you remember?" — structured readback from tasks, decisions, learnings, recent journal |
+| `/remember` | Structured readback (trigger: "Do you remember?") from tasks, decisions, learnings, recent journal |
 | `/reflect` | Surface items worth persisting as decisions or learnings |
 | `/pause` / `/resume` | Save and restore session state for later |
 
@@ -192,7 +192,7 @@ set `ctx.executablePath` in your VS Code settings.
 
 The extension updates through the VS Code Marketplace like any other
 extension; install new versions via the Extensions view. Updates to
-the **ctx CLI** are independent — bump it via your package manager or
+the **ctx CLI** are independent: bump it via your package manager, or
 let the auto-bootstrap fetch the latest release.
 
 Unlike the OpenCode integration, there is **no `ctx setup` step** for
@@ -218,17 +218,17 @@ Open Copilot Chat and ask:
 
 You should see a structured readback citing specific tasks, decisions,
 and recent session topics. If you instead see "I don't have memory" or
-"Let me check," something went wrong — confirm the CLI is reachable
+"Let me check," something went wrong: confirm the CLI is reachable
 (`@ctx /system doctor`) and `.context/` has files in it.
 
 ## What's Next
 
-- [Your First Session](first-session.md) — step-by-step walkthrough from
+- [Your First Session](first-session.md): step-by-step walkthrough from
   `ctx init` to verified recall.
-- [Common Workflows](common-workflows.md) — day-to-day commands for
+- [Common Workflows](common-workflows.md): day-to-day commands for
   tracking context, checking health, and browsing history.
-- [Context Files](context-files.md) — what lives in `.context/` and how
+- [Context Files](context-files.md): what lives in `.context/` and how
   each file is used.
-- [Setup across AI Tools](../recipes/multi-tool-setup.md) — wiring ctx
+- [Setup across AI Tools](../recipes/multi-tool-setup.md): wiring ctx
   for Claude Code, OpenCode, Cursor, Aider, Copilot, or Windsurf
   alongside VS Code.

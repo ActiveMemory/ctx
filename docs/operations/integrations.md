@@ -490,7 +490,7 @@ indicator.
 
 The extension ships to the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context)
 under publisher `activememory` (display name: *ctx — Persistent Context
-for AI*) — install it via the Extensions view or `code --install-extension`.
+for AI*). Install via the Extensions view or `code --install-extension`.
 
 To build from source instead (requires Node.js 20+):
 
@@ -516,11 +516,11 @@ files beyond `.context/` and the Copilot instructions are added.
 
 #### How It Works
 
-- **Chat participant** — `@ctx` is registered with VS Code's Chat API; 45 slash commands route to dedicated handlers that shell out to the ctx CLI.
-- **Automatic hooks** — file save → task-completion check; git commit → decision/learning prompt; `.context/` change → regenerate Copilot instructions; dependency-file change → `/map` prompt.
-- **Status-bar reminder** — a `$(bell) ctx` indicator surfaces pending session reminders, refreshing every 5 minutes.
-- **Natural language** — plain English after `@ctx` is routed to the nearest matching command.
-- **Auto-bootstrap** — if the ctx CLI isn't on PATH, the extension downloads the correct platform binary from GitHub Releases and caches it.
+- **Chat participant:** `@ctx` is registered with VS Code's Chat API; 45 slash commands route to dedicated handlers that shell out to the ctx CLI.
+- **Automatic hooks:** file save → task-completion check; git commit → decision/learning prompt; `.context/` change → regenerate Copilot instructions; dependency-file change → `/map` prompt.
+- **Status-bar reminder:** a `$(bell) ctx` indicator surfaces pending session reminders, refreshing every 5 minutes.
+- **Natural language:** plain English after `@ctx` is routed to the nearest matching command.
+- **Auto-bootstrap:** if the ctx CLI isn't on PATH, the extension downloads the correct platform binary from GitHub Releases and caches it.
 
 #### Configuration
 
