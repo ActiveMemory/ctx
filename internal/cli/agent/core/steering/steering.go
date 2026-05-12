@@ -12,7 +12,9 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	errSkill "github.com/ActiveMemory/ctx/internal/err/skill"
+	"github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/skill"
 	"github.com/ActiveMemory/ctx/internal/steering"
@@ -22,6 +24,11 @@ import (
 // returning their bodies as strings. Returns nil
 // when the steering directory does not exist or
 // contains no applicable files.
+//
+// Files whose body still contains the [steering.Tombstone]
+// placeholder marker are excluded and surfaced as a
+// warning on stderr so the user sees that scaffolded
+// content is being suppressed.
 //
 // Returns:
 //   - []string: Body content of each matching steering file
@@ -39,9 +46,14 @@ func LoadBodies() []string {
 
 	var bodies []string
 	for _, sf := range filtered {
-		if sf.Body != "" {
-			bodies = append(bodies, sf.Body)
+		if sf.Body == "" {
+			continue
 		}
+		if steering.HasTombstone(sf.Body) {
+			warn.Warn(cfgWarn.SteeringUnfilled, sf.Path)
+			continue
+		}
+		bodies = append(bodies, sf.Body)
 	}
 	return bodies
 }
