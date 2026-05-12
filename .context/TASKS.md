@@ -85,6 +85,23 @@ TASK STATUS LABELS:
   #priority:medium #added:2026-05-11 #completed:2026-05-11
   #grounding-gap
 
+- [x] Close VS Code documentation parity gap: ctx had a dedicated
+  `docs/home/opencode.md` (185 lines) and `site/home/opencode/`
+  published page, but no equivalent for VS Code — the extension
+  was reduced to a 24-line install snippet inside
+  `docs/operations/integrations.md` plus the marketplace README.
+  A docs-site reader had no path to day-to-day usage. Created
+  `docs/home/vscode.md` mirroring the opencode page shape
+  (problem, setup, what gets created, automatic hooks,
+  status bar, slash commands by category, natural language,
+  auto-bootstrap, prerequisites, configuration, troubleshooting,
+  verification, what's next). Registered in `zensical.toml`'s
+  "Get Started" nav. Expanded the integrations.md VS Code
+  subsection to point at the new home page and added a
+  parallel "First-Class Citizen" block in
+  `docs/recipes/multi-tool-setup.md`. #priority:medium
+  #added:2026-05-11 #completed:2026-05-11 #grounding-gap
+
 - [ ] Fix `editors/vscode/src/extension.test.ts` type errors and
   re-enable test-file type-checking + vitest in CI. Two distinct
   bugs: (1) tests import handlers (`handleComplete`, `handleTasks`,
