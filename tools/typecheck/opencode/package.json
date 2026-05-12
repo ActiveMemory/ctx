@@ -1,0 +1,13 @@
+{
+  "name": "ctx-opencode-plugin-typecheck",
+  "private": true,
+  "description": "Type-check gate for the embedded OpenCode plugin at internal/assets/integrations/opencode/plugin/index.ts. Not published; not embedded; CI-only dev tooling.",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.4.0",
+    "@types/bun": "^1.1.0",
+    "typescript": "^5.6.0"
+  }
+}

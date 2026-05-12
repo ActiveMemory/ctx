@@ -185,6 +185,28 @@ registers the ctx MCP server globally. See
     automatically. Context loads at session start, survives compaction,
     and persists at session end — no manual steps needed.
 
+#### VS Code
+
+Install the **ctx** extension from the
+[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context)
+(publisher: `activememory`). Then, from your project root:
+
+```bash
+ctx init && eval "$(ctx activate)"
+```
+
+Open Copilot Chat and type `@ctx /init` to verify. The extension
+auto-downloads the ctx CLI if it isn't on PATH. See
+[ctx for VS Code](../home/vscode.md) for full details.
+
+!!! tip "VS Code Is a First-Class Citizen"
+    The extension carries its own runtime. No `ctx setup` step is
+    needed. It registers a `@ctx` chat participant with 45 slash
+    commands, automatic hooks (file save, git commit, `.context/`
+    change, dependency-file edit), and a reminder status-bar
+    indicator. Unlike embedded harnesses, the extension ships
+    through its own pipeline to the VS Code Marketplace.
+
 #### Cursor
 
 Add the system prompt snippet to `.cursor/settings.json`:

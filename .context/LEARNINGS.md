@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-11 | tsc cross-tree include resolves node_modules from source file, not tsconfig |
 | 2026-05-10 | Go compile/tool version mismatch comes from the cached toolchain, not the system Go |
 | 2026-05-10 | An ongoing user's concrete workaround tax is the strongest validation evidence |
 | 2026-05-10 | Lift renames alongside features when borrowing from battle-tested external designs |
@@ -137,6 +138,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-11-202124] tsc cross-tree include resolves node_modules from source file, not tsconfig
+
+**Context**: Set up tsc --noEmit gate for the embedded OpenCode plugin. tsconfig lived in tools/typecheck/opencode/; include pointed at internal/assets/integrations/opencode/plugin/index.ts via relative path. First run failed with 'Cannot find module @opencode-ai/plugin' even though node_modules was correctly populated in tools/typecheck/opencode/.
+
+**Lesson**: When tsconfig.json sits in dir A but its 'include' points at .ts files in dir B, tsc resolves node_modules by walking up from each source file's location (dir B), NOT from the tsconfig's location (dir A). With moduleResolution: bundler the behavior is the same. The 'node_modules' that ships in dir A is invisible to a source file in a distant dir B.
+
+**Application**: For any cross-tree tsc setup (typecheck gate for embedded source elsewhere in the repo, monorepo-style references, etc.), add explicit baseUrl + paths to the tsconfig. Example: baseUrl: '.', paths: { '@opencode-ai/plugin': ['./node_modules/@opencode-ai/plugin/dist/index.d.ts'], '@opencode-ai/plugin/*': ['./node_modules/@opencode-ai/plugin/dist/*'] }. Add typeRoots ['./node_modules/@types', './node_modules'] for good measure. The cost is some manual path mapping; the benefit is that node_modules can live wherever the tooling does, not next to the source.
 
 ---
 

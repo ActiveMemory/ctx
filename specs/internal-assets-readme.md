@@ -144,3 +144,31 @@ None.
 ## Open Questions
 
 None.
+
+## Implementation Outcome (2026-05-11)
+
+After the README landed, a follow-up clarification rejected the
+"redirect by spawning four follow-up tasks" framing as a thinly-
+disguised deferral: the original Phase 0 line-30 task ("add
+`tsc --noEmit` for the embedded OpenCode plugin") still had to
+be implemented, not just rescoped. The implementation was done
+in the same session:
+
+- `tools/typecheck/opencode/` — new top-level dev-tooling
+  directory (sibling to `internal/assets/`, honoring the embed
+  contract). Contains `package.json` (`@opencode-ai/plugin`,
+  `@types/bun`, `typescript`), `tsconfig.json` (with `baseUrl`
+  + `paths` to resolve modules from the tools dir despite the
+  source file living elsewhere), `package-lock.json` (npm,
+  matching `editors/vscode/`), and a local `README.md`.
+- `.github/workflows/ci.yml` — new job
+  `typecheck-opencode-plugin` running `npm ci` then
+  `npx tsc --noEmit` against the embedded TS source.
+- `.gitignore` — `tools/typecheck/opencode/node_modules/`.
+- TASKS.md — original line-30 task marked `[x]` complete;
+  duplicate "spawned" item marked `[-]` as duplicate of the
+  now-completed original.
+
+Three of the four originally-spawned gap tasks remain genuinely
+new and stay open: shellcheck for embedded Bash, PSScriptAnalyzer
+for embedded PowerShell, and skill-frontmatter validity tests.

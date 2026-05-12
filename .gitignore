@@ -71,6 +71,9 @@ editors/vscode/node_modules/
 editors/vscode/dist/
 editors/vscode/*.vsix
 
+# Type-check tooling for embedded plugins
+tools/typecheck/opencode/node_modules/
+
 # Some ideas are best kept hidden.
 ideas
 .context/.ctx.key

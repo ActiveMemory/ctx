@@ -27,17 +27,19 @@ TASK STATUS LABELS:
 
 ## Phase 0 Grounding
 
-- [-] Add TypeScript type-check step (bunx tsc --noEmit) for embedded
+- [x] Add TypeScript type-check step (`tsc --noEmit`) for embedded
   editor-plugin assets to CI; nothing currently
-  checks .opencode/plugins/ctx/index.ts before embedding
-  #priority:low #added:2026-04-26-152912 #skipped:2026-05-11 reason:
-  scope redirected — investigation produced
-  specs/internal-assets-readme.md and `internal/assets/README.md`
-  documenting the embed contract; original work respawned into four
-  discrete gap tasks below (TS type-check, shellcheck,
-  PSScriptAnalyzer, skill frontmatter validation).
+  checks `.opencode/plugins/ctx/index.ts` before embedding
+  #priority:low #added:2026-04-26-152912 #completed:2026-05-11
+  Implementation: `tools/typecheck/opencode/` (package.json,
+  tsconfig.json, README, package-lock.json); CI job
+  `typecheck-opencode-plugin` in `.github/workflows/ci.yml`; embed
+  contract documented in `internal/assets/README.md` and decision
+  recorded 2026-05-11. Investigation also surfaced three
+  related-but-distinct gap tasks (shellcheck, PSScriptAnalyzer,
+  skill frontmatter validation) listed below.
 
-- [ ] Add TypeScript `tsc --noEmit` gate for the embedded OpenCode
+- [-] Add TypeScript `tsc --noEmit` gate for the embedded OpenCode
   plugin (`internal/assets/integrations/opencode/plugin/index.ts`).
   Place tooling (`package.json`, `tsconfig.json`) in a sibling
   directory outside `internal/assets/` so it does not pollute the
@@ -45,6 +47,11 @@ TASK STATUS LABELS:
   then `bunx tsc --noEmit`. Spec: respawn from
   `specs/internal-assets-readme.md` open work.
   #priority:low #added:2026-05-11 #grounding-gap
+  #skipped:2026-05-11 reason: duplicate of original line-30 task
+  above, which has now been completed end-to-end. CI uses `npm ci`
+  + `npx tsc --noEmit` (matching the existing `editors/vscode/`
+  convention) rather than Bun; `tsc` is the same compiler either
+  way and `@types/bun` provides Bun globals to the type-checker.
 
 - [ ] Add `shellcheck` gate for embedded shell scripts
   (`internal/assets/integrations/copilot-cli/scripts/*.sh` and
@@ -64,6 +71,51 @@ TASK STATUS LABELS:
   `internal/assets/embed_test.go` or add a dedicated test under
   `internal/assets/read/skill/`. #priority:medium #added:2026-05-11
   #grounding-gap
+
+- [x] Add CI guardrails for the VS Code extension at
+  `editors/vscode/` (separately-published deliverable, ships via
+  VS Code Marketplace under publisher `activememory`, not embedded
+  into the ctx binary). CI job `vscode-extension` runs `npm ci`,
+  `npm run build` (esbuild bundle), and `npx tsc --noEmit
+  -p tsconfig.ci.json` (production code only; test file excluded
+  pending separate fix). README docs added: `internal/assets/README.md`
+  gained an "Embedded vs. Separately-Published" comparison; the
+  extension's own README gained a "Release" section documenting
+  the manual `vsce publish` flow and the CI gates that protect it.
+  #priority:medium #added:2026-05-11 #completed:2026-05-11
+  #grounding-gap
+
+- [x] Close VS Code documentation parity gap: ctx had a dedicated
+  `docs/home/opencode.md` (185 lines) and `site/home/opencode/`
+  published page, but no equivalent for VS Code — the extension
+  was reduced to a 24-line install snippet inside
+  `docs/operations/integrations.md` plus the marketplace README.
+  A docs-site reader had no path to day-to-day usage. Created
+  `docs/home/vscode.md` mirroring the opencode page shape
+  (problem, setup, what gets created, automatic hooks,
+  status bar, slash commands by category, natural language,
+  auto-bootstrap, prerequisites, configuration, troubleshooting,
+  verification, what's next). Registered in `zensical.toml`'s
+  "Get Started" nav. Expanded the integrations.md VS Code
+  subsection to point at the new home page and added a
+  parallel "First-Class Citizen" block in
+  `docs/recipes/multi-tool-setup.md`. #priority:medium
+  #added:2026-05-11 #completed:2026-05-11 #grounding-gap
+
+- [ ] Fix `editors/vscode/src/extension.test.ts` type errors and
+  re-enable test-file type-checking + vitest in CI. Two distinct
+  bugs: (1) tests import handlers (`handleComplete`, `handleTasks`,
+  `handleRemind`, `handlePad`, `handleNotify`, `handleSystem`,
+  `handleSpec`) that are no longer exported from `extension.ts`
+  (only `activate` and `deactivate` are exported now) — the test
+  suite is rotting against the actual extension surface; (2) the
+  `fakeToken` helper's `onCancellationRequested` mock signature
+  is `(cb: () => void) => …` but the VS Code API expects
+  `(e: any) => any` with at least one argument. Once fixed,
+  remove the `tsconfig.ci.json` carve-out and add `npm test` to
+  the `vscode-extension` CI job. Also worth adding `npm run lint`
+  (eslint) and a `vsce package` dry-run step.
+  #priority:medium #added:2026-05-11 #grounding-gap
 
 - [ ] The target project (to be given to the Agent) has a good "phasing"
   mechanism for tasks; implement that; maybe `ctx task add` can have a
