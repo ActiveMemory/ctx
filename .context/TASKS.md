@@ -72,6 +72,34 @@ TASK STATUS LABELS:
   `internal/assets/read/skill/`. #priority:medium #added:2026-05-11
   #grounding-gap
 
+- [x] Add CI guardrails for the VS Code extension at
+  `editors/vscode/` (separately-published deliverable, ships via
+  VS Code Marketplace under publisher `activememory`, not embedded
+  into the ctx binary). CI job `vscode-extension` runs `npm ci`,
+  `npm run build` (esbuild bundle), and `npx tsc --noEmit
+  -p tsconfig.ci.json` (production code only; test file excluded
+  pending separate fix). README docs added: `internal/assets/README.md`
+  gained an "Embedded vs. Separately-Published" comparison; the
+  extension's own README gained a "Release" section documenting
+  the manual `vsce publish` flow and the CI gates that protect it.
+  #priority:medium #added:2026-05-11 #completed:2026-05-11
+  #grounding-gap
+
+- [ ] Fix `editors/vscode/src/extension.test.ts` type errors and
+  re-enable test-file type-checking + vitest in CI. Two distinct
+  bugs: (1) tests import handlers (`handleComplete`, `handleTasks`,
+  `handleRemind`, `handlePad`, `handleNotify`, `handleSystem`,
+  `handleSpec`) that are no longer exported from `extension.ts`
+  (only `activate` and `deactivate` are exported now) — the test
+  suite is rotting against the actual extension surface; (2) the
+  `fakeToken` helper's `onCancellationRequested` mock signature
+  is `(cb: () => void) => …` but the VS Code API expects
+  `(e: any) => any` with at least one argument. Once fixed,
+  remove the `tsconfig.ci.json` carve-out and add `npm test` to
+  the `vscode-extension` CI job. Also worth adding `npm run lint`
+  (eslint) and a `vsce package` dry-run step.
+  #priority:medium #added:2026-05-11 #grounding-gap
+
 - [ ] The target project (to be given to the Agent) has a good "phasing"
   mechanism for tasks; implement that; maybe `ctx task add` can have a
   `--phase` flag too, and we can have a auditor/normalizer for the current

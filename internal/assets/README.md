@@ -201,6 +201,40 @@ structure.
 * **Anything fetched or generated at install time.** If it
   isn't available at `go build`, it doesn't belong in
   `embed.FS`.
+* **Separately-published deliverables.** ctx also ships a
+  VS Code extension at `editors/vscode/`. It is *not* embedded
+  into the ctx binary: it is built and published independently
+  to the VS Code Marketplace under publisher `activememory`
+  (see `editors/vscode/README.md`, section "Release"). That
+  artifact has its own version, its own toolchain, and its own
+  CI gate (`vscode-extension` job in `.github/workflows/ci.yml`).
+  Anything that ships via a third-party marketplace, package
+  registry, or other out-of-band channel belongs next to *its*
+  pipeline, not here.
+
+---
+
+## Embedded vs. Separately-Published: At a Glance
+
+ctx ships two distinct kinds of artifact, and the rules around
+them are not the same:
+
+| Dimension | Embedded assets (this tree) | Separately-published (e.g. `editors/vscode/`) |
+|---|---|---|
+| Carrier | the ctx Go binary | `.vsix` to VS Code Marketplace |
+| Build pipeline | `go build` | `npm ci` + `esbuild` + `vsce package` |
+| Release pipeline | `release.yml` (`./hack/build-all.sh`) | manual `vsce publish` |
+| Version | pinned to the ctx release that compiled them | independent `version` in `package.json` |
+| Update reaches user via | ctx binary upgrade | VS Code extension update |
+| CI gate today | `typecheck-opencode-plugin` (embedded TS only) | `vscode-extension` (build + production tsc) |
+| Lives in repo at | `internal/assets/...` | `editors/<editor-name>/...` |
+
+If you are adding a new harness, decide which model it follows
+*before* placing files. Embedded harnesses are simpler to ship
+(one binary, no extra publish step) but every byte they carry
+becomes part of every ctx release. Separately-published
+harnesses have their own release cadence and surface, at the
+cost of a second pipeline to maintain.
 
 ---
 
