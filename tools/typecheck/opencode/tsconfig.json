@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext"],
+    "types": ["bun"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "baseUrl": ".",
+    "paths": {
+      "@opencode-ai/plugin": ["./node_modules/@opencode-ai/plugin/dist/index.d.ts"],
+      "@opencode-ai/plugin/*": ["./node_modules/@opencode-ai/plugin/dist/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./node_modules"]
+  },
+  "include": [
+    "../../../internal/assets/integrations/opencode/plugin/**/*.ts"
+  ]
+}

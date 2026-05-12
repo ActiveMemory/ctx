@@ -475,69 +475,58 @@ to regenerate the instructions.
 ### VS Code Chat Extension (`@ctx`)
 
 The **ctx VS Code extension** adds a `@ctx` chat participant to
-GitHub Copilot Chat, giving you direct access to all context commands
-from within the editor.
+GitHub Copilot Chat, giving you direct access to 45 context commands
+from within the editor, plus automatic hooks on file save / git commit /
+`.context/` changes / dependency-file edits, and a reminder status-bar
+indicator.
+
+!!! tip "Full guide: [ctx for VS Code](../home/vscode.md)"
+    The home-page guide covers daily workflows, the full command list,
+    natural-language routing, auto-bootstrap of the ctx CLI, troubleshooting,
+    and "Verify It Works." This subsection is the install-and-pointers
+    overview; the dedicated page is the authoritative reference.
 
 #### Installation
 
-1. Build from source (requires Node.js 18+):
+The extension ships to the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context)
+under publisher `activememory` (display name: *ctx — Persistent Context
+for AI*). Install via the Extensions view or `code --install-extension`.
+
+To build from source instead (requires Node.js 20+):
 
 ```bash
 cd editors/vscode
-npm install
+npm ci
 npm run build
 npx @vscode/vsce package
+code --install-extension ctx-context-<version>.vsix
 ```
 
-2. Install the `.vsix` file:
+Reload VS Code. Type `@ctx` in Copilot Chat to verify.
 
-```bash
-code --install-extension ctx-context-0.8.1.vsix
-```
+#### What Gets Created
 
-3. Reload VS Code. Type `@ctx` in Copilot Chat to verify.
+| File | Purpose |
+|------|---------|
+| `.context/` | Project-local context directory (created by `ctx init`, not by the extension) |
+| `.github/copilot-instructions.md` | Repository instructions Copilot reads natively; regenerated automatically when `.context/` files change |
 
-#### Slash Commands
+The extension itself lives in VS Code's extension storage; no project
+files beyond `.context/` and the Copilot instructions are added.
 
-| Command         | Description                                          |
-|-----------------|------------------------------------------------------|
-| `@ctx /init`    | Initialize `.context/` directory with template files |
-| `@ctx /status`  | Show context summary with token estimate             |
-| `@ctx /agent`   | Print AI-ready context packet                        |
-| `@ctx /drift`   | Detect stale or invalid context                      |
-| `@ctx /journal` | Browse and search AI session history                 |
-| `@ctx /hook`    | Generate AI tool integration configs                 |
-| `@ctx /add`     | Add a task, decision, or learning                    |
-| `@ctx /load`    | Output assembled context Markdown                    |
-| `@ctx /compact` | Archive completed tasks and clean up                 |
-| `@ctx /sync`    | Reconcile context with codebase                      |
+#### How It Works
 
-#### Usage Examples
-
-```text
-@ctx /init
-@ctx /status
-@ctx /add task Implement user authentication
-@ctx /drift
-@ctx /hook copilot
-@ctx /journal
-```
-
-Typing `@ctx` without a command shows help with all available commands.
-The extension also supports natural language: asking `@ctx` about
-"status" or "drift" routes to the correct command automatically.
+- **Chat participant:** `@ctx` is registered with VS Code's Chat API; 45 slash commands route to dedicated handlers that shell out to the ctx CLI.
+- **Automatic hooks:** file save → task-completion check; git commit → decision/learning prompt; `.context/` change → regenerate Copilot instructions; dependency-file change → `/map` prompt.
+- **Status-bar reminder:** a `$(bell) ctx` indicator surfaces pending session reminders, refreshing every 5 minutes.
+- **Natural language:** plain English after `@ctx` is routed to the nearest matching command.
+- **Auto-bootstrap:** if the ctx CLI isn't on PATH, the extension downloads the correct platform binary from GitHub Releases and caches it.
 
 #### Configuration
 
 | Setting              | Default | Description                                                      |
 |----------------------|---------|------------------------------------------------------------------|
 | `ctx.executablePath` | `ctx`   | Path to the ctx binary. Set this if `ctx` is not in your `PATH`. |
-
-#### Follow-Up Suggestions
-
-After each command, the extension suggests relevant next steps. For
-example, after `/init` it suggests `/status` and `/hook`; after
-`/drift` it suggests `/sync`.
 
 ### Session Persistence
 

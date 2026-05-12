@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-11 | Embedded and separately-published harnesses use distinct CI and release pipelines |
 | 2026-05-11 | Embedded foreign-language assets under internal/assets/ are intentional, not a smell |
 | 2026-05-10 | Placeholder overrides use EXTEND not REPLACE semantics |
 | 2026-05-10 | Editorial constitution at .context/ingest/KB-RULES.md, not CONSTITUTION.md |
@@ -138,6 +139,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-11-211246] Embedded and separately-published harnesses use distinct CI and release pipelines
+
+**Status**: Accepted
+
+**Context**: ctx ships two kinds of artifact. Embedded harnesses (OpenCode plugin, Copilot CLI scripts, Claude/OpenCode/Copilot CLI skills, git trace hooks, etc.) live under internal/assets/, are //go:embed'd into the ctx Go binary, and reach users via 'ctx setup' writing their bytes to disk. Separately-published harnesses (currently just the VS Code extension under editors/vscode/) build to their own artifact (.vsix), publish to a third-party channel (VS Code Marketplace under publisher 'activememory'), version independently, and reach users via that channel's update mechanism. Until this session, the boundary was implicit: doc.go and embed_test.go talked only about the embedded tree; release.yml only built the Go binary; nothing in CI exercised the vscode extension at all. A reviewer's first read of internal/assets/integrations/ was 'this is a dumping ground' precisely because the contract was not documented.
+
+**Decision**: Embedded and separately-published harnesses use distinct CI and release pipelines
+
+**Rationale**: Conflating the two would have one of two consequences: (a) shoehorning vscode into //go:embed, which means baking a .vsix or its sources into the Go binary and writing them out at setup time -- bloating the binary with bytes most users never use, and forcing the Go release cadence onto something with its own marketplace cadence; or (b) leaving the vscode harness ungated 'because it's different' -- which is what we had, and which is how typos ship. The right move is to acknowledge the two patterns are first-class peers, give each a documented home (internal/assets/ vs. editors/<editor>/), and gate each in CI with the toolchain appropriate to its release pipeline (Go test/build/vet for embedded; npm ci + esbuild + tsc for vscode). Future harnesses pick a pattern explicitly at placement time rather than drifting.
+
+**Consequence**: internal/assets/README.md now carries the 'Embedded vs. Separately-Published: At a Glance' table as the canonical reference. .github/workflows/ci.yml gained a vscode-extension job that gates the marketplace publish path. editors/vscode/README.md gained a 'Release' section with checklist and explicit notes on which CI gates protect the manual vsce publish. The two patterns are now first-class: a new harness must declare which it follows before placing files. Open implications: (1) anyone proposing to lift integrations/ out of internal/assets/ should re-read this decision -- the no-../ //go:embed constraint plus the pattern-asymmetry are the load-bearing reasons against; (2) the embedded-only quality gaps tracked in TASKS.md (shellcheck, PSScriptAnalyzer, skill frontmatter validity) and the separately-published quality gaps (vscode test rot, lint, vsce package dry-run) live in distinct gap-task clusters and should not be merged. Spec: specs/internal-assets-readme.md.
+
+---
 
 ## [2026-05-11-000000] Embedded foreign-language assets under internal/assets/ are intentional, not a smell
 

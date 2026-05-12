@@ -210,6 +210,60 @@ mock. They verify:
 - Follow-up suggestions are returned after commands
 - Edge cases: missing workspace, cancellation, empty output
 
+> **Note**: the test file currently has unresolved type errors
+> (handler imports that no longer exist on `extension.ts`, and
+> a `CancellationToken` mock with an out-of-date signature). The
+> tests still run under vitest's loose runtime, but `tsc` against
+> them fails. Tracked in TASKS.md; until fixed, the CI gate uses
+> `tsconfig.ci.json` which excludes `**/*.test.ts`.
+
+## Release
+
+This extension is **published separately from the ctx Go binary**.
+It does *not* ride along with `release.yml`. The release pipeline
+is intentionally manual: a maintainer runs `vsce publish` from a
+clean checkout against the `activememory` publisher account.
+
+CI guardrails that protect this manual publish (`vscode-extension`
+job in `.github/workflows/ci.yml`) run on every PR and push to
+`main`:
+
+- `npm ci`: clean dependency install from the committed lockfile.
+- `npm run build`: esbuild bundles `src/extension.ts` to
+  `dist/extension.js`. Catches bundler errors and missing imports
+  at the JavaScript level.
+- `npx tsc --noEmit -p tsconfig.ci.json`: type-checks the
+  production source (`src/**/*.ts` minus test files). Catches type
+  errors that esbuild silently passes through.
+
+What CI does **not** gate yet (known gaps):
+
+- **Tests** (`npm test`, vitest). The suite has type errors
+  unrelated to the production code; until they're fixed, gating
+  on vitest would force resolving them before any merge.
+- **Lint** (`npm run lint`, eslint).
+- **Publish dry-run** (`vsce package` to produce the `.vsix`
+  artifact without uploading). Worth adding once the test gate
+  is back.
+
+Release checklist for a maintainer:
+
+1. Bump `version` in `editors/vscode/package.json`.
+2. Update `editors/vscode/CHANGELOG.md`.
+3. Push to a branch, open PR. The `vscode-extension` CI job must
+   pass on the PR head.
+4. After merge, from a clean checkout of `main`:
+   ```bash
+   cd editors/vscode
+   npm ci
+   npm run build
+   npx vsce package
+   npx vsce publish      # requires VS Code Marketplace token
+   ```
+5. Tag the release commit and push the tag (the ctx-binary release
+   workflow keys on `v*` tags; the extension's tag does not need
+   to match, but keeping them in lockstep simplifies support).
+
 ## License
 
 Apache-2.0
