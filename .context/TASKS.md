@@ -27,17 +27,19 @@ TASK STATUS LABELS:
 
 ## Phase 0 Grounding
 
-- [-] Add TypeScript type-check step (bunx tsc --noEmit) for embedded
+- [x] Add TypeScript type-check step (`tsc --noEmit`) for embedded
   editor-plugin assets to CI; nothing currently
-  checks .opencode/plugins/ctx/index.ts before embedding
-  #priority:low #added:2026-04-26-152912 #skipped:2026-05-11 reason:
-  scope redirected — investigation produced
-  specs/internal-assets-readme.md and `internal/assets/README.md`
-  documenting the embed contract; original work respawned into four
-  discrete gap tasks below (TS type-check, shellcheck,
-  PSScriptAnalyzer, skill frontmatter validation).
+  checks `.opencode/plugins/ctx/index.ts` before embedding
+  #priority:low #added:2026-04-26-152912 #completed:2026-05-11
+  Implementation: `tools/typecheck/opencode/` (package.json,
+  tsconfig.json, README, package-lock.json); CI job
+  `typecheck-opencode-plugin` in `.github/workflows/ci.yml`; embed
+  contract documented in `internal/assets/README.md` and decision
+  recorded 2026-05-11. Investigation also surfaced three
+  related-but-distinct gap tasks (shellcheck, PSScriptAnalyzer,
+  skill frontmatter validation) listed below.
 
-- [ ] Add TypeScript `tsc --noEmit` gate for the embedded OpenCode
+- [-] Add TypeScript `tsc --noEmit` gate for the embedded OpenCode
   plugin (`internal/assets/integrations/opencode/plugin/index.ts`).
   Place tooling (`package.json`, `tsconfig.json`) in a sibling
   directory outside `internal/assets/` so it does not pollute the
@@ -45,6 +47,11 @@ TASK STATUS LABELS:
   then `bunx tsc --noEmit`. Spec: respawn from
   `specs/internal-assets-readme.md` open work.
   #priority:low #added:2026-05-11 #grounding-gap
+  #skipped:2026-05-11 reason: duplicate of original line-30 task
+  above, which has now been completed end-to-end. CI uses `npm ci`
+  + `npx tsc --noEmit` (matching the existing `editors/vscode/`
+  convention) rather than Bun; `tsc` is the same compiler either
+  way and `@types/bun` provides Bun globals to the type-checker.
 
 - [ ] Add `shellcheck` gate for embedded shell scripts
   (`internal/assets/integrations/copilot-cli/scripts/*.sh` and
