@@ -13,7 +13,7 @@ icon: lucide/settings
 
 # `ctx` Hub: Operations
 
-Running the ctx `ctx` Hub in production. This page is
+Running the `ctx` `ctx` Hub in production. This page is
 for **operators**: people running a hub for themselves or a
 team, not people writing to a hub someone else is running.
 

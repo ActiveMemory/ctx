@@ -82,7 +82,7 @@ Replace with the new names per the changelog.
 ## Step 5: Update Hook Configs
 
 If you have custom hooks in `.claude/settings.local.json` that
-reference ctx commands, update them:
+reference `ctx` commands, update them:
 
 ```bash
 jq '.hooks' .claude/settings.local.json | grep "ctx "

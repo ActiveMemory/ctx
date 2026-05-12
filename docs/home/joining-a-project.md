@@ -81,7 +81,7 @@ ctx agent --budget 8000
 ```
 
 This outputs a token-budgeted summary of the project context, ordered
-by priority. With Claude Code and the ctx plugin, context loads
+by priority. With Claude Code and the `ctx` plugin, context loads
 automatically via hooks. You can also use the `/ctx-remember` skill
 to get a structured readback of what the AI knows.
 
@@ -109,7 +109,7 @@ ctx convention add "All API handlers return structured errors"
 ```
 
 You can also just tell the AI: "Record this as a learning" or
-"Add this decision to context." With the ctx plugin, context-update
+"Add this decision to context." With the `ctx` plugin, context-update
 commands handle the file writes.
 
 See the [Knowledge Capture recipe](../recipes/knowledge-capture.md) for
@@ -140,7 +140,7 @@ it with the team instead of working around the constraint.
 (done) or `[-]` (skipped with a reason). The history matters for
 session replay and audit.
 
-**Bypassing hooks.** If the project uses ctx hooks (pre-commit nudges,
+**Bypassing hooks.** If the project uses `ctx` hooks (pre-commit nudges,
 context autoloading), don't disable them. They exist to keep context
 fresh. If a hook is noisy or broken, fix it or file a task.
 
@@ -157,4 +157,4 @@ noise, not signal.
 * [Knowledge Capture](../recipes/knowledge-capture.md): recording decisions, 
   learnings, and conventions
 * [Session Lifecycle](../recipes/session-lifecycle.md): how a typical AI 
-  session flows with ctx
+  session flows with `ctx`

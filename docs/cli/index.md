@@ -25,7 +25,7 @@ All commands support these flags:
 | `--version`     | Show version                                               |
 | `--tool <name>` | Override active AI tool identifier (e.g. `kiro`, `cursor`) |
 
-**Tell ctx which `.context/` to use.** ctx does not search the
+**Tell `ctx` which `.context/` to use.** `ctx` does not search the
 filesystem for `.context/`: you have to declare it. Three ways:
 
 - `eval "$(ctx activate)"` (recommended): binds `CTX_DIR` for the
@@ -54,7 +54,7 @@ need a project: `ctx init`, `ctx activate`, `ctx deactivate`,
 have been initialized by `ctx init` (otherwise commands return
 `ctx: not initialized`).
 
-<!-- drift-check: ctx --help | grep -c '  [a-z]' -->
+<!-- drift-check: `ctx` --help | grep -c '  [a-z]' -->
 ## Getting Started
 
 | Command                                             | Description                                              |

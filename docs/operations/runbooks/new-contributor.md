@@ -96,7 +96,7 @@ Start a Claude Code session and check that hooks fire:
 claude
 ```
 
-You should see ctx session hooks (ceremonies reminder, context
+You should see `ctx` session hooks (ceremonies reminder, context
 loading) on session start. If not, check that the plugin is
 installed correctly (Step 4).
 

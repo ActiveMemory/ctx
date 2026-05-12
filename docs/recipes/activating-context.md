@@ -13,7 +13,7 @@ You ran a `ctx` command and got:
 Error: no context directory specified for this project
 ```
 
-This means ctx doesn't know which `.context/` directory to operate
+This means `ctx` doesn't know which `.context/` directory to operate
 on. It will not guess, and it will not walk up from your current
 working directory looking for one; that behavior was removed
 deliberately, because silent inference was the source of several
@@ -58,8 +58,8 @@ Error: no context directory specified; a likely candidate is at
     /Users/you/repos/myproject/.context
 ```
 
-ctx found a single `.context/` on the way up from here but won't
-bind to it automatically. Run `eval "$(ctx activate)"` and ctx
+`ctx` found a single `.context/` on the way up from here but won't
+bind to it automatically. Run `eval "$(ctx activate)"` and `ctx`
 will emit the `export` for the candidate. Or set `CTX_DIR` by hand.
 
 ### Multiple Candidates
@@ -158,9 +158,9 @@ ctx drift
 
 ## For Claude Code Users
 
-The ctx plugin's hooks are generated with
+The `ctx` plugin's hooks are generated with
 `CTX_DIR="$CLAUDE_PROJECT_DIR/.context"` prefixed to each command,
-so hook-driven ctx invocations resolve correctly without any
+so hook-driven `ctx` invocations resolve correctly without any
 per-session setup. You only need to activate manually when running
 `ctx` yourself in a terminal.
 
@@ -183,8 +183,8 @@ The practical consequences:
   where they belong.
 - **The `CTX_DIR` you activate is implicitly a project-root
   declaration.** Setting `CTX_DIR=/weird/place/.context` means
-  you're telling ctx the project root is `/weird/place/`. That's
-  your call to make; ctx does not police it.
+  you're telling `ctx` the project root is `/weird/place/`. That's
+  your call to make; `ctx` does not police it.
 
 ### Recommended Layout
 
@@ -201,7 +201,7 @@ The practical consequences:
 ```
 
 `.context/` sits at the project root, next to `.git`. `ctx activate`
-binds to it; every ctx subsystem reads the project from its parent.
+binds to it; every `ctx` subsystem reads the project from its parent.
 
 ## Why Not Walk Up Automatically?
 
@@ -212,5 +212,5 @@ under the old walk-up model. See the
 and [the analysis doc](https://github.com/ActiveMemory/ctx/blob/main/specs/context-resolution-analysis.md)
 for the full reasoning.
 
-The short version: ctx decided to stop guessing and require the
+The short version: `ctx` decided to stop guessing and require the
 caller to declare. Every other decision flows from there.

@@ -39,7 +39,7 @@ them.
 
 ### `ctx connection register`
 
-One-time registration with a ctx Hub. Requires the ctx Hub address and
+One-time registration with a `ctx` Hub. Requires the `ctx` Hub address and
 admin token (printed by `ctx hub start` on first run).
 
 **Examples**:
@@ -53,7 +53,7 @@ On success, stores an encrypted connection config in
 
 ### `ctx connection subscribe`
 
-Set which entry types to receive from the ctx Hub. Only matching types
+Set which entry types to receive from the `ctx` Hub. Only matching types
 are returned by sync and listen.
 
 **Examples**:
@@ -65,7 +65,7 @@ ctx connection subscribe decision learning convention
 
 ### `ctx connection sync`
 
-Pull matching entries from the ctx Hub and write them to
+Pull matching entries from the `ctx` Hub and write them to
 `.context/hub/` as markdown files with origin tags and date
 headers. Tracks last-seen sequence for incremental sync.
 
@@ -77,7 +77,7 @@ ctx connection sync
 
 ### `ctx connection publish`
 
-Push entries to the ctx Hub. Specify type and content as arguments.
+Push entries to the `ctx` Hub. Specify type and content as arguments.
 
 **Examples**:
 
@@ -88,7 +88,7 @@ ctx connection publish learning "Go embed requires files in same package"
 
 ### `ctx connection listen`
 
-Stream new entries from the ctx Hub in real-time. Writes to
+Stream new entries from the `ctx` Hub in real-time. Writes to
 `.context/hub/` as entries arrive. Press Ctrl-C to stop.
 
 **Examples**:
@@ -99,7 +99,7 @@ ctx connection listen
 
 ### `ctx connection status`
 
-Show ctx Hub connection state and entry statistics.
+Show `ctx` Hub connection state and entry statistics.
 
 **Examples**:
 
@@ -109,7 +109,7 @@ ctx connection status
 
 ## Automatic Sharing
 
-Use `--share` on `ctx add` to write locally AND publish to the ctx Hub:
+Use `--share` on `ctx add` to write locally AND publish to the `ctx` Hub:
 
 ```bash
 ctx decision add "Use UTC" --share \
@@ -125,12 +125,12 @@ local context updates.
 ## Auto-Sync
 
 Once registered, the `check-hub-sync` hook automatically syncs
-new entries from the ctx Hub at the start of each session (daily
+new entries from the `ctx` Hub at the start of each session (daily
 throttled). No manual `ctx connection sync` needed.
 
 ## Shared Files
 
-Entries from the ctx Hub are stored in `.context/hub/`:
+Entries from the `ctx` Hub are stored in `.context/hub/`:
 
 ```
 .context/hub/

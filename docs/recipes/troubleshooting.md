@@ -158,7 +158,7 @@ See [Activating a Context Directory](activating-context.md) for the
 full recipe (one-shot `CTX_DIR=...` inline form, CI patterns, direnv
 setup).
 
-### "ctx: Not Initialized"
+### "`ctx`: Not Initialized"
 
 **Symptoms**: After declaring `CTX_DIR`, the command fails with
 `ctx: not initialized - run "ctx init" first`.
@@ -324,7 +324,7 @@ ctx hook event --hook context-load-gate
 ## Prerequisites
 
 * **Event logging** (*optional but recommended*): `event_log: true` in `.ctxrc`
-* **ctx initialized**: `ctx init`
+* **`ctx` initialized**: `ctx init`
 
 Event logging is not required for `ctx doctor` or `/ctx-doctor` to work. Both
 degrade gracefully: structural checks run regardless, and the skill notes when

@@ -310,7 +310,7 @@
     <link href="https://ctx.ist/blog/2026-02-08-not-everything-is-a-skill/"></link>
     <id>https://ctx.ist/blog/2026-02-08-not-everything-is-a-skill/</id>
     <updated>2026-02-08T00:00:00Z</updated>
-    <summary>As of v0.4.0, ctx consolidated sessions into the journal mechanism.</summary>
+    <summary>As of v0.4.0, `ctx` consolidated sessions into the journal mechanism.</summary>
     <author>
       <name>Jose Alekhinne</name>
     </author>

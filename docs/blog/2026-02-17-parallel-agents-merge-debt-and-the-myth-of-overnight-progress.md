@@ -398,7 +398,7 @@ Otherwise, you are **not** scaling cognition; you are scaling
 
 [The `ctx` Manifesto](https://ctx.ist/)'s thesis holds:
 
-> **Without ctx, intelligence resets. With ctx, creation compounds.**
+> **Without `ctx`, intelligence resets. With `ctx`, creation compounds.**
 
 Compounding requires *structure*. 
 

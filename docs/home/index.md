@@ -124,7 +124,7 @@ tool calls, inject standup notes, log file saves.
 
 ## Community
 
-### [#ctx](community.md)
+### [#`ctx`](community.md)
 
 We are the builders who care about **durable** context.<br />
 Join the community. Hang out in IRC. Star `ctx` on GitHub.

@@ -189,7 +189,7 @@ ctx trigger disable inject-context
 # Disabled .context/hooks/session-start/inject-context.sh
 ```
 
-### Three Hooking Concepts in ctx (Don't Confuse Them)
+### Three Hooking Concepts in `ctx` (Don't Confuse Them)
 
 This is a common source of confusion. `ctx` has three
 distinct hook-like layers, and they serve different purposes:
@@ -197,7 +197,7 @@ distinct hook-like layers, and they serve different purposes:
 | Layer                 | Owned by    | Where it runs                              | Configured via                         |
 |-----------------------|-------------|--------------------------------------------|----------------------------------------|
 | **`ctx trigger`**     | You         | `.context/hooks/<type>/*.sh`               | `ctx trigger add/enable`               |
-| **`ctx system` hooks**| ctx itself  | built-in, called by ctx's own lifecycle    | internal (see `ctx system --help`)     |
+| **`ctx system` hooks**| `ctx` itself  | built-in, called by `ctx`'s own lifecycle    | internal (see `ctx system --help`)     |
 | **Claude Code hooks** | Claude Code | `.claude/settings.local.json`              | edit JSON, or `/ctx-sanitize-permissions` |
 
 Use `ctx trigger` when you want project-specific automation

@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-11 | Naive Markdown line-sweep corrupts multi-line code spans and YAML lists |
 | 2026-05-11 | tsc cross-tree include resolves node_modules from source file, not tsconfig |
 | 2026-05-10 | Go compile/tool version mismatch comes from the cached toolchain, not the system Go |
 | 2026-05-10 | An ongoing user's concrete workaround tax is the strongest validation evidence |
@@ -138,6 +139,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-11-231025] Naive Markdown line-sweep corrupts multi-line code spans and YAML lists
+
+**Context**: Performed a programmatic typographic sweep across docs/*.md to wrap bare 'ctx' tokens in backticks (commit 61aab858). 81 source files, 236 lines changed. First pass corrupted two indented JSON snippets in MkDocs admonitions because the fence regex anchored to start-of-line and missed admonition-indented fences. After fixing the fence regex, two more corruptions surfaced (multi-line inline-code spans where the opening backtick is on line N and the closing on line N+1: the line-at-a-time transformer treated each line independently, leading to misjudged span boundaries on the second line). After post-sweep validation, a YAML parse error on docs/blog/2026-02-03-the-attention-budget.md surfaced one more breakage: a 'topics:' list-item like '- ctx primitives' got wrapped to '- `ctx` primitives', which is invalid YAML (a value starting with backtick is not a valid unquoted scalar). Total: 2 multi-line span corruptions + 1 YAML breakage, all detected only by post-sweep validation (make site + grep audit), not by the dry-run.
+
+**Lesson**: A naive line-at-a-time regex sweep across Markdown documents must respect a wider 'skip' set than the obvious cases. The full safe-skip list is: (1) triple-backtick fenced code blocks, BOTH root-level and indented inside MkDocs admonitions or list items (fence regex must allow leading whitespace, e.g. '^\\s*```'); (2) inline backtick spans on the same line; (3) multi-line inline-code spans crossing line boundaries (line-at-a-time logic cannot detect both ends, so either track fence-like 'odd-count' state across lines or treat any unclosed-on-line backtick as 'protect rest of line'); (4) the ENTIRE YAML frontmatter block (delimited by '---' at top and next '---'), not just specific keys like title/description/icon, because list-item values under topics/tags/keywords are also YAML and break on a leading backtick; (5) image alt-text '![alt]' (alt-text does not render in monotype); (6) link-reference definitions '[name]: url "title"'; (7) project copyright header comment blocks. Dry-run output never catches YAML or multi-line span breakage; validation MUST include a parser-level check (make site for YAML, post-grep for '``name`' double-backtick patterns near the wrapped token).
+
+**Application**: When designing any future programmatic sweep across docs/ (typography passes, internationalization, brand renames, em-dash replacement, link-text rewrites): (1) implement the full skip set above, not a subset; (2) for fence detection use '^\\s*```', not '^```'; (3) for the frontmatter, detect the entire block between '---' delimiters, not specific keys; (4) for multi-line inline-code, choose between cross-line backtick-pair tracking (complex but correct) or the simpler 'unclosed backtick protects rest of line' heuristic (corrupts ~1 per 100 files but recoverable manually); (5) ALWAYS validate post-sweep with 'make site' (zensical surfaces YAML errors) and a grep for '``\\w' double-backtick patterns near the wrapped token; (6) commit only after both validations are clean. For one-shot sweeps the script can be ad-hoc, but record the validation gate as part of the commit message so the next contributor knows what to check.
 
 ---
 

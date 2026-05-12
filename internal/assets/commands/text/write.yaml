@@ -953,6 +953,8 @@ write.steering-body-product:
   short: |-
     # Product Context
 
+    <!-- remove this after you edit the steering file !-->
+
     Describe the product, its goals, and target users.
 
     - **What is this project?**
@@ -964,6 +966,8 @@ write.steering-body-tech:
   short: |-
     # Technology Stack
 
+    <!-- remove this after you edit the steering file !-->
+
     Describe the technology stack, constraints, and key dependencies.
 
     - **Languages and versions**
@@ -974,6 +978,8 @@ write.steering-body-tech:
 write.steering-body-structure:
   short: |-
     # Project Structure
+
+    <!-- remove this after you edit the steering file !-->
 
     Describe the project layout and directory conventions.
 
@@ -1046,6 +1052,8 @@ write.claudecheck-version-close:
 write.steering-body-workflow:
   short: |-
     # Development Workflow
+
+    <!-- remove this after you edit the steering file !-->
 
     Describe the development workflow, branching strategy, and process rules.
 

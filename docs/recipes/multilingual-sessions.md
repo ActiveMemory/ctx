@@ -18,7 +18,7 @@ might use headers like `# Oturum: 2026-01-15 - API Düzeltme` (Turkish)
 or `# セッション: 2026-01-15 - テスト` (Japanese) instead of
 `# Session: 2026-01-15 - Fix API`.
 
-By default, ctx only recognizes `Session:` as a session header prefix.
+By default, `ctx` only recognizes `Session:` as a session header prefix.
 Files with other prefixes are silently skipped during journal import and
 journal generation: They look like regular Markdown, not sessions.
 
@@ -47,7 +47,7 @@ header that starts with a known prefix followed by a date:
 ```
 
 The list of recognized prefixes comes from `session_prefixes` in
-`.ctxrc`. When the key is absent or empty, ctx falls back to the
+`.ctxrc`. When the key is absent or empty, `ctx` falls back to the
 built-in default: `["Session:"]`.
 
 Date-only headers (`# 2026-01-15 - Morning Work`) are always recognized
@@ -104,7 +104,7 @@ prefixes should appear in the output.
 ## What This Does NOT Do
 
 - **Change the interface language**: `ctx` output is always English.
-  This setting only controls which session files ctx can *parse*.
+  This setting only controls which session files `ctx` can *parse*.
 - **Generate headers**: `ctx` never writes session headers. The prefix
   list is recognition-only (input, not output).
 - **Affect JSONL sessions**: Claude Code JSONL transcripts don't use

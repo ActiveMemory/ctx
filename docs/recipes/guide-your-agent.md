@@ -45,7 +45,7 @@ showing these natural-language patterns.
 
 ## Next Up
 
-**[Setup Across AI Tools →](multi-tool-setup.md)**: Initialize ctx
+**[Setup Across AI Tools →](multi-tool-setup.md)**: Initialize `ctx`
 and configure hooks for Claude Code, OpenCode, Cursor, Aider, Copilot, or
 Windsurf.
 

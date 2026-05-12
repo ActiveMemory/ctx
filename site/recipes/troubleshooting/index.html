@@ -2353,7 +2353,7 @@ day-to-day commands.</p>
 <p>See <a href="../activating-context/">Activating a Context Directory</a> for the
 full recipe (one-shot <code>CTX_DIR=...</code> inline form, CI patterns, direnv
 setup).</p>
-<h3 id="ctx-not-initialized">"ctx: Not Initialized"<a class="headerlink" href="#ctx-not-initialized" title="Permanent link">&para;</a></h3>
+<h3 id="ctx-not-initialized">"<code>ctx</code>: Not Initialized"<a class="headerlink" href="#ctx-not-initialized" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: After declaring <code>CTX_DIR</code>, the command fails with
 <code>ctx: not initialized - run "ctx init" first</code>.</p>
 <p><strong>Cause</strong>: The declared directory exists but hasn't been initialized
@@ -2506,7 +2506,7 @@ contrary to <code>CONSTITUTION.md</code> rules.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Event logging</strong> (<em>optional but recommended</em>): <code>event_log: true</code> in <code>.ctxrc</code></li>
-<li><strong>ctx initialized</strong>: <code>ctx init</code></li>
+<li><strong><code>ctx</code> initialized</strong>: <code>ctx init</code></li>
 </ul>
 <p>Event logging is not required for <code>ctx doctor</code> or <code>/ctx-doctor</code> to work. Both
 degrade gracefully: structural checks run regardless, and the skill notes when

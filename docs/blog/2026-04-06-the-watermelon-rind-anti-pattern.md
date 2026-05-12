@@ -42,7 +42,7 @@ dashboards passing, reality crumbling.
 
 Both halves of this metaphor showed up in a single experiment. And
 the result changed how we design architecture analysis in
-[ctx][ctx].
+[`ctx`][`ctx`].
 
 [ctx]: https://ctx.ist
 
@@ -230,7 +230,7 @@ autocomplete.
 
 ---
 
-*This post is part of the [ctx field notes][blog] series,
+*This post is part of the [`ctx` field notes][blog] series,
 documenting what we learn building persistent context
 infrastructure for AI coding sessions.*
 

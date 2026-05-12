@@ -1946,13 +1946,13 @@
 <p>Every OpenCode session starts from zero. You re-explain your architecture,
 the AI repeats mistakes it made yesterday, and decisions get rediscovered
 instead of remembered.</p>
-<p><strong>Without ctx:</strong></p>
+<p><strong>Without <code>ctx</code>:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&gt; &quot;Add the validation middleware we discussed&quot;
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>I don&#39;t have context about previous discussions. Could you describe
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>what validation middleware you&#39;re referring to?
 </span></code></pre></div>
-<p><strong>With ctx:</strong></p>
+<p><strong>With <code>ctx</code>:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&gt; &quot;Add the validation middleware we discussed&quot;
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Yes — from the Jan 15 session. You decided on Zod schemas at the
@@ -1969,7 +1969,7 @@ then run from your project root:</p>
 <p>This does three things:</p>
 <ol>
 <li><strong><code>ctx setup opencode --write</code></strong> — generates the project-local OpenCode plugin,
-   skills, and <code>AGENTS.md</code>, then merges the ctx MCP server into OpenCode's
+   skills, and <code>AGENTS.md</code>, then merges the <code>ctx</code> MCP server into OpenCode's
    global config (<code>~/.config/opencode/opencode.json</code> or
    <code>$OPENCODE_HOME/opencode.json</code>). This writes outside the project root
    because non-interactive shells (like MCP subprocesses) cannot discover
@@ -2022,7 +2022,7 @@ do anything — it just works.</p>
 <tr>
 <td>New session</td>
 <td><code>session.created</code></td>
-<td>Warms ctx state in the background (bootstrap + agent packet) so MCP queries are fast on first use</td>
+<td>Warms <code>ctx</code> state in the background (bootstrap + agent packet) so MCP queries are fast on first use</td>
 </tr>
 <tr>
 <td>Agent idle</td>
@@ -2060,7 +2060,7 @@ demand, even though the original messages are gone.</p>
 <p>When your conversation exceeds the context window, OpenCode runs a
 compaction pass (you can trigger one manually with <code>/compact</code>). The
 compaction agent summarizes older messages and drops the originals. Without
-ctx, all accumulated knowledge disappears. With ctx, the plugin intercepts
+<code>ctx</code>, all accumulated knowledge disappears. With <code>ctx</code>, the plugin intercepts
 the <code>experimental.session.compacting</code> event and appends <code>ctx system bootstrap</code>
 output (context directory path and file inventory) into the compaction
 context. The result: the compressed summary retains the breadcrumbs the
@@ -2102,7 +2102,7 @@ unnecessary.</p>
 <p>You don't need to use these often. The plugin handles most context loading
 automatically. These are for when you want explicit control.</p>
 <h2 id="mcp-tools">MCP Tools<a class="headerlink" href="#mcp-tools" title="Permanent link">&para;</a></h2>
-<p>The ctx MCP server exposes tools directly to the agent. These let the AI
+<p>The <code>ctx</code> MCP server exposes tools directly to the agent. These let the AI
 read and write your context files without shell commands:</p>
 <table>
 <thead>
@@ -2168,7 +2168,7 @@ read and write your context files without shell commands:</p>
 </table>
 <p>You don't invoke these yourself. The agent uses them as needed.</p>
 <h2 id="refreshing-the-integration">Refreshing the Integration<a class="headerlink" href="#refreshing-the-integration" title="Permanent link">&para;</a></h2>
-<p>If you re-run <code>ctx setup opencode --write</code> (e.g., after updating ctx), the
+<p>If you re-run <code>ctx setup opencode --write</code> (e.g., after updating <code>ctx</code>), the
 plugin and skills are rewritten in place. <strong>Restart OpenCode to pick up the
 refreshed plugin</strong> — OpenCode only loads plugins at launch, not mid-session.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>

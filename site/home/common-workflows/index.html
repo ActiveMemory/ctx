@@ -2290,8 +2290,8 @@ inside your coding assistant.</p>
 <thead>
 <tr>
 <th></th>
-<th>ctx CLI command</th>
-<th>ctx AI skill</th>
+<th><code>ctx</code> CLI command</th>
+<th><code>ctx</code> AI skill</th>
 </tr>
 </thead>
 <tbody>
@@ -2323,7 +2323,7 @@ inside your coding assistant.</p>
 </tbody>
 </table>
 <!-- drift-check: diff <(ls internal/assets/claude/skills/ | sort) <(sed -n '/Paired Commands/,/CLI-Only Commands/p' docs/home/common-workflows.md | grep -oP 'ctx-[a-z-]+' | sort -u) -->
-<!-- drift-check: diff <(ctx --help 2>&1 | sed -n '/Available Commands/,/Flags/p' | grep -oP '^\s+\K\w+' | sort) <(sed -n '/CLI-Only Commands/,/Rule of Thumb/p' docs/home/common-workflows.md | grep -oP 'ctx \K[a-z]+' | sort -u) -->
+<!-- drift-check: diff <(`ctx` --help 2>&1 | sed -n '/Available Commands/,/Flags/p' | grep -oP '^\s+\K\w+' | sort) <(sed -n '/CLI-Only Commands/,/Rule of Thumb/p' docs/home/common-workflows.md | grep -oP '`ctx` \K[a-z]+' | sort -u) -->
 
 <h3 id="paired-commands">Paired Commands<a class="headerlink" href="#paired-commands" title="Permanent link">&para;</a></h3>
 <p>These have both a CLI and a skill counterpart. Use the CLI for
@@ -2571,7 +2571,7 @@ agent's judgment.</p>
 </tr>
 <tr>
 <td><code>ctx why</code></td>
-<td>Read the philosophy behind ctx</td>
+<td>Read the philosophy behind <code>ctx</code></td>
 </tr>
 <tr>
 <td><code>ctx guide</code></td>

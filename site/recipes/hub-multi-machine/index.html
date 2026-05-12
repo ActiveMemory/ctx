@@ -2066,12 +2066,12 @@ fan-out inbox both live under <code>.context/</code>), so you have to tell
 <p>Each registration exchanges the admin token for a <strong>per-project
 client token</strong>. Only the client token is persisted in
 <code>.context/.connect.enc</code>, encrypted with the same AES-256-GCM scheme
-ctx uses for notification credentials.</p>
+<code>ctx</code> uses for notification credentials.</p>
 <h2 id="step-5-verify">Step 5: Verify<a class="headerlink" href="#step-5-verify" title="Permanent link">&para;</a></h2>
 <p>From either workstation:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>connection<span class="w"> </span>status
 </span></code></pre></div>
-<p>You should see the ctx Hub address, role (<code>leader</code> for single-node),
+<p>You should see the <code>ctx</code> Hub address, role (<code>leader</code> for single-node),
 subscription filters, and the sequence number you're synced to.</p>
 <h2 id="tls-recommended">TLS (Recommended)<a class="headerlink" href="#tls-recommended" title="Permanent link">&para;</a></h2>
 <p>For anything beyond a trusted home LAN, terminate TLS in front of

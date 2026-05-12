@@ -2161,7 +2161,7 @@ keep it clean.</p>
 <tbody>
 <tr>
 <td><code>ctx init</code></td>
-<td>Populates default ctx permissions</td>
+<td>Populates default <code>ctx</code> permissions</td>
 </tr>
 <tr>
 <td><code>/ctx-drift</code></td>
@@ -2176,7 +2176,7 @@ keep it clean.</p>
 <h2 id="recommended-defaults">Recommended Defaults<a class="headerlink" href="#recommended-defaults" title="Permanent link">&para;</a></h2>
 <p>After running <code>ctx init</code>, your <code>settings.local.json</code> will have the <code>ctx</code>
 defaults pre-populated. Here is an opinionated safe starting point for a Go
-project using ctx:</p>
+project using <code>ctx</code>:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;allow&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2267,7 +2267,7 @@ without re-prompting.</p>
 commands (<code>git log</code>, <code>git status</code>) and destructive ones (<code>git reset --hard</code>,
 <code>git clean -f</code>). Listing safe commands individually prevents accidentally
 pre-approving dangerous ones.</p>
-<p><strong>Pre-approve all <code>ctx-</code> skills</strong>: Skills shipped with ctx (<code>Skill(ctx-*)</code>) are
+<p><strong>Pre-approve all <code>ctx-</code> skills</strong>: Skills shipped with <code>ctx</code> (<code>Skill(ctx-*)</code>) are
 safe to pre-approve. They are part of your project and you control their
 content. This prevents the agent from prompting on every skill invocation.</p>
 <h3 id="default-deny-rules">Default Deny Rules<a class="headerlink" href="#default-deny-rules" title="Permanent link">&para;</a></h3>
@@ -2376,7 +2376,7 @@ pattern always prompts the user, even if it also matches an allow entry.</p>
 <h2 id="hooks-regex-safety-net">Hooks: Regex Safety Net<a class="headerlink" href="#hooks-regex-safety-net" title="Permanent link">&para;</a></h2>
 <p>Deny rules handle prefix-based blocking natively. Hooks complement them by
 catching patterns that require regex matching: Things deny rules can't express.</p>
-<p>The ctx plugin ships these blocking hooks:</p>
+<p>The <code>ctx</code> plugin ships these blocking hooks:</p>
 <table>
 <thead>
 <tr>
@@ -2387,7 +2387,7 @@ catching patterns that require regex matching: Things deny rules can't express.<
 <tbody>
 <tr>
 <td><code>ctx system block-non-path-ctx</code></td>
-<td>Running ctx from wrong path</td>
+<td>Running <code>ctx</code> from wrong path</td>
 </tr>
 </tbody>
 </table>
@@ -2402,7 +2402,7 @@ catching patterns that require regex matching: Things deny rules can't express.<
 <tbody>
 <tr>
 <td><code>block-dangerous-commands.sh</code></td>
-<td>Mid-command <code>sudo</code>/<code>git push</code> (after <code>&amp;&amp;</code>), copies to bin dirs, absolute-path ctx</td>
+<td>Mid-command <code>sudo</code>/<code>git push</code> (after <code>&amp;&amp;</code>), copies to bin dirs, absolute-path <code>ctx</code></td>
 </tr>
 </tbody>
 </table>
@@ -2480,7 +2480,7 @@ build/test tooling:</p>
 permission baselines for reproducible setups.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../multi-tool-setup/">Setting Up ctx Across AI Tools</a>: full setup recipe
+<li><a href="../multi-tool-setup/">Setting Up <code>ctx</code> Across AI Tools</a>: full setup recipe
   including <code>settings.local.json</code> creation</li>
 <li><a href="../context-health/">Context Health</a>: keeping <code>.context/</code> files accurate</li>
 <li><a href="../../operations/runbooks/sanitize-permissions/">Sanitize Permissions runbook</a>:

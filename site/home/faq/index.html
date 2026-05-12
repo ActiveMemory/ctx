@@ -1799,7 +1799,7 @@ terminal, a browser, or a code review. There's no schema to learn, no
 binary format to decode, no vendor lock-in. You can inspect your
 context with <code>cat</code>, diff it with <code>git diff</code>, and review it in a PR.</p>
 <h2 id="does-ctx-work-offline">Does <code>ctx</code> Work Offline?<a class="headerlink" href="#does-ctx-work-offline" title="Permanent link">&para;</a></h2>
-<p>Yes. ctx is completely local. It reads and writes files on disk,
+<p>Yes. <code>ctx</code> is completely local. It reads and writes files on disk,
 generates context packets from local state, and requires no network
 access. The only feature that touches the network is the optional
 <a href="../../recipes/webhook-notifications/">webhook notifications</a> hook,
@@ -1831,7 +1831,7 @@ variable:</p>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span>
 </span></code></pre></div>
 <p>Higher budgets include more context but cost more tokens per request.
-Lower budgets force sharper prioritization: ctx drops lower-priority
+Lower budgets force sharper prioritization: <code>ctx</code> drops lower-priority
 content first, so CONSTITUTION and TASKS always make the cut.</p>
 <p>See <a href="../configuration/">Configuration</a> for all available settings.</p>
 <h2 id="why-not-a-database">Why Not a Database?<a class="headerlink" href="#why-not-a-database" title="Permanent link">&para;</a></h2>
@@ -1845,9 +1845,9 @@ and portable as the code it describes.</p>
 <p>Yes. <code>ctx agent</code> outputs a context packet that any AI tool can
 consume: paste it into ChatGPT, Cursor, Copilot, Aider, or anything
 else that accepts text input.</p>
-<p>Claude Code gets first-class integration via the ctx plugin (hooks,
+<p>Claude Code gets first-class integration via the <code>ctx</code> plugin (hooks,
 skills, automatic context loading). VS Code Copilot Chat has a
-dedicated ctx extension. Other tools integrate via generated
+dedicated <code>ctx</code> extension. Other tools integrate via generated
 instruction files or manual pasting.</p>
 <p>See <a href="../../operations/integrations/">Integrations</a> for tool-specific
 setup, including the <a href="../../recipes/multi-tool-setup/">multi-tool recipe</a>.</p>
@@ -1857,7 +1857,7 @@ template files. Start recording decisions, tasks, and conventions as
 you work. Context grows naturally; you don't need to backfill
 everything on day one.</p>
 <p>See <a href="../getting-started/">Getting Started</a> for the full setup flow,
-or <a href="../joining-a-project/">Joining a ctx Project</a> if someone else
+or <a href="../joining-a-project/">Joining a <code>ctx</code> Project</a> if someone else
 already initialized it.</p>
 <h2 id="what-happens-when-context-files-get-too-big">What Happens When Context Files Get Too Big?<a class="headerlink" href="#what-happens-when-context-files-get-too-big" title="Permanent link">&para;</a></h2>
 <p>Token budgeting handles this automatically. <code>ctx agent</code> prioritizes

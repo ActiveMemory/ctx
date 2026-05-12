@@ -391,7 +391,7 @@ Often they **don't**.
 But the repository (*the place where the project actually lives*)
 has nowhere for that knowledge to go.
 
-That missing layer is what [ctx][ctx-site] builds: a version-controlled, 
+That missing layer is what [`ctx`][ctx-site] builds: a version-controlled, 
 structured knowledge layer that lives in `.context/` alongside your code and 
 travels wherever your repository travels.
 

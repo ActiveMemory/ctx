@@ -54,7 +54,7 @@ shell rc, or source a per-project `.envrc` with direnv.
 
 The single-source-anchor contract states that
 `filepath.Dir(CTX_DIR)` is the project root. When the context
-lives outside the project tree, ctx still resolves correctly for
+lives outside the project tree, `ctx` still resolves correctly for
 every operation that reads or writes inside `.context/`. But any
 operation that scans the **codebase** scans the wrong tree, and
 does so silently:
@@ -123,7 +123,7 @@ cd ~/repos/myproject-context
 git init
 ```
 
-### Step 2: Initialize ctx Pointing at It
+### Step 2: Initialize `ctx` Pointing at It
 
 From your project root, declare `CTX_DIR` pointing to the external
 location, then initialize:
@@ -324,11 +324,11 @@ Agent: [reads CTX_DIR, loads context from the external dir]
 ## Next Up
 
 **[The Complete Session →](session-lifecycle.md)**: Walk through a
-full ctx session from start to finish.
+full `ctx` session from start to finish.
 
 ## See Also
 
-* [Setting Up ctx Across AI Tools](multi-tool-setup.md): initial setup recipe
+* [Setting Up `ctx` Across AI Tools](multi-tool-setup.md): initial setup recipe
 * [Syncing Scratchpad Notes Across Machines](scratchpad-sync.md): distribute
   encryption keys when context is shared
 * [CLI Reference](../cli/index.md): full command list and global options

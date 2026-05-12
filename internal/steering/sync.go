@@ -66,6 +66,11 @@ func SyncTool(
 			continue
 		}
 
+		if HasTombstone(sf.Body) {
+			report.Skipped = append(report.Skipped, sf.Name)
+			continue
+		}
+
 		outPath := nativePath(projectRoot, tool, sf.Name)
 
 		if validateErr := validateOutputPath(
@@ -153,6 +158,9 @@ func StaleFiles(steeringDir, projectRoot, tool string) []string {
 	var stale []string
 	for _, sf := range files {
 		if !matchTool(sf, tool) {
+			continue
+		}
+		if HasTombstone(sf.Body) {
 			continue
 		}
 		outPath := nativePath(projectRoot, tool, sf.Name)

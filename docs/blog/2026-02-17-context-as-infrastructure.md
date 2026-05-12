@@ -111,7 +111,7 @@ it is **maintained as persistent files** in a `.context/` directory:
 This is not a novel idea. It is the same idea behind every piece of
 infrastructure software engineers already use:
 
-| Traditional Infrastructure | ctx Equivalent              |
+| Traditional Infrastructure | `ctx` Equivalent              |
 |----------------------------|-----------------------------|
 | Database                   | `.context/*.md` files       |
 | Configuration files        | `CONSTITUTION.md`           |
@@ -434,7 +434,7 @@ And the practices that keep it all **honest**:
 *This post synthesizes ideas from across the `ctx` blog series: the
 attention budget primitive, the two-tier persistence model, the IDE
 decision, and the progressive disclosure pattern. The principles are
-drawn from three weeks of building ctx and 70+ sessions of treating
+drawn from three weeks of building `ctx` and 70+ sessions of treating
 context as infrastructure rather than conversation.*
 
 *See also: [When a System Starts Explaining Itself](2026-02-17-when-a-system-starts-explaining-itself.md):

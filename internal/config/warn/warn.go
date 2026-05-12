@@ -104,6 +104,16 @@ const (
 	// explains why the state directory resolution went sideways
 	// before the caller surfaces an empty-path error.
 	StateDirProbe = "probe state dir: %v"
+
+	// SteeringUnfilled is the stderr format for steering files
+	// that still carry the cfgSteering.Tombstone placeholder
+	// marker. The file is skipped on every load path (agent
+	// context packet, MCP ctx_steering_get, sync to Cursor /
+	// Cline / Kiro). The warning is the breadcrumb that tells
+	// the user a scaffolded steering file is silently inert
+	// until the tombstone line is removed.
+	SteeringUnfilled = "skipping unfilled steering file %s " +
+		"(remove the tombstone line to activate)"
 )
 
 // Warn context identifiers for index generation.

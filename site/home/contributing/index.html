@@ -2590,7 +2590,7 @@ never distributed to users.</p>
 </tbody>
 </table>
 <p>Six skills previously in this list have been promoted to bundled plugin skills
-and are now available to all ctx users: <code>/ctx-brainstorm</code>, <code>/ctx-link-check</code>,
+and are now available to all <code>ctx</code> users: <code>/ctx-brainstorm</code>, <code>/ctx-link-check</code>,
 <code>/ctx-permission-sanitize</code>, <code>/ctx-skill-create</code>, <code>/ctx-spec</code>.</p>
 <hr />
 <h2 id="how-to-add-things">How to Add Things<a class="headerlink" href="#how-to-add-things" title="Permanent link">&para;</a></h2>
@@ -2617,7 +2617,7 @@ and are now available to all ctx users: <code>/ctx-brainstorm</code>, <code>/ctx
 <p>Pattern to follow: <code>internal/cli/pad/pad.go</code> (parent with subcommands) or
 <code>internal/cli/drift/</code> (single command).</p>
 <h3 id="package-taxonomy">Package Taxonomy<a class="headerlink" href="#package-taxonomy" title="Permanent link">&para;</a></h3>
-<p>ctx separates concerns into a strict package taxonomy. Knowing where
+<p><code>ctx</code> separates concerns into a strict package taxonomy. Knowing where
 things go prevents code review friction and keeps the AST lint tests
 happy.</p>
 <h4 id="output-internalwrite">Output: <code>internal/write/</code><a class="headerlink" href="#output-internalwrite" title="Permanent link">&para;</a></h4>
@@ -2784,7 +2784,7 @@ is gitignored and swapped between them:</p>
 </tr>
 </tbody>
 </table>
-<p>Use ctx commands to switch:</p>
+<p>Use <code>ctx</code> commands to switch:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>dev<span class="w">      </span><span class="c1"># switch to dev profile</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>base<span class="w">     </span><span class="c1"># switch to base profile</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ctx<span class="w"> </span>config<span class="w"> </span>status<span class="w">          </span><span class="c1"># show which profile is active</span>

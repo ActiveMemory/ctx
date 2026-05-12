@@ -27,7 +27,7 @@ Also, several `ctx` features (*journal changelog, blog generation*) also use
 
 Every setup starts with **the `ctx` binary**: the CLI tool itself.
 
-If you use **Claude Code**, you also install the **ctx plugin**, which
+If you use **Claude Code**, you also install the **`ctx` plugin**, which
 adds hooks (context autoloading, persistence nudges) and 25+ `/ctx-*`
 skills. For other AI tools, `ctx` integrates via generated instruction
 files or manual context pasting: see
@@ -198,37 +198,59 @@ ctx init
 This creates a `.context/` directory with template files and an
 encryption key at `~/.ctx/` for the
 [encrypted scratchpad](../reference/scratchpad.md).
-For Claude Code, install the [ctx plugin](../operations/integrations.md#claude-code-full-integration)
+For Claude Code, install the [`ctx` plugin](../operations/integrations.md#claude-code-full-integration)
 for automatic hooks and skills.
 
-**`ctx init` also scaffolds four *foundation steering files*** in
-`.context/steering/`; these are behavioral-rule templates that
-tell your AI how to act on your project:
+`ctx init` also scaffolds four **foundation steering files** in
+`.context/steering/` — `product.md`, `tech.md`, `structure.md`,
+`workflow.md`. **They are placeholders until you customize
+them** (see the next step); skipping that step has consequences,
+so it is broken out as its own numbered beat rather than
+buried here.
 
-| File            | What it captures                                   |
-|-----------------|-----------------------------------------------------|
-| `product.md`    | Product context, goals, and target users           |
-| `tech.md`       | Technology stack, constraints, key dependencies    |
-| `structure.md`  | Project structure and directory conventions        |
-| `workflow.md`   | Development workflow and process rules             |
+### 2. Customize Your Steering Files
 
-Each file starts with a self-documenting HTML comment
-explaining the three inclusion modes (`always` / `auto` /
-`manual`), priority, and tool scoping. The defaults are set
-to `inclusion: always` and `priority: 10`, so they fire on
-every AI tool call until you edit them.
+Steering files are **behavioral rules prepended to every AI
+prompt** — the layer that tells your AI *how to act* on this
+specific project. They are distinct from decisions (*what* was
+chosen) and conventions (*how* the codebase is written); see
+[`ctx` for Steering Files](../recipes/steering.md) for the full
+model.
 
-**You should open each of these files and replace the
-placeholder content with your project's actual rules.**
-Running `ctx init` again won't clobber your edits; existing
-files are left alone. To opt out entirely, use
-`ctx init --no-steering-init`.
+`ctx init` scaffolded four foundation files; open each and
+fill it in:
 
-See [Writing Steering Files](../recipes/steering.md) for the
-full walkthrough, or [`ctx steering`](../cli/steering.md) for
-the command reference.
+| File            | What to fill in                                        |
+|-----------------|--------------------------------------------------------|
+| `product.md`    | What the project is, who uses it, what's out of scope  |
+| `tech.md`       | Languages, frameworks, runtime, hard constraints       |
+| `structure.md`  | Directory layout, where new files go, naming rules     |
+| `workflow.md`   | Branch strategy, commit conventions, pre-commit checks |
 
-### 2. Activate the Project
+Each scaffolded file ships with a **tombstone marker** line
+(`<!-- remove this after you edit the steering file !-->`).
+**As long as the marker is present, the file is silently
+skipped** on every load path: the agent context packet, MCP
+`ctx_steering_get`, and native-tool sync (Cursor / Cline /
+Kiro). The skip is deliberate — injecting unfilled placeholders
+into AI prompts is worse than no steering at all, because the
+AI tries to follow "Describe the product..." as if it were a
+rule.
+
+**Replace each file's body with real content, then delete the
+tombstone line.** When the line is gone, the file becomes
+active on the next AI tool call.
+
+Don't want steering at all? Pass `--no-steering-init` to
+`ctx init` to skip the scaffold entirely. Existing edits are
+never clobbered by re-running `ctx init`.
+
+Inclusion modes (`always` / `auto` / `manual`), priority, and
+tool scoping are covered in
+[Writing Steering Files](../recipes/steering.md) and
+[`ctx steering`](../cli/steering.md).
+
+### 3. Activate the Project
 
 Tell `ctx` which `.context/` directory the rest of these commands
 should use:
@@ -243,7 +265,7 @@ users can wire it into `.envrc` and forget about it. For more
 options (multiple `.context/` directories, scripts, CI), see
 [Activating a Context Directory](../recipes/activating-context.md).
 
-### 3. Check Status
+### 4. Check Status
 
 ```bash
 ctx status
@@ -251,13 +273,13 @@ ctx status
 
 Shows context summary: files present, token estimate, and recent activity.
 
-### 4. Start Using with AI
+### 5. Start Using with AI
 
 With Claude Code (*and the `ctx` plugin installed*), context loads automatically
 via hooks.
 
 With **VS Code Copilot Chat**, install the
-[ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx) and use
+[`ctx` extension](../operations/integrations.md#vs-code-chat-extension-ctx) and use
 `@ctx /status`, `@ctx /agent`, and other slash commands directly in chat.
 Run `ctx setup copilot --write` to generate `.github/copilot-instructions.md`
 for automatic context loading.
@@ -268,7 +290,7 @@ For other tools, paste the output of:
 ctx agent --budget 8000
 ```
 
-### 4B. Set Up for Your AI Tool
+### 5B. Set Up for Your AI Tool
 
 If you use an MCP-compatible tool, generate the integration config
 with `ctx setup`:
@@ -294,20 +316,20 @@ with `ctx setup`:
     # Creates .vscode/mcp.json and syncs steering files
     ```
 
-This registers the ctx MCP server and syncs any
+This registers the `ctx` MCP server and syncs any
 [steering files](../cli/steering.md) into the tool's
 native format. Re-run after adding or changing steering files.
 
-### 5. Verify It Works
+### 6. Verify It Works
 
 Ask your AI: **"Do you remember?"**
 
 It should cite specific context: current tasks, recent decisions,
 or previous session topics.
 
-### 6. Set Up Companion Tools (Highly Recommended)
+### 7. Set Up Companion Tools (Highly Recommended)
 
-ctx works on its own, but two companion MCP servers unlock significantly
+`ctx` works on its own, but two companion MCP servers unlock significantly
 better agent behavior. The investment is small and the benefits compound
 over sessions:
 

@@ -2062,7 +2062,7 @@ This recipe assumes you already know you want the feature.</p>
 <p>By the end, you will have:</p>
 <ol>
 <li>A local hub process running on port <code>9900</code>.</li>
-<li>Two project directories both registered with the ctx Hub.</li>
+<li>Two project directories both registered with the <code>ctx</code> Hub.</li>
 <li>A decision published from project <code>alpha</code> that appears
    automatically in project <code>beta</code>'s <code>.context/hub/</code> and in
    <code>ctx agent --include-hub</code> output.</li>
@@ -2119,7 +2119,7 @@ in the project.</p>
 <p>Only the entry types you subscribe to will be delivered by <code>sync</code>
 and <code>listen</code>.</p>
 <h2 id="step-4-publish-a-decision">Step 4: Publish a Decision<a class="headerlink" href="#step-4-publish-a-decision" title="Permanent link">&para;</a></h2>
-<p>Either use <code>ctx add --share</code> to write locally <em>and</em> push to the ctx Hub:</p>
+<p>Either use <code>ctx add --share</code> to write locally <em>and</em> push to the <code>ctx</code> Hub:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Use UTC timestamps everywhere&quot;</span><span class="w"> </span>--share<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;We had timezone drift between the API and journal&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;Single source of truth avoids conversion bugs&quot;</span><span class="w"> </span><span class="se">\</span>

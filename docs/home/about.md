@@ -67,7 +67,7 @@ Without persistent memory, every session starts at zero.
 
 `ctx` gives your AI a memory that persists across sessions:
 
-=== "Without ctx"
+=== "Without `ctx`"
 
     ```text
     Session 12: Monday morning
@@ -86,7 +86,7 @@ Without persistent memory, every session starts at zero.
     20 minutes spent restoring decisions that already exist.
     ```
 
-=== "With ctx"
+=== "With `ctx`"
 
     ```text
     Session 12: Monday morning

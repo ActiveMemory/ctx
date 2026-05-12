@@ -2115,14 +2115,14 @@ Go service you'll ever write, not just this one. So:</p>
 <ol>
 <li>Writes the learning to <code>api/.context/LEARNINGS.md</code>
    locally (as a normal <code>ctx learning add</code> would).</li>
-<li>Publishes the same entry to the ctx Hub, which stores it
+<li>Publishes the same entry to the <code>ctx</code> Hub, which stores it
    in the append-only JSONL and fans it out to every
    subscribed client.</li>
 </ol>
 <p>Within seconds, <code>cli/.context/hub/learnings.md</code> and
 <code>dotfiles/.context/hub/learnings.md</code> both contain a copy
 of this learning (the <code>ctx connection listen</code> daemon picks
-it up from the ctx Hub's Listen stream).</p>
+it up from the <code>ctx</code> Hub's Listen stream).</p>
 <h3 id="1200-you-switch-to-cli">12:00 - You Switch to <code>cli</code><a class="headerlink" href="#1200-you-switch-to-cli" title="Permanent link">&para;</a></h3>
 <p><code>cd ~/projects/cli</code>, open a new session. The agent
 packet for <code>cli</code> now includes <strong>the learning you just

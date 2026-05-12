@@ -11,7 +11,7 @@ Stories, insights, and lessons learned from **building** and **using** `ctx`.
 
 ## Releases
 
-### [ctx v0.8.0: The Architecture Release](2026-03-23-ctx-v0.8.0-the-architecture-release.md)
+### [`ctx` v0.8.0: The Architecture Release](2026-03-23-ctx-v0.8.0-the-architecture-release.md)
 
 *March 23, 2026*: 374 commits, 1,708 Go files touched, and a near-complete
 architectural overhaul. Every CLI package restructured into `cmd/ + core/`
@@ -97,11 +97,11 @@ persistence, design philosophy
 
 *February 3, 2026*: Every token you send to an AI consumes a finite
 resource: the **attention budget**. Understanding this constraint shaped every
-design decision in ctx: hierarchical file structure, explicit budgets,
+design decision in `ctx`: hierarchical file structure, explicit budgets,
 progressive disclosure, and filesystem-as-index.
 
 **Topics**: attention mechanics, context engineering, progressive disclosure,
-ctx primitives, token budgets
+`ctx` primitives, token budgets
 
 ---
 
@@ -295,9 +295,9 @@ infrastructure decisions, context engineering
 
 ## Releases
 
-### [ctx v0.6.0: The Integration Release](2026-02-16-ctx-v0.6.0-the-integration-release.md)
+### [`ctx` v0.6.0: The Integration Release](2026-02-16-ctx-v0.6.0-the-integration-release.md)
 
-*February 16, 2026*: ctx is now a Claude Marketplace plugin. Two commands,
+*February 16, 2026*: `ctx` is now a Claude Marketplace plugin. Two commands,
 no build step, no shell scripts. v0.6.0 replaces six Bash hook scripts with
 compiled Go subcommands and ships 25+ Skills as a **plugin**.
 
@@ -306,7 +306,7 @@ security hardening
 
 ---
 
-### [ctx v0.3.0: The Discipline Release](2026-02-15-ctx-v0.3.0-the-discipline-release.md)
+### [`ctx` v0.3.0: The Discipline Release](2026-02-15-ctx-v0.3.0-the-discipline-release.md)
 
 *February 15, 2026*: No new headline feature. Just 35+ documentation and
 quality commits against ~15 feature commits. What a release looks like when
@@ -317,7 +317,7 @@ E/A/R framework
 
 ---
 
-### [ctx v0.2.0: The Archaeology Release](2026-02-01-ctx-v0.2.0-the-archaeology-release.md)
+### [`ctx` v0.2.0: The Archaeology Release](2026-02-01-ctx-v0.2.0-the-archaeology-release.md)
 
 *February 1, 2026*: What if your AI could remember everything? Not just
 the current session, but every session. `ctx` v0.2.0 introduces the recall
@@ -328,7 +328,7 @@ meta-tools
 
 ---
 
-### [Building ctx Using ctx: A Meta-Experiment in AI-Assisted Development](2026-01-27-building-ctx-using-ctx.md)
+### [Building `ctx` Using `ctx`: A Meta-Experiment in AI-Assisted Development](2026-01-27-building-ctx-using-ctx.md)
 
 *January 27, 2026*: What happens when you build a tool designed to give AI
 memory, using that very same tool to remember what you're building? This is

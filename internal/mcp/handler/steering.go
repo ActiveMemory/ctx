@@ -16,9 +16,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/steering"
 )
@@ -50,12 +52,25 @@ func SteeringGet(_ *entity.MCPDeps, prompt string) (string, error) {
 
 	filtered := steering.Filter(files, prompt, nil, "")
 
-	if len(filtered) == 0 {
+	// Drop placeholder files (those still carrying the
+	// tombstone). The MCP path runs as a subprocess; warnings
+	// go to stderr where the host AI tool surfaces them in
+	// its MCP server logs.
+	active := filtered[:0]
+	for _, sf := range filtered {
+		if steering.HasTombstone(sf.Body) {
+			warn.Warn(cfgWarn.SteeringUnfilled, sf.Path)
+			continue
+		}
+		active = append(active, sf)
+	}
+
+	if len(active) == 0 {
 		return desc.Text(text.DescKeyMCPSteeringNoMatch), nil
 	}
 
 	var sb strings.Builder
-	for _, sf := range filtered {
+	for _, sf := range active {
 		ctxIo.SafeFprintf(&sb,
 			desc.Text(text.DescKeyMCPSteeringSection),
 			sf.Name, sf.Body)

@@ -13,7 +13,7 @@ icon: lucide/settings
 
 ## Configuration
 
-ctx uses three layers of configuration. Each layer overrides the one below it:
+`ctx` uses three layers of configuration. Each layer overrides the one below it:
 
 1. **CLI flags**: Per-invocation overrides (*highest priority*)
 2. **Environment variables**: Shell or CI/CD overrides
@@ -51,7 +51,7 @@ invocation. There is no global or user-level config file: configuration is
 always per-project.
 
 !!! note "Contributors: Dev Configuration Profile"
-    The ctx repo ships two `.ctxrc` source profiles (`.ctxrc.base` and
+    The `ctx` repo ships two `.ctxrc` source profiles (`.ctxrc.base` and
     `.ctxrc.dev`). The working copy is gitignored and swapped between them
     via `ctx config switch dev` / `ctx config switch base`.
     See [Contributing: Configuration Profiles](contributing.md#configuration-profiles).
@@ -197,7 +197,7 @@ CTX_TOKEN_BUDGET=16000 ctx agent
 
 ---
 
-<!-- drift-check: diff <(ctx --help 2>&1 | grep -oP '^\s+--[a-z-]+' | sed 's/^\s*//' | sort) <(sed -n '/CLI Global Flags/,/^---$/p' docs/home/configuration.md | grep -oP '`(--[a-z-]+)`' | tr -d '`' | sort -u) -->
+<!-- drift-check: diff <(`ctx` --help 2>&1 | grep -oP '^\s+--[a-z-]+' | sed 's/^\s*//' | sort) <(sed -n '/CLI Global Flags/,/^---$/p' docs/home/configuration.md | grep -oP '`(--[a-z-]+)`' | tr -d '`' | sort -u) -->
 ## CLI Global Flags
 
 CLI flags have the highest priority and override both environment variables and

@@ -32,7 +32,7 @@ for popular AI coding assistants.
 
 ## Claude Code (Full Integration)
 
-Claude Code has the deepest integration via the **ctx plugin**.
+Claude Code has the deepest integration via the **`ctx` plugin**.
 
 ### Setup
 
@@ -95,8 +95,8 @@ graph TD
 ### Plugin Hooks
 
 <!-- drift-check: cat internal/assets/claude/hooks/hooks.json | grep -c '"command"' -->
-<!-- drift-check: diff <(grep -oP '"ctx system \K[^"]+' internal/assets/claude/hooks/hooks.json | sort) <(sed -n '/Plugin Hooks/,/Hook Configuration/p' docs/operations/integrations.md | grep -oP 'ctx system \K[a-z-]+' | sort) -->
-The ctx plugin provides lifecycle hooks implemented as Go subcommands
+<!-- drift-check: diff <(grep -oP '"`ctx` system \K[^"]+' internal/assets/claude/hooks/hooks.json | sort) <(sed -n '/Plugin Hooks/,/Hook Configuration/p' docs/operations/integrations.md | grep -oP '`ctx` system \K[a-z-]+' | sort) -->
+The `ctx` plugin provides lifecycle hooks implemented as Go subcommands
 (`ctx system *`):
 
 | Hook                             | Event                        | Purpose                                          |
@@ -259,7 +259,7 @@ cat .context/TASKS.md
 <!-- drift-check: diff <(ls internal/assets/claude/skills/ | sort) <(sed -n '/Agent Skills/,/Usage Examples/p' docs/operations/integrations.md | grep -oP '/\Kctx-[a-z-]+' | sort -u) -->
 ### Agent Skills
 
-The ctx plugin ships Agent Skills following the
+The `ctx` plugin ships Agent Skills following the
 [agentskills.io specification](https://agentskills.io).
 
 These are invoked in Claude Code with `/skill-name`.
@@ -320,7 +320,7 @@ These are invoked in Claude Code with `/skill-name`.
 
 | Skill                  | Description                                                |
 |------------------------|------------------------------------------------------------|
-| `/ctx-doctor`          | Troubleshoot ctx behavior with structural health checks    |
+| `/ctx-doctor`          | Troubleshoot `ctx` behavior with structural health checks    |
 | `/ctx-drift`           | Detect and fix context drift (structural + semantic)       |
 | `/ctx-consolidate`     | Merge redundant learnings or decisions into denser entries |
 | `/ctx-alignment-audit` | Audit doc claims against playbook instructions             |
@@ -474,22 +474,22 @@ to regenerate the instructions.
 
 ### VS Code Chat Extension (`@ctx`)
 
-The **ctx VS Code extension** adds a `@ctx` chat participant to
+The **`ctx` VS Code extension** adds a `@ctx` chat participant to
 GitHub Copilot Chat, giving you direct access to 45 context commands
 from within the editor, plus automatic hooks on file save / git commit /
 `.context/` changes / dependency-file edits, and a reminder status-bar
 indicator.
 
-!!! tip "Full guide: [ctx for VS Code](../home/vscode.md)"
+!!! tip "Full guide: [`ctx` for VS Code](../home/vscode.md)"
     The home-page guide covers daily workflows, the full command list,
-    natural-language routing, auto-bootstrap of the ctx CLI, troubleshooting,
+    natural-language routing, auto-bootstrap of the `ctx` CLI, troubleshooting,
     and "Verify It Works." This subsection is the install-and-pointers
     overview; the dedicated page is the authoritative reference.
 
 #### Installation
 
 The extension ships to the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context)
-under publisher `activememory` (display name: *ctx — Persistent Context
+under publisher `activememory` (display name: *`ctx` — Persistent Context
 for AI*). Install via the Extensions view or `code --install-extension`.
 
 To build from source instead (requires Node.js 20+):
@@ -516,17 +516,17 @@ files beyond `.context/` and the Copilot instructions are added.
 
 #### How It Works
 
-- **Chat participant:** `@ctx` is registered with VS Code's Chat API; 45 slash commands route to dedicated handlers that shell out to the ctx CLI.
+- **Chat participant:** `@ctx` is registered with VS Code's Chat API; 45 slash commands route to dedicated handlers that shell out to the `ctx` CLI.
 - **Automatic hooks:** file save → task-completion check; git commit → decision/learning prompt; `.context/` change → regenerate Copilot instructions; dependency-file change → `/map` prompt.
 - **Status-bar reminder:** a `$(bell) ctx` indicator surfaces pending session reminders, refreshing every 5 minutes.
 - **Natural language:** plain English after `@ctx` is routed to the nearest matching command.
-- **Auto-bootstrap:** if the ctx CLI isn't on PATH, the extension downloads the correct platform binary from GitHub Releases and caches it.
+- **Auto-bootstrap:** if the `ctx` CLI isn't on PATH, the extension downloads the correct platform binary from GitHub Releases and caches it.
 
 #### Configuration
 
 | Setting              | Default | Description                                                      |
 |----------------------|---------|------------------------------------------------------------------|
-| `ctx.executablePath` | `ctx`   | Path to the ctx binary. Set this if `ctx` is not in your `PATH`. |
+| `ctx.executablePath` | `ctx`   | Path to the `ctx` binary. Set this if `ctx` is not in your `PATH`. |
 
 ### Session Persistence
 
@@ -567,7 +567,7 @@ Paste output into Copilot Chat for context-aware responses.
 
 ## OpenCode
 
-OpenCode is a terminal-first AI coding agent. ctx integrates via
+OpenCode is a terminal-first AI coding agent. `ctx` integrates via
 a thin lifecycle plugin, MCP server, and `AGENTS.md` instructions.
 
 ### Setup
@@ -588,13 +588,13 @@ eval "$(ctx activate)"
 | `.opencode/plugins/ctx.ts` | Lifecycle plugin (hooks to `ctx system`) |
 | `~/.config/opencode/opencode.json` | Global MCP server registration (or `$OPENCODE_HOME/opencode.json`) |
 | `AGENTS.md` | Agent instructions (read natively) |
-| `.opencode/skills/ctx-*/SKILL.md` | ctx skills |
+| `.opencode/skills/ctx-*/SKILL.md` | `ctx` skills |
 
 ### How It Works
 
 The plugin wires OpenCode lifecycle events to `ctx system`:
 
-- **`session.created`** — warms ctx state in the background (bootstrap + agent packet) so MCP queries are fast on first use
+- **`session.created`** — warms `ctx` state in the background (bootstrap + agent packet) so MCP queries are fast on first use
 - **`tool.execute.after` (shell, on `git commit`)** — runs `ctx system post-commit`
 - **`tool.execute.after` (edit/write)** — runs `ctx system check-task-completion`
 - **`session.idle`** — runs persistence and task-completion checks (silent: output is buffered, not surfaced to the TUI)

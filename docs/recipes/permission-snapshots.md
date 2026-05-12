@@ -123,5 +123,5 @@ posts, changelogs, and journal sites from your project activity.
 
 * [Permission Hygiene](claude-code-permissions.md): recommended defaults and
   maintenance workflow
-* [CLI Reference: ctx permission](../cli/context.md#ctx-permission):
+* [CLI Reference: `ctx` permission](../cli/context.md#ctx-permission):
   full command documentation

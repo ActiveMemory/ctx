@@ -1863,7 +1863,7 @@ managed sections).</p>
 <p>Replace with the new names per the changelog.</p>
 <h2 id="step-5-update-hook-configs">Step 5: Update Hook Configs<a class="headerlink" href="#step-5-update-hook-configs" title="Permanent link">&para;</a></h2>
 <p>If you have custom hooks in <code>.claude/settings.local.json</code> that
-reference ctx commands, update them:</p>
+reference <code>ctx</code> commands, update them:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>jq<span class="w"> </span><span class="s1">&#39;.hooks&#39;</span><span class="w"> </span>.claude/settings.local.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;ctx &quot;</span>
 </span></code></pre></div>
 <h2 id="step-6-verify">Step 6: Verify<a class="headerlink" href="#step-6-verify" title="Permanent link">&para;</a></h2>

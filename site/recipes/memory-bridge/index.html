@@ -2236,9 +2236,9 @@
 <ul>
 <li><strong>Outside the repo</strong> - not version-controlled, not portable</li>
 <li><strong>Machine-specific</strong> - tied to one <code>~/.claude/</code> directory</li>
-<li><strong>Invisible to ctx</strong> - context loading and hooks don't read it</li>
+<li><strong>Invisible to <code>ctx</code></strong> - context loading and hooks don't read it</li>
 </ul>
-<p>Meanwhile, ctx maintains structured context files (DECISIONS.md,
+<p>Meanwhile, <code>ctx</code> maintains structured context files (DECISIONS.md,
 LEARNINGS.md, CONVENTIONS.md) that are git-tracked, portable, and
 token-budgeted - but Claude Code doesn't automatically write to them.</p>
 <p>The two systems hold complementary knowledge with no bridge between them.</p>
@@ -2386,7 +2386,7 @@ against the mirror. When drift is detected, the agent sees:</p>
 </tr>
 <tr>
 <td>Not initialized</td>
-<td>Init guard rejects (same as all ctx commands).</td>
+<td>Init guard rejects (same as all <code>ctx</code> commands).</td>
 </tr>
 </tbody>
 </table>
@@ -2458,7 +2458,7 @@ structured project context on session start - without needing hooks.</p>
 </span></code></pre></div>
 <p><strong>Rules:</strong></p>
 <ul>
-<li>ctx owns everything <strong>between</strong> the markers</li>
+<li><code>ctx</code> owns everything <strong>between</strong> the markers</li>
 <li>Claude owns everything <strong>outside</strong> the markers</li>
 <li><code>ctx memory import</code> reads only outside the markers</li>
 <li><code>ctx memory publish</code> replaces only inside the markers</li>

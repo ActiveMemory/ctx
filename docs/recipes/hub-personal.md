@@ -102,14 +102,14 @@ The `--share` flag does two things:
 
 1. Writes the learning to `api/.context/LEARNINGS.md`
    locally (as a normal `ctx learning add` would).
-2. Publishes the same entry to the ctx Hub, which stores it
+2. Publishes the same entry to the `ctx` Hub, which stores it
    in the append-only JSONL and fans it out to every
    subscribed client.
 
 Within seconds, `cli/.context/hub/learnings.md` and
 `dotfiles/.context/hub/learnings.md` both contain a copy
 of this learning (the `ctx connection listen` daemon picks
-it up from the ctx Hub's Listen stream).
+it up from the `ctx` Hub's Listen stream).
 
 ### 12:00 - You Switch to `cli`
 

@@ -456,6 +456,6 @@ sessions.
 * [The Complete Session](session-lifecycle.md): where session saving fits in the daily workflow
 * [Turning Activity into Content](publishing.md): generating blog posts from session history
 * [Session Journal](../reference/session-journal.md): full documentation of the journal system
-* [CLI Reference: ctx journal](../cli/journal.md#ctx-journal): all journal subcommands and flags
-* [CLI Reference: ctx serve](../cli/journal.md#ctx-serve): serve-only (no regeneration)
+* [CLI Reference: `ctx` journal](../cli/journal.md#ctx-journal): all journal subcommands and flags
+* [CLI Reference: `ctx` serve](../cli/journal.md#ctx-serve): serve-only (no regeneration)
 * [Context Files](../home/context-files.md): the `.context/` directory structure

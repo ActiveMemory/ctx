@@ -18,7 +18,7 @@ what you were doing, the AI repeats yesterday's mistakes, and decisions
 you spent an hour reasoning through last week get rediscovered instead
 of remembered.
 
-**Without ctx:**
+**Without `ctx`:**
 
 ```
 @workspace add the validation middleware we discussed
@@ -27,7 +27,7 @@ I don't have context about previous discussions. Could you describe
 what validation middleware you're referring to?
 ```
 
-**With ctx:**
+**With `ctx`:**
 
 ```
 @ctx Do you remember?
@@ -47,10 +47,10 @@ Install the extension and the `ctx` binary, then `ctx init` your project:
 
 1. **Install the extension** from the
    [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context)
-   (publisher: `activememory`, display name: *ctx — Persistent Context
+   (publisher: `activememory`, display name: *`ctx` — Persistent Context
    for AI*). Or build from source (see
    [editors/vscode/README.md](https://github.com/ActiveMemory/ctx/blob/main/editors/vscode/README.md#development)).
-2. **Install the ctx CLI** if you haven't already
+2. **Install the `ctx` CLI** if you haven't already
    ([installation docs](getting-started.md#installation)). If you skip
    this step, the extension will auto-download the right binary for
    your platform on first use (see [Auto-Bootstrap](#auto-bootstrap)
@@ -164,7 +164,7 @@ short menu of likely matches.
 
 ## Auto-Bootstrap
 
-If the ctx CLI isn't on PATH (or at a path configured via
+If the `ctx` CLI isn't on PATH (or at a path configured via
 `ctx.executablePath`), the extension auto-downloads the right binary:
 
 1. Detects OS and architecture (darwin / linux / windows, amd64 / arm64).
@@ -180,23 +180,23 @@ set `ctx.executablePath` in your VS Code settings.
 
 - **VS Code 1.93+**
 - **[GitHub Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat)** extension
-- **ctx CLI** on PATH, or let the extension auto-download it
+- **`ctx` CLI** on PATH, or let the extension auto-download it
 
 ## Configuration
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `ctx.executablePath` | `ctx` | Path to the ctx CLI binary. Set this if ctx isn't on PATH and you don't want auto-download. |
+| `ctx.executablePath` | `ctx` | Path to the `ctx` CLI binary. Set this if `ctx` isn't on PATH and you don't want auto-download. |
 
 ## Refreshing the Integration
 
 The extension updates through the VS Code Marketplace like any other
 extension; install new versions via the Extensions view. Updates to
-the **ctx CLI** are independent: bump it via your package manager, or
+the **`ctx` CLI** are independent: bump it via your package manager, or
 let the auto-bootstrap fetch the latest release.
 
 Unlike the OpenCode integration, there is **no `ctx setup` step** for
-VS Code. The extension carries its own runtime; ctx's role is only to
+VS Code. The extension carries its own runtime; `ctx`'s role is only to
 provide the CLI it shells out to.
 
 ## Troubleshooting
@@ -204,7 +204,7 @@ provide the CLI it shells out to.
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | `@ctx` participant doesn't appear in Copilot Chat | Copilot Chat not installed or not signed in | Install [GitHub Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) and ensure you're signed in to a Copilot-eligible account |
-| `@ctx /status` says ctx not found | CLI not on PATH and auto-download disabled | Either add ctx to PATH (`brew install activememory/tap/ctx` or download from [Releases](https://github.com/ActiveMemory/ctx/releases)), or unset `ctx.executablePath` to let the extension auto-download |
+| `@ctx /status` says `ctx` not found | CLI not on PATH and auto-download disabled | Either add `ctx` to PATH (`brew install activememory/tap/ctx` or download from [Releases](https://github.com/ActiveMemory/ctx/releases)), or unset `ctx.executablePath` to let the extension auto-download |
 | Status-bar reminder never updates | Heartbeat suppressed or `.context/` doesn't exist | Run `ctx init` from your project root; reload VS Code if the indicator still doesn't appear within 5 minutes |
 | Commands run but nothing is captured to `.context/` | Workspace folder missing or `.context/` outside the open folder | Make sure your project root (the one with `.context/`) is the workspace root, not a subdirectory of it |
 
@@ -229,6 +229,6 @@ and recent session topics. If you instead see "I don't have memory" or
   tracking context, checking health, and browsing history.
 - [Context Files](context-files.md): what lives in `.context/` and how
   each file is used.
-- [Setup across AI Tools](../recipes/multi-tool-setup.md): wiring ctx
+- [Setup across AI Tools](../recipes/multi-tool-setup.md): wiring `ctx`
   for Claude Code, OpenCode, Cursor, Aider, Copilot, or Windsurf
   alongside VS Code.

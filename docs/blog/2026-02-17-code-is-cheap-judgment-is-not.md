@@ -116,7 +116,7 @@ accountable.
 
 ---
 
-## The Evidence from Building ctx
+## The Evidence from Building `ctx`
 
 I did **not** arrive at this conclusion theoretically. 
 
@@ -125,7 +125,7 @@ and watching **exactly where** a human touch mattered.
 
 ### YOLO Mode Proved Production Is Cheap
 
-In [Building ctx Using ctx][origin-post], I documented the YOLO
+In [Building `ctx` Using `ctx`][origin-post], I documented the YOLO
 phase: auto-accept everything, let the AI ship features at full
 speed. It produced 14 commands in a week. Impressive output.
 
@@ -324,7 +324,7 @@ the *replacement*:
 This post is a retrospective. It synthesizes the thread running
 through every previous entry in this blog:
 
-* [Building ctx Using ctx][origin-post] showed that production
+* [Building `ctx` Using `ctx`][origin-post] showed that production
   without direction creates debt
 * [Refactoring with Intent](2026-02-01-refactoring-with-intent.md)
   showed that slowing down is not the opposite of progress
@@ -352,7 +352,7 @@ From **YOLO mode** to **defense in depth**, the pattern is the same:
 
 *This post synthesizes the thread running through every previous
 entry in this blog. The evidence is drawn from three weeks of
-building ctx with AI assistance, the decisions recorded in
+building `ctx` with AI assistance, the decisions recorded in
 `DECISIONS.md`, the learnings captured in `LEARNINGS.md`, and the git
 history that tracks where the human mattered and where the AI
 ran unsupervised.*

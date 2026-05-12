@@ -185,7 +185,7 @@ additional context. This fires on every tool call; no
 user action.
 
 **2. On-demand MCP tool call (`ctx_steering_get`).** The
-ctx plugin ships a `.mcp.json` file that automatically
+`ctx` plugin ships a `.mcp.json` file that automatically
 registers the `ctx` MCP server (`ctx mcp serve`) with
 Claude Code on plugin install. Once registered, Claude
 can invoke the `ctx_steering_get` tool mid-task to fetch

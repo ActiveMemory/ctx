@@ -2741,7 +2741,7 @@ to invoke the relevant skills directly.</p>
 </tr>
 <tr>
 <td><a href="#ctx-doctor"><code>/ctx-doctor</code></a></td>
-<td>Troubleshoot ctx behavior with health checks and event analysis</td>
+<td>Troubleshoot <code>ctx</code> behavior with health checks and event analysis</td>
 <td>user-invocable</td>
 </tr>
 <tr>
@@ -2956,7 +2956,7 @@ positive observations.</p>
 <a href="../../recipes/context-health/">Detecting and Fixing Drift</a></p>
 <hr />
 <h3 id="ctx-doctor"><code>/ctx-doctor</code><a class="headerlink" href="#ctx-doctor" title="Permanent link">&para;</a></h3>
-<p>Troubleshoot ctx behavior. Runs structural health checks via <code>ctx doctor</code>,
+<p>Troubleshoot <code>ctx</code> behavior. Runs structural health checks via <code>ctx doctor</code>,
 analyzes event log patterns via <code>ctx hook event</code>, and presents findings
 with suggested actions. The CLI provides the structural baseline; the agent
 adds semantic analysis of event patterns and correlations.</p>
@@ -3179,7 +3179,7 @@ not know), the description is the trigger (make it specific and
 Security hooks still fire. Use for quick investigations or tasks that
 don't need ceremony overhead.</p>
 <p><strong>Wraps</strong>: <code>ctx hook pause</code></p>
-<p><strong>Trigger phrases</strong>: "pause ctx", "pause context", "stop the nudges",
+<p><strong>Trigger phrases</strong>: "pause <code>ctx</code>", "pause context", "stop the nudges",
 "quiet mode"</p>
 <p><strong>See also</strong>:
 <a href="../../recipes/session-pause/">Pausing Context Hooks</a></p>
@@ -3188,13 +3188,13 @@ don't need ceremony overhead.</p>
 <p>Resume context hooks after a pause. Restores normal nudge, reminder,
 and ceremony behavior. Silent no-op if not paused.</p>
 <p><strong>Wraps</strong>: <code>ctx hook resume</code></p>
-<p><strong>Trigger phrases</strong>: "resume ctx", "resume context", "turn nudges back on",
+<p><strong>Trigger phrases</strong>: "resume <code>ctx</code>", "resume context", "turn nudges back on",
 "unpause"</p>
 <p><strong>See also</strong>:
 <a href="../../recipes/session-pause/">Pausing Context Hooks</a></p>
 <hr />
 <h2 id="project-specific-skills">Project-Specific Skills<a class="headerlink" href="#project-specific-skills" title="Permanent link">&para;</a></h2>
-<p>The ctx plugin ships the skills listed above.
+<p>The <code>ctx</code> plugin ships the skills listed above.
 Teams can add their own project-specific skills to <code>.claude/skills/</code> in the
 project root: These are separate from plugin-shipped skills and are scoped
 to the project.</p>

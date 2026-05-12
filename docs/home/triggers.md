@@ -52,7 +52,7 @@ type.
     `ctx trigger enable <name>` after reviewing the contents.
     That's not a suggestion; it's the security model.
 
-## Three Hook-like Layers in ctx
+## Three Hook-like Layers in `ctx`
 
 Triggers are one of **three** distinct hook-like concepts in
 ctx. The names are similar but the owners and use cases are
@@ -61,7 +61,7 @@ not:
 | Layer                  | Owned by    | Where they live                         | When to use                                |
 |------------------------|-------------|-----------------------------------------|--------------------------------------------|
 | **`ctx trigger`**      | You         | `.context/hooks/<type>/*.sh`            | Project-specific automation, any AI tool   |
-| **`ctx system` hooks** | ctx itself  | built-in, wired into tool configs       | Built-in nudges (you don't author these)   |
+| **`ctx system` hooks** | `ctx` itself  | built-in, wired into tool configs       | Built-in nudges (you don't author these)   |
 | **Claude Code hooks**  | Claude Code | `.claude/settings.local.json`           | Claude-Code-only tool-specific integration |
 
 This page is about the first category. The other two run

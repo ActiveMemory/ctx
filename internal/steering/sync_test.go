@@ -330,3 +330,63 @@ Auto body.
 		t.Error("kiro output should map auto inclusion to mode: auto")
 	}
 }
+
+func TestSyncTool_SkipsTombstonedFile(t *testing.T) {
+	root := t.TempDir()
+	steeringDir := filepath.Join(root, ".context", "steering")
+
+	tombstoned := `---
+name: product
+description: Product context
+inclusion: always
+priority: 10
+---
+# Product Context
+
+` + Tombstone + `
+
+Describe the product, its goals, and target users.
+`
+	writeSteering(t, steeringDir, "product", tombstoned)
+
+	report, err := SyncTool(steeringDir, root, "cursor")
+	if err != nil {
+		t.Fatalf("SyncTool: %v", err)
+	}
+	if len(report.Written) != 0 {
+		t.Errorf("expected 0 written files (tombstoned file should be skipped), got %v", report.Written)
+	}
+	if len(report.Skipped) != 1 || report.Skipped[0] != "product" {
+		t.Errorf("expected product to be skipped, got %v", report.Skipped)
+	}
+
+	// The native-format output should NOT have been written.
+	out := filepath.Join(root, ".cursor", "rules", "product.mdc")
+	if _, statErr := os.Stat(out); statErr == nil {
+		t.Errorf("tombstoned file was synced to %s; expected no write", out)
+	}
+}
+
+func TestStaleFiles_SkipsTombstonedFile(t *testing.T) {
+	root := t.TempDir()
+	steeringDir := filepath.Join(root, ".context", "steering")
+
+	tombstoned := `---
+name: product
+description: Product context
+inclusion: always
+priority: 10
+---
+# Product Context
+
+` + Tombstone + `
+
+placeholder.
+`
+	writeSteering(t, steeringDir, "product", tombstoned)
+
+	stale := StaleFiles(steeringDir, root, "cursor")
+	if len(stale) != 0 {
+		t.Errorf("expected tombstoned file to be skipped (not reported as stale), got %v", stale)
+	}
+}

@@ -21,7 +21,7 @@ context with `cat`, diff it with `git diff`, and review it in a PR.
 
 ## Does `ctx` Work Offline?
 
-Yes. ctx is completely local. It reads and writes files on disk,
+Yes. `ctx` is completely local. It reads and writes files on disk,
 generates context packets from local state, and requires no network
 access. The only feature that touches the network is the optional
 [webhook notifications](../recipes/webhook-notifications.md) hook,
@@ -60,7 +60,7 @@ ctx agent --budget 4000
 ```
 
 Higher budgets include more context but cost more tokens per request.
-Lower budgets force sharper prioritization: ctx drops lower-priority
+Lower budgets force sharper prioritization: `ctx` drops lower-priority
 content first, so CONSTITUTION and TASKS always make the cut.
 
 See [Configuration](configuration.md) for all available settings.
@@ -81,9 +81,9 @@ Yes. `ctx agent` outputs a context packet that any AI tool can
 consume: paste it into ChatGPT, Cursor, Copilot, Aider, or anything
 else that accepts text input.
 
-Claude Code gets first-class integration via the ctx plugin (hooks,
+Claude Code gets first-class integration via the `ctx` plugin (hooks,
 skills, automatic context loading). VS Code Copilot Chat has a
-dedicated ctx extension. Other tools integrate via generated
+dedicated `ctx` extension. Other tools integrate via generated
 instruction files or manual pasting.
 
 See [Integrations](../operations/integrations.md) for tool-specific
@@ -97,7 +97,7 @@ you work. Context grows naturally; you don't need to backfill
 everything on day one.
 
 See [Getting Started](getting-started.md) for the full setup flow,
-or [Joining a ctx Project](joining-a-project.md) if someone else
+or [Joining a `ctx` Project](joining-a-project.md) if someone else
 already initialized it.
 
 ## What Happens When Context Files Get Too Big?

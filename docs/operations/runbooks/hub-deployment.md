@@ -13,7 +13,7 @@ icon: lucide/server
 
 # Hub Deployment
 
-Linear runbook for setting up a ctx Hub for yourself or a team.
+Linear runbook for setting up a `ctx` Hub for yourself or a team.
 Consolidates pieces currently scattered across hub recipes and
 operations docs.
 

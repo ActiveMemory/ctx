@@ -81,7 +81,7 @@ Test the critical paths:
 ## Step 4: Test Against a Clean Project
 
 Create a temporary project to verify the plugin works outside
-the ctx repo:
+the `ctx` repo:
 
 ```bash
 mkdir /tmp/test-ctx-plugin && cd /tmp/test-ctx-plugin

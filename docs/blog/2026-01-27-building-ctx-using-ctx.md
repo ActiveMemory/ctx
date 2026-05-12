@@ -11,7 +11,7 @@ topics:
   - architectural decisions
 ---
 
-# Building ctx Using ctx
+# Building `ctx` Using `ctx`
 
 !!! note "Update (2026-02-11)"
     As of `v0.4.0`, `ctx` consolidated sessions into the journal mechanism.
@@ -538,7 +538,7 @@ Because not everyone always lives in the terminal (*me included*).
 
 ## Conclusion
 
-Building `ctx` using ctx was a meta-experiment in AI-assisted development. 
+Building `ctx` using `ctx` was a meta-experiment in AI-assisted development. 
 
 I learned that **memory isn't just convenient: It's transformative**:
 

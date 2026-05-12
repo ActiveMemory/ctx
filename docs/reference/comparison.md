@@ -44,7 +44,7 @@ Most tools treat context as **input**.
 
 That single difference explains nearly all of `ctx`'s design choices.
 
-| Question                 | Most tools                | ctx              |
+| Question                 | Most tools                | `ctx`              |
 |--------------------------|---------------------------|------------------|
 | Where does context live? | In prompts or APIs        | In files         |
 | How long does it last?   | One request / one session | Across time      |
@@ -108,7 +108,7 @@ RAG answers questions like:
 
 Here are some key differences:
 
-| RAG                   | ctx                   |
+| RAG                   | `ctx`                   |
 |-----------------------|-----------------------|
 | Statistical relevance | Intentional relevance |
 | Embedding-based       | File-based            |
@@ -118,7 +118,7 @@ Here are some key differences:
 `ctx` does not replace RAG.
 Instead, it defines a persistent context layer that RAG can optionally augment.
 
-> RAG belongs to the **data plane**; ctx defines the **context control plane**.
+> RAG belongs to the **data plane**; `ctx` defines the **context control plane**.
 
 It focuses on **project memory**, not knowledge search.
 

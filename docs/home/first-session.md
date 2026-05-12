@@ -52,7 +52,7 @@ Next steps:
 
 This created your `.context/` directory with template files. 
 
-For Claude Code, [install the ctx plugin](getting-started.md#installation) to get automatic hooks and skills.
+For Claude Code, [install the `ctx` plugin](getting-started.md#installation) to get automatic hooks and skills.
 
 ## Step 2: Activate the Project
 
@@ -153,7 +153,7 @@ via hooks, but the explicit ceremony gives you a **readback** to verify.
 
 !!! info "Using VS Code?"
     With **VS Code Copilot Chat** (*and the
-    [ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx)*), 
+    [`ctx` extension](../operations/integrations.md#vs-code-chat-extension-ctx)*), 
     type `@ctx /agent` in chat to load your context packet, or `@ctx /status`
     to check your project context. Run `ctx setup copilot --write` once
     to generate `.github/copilot-instructions.md` for automatic context loading.

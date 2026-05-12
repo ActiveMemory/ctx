@@ -322,7 +322,7 @@ Every previous post looked inward.
 
 This one looks outward.
 
-* [Building ctx Using ctx][origin-post]: one mind, one repository
+* [Building `ctx` Using `ctx`][origin-post]: one mind, one repository
 * [The Attention Budget][attention-post]: the constraint
 * [Context as Infrastructure][infra-post]: the architecture
 * [Code Is Cheap. Judgment Is Not.][judgment-post]: the bottleneck

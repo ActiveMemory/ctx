@@ -1204,7 +1204,7 @@ you get point-in-time recovery for free.</p>
   register</code> have zero cross-machine persistence.</li>
 </ul>
 <p>For these, pick one strategy above and forget about it.</p>
-<h2 id="why-ctx-no-longer-ships-a-backup-command">Why ctx No Longer Ships a Backup Command<a class="headerlink" href="#why-ctx-no-longer-ships-a-backup-command" title="Permanent link">&para;</a></h2>
+<h2 id="why-ctx-no-longer-ships-a-backup-command">Why <code>ctx</code> No Longer Ships a Backup Command<a class="headerlink" href="#why-ctx-no-longer-ships-a-backup-command" title="Permanent link">&para;</a></h2>
 <p>Backup is inherently environment-specific: SMB, NFS, S3, rsync,
 Time Machine, Borg, restic. Every user has a different story. The
 previous <code>ctx backup</code> picked SMB via GVFS, which was Linux-only and

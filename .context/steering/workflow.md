@@ -4,47 +4,67 @@ description: Development workflow and process rules
 inclusion: always
 priority: 10
 ---
-<!--
-  This is a ctx steering file: persistent behavioral
-  rules prepended to prompts based on the frontmatter
-  above.
-
-  inclusion (when the rule fires):
-    always  → injected on EVERY tool call. On Claude
-              Code this is the only mode that fires
-              AUTOMATICALLY (the PreToolUse hook
-              passes an empty prompt to ctx agent).
-              Use for invariants and for any rule
-              that MUST fire reliably.
-    auto    → injected when the prompt matches the
-              `description` field above.
-                - Cursor / Cline / Kiro: native.
-                - Claude Code: Claude calls the
-                  ctx_steering_get MCP tool on its
-                  own when it decides the rule is
-                  relevant. The ctx plugin ships
-                  the MCP auto-registration; verify
-                  with `claude mcp list`.
-    manual  → only when the file is explicitly named
-              (e.g. via the MCP tool or a skill).
-
-  priority (ordering within a tier):
-    Lower numbers inject first. 10 is a reasonable
-    default for invariants; use 50 for normal rules.
-
-  tools (scope the rule to specific AI tools):
-    Empty list = applies to all tools (default).
-    Example:  tools: [claude, cursor]
-
-  Edit the body below, then delete this comment.
-  See docs/cli/steering.md for the full reference.
--->
 
 # Development Workflow
 
-Describe the development workflow, branching strategy, and process rules.
+## Branch discipline
 
-- **Branch strategy** (main-only, trunk-based, feature branches)
-- **Commit conventions** (message format, signed-off-by)
-- **Pre-commit / pre-push checks**
-- **Review expectations**
+- **Branch off `main` BEFORE the first commit.** `main` is
+  off-limits for direct commits. Even one-line fixes branch.
+- When the user signals "stacking is intentional," stay on the
+  current feature branch — do NOT create a new one.
+- Branch names follow the conventional-commit shape:
+  `feat/<scope>`, `fix/<scope>`, `docs/<scope>`, `chore/<scope>`.
+
+## Never push, never merge
+
+- **Never run `git push`.** Never offer to. Stop at commit. The
+  human is the final authoritative decision maker before any
+  push to upstream (CONSTITUTION).
+- Same rule for `gh pr create` and `gh pr merge`. Don't.
+
+## DCO sign-off is required
+
+- Every commit needs `Signed-off-by: …` — use `git commit -s`.
+- CI's DCO workflow blocks PRs that lack the sign-off line. There
+  is no exception.
+
+## Every commit has a Spec trailer
+
+- `Spec: specs/<name>.md` at the end of every commit message
+  (CONSTITUTION). No "non-trivial" qualifier; even one-liner
+  fixes get a spec for traceability.
+- Use `/ctx-commit` rather than raw `git commit` so decisions
+  and learnings get captured alongside the code.
+
+## Gates before every commit
+
+- `make lint` — must return zero issues.
+- `make test` — must pass.
+- Working tree must be clean of unrelated changes. Surface
+  pre-existing modifications before bundling them; never
+  silently fold them in.
+
+## Conventional commit subjects
+
+- Prefixes: `feat(scope):`, `fix(scope):`, `docs(scope):`,
+  `refactor(scope):`, `chore(scope):`, `deps:`, `test(scope):`.
+- Subject under 70 characters; details go in the body.
+- Co-Authored-By for Claude is omitted. The human signoff stays.
+
+## Error handling
+
+- Handle every error at the call site. No `_ =` discards. No
+  `value, _ :=`. No `panic`. Existing `_ =` and silent skips in
+  the codebase are tech debt, not authorization to copy.
+- Path construction uses stdlib (`filepath.Join`); never string
+  concatenation (security: prevents path traversal — CONSTITUTION).
+
+## Context capture cadence
+
+- After completing a task, making a non-obvious decision, or
+  hitting a gotcha: persist before continuing. Don't wait for
+  session end.
+- Use `/ctx-decision-add`, `/ctx-learning-add`,
+  `/ctx-convention-add`, `/ctx-task-add`. They auto-link to the
+  current session + branch + commit.

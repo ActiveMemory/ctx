@@ -956,10 +956,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-activate-the-project" class="md-nav__link">
+  <a href="#2-customize-your-steering-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Activate the Project
+        2. Customize Your Steering Files
       
     </span>
   </a>
@@ -967,10 +967,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-check-status" class="md-nav__link">
+  <a href="#3-activate-the-project" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Check Status
+        3. Activate the Project
       
     </span>
   </a>
@@ -978,10 +978,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-start-using-with-ai" class="md-nav__link">
+  <a href="#4-check-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Start Using with AI
+        4. Check Status
       
     </span>
   </a>
@@ -989,10 +989,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4b-set-up-for-your-ai-tool" class="md-nav__link">
+  <a href="#5-start-using-with-ai" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4B. Set Up for Your AI Tool
+        5. Start Using with AI
       
     </span>
   </a>
@@ -1000,10 +1000,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-verify-it-works" class="md-nav__link">
+  <a href="#5b-set-up-for-your-ai-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Verify It Works
+        5B. Set Up for Your AI Tool
       
     </span>
   </a>
@@ -1011,10 +1011,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-set-up-companion-tools-highly-recommended" class="md-nav__link">
+  <a href="#6-verify-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Set Up Companion Tools (Highly Recommended)
+        6. Verify It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-set-up-companion-tools-highly-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Set Up Companion Tools (Highly Recommended)
       
     </span>
   </a>
@@ -1819,10 +1830,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-activate-the-project" class="md-nav__link">
+  <a href="#2-customize-your-steering-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Activate the Project
+        2. Customize Your Steering Files
       
     </span>
   </a>
@@ -1830,10 +1841,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-check-status" class="md-nav__link">
+  <a href="#3-activate-the-project" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Check Status
+        3. Activate the Project
       
     </span>
   </a>
@@ -1841,10 +1852,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-start-using-with-ai" class="md-nav__link">
+  <a href="#4-check-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Start Using with AI
+        4. Check Status
       
     </span>
   </a>
@@ -1852,10 +1863,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4b-set-up-for-your-ai-tool" class="md-nav__link">
+  <a href="#5-start-using-with-ai" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4B. Set Up for Your AI Tool
+        5. Start Using with AI
       
     </span>
   </a>
@@ -1863,10 +1874,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-verify-it-works" class="md-nav__link">
+  <a href="#5b-set-up-for-your-ai-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Verify It Works
+        5B. Set Up for Your AI Tool
       
     </span>
   </a>
@@ -1874,10 +1885,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-set-up-companion-tools-highly-recommended" class="md-nav__link">
+  <a href="#6-verify-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Set Up Companion Tools (Highly Recommended)
+        6. Verify It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-set-up-companion-tools-highly-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Set Up Companion Tools (Highly Recommended)
       
     </span>
   </a>
@@ -1986,7 +2008,7 @@ Without it, the data is gone.</p>
 <code>git</code> history directly.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>Every setup starts with <strong>the <code>ctx</code> binary</strong>: the CLI tool itself.</p>
-<p>If you use <strong>Claude Code</strong>, you also install the <strong>ctx plugin</strong>, which
+<p>If you use <strong>Claude Code</strong>, you also install the <strong><code>ctx</code> plugin</strong>, which
 adds hooks (context autoloading, persistence nudges) and 25+ <code>/ctx-*</code>
 skills. For other AI tools, <code>ctx</code> integrates via generated instruction
 files or manual context pasting: see
@@ -2124,51 +2146,69 @@ full hook and skill reference.</p>
 <p>This creates a <code>.context/</code> directory with template files and an
 encryption key at <code>~/.ctx/</code> for the
 <a href="../../reference/scratchpad/">encrypted scratchpad</a>.
-For Claude Code, install the <a href="../../operations/integrations/#claude-code-full-integration">ctx plugin</a>
+For Claude Code, install the <a href="../../operations/integrations/#claude-code-full-integration"><code>ctx</code> plugin</a>
 for automatic hooks and skills.</p>
-<p><strong><code>ctx init</code> also scaffolds four <em>foundation steering files</em></strong> in
-<code>.context/steering/</code>; these are behavioral-rule templates that
-tell your AI how to act on your project:</p>
+<p><code>ctx init</code> also scaffolds four <strong>foundation steering files</strong> in
+<code>.context/steering/</code> — <code>product.md</code>, <code>tech.md</code>, <code>structure.md</code>,
+<code>workflow.md</code>. <strong>They are placeholders until you customize
+them</strong> (see the next step); skipping that step has consequences,
+so it is broken out as its own numbered beat rather than
+buried here.</p>
+<h3 id="2-customize-your-steering-files">2. Customize Your Steering Files<a class="headerlink" href="#2-customize-your-steering-files" title="Permanent link">&para;</a></h3>
+<p>Steering files are <strong>behavioral rules prepended to every AI
+prompt</strong> — the layer that tells your AI <em>how to act</em> on this
+specific project. They are distinct from decisions (<em>what</em> was
+chosen) and conventions (<em>how</em> the codebase is written); see
+<a href="../../recipes/steering/"><code>ctx</code> for Steering Files</a> for the full
+model.</p>
+<p><code>ctx init</code> scaffolded four foundation files; open each and
+fill it in:</p>
 <table>
 <thead>
 <tr>
 <th>File</th>
-<th>What it captures</th>
+<th>What to fill in</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>product.md</code></td>
-<td>Product context, goals, and target users</td>
+<td>What the project is, who uses it, what's out of scope</td>
 </tr>
 <tr>
 <td><code>tech.md</code></td>
-<td>Technology stack, constraints, key dependencies</td>
+<td>Languages, frameworks, runtime, hard constraints</td>
 </tr>
 <tr>
 <td><code>structure.md</code></td>
-<td>Project structure and directory conventions</td>
+<td>Directory layout, where new files go, naming rules</td>
 </tr>
 <tr>
 <td><code>workflow.md</code></td>
-<td>Development workflow and process rules</td>
+<td>Branch strategy, commit conventions, pre-commit checks</td>
 </tr>
 </tbody>
 </table>
-<p>Each file starts with a self-documenting HTML comment
-explaining the three inclusion modes (<code>always</code> / <code>auto</code> /
-<code>manual</code>), priority, and tool scoping. The defaults are set
-to <code>inclusion: always</code> and <code>priority: 10</code>, so they fire on
-every AI tool call until you edit them.</p>
-<p><strong>You should open each of these files and replace the
-placeholder content with your project's actual rules.</strong>
-Running <code>ctx init</code> again won't clobber your edits; existing
-files are left alone. To opt out entirely, use
-<code>ctx init --no-steering-init</code>.</p>
-<p>See <a href="../../recipes/steering/">Writing Steering Files</a> for the
-full walkthrough, or <a href="../../cli/steering/"><code>ctx steering</code></a> for
-the command reference.</p>
-<h3 id="2-activate-the-project">2. Activate the Project<a class="headerlink" href="#2-activate-the-project" title="Permanent link">&para;</a></h3>
+<p>Each scaffolded file ships with a <strong>tombstone marker</strong> line
+(<code>&lt;!-- remove this after you edit the steering file !--&gt;</code>).
+<strong>As long as the marker is present, the file is silently
+skipped</strong> on every load path: the agent context packet, MCP
+<code>ctx_steering_get</code>, and native-tool sync (Cursor / Cline /
+Kiro). The skip is deliberate — injecting unfilled placeholders
+into AI prompts is worse than no steering at all, because the
+AI tries to follow "Describe the product..." as if it were a
+rule.</p>
+<p><strong>Replace each file's body with real content, then delete the
+tombstone line.</strong> When the line is gone, the file becomes
+active on the next AI tool call.</p>
+<p>Don't want steering at all? Pass <code>--no-steering-init</code> to
+<code>ctx init</code> to skip the scaffold entirely. Existing edits are
+never clobbered by re-running <code>ctx init</code>.</p>
+<p>Inclusion modes (<code>always</code> / <code>auto</code> / <code>manual</code>), priority, and
+tool scoping are covered in
+<a href="../../recipes/steering/">Writing Steering Files</a> and
+<a href="../../cli/steering/"><code>ctx steering</code></a>.</p>
+<h3 id="3-activate-the-project">3. Activate the Project<a class="headerlink" href="#3-activate-the-project" title="Permanent link">&para;</a></h3>
 <p>Tell <code>ctx</code> which <code>.context/</code> directory the rest of these commands
 should use:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
@@ -2178,22 +2218,22 @@ next steps fail with <code>Error: no context directory specified</code>. Direnv
 users can wire it into <code>.envrc</code> and forget about it. For more
 options (multiple <code>.context/</code> directories, scripts, CI), see
 <a href="../../recipes/activating-context/">Activating a Context Directory</a>.</p>
-<h3 id="3-check-status">3. Check Status<a class="headerlink" href="#3-check-status" title="Permanent link">&para;</a></h3>
+<h3 id="4-check-status">4. Check Status<a class="headerlink" href="#4-check-status" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>status
 </span></code></pre></div>
 <p>Shows context summary: files present, token estimate, and recent activity.</p>
-<h3 id="4-start-using-with-ai">4. Start Using with AI<a class="headerlink" href="#4-start-using-with-ai" title="Permanent link">&para;</a></h3>
+<h3 id="5-start-using-with-ai">5. Start Using with AI<a class="headerlink" href="#5-start-using-with-ai" title="Permanent link">&para;</a></h3>
 <p>With Claude Code (<em>and the <code>ctx</code> plugin installed</em>), context loads automatically
 via hooks.</p>
 <p>With <strong>VS Code Copilot Chat</strong>, install the
-<a href="../../operations/integrations/#vs-code-chat-extension-ctx">ctx extension</a> and use
+<a href="../../operations/integrations/#vs-code-chat-extension-ctx"><code>ctx</code> extension</a> and use
 <code>@ctx /status</code>, <code>@ctx /agent</code>, and other slash commands directly in chat.
 Run <code>ctx setup copilot --write</code> to generate <code>.github/copilot-instructions.md</code>
 for automatic context loading.</p>
 <p>For other tools, paste the output of:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
 </span></code></pre></div>
-<h3 id="4b-set-up-for-your-ai-tool">4B. Set Up for Your AI Tool<a class="headerlink" href="#4b-set-up-for-your-ai-tool" title="Permanent link">&para;</a></h3>
+<h3 id="5b-set-up-for-your-ai-tool">5B. Set Up for Your AI Tool<a class="headerlink" href="#5b-set-up-for-your-ai-tool" title="Permanent link">&para;</a></h3>
 <p>If you use an MCP-compatible tool, generate the integration config
 with <code>ctx setup</code>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kiro</label><label for="__tabbed_2_2">Cursor</label><label for="__tabbed_2_3">Cline</label></div>
@@ -2215,15 +2255,15 @@ with <code>ctx setup</code>:</p>
 </div>
 </div>
 </div>
-<p>This registers the ctx MCP server and syncs any
+<p>This registers the <code>ctx</code> MCP server and syncs any
 <a href="../../cli/steering/">steering files</a> into the tool's
 native format. Re-run after adding or changing steering files.</p>
-<h3 id="5-verify-it-works">5. Verify It Works<a class="headerlink" href="#5-verify-it-works" title="Permanent link">&para;</a></h3>
+<h3 id="6-verify-it-works">6. Verify It Works<a class="headerlink" href="#6-verify-it-works" title="Permanent link">&para;</a></h3>
 <p>Ask your AI: <strong>"Do you remember?"</strong></p>
 <p>It should cite specific context: current tasks, recent decisions,
 or previous session topics.</p>
-<h3 id="6-set-up-companion-tools-highly-recommended">6. Set Up Companion Tools (Highly Recommended)<a class="headerlink" href="#6-set-up-companion-tools-highly-recommended" title="Permanent link">&para;</a></h3>
-<p>ctx works on its own, but two companion MCP servers unlock significantly
+<h3 id="7-set-up-companion-tools-highly-recommended">7. Set Up Companion Tools (Highly Recommended)<a class="headerlink" href="#7-set-up-companion-tools-highly-recommended" title="Permanent link">&para;</a></h3>
+<p><code>ctx</code> works on its own, but two companion MCP servers unlock significantly
 better agent behavior. The investment is small and the benefits compound
 over sessions:</p>
 <ul>

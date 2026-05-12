@@ -134,5 +134,5 @@ ctx learning add "Vitest mock hoisting" \
   for persisting decisions, learnings, and conventions
 * [Context Files Reference](context-files.md): structure and format for
   every file in `.context/`
-* [About ctx](about.md): the bigger picture - why persistent context
+* [About `ctx`](about.md): the bigger picture - why persistent context
   changes how you work with AI
