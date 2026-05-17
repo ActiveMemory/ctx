@@ -204,7 +204,7 @@ The **journal system** includes:
 
 | Component                | Purpose                                            |
 |--------------------------|----------------------------------------------------|
-| `ctx recall import`      | Import sessions to markdown in `.context/journal/` |
+| `ctx recall import`      | Import sessions to Markdown in `.context/journal/` |
 | `ctx journal site`       | Generate static site from journal entries          |
 | `ctx serve`              | Convenience wrapper for the static site server     |
 | `/ctx-journal-enrich`    | Slash command to add frontmatter and tags          |

@@ -112,7 +112,7 @@ re-analyze and update confidence.
 
 ## ARCHITECTURE.md Constraints
 
-- **Size target**: under 4000 tokens (~16KB of markdown)
+- **Size target**: under 4000 tokens (~16KB of Markdown)
 - **Sections**: Overview, Package Dependency Graph (mermaid),
   Component Map (tables), Data Flow (mermaid sequence diagrams),
   Key Patterns, File Layout (ASCII tree)

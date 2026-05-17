@@ -76,12 +76,20 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	// Write .github/agents/ctx.md
-	if agentErr := deployAgent(cmd); agentErr != nil {
+	if agentErr := deployGithubAsset(
+		cmd,
+		cfgHook.DirGitHubAgents, cfgHook.FileAgentsCtxMd,
+		agent.AgentsCtxMd,
+	); agentErr != nil {
 		writeErr.WarnFile(cmd, cfgHook.DirGitHubAgents, agentErr)
 	}
 
 	// Write .github/instructions/context.instructions.md
-	if instrErr := deployInstructions(cmd); instrErr != nil {
+	if instrErr := deployGithubAsset(
+		cmd,
+		cfgHook.DirGitHubInstructions, cfgHook.FileInstructionsCtxMd,
+		agent.InstructionsCtxMd,
+	); instrErr != nil {
 		writeErr.WarnFile(
 			cmd, cfgHook.DirGitHubInstructions, instrErr,
 		)

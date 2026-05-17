@@ -24,7 +24,7 @@ into three layers:
 3. **Governance** — Proactive nudges, ceremony checks, session health
 
 Architecture principle: **single source of truth**. Skills are authored
-as markdown SKILL.md files in `internal/assets/integrations/copilot-cli/skills/`
+as Markdown SKILL.md files in `internal/assets/integrations/copilot-cli/skills/`
 and deployed by `ctx setup copilot-cli --write`. VS Code commands call
 `ctx` CLI or MCP tools — the extension does not duplicate skill logic.
 
@@ -103,7 +103,7 @@ case '/implement':
 ```
 
 VS Code commands delegate to `ctx` CLI. The extension provides UI
-(progress, follow-ups, markdown rendering) but not logic.
+(progress, follow-ups, Markdown rendering) but not logic.
 
 ### 1.4 Files to Create/Modify
 
@@ -370,4 +370,4 @@ These features are Claude Code specific and **not ported**:
 3. **VS Code command registration limit**: Is there a practical limit on slash
    commands in a chat participant? Current 45 → 55+ after this spec.
 4. **Skill frontmatter schema**: Does Copilot CLI enforce a specific YAML
-   frontmatter schema for SKILL.md, or is it freeform markdown?
+   frontmatter schema for SKILL.md, or is it freeform Markdown?

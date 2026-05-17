@@ -2000,7 +2000,7 @@ without ceremony.</p>
   the hub.</li>
 <li>Each project on each workstation has been activated for
   the shell with <code>eval "$(ctx activate)"</code>. The hub server
-  (<code>ctx hub start</code>, etc.) doesn't need this — but the
+  (<code>ctx hub start</code>, etc.) doesn't need this, but the
   client side (<code>ctx connection ...</code>, <code>ctx add --share</code>)
   lives in a project and does. If you skip activation,
   those client commands fail with <code>Error: no context
@@ -2154,7 +2154,7 @@ hub, and they should land within an hour of the
 incident. "Share fast, edit later" is the rule.</p>
 <p><strong>Delete noisy entries, don't tolerate them.</strong> The hub
 is append-only, but the <code>.context/hub/</code> mirror on each
-client is just markdown. If a shared learning turns out
+client is just Markdown. If a shared learning turns out
 to be wrong or obsolete, remove it from local mirrors
 and stop the hub daemon to truncate <code>entries.jsonl</code>
 (see <a href="../../operations/hub/">Hub operations</a>). Noisy

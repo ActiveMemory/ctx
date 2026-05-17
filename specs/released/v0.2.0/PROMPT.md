@@ -79,7 +79,7 @@ Check if `internal/recall/` exists.
 
 **Renderer** (T1.2.x):
 - Use `//go:embed` for templates and static assets
-- Use `goldmark` for markdown → HTML
+- Use `goldmark` for Markdown → HTML
 - Use `chroma` for syntax highlighting
 - Thinking blocks: `<details>` elements, collapsed by default
 
@@ -148,7 +148,7 @@ You will not remember this conversation. Write everything important to files.
 - No panics in library code
 - Use `internal/recall/` for all recall code
 - Embed assets with `//go:embed`
-- Use `goldmark` for markdown, `chroma` for syntax highlighting
+- Use `goldmark` for Markdown, `chroma` for syntax highlighting
 
 ### SCOPE CONSTRAINTS
 - Go only. No external databases. No npm/node.

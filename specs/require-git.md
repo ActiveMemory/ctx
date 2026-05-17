@@ -1,8 +1,8 @@
 # Require Git as Architectural Precondition
 
-Promote the de facto invariant ("ctx works properly only with
-git") to a de jure one. `ctx init` and every `ctx` subcommand
-(except read-only diagnostics) refuse to operate without `.git/`.
+`ctx` already needs git to work properly; this phase enforces
+it. `ctx init` and every `ctx` subcommand (except read-only
+diagnostics) refuse to operate without `.git/`.
 
 ## Problem
 

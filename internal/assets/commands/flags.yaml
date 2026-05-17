@@ -283,3 +283,15 @@ watch.dry-run:
   short: Show updates without applying
 watch.log:
   short: 'Log file to watch (default: stdin)'
+handover.summary:
+  short: 'What happened this session (past tense). Required.'
+handover.next:
+  short: 'What the next agent should do FIRST. Required.'
+handover.highlights:
+  short: 'Notable artifacts produced this session.'
+handover.open-questions:
+  short: 'Things that remain undecided.'
+handover.commit:
+  short: 'Override resolved git HEAD for Provenance line (CI replay).'
+handover.no-fold:
+  short: 'Skip closeout consumption (mid-session checkpoint).'

@@ -207,10 +207,6 @@ binds to it; every `ctx` subsystem reads the project from its parent.
 
 Nested projects, submodules, rogue agent-created `.context/`
 directories, and sub-agent sessions all produced silent misrouting
-under the old walk-up model. See the
-[explicit-context-dir spec](https://github.com/ActiveMemory/ctx/blob/main/specs/explicit-context-dir.md)
-and [the analysis doc](https://github.com/ActiveMemory/ctx/blob/main/specs/context-resolution-analysis.md)
-for the full reasoning.
-
-The short version: `ctx` decided to stop guessing and require the
-caller to declare. Every other decision flows from there.
+under the old walk-up model. `ctx` decided to stop guessing and
+require the caller to declare. Every other decision flows from
+there.

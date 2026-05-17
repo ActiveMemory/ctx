@@ -108,7 +108,7 @@ Every published entry is validated before it touches the log:
 ### No Script Execution
 
 The hub never interprets entry content. There is no expression
-language, no template evaluation, no markdown rendering at
+language, no template evaluation, no Markdown rendering at
 ingest. Content is stored as bytes and fanned out to clients
 verbatim.
 

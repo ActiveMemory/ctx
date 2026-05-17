@@ -266,6 +266,9 @@ const (
 	// DescKeyInitLabelSteering is the text key for init label steering
 	// (foundation files scaffold) messages.
 	DescKeyInitLabelSteering = "init.label-steering"
+	// DescKeyInitLabelKB is the text key for init label kb editorial
+	// pipeline scaffold messages.
+	DescKeyInitLabelKB = "init.label-kb"
 )
 
 // Init confirmation prompts and mode labels.

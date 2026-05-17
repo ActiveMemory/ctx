@@ -21,6 +21,9 @@ const (
 	// CompactTimestamp is the YYYYMMDD-HHMMSS layout used in entry headers
 	// and task timestamps (e.g., 2026-01-28-143022).
 	CompactTimestamp = "2006-01-02-150405"
+	// RFC3339Compact is the compact UTC timestamp used in closeout and
+	// handover filename suffixes (e.g., 20260128T143022Z).
+	RFC3339Compact = "20060102T150405Z"
 )
 
 // DateMinLen is the minimum string length for a

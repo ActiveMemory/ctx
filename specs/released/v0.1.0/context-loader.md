@@ -10,7 +10,7 @@ Context system.
 
 1. **Discovery** — Find the `.context/` directory and enumerate files
 2. **Reading** — Load file contents with proper encoding
-3. **Parsing** — Convert markdown to structured data
+3. **Parsing** — Convert Markdown to structured data
 4. **Assembly** — Combine parsed files into unified context
 5. **Budgeting** — Respect token limits and prioritize content
 
@@ -82,7 +82,7 @@ CONSTITUTION.md is NEVER truncated.
 
 ### Markdown to Structure
 
-The parser extracts structure from markdown using these rules:
+The parser extracts structure from Markdown using these rules:
 
 ```go
 type ParsedContent struct {
@@ -108,7 +108,7 @@ type Item struct {
 
 ### Error Handling
 
-- **Malformed markdown**: Parse what's possible, log warnings
+- **Malformed Markdown**: Parse what's possible, log warnings
 - **Missing files**: Include in `missing` array, continue loading others
 - **Encoding issues**: Assume UTF-8, replace invalid sequences
 - **Empty files**: Include with empty parsed content
@@ -121,7 +121,7 @@ More accurate estimation can be added later with tiktoken or similar.
 
 ## Assembly
 
-The `summary` field contains the assembled context as a single markdown string:
+The `summary` field contains the assembled context as a single Markdown string:
 
 ```markdown
 # Project Context
@@ -163,6 +163,6 @@ Optional caching layer:
 
 - Unit tests for each parsing rule
 - Integration tests with sample `.context/` directories
-- Edge cases: empty files, malformed markdown, missing directory
+- Edge cases: empty files, malformed Markdown, missing directory
 - Token budget tests: verify truncation behavior
 - Performance: loading should complete in <100ms for typical projects

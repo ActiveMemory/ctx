@@ -64,6 +64,12 @@ const (
 	// FrontmatterDelimiter is the YAML frontmatter
 	// boundary marker.
 	FrontmatterDelimiter = "---"
+	// FormatString is the Printf %s verb used as a pass-through
+	// format when the caller has already resolved the
+	// localized text via desc.Text and the format string itself
+	// must remain a compile-time constant for govet's printf
+	// check.
+	FormatString = "%s"
 )
 
 // TopicSeparators are the delimiters between a date and topic in session

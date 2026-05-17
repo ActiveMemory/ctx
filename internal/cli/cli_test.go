@@ -64,6 +64,13 @@ func TestBinaryIntegration(t *testing.T) {
 	if err := os.Mkdir(testDir, 0750); err != nil {
 		t.Fatalf("failed to create test dir: %v", err)
 	}
+	// Phase RG: the root PersistentPreRunE refuses every
+	// command when `<projectRoot>/.git` is absent. The CLI
+	// integration test simulates a real working tree, so
+	// stub an empty `.git/` directory to satisfy the guard.
+	if err := os.Mkdir(filepath.Join(testDir, ".git"), 0750); err != nil {
+		t.Fatalf("failed to create .git dir: %v", err)
+	}
 
 	// Under the explicit-context-dir model each subprocess invocation
 	// must declare CTX_DIR. t.Setenv mutates the current process env

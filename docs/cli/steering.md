@@ -16,7 +16,7 @@ icon: lucide/compass
 Manage **steering files**: persistent behavioral rules for AI
 coding assistants.
 
-A steering file is a small markdown document with YAML
+A steering file is a small Markdown document with YAML
 frontmatter that tells the AI *how to behave* in a specific
 context. `ctx steering` keeps those files in
 `.context/steering/`, decides which ones apply for a given

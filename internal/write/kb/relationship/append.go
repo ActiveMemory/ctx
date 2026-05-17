@@ -1,0 +1,65 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package relationship
+
+import (
+	"os"
+	"path/filepath"
+
+	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgKbRel "github.com/ActiveMemory/ctx/internal/config/kb/relationship"
+	errKbRel "github.com/ActiveMemory/ctx/internal/err/kb/relationship"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
+)
+
+// Append writes one row to the relationship-map artifact at
+// path. When the file does not exist, it is created with the
+// schema header and then the row is appended. The write opens
+// the file with O_CREATE|O_APPEND|O_WRONLY; idempotency at the
+// call-site is the caller's responsibility.
+//
+// Parameters:
+//   - path: absolute path to
+//     `.context/kb/relationship-map.md`.
+//   - row: row content.
+//
+// Returns:
+//   - error: wrapped I/O failures.
+func Append(path string, row Row) error {
+	if mkErr := ctxIo.SafeMkdirAll(
+		filepath.Dir(path), cfgFs.PermExec,
+	); mkErr != nil {
+		return errKbRel.MkdirDir(mkErr)
+	}
+	needsHeader := false
+	if _, statErr := ctxIo.SafeStat(path); statErr != nil {
+		if !os.IsNotExist(statErr) {
+			return errKbRel.ReadFile(statErr)
+		}
+		needsHeader = true
+	}
+
+	f, openErr := ctxIo.SafeAppendFile(path, cfgFs.PermSecret)
+	if openErr != nil {
+		return errKbRel.OpenFile(openErr)
+	}
+	defer func() { _ = f.Close() }()
+
+	if needsHeader {
+		if _, writeErr := f.WriteString(
+			cfgKbRel.TableHeader,
+		); writeErr != nil {
+			return errKbRel.WriteRow(writeErr)
+		}
+	}
+	if _, writeErr := f.WriteString(
+		renderRow(row),
+	); writeErr != nil {
+		return errKbRel.WriteRow(writeErr)
+	}
+	return nil
+}

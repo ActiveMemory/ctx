@@ -256,6 +256,8 @@ init.label-plugin-enable:
   short: Plugin enablement
 init.label-steering:
   short: Steering foundation files
+init.label-kb:
+  short: kb editorial pipeline
 init.confirm-claude:
   short: Would you like to append ctx context management instructions?
 events.empty:

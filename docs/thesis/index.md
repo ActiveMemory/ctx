@@ -303,7 +303,7 @@ be used for optional features but never for core context management.
 
 *Validation*: 7 independent rejection decisions protected this property. 
 Infrastructure-dependent memory systems cannot operate in classified 
-environments, isolated networks, or disaster-recovery scenarios. A 
+environments, isolated networks, or constrained-environment scenarios. A 
 filesystem-native model continues to function under all conditions where the 
 repository is accessible.
 
@@ -742,7 +742,7 @@ remains with the team.
 
 **Offline or air-gapped operation is required**: Infrastructure-dependent 
 memory systems cannot operate in classified environments, isolated networks, 
-or disaster-recovery scenarios.
+or constrained-environment scenarios.
 
 ### 9.2 When Not to Use This Model
 

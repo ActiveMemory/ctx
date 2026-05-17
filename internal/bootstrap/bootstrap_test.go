@@ -323,6 +323,15 @@ func TestInitGuard_AllowsInitializedCommand(t *testing.T) {
 	if mkErr := os.MkdirAll(ctxDir, 0o700); mkErr != nil {
 		t.Fatal(mkErr)
 	}
+	// Phase RG: the root PersistentPreRunE requires a .git/
+	// directory under the project root. Without it, every
+	// subcommand short-circuits with "git working tree
+	// required". Create an empty .git/ marker to satisfy the
+	// precondition (no real repo needed for this guard).
+	gitDir := filepath.Join(tmp, ".git")
+	if mkGitErr := os.MkdirAll(gitDir, 0o700); mkGitErr != nil {
+		t.Fatal(mkGitErr)
+	}
 
 	// Create required context files so Initialized() returns true.
 	for _, f := range ctx.FilesRequired {

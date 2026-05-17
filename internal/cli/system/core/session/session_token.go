@@ -67,8 +67,8 @@ func ReadTokenInfo(sessionID string) (entity.TokenInfo, error) {
 // from many entry points (including provenance.Emit, which is
 // intentionally unconditional) and we must not materialize
 // .context/state/ as a side effect of glob caching in projects that
-// have never run ctx init. Returns ("", nil) — caller treats as
-// "no token data" and proceeds.
+// have never run ctx init. Returns ("", nil); the caller treats
+// that as "no token data" and proceeds.
 //
 // Parameters:
 //   - sessionID: The Claude Code session ID

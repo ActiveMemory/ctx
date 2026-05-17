@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/loop"
-	"github.com/ActiveMemory/ctx/internal/flagbind"
+	"github.com/ActiveMemory/ctx/internal/flag_bind"
 )
 
 // Cmd returns the "ctx loop" command for generating Ralph loop scripts.

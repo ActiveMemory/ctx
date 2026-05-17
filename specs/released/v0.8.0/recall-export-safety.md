@@ -7,7 +7,7 @@ import and confirmation prompt — see Phase 1.)
 
 ## Context
 
-`ctx recall import` regenerates journal markdown from JSONL session data.
+`ctx recall import` regenerates journal Markdown from JSONL session data.
 The conversation body is **always** regenerated — manual edits are lost.
 `--force` additionally discards enriched YAML frontmatter. The docs say
 "you can edit these files" without warning about this.

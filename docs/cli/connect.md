@@ -62,7 +62,7 @@ ctx connect subscribe decision learning convention
 ### `ctx connect sync`
 
 Pull matching entries from the hub and write them to
-`.context/hub/` as markdown files with origin tags and date
+`.context/hub/` as Markdown files with origin tags and date
 headers. Tracks last-seen sequence for incremental sync.
 
 ```bash

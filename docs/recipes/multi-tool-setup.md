@@ -183,7 +183,7 @@ registers the `ctx` MCP server globally. See
 !!! tip "OpenCode Is a First-Class Citizen"
     With the plugin installed, OpenCode gets lifecycle hooks and skills
     automatically. Context loads at session start, survives compaction,
-    and persists at session end — no manual steps needed.
+    and persists at session end, with no manual steps needed.
 
 #### VS Code
 

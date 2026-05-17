@@ -608,3 +608,177 @@ err.init-backup-read:
   short: 'read %s for backup: %w'
 err.init-backup-write:
   short: 'write backup %s: %w'
+err.handover.latest:
+  short: 'latest handover: %w'
+err.handover.list-closeouts:
+  short: 'list closeouts for fold: %w'
+err.handover.marshal-frontmatter:
+  short: 'marshal handover frontmatter: %w'
+err.handover.mkdir-handovers:
+  short: 'mkdir handovers dir: %w'
+err.handover.write-handover:
+  short: 'write handover: %w'
+err.handover.archive-folded-closeouts:
+  short: 'archive folded closeouts: %w'
+err.handover.read-handover:
+  short: 'read handover: %w'
+err.handover.read-handovers-dir:
+  short: 'read handovers dir: %w'
+err.handover.parse-frontmatter:
+  short: 'parse handover frontmatter: %w'
+err.handover.resolve-head:
+  short: 'resolve git head for handover: %w'
+err.closeout.read-closeout:
+  short: 'read closeout: %w'
+err.closeout.parse-frontmatter:
+  short: 'parse closeout frontmatter: %w'
+err.closeout.marshal-frontmatter:
+  short: 'marshal closeout frontmatter: %w'
+err.closeout.read-closeouts-dir:
+  short: 'read closeouts dir: %w'
+err.closeout.resolve-head:
+  short: 'resolve git head for closeout: %w'
+err.closeout.mkdir-closeouts:
+  short: 'mkdir closeouts dir: %w'
+err.closeout.write-closeout:
+  short: 'write closeout: %w'
+err.closeout.mkdir-archive:
+  short: 'mkdir closeout archive dir: %w'
+err.closeout.archive-move:
+  short: 'archive closeout %s: %w'
+err.closeout.missing-fields:
+  short: '%w: %s'
+err.gitmeta.missing-git-tree:
+  short: '%w: .git/ not found at %s; run `git init` to fix'
+err.gitmeta.missing-git-tree-for-cmd:
+  short: '%w: ctx %s: .git/ not found at %s; run `git init` to fix'
+err.gitmeta.stat-git-dir:
+  short: 'stat .git at %s: %w'
+err.gitmeta.resolve-head:
+  short: 'resolve git head: %w'
+err.initkb.mkdir:
+  short: 'mkdir %s: %w'
+err.initkb.copy-ingest-templates:
+  short: 'copy ingest templates: %w'
+err.initkb.copy-schemas:
+  short: 'copy schemas: %w'
+err.initkb.copy-landing:
+  short: 'copy kb landing: %w'
+err.initkb.read-embed:
+  short: 'read embed %s: %w'
+err.initkb.mkdir-for:
+  short: 'mkdir for %s: %w'
+err.initkb.write-file:
+  short: 'write %s: %w'
+err.initkb.read-dir:
+  short: 'read %s: %w'
+err.kb.evidence.duplicate-id:
+  short: '%w: %s'
+err.kb.evidence.invalid-band:
+  short: '%w: %q'
+err.kb.evidence.read-index:
+  short: 'read evidence-index: %w'
+err.kb.evidence.mkdir-dir:
+  short: 'mkdir evidence-index parent: %w'
+err.kb.evidence.open-index:
+  short: 'open evidence-index: %w'
+err.kb.evidence.write-row:
+  short: 'write evidence row: %w'
+err.kb.evidence.parse-id-number:
+  short: 'parse EV number %q: %w'
+err.kb.sourcecoverage.illegal-transition:
+  short: '%w: %s → %s for source %s'
+err.kb.sourcecoverage.unknown-source:
+  short: '%w: %s entering at %s'
+err.kb.sourcecoverage.read-ledger:
+  short: 'read ledger: %w'
+err.kb.sourcecoverage.mkdir-ledger-dir:
+  short: 'mkdir ledger parent: %w'
+err.kb.sourcecoverage.write-ledger:
+  short: 'write ledger: %w'
+err.kb.glossary.read-file:
+  short: 'stat glossary: %w'
+err.kb.glossary.mkdir-dir:
+  short: 'mkdir glossary parent: %w'
+err.kb.glossary.open-file:
+  short: 'open glossary: %w'
+err.kb.glossary.write-row:
+  short: 'write glossary row: %w'
+err.kb.timeline.read-file:
+  short: 'stat timeline: %w'
+err.kb.timeline.mkdir-dir:
+  short: 'mkdir timeline parent: %w'
+err.kb.timeline.open-file:
+  short: 'open timeline: %w'
+err.kb.timeline.write-row:
+  short: 'write timeline row: %w'
+err.kb.sourcemap.read-file:
+  short: 'stat source-map: %w'
+err.kb.sourcemap.mkdir-dir:
+  short: 'mkdir source-map parent: %w'
+err.kb.sourcemap.open-file:
+  short: 'open source-map: %w'
+err.kb.sourcemap.write-row:
+  short: 'write source-map row: %w'
+err.kb.relationship.read-file:
+  short: 'stat relationship-map: %w'
+err.kb.relationship.mkdir-dir:
+  short: 'mkdir relationship-map parent: %w'
+err.kb.relationship.open-file:
+  short: 'open relationship-map: %w'
+err.kb.relationship.write-row:
+  short: 'write relationship-map row: %w'
+err.kb.contradiction.read-file:
+  short: 'read contradictions: %w'
+err.kb.contradiction.mkdir-dir:
+  short: 'mkdir contradictions parent: %w'
+err.kb.contradiction.open-file:
+  short: 'open contradictions: %w'
+err.kb.contradiction.write-row:
+  short: 'write contradictions row: %w'
+err.kb.contradiction.parse-c-number:
+  short: 'parse C number %q: %w'
+err.kb.decision.read-file:
+  short: 'read decisions: %w'
+err.kb.decision.mkdir-dir:
+  short: 'mkdir decisions parent: %w'
+err.kb.decision.open-file:
+  short: 'open decisions: %w'
+err.kb.decision.write-row:
+  short: 'write decisions row: %w'
+err.kb.decision.parse-dd-number:
+  short: 'parse DD number %q: %w'
+err.kb.question.read-file:
+  short: 'read questions: %w'
+err.kb.question.mkdir-dir:
+  short: 'mkdir questions parent: %w'
+err.kb.question.open-file:
+  short: 'open questions: %w'
+err.kb.question.write-row:
+  short: 'write questions row: %w'
+err.kb.question.parse-q-number:
+  short: 'parse Q number %q: %w'
+err.kb.cli.grounding-missing:
+  short: 'grounding-sources.md not found at %s; list sources first'
+err.kb.cli.grounding-empty:
+  short: 'grounding-sources.md is empty at %s; list sources first'
+err.kb.cli.topic-exists:
+  short: 'topic %s already exists at %s'
+err.kb.cli.mkdir-ingest:
+  short: 'mkdir ingest: %w'
+err.kb.cli.open-findings:
+  short: 'open findings: %w'
+err.kb.cli.write-finding:
+  short: 'write finding: %w'
+err.kb.cli.read-kb-index:
+  short: 'read kb index: %w'
+err.kb.cli.write-kb-index:
+  short: 'write kb index: %w'
+err.kb.cli.read-topics-dir:
+  short: 'read topics dir: %w'
+err.kb.cli.mkdir-topic:
+  short: 'mkdir topic: %w'
+err.kb.cli.read-topic-template:
+  short: 'read embedded topic template: %w'
+err.kb.cli.write-topic-index:
+  short: 'write topic index: %w'

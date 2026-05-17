@@ -1061,3 +1061,39 @@ write.steering-body-workflow:
     - **Commit conventions** (message format, signed-off-by)
     - **Pre-commit / pre-push checks**
     - **Review expectations**
+write.handover.wrote:
+  short: "wrote %s\n"
+write.handover.folded:
+  short: "folded %d closeout(s); archived to %s\n"
+write.handover.malformed-warning:
+  short: "warning: %d malformed closeout(s) skipped during fold:\n"
+write.handover.malformed-line:
+  short: "  %s\n"
+write.kb-cli.finding-line:
+  short: "- [%s] %s\n"
+write.kb-cli.reindexed:
+  short: "reindexed %d topic(s) into %s\n"
+write.kb-cli.scaffolded:
+  short: "scaffolded %s\n"
+write.kb-cli.appended-to:
+  short: "appended to %s\n"
+write.kb-cli.ask-driven-hint:
+  short: "Q&A is driven by the /ctx-kb-ask skill.\n"
+write.kb-cli.ask-invoke-format:
+  short: "In Claude Code, invoke: /ctx-kb-ask %s\n"
+write.kb-cli.ask-contract-pointer:
+  short: "See .context/ingest/40-ASK.md for the contract.\n"
+write.kb-cli.ground-driven-hint:
+  short: "Grounding is driven by the /ctx-kb-ground skill.\n"
+write.kb-cli.ground-contract-pointer:
+  short: "See .context/ingest/00-GROUND.md for the contract.\n"
+write.kb-cli.ingest-driven-hint:
+  short: "Editorial ingestion is driven by the /ctx-kb-ingest skill.\n"
+write.kb-cli.ingest-invoke-format:
+  short: "In Claude Code, invoke: /ctx-kb-ingest %s\n"
+write.kb-cli.ingest-fallback-hint:
+  short: "Without the skill, follow .context/ingest/PROMPT.md.\n"
+write.kb-cli.site-review-driven-hint:
+  short: "Site-review is driven by the /ctx-kb-site-review skill.\n"
+write.kb-cli.site-review-contract-pointer:
+  short: "See .context/ingest/50-SITE_REVIEW.md for the contract.\n"

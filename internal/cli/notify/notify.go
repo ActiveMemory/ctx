@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
-	"github.com/ActiveMemory/ctx/internal/flagbind"
+	"github.com/ActiveMemory/ctx/internal/flag_bind"
 	iNotify "github.com/ActiveMemory/ctx/internal/notify"
 )
 

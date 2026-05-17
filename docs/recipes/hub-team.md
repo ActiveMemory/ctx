@@ -33,7 +33,7 @@ without ceremony.
   the hub.
 - Each project on each workstation has been activated for
   the shell with `eval "$(ctx activate)"`. The hub server
-  (`ctx hub start`, etc.) doesn't need this — but the
+  (`ctx hub start`, etc.) doesn't need this, but the
   client side (`ctx connection ...`, `ctx add --share`)
   lives in a project and does. If you skip activation,
   those client commands fail with `Error: no context
@@ -214,7 +214,7 @@ incident. "Share fast, edit later" is the rule.
 
 **Delete noisy entries, don't tolerate them.** The hub
 is append-only, but the `.context/hub/` mirror on each
-client is just markdown. If a shared learning turns out
+client is just Markdown. If a shared learning turns out
 to be wrong or obsolete, remove it from local mirrors
 and stop the hub daemon to truncate `entries.jsonl`
 (see [Hub operations](../operations/hub.md)). Noisy
