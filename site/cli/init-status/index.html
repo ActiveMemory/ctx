@@ -1810,6 +1810,20 @@
 <p>Initialize a new <code>.context/</code> directory with template files.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Git is required</p>
+<p><code>ctx init</code> (and every non-administrative <code>ctx</code> subcommand)
+refuses to operate without a <code>.git/</code> working tree at the
+project root. <code>ctx</code> already needed git to work properly;
+that requirement is now enforced rather than assumed.</p>
+<p>Handovers and closeouts stamp the current commit into
+their frontmatter, and the editorial pipeline pins
+in-repo evidence to a short SHA (<em>none of which works
+without a repo</em>). </p>
+<p>Run <code>git init</code> first if the project does
+not already have one. </p>
+<p>There is no <code>--allow-no-git</code> escape hatch. </p>
+</div>
 <p><strong>Flags</strong>:</p>
 <table>
 <thead>
@@ -1840,6 +1854,12 @@
 <p><strong>Creates</strong>:</p>
 <ul>
 <li><code>.context/</code> directory with all template files</li>
+<li><code>.context/kb/</code> (with <code>index.md</code> and <code>topics/</code>) and
+  <code>.context/ingest/</code> (with <code>KB-RULES.md</code>, mode prompts,
+  <code>OPERATOR.md</code>, <code>PROMPT.md</code>, <code>closeouts/</code>, <code>schemas/</code>) and
+  <code>.context/handovers/</code>: the editorial-pipeline scaffolding
+  (<a href="../../recipes/build-a-knowledge-base/">Phase KB</a>). Embedded
+  templates are copied; existing files are preserved.</li>
 <li><code>.claude/settings.local.json</code> with pre-approved <code>ctx</code> permissions</li>
 <li><code>CLAUDE.md</code> with bootstrap instructions (or merges into existing)</li>
 </ul>

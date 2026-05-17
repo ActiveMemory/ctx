@@ -17,6 +17,10 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-17 | `_helpers.go` / `_utils.go` filenames are project anti-pattern; use domain nouns |
+| 2026-05-17 | Subagent parallelism shines for mechanical refactor with a worked-example reference |
+| 2026-05-17 | naked_errors audit rejects fmt.Errorf wrapping outside internal/err/<area>/ |
+| 2026-05-17 | Pre-emptive constants are dead exports; ship constants only when their caller lands |
 | 2026-05-11 | Naive Markdown line-sweep corrupts multi-line code spans and YAML lists |
 | 2026-05-11 | tsc cross-tree include resolves node_modules from source file, not tsconfig |
 | 2026-05-10 | Go compile/tool version mismatch comes from the cached toolchain, not the system Go |
@@ -142,93 +146,352 @@ DO NOT UPDATE FOR:
 
 ---
 
+## [2026-05-17-061500] `_helpers.go` / `_utils.go` filenames are project anti-pattern; use domain nouns
+
+**Context**: During Phase KB / Phase RG audit cleanup, the first file split I
+attempted to satisfy the mixed-visibility audit named the new file
+`read_helpers.go`. The user vetoed on sight: "utils; helpers, etcs are ALL lazy
+naming; I will veto them the moment I see them; find proper domain objects."
+
+**Lesson**: ctx's per-package file layout follows domain nouns, not
+visibility-suffixed catch-alls. The canonical reference shape is
+`internal/journal/parser/` which splits 18 files by domain (envelope, markdown,
+parse, validate, claude, copilot, ...). The mixed-visibility audit demands a
+split, but the split target must be a real noun: `frontmatter.go` (YAML
+parsing/validation), `markdown.go` (rendering), `filename.go` (filename
+derivation), `provenance.go` (sha/branch resolution), `parse.go` (one-shot
+parser), `cursor.go` (latest-pointer logic). Never `_helpers.go`.
+
+**Application**: When splitting a file to satisfy `mixed_visibility_test`, name
+the new file for what the helpers ARE about, not for what visibility they have.
+If you can't name it cleanly, the split itself may be wrong and the funcs may
+belong in a different package entirely.
+
+---
+
+## [2026-05-17-061000] Subagent parallelism shines for mechanical refactor with a worked-example reference
+
+**Context**: Phase KB audit cleanup spanned 428 violations across 21 categories
+in ~50 files. Doing it serially in the orchestrator would have burned the
+session. Three subagents in parallel (one for 16 markdown templates, one for 10
+schemas, one for 6 SKILL.md files) landed 32 files with zero integration churn.
+A fourth subagent (9 kb writer packages) and a fifth (CLI cmd tree) followed the
+same shape and cleared the bulk of audit failures while the orchestrator handled
+handover + gitmeta + closeout itself.
+
+**Lesson**: Subagents work well when (a) the work is well-bounded, (b) a
+canonical worked example exists in the prompt or on disk, (c) the agent is told
+to fix-or-fail-with-a-blocker rather than surface deferral options. The first
+subagent I dispatched stopped at honest-scope reporting; the followups plowed
+because the prompt explicitly invoked the Constitution's no-deferral rule and
+pointed at a worked example.
+
+**Application**: For mechanical refactor work at scale: do one worked example in
+the orchestrator, then dispatch a subagent for the rest with the example as a
+reference path in the prompt. Tell the subagent to either complete the work or
+surface a specific blocker with a concrete next step, not options for the user
+to choose between.
+
+---
+
+## [2026-05-17-060000] naked_errors audit rejects fmt.Errorf wrapping outside internal/err/<area>/
+
+**Context**: When fixing Phase KB audit failures, I initially assumed
+`fmt.Errorf("desc: %w", err)` wrapping at the call site satisfies the
+naked_errors audit. It does not. `internal/audit/naked_errors_test.go` flags
+every `fmt.Errorf` and `errors.New` call outside `internal/err/**`. The ctx
+convention requires error constructors to live in domain-scoped
+`internal/err/<area>/` packages and pull their format strings from either
+`internal/config/<area>/` Go-side constants OR `desc.Text(text.DescKey...)` YAML
+keys.
+
+**Lesson**: For Phase KB this meant building 14 new err packages (`closeout`,
+`handover`, `gitmeta`, `kbevidence`, `kbsourcecoverage`, plus 7 kb-table
+packages, `kbcli`, `initkb`) plus matching `internal/config/<area>/` packages
+with `ErrMsg<Name>` and `Format<Name>` constants. The pattern: `var ErrX =
+errors.New(cfgArea.ErrMsgX)` for sentinels; `func X(args, cause) error { return
+fmt.Errorf(cfgArea.FormatX, args, cause) }` for wrapping constructors. Callers
+do `errors.Is(err, errArea.ErrX)` for sentinel matching.
+
+**Application**: Estimating the cost of "add a new feature" in ctx must include
+the err-package + config-package wiring. Each new error surface is ~3 files per
+area (config/<area>/messages.go, err/<area>/<area>.go, the calling code). The
+Phase RG `MissingGitError` typed struct was the wrong shape for ctx; it became
+`errGitmeta.ErrMissingGitTree` (sentinel) +
+`errGitmeta.MissingGitTreeForCmd(cmdName, projectRoot)` (wrapping constructor).
+
+---
+
+## [2026-05-17-055500] Pre-emptive constants are dead exports; ship constants only when their caller lands
+
+**Context**: During Phase KB Stage 3, I added the full set of expected constants
+to `internal/config/kb/kb.go`: closeout-mode names, schema filenames, life-stage
+tokens, pass-mode tokens, the LifeStageThreshold integer. Many of these had no
+caller yet because their consumers (doctor advisories, the `ctx kb site build`
+zensical wiring, doctor advisory checks) were Phase 7 work. The
+`dead_exports_test.go` audit flagged 28 of them. Same for
+`cli/kb/core/path/SchemasDir` and `KBArtifactFile`, plus `regex.SlugWithSlash`.
+
+**Lesson**: ctx's dead-export audit is symbol-graph-strict: any exported const /
+var / func without an internal reader fails the gate. You cannot scaffold
+constants ahead of their callers, even if you know the caller is one phase away.
+The constants must land in the same commit (or a strict precursor commit) as the
+code that reads them.
+
+**Application**: When defining configuration constants for a new feature, write
+the caller first or in the same change. If a constant truly needs to ship ahead
+of its caller (rare), park it in a TASKS.md line, not a config file. The audit
+treats "future use" as dead.
+
+---
+
 ## [2026-05-11-231025] Naive Markdown line-sweep corrupts multi-line code spans and YAML lists
 
-**Context**: Performed a programmatic typographic sweep across docs/*.md to wrap bare 'ctx' tokens in backticks (commit 61aab858). 81 source files, 236 lines changed. First pass corrupted two indented JSON snippets in MkDocs admonitions because the fence regex anchored to start-of-line and missed admonition-indented fences. After fixing the fence regex, two more corruptions surfaced (multi-line inline-code spans where the opening backtick is on line N and the closing on line N+1: the line-at-a-time transformer treated each line independently, leading to misjudged span boundaries on the second line). After post-sweep validation, a YAML parse error on docs/blog/2026-02-03-the-attention-budget.md surfaced one more breakage: a 'topics:' list-item like '- ctx primitives' got wrapped to '- `ctx` primitives', which is invalid YAML (a value starting with backtick is not a valid unquoted scalar). Total: 2 multi-line span corruptions + 1 YAML breakage, all detected only by post-sweep validation (make site + grep audit), not by the dry-run.
+**Context**: Performed a programmatic typographic sweep across docs/*.md to wrap
+bare 'ctx' tokens in backticks (commit 61aab858). 81 source files, 236 lines
+changed. First pass corrupted two indented JSON snippets in MkDocs admonitions
+because the fence regex anchored to start-of-line and missed admonition-indented
+fences. After fixing the fence regex, two more corruptions surfaced (multi-line
+inline-code spans where the opening backtick is on line N and the closing on
+line N+1: the line-at-a-time transformer treated each line independently,
+leading to misjudged span boundaries on the second line). After post-sweep
+validation, a YAML parse error on docs/blog/2026-02-03-the-attention-budget.md
+surfaced one more breakage: a 'topics:' list-item like '- ctx primitives' got
+wrapped to '- `ctx` primitives', which is invalid YAML (a value starting with
+backtick is not a valid unquoted scalar). Total: 2 multi-line span corruptions +
+1 YAML breakage, all detected only by post-sweep validation (make site + grep
+audit), not by the dry-run.
 
-**Lesson**: A naive line-at-a-time regex sweep across Markdown documents must respect a wider 'skip' set than the obvious cases. The full safe-skip list is: (1) triple-backtick fenced code blocks, BOTH root-level and indented inside MkDocs admonitions or list items (fence regex must allow leading whitespace, e.g. '^\\s*```'); (2) inline backtick spans on the same line; (3) multi-line inline-code spans crossing line boundaries (line-at-a-time logic cannot detect both ends, so either track fence-like 'odd-count' state across lines or treat any unclosed-on-line backtick as 'protect rest of line'); (4) the ENTIRE YAML frontmatter block (delimited by '---' at top and next '---'), not just specific keys like title/description/icon, because list-item values under topics/tags/keywords are also YAML and break on a leading backtick; (5) image alt-text '![alt]' (alt-text does not render in monotype); (6) link-reference definitions '[name]: url "title"'; (7) project copyright header comment blocks. Dry-run output never catches YAML or multi-line span breakage; validation MUST include a parser-level check (make site for YAML, post-grep for '``name`' double-backtick patterns near the wrapped token).
+**Lesson**: A naive line-at-a-time regex sweep across Markdown documents must
+respect a wider 'skip' set than the obvious cases. The full safe-skip list is:
+(1) triple-backtick fenced code blocks, BOTH root-level and indented inside
+MkDocs admonitions or list items (fence regex must allow leading whitespace,
+e.g. '^\\s*```'); (2) inline backtick spans on the same line; (3) multi-line
+inline-code spans crossing line boundaries (line-at-a-time logic cannot detect
+both ends, so either track fence-like 'odd-count' state across lines or treat
+any unclosed-on-line backtick as 'protect rest of line'); (4) the ENTIRE YAML
+frontmatter block (delimited by '---' at top and next '---'), not just specific
+keys like title/description/icon, because list-item values under
+topics/tags/keywords are also YAML and break on a leading backtick; (5) image
+alt-text '![alt]' (alt-text does not render in monotype); (6) link-reference
+definitions '[name]: url "title"'; (7) project copyright header comment blocks.
+Dry-run output never catches YAML or multi-line span breakage; validation MUST
+include a parser-level check (make site for YAML, post-grep for '``name`'
+double-backtick patterns near the wrapped token).
 
-**Application**: When designing any future programmatic sweep across docs/ (typography passes, internationalization, brand renames, em-dash replacement, link-text rewrites): (1) implement the full skip set above, not a subset; (2) for fence detection use '^\\s*```', not '^```'; (3) for the frontmatter, detect the entire block between '---' delimiters, not specific keys; (4) for multi-line inline-code, choose between cross-line backtick-pair tracking (complex but correct) or the simpler 'unclosed backtick protects rest of line' heuristic (corrupts ~1 per 100 files but recoverable manually); (5) ALWAYS validate post-sweep with 'make site' (zensical surfaces YAML errors) and a grep for '``\\w' double-backtick patterns near the wrapped token; (6) commit only after both validations are clean. For one-shot sweeps the script can be ad-hoc, but record the validation gate as part of the commit message so the next contributor knows what to check.
+**Application**: When designing any future programmatic sweep across docs/
+(typography passes, internationalization, brand renames, em-dash replacement,
+link-text rewrites): (1) implement the full skip set above, not a subset; (2)
+for fence detection use '^\\s*```', not '^```'; (3) for the frontmatter, detect
+the entire block between '---' delimiters, not specific keys; (4) for multi-line
+inline-code, choose between cross-line backtick-pair tracking (complex but
+correct) or the simpler 'unclosed backtick protects rest of line' heuristic
+(corrupts ~1 per 100 files but recoverable manually); (5) ALWAYS validate
+post-sweep with 'make site' (zensical surfaces YAML errors) and a grep for
+'``\\w' double-backtick patterns near the wrapped token; (6) commit only after
+both validations are clean. For one-shot sweeps the script can be ad-hoc, but
+record the validation gate as part of the commit message so the next contributor
+knows what to check.
 
 ---
 
 ## [2026-05-11-202124] tsc cross-tree include resolves node_modules from source file, not tsconfig
 
-**Context**: Set up tsc --noEmit gate for the embedded OpenCode plugin. tsconfig lived in tools/typecheck/opencode/; include pointed at internal/assets/integrations/opencode/plugin/index.ts via relative path. First run failed with 'Cannot find module @opencode-ai/plugin' even though node_modules was correctly populated in tools/typecheck/opencode/.
+**Context**: Set up tsc --noEmit gate for the embedded OpenCode plugin. tsconfig
+lived in tools/typecheck/opencode/; include pointed at
+internal/assets/integrations/opencode/plugin/index.ts via relative path. First
+run failed with 'Cannot find module @opencode-ai/plugin' even though
+node_modules was correctly populated in tools/typecheck/opencode/.
 
-**Lesson**: When tsconfig.json sits in dir A but its 'include' points at .ts files in dir B, tsc resolves node_modules by walking up from each source file's location (dir B), NOT from the tsconfig's location (dir A). With moduleResolution: bundler the behavior is the same. The 'node_modules' that ships in dir A is invisible to a source file in a distant dir B.
+**Lesson**: When tsconfig.json sits in dir A but its 'include' points at .ts
+files in dir B, tsc resolves node_modules by walking up from each source file's
+location (dir B), NOT from the tsconfig's location (dir A). With
+moduleResolution: bundler the behavior is the same. The 'node_modules' that
+ships in dir A is invisible to a source file in a distant dir B.
 
-**Application**: For any cross-tree tsc setup (typecheck gate for embedded source elsewhere in the repo, monorepo-style references, etc.), add explicit baseUrl + paths to the tsconfig. Example: baseUrl: '.', paths: { '@opencode-ai/plugin': ['./node_modules/@opencode-ai/plugin/dist/index.d.ts'], '@opencode-ai/plugin/*': ['./node_modules/@opencode-ai/plugin/dist/*'] }. Add typeRoots ['./node_modules/@types', './node_modules'] for good measure. The cost is some manual path mapping; the benefit is that node_modules can live wherever the tooling does, not next to the source.
+**Application**: For any cross-tree tsc setup (typecheck gate for embedded
+source elsewhere in the repo, monorepo-style references, etc.), add explicit
+baseUrl + paths to the tsconfig. Example: baseUrl: '.', paths: {
+'@opencode-ai/plugin': ['./node_modules/@opencode-ai/plugin/dist/index.d.ts'],
+'@opencode-ai/plugin/*': ['./node_modules/@opencode-ai/plugin/dist/*'] }. Add
+typeRoots ['./node_modules/@types', './node_modules'] for good measure. The cost
+is some manual path mapping; the benefit is that node_modules can live wherever
+the tooling does, not next to the source.
 
 ---
 
 ## [2026-05-10-181418] Go compile/tool version mismatch comes from the cached toolchain, not the system Go
 
-**Context**: Hit 'compile: version "go1.26.1" does not match go tool version "go1.26.2"' on every go build / go test / make lint, even with my changes stashed out. System Go was 1.26.2 (healthy); go.mod pinned 1.26.1, so Go's auto-toolchain feature had downloaded 1.26.1 to ~/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.26.1.darwin-arm64/. That cached toolchain was internally inconsistent: its compile binary and stdlib export data disagreed on version.
+**Context**: Hit 'compile: version "go1.26.1" does not match go tool version
+"go1.26.2"' on every go build / go test / make lint, even with my changes
+stashed out. System Go was 1.26.2 (healthy); go.mod pinned 1.26.1, so Go's
+auto-toolchain feature had downloaded 1.26.1 to
+~/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.26.1.darwin-arm64/. That cached
+toolchain was internally inconsistent: its compile binary and stdlib export data
+disagreed on version.
 
-**Lesson**: When the compile-vs-tool version error appears, the bug is the cached toolchain dir, not the installed Go. Reinstalling Go (brew, installer, etc.) does NOT touch the cached download, so the error persists after reinstall. Three real fixes: (1) rm -rf ~/go/pkg/mod/golang.org/toolchain@v0.0.1-go<X>.<platform>/ to force a clean re-download (~30s); (2) bump go.mod to match the system Go so the cached one is bypassed; (3) GOTOOLCHAIN=go<system version> to override the pin per-invocation. go clean -cache and GOTOOLCHAIN=local do not help.
+**Lesson**: When the compile-vs-tool version error appears, the bug is the
+cached toolchain dir, not the installed Go. Reinstalling Go (brew, installer,
+etc.) does NOT touch the cached download, so the error persists after reinstall.
+Three real fixes: (1) rm -rf
+~/go/pkg/mod/golang.org/toolchain@v0.0.1-go<X>.<platform>/ to force a clean
+re-download (~30s); (2) bump go.mod to match the system Go so the cached one is
+bypassed; (3) GOTOOLCHAIN=go<system version> to override the pin per-invocation.
+go clean -cache and GOTOOLCHAIN=local do not help.
 
-**Application**: First diagnostic on this error: check go env GOROOT — if it points to ~/go/pkg/mod/golang.org/toolchain@... the cached toolchain is in play. Then either delete the cached dir (most surgical) or bump go.mod (one-line diff, but lands in a commit). Do not waste time reinstalling Go.
+**Application**: First diagnostic on this error: check `go env GOROOT`. If it
+points to `~/go/pkg/mod/golang.org/toolchain@...` the cached toolchain is in
+play. Then either delete the cached dir (most surgical) or bump go.mod (one-line
+diff, but lands in a commit). Do not waste time reinstalling Go.
 
 ---
 
 ## [2026-05-10-001859] An ongoing user's concrete workaround tax is the strongest validation evidence
 
-**Context**: When extracting the editorial pipeline, the user pointed at things-wtf-disaster-recovery as a project where they were already running the editorial pattern manually — but at concrete cost: CLAUDE.md disabling half of ctx code-dev skills (/ctx-commit, /ctx-implement, /ctx-spec, /ctx-architecture, /ctx-brainstorm, /ctx-wrap-up), 10-CONSTITUTION.md at repo root colliding with .context/CONSTITUTION.md, hand-typed 8-item closeouts, hand-managed 20-INBOX.md, dedicated reference/vcf/external-grounding.md for ground-mode. The workaround was visible and the pain was specific.
+**Context**: When extracting the editorial pipeline, the user pointed at
+`your-project` as a project where they were already running the editorial pattern
+manually, at concrete cost: CLAUDE.md disabling half of ctx code-dev skills
+(/ctx-commit, /ctx-implement, /ctx-spec, /ctx-architecture, /ctx-brainstorm,
+/ctx-wrap-up), 10-CONSTITUTION.md at repo root colliding with
+.context/CONSTITUTION.md, hand-typed 8-item closeouts, hand-managed 20-INBOX.md,
+dedicated reference/vcf/external-grounding.md for ground-mode. The workaround
+was visible and the pain was specific.
 
-**Lesson**: An ongoing user paying concrete workaround tax is the strongest validation evidence — it beats hypothetical user research, beats N=2 design discussion, beats 'this seems useful.' The shape of the workaround maps directly to the gap the feature should fill. Validation is essentially complete before any code is written; the new feature mechanizes what already works manually.
+**Lesson**: An ongoing user paying concrete workaround tax is the strongest
+validation evidence; it beats hypothetical user research, beats N=2 design
+discussion, beats 'this seems useful.' The shape of the workaround maps directly
+to the gap the feature should fill. Validation is essentially complete before
+any code is written; the new feature mechanizes what already works manually.
 
-**Application**: When deciding whether to ship a feature, prefer 'a real user is paying real workaround cost right now' over 'this seems valuable.' Use the workaround details (which files they created, which conventions they bent, which skills they disabled) as the inverse-spec of what to build. Ship the feature shape that exactly matches what they hand-rolled, and use their project as the regression test corpus (Phase KB-2 ports things-wtf as the validation step).
+**Application**: When deciding whether to ship a feature, prefer 'a real user is
+paying real workaround cost right now' over 'this seems valuable.' Use the
+workaround details (which files they created, which conventions they bent, which
+skills they disabled) as the inverse-spec of what to build. Ship the feature
+shape that exactly matches what they hand-rolled, and use their project as the
+regression test corpus (Phase KB-2 ports `your-project` as the validation step).
 
 ---
 
 ## [2026-05-10-001859] Lift renames alongside features when borrowing from battle-tested external designs
 
-**Context**: When extracting the editorial pipeline from the sibling project, noticed they named their editorial constitution 10-INGEST_RULES.md (not 10-CONSTITUTION.md), and explicitly recorded a 'domain-decisions.md is named to disambiguate from .anchor/DECISIONS.md (naming-by-rename rule)' note in their schemas. They had hit and resolved naming conflicts that things-wtf was actively re-fighting (with 10-CONSTITUTION.md at repo root colliding with .context/CONSTITUTION.md).
+**Context**: When extracting the editorial pipeline from the sibling project,
+noticed they named their editorial constitution 10-INGEST_RULES.md (not
+10-CONSTITUTION.md), and explicitly recorded a 'domain-decisions.md is named to
+disambiguate from .tool/DECISIONS.md (naming-by-rename rule)' note in their
+schemas. They had hit and resolved naming conflicts that `your-project` was actively
+re-fighting (with 10-CONSTITUTION.md at repo root colliding with
+.context/CONSTITUTION.md).
 
-**Lesson**: When lifting from a battle-tested external design, lift the renames and disambiguation moves alongside the features. Intentional renames encode resolved conflicts; treating them as cosmetic preferences re-litigates the underlying fight in your codebase. The aesthetic difference between two names often hides hard-won architectural learning.
+**Lesson**: When lifting from a battle-tested external design, lift the renames
+and disambiguation moves alongside the features. Intentional renames encode
+resolved conflicts; treating them as cosmetic preferences re-litigates the
+underlying fight in your codebase. The aesthetic difference between two names
+often hides hard-won architectural learning.
 
-**Application**: ctx editorial pipeline uses KB-RULES.md (not CONSTITUTION.md) and domain-decisions.md (not DECISIONS.md) explicitly because the sibling did. For any future external-design lift, scan the source for renames as signal of resolved-conflict knowledge — and copy them with the rationale (in DECISIONS.md) so future maintainers don't 'simplify' the names back into the conflict zone.
+**Application**: ctx editorial pipeline uses KB-RULES.md (not CONSTITUTION.md)
+and domain-decisions.md (not DECISIONS.md) explicitly because the sibling did.
+For any future external-design lift, scan the source for renames as signal of
+resolved-conflict knowledge, and copy them with the rationale (in DECISIONS.md)
+so future maintainers don't 'simplify' the names back into the conflict zone.
 
 ---
 
 ## [2026-05-10-001859] KB epistemology: in a KB you do not decide, you increase confidence
 
-**Context**: Considered whether KB editorial decisions need a parallel /ctx-kb-decide skill mirroring /ctx-decision-add. Got stuck on three resolutions (skill surface doubles, mode-aware router, manual discipline) until the user reframed: do you really decide in a KB, or do you just learn and improve confidence? A claim with confidence greater than 0.9 is decided by contract; lower confidence requires more evidence.
+**Context**: Considered whether KB editorial decisions need a parallel
+/ctx-kb-decide skill mirroring /ctx-decision-add. Got stuck on three resolutions
+(skill surface doubles, mode-aware router, manual discipline) until the user
+reframed: do you really decide in a KB, or do you just learn and improve
+confidence? A claim with confidence greater than 0.9 is decided by contract;
+lower confidence requires more evidence.
 
-**Lesson**: In a knowledge base, the correct ontology has no 'decide' moment — there are only evidence-capture events with confidence bands. Even natural-language assertions like 'we are spinning off X, anchor on this' are semantically evidence-capture (a high-confidence claim arriving), not decision-capture (a choice between alternatives). The pipeline-only-writer model is not rigid; it is the ontologically correct surface for evidence-tracked knowledge.
+**Lesson**: In a knowledge base, the correct ontology has no 'decide' moment;
+there are only evidence-capture events with confidence bands. Even
+natural-language assertions like 'we are spinning off X, anchor on this' are
+semantically evidence-capture (a high-confidence claim arriving), not
+decision-capture (a choice between alternatives). The pipeline-only-writer model
+is not rigid; it is the ontologically correct surface for evidence-tracked
+knowledge.
 
-**Application**: When a feature seems to require a parallel skill mirroring an existing canonical capture skill, check whether the underlying domain has the same ontology. If the new domain operates by 'increase confidence' rather than 'pick a choice,' the parallel skill is the wrong shape and the pipeline approach is right. Useful general check: is this 'I made a call between alternatives' or 'I learned something about the world'? Different ontologies call for different surfaces.
+**Application**: When a feature seems to require a parallel skill mirroring an
+existing canonical capture skill, check whether the underlying domain has the
+same ontology. If the new domain operates by 'increase confidence' rather than
+'pick a choice,' the parallel skill is the wrong shape and the pipeline approach
+is right. Useful general check: is this 'I made a call between alternatives' or
+'I learned something about the world'? Different ontologies call for different
+surfaces.
 
 ---
 
 ## [2026-05-10-001859] P2: A KB of KBs is a KB
 
-**Context**: User raised 'KB of KBs' as a wished-for federation feature for multi-team consolidation (research-master KB pulling several team KBs together). Initial framing treated this as a v2 feature that might require v1 schema decisions like KB-prefixed IDs (research-master/EV-019) or federation roots. User reframed: 'kb is knowledge; knowledge is source; source is ingestable; that's also what makes kb of kbs composable; because kb of kbs is a kb.'
+**Context**: User raised 'KB of KBs' as a wished-for federation feature for
+multi-team consolidation (research-master KB pulling several team KBs together).
+Initial framing treated this as a v2 feature that might require v1 schema
+decisions like KB-prefixed IDs (research-master/EV-019) or federation roots.
+User reframed: 'kb is knowledge; knowledge is source; source is ingestable;
+that's also what makes kb of kbs composable; because kb of kbs is a kb.'
 
-**Lesson**: Recursive composability eliminates whole feature classes. When a 'thing-of-things' feature comes up, ask whether the standard pipeline applied to its own output covers the case before designing a new mechanism. Federation as 'pipeline pointed at another instance of its own input shape' is dramatically simpler than federation as a separate subsystem.
+**Lesson**: Recursive composability eliminates whole feature classes. When a
+'thing-of-things' feature comes up, ask whether the standard pipeline applied to
+its own output covers the case before designing a new mechanism. Federation as
+'pipeline pointed at another instance of its own input shape' is dramatically
+simpler than federation as a separate subsystem.
 
-**Application**: Federation does not need v1 schema lockout: source-map kind: kb plus the standard ingest pipeline covers it. Same insight applies to taxonomy-was-wrong recovery (start fresh KB; ingest old as source; discard irrelevant parts at extraction time) and multi-team consolidation (each team owns a KB; master ingests them). Watch for this pattern in future ctx feature design — the 'thing-of-things is a thing' shortcut may collapse the design problem entirely.
+**Application**: Federation does not need v1 schema lockout: source-map kind: kb
+plus the standard ingest pipeline covers it. Same insight applies to
+taxonomy-was-wrong recovery (start fresh KB; ingest old as source; discard
+irrelevant parts at extraction time) and multi-team consolidation (each team
+owns a KB; master ingests them). Watch for this pattern in future ctx feature
+design; the 'thing-of-things is a thing' shortcut may collapse the design
+problem entirely.
 
 ---
 
 ## [2026-05-10-001859] P1: The LLM is the migration tool
 
-**Context**: Designing schemas for the editorial pipeline raised the question of whether to commit to specific aesthetic choices (EV-### IDs, four named modes, four-band confidence) or hedge with abstract types that could absorb future change. The unwind-cost analysis during /ctx-plan showed every category of being-wrong is essentially cheap because the LLM absorbs the migration: wholesale ID renumbering (LLM cleanup), taxonomy reshuffles (start-fresh-and-ingest-old), schema-band remapping (mathematical and scriptable), path renames (single sweep).
+**Context**: Designing schemas for the editorial pipeline raised the question of
+whether to commit to specific aesthetic choices (EV-### IDs, four named modes,
+four-band confidence) or hedge with abstract types that could absorb future
+change. The unwind-cost analysis during /ctx-plan showed every category of
+being-wrong is essentially cheap because the LLM absorbs the migration:
+wholesale ID renumbering (LLM cleanup), taxonomy reshuffles
+(start-fresh-and-ingest-old), schema-band remapping (mathematical and
+scriptable), path renames (single sweep).
 
-**Lesson**: When designing AI-assisted persistent storage, expensive migrations are absorbed by LLM cleanup passes. Commit to the readable, opinionated, aesthetic schema in v1 instead of hedging with abstract types. Be wrong cheaply: the alternative (hedging upfront) ships a generic shape that nobody loves, and migrations were never as expensive as we feared.
+**Lesson**: When designing AI-assisted persistent storage, expensive migrations
+are absorbed by LLM cleanup passes. Commit to the readable, opinionated,
+aesthetic schema in v1 instead of hedging with abstract types. Be wrong cheaply:
+the alternative (hedging upfront) ships a generic shape that nobody loves, and
+migrations were never as expensive as we feared.
 
-**Application**: For any future ctx feature where the schema-vs-flexibility question arises, default to the specific shape; trust LLM cleanup as the migration story. Surface dirty state via doctor advisories so the agent has a work surface to operate on. Applies broadly: editorial KB schemas, closeout shapes, future feature surfaces. Pair with the discipline of doctor flagging duplicates / divergences so the LLM has clear cases to resolve.
+**Application**: For any future ctx feature where the schema-vs-flexibility
+question arises, default to the specific shape; trust LLM cleanup as the
+migration story. Surface dirty state via doctor advisories so the agent has a
+work surface to operate on. Applies broadly: editorial KB schemas, closeout
+shapes, future feature surfaces. Pair with the discipline of doctor flagging
+duplicates / divergences so the LLM has clear cases to resolve.
 
 ---
 
 ## [2026-05-08-195031] Cursor imports Claude Code hooks and sets CLAUDE_PROJECT_DIR per workspace
 
-**Context**: Investigating why .context/state/ appeared in non-ctx projects opened in Cursor. Hypothesis was a Cursor extension or shell hook; turned out to be Cursor's documented Claude-compatibility behavior (https://cursor.com/docs/hooks): it loads ~/.claude hooks and injects CLAUDE_PROJECT_DIR=workspace_root so they 'just work'. Globally-enabled Claude plugins therefore fire in every Cursor workspace.
+**Context**: Investigating why .context/state/ appeared in non-ctx projects
+opened in Cursor. Hypothesis was a Cursor extension or shell hook; turned out to
+be Cursor's documented Claude-compatibility behavior
+(https://cursor.com/docs/hooks): it loads ~/.claude hooks and injects
+CLAUDE_PROJECT_DIR=workspace_root so they 'just work'. Globally-enabled Claude
+plugins therefore fire in every Cursor workspace.
 
-**Lesson**: When debugging cross-tool side effects, check whether the host tool advertises compatibility with the implicated tool's config format. The leak surface of any global Claude plugin is now 'every Cursor workspace + every Claude Code project', not just 'every Claude Code project'.
+**Lesson**: When debugging cross-tool side effects, check whether the host tool
+advertises compatibility with the implicated tool's config format. The leak
+surface of any global Claude plugin is now 'every Cursor workspace + every
+Claude Code project', not just 'every Claude Code project'.
 
-**Application**: Hooks must be safe to fire in non-ctx projects: silent bail when state.Initialized() is false, no filesystem side effects. The ctx code-side fix lives in state.Dir's Initialized gate; the design rule is broader — assume hooks may run anywhere, not just where the user invoked ctx init.
+**Application**: Hooks must be safe to fire in non-ctx projects: silent bail
+when state.Initialized() is false, no filesystem side effects. The ctx code-side
+fix lives in state.Dir's Initialized gate; the design rule is broader: assume
+hooks may run anywhere, not just where the user invoked ctx init.
 
 ---
 
@@ -1779,128 +2042,263 @@ git integration, extensions - all free.
 [learnings-reference.md](learnings-reference.md)*
 ## [2026-04-29-050000] BunShell ctx.$ calls echo stdout to OpenCode's process unless .quiet() is set — leaks visible noise
 
-**Context**: After PR #72 wired session.created and session.idle to fire `ctx system bootstrap`, `ctx agent --budget 4000`, and friends, end users started seeing chunks of Markdown bleeding into the OpenCode TUI: `## Steering`, `# Product Context`, `Describe the product...`. These are the contents of `.context/steering/` template stubs that `ctx agent --budget 4000` includes in its context packet. The plugin used the shell-level `2>/dev/null || true` to swallow stderr and force exit 0, but stdout was untouched.
+**Context**: After PR #72 wired session.created and session.idle to fire `ctx
+system bootstrap`, `ctx agent --budget 4000`, and friends, end users started
+seeing chunks of Markdown bleeding into the OpenCode TUI: `## Steering`, `#
+Product Context`, `Describe the product...`. These are the contents of
+`.context/steering/` template stubs that `ctx agent --budget 4000` includes in
+its context packet. The plugin used the shell-level `2>/dev/null || true` to
+swallow stderr and force exit 0, but stdout was untouched.
 
-**Lesson**: BunShell's documented behavior: *"By default, the shell will write to the current process's stdout and stderr, as well as buffering that output."* So an `await ctx.$\`...\`` call in a plugin echoes its stdout/stderr to OpenCode's process, which the TUI/agent surfaces. Shell-level `2>/dev/null` only suppresses stderr; stdout still leaks. The fix is BunShell's `.quiet()` modifier on the BunShellPromise, which configures the shell to only buffer the output rather than also writing to the parent process.
+**Lesson**: BunShell's documented behavior: *"By default, the shell will write
+to the current process's stdout and stderr, as well as buffering that output."*
+So an `await ctx.$\`...\`` call in a plugin echoes its stdout/stderr to
+OpenCode's process, which the TUI/agent surfaces. Shell-level `2>/dev/null` only
+suppresses stderr; stdout still leaks. The fix is BunShell's `.quiet()` modifier
+on the BunShellPromise, which configures the shell to only buffer the output
+rather than also writing to the parent process.
 
-**Application**: Always chain `.nothrow().quiet()` on BunShell template literals in OpenCode plugins, even for fire-and-forget calls where you discard the result: `await ctx.$\`ctx system bootstrap\`.nothrow().quiet()`. With both modifiers, you don't need shell-level `2>/dev/null || true` — `.nothrow()` swallows non-zero exits at the BunShell layer, `.quiet()` keeps every byte of output buffered. Pattern is the cooperative default for any plugin that spawns long-output commands during the agent session lifecycle.
+**Application**: Always chain `.nothrow().quiet()` on BunShell template literals
+in OpenCode plugins, even for fire-and-forget calls where you discard the
+result: `await ctx.$\`ctx system bootstrap\`.nothrow().quiet()`. With both
+modifiers, you don't need shell-level `2>/dev/null || true` — `.nothrow()`
+swallows non-zero exits at the BunShell layer, `.quiet()` keeps every byte of
+output buffered. Pattern is the cooperative default for any plugin that spawns
+long-output commands during the agent session lifecycle.
 
 ---
 
 ## [2026-04-29-040000] OpenCode plugin compaction interop is breadcrumb-mediated: own your context preservation explicitly
 
-**Context**: After PR #72 wired `session.created` / `session.idle` / `tool.execute.after` / `shell.env`, a `/compact` test in OpenCode (with `oh-my-openagent@3.17.6` also installed) recovered ctx context post-compaction *only by accident*: oh-my-openagent's `experimental.session.compacting` handler builds a structured summary template that happens to preserve `.context/`-prefixed file paths in its "Active Working Context → Files" section. Combined with our `shell.env` CTX_DIR injection, the agent had enough breadcrumbs to re-read DECISIONS.md from disk post-compaction. Without that section, our context would have evaporated silently into the compaction summary.
+**Context**: After PR #72 wired `session.created` / `session.idle` /
+`tool.execute.after` / `shell.env`, a `/compact` test in OpenCode (with
+`oh-my-openagent@3.17.6` also installed) recovered ctx context post-compaction
+*only by accident*: oh-my-openagent's `experimental.session.compacting` handler
+builds a structured summary template that happens to preserve
+`.context/`-prefixed file paths in its "Active Working Context → Files"
+section. Combined with our `shell.env` CTX_DIR injection, the agent had enough
+breadcrumbs to re-read DECISIONS.md from disk post-compaction. Without that
+section, our context would have evaporated silently into the compaction summary.
 
-**Lesson**: Two compaction-aware plugins in the same session can synergize without either knowing about the other — but the synergy is fragile because it depends on undocumented serialization choices in the *other* plugin. If the other plugin's template ever changes (e.g., drops file-path preservation, swaps the "Active Working Context" section name, condenses paths to basenames), the breadcrumbs disappear and ctx context is lost without any signal. The `Hooks` interface in `@opencode-ai/plugin` v1.4.x exposes `experimental.session.compacting?: (input, output: { context: string[]; prompt?: string }) => Promise<void>` — pushing to `output.context` is *additive* (appends to the default prompt), and replacing `output.prompt` is *destructive* (only one plugin can win that race).
+**Lesson**: Two compaction-aware plugins in the same session can synergize
+without either knowing about the other — but the synergy is fragile because it
+depends on undocumented serialization choices in the *other* plugin. If the
+other plugin's template ever changes (e.g., drops file-path preservation, swaps
+the "Active Working Context" section name, condenses paths to basenames), the
+breadcrumbs disappear and ctx context is lost without any signal. The `Hooks`
+interface in `@opencode-ai/plugin` v1.4.x exposes
+`experimental.session.compacting?: (input, output: { context: string[]; prompt?:
+string }) => Promise<void>` — pushing to `output.context` is *additive*
+(appends to the default prompt), and replacing `output.prompt` is *destructive*
+(only one plugin can win that race).
 
-**Application**: Register `experimental.session.compacting` in your own plugin and push high-signal context strings (e.g., `ctx system bootstrap` output) to `output.context` so context preservation does not depend on coexisting plugins. Never set `output.prompt` from a thin shim — that would conflict with primary compaction harnesses like oh-my-openagent. Composition via `output.context` is the correct cooperative pattern.
+**Application**: Register `experimental.session.compacting` in your own plugin
+and push high-signal context strings (e.g., `ctx system bootstrap` output) to
+`output.context` so context preservation does not depend on coexisting plugins.
+Never set `output.prompt` from a thin shim — that would conflict with primary
+compaction harnesses like oh-my-openagent. Composition via `output.context` is
+the correct cooperative pattern.
 
 ---
 
 ## [2026-04-29-030000] @opencode-ai/plugin event hook is a single dispatcher, not an object of named handlers
 
-**Context**: PR #72's first OpenCode plugin shipped with `event: { "session.created": fn, "session.idle": fn }` — an object keyed by event type. It compiled clean against `satisfies Plugin` but never fired. End-to-end trace showed neighboring hooks (`shell.env`, `tool.execute.after`) running while every event handler silently no-op'd.
+**Context**: PR #72's first OpenCode plugin shipped with `event: {
+"session.created": fn, "session.idle": fn }` — an object keyed by event type.
+It compiled clean against `satisfies Plugin` but never fired. End-to-end trace
+showed neighboring hooks (`shell.env`, `tool.execute.after`) running while every
+event handler silently no-op'd.
 
-**Lesson**: `@opencode-ai/plugin` v1.4.x defines `event?: (input: { event: Event }) => Promise<void>` — one dispatcher called for every event with `input.event.type` discriminating. Asymmetric with neighbors because `shell.env` and `tool.execute.*` *are* top-level named keys; only the dozens of `EventX` types collapse into the single `event` slot.
+**Lesson**: `@opencode-ai/plugin` v1.4.x defines `event?: (input: { event: Event
+}) => Promise<void>` — one dispatcher called for every event with
+`input.event.type` discriminating. Asymmetric with neighbors because `shell.env`
+and `tool.execute.*` *are* top-level named keys; only the dozens of `EventX`
+types collapse into the single `event` slot.
 
-**Application**: Use `event: async ({event}) => { if (event.type === "session.created") { ... } else if (event.type === "session.idle") { ... } }`. Type discriminator strings live under each `EventX` type in `node_modules/@opencode-ai/sdk/dist/gen/types.gen.d.ts`.
+**Application**: Use `event: async ({event}) => { if (event.type ===
+"session.created") { ... } else if (event.type === "session.idle") { ... } }`.
+Type discriminator strings live under each `EventX` type in
+`node_modules/@opencode-ai/sdk/dist/gen/types.gen.d.ts`.
 
 ---
 
 ## [2026-04-29-030100] OpenCode plugin hooks like shell.env take (input, output) and mutate; returned objects are ignored
 
-**Context**: First plugin had `"shell.env": () => ({ CTX_DIR: ".context" })`. The hook fired but the agent's bash tool never saw `CTX_DIR`; manual export was required for every ctx call. The returned object was dropped on the floor by the runtime.
+**Context**: First plugin had `"shell.env": () => ({ CTX_DIR: ".context" })`.
+The hook fired but the agent's bash tool never saw `CTX_DIR`; manual export was
+required for every ctx call. The returned object was dropped on the floor by the
+runtime.
 
-**Lesson**: Multiple hooks in `@opencode-ai/plugin` v1.4.x take two arguments where the second is an OUT param. Examples: `shell.env: (input, output: {env}) => void` (mutate `output.env`), `tool.execute.after: (input, output: {title, output, metadata}) => void`, `chat.params: (input, output: {temperature, ...}) => void`, `chat.headers: (input, output: {headers}) => void`. Pattern is consistent across the SDK.
+**Lesson**: Multiple hooks in `@opencode-ai/plugin` v1.4.x take two arguments
+where the second is an OUT param. Examples: `shell.env: (input, output: {env})
+=> void` (mutate `output.env`), `tool.execute.after: (input, output: {title,
+output, metadata}) => void`, `chat.params: (input, output: {temperature, ...})
+=> void`, `chat.headers: (input, output: {headers}) => void`. Pattern is
+consistent across the SDK.
 
-**Application**: Always read the type definition in `node_modules/@opencode-ai/plugin/dist/index.d.ts` for any hook before wiring. If a hook signature has two parameters where the second is an object, it's a mutation hook — return values are discarded.
+**Application**: Always read the type definition in
+`node_modules/@opencode-ai/plugin/dist/index.d.ts` for any hook before wiring.
+If a hook signature has two parameters where the second is an object, it's a
+mutation hook — return values are discarded.
 
 ---
 
 ## [2026-04-29-030200] OpenCode shell.env injects env only into agent's shell tool, not into plugin's own ctx.$ calls
 
-**Context**: After fixing `shell.env`'s `(input, output) => mutate output.env` signature so `CTX_DIR` reached the agent's bash tool, the plugin's own `ctx.$\`ctx system bootstrap\`` calls still failed silently — they ran without `CTX_DIR` and ctx fell back to `~/.context`. The hook fired correctly; the plugin's subprocess side-effects didn't see the env.
+**Context**: After fixing `shell.env`'s `(input, output) => mutate output.env`
+signature so `CTX_DIR` reached the agent's bash tool, the plugin's own
+`ctx.$\`ctx system bootstrap\`` calls still failed silently — they ran without
+`CTX_DIR` and ctx fell back to `~/.context`. The hook fired correctly; the
+plugin's subprocess side-effects didn't see the env.
 
-**Lesson**: `shell.env` injects env into the agent's shell-tool invocations. The plugin's own BunShell calls (`ctx.$\`...\``) inherit OpenCode's process env, which is *separate*. Two shells, two envs.
+**Lesson**: `shell.env` injects env into the agent's shell-tool invocations. The
+plugin's own BunShell calls (`ctx.$\`...\``) inherit OpenCode's process env,
+which is *separate*. Two shells, two envs.
 
-**Application**: Build an env-aware BunShell once in the plugin factory: `const $ = ctx.$.env({ ...process.env, CTX_DIR: \`${ctx.directory}/.context\` })`. Reuse it for every plugin-initiated subprocess call. `ctx.directory` is the project root from `PluginInput`.
+**Application**: Build an env-aware BunShell once in the plugin factory: `const
+$ = ctx.$.env({ ...process.env, CTX_DIR: \`${ctx.directory}/.context\` })`.
+Reuse it for every plugin-initiated subprocess call. `ctx.directory` is the
+project root from `PluginInput`.
 
 ---
 
 ## [2026-04-26-180000] OpenCode auto-loads only flat .ts files under .opencode/plugins/; subdirectories are ignored
 
-**Context**: Initial OpenCode integration deployed the plugin as `.opencode/plugins/ctx/index.ts` (a directory with index.ts inside, mirroring npm package conventions). End-to-end smoke testing showed the plugin file was present and the binary was current, yet OpenCode never invoked any of the plugin's hooks (no `module-load` trace fired even with `--print-logs --log-level DEBUG`). Copying the same content to a flat `.opencode/plugins/ctx.ts` file made the plugin load and fire correctly.
+**Context**: Initial OpenCode integration deployed the plugin as
+`.opencode/plugins/ctx/index.ts` (a directory with index.ts inside, mirroring
+npm package conventions). End-to-end smoke testing showed the plugin file was
+present and the binary was current, yet OpenCode never invoked any of the
+plugin's hooks (no `module-load` trace fired even with `--print-logs --log-level
+DEBUG`). Copying the same content to a flat `.opencode/plugins/ctx.ts` file made
+the plugin load and fire correctly.
 
-**Lesson**: OpenCode's plugin auto-discovery only scans top-level files under `.opencode/plugins/` and `~/.config/opencode/plugins/`. Subdirectories are silently skipped — there is no log line indicating a subdirectory was found and ignored. The official docs at opencode.ai/docs/plugins/ say only "files in these directories are automatically loaded at startup" without specifying the rule, so this is easy to miss. The `opencode plugin <module>` CLI registers npm modules (a different code path) and accepts only npm names, not local paths.
+**Lesson**: OpenCode's plugin auto-discovery only scans top-level files under
+`.opencode/plugins/` and `~/.config/opencode/plugins/`. Subdirectories are
+silently skipped — there is no log line indicating a subdirectory was found
+and ignored. The official docs at opencode.ai/docs/plugins/ say only "files in
+these directories are automatically loaded at startup" without specifying the
+rule, so this is easy to miss. The `opencode plugin <module>` CLI registers npm
+modules (a different code path) and accepts only npm names, not local paths.
 
-**Application**: Deploy single-file plugins as `.opencode/plugins/<name>.ts`, not `.opencode/plugins/<name>/index.ts`. No `package.json` is required when the plugin uses type-only imports (`import type` is erased at compile time) and the host runtime injects the plugin context. To verify a plugin is actually loaded, add a top-of-module side effect (e.g. `appendFileSync` to a known path) and confirm it fires before debugging hook contracts.
+**Application**: Deploy single-file plugins as `.opencode/plugins/<name>.ts`,
+not `.opencode/plugins/<name>/index.ts`. No `package.json` is required when the
+plugin uses type-only imports (`import type` is erased at compile time) and the
+host runtime injects the plugin context. To verify a plugin is actually loaded,
+add a top-of-module side effect (e.g. `appendFileSync` to a known path) and
+confirm it fires before debugging hook contracts.
 
 ---
 
 ## [2026-04-26-165500] OpenCode opencode.json MCP shape: command is Array<string>, no separate args field
 
-**Context**: `ctx setup opencode --write` was generating `opencode.json` with the Copilot CLI MCP shape (`{type: "local", command: "ctx", args: ["mcp", "serve"]}`). OpenCode rejected the file at startup with `Configuration is invalid… Expected array, got "ctx" mcp.ctx.command` and `Missing key mcp.ctx.enabled`.
+**Context**: `ctx setup opencode --write` was generating `opencode.json` with
+the Copilot CLI MCP shape (`{type: "local", command: "ctx", args: ["mcp",
+"serve"]}`). OpenCode rejected the file at startup with `Configuration is
+invalid… Expected array, got "ctx" mcp.ctx.command` and `Missing key
+mcp.ctx.enabled`.
 
-**Lesson**: OpenCode's `McpLocalConfig` (in `@opencode-ai/sdk`) defines `command: Array<string>` as a single field that holds the binary AND its arguments — there is no separate `args` field. It also requires `enabled: boolean` at runtime even though the TS type marks it optional. The Copilot CLI MCP shape is similar in spirit but structurally different; do not copy-paste between them.
+**Lesson**: OpenCode's `McpLocalConfig` (in `@opencode-ai/sdk`) defines
+`command: Array<string>` as a single field that holds the binary AND its
+arguments — there is no separate `args` field. It also requires `enabled:
+boolean` at runtime even though the TS type marks it optional. The Copilot CLI
+MCP shape is similar in spirit but structurally different; do not copy-paste
+between them.
 
-**Application**: For OpenCode MCP entries always use `command: ["ctx", "mcp", "serve"]` and include `enabled: true`. If you add a new editor integration with its own MCP file format, read the upstream type definitions from `node_modules/@<vendor>/sdk/dist/gen/types.gen.d.ts` (or equivalent) before reusing an existing generator.
+**Application**: For OpenCode MCP entries always use `command: ["ctx", "mcp",
+"serve"]` and include `enabled: true`. If you add a new editor integration with
+its own MCP file format, read the upstream type definitions from
+`node_modules/@<vendor>/sdk/dist/gen/types.gen.d.ts` (or equivalent) before
+reusing an existing generator.
 
 ---
 
 ## [2026-04-26-152850] make test exit code unreliable due to -cover covdata tooling issue
 
-**Context**: make test exited 1 even with all 123 packages passing on this Go install; root cause is missing covdata tool when -cover is enabled
+**Context**: make test exited 1 even with all 123 packages passing on this Go
+install; root cause is missing covdata tool when -cover is enabled
 
-**Lesson**: Don't trust make test exit code alone when verifying changes. The -cover flag in the test target can fail with 'no such tool covdata' even when every package passes.
+**Lesson**: Don't trust make test exit code alone when verifying changes. The
+-cover flag in the test target can fail with 'no such tool covdata' even when
+every package passes.
 
-**Application**: When make test fails, fall back to 'go test ./...' (no -cover) and tally ^ok / ^FAIL counts to distinguish real failures from tooling issues.
+**Application**: When make test fails, fall back to 'go test ./...' (no -cover)
+and tally ^ok / ^FAIL counts to distinguish real failures from tooling issues.
 
 ---
 
 ## [2026-04-26-152842] Trailing word boundary in regex matches commit-tree as git commit
 
-**Context**: First post-commit filter regex \bgit\s+commit\b in the OpenCode plugin would have triggered on git commit-tree because \b matches between t and -
+**Context**: First post-commit filter regex \bgit\s+commit\b in the OpenCode
+plugin would have triggered on git commit-tree because \b matches between t and
+-
 
-**Lesson**: A trailing word boundary doesn't exclude hyphenated continuations — \b matches every word/non-word transition. Use (?!-) negative lookahead to specifically reject hyphen-suffixed siblings.
+**Lesson**: A trailing word boundary doesn't exclude hyphenated continuations
+— \b matches every word/non-word transition. Use (?!-) negative lookahead to
+specifically reject hyphen-suffixed siblings.
 
-**Application**: For any porcelain with hyphenated cousins (commit-tree, commit-graph, for-each-ref), append (?!-) to the boundary.
+**Application**: For any porcelain with hyphenated cousins (commit-tree,
+commit-graph, for-each-ref), append (?!-) to the boundary.
 
 ---
 
 ## [2026-04-26-152836] ctx system help can list project-local hooks not in the Go binary
 
-**Context**: PR #72 plugin called 'ctx system block-dangerous-commands'; user's installed ctx 0.7.2 listed it in help, but no directory exists under internal/cli/system/cmd/ — it's a Claude Code plugin-local hook surfaced via wrapper
+**Context**: PR #72 plugin called 'ctx system block-dangerous-commands'; user's
+installed ctx 0.7.2 listed it in help, but no directory exists under
+internal/cli/system/cmd/ — it's a Claude Code plugin-local hook surfaced via
+wrapper
 
-**Lesson**: ctx system help output is a union of compiled Go subcommands and project-local Claude wrappers; non-Claude integrations only see the Go subset
+**Lesson**: ctx system help output is a union of compiled Go subcommands and
+project-local Claude wrappers; non-Claude integrations only see the Go subset
 
-**Application**: When porting plugin behavior to a new editor, only call subcommands that have a directory under internal/cli/system/cmd/. Don't trust ctx system help output as the canonical surface.
+**Application**: When porting plugin behavior to a new editor, only call
+subcommands that have a directory under internal/cli/system/cmd/. Don't trust
+ctx system help output as the canonical surface.
 
 ---
 
 ## [2026-04-25-014704] Confident code comments can pull an LLM away from first-principles knowledge
 
-**Context**: cli_test.go had a comment claiming 'parent's t.Setenv doesn't propagate to exec'd children unless we build it into cmd.Env' which is wrong. I patched the helper's CTX_DIR dedup instead of questioning the helper itself, despite knowing t.Setenv semantics.
+**Context**: cli_test.go had a comment claiming 'parent's t.Setenv doesn't
+propagate to exec'd children unless we build it into cmd.Env' which is wrong. I
+patched the helper's CTX_DIR dedup instead of questioning the helper itself,
+despite knowing t.Setenv semantics.
 
-**Lesson**: A comment that explains why a stdlib mechanism 'doesn't work' is doing extra rhetorical work to talk a reader out of the obvious approach. That's exactly when to verify from first principles instead of trusting the surrounding-code frame.
+**Lesson**: A comment that explains why a stdlib mechanism 'doesn't work' is
+doing extra rhetorical work to talk a reader out of the obvious approach. That's
+exactly when to verify from first principles instead of trusting the
+surrounding-code frame.
 
-**Application**: When an existing comment justifies a non-canonical approach contradicting stdlib knowledge: pause, verify against memory of the actual API before patching within the existing frame.
+**Application**: When an existing comment justifies a non-canonical approach
+contradicting stdlib knowledge: pause, verify against memory of the actual API
+before patching within the existing frame.
 
 ---
 
 ## [2026-04-25-014704] filepath.Join('', rel) returns rel as CWD-relative, not error
 
-**Context**: Recurring orphan jsonl-path-<sessionID> appeared at project root. Older state.Dir() returned ('', nil) when CTX_DIR was undeclared, so filepath.Join('', 'jsonl-path-XXX') = 'jsonl-path-XXX', writing relative to CWD.
+**Context**: Recurring orphan jsonl-path-<sessionID> appeared at project root.
+Older state.Dir() returned ('', nil) when CTX_DIR was undeclared, so
+filepath.Join('', 'jsonl-path-XXX') = 'jsonl-path-XXX', writing relative to CWD.
 
-**Lesson**: Functions returning a path-string must never return ('', nil). Sentinel errors force callers to gate, closing the silent CWD-relative write.
+**Lesson**: Functions returning a path-string must never return ('', nil).
+Sentinel errors force callers to gate, closing the silent CWD-relative write.
 
-**Application**: Audit any (string, error) path-returner that historically had a ('', nil) shortcut. Closed for state.Dir and rc.ContextDir; check remaining resolvers.
+**Application**: Audit any (string, error) path-returner that historically had a
+('', nil) shortcut. Closed for state.Dir and rc.ContextDir; check remaining
+resolvers.
 
 ---
 
 ## [2026-04-25-014704] Parallel go test ./... packages can race on ~/.claude/settings.json
 
-**Context**: make test runs packages in parallel processes. Fourteen test files invoked initialize.Cmd().Execute(), which read-modify-writes ~/.claude/settings.json without HOME isolation.
+**Context**: make test runs packages in parallel processes. Fourteen test files
+invoked initialize.Cmd().Execute(), which read-modify-writes
+~/.claude/settings.json without HOME isolation.
 
-**Lesson**: Under load the races materialized as flaky 'FAIL coverage: [no statements]' in cli/watch/core. Run alone the package passed; under parallel make test it failed intermittently.
+**Lesson**: Under load the races materialized as flaky 'FAIL coverage: [no
+statements]' in cli/watch/core. Run alone the package passed; under parallel
+make test it failed intermittently.
 
-**Application**: testctx.Declare now sets HOME alongside CTX_DIR. Centralized fix; future tests automatically isolate user-home writes.
+**Application**: testctx.Declare now sets HOME alongside CTX_DIR. Centralized
+fix; future tests automatically isolate user-home writes.

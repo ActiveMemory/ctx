@@ -20,7 +20,7 @@ When re-importing a session whose journal file already exists:
 
 This **already preserves enriched frontmatter** (title, type, outcome,
 topics, technologies, summary) during re-import. The enrichment skill
-stores all metadata in the YAML frontmatter block, not in markdown
+stores all metadata in the YAML frontmatter block, not in Markdown
 sections, so the current `extractFrontmatter()` + `stripFrontmatter()`
 merge captures everything.
 

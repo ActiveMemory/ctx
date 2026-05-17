@@ -174,7 +174,7 @@ Load and display assembled context (what AI sees).
 ctx load [--budget <tokens>] [--raw]
 ```
 
-**Output**: The assembled markdown context as it would be provided to an AI.
+**Output**: The assembled Markdown context as it would be provided to an AI.
 
 **Options**:
 - `--budget <tokens>`: Token budget for assembly (default: 8000)

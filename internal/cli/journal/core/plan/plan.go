@@ -14,7 +14,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/tpl"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/index"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/lock"
-	"github.com/ActiveMemory/ctx/internal/cli/journal/core/slug"
 	srcFmt "github.com/ActiveMemory/ctx/internal/cli/journal/core/source/format"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/file"
@@ -23,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
+	"github.com/ActiveMemory/ctx/internal/slug"
 )
 
 // Import builds an ImportPlan without writing any files.

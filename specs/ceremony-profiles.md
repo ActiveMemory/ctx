@@ -18,14 +18,13 @@ names:
 These names are also baked into the message templates at
 `internal/assets/hooks/messages/check-ceremony/{remember,wrapup,both}.txt`.
 
-Non-code-dev projects rebrand those ceremonies. The motivating case is
-the DR knowledgebase project at `things-wtf-disaster-recovery`, an
-**editorial** project where:
+Non-code-dev projects rebrand those ceremonies. The motivating case
+is an **editorial** knowledgebase project at `your-project` where:
 
 - ctx code-dev skills explicitly do not apply (per its
   `.context/CONSTITUTION.md` and root `10-CONSTITUTION.md`).
-- The project has shipped DR-specific replacements: `/dp-remember`,
-  `/dp-wrap-up`, `/dp-commit`.
+- The project has shipped project-specific replacements: `/proj-remember`,
+  `/proj-wrap-up`, `/proj-commit`.
 
 In that project the ceremony nudge fires correctly (3 sessions without
 ceremony usage) but recommends the wrong skills. The user gets nudged
@@ -54,9 +53,9 @@ In `.ctxrc`:
 
 ```yaml
 ceremony:
-  remember: dp-remember
-  wrapup: dp-wrap-up
-  # commit: dp-commit   # optional, see "Commit ceremony" below
+  remember: proj-remember
+  wrapup: proj-wrap-up
+  # commit: proj-commit   # optional, see "Commit ceremony" below
 ```
 
 When the block is absent, the ceremony layer falls back to the
@@ -151,7 +150,7 @@ Ceremony: ctx-remember / ctx-wrap-up   (default)
 or
 
 ```
-Ceremony: dp-remember / dp-wrap-up   (project)
+Ceremony: proj-remember / proj-wrap-up   (project)
 ```
 
 ## Implementation plan
@@ -174,8 +173,8 @@ Ceremony: dp-remember / dp-wrap-up   (project)
 7. Update tests:
    - Default profile renders `/ctx-remember` / `/ctx-wrap-up` as
      before.
-   - A project with `ceremony.remember: dp-remember` renders
-     `/dp-remember` and the scanner only considers `dp-remember`
+   - A project with `ceremony.remember: proj-remember` renders
+     `/proj-remember` and the scanner only considers `proj-remember`
      usage as fulfilling the open-bookend.
 8. Document in `docs/recipes/` (one short page on declaring a
    project ceremony profile, with the editorial-project example).
@@ -208,8 +207,8 @@ Ceremony: dp-remember / dp-wrap-up   (project)
 
 ## Related
 
-- DR editorial project (consumer):
-  `~/Desktop/WORKSPACE/things-wtf-disaster-recovery`
+- Editorial project (consumer):
+  `~/your/project/path`
 - Existing ceremony plumbing:
   `internal/config/ceremony/ceremony.go`,
   `internal/cli/system/core/ceremony/ceremony.go`,

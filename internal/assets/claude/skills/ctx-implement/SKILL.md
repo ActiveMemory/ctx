@@ -106,7 +106,7 @@ After all steps complete:
 | Templates/embeds   | `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx`   |
 | Makefile           | Run the new/changed target                        |
 | Skill files        | Build (to verify embed) + check live copy matches |
-| Docs/markdown only | None required                                     |
+| Docs/Markdown only | None required                                     |
 | Shell scripts      | `bash -n script.sh` (syntax check)                |
 
 ## Handling Failures

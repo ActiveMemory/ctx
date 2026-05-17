@@ -208,7 +208,7 @@ These tools are designed for:
 
 * **local-first**: context lives next to your code, not
   behind a service boundary.
-* **file-based**: everything important is a markdown
+* **file-based**: everything important is a Markdown
   file you can read, diff, grep, and version-control.
 * **single-binary core**: the context persistence path
   (`init`, `add`, `agent`, `status`, `drift`, `load`,

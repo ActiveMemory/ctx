@@ -70,7 +70,7 @@ runtime provides the plugin context, so there's no runtime
 dependency tree to install.
 
 **`skills/`** — Subset of portable skills (ctx-agent, ctx-remember, ctx-status,
-ctx-wrap-up). Format: YAML frontmatter + markdown body, same as Copilot CLI skills.
+ctx-wrap-up). Format: YAML frontmatter + Markdown body, same as Copilot CLI skills.
 
 ### 2. Asset Reader (`internal/assets/read/agent/agent.go`)
 

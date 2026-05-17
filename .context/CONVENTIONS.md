@@ -270,4 +270,5 @@ DO NOT UPDATE FOR:
   capitalization would otherwise apply: write `CONSTITUTION.md`, not
   CONSTITUTION.Md. The title-case engine refuses to capitalize lowercase tokens
   following a literal . dot, but explicit backticks remain the clearest signal.
-- New editor integrations include an MCP-merge test covering: create / empty file / preserve existing keys / skip when registered / reject malformed JSON
+- New editor integrations include an MCP-merge test covering: create / empty
+  file / preserve existing keys / skip when registered / reject malformed JSON

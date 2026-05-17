@@ -120,7 +120,7 @@
 | Status bar | — | 🔧 Reminder status bar (PR pending) | — |
 | Diagnostics command | — | ✅ `/diag` with timing | — |
 | Progress indicators | — | ✅ `stream.progress()` | — |
-| Markdown rendering | Terminal output | ✅ VS Code markdown | Terminal output |
+| Markdown rendering | Terminal output | ✅ VS Code Markdown | Terminal output |
 | Interactive mode | ✅ Terminal REPL | ✅ Chat panel | ✅ Terminal REPL |
 | Programmatic mode | — | — | ✅ `copilot -p "prompt"` |
 | Plan mode | — | — | ✅ Shift+Tab |

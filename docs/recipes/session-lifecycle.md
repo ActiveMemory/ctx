@@ -317,6 +317,17 @@ conversation, then proposes structured candidates for your approval. After
 you select which to keep, it persists them via `ctx add` and offers
 `/ctx-commit` if uncommitted changes remain.
 
+As its **final step**, `/ctx-wrap-up` writes a **handover**
+under `.context/handovers/<TS>-<slug>.md` — a
+former-agent-to-next-agent note with a past-tense summary and
+a future-tense "first action for the next session". The
+filename is timestamped so concurrent agent runs never
+overwrite each other. The next `/ctx-remember` reads this
+file as the authoritative recall surface; skipping
+`/ctx-wrap-up` means the next session has no handover to
+read and recall degrades to probabilistic reconstruction
+from canonical files plus journal.
+
 Session transcripts are automatically captured by Claude Code and can be
 browsed later with `ctx journal source` and `ctx journal source --show`.
 

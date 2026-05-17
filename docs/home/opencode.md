@@ -31,7 +31,7 @@ what validation middleware you're referring to?
 ```
 > "Add the validation middleware we discussed"
 
-Yes — from the Jan 15 session. You decided on Zod schemas at the
+Yes. From the Jan 15 session. You decided on Zod schemas at the
 route level (DECISIONS.md #12), and the pattern is in
 CONVENTIONS.md. I'll follow the existing middleware in
 src/middleware/auth.ts as a reference.
@@ -50,15 +50,15 @@ ctx setup opencode --write && ctx init && eval "$(ctx activate)"
 
 This does three things:
 
-1. **`ctx setup opencode --write`** — generates the project-local OpenCode plugin,
+1. **`ctx setup opencode --write`**: generates the project-local OpenCode plugin,
    skills, and `AGENTS.md`, then merges the `ctx` MCP server into OpenCode's
    global config (`~/.config/opencode/opencode.json` or
    `$OPENCODE_HOME/opencode.json`). This writes outside the project root
    because non-interactive shells (like MCP subprocesses) cannot discover
-   project-local config — the same reason the Copilot CLI integration
+   project-local config; the same reason the Copilot CLI integration
    writes to `~/.copilot/mcp-config.json`.
-2. **`ctx init`** — creates the `.context/` directory with template files
-3. **`eval "$(ctx activate)"`** — binds `CTX_DIR` for your shell
+2. **`ctx init`**: creates the `.context/` directory with template files.
+3. **`eval "$(ctx activate)"`**: binds `CTX_DIR` for your shell.
 
 ### What Gets Created
 
@@ -69,18 +69,18 @@ This does three things:
 | `AGENTS.md` | Agent instructions (OpenCode reads this natively) |
 | `.opencode/skills/ctx-*/SKILL.md` | Slash command skills |
 
-The plugin is a single file with no runtime dependencies — no `bun install`
+The plugin is a single file with no runtime dependencies; no `bun install`
 or `npm install` needed. OpenCode loads it automatically on launch.
 
 ## What Happens Automatically
 
 The plugin wires OpenCode lifecycle events to `ctx`. You don't need to
-do anything — it just works.
+do anything; it just works.
 
 | Event | What fires | What it does |
 |-------|-----------|--------------|
 | New session | `session.created` | Warms `ctx` state in the background (bootstrap + agent packet) so MCP queries are fast on first use |
-| Agent idle | `session.idle` | Runs persistence and task-completion checks (silent — output is buffered, not surfaced to the TUI) |
+| Agent idle | `session.idle` | Runs persistence and task-completion checks (silent: output is buffered, not surfaced to the TUI) |
 | After `git commit` | `tool.execute.after` | Runs `ctx system post-commit` to capture context state |
 | After file edit | `tool.execute.after` | Runs `ctx system check-task-completion` to detect silent task completions |
 | Every shell call | `shell.env` | Injects `CTX_DIR` so all `ctx` commands in the agent's shell resolve to the right project |
@@ -89,7 +89,7 @@ do anything — it just works.
 The compaction hook matters most. When OpenCode compresses your context
 window to free up tokens, the plugin makes sure the compressed summary
 includes a pointer back to your `.context/` directory and its file
-inventory — so the agent can re-read tasks, decisions, and learnings on
+inventory, so the agent can re-read tasks, decisions, and learnings on
 demand, even though the original messages are gone.
 
 ### How Compaction Works
@@ -118,7 +118,7 @@ Four skills are available as slash commands:
 | Command | When to use |
 |---------|-------------|
 | `/ctx-agent` | Load full context packet. Use at session start or when context feels stale. |
-| `/ctx-remember` | "Do you remember?" — reads tasks, decisions, learnings, and recent journal entries. Returns a structured readback. |
+| `/ctx-remember` | "Do you remember?"; reads tasks, decisions, learnings, and recent journal entries. Returns a structured readback. |
 | `/ctx-status` | Context summary at a glance: file count, token estimate, recent activity. |
 | `/ctx-wrap-up` | End-of-session ceremony. Captures learnings, decisions, conventions, and outstanding tasks to `.context/` files. |
 
@@ -152,7 +152,7 @@ You don't invoke these yourself. The agent uses them as needed.
 
 If you re-run `ctx setup opencode --write` (e.g., after updating `ctx`), the
 plugin and skills are rewritten in place. **Restart OpenCode to pick up the
-refreshed plugin** — OpenCode only loads plugins at launch, not mid-session.
+refreshed plugin**. OpenCode only loads plugins at launch, not mid-session.
 
 ## Troubleshooting
 
@@ -160,7 +160,7 @@ refreshed plugin** — OpenCode only loads plugins at launch, not mid-session.
 |---------|-------|-----|
 | `opencode mcp list` shows `ctx ✗ failed MCP error -32000: Connection closed` | `CTX_DIR` not resolving in the MCP subprocess | Re-run `ctx setup opencode --write` to regenerate the sh-wrapper that sets `CTX_DIR` |
 | Plugin installed but no hooks fire | Flat-file vs. subdirectory discovery mismatch (OpenCode requires `.opencode/plugins/<name>.ts`, not a subfolder) | Verify the plugin is at `.opencode/plugins/ctx.ts`. Check with `opencode --print-logs --log-level DEBUG` |
-| `ctx agent` markdown leaking into the TUI | BunShell command missing `.nothrow().quiet()` | Update to the latest plugin: `ctx setup opencode --write` and restart |
+| `ctx agent` Markdown leaking into the TUI | BunShell command missing `.nothrow().quiet()` | Update to the latest plugin: `ctx setup opencode --write` and restart |
 
 ## Verify It Works
 
@@ -172,14 +172,14 @@ Do you remember?
 
 The AI should cite specific context: current tasks, recent decisions, or
 previous session topics. If it says "I don't have memory" or "Let me
-check," something went wrong — check that the plugin installed correctly
+check," something went wrong; check that the plugin installed correctly
 and `.context/` has files in it.
 
 ## What's Next
 
-- [Your First Session](first-session.md) — step-by-step walkthrough from
-  `ctx init` to verified recall
-- [Common Workflows](common-workflows.md) — day-to-day commands for
-  tracking context, checking health, and browsing history
-- [Context Files](context-files.md) — what lives in `.context/` and how
-  each file is used
+- [Your First Session](first-session.md): step-by-step walkthrough from
+  `ctx init` to verified recall.
+- [Common Workflows](common-workflows.md): day-to-day commands for
+  tracking context, checking health, and browsing history.
+- [Context Files](context-files.md): what lives in `.context/` and how
+  each file is used.

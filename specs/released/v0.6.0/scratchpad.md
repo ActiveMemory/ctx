@@ -57,7 +57,7 @@ scratchpad_encrypt: true   # default: true
 
 When `false`:
 - No key is generated
-- Scratchpad is stored as `.context/scratchpad.md` (plain markdown)
+- Scratchpad is stored as `.context/scratchpad.md` (plain Markdown)
 - Same CLI, same skill, same commands — only storage differs
 
 ## CLI Commands

@@ -15,9 +15,9 @@ has no lightweight option.
 
 ## Decision
 
-Add **prompt templates** — plain markdown files in `.context/prompts/` that
+Add **prompt templates** — plain Markdown files in `.context/prompts/` that
 users can invoke via `/ctx-prompt <name>` or manage via `ctx prompt` CLI.
-No frontmatter, no build step, no trigger rules. Just named markdown.
+No frontmatter, no build step, no trigger rules. Just named Markdown.
 
 ## Design
 

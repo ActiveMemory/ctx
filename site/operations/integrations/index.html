@@ -3526,7 +3526,7 @@ overview; the dedicated page is the authoritative reference.</p>
 </div>
 <h4 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h4>
 <p>The extension ships to the <a href="https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context">VS Code Marketplace</a>
-under publisher <code>activememory</code> (display name: <em><code>ctx</code> — Persistent Context
+under publisher <code>activememory</code> (display name: <em><code>ctx</code>: Persistent Context
 for AI</em>). Install via the Extensions view or <code>code --install-extension</code>.</p>
 <p>To build from source instead (requires Node.js 20+):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">cd</span><span class="w"> </span>editors/vscode
@@ -3646,14 +3646,14 @@ a thin lifecycle plugin, MCP server, and <code>AGENTS.md</code> instructions.</p
 <h3 id="how-it-works_2">How It Works<a class="headerlink" href="#how-it-works_2" title="Permanent link">&para;</a></h3>
 <p>The plugin wires OpenCode lifecycle events to <code>ctx system</code>:</p>
 <ul>
-<li><strong><code>session.created</code></strong> — warms <code>ctx</code> state in the background (bootstrap + agent packet) so MCP queries are fast on first use</li>
-<li><strong><code>tool.execute.after</code> (shell, on <code>git commit</code>)</strong> — runs <code>ctx system post-commit</code></li>
-<li><strong><code>tool.execute.after</code> (edit/write)</strong> — runs <code>ctx system check-task-completion</code></li>
-<li><strong><code>session.idle</code></strong> — runs persistence and task-completion checks (silent: output is buffered, not surfaced to the TUI)</li>
-<li><strong><code>shell.env</code></strong> — injects <code>CTX_DIR</code> into the agent's shell so <code>ctx</code> commands resolve to the right project</li>
-<li><strong><code>experimental.session.compacting</code></strong> — pushes <code>ctx system bootstrap</code> output into the compaction context so the agent keeps breadcrumbs back to <code>.context/</code></li>
+<li><strong><code>session.created</code></strong>: warms <code>ctx</code> state in the background (bootstrap + agent packet) so MCP queries are fast on first use.</li>
+<li><strong><code>tool.execute.after</code> (shell, on <code>git commit</code>)</strong>: runs <code>ctx system post-commit</code>.</li>
+<li><strong><code>tool.execute.after</code> (edit/write)</strong>: runs <code>ctx system check-task-completion</code>.</li>
+<li><strong><code>session.idle</code></strong>: runs persistence and task-completion checks (silent: output is buffered, not surfaced to the TUI).</li>
+<li><strong><code>shell.env</code></strong>: injects <code>CTX_DIR</code> into the agent's shell so <code>ctx</code> commands resolve to the right project.</li>
+<li><strong><code>experimental.session.compacting</code></strong>: pushes <code>ctx system bootstrap</code> output into the compaction context so the agent keeps breadcrumbs back to <code>.context/</code>.</li>
 </ul>
-<p>The plugin is a single file with no runtime dependencies — no <code>bun install</code>
+<p>The plugin is a single file with no runtime dependencies; no <code>bun install</code>
 needed. OpenCode loads it automatically on launch.</p>
 <h3 id="context-updates">Context Updates<a class="headerlink" href="#context-updates" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Get AI-optimized context packet</span>

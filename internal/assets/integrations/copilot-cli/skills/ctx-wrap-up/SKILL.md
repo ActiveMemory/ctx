@@ -17,6 +17,39 @@ Check that the context directory exists. If it does not, tell the user:
 "No context directory found. Run `ctx init` to set up context
 tracking, then there will be something to wrap up."
 
+## Handover Is the Mandatory Final Step
+
+`/ctx-wrap-up` owns the user-facing session-end trigger and
+**always** delegates to `/ctx-handover` as its final step.
+The handover is the former agent's note to the next agent
+(or human): what happened, and what should come next. It
+writes `.context/handovers/<TS>-<slug>.md` (timestamped so
+multiple agent runs never overwrite). Without this final
+step, `/ctx-remember` has nothing to read at the start of
+the next session and recall degenerates into probabilistic
+reconstruction from canonical files plus journal.
+
+## KB Editorial State (Phase KB, Optional)
+
+If `.context/kb/` exists, this project additionally uses the
+editorial pipeline. After the capture phase but before the
+final `/ctx-handover` delegation:
+
+1. List any closeouts under `.context/ingest/closeouts/`.
+   These are per-pass audit artifacts from `/ctx-kb-ingest`,
+   `/ctx-kb-ask`, etc. that have not yet been folded into a
+   handover.
+2. Count unresolved entries in
+   `.context/kb/outstanding-questions.md` (rows whose Status
+   is `open`).
+3. Surface both counts in the wrap-up summary so the operator
+   sees what editorial residue is pending; the handover
+   step's fold pass will consume the closeouts.
+
+When `.context/kb/` does NOT exist, skip this section
+entirely; the wrap-up proceeds with the standard capture
+checklist and still ends with `/ctx-handover`.
+
 ## When to Use
 
 - At the end of a session, before the user quits
@@ -33,7 +66,7 @@ tracking, then there will be something to wrap up."
 
 ## Process
 
-### Phase 1: Gather signal
+### Phase 1: Gather Signal
 
 Do this **silently**: do not narrate the steps:
 
@@ -52,7 +85,7 @@ Do this **silently**: do not narrate the steps:
    - Follow-up work identified but not yet started
    - Tasks completed or progressed
 
-### Phase 2: Propose candidates
+### Phase 2: Propose Candidates
 
 Think step-by-step about what is worth persisting. For each
 potential candidate, ask yourself:
@@ -89,7 +122,7 @@ Skip categories with no candidates: do not show empty sections.
 Persist all? Or select which to keep?
 ```
 
-### Phase 3: Persist approved candidates
+### Phase 3: Persist Approved Candidates
 
 Wait for the user to approve, select, or modify candidates.
 Wait for the user to approve each item before persisting:
@@ -110,7 +143,7 @@ For each approved candidate, run the appropriate command:
 Report the result of each command. If any fail, report the error
 and continue with the remaining items.
 
-### Phase 3.5: Suppress post-wrap-up nudges
+### Phase 3.5: Suppress Post-Wrap-Up Nudges
 
 After persisting, mark the session as wrapped up so checkpoint
 nudges are suppressed for the remainder of the session:
@@ -119,7 +152,7 @@ nudges are suppressed for the remainder of the session:
 ctx system mark-wrapped-up
 ```
 
-### Phase 4: Commit (optional)
+### Phase 4: Surface Uncommitted Changes
 
 After persisting, check for uncommitted changes:
 
@@ -127,16 +160,66 @@ After persisting, check for uncommitted changes:
 git status --short
 ```
 
-If there are uncommitted changes, offer:
+When `git status --short` reports any modified or untracked
+files, surface them and offer `/ctx-commit`:
 
-> There are uncommitted changes. Want me to run `/ctx-commit`
-> to commit with context capture?
+> There are uncommitted changes (`<count>` files). Run
+> `/ctx-commit` to commit with context capture?
 
-Do not auto-commit. The user decides.
+Do not auto-commit; the user decides. But always run the
+`git status` check and always surface non-empty output. Do
+not skip this phase silently when the working tree is dirty.
+
+### Phase 5: Delegate to `/ctx-handover` (mandatory)
+
+`/ctx-wrap-up` always ends here. Drafting the handover reuses
+the signal gathered in Phase 1 and the candidates approved in
+Phase 3:
+
+1. **Title**: a short noun phrase naming the session arc
+   (becomes the slug in `<TS>-<slug>.md`). Drawn from the
+   conversation; confirm with the user.
+2. **`--summary`** (required, past tense): one paragraph
+   naming what was done this session, drawn from the
+   approved candidates and the git-log scan. Concrete, not
+   vague.
+3. **`--next`** (required, future tense): one paragraph
+   naming the specific first action the next agent should
+   take. Pull from the highest-priority pending task in
+   TASKS.md or the open thread the session was on.
+4. **`--highlights`**: draft a bullet list of notable
+   artifacts produced this session (commits, decisions,
+   specs, files created). Always present a draft. Pass an
+   empty string only after the user has explicitly said
+   there is nothing to highlight.
+5. **`--open-questions`**: draft a bullet list of things
+   that remain undecided. Pull from any candidate the user
+   did not turn into a decision, any deferred ingest pass,
+   any `TODO` discovered in the session. Always present a
+   draft. Pass an empty string only after the user has
+   explicitly confirmed there is nothing open.
+
+Surface the drafted values to the user for one final
+confirmation, then delegate:
+
+```text
+/ctx-handover "<title>" --summary "<...>" --next "<...>" \
+  [--highlights "<...>"] [--open-questions "<...>"]
+```
+
+The `/ctx-handover` skill performs the pre-write gates,
+writes `.context/handovers/<TS>-<slug>.md`, and (when
+`.context/kb/` exists) folds postdated closeouts into the
+`## Folded Closeouts` section and archives them.
+
+If `/ctx-handover` refuses (missing `.context/handovers/`,
+empty placeholder values, etc.), surface the refusal to the
+user. Do not declare the wrap-up complete until the
+handover landed.
 
 ## Candidate Quality Guide
 
-### Good candidates
+### Good Candidates
 
 - "PyMdownx `details` extension wraps content in `<details>`
   tags, breaking `<pre><code>` rendering in MkDocs": specific
@@ -147,7 +230,7 @@ Do not auto-commit. The user decides.
 - "Convention: all skill descriptions use imperative mood":
   codifies a pattern for consistency
 
-### Weak candidates (do not propose)
+### Weak Candidates (Do Not Propose)
 
 - "Go has good error handling": general knowledge, not
   project-specific
@@ -178,3 +261,5 @@ After persisting, verify:
 - [ ] Each `ctx add` command succeeded
 - [ ] Uncommitted changes were surfaced (if any)
 - [ ] User was offered `/ctx-commit` (if applicable)
+- [ ] `/ctx-handover` was invoked and the resulting
+      `.context/handovers/<TS>-<slug>.md` was written

@@ -66,6 +66,10 @@ dist/
 .context/journal-site/
 .context/journal-obsidian/
 
+# KB rendered site output (Phase KB; analogous to journal-site)
+.context/site/
+.context/site-config/
+
 # VS Code extension build artifacts
 editors/vscode/node_modules/
 editors/vscode/dist/

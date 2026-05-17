@@ -1560,6 +1560,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#knowledge-base-phase-kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge Base (Phase KB)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Knowledge Base (Phase KB)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-kb-ingest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-kb-ingest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-kb-ask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-kb-ask
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-kb-site-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-kb-site-review
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-kb-ground" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-kb-ground
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-kb-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-kb-note
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-handover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-handover
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#project-specific-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2465,6 +2548,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#knowledge-base-phase-kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge Base (Phase KB)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Knowledge Base (Phase KB)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-kb-ingest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-kb-ingest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-kb-ask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-kb-ask
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-kb-site-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-kb-site-review
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-kb-ground" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-kb-ground
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-kb-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-kb-note
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-handover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-handover
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#project-specific-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2764,6 +2930,36 @@ to invoke the relevant skills directly.</p>
 <td>Resume context hooks after a pause</td>
 <td>user-invocable</td>
 </tr>
+<tr>
+<td><a href="#ctx-kb-ingest"><code>/ctx-kb-ingest</code></a></td>
+<td>Editorial KB pass (topic-page / triage / evidence-only)</td>
+<td>user-invocable</td>
+</tr>
+<tr>
+<td><a href="#ctx-kb-ask"><code>/ctx-kb-ask</code></a></td>
+<td>Q&amp;A grounded in the KB; refuses to web-jump</td>
+<td>user-invocable</td>
+</tr>
+<tr>
+<td><a href="#ctx-kb-site-review"><code>/ctx-kb-site-review</code></a></td>
+<td>Mechanical KB structural audit</td>
+<td>user-invocable</td>
+</tr>
+<tr>
+<td><a href="#ctx-kb-ground"><code>/ctx-kb-ground</code></a></td>
+<td>Re-ground the KB against listed external sources</td>
+<td>user-invocable</td>
+</tr>
+<tr>
+<td><a href="#ctx-kb-note"><code>/ctx-kb-note</code></a></td>
+<td>Park a finding in <code>ingest/findings.md</code></td>
+<td>user-invocable</td>
+</tr>
+<tr>
+<td><a href="#ctx-handover"><code>/ctx-handover</code></a></td>
+<td>Handover step delegated by <code>/ctx-wrap-up</code>; folds postdated closeouts</td>
+<td>sub-mechanism</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -2826,13 +3022,20 @@ manual TASKS.md updates</p>
 git diff, recent commits, and conversation themes. Proposes
 candidates (learnings, decisions, conventions, tasks) with complete
 structured fields for user approval, then persists via <code>ctx add</code>.
-Offers <code>/ctx-commit</code> if uncommitted changes remain.
+Offers <code>/ctx-commit</code> if uncommitted changes remain. <strong>Always
+delegates to <code>/ctx-handover</code> as its final step</strong>, regardless of
+whether <code>.context/kb/</code> exists: KB presence only affects what gets
+folded into the handover, not whether it is written.
 <strong>Ceremony skill</strong>: invoke explicitly at session end.</p>
+<p><strong>Trigger phrases</strong>: "let's wrap up", "save context", "save
+state", "leave a handover", "before I go", "stepping away",
+"end of session"</p>
 <p><strong>Wraps</strong>: <code>git diff --stat</code>, <code>git log</code>, <code>ctx learning add</code>,
 <code>ctx decision add</code>, <code>ctx convention add</code>, <code>ctx task add</code>,
-chains to <code>/ctx-commit</code></p>
+chains to <code>/ctx-commit</code>, delegates to <code>/ctx-handover</code></p>
 <p><strong>See also</strong>: <a href="../../recipes/session-ceremonies/">Session Ceremonies</a>,
-<a href="../../recipes/session-lifecycle/">The Complete Session</a></p>
+<a href="../../recipes/session-lifecycle/">The Complete Session</a>,
+<a href="#ctx-handover"><code>/ctx-handover</code></a></p>
 <hr />
 <h2 id="context-persistence">Context Persistence<a class="headerlink" href="#context-persistence" title="Permanent link">&para;</a></h2>
 <p>Skills for recording work artifacts: tasks, decisions, learnings,
@@ -2972,7 +3175,7 @@ works but with reduced capability. It runs structural checks and notes:
 <a href="../../cli/event/#ctx-hook-event"><code>ctx hook event</code> CLI</a></p>
 <hr />
 <h3 id="ctx-link-check"><code>/ctx-link-check</code><a class="headerlink" href="#ctx-link-check" title="Permanent link">&para;</a></h3>
-<p>Scan all markdown files under <code>docs/</code> for broken links. Three passes:
+<p>Scan all Markdown files under <code>docs/</code> for broken links. Three passes:
 internal links (verify file targets exist on disk), external links
 (HTTP HEAD with timeout, report failures as warnings), and image
 references. Resolves relative paths, strips anchors before checking,
@@ -3032,8 +3235,9 @@ produced a debated brief that already covers the design.</p>
 <li>Frozen contracts in <code>docs/</code> (release notes, public CLI docs)</li>
 <li>Recorded decisions in <code>.context/DECISIONS.md</code></li>
 <li>The brief at <code>&lt;path&gt;</code></li>
-<li>Agent inference — only when 1–3 are silent, and labeled <code>TBD</code>
-   in the resulting spec so it stands out for review.</li>
+<li>Agent inference, only when 1 through 3 are silent, and
+   labeled <code>TBD</code> in the resulting spec so it stands out for
+   review.</li>
 </ol>
 <p>Light compression for clarity is allowed; new facts are not.
 Where the brief is silent, the spec writes <code>TBD</code> rather than
@@ -3192,6 +3396,88 @@ and ceremony behavior. Silent no-op if not paused.</p>
 "unpause"</p>
 <p><strong>See also</strong>:
 <a href="../../recipes/session-pause/">Pausing Context Hooks</a></p>
+<hr />
+<h2 id="knowledge-base-phase-kb">Knowledge Base (Phase KB)<a class="headerlink" href="#knowledge-base-phase-kb" title="Permanent link">&para;</a></h2>
+<p>Skills for the editorial knowledge-ingestion pipeline. Active when
+<code>.context/kb/</code> exists (laid down by <code>ctx init</code>). The pipeline gives
+you evidence-tracked knowledge with confidence bands, folder-shaped
+topic pages, a source-coverage state machine, and per-session
+handovers that fold postdated closeouts.</p>
+<p>See the
+<a href="../../recipes/build-a-knowledge-base/">Build a Knowledge Base recipe</a>
+for the full workflow. The editorial constitution lives at
+<code>.context/ingest/KB-RULES.md</code>.</p>
+<h3 id="ctx-kb-ingest"><code>/ctx-kb-ingest</code><a class="headerlink" href="#ctx-kb-ingest" title="Permanent link">&para;</a></h3>
+<p>Mode-aware editorial pass. Declares its pass-mode
+(<code>topic-page</code> / <code>triage</code> / <code>evidence-only</code>) up front, scans the
+source-coverage ledger for adjacent incomplete topics, synthesizes
+prose into <code>.context/kb/topics/&lt;slug&gt;/index.md</code>, mints <code>EV-###</code>
+rows in <code>evidence-index.md</code>, runs a four-invariant completion
+circuit breaker, and writes a closeout under
+<code>.context/ingest/closeouts/</code>. Refuses on empty input.</p>
+<p><strong>Wraps</strong>: <code>ctx kb ingest</code>, <code>ctx kb topic new</code>, the writer
+packages under <code>internal/write/kb/</code>.</p>
+<p><strong>Trigger phrases</strong>: "ingest the transcripts", "pull this into the
+kb", "add evidence from"</p>
+<p><strong>See also</strong>:
+<a href="../../recipes/build-a-knowledge-base/">Build a Knowledge Base</a>,
+<a href="../../recipes/typical-kb-session/">Typical KB Session</a>,
+<a href="../../cli/kb/#ctx-kb"><code>ctx kb</code> CLI</a></p>
+<hr />
+<h3 id="ctx-kb-ask"><code>/ctx-kb-ask</code><a class="headerlink" href="#ctx-kb-ask" title="Permanent link">&para;</a></h3>
+<p>Q&amp;A grounded in the KB. Cites <code>EV-###</code> rows; refuses to web-jump.
+When the KB cannot answer, opens a <code>Q-###</code> row in
+<code>outstanding-questions.md</code> rather than inventing. Refuses on empty
+question.</p>
+<p><strong>Wraps</strong>: <code>ctx kb ask</code>, reads <code>.context/kb/*.md</code></p>
+<p><strong>Trigger phrases</strong>: "does the kb say", "according to evidence"</p>
+<p><strong>See also</strong>: <a href="../../cli/kb/#ctx-kb"><code>ctx kb</code> CLI</a></p>
+<hr />
+<h3 id="ctx-kb-site-review"><code>/ctx-kb-site-review</code><a class="headerlink" href="#ctx-kb-site-review" title="Permanent link">&para;</a></h3>
+<p>Mechanical structural audit. Coerces malformed Confidence-band
+capitalization, flags malformed closeout frontmatter, refuses
+judgment calls that require evidence (those go through ingest).</p>
+<p><strong>Wraps</strong>: <code>ctx kb site-review</code></p>
+<p><strong>Trigger phrases</strong>: "audit the kb", "check kb for rot"</p>
+<p><strong>See also</strong>: <a href="../../cli/kb/#ctx-kb"><code>ctx kb</code> CLI</a></p>
+<hr />
+<h3 id="ctx-kb-ground"><code>/ctx-kb-ground</code><a class="headerlink" href="#ctx-kb-ground" title="Permanent link">&para;</a></h3>
+<p>External re-grounding pass. Reads
+<code>.context/ingest/grounding-sources.md</code> and refreshes each listed
+source. Refuses cleanly when the file is absent or empty.</p>
+<p><strong>Wraps</strong>: <code>ctx kb ground</code></p>
+<p><strong>Trigger phrases</strong>: "re-ground the kb", "check upstream"</p>
+<p><strong>See also</strong>: <a href="../../cli/kb/#ctx-kb"><code>ctx kb</code> CLI</a></p>
+<hr />
+<h3 id="ctx-kb-note"><code>/ctx-kb-note</code><a class="headerlink" href="#ctx-kb-note" title="Permanent link">&para;</a></h3>
+<p>Lightweight capture into <code>.context/ingest/findings.md</code>. Never
+writes to a topic page or <code>evidence-index.md</code>. Use for parking
+findings the next ingest pass should absorb.</p>
+<p><strong>Wraps</strong>: <code>ctx kb note "&lt;text&gt;"</code></p>
+<p><strong>Trigger phrases</strong>: "drop a note", "park this finding"</p>
+<p><strong>See also</strong>: <a href="../../cli/kb/#ctx-kb"><code>ctx kb</code> CLI</a></p>
+<hr />
+<h3 id="ctx-handover"><code>/ctx-handover</code><a class="headerlink" href="#ctx-handover" title="Permanent link">&para;</a></h3>
+<p>Per-session handover artifact writer; the sub-mechanism that
+<code>/ctx-wrap-up</code> delegates to as its final step. Collects
+<code>--summary</code> (past tense) and <code>--next</code> (future tense, specific)
+and calls <code>ctx handover write</code>. Writes the handover to
+<code>.context/handovers/&lt;TS&gt;-&lt;slug&gt;.md</code> (timestamped so concurrent
+agent runs never overwrite). Folds postdated closeouts into a
+<code>## Folded closeouts</code> section and <strong>physically archives</strong> the
+source closeouts under <code>.context/archive/closeouts/</code> (closeouts
+are append-never-rewrite; archival moves bytes but does not
+modify them). <code>--no-fold</code> skips the fold for mid-session
+checkpoints.</p>
+<p><strong>Mandatory tail of <code>/ctx-wrap-up</code>.</strong> Direct invocation is
+reserved for <code>--no-fold</code> mid-session checkpoints and recovery
+after an aborted session.</p>
+<p><strong>Wraps</strong>: <code>ctx handover write &lt;title&gt; --summary X --next Y</code></p>
+<p><strong>See also</strong>:
+<a href="#ctx-wrap-up"><code>/ctx-wrap-up</code></a>,
+<a href="../../recipes/typical-kb-session/">Typical KB Session</a>,
+<a href="../../recipes/recover-aborted-session/">Recover an Aborted KB Session</a>,
+<a href="../../cli/handover/#ctx-handover"><code>ctx handover</code> CLI</a></p>
 <hr />
 <h2 id="project-specific-skills">Project-Specific Skills<a class="headerlink" href="#project-specific-skills" title="Permanent link">&para;</a></h2>
 <p>The <code>ctx</code> plugin ships the skills listed above.

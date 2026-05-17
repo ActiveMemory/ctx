@@ -13,7 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	embFlag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/flagbind"
+	"github.com/ActiveMemory/ctx/internal/flag_bind"
 )
 
 // Cmd returns the "ctx system session-event" subcommand.

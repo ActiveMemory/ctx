@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/journal"
-	"github.com/ActiveMemory/ctx/internal/flagbind"
+	"github.com/ActiveMemory/ctx/internal/flag_bind"
 )
 
 // Cmd returns the journal source subcommand.

@@ -4,7 +4,7 @@ description: "Audit docs for dead links. Use before releases, after restructurin
 tools: [bash, read, glob, grep]
 ---
 
-Scan markdown files for broken links. Two passes:
+Scan Markdown files for broken links. Two passes:
 internal (file targets) and external (HTTP URLs).
 
 ## Scope Discovery
@@ -36,7 +36,7 @@ Report which directories are being scanned at the start of output.
 
 ### Pass 1: Internal Links
 
-Scan every `.md` file in the discovered scope for markdown links
+Scan every `.md` file in the discovered scope for Markdown links
 pointing to other files: `[text](target.md)`,
 `[text](../path/file.md)`, `[text](path/file.md#anchor)`.
 
@@ -57,7 +57,7 @@ BROKEN: source-file.md:LINE → target.md (file not found)
 ### Pass 2: External Links
 
 Scan every `.md` file in the discovered scope for `http://` and
-`https://` URLs in markdown link syntax.
+`https://` URLs in Markdown link syntax.
 
 For each URL:
 

@@ -1517,6 +1517,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#knowledge-base-phase-kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge Base (Phase KB)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Knowledge Base (Phase KB)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-a-knowledge-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build a Knowledge Base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typical-kb-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical KB Session
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recover-an-aborted-kb-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recover an Aborted KB Session
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sessions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2143,6 +2193,33 @@ pipeline works for Turkish, Japanese, and any other locale.</p>
 shared directory, or anywhere else. Useful for open source projects
 with private context or <strong>multi-repo</strong> setups.</p>
 <p><strong>Uses</strong>: <code>ctx init</code>, <code>CTX_DIR</code>, <code>.ctxrc</code>, <code>/ctx-status</code></p>
+<hr />
+<h2 id="knowledge-base-phase-kb">Knowledge Base (Phase KB)<a class="headerlink" href="#knowledge-base-phase-kb" title="Permanent link">&para;</a></h2>
+<h3 id="build-a-knowledge-base"><a href="build-a-knowledge-base/">Build a Knowledge Base</a><a class="headerlink" href="#build-a-knowledge-base" title="Permanent link">&para;</a></h3>
+<p>Stand up the editorial pipeline for knowledge-shaped work
+(research projects, vendor-spec analysis, post-incident reviews).
+Covers the pass-mode contract, source-coverage state-machine
+ledger, topic-adjacency pre-flight, cold-reader rubric,
+closeout/fold mechanism, and folder-shaped topic pages.</p>
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>ctx kb topic new</code>, <code>ctx kb note</code>,
+<code>ctx kb reindex</code>, <code>ctx handover write</code>,
+<code>/ctx-kb-ingest</code>, <code>/ctx-kb-ask</code>, <code>/ctx-kb-site-review</code>,
+<code>/ctx-kb-ground</code>, <code>/ctx-kb-note</code>, <code>/ctx-handover</code></p>
+<hr />
+<h3 id="typical-kb-session"><a href="typical-kb-session/">Typical KB Session</a><a class="headerlink" href="#typical-kb-session" title="Permanent link">&para;</a></h3>
+<p>The everyday flow once the pipeline is set up: session start
+recall, ingest a transcript, ask grounded questions, park
+findings, wrap up via the mandatory handover.</p>
+<p><strong>Uses</strong>: <code>/ctx-remember</code>, <code>/ctx-kb-ingest</code>, <code>/ctx-kb-ask</code>,
+<code>/ctx-kb-note</code>, <code>/ctx-wrap-up</code>, <code>/ctx-handover</code></p>
+<hr />
+<h3 id="recover-an-aborted-kb-session"><a href="recover-aborted-session/">Recover an Aborted KB Session</a><a class="headerlink" href="#recover-an-aborted-kb-session" title="Permanent link">&para;</a></h3>
+<p>What to do when the session ends after one or more editorial
+passes but before <code>/ctx-handover</code>. Closeouts survive the abort;
+the next session's <code>/ctx-remember</code> reads them as unfolded
+postdated artifacts; the next <code>/ctx-handover</code> folds them
+retroactively.</p>
+<p><strong>Uses</strong>: <code>/ctx-remember</code>, <code>/ctx-handover</code></p>
 <hr />
 <h2 id="sessions">Sessions<a class="headerlink" href="#sessions" title="Permanent link">&para;</a></h2>
 <h3 id="the-complete-session"><a href="session-lifecycle/">The Complete Session</a><a class="headerlink" href="#the-complete-session" title="Permanent link">&para;</a></h3>

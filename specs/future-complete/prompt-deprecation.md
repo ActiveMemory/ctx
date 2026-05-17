@@ -4,7 +4,7 @@
 
 `ctx` ships two overlapping systems for agent instructions: **skills**
 (`.claude/skills/`, with frontmatter, trigger descriptions, and tool
-permissions) and **prompt templates** (`.context/prompts/`, plain markdown,
+permissions) and **prompt templates** (`.context/prompts/`, plain Markdown,
 no metadata). Three of the four bundled prompts (code-review, explain,
 refactor) are functionally lightweight skills — they give the agent working
 instructions to apply. But because they live in the prompt system, the agent

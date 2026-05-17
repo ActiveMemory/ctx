@@ -25,7 +25,7 @@ import (
 )
 
 // flagMethods lists cobra flag registration methods
-// that must go through internal/flagbind/.
+// that must go through internal/flag_bind/.
 var flagMethods = map[string]bool{
 	"StringVar":      true,
 	"StringVarP":     true,
@@ -43,7 +43,7 @@ var flagMethods = map[string]bool{
 
 // TestNoFlagBindOutsideFlagbind ensures direct cobra
 // flag registration (.Flags().StringVar, etc.) only
-// appears in internal/flagbind/. All other packages
+// appears in internal/flag_bind/. All other packages
 // must use the flagbind helpers.
 //
 // Test files are exempt.
@@ -54,7 +54,7 @@ func TestNoFlagBindOutsideFlagbind(t *testing.T) {
 	var violations []string
 
 	for _, pkg := range pkgs {
-		if strings.Contains(pkg.PkgPath, "flagbind") {
+		if strings.Contains(pkg.PkgPath, "flag_bind") {
 			continue
 		}
 

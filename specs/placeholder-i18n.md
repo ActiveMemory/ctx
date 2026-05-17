@@ -23,7 +23,7 @@ Three concrete gaps:
 1. **English-only set** baked as Go constants
    (`PlaceholderTBD`, `PlaceholderNA`, `PlaceholderSeeChat`, …). A
    Spanish, Turkish, German, or Japanese user has no shipped
-   defence against their language's "to be defined" markers.
+   defense against their language's "to be defined" markers.
 2. **No `.ctxrc` override hook**. Every other parser-vocabulary
    list in ctx (`session_prefixes`, `classify_rules`,
    `spec_signal_words`) is overridable. Placeholders are the
@@ -211,7 +211,7 @@ func RejectPlaceholder(flag, value string) error {
   body flags (decision/learning add today, more later). Per-flag
   customization can be added if a real need appears.
 - **Shipping `tr` (or any other locale) defaults in this spec.**
-  ctx has not shipped any locale-specific behaviour yet (no `tr`
+  ctx has not shipped any locale-specific behavior yet (no `tr`
   files anywhere). Ship `en` only; the structure makes adding
   `tr.yaml`, `es.yaml`, etc. a copy-edit later.
 - **Fuzzy / Levenshtein / stem matching.** Exact case-folded

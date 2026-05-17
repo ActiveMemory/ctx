@@ -2,7 +2,7 @@
 
 ## Overview
 
-Each context file serves a specific purpose and follows a consistent markdown 
+Each context file serves a specific purpose and follows a consistent Markdown 
 structure. Files are designed to be human-readable, AI-parseable, 
 and token-efficient.
 

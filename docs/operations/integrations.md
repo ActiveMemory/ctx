@@ -489,7 +489,7 @@ indicator.
 #### Installation
 
 The extension ships to the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context)
-under publisher `activememory` (display name: *`ctx` — Persistent Context
+under publisher `activememory` (display name: *`ctx`: Persistent Context
 for AI*). Install via the Extensions view or `code --install-extension`.
 
 To build from source instead (requires Node.js 20+):
@@ -594,14 +594,14 @@ eval "$(ctx activate)"
 
 The plugin wires OpenCode lifecycle events to `ctx system`:
 
-- **`session.created`** — warms `ctx` state in the background (bootstrap + agent packet) so MCP queries are fast on first use
-- **`tool.execute.after` (shell, on `git commit`)** — runs `ctx system post-commit`
-- **`tool.execute.after` (edit/write)** — runs `ctx system check-task-completion`
-- **`session.idle`** — runs persistence and task-completion checks (silent: output is buffered, not surfaced to the TUI)
-- **`shell.env`** — injects `CTX_DIR` into the agent's shell so `ctx` commands resolve to the right project
-- **`experimental.session.compacting`** — pushes `ctx system bootstrap` output into the compaction context so the agent keeps breadcrumbs back to `.context/`
+- **`session.created`**: warms `ctx` state in the background (bootstrap + agent packet) so MCP queries are fast on first use.
+- **`tool.execute.after` (shell, on `git commit`)**: runs `ctx system post-commit`.
+- **`tool.execute.after` (edit/write)**: runs `ctx system check-task-completion`.
+- **`session.idle`**: runs persistence and task-completion checks (silent: output is buffered, not surfaced to the TUI).
+- **`shell.env`**: injects `CTX_DIR` into the agent's shell so `ctx` commands resolve to the right project.
+- **`experimental.session.compacting`**: pushes `ctx system bootstrap` output into the compaction context so the agent keeps breadcrumbs back to `.context/`.
 
-The plugin is a single file with no runtime dependencies — no `bun install`
+The plugin is a single file with no runtime dependencies; no `bun install`
 needed. OpenCode loads it automatically on launch.
 
 ### Context Updates

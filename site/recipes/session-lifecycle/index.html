@@ -2391,6 +2391,16 @@ these two skills are the exception to the conversational rule.</p>
 conversation, then proposes structured candidates for your approval. After
 you select which to keep, it persists them via <code>ctx add</code> and offers
 <code>/ctx-commit</code> if uncommitted changes remain.</p>
+<p>As its <strong>final step</strong>, <code>/ctx-wrap-up</code> writes a <strong>handover</strong>
+under <code>.context/handovers/&lt;TS&gt;-&lt;slug&gt;.md</code> — a
+former-agent-to-next-agent note with a past-tense summary and
+a future-tense "first action for the next session". The
+filename is timestamped so concurrent agent runs never
+overwrite each other. The next <code>/ctx-remember</code> reads this
+file as the authoritative recall surface; skipping
+<code>/ctx-wrap-up</code> means the next session has no handover to
+read and recall degrades to probabilistic reconstruction
+from canonical files plus journal.</p>
 <p>Session transcripts are automatically captured by Claude Code and can be
 browsed later with <code>ctx journal source</code> and <code>ctx journal source --show</code>.</p>
 <hr />

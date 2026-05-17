@@ -15,7 +15,7 @@ import (
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/ActiveMemory/ctx/internal/flagbind"
+	"github.com/ActiveMemory/ctx/internal/flag_bind"
 )
 
 // Cmd builds a cobra add subcommand for the given noun.

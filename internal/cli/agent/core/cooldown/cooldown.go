@@ -88,8 +88,8 @@ func TouchTombstone(session string) error {
 //   - error: non-nil when the context directory is not declared,
 //     the project is not initialized, or the state directory cannot
 //     be created. Delegates to [state.Dir] so the
-//     [errCtx.ErrNotInitialized] gate applies here too — see
-//     specs/state-dir-no-mkdir-when-uninitialized.md. Without this,
+//     [errCtx.ErrNotInitialized] gate applies here too (see
+//     specs/state-dir-no-mkdir-when-uninitialized.md). Without this,
 //     a hook-driven `ctx agent` invocation in a non-ctx project
 //     (the cross-IDE Cursor leak path) would mkdir `.context/state/`
 //     directly here, bypassing [state.Dir]'s gate.

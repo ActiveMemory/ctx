@@ -380,7 +380,7 @@ into a single invocation.
 
 !!! info "Skills beyond Claude Code"
     The `/slash-command` syntax above is Claude Code native, but the
-    underlying `SKILL.md` files are a standard markdown format that any
+    underlying `SKILL.md` files are a standard Markdown format that any
     agent can consume. If you use a different coding agent, consult its
     documentation for how to load skill files as prompt templates.
 

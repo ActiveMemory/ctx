@@ -143,7 +143,7 @@ Before writing, validate:
 
 1. Target file exists (or can be created)
 2. Action is valid
-3. Content is well-formed markdown
+3. Content is well-formed Markdown
 4. Section exists (if specified)
 5. ID can be found (for update/remove/complete)
 

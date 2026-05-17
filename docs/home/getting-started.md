@@ -202,7 +202,7 @@ For Claude Code, install the [`ctx` plugin](../operations/integrations.md#claude
 for automatic hooks and skills.
 
 `ctx init` also scaffolds four **foundation steering files** in
-`.context/steering/` — `product.md`, `tech.md`, `structure.md`,
+`.context/steering/`: `product.md`, `tech.md`, `structure.md`,
 `workflow.md`. **They are placeholders until you customize
 them** (see the next step); skipping that step has consequences,
 so it is broken out as its own numbered beat rather than
@@ -211,7 +211,7 @@ buried here.
 ### 2. Customize Your Steering Files
 
 Steering files are **behavioral rules prepended to every AI
-prompt** — the layer that tells your AI *how to act* on this
+prompt**: the layer that tells your AI *how to act* on this
 specific project. They are distinct from decisions (*what* was
 chosen) and conventions (*how* the codebase is written); see
 [`ctx` for Steering Files](../recipes/steering.md) for the full
@@ -232,7 +232,7 @@ Each scaffolded file ships with a **tombstone marker** line
 **As long as the marker is present, the file is silently
 skipped** on every load path: the agent context packet, MCP
 `ctx_steering_get`, and native-tool sync (Cursor / Cline /
-Kiro). The skip is deliberate — injecting unfilled placeholders
+Kiro). The skip is deliberate: injecting unfilled placeholders
 into AI prompts is worse than no steering at all, because the
 AI tries to follow "Describe the product..." as if it were a
 rule.

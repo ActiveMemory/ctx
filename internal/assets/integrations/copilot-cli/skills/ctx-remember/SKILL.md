@@ -45,7 +45,23 @@ feel like a file search rather than genuine recall:
    ```bash
    ctx journal source --limit 3
    ```
-4. **Present the structured readback** (see format below)
+4. **Read the latest handover.** Look under
+   `.context/handovers/`, sort by filename (timestamped
+   `<TS>-<slug>.md`; the newest is the lexicographically
+   last), and read its `## Summary` and `## Next Session`
+   sections as the authoritative recall surface. The
+   handover is the previous session's note to this one.
+   Skip only if `.context/handovers/` is empty or absent.
+5. **Read postdated closeouts, if any.** When
+   `.context/ingest/closeouts/` exists, list closeouts whose
+   `generated-at` postdates the handover's `generated-at`
+   and read their `## What Changed` sections. These are
+   per-pass audit notes the previous wrap-up did not get a
+   chance to fold into a handover. This step is read-only:
+   `/ctx-remember` does not run any editorial pass. If the
+   directory does not exist or holds no postdated entries,
+   skip the step.
+6. **Present the structured readback** (see format below)
 
 ## Readback Format
 
@@ -73,7 +89,7 @@ tasks, or ask the user for direction if priorities are unclear.
   not *searching*
 - Be honest about the mechanism only if the user explicitly asks
   *how* you remember (e.g., "It's stored in context files managed
-  by ctx")
+  by `ctx`")
 
 ## Examples
 
@@ -97,7 +113,7 @@ tasks, or ask the user for direction if priorities are unclear.
 > partially done. Want to continue those, or shift to the JSON
 > status flag?
 
-### Bad Readback (Anti-patterns)
+### Bad Readback (Anti-Patterns)
 
 > "I don't have persistent memory, but let me check if there
 > are any context files..."
@@ -114,7 +130,7 @@ Skip this section entirely if `companion_check: false` is set in
 `.ctxrc`: check by running `ctx config status` and looking for
 the field value.
 
-**Companion tools** enhance ctx skills with web search and code
+**Companion tools** enhance `ctx` skills with web search and code
 intelligence. They are optional but recommended:
 
 | Tool          | Purpose                                                | Smoke test                                                           |

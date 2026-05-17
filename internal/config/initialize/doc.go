@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package initialize hosts compile-time constants consumed by
-// the ctx init command — sentinel error messages used by
+// the ctx init command: sentinel error messages used by
 // the err/initialize package, backup directory naming for
 // ctx init --reset, and the canonical reset flag name.
 //

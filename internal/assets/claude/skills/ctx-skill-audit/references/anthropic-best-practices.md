@@ -37,7 +37,7 @@ context. If they'd be confused, Claude will be too.
 
 Tell Claude what to do, not what to avoid. Positive instructions
 ("write flowing prose paragraphs") outperform negative ones
-("don't use markdown").
+("don't use Markdown").
 
 **Why this matters for skills:** a skill full of "don't do X"
 leaves the agent guessing what *to* do. Positive instructions
@@ -45,7 +45,7 @@ give a clear target. Negative guards are fine as supplements,
 but the primary instruction should describe the desired behavior.
 
 <example>
-<poor>Do not use markdown in your response.</poor>
+<poor>Do not use Markdown in your response.</poor>
 <good>Write your response as flowing prose paragraphs.</good>
 </example>
 
@@ -197,7 +197,7 @@ context windows:
 
 - **Checkpoint progress**: encourage saving state at natural
   breakpoints so work isn't lost if context refreshes.
-- **Use structured formats for state**: JSON or markdown
+- **Use structured formats for state**: JSON or Markdown
   checklists for tracking progress.
 - **Use git for persistence**: commits provide both state
   tracking and rollback capability.
