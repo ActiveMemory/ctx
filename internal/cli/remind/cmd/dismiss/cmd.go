@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errReminder "github.com/ActiveMemory/ctx/internal/err/reminder"
-	"github.com/ActiveMemory/ctx/internal/flag_bind"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the remind dismiss subcommand.

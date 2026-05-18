@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	cfgTrigger "github.com/ActiveMemory/ctx/internal/config/trigger"
 	errTrigger "github.com/ActiveMemory/ctx/internal/err/trigger"
-	"github.com/ActiveMemory/ctx/internal/flag_bind"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/trigger"
 	writeTrigger "github.com/ActiveMemory/ctx/internal/write/trigger"

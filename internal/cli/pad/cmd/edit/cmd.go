@@ -18,7 +18,7 @@ import (
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
-	"github.com/ActiveMemory/ctx/internal/flag_bind"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the pad edit subcommand.

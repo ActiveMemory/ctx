@@ -119,7 +119,7 @@ func TestDescKeyOnlyInLookupCalls(t *testing.T) {
 		if strings.Contains(
 			pkg.PkgPath, "config/embed/",
 		) || strings.Contains(
-			pkg.PkgPath, "flag_bind",
+			pkg.PkgPath, "flagbind",
 		) {
 			continue
 		}

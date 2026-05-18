@@ -207,6 +207,6 @@ binds to it; every `ctx` subsystem reads the project from its parent.
 
 Nested projects, submodules, rogue agent-created `.context/`
 directories, and sub-agent sessions all produced silent misrouting
-under the old walk-up model. `ctx` decided to stop guessing and
-require the caller to declare. Every other decision flows from
+under a walk-up model. For consistency, `ctx` does not guess, 
+and  requires the caller to declare. Every other decision flows from
 there.

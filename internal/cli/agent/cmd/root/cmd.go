@@ -19,7 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
-	"github.com/ActiveMemory/ctx/internal/flag_bind"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 

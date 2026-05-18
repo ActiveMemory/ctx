@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	cfgStats "github.com/ActiveMemory/ctx/internal/config/stats"
-	"github.com/ActiveMemory/ctx/internal/flag_bind"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx usage" top-level command.

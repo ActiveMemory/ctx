@@ -46,6 +46,6 @@
 //	c.Flags().Bool("dry-run", false, desc.Flag(flag.DescKeyAddDryRun))
 //
 // In practice, most flag binding goes through
-// [internal/flag_bind] which already knows how to look up
+// [internal/flagbind] which already knows how to look up
 // the desc key, so callers rarely call `desc.Flag` directly.
 package flag

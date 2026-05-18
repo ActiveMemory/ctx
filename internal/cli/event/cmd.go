@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	eventCfg "github.com/ActiveMemory/ctx/internal/config/event"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/flag_bind"
+	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
 // Cmd returns the "ctx hook event" command.
