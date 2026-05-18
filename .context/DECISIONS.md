@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-17 | entity.Sentinel lives in internal/entity/ because the cross-package-types audit treats entity/ as the canonical home for shared types |
 | 2026-05-16 | Phase KB lifts the current upstream editorial-pipeline shape, superseding the 4-phase predecessor in the brief |
 | 2026-05-11 | Embedded and separately-published harnesses use distinct CI and release pipelines |
 | 2026-05-11 | Embedded foreign-language assets under internal/assets/ are intentional, not a smell |
@@ -140,6 +141,61 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-17-181500] `entity.Sentinel` lives in `internal/entity/` because the cross-package-types audit treats `entity/` as the canonical home for shared types
+
+**Status**: Accepted
+
+**Context**: While converting the prior session's
+`ErrMsg`-string-sentinel anti-pattern to typed-string sentinels
+with lazy `desc.Text` resolution, the natural home for the
+`Sentinel` type was a small shared helper used by every
+`internal/err/<area>/` package. The first draft placed it at
+`internal/err/sentinel/`, but `TestCrossPackageTypes` (which has
+zero grandfathered violations and forbids weakening or
+allowlist-bumping) flagged the cross-package usage with the hint
+"consider entity/".
+
+**Alternatives Considered**:
+- Per-package sentinel type duplicated across 9 err packages.
+  Pros: no cross-package type. Cons: 18 boilerplate declarations
+  (type + Error method × 9) with doc comments; convention drift
+  risk as the duplicated shape can diverge.
+- Keep `internal/err/sentinel/` and add it to `typeExemptPackages`
+  in the audit. Pros: semantic home matches the type's role
+  (behavioral mixin for errors). Cons: the audit explicitly
+  forbids exemption-list growth as the mechanism for new code;
+  the test header says "If a test fails after your change, fix
+  the code under test."
+- Move `Sentinel` to `internal/entity/`. Pros: passes the audit
+  without weakening; one shared declaration; consistent with
+  every other cross-cutting type. Cons: `Sentinel` is a
+  behavioral helper, not a domain data shape — semantically
+  stretches `entity/`'s usual contents.
+
+**Decision**: Place `Sentinel` in `internal/entity/sentinel.go`.
+
+**Rationale**: The audit's rule is the project's hardline: every
+cross-package type goes in `entity/`. The semantic stretch is
+real but small, and writing exceptions to the audit is more
+expensive long-term than absorbing a one-type semantic blur in
+a package whose contract is already "things used cross-package."
+Per-package duplication was rejected because the convention is
+load-bearing — the next session that touches an err package
+needs one obvious shape to copy, not a choice between 9 nearly
+identical copies.
+
+**Consequence**: `entity/` now houses a typed-string error
+helper alongside its data shapes. Future readers landing in
+`entity/` will find one file (`sentinel.go`) that doesn't
+match the package's "data" theme; the doc comment on `Sentinel`
+explains why. If `entity/` grows more behavioral helpers, the
+package contract should be revisited; for now the precedent is
+contained to this single type.
+
+**Related**: LEARNINGS.md `[2026-05-17-180000] Sentinel errors
+use typed zero-data structs with lazy desc.Text()` records the
+shape itself.
 
 ## [2026-05-16-000000] Phase KB lifts the current upstream editorial-pipeline shape, superseding the 4-phase predecessor in the brief
 
