@@ -7,13 +7,12 @@
 package schema
 
 import (
-	"errors"
-
-	cfgSchema "github.com/ActiveMemory/ctx/internal/config/schema"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 // ErrDrift indicates schema drift was detected.
-var ErrDrift = errors.New(cfgSchema.ErrMsgDrift)
+const ErrDrift = entity.Sentinel(text.DescKeyErrSchemaDrift)
 
 // Drift returns a schema drift error.
 //

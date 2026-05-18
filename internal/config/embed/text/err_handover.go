@@ -41,4 +41,22 @@ const (
 	// DescKeyErrHandoverResolveHead is the text key for the
 	// git-head resolution failure wrapper.
 	DescKeyErrHandoverResolveHead = "err.handover.resolve-head"
+	// DescKeyErrHandoverTitleRequired is the text key for the
+	// empty-title sentinel.
+	DescKeyErrHandoverTitleRequired = "err.handover.title-required"
+	// DescKeyErrHandoverSummaryRequired is the text key for the
+	// empty-summary sentinel.
+	DescKeyErrHandoverSummaryRequired = "err.handover.summary-required"
+	// DescKeyErrHandoverNextRequired is the text key for the
+	// empty-next-session sentinel.
+	DescKeyErrHandoverNextRequired = "err.handover.next-required"
+	// DescKeyErrHandoverMissingFrontmatter is the text key for
+	// the missing-frontmatter parse sentinel.
+	DescKeyErrHandoverMissingFrontmatter = "err.handover.missing-frontmatter"
+	// DescKeyErrHandoverMissingClosingDelim is the text key for
+	// the unterminated-frontmatter parse sentinel.
+	DescKeyErrHandoverMissingClosingDelim = "err.handover.missing-closing-delim"
+	// DescKeyErrHandoverMissingGeneratedAt is the text key for
+	// the missing-generated-at parse sentinel.
+	DescKeyErrHandoverMissingGeneratedAt = "err.handover.missing-generated-at"
 )

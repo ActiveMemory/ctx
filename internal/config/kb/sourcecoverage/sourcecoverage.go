@@ -6,22 +6,6 @@
 
 package sourcecoverage
 
-// Sentinel error-message constants. These back `errors.New`
-// values in `internal/err/kb/sourcecoverage/` and are matched
-// via `errors.Is` at the call site. They cannot use desc.Text
-// because the sentinels are package-level vars evaluated
-// before the embedded YAML lookup is populated; wrapping
-// format strings have moved to commands/text/errors.yaml.
-const (
-	// ErrMsgIllegalTransition signals that Advance was called
-	// with a state pair the ledger's state machine rejects.
-	ErrMsgIllegalTransition = "illegal state transition"
-	// ErrMsgUnknownSource signals that Advance referenced a
-	// Source not yet present in the ledger AND the new State is
-	// not one of the entry-point states (discovered, admitted).
-	ErrMsgUnknownSource = "unknown source for non-initial state"
-)
-
 // Markdown rendering constants for the source-coverage ledger.
 // Structural literals stay as Go consts.
 const (

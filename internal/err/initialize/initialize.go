@@ -7,7 +7,6 @@
 package initialize
 
 import (
-	"errors"
 	"fmt"
 	"path/filepath"
 	"strings"
@@ -16,26 +15,26 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgInit "github.com/ActiveMemory/ctx/internal/config/initialize"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// ErrContextPopulated is returned by ctx init when the target
-// .context/ directory contains a populated context (essential
-// files present) and the operator did not pass --reset.
-//
-// Wrap with [Populated] to attach the file list and the
-// recovery hint pointing at --reset.
-//
-// The message lives in config/initialize (not resolved through
-// desc.Text) because the sentinel is initialized at package
-// load time, before the embedded YAML lookup is populated.
-var ErrContextPopulated = errors.New(cfgInit.ErrMsgContextPopulated)
-
-// ErrResetRequiresInteractive is returned by ctx init --reset
-// when the invocation is non-interactive (the --caller flag
-// is set, indicating an editor or scripted entry point). Reset
-// is destructive and must come from a real terminal session.
-var ErrResetRequiresInteractive = errors.New(
-	cfgInit.ErrMsgResetRequiresInteractive,
+const (
+	// ErrContextPopulated is returned by ctx init when the
+	// target .context/ directory contains a populated context
+	// (essential files present) and the operator did not pass
+	// --reset. Wrap with [Populated] to attach the file list
+	// and the recovery hint pointing at --reset.
+	ErrContextPopulated = entity.Sentinel(
+		text.DescKeyErrInitContextPopulatedMsg,
+	)
+	// ErrResetRequiresInteractive is returned by ctx init
+	// --reset when the invocation is non-interactive (the
+	// --caller flag is set, indicating an editor or scripted
+	// entry point). Reset is destructive and must come from a
+	// real terminal session.
+	ErrResetRequiresInteractive = entity.Sentinel(
+		text.DescKeyErrInitResetRequiresInteractiveMsg,
+	)
 )
 
 // Populated wraps [ErrContextPopulated] with the populated

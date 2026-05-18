@@ -67,9 +67,3 @@ const (
 	// HeadingBlockTypes is the block types section heading.
 	HeadingBlockTypes = "## Content Block Types"
 )
-
-// Error message constants.
-const (
-	// ErrMsgDrift is the error message for schema drift.
-	ErrMsgDrift = "schema drift detected"
-)

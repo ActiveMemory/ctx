@@ -41,4 +41,14 @@ const (
 	// DescKeyErrCloseoutMissingFields is the text key for the
 	// missing-fields sentinel-wrap with the joined field list.
 	DescKeyErrCloseoutMissingFields = "err.closeout.missing-fields"
+	// DescKeyErrCloseoutMissingFieldsMsg is the text key for the
+	// missing-fields sentinel's own `.Error()` string (the prefix
+	// that the wrapper format above interpolates via `%w`).
+	DescKeyErrCloseoutMissingFieldsMsg = "err.closeout.missing-fields-msg"
+	// DescKeyErrCloseoutMissingFrontmatter is the text key for the
+	// missing-frontmatter parse sentinel.
+	DescKeyErrCloseoutMissingFrontmatter = "err.closeout.missing-frontmatter"
+	// DescKeyErrCloseoutModeRequired is the text key for the
+	// empty-mode sentinel returned by Write.
+	DescKeyErrCloseoutModeRequired = "err.closeout.mode-required"
 )

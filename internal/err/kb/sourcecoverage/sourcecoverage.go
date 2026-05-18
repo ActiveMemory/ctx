@@ -7,25 +7,27 @@
 package sourcecoverage
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	cfgKbSC "github.com/ActiveMemory/ctx/internal/config/kb/sourcecoverage"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// ErrIllegalTransition signals that Advance was called with a
-// (from, to) state pair the source-coverage state machine
-// rejects.
-var ErrIllegalTransition = errors.New(
-	cfgKbSC.ErrMsgIllegalTransition,
+const (
+	// ErrIllegalTransition signals that Advance was called with
+	// a (from, to) state pair the source-coverage state machine
+	// rejects.
+	ErrIllegalTransition = entity.Sentinel(
+		text.DescKeyErrKbSourcecoverageIllegalTransitionMsg,
+	)
+	// ErrUnknownSource signals that Advance referenced a Source
+	// not yet present in the ledger AND the new State is not
+	// one of the initial states (`discovered`, `admitted`).
+	ErrUnknownSource = entity.Sentinel(
+		text.DescKeyErrKbSourcecoverageUnknownSourceMsg,
+	)
 )
-
-// ErrUnknownSource signals that Advance referenced a Source
-// not yet present in the ledger AND the new State is not one
-// of the initial states (`discovered`, `admitted`).
-var ErrUnknownSource = errors.New(cfgKbSC.ErrMsgUnknownSource)
 
 // IllegalTransition wraps [ErrIllegalTransition] with the
 // offending from-state, to-state, and source name.

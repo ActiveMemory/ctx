@@ -5,30 +5,12 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package initialize hosts compile-time constants consumed by
-// the ctx init command (sentinel error messages, backup
-// directory naming, reset flag literal).
-//
-// Sentinel error messages live here (not in the embedded YAML
-// loaded via desc.Text) because the err/initialize package
-// instantiates them at package-load time, before the YAML
-// lookup table is populated.
+// the ctx init command (backup directory naming, reset flag
+// literal). Sentinel error values live in
+// `internal/err/initialize/`; their user-facing text lives in
+// `commands/text/errors.yaml` and is resolved through
+// `desc.Text` at error-display time.
 package initialize
-
-// Sentinel error messages for ctx init refusal and reset.
-//
-// These mirror keys in commands/text/errors.yaml but exist as
-// raw string constants because the var ErrContextPopulated /
-// var ErrResetRequiresInteractive sentinels in the err package
-// are initialized before the YAML lookup is ready.
-const (
-	// ErrMsgContextPopulated is the sentinel message for
-	// ctx init's refuse-when-populated guard.
-	ErrMsgContextPopulated = "context already populated; refusing to overwrite"
-	// ErrMsgResetRequiresInteractive is the sentinel message
-	// for ctx init --reset's interactive-only guard.
-	ErrMsgResetRequiresInteractive = "ctx init --reset requires" +
-		" an interactive terminal"
-)
 
 // Backup directory naming for ctx init --reset.
 const (

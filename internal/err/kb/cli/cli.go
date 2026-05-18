@@ -7,32 +7,36 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	cfgKbCli "github.com/ActiveMemory/ctx/internal/config/kb/cli"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// ErrAskNoQuestion signals an empty `ctx kb ask` invocation.
-var ErrAskNoQuestion = errors.New(cfgKbCli.ErrMsgAskNoQuestion)
-
-// ErrIngestNoSources signals an empty `ctx kb ingest`
-// invocation.
-var ErrIngestNoSources = errors.New(cfgKbCli.ErrMsgIngestNoSources)
-
-// ErrNoteNoText signals an empty `ctx kb note` invocation.
-var ErrNoteNoText = errors.New(cfgKbCli.ErrMsgNoteNoText)
-
-// ErrTopicEmptyName signals a `ctx kb topic new` invocation
-// whose name reduces to an empty slug.
-var ErrTopicEmptyName = errors.New(cfgKbCli.ErrMsgTopicEmptyName)
-
-// ErrReindexMissingBlock signals a kb landing page that is
-// missing the CTX:KB:TOPICS managed block.
-var ErrReindexMissingBlock = errors.New(
-	cfgKbCli.ErrMsgReindexMissingBlock,
+const (
+	// ErrAskNoQuestion signals an empty `ctx kb ask`
+	// invocation.
+	ErrAskNoQuestion = entity.Sentinel(
+		text.DescKeyErrKbCliAskNoQuestion,
+	)
+	// ErrIngestNoSources signals an empty `ctx kb ingest`
+	// invocation.
+	ErrIngestNoSources = entity.Sentinel(
+		text.DescKeyErrKbCliIngestNoSources,
+	)
+	// ErrNoteNoText signals an empty `ctx kb note` invocation.
+	ErrNoteNoText = entity.Sentinel(text.DescKeyErrKbCliNoteNoText)
+	// ErrTopicEmptyName signals a `ctx kb topic new`
+	// invocation whose name reduces to an empty slug.
+	ErrTopicEmptyName = entity.Sentinel(
+		text.DescKeyErrKbCliTopicEmptyName,
+	)
+	// ErrReindexMissingBlock signals a kb landing page that is
+	// missing the CTX:KB:TOPICS managed block.
+	ErrReindexMissingBlock = entity.Sentinel(
+		text.DescKeyErrKbCliReindexMissingBlock,
+	)
 )
 
 // GroundingMissing wraps a missing grounding-sources.md error

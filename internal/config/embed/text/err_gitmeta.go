@@ -23,4 +23,11 @@ const (
 	// DescKeyErrGitmetaResolveHead is the text key for the
 	// `git rev-parse --short HEAD` invocation failure.
 	DescKeyErrGitmetaResolveHead = "err.gitmeta.resolve-head"
+	// DescKeyErrGitmetaMissingGitTreeMsg is the text key for the
+	// missing-git-tree sentinel's own `.Error()` string (the
+	// prefix interpolated via `%w` by the wrapper formats).
+	DescKeyErrGitmetaMissingGitTreeMsg = "err.gitmeta.missing-git-tree-msg"
+	// DescKeyErrGitmetaResolveHeadEmpty is the text key for the
+	// empty-HEAD-output sentinel.
+	DescKeyErrGitmetaResolveHeadEmpty = "err.gitmeta.resolve-head-empty"
 )

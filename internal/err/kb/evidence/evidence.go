@@ -7,24 +7,28 @@
 package evidence
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	cfgKbEvidence "github.com/ActiveMemory/ctx/internal/config/kb/evidence"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// ErrDuplicateID signals that Append was called with an
-// explicit row.ID already present in the file. Renumbering is
-// forbidden; callers must reuse the existing row verbatim or
-// mint a new ID by leaving row.ID empty.
-var ErrDuplicateID = errors.New(cfgKbEvidence.ErrMsgDuplicateID)
-
-// ErrInvalidBand signals a row whose Confidence is not one of
-// the four canonical bands defined in
-// [github.com/ActiveMemory/ctx/internal/config/kb].
-var ErrInvalidBand = errors.New(cfgKbEvidence.ErrMsgInvalidBand)
+const (
+	// ErrDuplicateID signals that Append was called with an
+	// explicit row.ID already present in the file.
+	// Renumbering is forbidden; callers must reuse the existing
+	// row verbatim or mint a new ID by leaving row.ID empty.
+	ErrDuplicateID = entity.Sentinel(
+		text.DescKeyErrKbEvidenceDuplicateIDMsg,
+	)
+	// ErrInvalidBand signals a row whose Confidence is not one
+	// of the four canonical bands defined in
+	// [github.com/ActiveMemory/ctx/internal/config/kb].
+	ErrInvalidBand = entity.Sentinel(
+		text.DescKeyErrKbEvidenceInvalidBandMsg,
+	)
+)
 
 // DuplicateID wraps ErrDuplicateID with the offending
 // identifier so callers see exactly which ID collided.

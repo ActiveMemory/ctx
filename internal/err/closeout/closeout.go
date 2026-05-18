@@ -7,30 +7,33 @@
 package closeout
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	cfgCloseout "github.com/ActiveMemory/ctx/internal/config/closeout"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// ErrMissingFrontmatter signals a closeout file missing the
-// `---` open delimiter on line 1.
-var ErrMissingFrontmatter = errors.New(cfgCloseout.ErrMsgMissingFrontmatter)
-
-// ErrMissingFields signals a closeout frontmatter missing one
-// of the required fields (sha, branch, mode, generated-at).
-// Constructor [MissingFields] wraps it with the actual field
-// names.
-var ErrMissingFields = errors.New(cfgCloseout.ErrMsgMissingFields)
-
-// ErrModeRequired signals a
-// [github.com/ActiveMemory/ctx/internal/write/closeout.Write]
-// call with an empty mode string.
-var ErrModeRequired = errors.New(cfgCloseout.ErrMsgModeRequired)
+const (
+	// ErrMissingFrontmatter signals a closeout file missing the
+	// `---` open delimiter on line 1.
+	ErrMissingFrontmatter = entity.Sentinel(
+		text.DescKeyErrCloseoutMissingFrontmatter,
+	)
+	// ErrMissingFields signals a closeout frontmatter missing
+	// one of the required fields (sha, branch, mode,
+	// generated-at). Constructor [MissingFields] wraps it with
+	// the actual field names.
+	ErrMissingFields = entity.Sentinel(
+		text.DescKeyErrCloseoutMissingFieldsMsg,
+	)
+	// ErrModeRequired signals a
+	// [github.com/ActiveMemory/ctx/internal/write/closeout.Write]
+	// call with an empty mode string.
+	ErrModeRequired = entity.Sentinel(text.DescKeyErrCloseoutModeRequired)
+)
 
 // MissingFields wraps the sentinel [ErrMissingFields] with a
 // comma-separated list of the missing field names.

@@ -128,6 +128,15 @@ const (
 	// DescKeyErrInitBackupWrite is the text key for backup-target
 	// write failures. Template expects a %s path and a %w cause.
 	DescKeyErrInitBackupWrite = "err.init-backup-write"
+	// DescKeyErrInitContextPopulatedMsg is the text key for the
+	// context-populated sentinel's own `.Error()` string (the
+	// prefix interpolated via `%w` by DescKeyErrInitContextPopulated).
+	DescKeyErrInitContextPopulatedMsg = "err.init.context-populated-msg"
+	// DescKeyErrInitResetRequiresInteractiveMsg is the text key for
+	// the reset-requires-interactive sentinel's own `.Error()`
+	// string (the prefix interpolated via `%w` by
+	// DescKeyErrInitResetRequiresInteractive).
+	DescKeyErrInitResetRequiresInteractiveMsg = "err.init.reset-requires-interactive-msg"
 )
 
 // DescKeys for init permission setup output.
