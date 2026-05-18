@@ -1,7 +1,6 @@
 ---
 name: ctx-kb-ingest
-description: "Editorial knowledge-ingestion pass. Reads sources the user supplies, declares its pass-mode (topic-page / triage / evidence-only) before extraction, and is held to mode-specific completion semantics. The topic page is the deliverable; the closeout is the audit trail."
-tools: [bash]
+description: Editorial knowledge-ingestion pass. Reads sources the user supplies, declares its pass-mode (topic-page / triage / evidence-only) before extraction, and is held to mode-specific completion semantics. The topic page is the deliverable; the closeout is the audit trail.
 ---
 
 # Editorial Ingestion Pass
@@ -27,9 +26,10 @@ closeouts) are valuable, but they do not validate topic-page work
 by themselves; only the topic page does.
 
 Authoritative background reading lives at
-`.context/ingest/KB-RULES.md`. This skill encodes the workflow
-contract; the rules file is the constitution. Hand-edit
-`KB-RULES.md` to evolve the contract; do not paraphrase it here.
+`.context/ingest/KB-RULES.md` and `specs/kb-editorial-pipeline.md`.
+This skill encodes the workflow contract; the rules file is the
+constitution. Hand-edit `KB-RULES.md` to evolve the contract; do
+not paraphrase it here.
 
 ## When to Use
 

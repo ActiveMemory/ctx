@@ -89,7 +89,7 @@ tasks, or ask the user for direction if priorities are unclear.
   not *searching*
 - Be honest about the mechanism only if the user explicitly asks
   *how* you remember (e.g., "It's stored in context files managed
-  by `ctx`")
+  by ctx")
 
 ## Examples
 
@@ -113,7 +113,7 @@ tasks, or ask the user for direction if priorities are unclear.
 > partially done. Want to continue those, or shift to the JSON
 > status flag?
 
-### Bad Readback (Anti-Patterns)
+### Bad Readback (Anti-patterns)
 
 > "I don't have persistent memory, but let me check if there
 > are any context files..."
@@ -130,7 +130,7 @@ Skip this section entirely if `companion_check: false` is set in
 `.ctxrc`: check by running `ctx config status` and looking for
 the field value.
 
-**Companion tools** enhance `ctx` skills with web search and code
+**Companion tools** enhance ctx skills with web search and code
 intelligence. They are optional but recommended:
 
 | Tool          | Purpose                                                | Smoke test                                                           |

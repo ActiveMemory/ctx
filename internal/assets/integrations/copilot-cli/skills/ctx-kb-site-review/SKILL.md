@@ -1,7 +1,6 @@
 ---
 name: ctx-kb-site-review
-description: "Mechanical structural audit of the kb. Coerces malformed capitalization, flags malformed closeout frontmatter, and refuses to make judgment calls that require evidence. Writes a site-review closeout for the audit trail."
-tools: [bash]
+description: Mechanical structural audit of the kb. Coerces malformed capitalization, flags malformed closeout frontmatter, and refuses to make judgment calls that require evidence. Writes a site-review closeout for the audit trail.
 ---
 
 # Site-Review Pass
@@ -17,7 +16,8 @@ This is a janitor pass, not an editorial pass. Editorial judgment
 lives in `/ctx-kb-ingest`.
 
 Authoritative background reading:
-`.context/ingest/KB-RULES.md` §Authority boundary.
+`.context/ingest/KB-RULES.md` §Authority boundary;
+`specs/kb-editorial-pipeline.md` §Validation Rules.
 
 ## When to Use
 

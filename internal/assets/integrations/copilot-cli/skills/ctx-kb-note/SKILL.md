@@ -1,7 +1,6 @@
 ---
 name: ctx-kb-note
-description: "Lightweight capture into .context/ingest/findings.md. Single argument is the note text. Never writes to a topic page or to evidence-index.md. The pipeline's ad-hoc escape hatch for 'park this for the next ingest'."
-tools: [bash]
+description: Lightweight capture into .context/ingest/findings.md. Single argument is the note text. Never writes to a topic page or to evidence-index.md. The pipeline's ad-hoc escape hatch for "park this for the next ingest".
 ---
 
 # Park a Finding for the Next Ingest
@@ -14,7 +13,8 @@ topic-page edit, no `EV-###` minting. Just typed memory landing
 in one well-known file.
 
 Authoritative background reading:
-`.context/ingest/KB-RULES.md` §Authority boundary.
+`.context/ingest/KB-RULES.md` §Authority boundary;
+`specs/kb-editorial-pipeline.md` §Interface.
 
 ## When to Use
 
@@ -34,9 +34,9 @@ Authoritative background reading:
   `/ctx-kb-ingest`).
 - The user is asking a content question (use `/ctx-kb-ask`).
 - The note is actually a task / decision / learning / convention
-  for the code-dev side (use `/ctx-add-task` /
-  `/ctx-add-decision` / `/ctx-add-learning` /
-  `/ctx-add-convention`; those write to canonical files, this
+  for the code-dev side (use `/ctx-task-add` /
+  `/ctx-decision-add` / `/ctx-learning-add` /
+  `/ctx-convention-add`; those write to canonical files, this
   one does not).
 - The note is empty (refuse-on-empty; see below).
 
@@ -48,9 +48,9 @@ Authoritative background reading:
 - **`/ctx-kb-ingest`** reads `findings.md` opportunistically
   when scoping its source set; the user controls when notes get
   promoted into evidence.
-- **Canonical capture skills** (`/ctx-add-task`,
-  `/ctx-add-decision`, `/ctx-add-learning`,
-  `/ctx-add-convention`) write to the five canonical
+- **Canonical capture skills** (`/ctx-task-add`,
+  `/ctx-decision-add`, `/ctx-learning-add`,
+  `/ctx-convention-add`) write to the five canonical
   `.context/` files. Strict authority boundary: this skill
   never touches them.
 

@@ -66,7 +66,7 @@ checklist and still ends with `/ctx-handover`.
 
 ## Process
 
-### Phase 1: Gather Signal
+### Phase 1: Gather signal
 
 Do this **silently**: do not narrate the steps:
 
@@ -85,7 +85,7 @@ Do this **silently**: do not narrate the steps:
    - Follow-up work identified but not yet started
    - Tasks completed or progressed
 
-### Phase 2: Propose Candidates
+### Phase 2: Propose candidates
 
 Think step-by-step about what is worth persisting. For each
 potential candidate, ask yourself:
@@ -122,7 +122,7 @@ Skip categories with no candidates: do not show empty sections.
 Persist all? Or select which to keep?
 ```
 
-### Phase 3: Persist Approved Candidates
+### Phase 3: Persist approved candidates
 
 Wait for the user to approve, select, or modify candidates.
 Wait for the user to approve each item before persisting:
@@ -143,7 +143,7 @@ For each approved candidate, run the appropriate command:
 Report the result of each command. If any fail, report the error
 and continue with the remaining items.
 
-### Phase 3.5: Suppress Post-Wrap-Up Nudges
+### Phase 3.5: Suppress post-wrap-up nudges
 
 After persisting, mark the session as wrapped up so checkpoint
 nudges are suppressed for the remainder of the session:
@@ -180,9 +180,8 @@ Phase 3:
    (becomes the slug in `<TS>-<slug>.md`). Drawn from the
    conversation; confirm with the user.
 2. **`--summary`** (required, past tense): one paragraph
-   naming what was done this session, drawn from the
-   approved candidates and the git-log scan. Concrete, not
-   vague.
+   naming what was done this session, drawn from the approved
+   candidates and the git-log scan. Concrete, not vague.
 3. **`--next`** (required, future tense): one paragraph
    naming the specific first action the next agent should
    take. Pull from the highest-priority pending task in
@@ -210,16 +209,18 @@ confirmation, then delegate:
 The `/ctx-handover` skill performs the pre-write gates,
 writes `.context/handovers/<TS>-<slug>.md`, and (when
 `.context/kb/` exists) folds postdated closeouts into the
-`## Folded Closeouts` section and archives them.
+`## Folded Closeouts` section and archives them. See
+[`/ctx-handover`](#) for the full input contract and CLI
+flag reference.
 
 If `/ctx-handover` refuses (missing `.context/handovers/`,
 empty placeholder values, etc.), surface the refusal to the
-user. Do not declare the wrap-up complete until the
-handover landed.
+user. Do not declare the wrap-up complete until the handover
+landed.
 
 ## Candidate Quality Guide
 
-### Good Candidates
+### Good candidates
 
 - "PyMdownx `details` extension wraps content in `<details>`
   tags, breaking `<pre><code>` rendering in MkDocs": specific
@@ -230,7 +231,7 @@ handover landed.
 - "Convention: all skill descriptions use imperative mood":
   codifies a pattern for consistency
 
-### Weak Candidates (Do Not Propose)
+### Weak candidates (do not propose)
 
 - "Go has good error handling": general knowledge, not
   project-specific

@@ -1,7 +1,6 @@
 ---
 name: ctx-kb-ask
-description: "Q&A grounded in the existing kb. Read-only on prose; refuses to web-jump; if the kb cannot answer, opens a Q-### row in outstanding-questions.md and reports the gap. Writes an ask closeout for the audit trail."
-tools: [bash]
+description: Q&A grounded in the existing kb. Read-only on prose; refuses to web-jump; if the kb cannot answer, opens a Q-### row in outstanding-questions.md and reports the gap. Writes an ask closeout for the audit trail.
 ---
 
 # Ask the KB
@@ -17,7 +16,7 @@ this skill is read-only on prose.
 
 Authoritative background reading:
 `.context/ingest/KB-RULES.md` §Authority boundary and
-§Evidence discipline.
+§Evidence discipline; `specs/kb-editorial-pipeline.md` §Interface.
 
 ## When to Use
 

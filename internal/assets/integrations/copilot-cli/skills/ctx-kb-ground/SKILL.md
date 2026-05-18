@@ -1,7 +1,6 @@
 ---
 name: ctx-kb-ground
-description: "Read-only freshness audit over the kb's tracked sources (URLs, in-tree paths, MCP resources) declared in grounding-sources.md. Classifies each source's drift state, annotates the source-coverage ledger, and writes a ground closeout; flags drifted or new-to-kb sources for /ctx-kb-ingest. Never mints evidence, authors prose, or transitions ledger states."
-tools: [bash]
+description: Read-only freshness audit over the kb's tracked sources (URLs, in-tree paths, MCP resources) declared in grounding-sources.md. Classifies each source's drift state, annotates the source-coverage ledger, and writes a ground closeout; flags drifted or new-to-kb sources for /ctx-kb-ingest. Never mints evidence, authors prose, or transitions ledger states.
 ---
 
 # Ground the KB Against Its Tracked Sources
@@ -22,15 +21,17 @@ authority.
 
 If a tracked source drifted or is new to the kb, this skill flags
 it and recommends a follow-up `/ctx-kb-ingest`. The declarative
-watch list in `grounding-sources.md` persists across sessions
-(ingest's source list is per-invocation) and tracks sources from
-anywhere the kb cites — public web, this repo's tree, behind an
-MCP server. Distance from the repo is irrelevant; what matters is
+watch list in `grounding-sources.md` is what makes this skill
+distinct from ingest: it **persists across sessions** (ingest's
+source list is per-invocation) and tracks sources from anywhere
+the kb cites — public web, this repo's tree, behind an MCP
+server. Distance from the repo is irrelevant; what matters is
 that the kb depends on them for evidence.
 
 Authoritative background reading:
 `.context/ingest/KB-RULES.md` §Authority boundary and
-§Source-coverage ledger.
+§Source-coverage ledger; `specs/kb-editorial-pipeline.md`
+§Interface and §Edge Cases.
 
 ## When to Use
 

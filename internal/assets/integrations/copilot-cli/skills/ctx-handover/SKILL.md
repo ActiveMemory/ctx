@@ -1,7 +1,6 @@
 ---
 name: ctx-handover
-description: "Per-session handover artifact writer. Wraps `ctx handover write` with `--summary` and `--next` (both required, both validated non-placeholder by the CLI). Always invoked as the final step of `/ctx-wrap-up`; not the user-facing trigger. When `.context/kb/` exists, also folds postdated closeouts into the handover and archives them."
-tools: [bash]
+description: Per-session handover artifact writer. Wraps `ctx handover write` with `--summary` and `--next` (both required, both validated non-placeholder by the CLI). Always invoked as the final step of `/ctx-wrap-up`; not the user-facing trigger. When `.context/kb/` exists, also folds postdated closeouts into the handover and archives them.
 ---
 
 # Write a Handover
@@ -11,10 +10,15 @@ fresh agent, a different operator, a cold restart the next
 morning) can resume without re-deriving context probabilistically
 from canonical files plus journal.
 
-This skill is the **sole authoritative recall artifact** writer.
-`SESSION_LOG.md` entries, closeouts, and journal entries are
-mid-flight surfaces; the handover is what `/ctx-remember` reads
-on session start.
+This skill is the **sole authoritative recall artifact** writer
+(per `KB-RULES.md` §Four inviolable rules: *"the handover is
+the sole authoritative recall artifact"*). `SESSION_LOG.md`
+entries, closeouts, and journal entries are mid-flight surfaces;
+the handover is what `/ctx-remember` reads on session start.
+
+Authoritative background reading:
+`.context/ingest/KB-RULES.md` §Four inviolable rules;
+`specs/kb-editorial-pipeline.md` §Interface.
 
 ## When to Use
 
@@ -37,8 +41,8 @@ step. Do not advertise this skill as a direct user trigger.
   session has zero context.
 - The user already ran `/ctx-handover` recently in this session
   and nothing has changed since.
-- The user invokes a capture skill (`/ctx-add-task`,
-  `/ctx-add-decision`, etc.); those write to canonical files,
+- The user invokes a capture skill (`/ctx-task-add`,
+  `/ctx-decision-add`, etc.); those write to canonical files,
   not to a handover artifact.
 
 ## Authority Boundary (vs Other Skills)
@@ -46,7 +50,7 @@ step. Do not advertise this skill as a direct user trigger.
 - **`/ctx-handover`**: writes
   `.context/handovers/<TS>-<slug>.md`; folds postdated
   closeouts from `.context/ingest/closeouts/` into the
-  handover's `## Folded Closeouts` section; archives folded
+  handover's `## Folded closeouts` section; archives folded
   closeouts to `.context/archive/closeouts/`. Single writer of
   this artifact.
 - **`/ctx-wrap-up`**: owns the user-facing session-end
@@ -56,8 +60,8 @@ step. Do not advertise this skill as a direct user trigger.
 - **`/ctx-remember`**: reads the latest handover plus any
   closeouts whose `generated-at` postdates the handover; the
   read-side counterpart to this skill's write surface.
-- **Capture skills** (`/ctx-add-task`, `/ctx-add-decision`,
-  `/ctx-add-learning`, `/ctx-add-convention`): write to the
+- **Capture skills** (`/ctx-task-add`, `/ctx-decision-add`,
+  `/ctx-learning-add`, `/ctx-convention-add`): write to the
   five canonical files. This skill never modifies those files;
   the handover narrative *references* them, it does not author
   them.
@@ -65,7 +69,7 @@ step. Do not advertise this skill as a direct user trigger.
 ## Usage Examples
 
 ```text
-/ctx-handover "Cursor Hooks deep dive"
+/ctx-handover "kb editorial pipeline phase KB skills drafted"
 /ctx-handover "rev2 spec landed; tomorrow start the writer package"
 /ctx-handover "research session on cursor hooks"
 /ctx-handover --no-fold "mid-session checkpoint before lunch"
@@ -74,9 +78,10 @@ step. Do not advertise this skill as a direct user trigger.
 ## Input Contract
 
 The skill wraps `ctx handover write`, which enforces required
-flags via `MarkFlagRequired` and rejects placeholder bodies.
-Empty `TBD`, `see chat`, whitespace-only values are rejected by
-the CLI, not just by the skill text.
+flags via `MarkFlagRequired` and rejects placeholder bodies via
+the Phase SK validation pattern. Empty `TBD`, `see chat`,
+whitespace-only values are rejected by the CLI, not just by the
+skill text.
 
 | Flag | Type | Default | Description |
 |------|------|---------|-------------|
@@ -153,16 +158,20 @@ conditional on the directory's existence (see §Process).
    ```
 
    The CLI:
-   - Validates flags (rejects placeholder values).
-   - Resolves git HEAD (honors `CTX_TASK_COMMIT` and
-     `GITHUB_SHA` for CI replay).
-   - Reads the latest-handover cursor to find the postdated
+   - Validates flags (placeholder rejection per Phase SK).
+   - Resolves git HEAD via `gitmeta.ResolveHead` (honors
+     `CTX_TASK_COMMIT` and `GITHUB_SHA` for CI replay).
+   - Reads `LatestHandoverCursor` to find the postdated
      closeout window.
+   - Lists `UnconsumedCloseouts` (closeouts whose
+     `generated-at` postdates the cursor).
    - For each unconsumed closeout, folds its body into the
-     handover's `## Folded Closeouts` section. Malformed
-     closeouts are skipped with a warning.
-   - Moves folded closeouts to `.context/archive/closeouts/`.
-     Archived closeouts are immutable.
+     handover's `## Folded closeouts` section. Malformed
+     closeouts (missing `generated-at`, malformed frontmatter)
+     are skipped with a warning.
+   - Calls `ArchiveCloseouts` to move folded closeouts to
+     `.context/archive/closeouts/`. Archived closeouts are
+     immutable.
    - Writes `.context/handovers/<TS>-<slug>.md`.
 
    When `--no-fold` is set, the fold + archive steps are
@@ -175,31 +184,33 @@ conditional on the directory's existence (see §Process).
    - Count of closeouts folded (or *"none postdated the prior
      handover"*).
    - Count of malformed closeouts skipped (with filenames so
-     the user can fix or delete).
+     the user can fix or delete; site-review's job to flag,
+     but the warning here is opportunistic).
    - Any CLI validation failures (with the placeholder text
      that triggered rejection).
 
 ## Closeout Fold Mechanics
 
-When `.context/kb/` is present, the editorial pipeline
-(`/ctx-kb-*`) writes per-pass closeouts under
-`.context/ingest/closeouts/`. The handover fold is how those
-closeouts are tied back to a session boundary:
+The fold mechanism is the integration point between the
+editorial pipeline (`/ctx-kb-*` closeouts) and session continuity
+(handover artifacts). Mechanically:
 
-- The latest-handover cursor is the `generated-at` of the
-  newest handover (or zero time if none exists).
-- Every closeout whose `generated-at` postdates the cursor is
-  folded.
+- `LatestHandoverCursor` reads `.context/handovers/` and returns
+  the `generated-at` of the newest handover (or zero time if
+  none exists).
+- `UnconsumedCloseouts` walks `.context/ingest/closeouts/` and
+  returns every closeout whose `generated-at` postdates the
+  cursor.
 - Each folded closeout's body is embedded under
-  `## Folded Closeouts` in the new handover, in
-  `generated-at` order. The frontmatter is preserved
-  verbatim so the audit trail survives the fold.
-- After the fold, source closeouts are moved to
+  `## Folded closeouts` in the new handover, in `generated-at`
+  order. The frontmatter is preserved verbatim so the audit
+  trail survives the fold.
+- After the fold, `ArchiveCloseouts` moves the source files to
   `.context/archive/closeouts/`. Archived closeouts are
   immutable; subsequent passes never re-fold them.
 
 A handover with no postdated closeouts to fold writes a
-`## Folded Closeouts` section with the body *"none"*; never
+`## Folded closeouts` section with the body *"none"*; never
 omit the section, so the audit trail is explicit.
 
 ## Edge Cases
@@ -209,14 +220,15 @@ omit the section, so the audit trail is explicit.
 | `.context/` missing | Refuse; suggest `ctx init`. No residue. |
 | `.context/handovers/` missing | Refuse; suggest `ctx init --upgrade`. No residue. |
 | Empty `--summary` or `--next` | The CLI rejects with the placeholder-rejection message; surface verbatim. |
-| Placeholder values (`TBD`, `see chat`, whitespace-only) | The CLI rejects; surface verbatim and ask the user to redraft. |
-| No postdated closeouts to fold | Write the handover with `## Folded Closeouts` body *"none"*. Never omit the section. |
-| Postdated closeout has malformed frontmatter | The CLI skips the file with a warning naming it. Report the warning so the user can fix or delete. |
+| Placeholder values (`TBD`, `see chat`, whitespace-only) for `--summary` or `--next` | The CLI rejects; surface verbatim and ask the user to redraft. |
+| No postdated closeouts to fold | Write the handover with `## Folded closeouts` body *"none"*. Never omit the section. |
+| Postdated closeout has malformed frontmatter | The CLI skips the file with a warning naming it. Report the warning to the user so they can fix or delete. |
 | `--no-fold` set | Skip the fold + archive steps; the handover stands alone; closeouts stay in `.context/ingest/closeouts/` for the next invocation. |
 | Mid-session re-invocation | Each invocation writes a new handover file. The newest one is what `/ctx-remember` reads next session. Multiple per session are fine. |
 | Session aborted before wrap-up | Closeouts stay in place; next session's `/ctx-remember` reads canonical files + the last handover + any postdated unfolded closeouts. Editorial work survives. |
-| `gitmeta.ResolveHead` returns an error (no git, detached HEAD with no fallback) | The CLI surfaces a typed error; relay verbatim. The recovery path is to add a git repo, not to invent one here. |
-| `CTX_TASK_COMMIT` or `GITHUB_SHA` set | Honored for the Provenance line per the resolver's precedence rules; no special handling here. |
+| User runs `/ctx-wrap-up` without `.context/kb/` present | `/ctx-wrap-up` still drives `/ctx-handover` as its final step; kb-presence affects what gets folded, not whether the handover is written. |
+| `gitmeta.ResolveHead` returns an error (no git, detached HEAD with no fallback) | The CLI surfaces the typed `MissingGitError`; relay verbatim. Phase RG owns the recovery path; this skill does not invent one. |
+| `CTX_TASK_COMMIT` or `GITHUB_SHA` set | Honoured for the Provenance line per `gitmeta.ResolveHead`'s precedence rules; no special handling here. |
 
 ## Anti-Patterns
 
@@ -232,7 +244,7 @@ omit the section, so the audit trail is explicit.
 - Hand-writing a handover file. The CLI is the sole writer.
   Hand-edits drift from the schema the read side expects.
 - Modifying an archived closeout. Archived closeouts are
-  immutable.
+  immutable per `KB-RULES.md` §Closeout shape.
 - Inventing `--highlights` or `--open-questions` content the
   session did not actually produce. Light compression for
   clarity is allowed; new facts are not.
