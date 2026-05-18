@@ -25,7 +25,7 @@ ctx kb [subcommand]
 | `ctx kb ingest <folder\|paths>`  | Skill-driven     | Mode-aware editorial pass. CLI form refuses on empty input and points at the `/ctx-kb-ingest` skill. |
 | `ctx kb ask "<question>"`        | Skill-driven     | Q&A grounded in the kb. CLI form refuses on empty input and points at the `/ctx-kb-ask` skill.  |
 | `ctx kb site-review`             | Skill-driven     | Mechanical structural audit. Points at `/ctx-kb-site-review`.                       |
-| `ctx kb ground`                  | Skill-driven     | External grounding via `grounding-sources.md`. Refuses when the file is empty.      |
+| `ctx kb ground`                  | Skill-driven     | Read-only freshness audit over tracked sources listed in `grounding-sources.md` (URLs, in-tree paths, MCP resources). Refuses when the file is empty. |
 
 !!! note "Skill-driven vs real CLI"
     The mode skills (`ingest`, `ask`, `site-review`, `ground`)

@@ -1,22 +1,33 @@
 ---
 name: ctx-kb-ground
-description: External grounding pass for the kb. Reads grounding-sources.md, refreshes the listed sources, and advances source-coverage ledger rows accordingly. Writes a ground closeout for the audit trail. Prompts once if grounding-sources.md is empty; NONE on a line is a per-pass skip.
+description: Read-only freshness audit over the kb's tracked sources (URLs, in-tree paths, MCP resources) declared in grounding-sources.md. Classifies each source's drift state, annotates the source-coverage ledger, and writes a ground closeout; flags drifted or new-to-kb sources for /ctx-kb-ingest. Never mints evidence, authors prose, or transitions ledger states.
 allowed-tools: Bash(ctx:*), Bash(ls:*), Read, Edit
 ---
 
-# Ground the KB Against External Sources
+# Ground the KB Against Its Tracked Sources
 
-Refresh `.context/kb/` against the external sources the user has
-declared in `.context/ingest/grounding-sources.md`. This is the
-*"are we still current?"* pass. It does not mint new evidence by
-itself, does not author topic pages, does not modify Confidence
-bands. It walks the declared external sources, checks each for
-drift against what the kb cites, and advances the source-coverage
-ledger to reflect what the refresh found.
+Walk the sources declared in `.context/ingest/grounding-sources.md`
+and report whether the kb's claims are still current. This is the
+*"are we still current?"* pass — a **read-only freshness audit**,
+not a re-ingest.
 
-If the refresh surfaces material the kb should absorb, this skill
-flags it and recommends `/ctx-kb-ingest`. Authoring is ingest's
-authority, not this skill's.
+Each tracked source — **URLs, in-tree paths, or MCP resources** —
+gets resolved and classified as `unchanged`, `drifted`, `gone`,
+`freshness opaque`, or `new to kb`. The skill annotates the
+source-coverage ledger's `Residue` and `Next action` cells and
+writes a ground closeout summarising findings. It does **NOT**
+mint `EV-###` rows, author topic-page prose, transition ledger
+states, or modify Confidence bands; those are `/ctx-kb-ingest`'s
+authority.
+
+If a tracked source drifted or is new to the kb, this skill flags
+it and recommends a follow-up `/ctx-kb-ingest`. The declarative
+watch list in `grounding-sources.md` is what makes this skill
+distinct from ingest: it **persists across sessions** (ingest's
+source list is per-invocation) and tracks sources from anywhere
+the kb cites — public web, this repo's tree, behind an MCP
+server. Distance from the repo is irrelevant; what matters is
+that the kb depends on them for evidence.
 
 Authoritative background reading:
 `.context/ingest/KB-RULES.md` §Authority boundary and
@@ -40,11 +51,12 @@ Authoritative background reading:
 
 ## Authority Boundary (vs Other Skills)
 
-- **`/ctx-kb-ground`**: refreshes external sources listed in
-  `grounding-sources.md`; advances source-coverage ledger rows
-  for sources where the refresh changed state; writes a ground
-  closeout. **May not** mint `EV-###` rows, author prose,
-  modify a topic page, or change a Confidence band.
+- **`/ctx-kb-ground`**: read-only freshness audit over the
+  sources listed in `grounding-sources.md` (URLs, in-tree paths,
+  MCP resources). Annotates the source-coverage ledger's
+  `Residue` and `Next action` cells; writes a ground closeout.
+  **May not** mint `EV-###` rows, author prose, modify a topic
+  page, change a Confidence band, or transition ledger states.
 - **`/ctx-kb-ingest`**: handles anything this skill surfaces
   as new material to absorb.
 - **`/ctx-kb-ask`**: handles read-only questions about kb
@@ -180,7 +192,7 @@ forcing them to remember the filename.
    sha: <short>
    branch: <name>
    mode: ground
-   pass-mode: external-refresh
+   pass-mode: refresh
    life-stage: <bootstrap|maintenance>
    generated-at: <RFC-3339>
    ---

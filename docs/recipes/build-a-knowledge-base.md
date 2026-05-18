@@ -53,7 +53,7 @@ ctx kb topic new "Cursor Hooks"         # scaffold a topic folder
 | `/ctx-kb-ingest`           | Skill   | Mode-aware editorial pass (topic-page/triage/evidence) |
 | `/ctx-kb-ask`              | Skill   | Q&A grounded in the kb                                 |
 | `/ctx-kb-site-review`      | Skill   | Mechanical structural audit                            |
-| `/ctx-kb-ground`           | Skill   | Re-grounding against external sources                  |
+| `/ctx-kb-ground`           | Skill   | Read-only freshness audit over the kb's tracked sources |
 | `/ctx-kb-note`             | Skill   | Capture a finding for the next ingest pass             |
 | `/ctx-wrap-up`             | Skill   | End-of-session ceremony; delegates to the handover step |
 
@@ -178,9 +178,16 @@ which a future `/ctx-kb-ingest` pass can close.
 flags malformed closeout frontmatter, and **refuses to make
 judgment calls that require evidence** (those go through ingest).
 
-`ground` reads `.context/ingest/grounding-sources.md` and runs
-the equivalent of a fresh fetch + re-extract pass for each
-listed source, useful when an upstream source has changed.
+`ground` reads `.context/ingest/grounding-sources.md` — the kb's
+persistent watch list — and walks each declared source (URL,
+in-tree path, or MCP resource) to check whether it has drifted
+since the kb last cited it. The pass is **read-only on the kb's
+prose and evidence**: it annotates the source-coverage ledger's
+`Residue` / `Next action` cells and writes a ground closeout, but
+does NOT re-extract claims, mint `EV-###` rows, or touch topic
+pages. Drifted or new-to-kb sources are flagged for a follow-up
+`/ctx-kb-ingest`. Use ground for "are the docs still current?"
+hygiene; use `/ctx-kb-ingest` to actually absorb new material.
 
 ## Step 5: Browse the KB Locally
 
