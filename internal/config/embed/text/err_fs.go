@@ -97,6 +97,28 @@ const (
 	// Used when state.Dir() is invoked in a project that has CTX_DIR
 	// declared but lacks the required context files.
 	DescKeyErrContextNotInitialized = "err.context.not-initialized"
+	// DescKeyErrContextDirNotDeclared is the text key for the
+	// ErrDirNotDeclared sentinel's own `.Error()` string.
+	DescKeyErrContextDirNotDeclared = "err.context.dir-not-declared"
+	// DescKeyErrContextRelativeNotAllowedMsg is the text key for
+	// the ErrRelativeNotAllowed sentinel's own `.Error()` string
+	// (the prefix interpolated via `%w` by the wrapper format
+	// DescKeyErrContextRelativeNotAllowed).
+	DescKeyErrContextRelativeNotAllowedMsg = "err.context.relative-not-allowed-msg"
+	// DescKeyErrContextNonCanonicalBasenameMsg is the text key
+	// for the ErrNonCanonicalBasename sentinel's own `.Error()`
+	// string.
+	DescKeyErrContextNonCanonicalBasenameMsg = "err.context.non-canonical-basename-msg"
+	// DescKeyErrContextDirNotADirectoryMsg is the text key for
+	// the ErrContextDirNotADirectory sentinel's own `.Error()`
+	// string.
+	DescKeyErrContextDirNotADirectoryMsg = "err.context.dir-not-a-directory-msg"
+	// DescKeyErrContextDirStatMsg is the text key for the
+	// ErrContextDirStat sentinel's own `.Error()` string.
+	DescKeyErrContextDirStatMsg = "err.context.dir-stat-msg"
+	// DescKeyErrContextNotInitializedMsg is the text key for the
+	// ErrNotInitialized sentinel's own `.Error()` string.
+	DescKeyErrContextNotInitializedMsg = "err.context.not-initialized-msg"
 )
 
 // DescKeys for filesystem write output.

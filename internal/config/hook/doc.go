@@ -6,7 +6,7 @@
 
 // Package hook holds the **constants** every package
 // touching the hook subsystem references: hook names
-// (`check_persistence`, `check_context_size`, …),
+// (`checkpersistence`, `checkcontextsize`, …),
 // lifecycle stages (sessionStart, preToolUse, …),
 // supported AI tool identifiers (`claude`, `cursor`,
 // `cline`, `kiro`, `codex`), category tags

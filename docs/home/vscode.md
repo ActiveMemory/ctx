@@ -47,7 +47,7 @@ Install the extension and the `ctx` binary, then `ctx init` your project:
 
 1. **Install the extension** from the
    [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=activememory.ctx-context)
-   (publisher: `activememory`, display name: *`ctx` — Persistent Context
+   (publisher: `activememory`, display name: *`ctx`: Persistent Context
    for AI*). Or build from source (see
    [editors/vscode/README.md](https://github.com/ActiveMemory/ctx/blob/main/editors/vscode/README.md#development)).
 2. **Install the `ctx` CLI** if you haven't already

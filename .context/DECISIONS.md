@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-17 | entity.Sentinel lives in internal/entity/ because the cross-package-types audit treats entity/ as the canonical home for shared types |
+| 2026-05-16 | Phase KB lifts the current upstream editorial-pipeline shape, superseding the 4-phase predecessor in the brief |
 | 2026-05-11 | Embedded and separately-published harnesses use distinct CI and release pipelines |
 | 2026-05-11 | Embedded foreign-language assets under internal/assets/ are intentional, not a smell |
 | 2026-05-10 | Placeholder overrides use EXTEND not REPLACE semantics |
@@ -140,17 +142,165 @@ For significant decisions:
 
 -->
 
+## [2026-05-17-181500] `entity.Sentinel` lives in `internal/entity/` because the cross-package-types audit treats `entity/` as the canonical home for shared types
+
+**Status**: Accepted
+
+**Context**: While converting the prior session's
+`ErrMsg`-string-sentinel anti-pattern to typed-string sentinels
+with lazy `desc.Text` resolution, the natural home for the
+`Sentinel` type was a small shared helper used by every
+`internal/err/<area>/` package. The first draft placed it at
+`internal/err/sentinel/`, but `TestCrossPackageTypes` (which has
+zero grandfathered violations and forbids weakening or
+allowlist-bumping) flagged the cross-package usage with the hint
+"consider entity/".
+
+**Alternatives Considered**:
+- Per-package sentinel type duplicated across 9 err packages.
+  Pros: no cross-package type. Cons: 18 boilerplate declarations
+  (type + Error method × 9) with doc comments; convention drift
+  risk as the duplicated shape can diverge.
+- Keep `internal/err/sentinel/` and add it to `typeExemptPackages`
+  in the audit. Pros: semantic home matches the type's role
+  (behavioral mixin for errors). Cons: the audit explicitly
+  forbids exemption-list growth as the mechanism for new code;
+  the test header says "If a test fails after your change, fix
+  the code under test."
+- Move `Sentinel` to `internal/entity/`. Pros: passes the audit
+  without weakening; one shared declaration; consistent with
+  every other cross-cutting type. Cons: `Sentinel` is a
+  behavioral helper, not a domain data shape — semantically
+  stretches `entity/`'s usual contents.
+
+**Decision**: Place `Sentinel` in `internal/entity/sentinel.go`.
+
+**Rationale**: The audit's rule is the project's hardline: every
+cross-package type goes in `entity/`. The semantic stretch is
+real but small, and writing exceptions to the audit is more
+expensive long-term than absorbing a one-type semantic blur in
+a package whose contract is already "things used cross-package."
+Per-package duplication was rejected because the convention is
+load-bearing — the next session that touches an err package
+needs one obvious shape to copy, not a choice between 9 nearly
+identical copies.
+
+**Consequence**: `entity/` now houses a typed-string error
+helper alongside its data shapes. Future readers landing in
+`entity/` will find one file (`sentinel.go`) that doesn't
+match the package's "data" theme; the doc comment on `Sentinel`
+explains why. If `entity/` grows more behavioral helpers, the
+package contract should be revisited; for now the precedent is
+contained to this single type.
+
+**Related**: LEARNINGS.md `[2026-05-17-180000] Sentinel errors
+use typed zero-data structs with lazy desc.Text()` records the
+shape itself.
+
+## [2026-05-16-000000] Phase KB lifts the current upstream editorial-pipeline shape, superseding the 4-phase predecessor in the brief
+
+**Status**: Accepted
+
+**Context**: The Phase KB spec at `specs/kb-editorial-pipeline.md` was
+originally lifted from the upstream editorial pipeline in May 2026, at which
+point that pipeline encoded a 4-phase model (triage / extract / reconcile /
+surface). The upstream design has since evolved past that shape into a pass-mode
+contract (`topic-page` / `triage` / `evidence-only`) with up-front declaration,
+a 4-invariant completion circuit breaker, a source-coverage state-machine
+ledger, a topic-adjacency pre-flight, a cold-reader orientation rubric,
+folder-shaped topics from day one, and an explicit CLI-as-scaffold-authority
+rule. The comparison note at `ideas/upstream-pipeline-comparison.md` enumerated
+the deltas. The fork was whether to implement the spec as written (older shape;
+faster to type; weaker as a feature) or to revise the spec to absorb the
+upstream design's current shape before any code is written.
+
+**Decision**: Phase KB lifts the current upstream editorial-pipeline shape.
+`specs/kb-editorial-pipeline.md` was rewritten in place on 2026-05-16 to encode
+pass-mode contract, completion circuit breaker, source-coverage state-machine
+ledger, topic-adjacency pre-flight, cold-reader rubric, folder-shaped topics
+from day one, CLI-as-scaffold-authority, and explicit failure-analysis section.
+The original 4-phase model is superseded; the brief's two organizing principles
+(LLM as migration tool; KB-of-KBs is a KB) carry forward.
+
+**Rationale**: The upstream pipeline's evolution after the brief was drafted
+reflects real pain: false-finish drift, ledger-vs-reality divergence, adjacency
+invisibility, mode-muddying under operator pressure. Lifting the older shape
+would mean re-fighting those wounds. The user's lift-the-whole-shape posture
+(feedback memory `feedback_no_defer_unfamiliar_scope`) extends here: lift the
+patterns the upstream author chose, not just the structure visible at the moment
+of first contact. Concretely: folder-shaped topics from day one avoid a v1.1
+migration (the upstream reference's live kb has 12 sub-topic folders under
+`topics/claude-code/` alone; that depth arrives fast); the pass-mode contract
+makes promise=result visible per pass instead of buried in a closeout the
+operator might not read; the state-machine ledger replaces the spec's flat
+`source-map.md` so "what is incomplete?" has a canonical answer; the circuit
+breaker turns CONSTITUTION's "Completion Over Motion" from prose into a
+mechanical gate.
+
+**Consequence**: Phase KB tasks in `.context/TASKS.md` (line 1832 onward) now
+reference the revised spec; concrete additions cover the new shape (path
+constants under `internal/cli/kb/core/`, new helpers for passmode /
+circuitbreaker / ledger / adjacency / coldreader / lifestage, new doctor
+advisories for ledger drift + pass-mode mismatch + illegal state transitions,
+generalized closeout naming `<TS>-<mode>-closeout.md`). The `internal/store/`
+shape from the original spec is replaced with `internal/write/` per existing ctx
+convention (writers live in `internal/write/<area>/`). Folder-shaped topics from
+day one means `.context/kb/topics/<slug>/index.md` is the canonical surface, not
+flat `<slug>.md`; `ctx kb topic new` is the sole scaffold writer.
+Failure-analysis section is now part of the spec, with three concrete loss modes
+(pass-mode bypass, ledger drift, adjacency trivialization) each carrying v1
+mitigations. Spec: `specs/kb-editorial-pipeline.md`. Source:
+`ideas/upstream-pipeline-comparison.md`.
+
+---
+
 ## [2026-05-11-211246] Embedded and separately-published harnesses use distinct CI and release pipelines
 
 **Status**: Accepted
 
-**Context**: ctx ships two kinds of artifact. Embedded harnesses (OpenCode plugin, Copilot CLI scripts, Claude/OpenCode/Copilot CLI skills, git trace hooks, etc.) live under internal/assets/, are //go:embed'd into the ctx Go binary, and reach users via 'ctx setup' writing their bytes to disk. Separately-published harnesses (currently just the VS Code extension under editors/vscode/) build to their own artifact (.vsix), publish to a third-party channel (VS Code Marketplace under publisher 'activememory'), version independently, and reach users via that channel's update mechanism. Until this session, the boundary was implicit: doc.go and embed_test.go talked only about the embedded tree; release.yml only built the Go binary; nothing in CI exercised the vscode extension at all. A reviewer's first read of internal/assets/integrations/ was 'this is a dumping ground' precisely because the contract was not documented.
+**Context**: ctx ships two kinds of artifact. Embedded harnesses (OpenCode
+plugin, Copilot CLI scripts, Claude/OpenCode/Copilot CLI skills, git trace
+hooks, etc.) live under internal/assets/, are //go:embed'd into the ctx Go
+binary, and reach users via 'ctx setup' writing their bytes to disk.
+Separately-published harnesses (currently just the VS Code extension under
+editors/vscode/) build to their own artifact (.vsix), publish to a third-party
+channel (VS Code Marketplace under publisher 'activememory'), version
+independently, and reach users via that channel's update mechanism. Until this
+session, the boundary was implicit: doc.go and embed_test.go talked only about
+the embedded tree; release.yml only built the Go binary; nothing in CI exercised
+the vscode extension at all. A reviewer's first read of
+internal/assets/integrations/ was 'this is a dumping ground' precisely because
+the contract was not documented.
 
-**Decision**: Embedded and separately-published harnesses use distinct CI and release pipelines
+**Decision**: Embedded and separately-published harnesses use distinct CI and
+release pipelines
 
-**Rationale**: Conflating the two would have one of two consequences: (a) shoehorning vscode into //go:embed, which means baking a .vsix or its sources into the Go binary and writing them out at setup time -- bloating the binary with bytes most users never use, and forcing the Go release cadence onto something with its own marketplace cadence; or (b) leaving the vscode harness ungated 'because it's different' -- which is what we had, and which is how typos ship. The right move is to acknowledge the two patterns are first-class peers, give each a documented home (internal/assets/ vs. editors/<editor>/), and gate each in CI with the toolchain appropriate to its release pipeline (Go test/build/vet for embedded; npm ci + esbuild + tsc for vscode). Future harnesses pick a pattern explicitly at placement time rather than drifting.
+**Rationale**: Conflating the two would have one of two consequences: (a)
+shoehorning vscode into //go:embed, which means baking a .vsix or its sources
+into the Go binary and writing them out at setup time -- bloating the binary
+with bytes most users never use, and forcing the Go release cadence onto
+something with its own marketplace cadence; or (b) leaving the vscode harness
+ungated 'because it's different' -- which is what we had, and which is how typos
+ship. The right move is to acknowledge the two patterns are first-class peers,
+give each a documented home (internal/assets/ vs. editors/<editor>/), and gate
+each in CI with the toolchain appropriate to its release pipeline (Go
+test/build/vet for embedded; npm ci + esbuild + tsc for vscode). Future
+harnesses pick a pattern explicitly at placement time rather than drifting.
 
-**Consequence**: internal/assets/README.md now carries the 'Embedded vs. Separately-Published: At a Glance' table as the canonical reference. .github/workflows/ci.yml gained a vscode-extension job that gates the marketplace publish path. editors/vscode/README.md gained a 'Release' section with checklist and explicit notes on which CI gates protect the manual vsce publish. The two patterns are now first-class: a new harness must declare which it follows before placing files. Open implications: (1) anyone proposing to lift integrations/ out of internal/assets/ should re-read this decision -- the no-../ //go:embed constraint plus the pattern-asymmetry are the load-bearing reasons against; (2) the embedded-only quality gaps tracked in TASKS.md (shellcheck, PSScriptAnalyzer, skill frontmatter validity) and the separately-published quality gaps (vscode test rot, lint, vsce package dry-run) live in distinct gap-task clusters and should not be merged. Spec: specs/internal-assets-readme.md.
+**Consequence**: internal/assets/README.md now carries the 'Embedded vs.
+Separately-Published: At a Glance' table as the canonical reference.
+.github/workflows/ci.yml gained a vscode-extension job that gates the
+marketplace publish path. editors/vscode/README.md gained a 'Release' section
+with checklist and explicit notes on which CI gates protect the manual vsce
+publish. The two patterns are now first-class: a new harness must declare which
+it follows before placing files. Open implications: (1) anyone proposing to lift
+integrations/ out of internal/assets/ should re-read this decision -- the no-../
+//go:embed constraint plus the pattern-asymmetry are the load-bearing reasons
+against; (2) the embedded-only quality gaps tracked in TASKS.md (shellcheck,
+PSScriptAnalyzer, skill frontmatter validity) and the separately-published
+quality gaps (vscode test rot, lint, vsce package dry-run) live in distinct
+gap-task clusters and should not be merged. Spec:
+specs/internal-assets-readme.md.
 
 ---
 
@@ -158,17 +308,47 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: A diagnostic conversation surfaced that `internal/assets/integrations/` contains TypeScript (`opencode/plugin/index.ts`), Bash and PowerShell scripts (`copilot-cli/scripts/`), JSON, YAML, and Markdown — none of it Go source. The first-glance read was "internal/ has become a dumping ground for non-Go tooling; lift integrations/ out." Audit of `embed.go` proved otherwise: every file under `integrations/` is captured by an explicit `//go:embed` directive and shipped inside the ctx binary as raw bytes, then written to the user's filesystem at `ctx setup` time. The smell was real (no contract document existed to explain this) but the architectural diagnosis was wrong.
+**Context**: A diagnostic conversation surfaced that
+`internal/assets/integrations/` contains TypeScript
+(`opencode/plugin/index.ts`), Bash and PowerShell scripts
+(`copilot-cli/scripts/`), JSON, YAML, and Markdown — none of it Go source. The
+first-glance read was "internal/ has become a dumping ground for non-Go tooling;
+lift integrations/ out." Audit of `embed.go` proved otherwise: every file under
+`integrations/` is captured by an explicit `//go:embed` directive and shipped
+inside the ctx binary as raw bytes, then written to the user's filesystem at
+`ctx setup` time. The smell was real (no contract document existed to explain
+this) but the architectural diagnosis was wrong.
 
-**Decision**: Embedded foreign-language assets stay under `internal/assets/`. The `internal/` directory is honoring Go's import-privacy convention; the contract is "everything in this tree is `//go:embed`'d into the binary as bytes." A `README.md` at `internal/assets/README.md` documents the contract; `internal/assets/doc.go` continues to serve the Go-doc audience.
+**Decision**: Embedded foreign-language assets stay under `internal/assets/`.
+The `internal/` directory is honoring Go's import-privacy convention; the
+contract is "everything in this tree is `//go:embed`'d into the binary as
+bytes." A `README.md` at `internal/assets/README.md` documents the contract;
+`internal/assets/doc.go` continues to serve the Go-doc audience.
 
 **Rationale**: Three reasons against lifting:
 
-1. **Hard Go constraint**: `//go:embed` directives cannot reference parents (no `../`). Moving assets out of the embed.go directory tree forces moving (or duplicating) the embed package itself, with import-path blast radius across every consumer. The relocation cost is disproportionate to the readability win.
-2. **Idiomatic Go**: `internal/` is about import privacy, not source language. Projects like Kubernetes and Cobra ship embedded foreign-language payloads from `internal/` without considering it a smell.
-3. **The actual fix is cheaper**: the smell was a missing contract document, not a misplaced directory. A README that names the rule ("everything here is `//go:embed`'d; foreign-language files are intentional payload") resolves the legibility problem at zero structural cost. Dev tooling *about* the embedded payload (e.g. `tsconfig.json` for the TS plugin) is what does not belong inside the embed tree — that goes in a sibling tooling directory.
+1. **Hard Go constraint**: `//go:embed` directives cannot reference parents (no
+`../`). Moving assets out of the embed.go directory tree forces moving (or
+duplicating) the embed package itself, with import-path blast radius across
+every consumer. The relocation cost is disproportionate to the readability win.
+2. **Idiomatic Go**: `internal/` is about import privacy, not source language.
+Projects like Kubernetes and Cobra ship embedded foreign-language payloads from
+`internal/` without considering it a smell.
+3. **The actual fix is cheaper**: the smell was a missing contract document, not
+a misplaced directory. A README that names the rule ("everything here is
+`//go:embed`'d; foreign-language files are intentional payload") resolves the
+legibility problem at zero structural cost. Dev tooling *about* the embedded
+payload (e.g. `tsconfig.json` for the TS plugin) is what does not belong inside
+the embed tree — that goes in a sibling tooling directory.
 
-**Consequence**: Future contributors who feel the same "internal/ is a dumping ground" instinct will find a README documenting why the layout is correct. The README also enumerates current quality gates (presence, format parse, schema integrity) and the known gaps (TypeScript type-check, shellcheck, PSScriptAnalyzer, skill frontmatter validation) — gaps now spawned as discrete Phase 0 tasks. The line-30 `tsc --noEmit` task is redirected: its tooling files must live in a sibling directory outside `internal/assets/` to honor the embed contract.
+**Consequence**: Future contributors who feel the same "internal/ is a dumping
+ground" instinct will find a README documenting why the layout is correct. The
+README also enumerates current quality gates (presence, format parse, schema
+integrity) and the known gaps (TypeScript type-check, shellcheck,
+PSScriptAnalyzer, skill frontmatter validation) — gaps now spawned as discrete
+Phase 0 tasks. The line-30 `tsc --noEmit` task is redirected: its tooling files
+must live in a sibling directory outside `internal/assets/` to honor the embed
+contract.
 
 **Related**: Spec: specs/internal-assets-readme.md
 
@@ -178,13 +358,27 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: When localizing the placeholder set used by validate.RejectPlaceholder, .ctxrc gains a placeholders: list. The existing precedent (rc.SessionPrefixes) uses REPLACE semantics: any non-empty user list completely replaces the shipped defaults. Placeholders need a different rule.
+**Context**: When localizing the placeholder set used by
+validate.RejectPlaceholder, .ctxrc gains a placeholders: list. The existing
+precedent (rc.SessionPrefixes) uses REPLACE semantics: any non-empty user list
+completely replaces the shipped defaults. Placeholders need a different rule.
 
 **Decision**: Placeholder overrides use EXTEND not REPLACE semantics
 
-**Rationale**: The dominant case in this codebase is Tarzan Turkish — bilingual EN+TR projects where users need both English (TBD, n/a, see chat) and Turkish (iptal, yapılacak, görüşülecek) placeholders rejected simultaneously. REPLACE would force users to re-list every English default just to add one Turkish term, which they would skip and silently lose half the validator's coverage. EXTEND appends user list onto the shipped defaults so partial overrides do not regress baseline protection.
+**Rationale**: The dominant case in this codebase is Tarzan Turkish —
+bilingual EN+TR projects where users need both English (TBD, n/a, see chat) and
+Turkish (iptal, yapılacak, görüşülecek) placeholders rejected
+simultaneously. REPLACE would force users to re-list every English default just
+to add one Turkish term, which they would skip and silently lose half the
+validator's coverage. EXTEND appends user list onto the shipped defaults so
+partial overrides do not regress baseline protection.
 
-**Consequence**: rc.Placeholders() must combine defaults + user list with case-folded de-duplication, diverging from the SessionPrefixes pattern. A future maintainer reading both accessors side-by-side will notice the inconsistency; the divergence is intentional and Spec: specs/placeholder-i18n.md captures why. If REPLACE is later wanted, add an opt-in placeholders_replace: true toggle rather than flipping the default.
+**Consequence**: rc.Placeholders() must combine defaults + user list with
+case-folded de-duplication, diverging from the SessionPrefixes pattern. A future
+maintainer reading both accessors side-by-side will notice the inconsistency;
+the divergence is intentional and Spec: specs/placeholder-i18n.md captures why.
+If REPLACE is later wanted, add an opt-in placeholders_replace: true toggle
+rather than flipping the default.
 
 ---
 
@@ -192,13 +386,28 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: things-wtf hand-rolled an editorial pipeline at the repo root with 10-CONSTITUTION.md, colliding with .context/CONSTITUTION.md. CLAUDE.md spent paragraphs explaining the layer split (workflow infra at repo root vs ctx layer at .context/ vs domain content at docs/). The naming collision is the core friction.
+**Context**: `your-project` hand-rolled an editorial pipeline at the repo root with
+10-CONSTITUTION.md, colliding with .context/CONSTITUTION.md. CLAUDE.md spent
+paragraphs explaining the layer split (workflow infra at repo root vs ctx layer
+at .context/ vs domain content at docs/). The naming collision is the core
+friction.
 
-**Decision**: Editorial constitution at .context/ingest/KB-RULES.md, not CONSTITUTION.md
+**Decision**: Editorial constitution at .context/ingest/KB-RULES.md, not
+CONSTITUTION.md
 
-**Rationale**: Sibling project hit and named-their-way-out-of this exact conflict (their file is 10-INGEST_RULES.md, with an explicit naming-by-rename rule recorded in their domain-decisions.md schema header: 'KB-side filename is domain-decisions.md to disambiguate from the root file'). Lift the rename, not just the feature; learn from their resolved wound rather than re-fight the conflict.
+**Rationale**: Sibling project hit and named-their-way-out-of this exact
+conflict (their file is 10-INGEST_RULES.md, with an explicit naming-by-rename
+rule recorded in their domain-decisions.md schema header: 'KB-side filename is
+domain-decisions.md to disambiguate from the root file'). Lift the rename, not
+just the feature; learn from their resolved wound rather than re-fight the
+conflict.
 
-**Consequence**: Pipeline templates use KB-RULES.md throughout (specs/kb-editorial-pipeline.md and brief reflect this); ctx CONSTITUTION.md retains its singular meaning as the project-level invariants file; no layer-bleed documentation needed in CLAUDE.md to cover an avoided collision; same naming discipline carries through to domain-decisions.md (kept separate from DECISIONS.md by the same logic).
+**Consequence**: Pipeline templates use KB-RULES.md throughout
+(specs/kb-editorial-pipeline.md and brief reflect this); ctx CONSTITUTION.md
+retains its singular meaning as the project-level invariants file; no
+layer-bleed documentation needed in CLAUDE.md to cover an avoided collision;
+same naming discipline carries through to domain-decisions.md (kept separate
+from DECISIONS.md by the same logic).
 
 ---
 
@@ -206,13 +415,25 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: Trade-off considered: handover and editorial pipeline are technically separable. Handover alone gives narrative thread between sessions. Editorial alone piles up closeouts that 'do you remember?' reads via the postdated-unfolded-closeout path. Either could ship without the other; question was whether to split into two ships for smaller risk per release.
+**Context**: Trade-off considered: handover and editorial pipeline are
+technically separable. Handover alone gives narrative thread between sessions.
+Editorial alone piles up closeouts that 'do you remember?' reads via the
+postdated-unfolded-closeout path. Either could ship without the other; question
+was whether to split into two ships for smaller risk per release.
 
 **Decision**: Phase KB ships handover plus editorial paired, not split
 
-**Rationale**: The closeout/fold mechanism is the integration point between the two features. Shipping paired guarantees the fold gets real-world stress on day one rather than being added retroactively when the second feature lands. Better-together over smaller-ship; integration coherence over delivery cadence; the user's lift-the-whole-shape posture extends to shipping coherence.
+**Rationale**: The closeout/fold mechanism is the integration point between the
+two features. Shipping paired guarantees the fold gets real-world stress on day
+one rather than being added retroactively when the second feature lands.
+Better-together over smaller-ship; integration coherence over delivery cadence;
+the user's lift-the-whole-shape posture extends to shipping coherence.
 
-**Consequence**: Phase KB is bigger than either feature alone; KB-2 sub-phase covers things-wtf port as the integration regression suite; ideas/001 handover work folds into Phase KB rather than shipping as its own phase; the polish-PR (Phase SK) and git-mandate (Phase RG) Phase 0 prerequisites land first to keep Phase KB clean.
+**Consequence**: Phase KB is bigger than either feature alone; KB-2 sub-phase
+covers `your-project` port as the integration regression suite; ideas/001 handover
+work folds into Phase KB rather than shipping as its own phase; the polish-PR
+(Phase SK) and git-mandate (Phase RG) Phase 0 prerequisites land first to keep
+Phase KB clean.
 
 ---
 
@@ -220,13 +441,29 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: Designing the KB editorial layer raised the question of whether KB editorial decisions need a parallel /ctx-kb-decide skill mirroring /ctx-decision-add. Three resolutions tested: alpha) skill surface doubles (every capture skill gets a kb sibling); beta) capture skills become mode-aware routers; gamma) capture skills stay single-purpose with user discipline.
+**Context**: Designing the KB editorial layer raised the question of whether KB
+editorial decisions need a parallel /ctx-kb-decide skill mirroring
+/ctx-decision-add. Three resolutions tested: alpha) skill surface doubles (every
+capture skill gets a kb sibling); beta) capture skills become mode-aware
+routers; gamma) capture skills stay single-purpose with user discipline.
 
-**Decision**: KB ontology is pipeline-only-writer; no /ctx-kb-decide parallel skill
+**Decision**: KB ontology is pipeline-only-writer; no /ctx-kb-decide parallel
+skill
 
-**Rationale**: All three rejected after a deeper reframe surfaced by the user: in a KB you don't decide, you increase confidence. A claim with confidence greater than 0.9 is fact-by-contract; lower confidence needs more evidence. Even natural-language assertions ('we are spinning off X, anchor on this') are semantically evidence-capture events, not decision-capture events. The sibling pipeline-only-writer model is not rigid; it is the ontologically correct surface for evidence-tracked knowledge.
+**Rationale**: All three rejected after a deeper reframe surfaced by the user:
+in a KB you don't decide, you increase confidence. A claim with confidence
+greater than 0.9 is fact-by-contract; lower confidence needs more evidence. Even
+natural-language assertions ('we are spinning off X, anchor on this') are
+semantically evidence-capture events, not decision-capture events. The sibling
+pipeline-only-writer model is not rigid; it is the ontologically correct surface
+for evidence-tracked knowledge.
 
-**Consequence**: KB skill surface stays small: 4 mode skills (ingest/ask/site-review/ground) plus 1 lightweight ctx kb note for capture-without-pipeline; existing /ctx-decision-add etc. unchanged in authority; users who want to record a KB editorial framing instead drop a finding into the inbox or hand-edit the markdown directly. No router question on every capture; no parallel skill maintenance burden.
+**Consequence**: KB skill surface stays small: 4 mode skills
+(ingest/ask/site-review/ground) plus 1 lightweight ctx kb note for
+capture-without-pipeline; existing /ctx-decision-add etc. unchanged in
+authority; users who want to record a KB editorial framing instead drop a
+finding into the inbox or hand-edit the markdown directly. No router question on
+every capture; no parallel skill maintenance burden.
 
 ---
 
@@ -234,13 +471,27 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: ctx today silently degrades without git via commit:none sentinels in provenance flags; doctor effectively says 'git required for this to work properly' without enforcing. Sibling project mandates git architecturally and says so explicitly. User confirmed N approximately 0 ctx projects in practice run without git. Editorial pipeline lift inherits the git-required assumption (closeout sha:/branch:, evidence-index SHA-pinned in-repo citations, handover Provenance from git HEAD).
+**Context**: ctx today silently degrades without git via commit:none sentinels
+in provenance flags; doctor effectively says 'git required for this to work
+properly' without enforcing. Sibling project mandates git architecturally and
+says so explicitly. User confirmed N approximately 0 ctx projects in practice
+run without git. Editorial pipeline lift inherits the git-required assumption
+(closeout sha:/branch:, evidence-index SHA-pinned in-repo citations, handover
+Provenance from git HEAD).
 
 **Decision**: Mandate git as architectural precondition
 
-**Rationale**: Persistent-memory promise is dishonest without an undo layer: LLM agents are not trustworthy stewards of files; git reflog is the recovery path. Eliminates dead-code branches across every git-touching path. Trust boundary: refuse-on-no-git rather than auto-git-init (ctx never modifies user filesystem outside .context/). User: we should have done this on day zero.
+**Rationale**: Persistent-memory promise is dishonest without an undo layer: LLM
+agents are not trustworthy stewards of files; git reflog is the recovery path.
+Eliminates dead-code branches across every git-touching path. Trust boundary:
+refuse-on-no-git rather than auto-git-init (ctx never modifies user filesystem
+outside .context/). User: we should have done this on day zero.
 
-**Consequence**: Breaking change in next minor release; specs/require-git.md written; commit:none sentinel becomes unreachable across gitmeta and doctor advisories; CONSTITUTION.md amendment + DECISIONS.md entry will land during Phase RG implementation; release notes carry one-command migration ('run git init in any pre-existing git-less ctx project before upgrading').
+**Consequence**: Breaking change in next minor release; specs/require-git.md
+written; commit:none sentinel becomes unreachable across gitmeta and doctor
+advisories; CONSTITUTION.md amendment + DECISIONS.md entry will land during
+Phase RG implementation; release notes carry one-command migration ('run git
+init in any pre-existing git-less ctx project before upgrading').
 
 ---
 
@@ -248,13 +499,30 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: Sibling clean-room project (analyzed undercover; not named to avoid carryover) ships a battle-tested editorial pipeline (4 modes, 9 KB artifacts, closeout/fold mechanism, browseable site rendering). things-wtf-disaster-recovery has been hand-rolling the same shape for weeks at workaround cost: CLAUDE.md disables half of ctx code-dev skills, 10-CONSTITUTION.md at repo root collides with .context/CONSTITUTION.md, hand-typed 8-item closeouts, hand-managed 20-INBOX.md. Considered lift-intact vs hedge-and-defer.
+**Context**: Sibling clean-room project (analyzed undercover; not named to avoid
+carryover) ships a battle-tested editorial pipeline (4 modes, 9 KB artifacts,
+closeout/fold mechanism, browseable site rendering). `your-project` has been
+hand-rolling the same shape for weeks at workaround cost: CLAUDE.md disables
+half of ctx code-dev skills, 10-CONSTITUTION.md at repo root collides with
+.context/CONSTITUTION.md, hand-typed 8-item closeouts, hand-managed 20-INBOX.md.
+Considered lift-intact vs hedge-and-defer.
 
-**Decision**: Lift sibling editorial pipeline shape into ctx as v1, paired with handover
+**Decision**: Lift sibling editorial pipeline shape into ctx as v1, paired with
+handover
 
-**Rationale**: The sibling design is field-tested under production use; things-wtf is a live validation corpus already paying the workaround tax (N=1 lived validation beats hypothetical user research). Initial defer-on-uncertainty instinct corrected by user pushback to lift the whole shape with a non-colliding rename (KB-RULES.md, not CONSTITUTION.md). Two organizing principles (P1: LLM is the migration tool; P2: a KB of KBs is a KB) make lift-the-whole-shape rational rather than reckless.
+**Rationale**: The sibling design is field-tested under production use;
+`your-project` is a live validation corpus already paying the workaround tax (N=1
+lived validation beats hypothetical user research). Initial defer-on-uncertainty
+instinct corrected by user pushback to lift the whole shape with a non-colliding
+rename (KB-RULES.md, not CONSTITUTION.md). Two organizing principles (P1: LLM is
+the migration tool; P2: a KB of KBs is a KB) make lift-the-whole-shape rational
+rather than reckless.
 
-**Consequence**: specs/kb-editorial-pipeline.md written; three TASKS.md phases added (SK polish, RG require-git, KB editorial+handover); KB has its own write authority separate from canonical files; closeout/fold mechanism integrates editorial work with session continuity via handover; ideas/003 brief produced as design source.
+**Consequence**: specs/kb-editorial-pipeline.md written; three TASKS.md phases
+added (SK polish, RG require-git, KB editorial+handover); KB has its own write
+authority separate from canonical files; closeout/fold mechanism integrates
+editorial work with session continuity via handover; ideas/003 brief produced as
+design source.
 
 ---
 
@@ -262,13 +530,28 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: Closing the cross-IDE Cursor leak required preventing state.Dir() from materializing .context/state/ in uninitialized projects. Two viable options: (A) gate inside state.Dir itself; (B) require every caller to check Initialized() first.
+**Context**: Closing the cross-IDE Cursor leak required preventing state.Dir()
+from materializing .context/state/ in uninitialized projects. Two viable
+options: (A) gate inside state.Dir itself; (B) require every caller to check
+Initialized() first.
 
 **Decision**: Gate mkdir inside state.Dir() rather than per-caller
 
-**Rationale**: Option (A) makes the invariant ('no .context/state/ in uninitialized projects') structurally enforced. The leak's root cause was exactly the (B)-style assumption — check_reminder.Run deliberately skipped the gate to print provenance unconditionally, and that path silently produced the leak via Preamble -> nudge.Paused -> PauseMarkerPath -> state.Dir. As long as Dir() mkdirs unconditionally, every future caller is one missed gate away from re-introducing the bug.
+**Rationale**: Option (A) makes the invariant ('no .context/state/ in
+uninitialized projects') structurally enforced. The leak's root cause was
+exactly the (B)-style assumption — checkreminder.Run deliberately skipped the
+gate to print provenance unconditionally, and that path silently produced the
+leak via Preamble -> nudge.Paused -> PauseMarkerPath -> state.Dir. As long as
+Dir() mkdirs unconditionally, every future caller is one missed gate away from
+re-introducing the bug.
 
-**Consequence**: state.Dir() now returns errCtx.ErrNotInitialized for uninit projects. Hook callers' existing 'if dirErr != nil { return nil }' branches absorb it silently; interactive callers (ctx add, task complete, prune) surface a path-bearing message via cobra. cooldown.TombstonePath was refactored to delegate to state.Dir so the gate also covers the PreToolUse 'ctx agent' path. memory.SaveState/LoadState were left alone because they use 0755 (different leak class) and are user-initiated, not auto-triggered.
+**Consequence**: state.Dir() now returns errCtx.ErrNotInitialized for uninit
+projects. Hook callers' existing 'if dirErr != nil { return nil }' branches
+absorb it silently; interactive callers (ctx add, task complete, prune) surface
+a path-bearing message via cobra. cooldown.TombstonePath was refactored to
+delegate to state.Dir so the gate also covers the PreToolUse 'ctx agent' path.
+memory.SaveState/LoadState were left alone because they use 0755 (different leak
+class) and are user-initiated, not auto-triggered.
 
 ---
 
@@ -1949,15 +2232,30 @@ Filename Format, Two-Tier Persistence Model). Users who want session history use
 
 **Status**: Accepted
 
-**Context**: The 2026-04-26-152858 decision shipped the OpenCode plugin without a tool.execute.before hook and noted "Re-add when block-dangerous-commands is promoted to the ctx Go binary." Revisited: that promotion is no longer planned. Keeping the open task on the books makes future sessions believe a re-add is pending.
+**Context**: The 2026-04-26-152858 decision shipped the OpenCode plugin without
+a tool.execute.before hook and noted "Re-add when block-dangerous-commands is
+promoted to the ctx Go binary." Revisited: that promotion is no longer planned.
+Keeping the open task on the books makes future sessions believe a re-add is
+pending.
 
-**Decision**: We will not promote block-dangerous-commands to a ctx system Go subcommand. The OpenCode plugin's missing tool.execute.before hook is permanent, not deferred.
+**Decision**: We will not promote block-dangerous-commands to a ctx system Go
+subcommand. The OpenCode plugin's missing tool.execute.before hook is permanent,
+not deferred.
 
-**Rationale**: The Cobra exit-1 / `{ blocked: true }` interaction makes any shim hostile to users without the Claude wrapper, and the safety-hook gap is acceptable given OpenCode's positioning. Recording this avoids the tax of a perpetually-pending follow-up that no one intends to land.
+**Rationale**: The Cobra exit-1 / `{ blocked: true }` interaction makes any shim
+hostile to users without the Claude wrapper, and the safety-hook gap is
+acceptable given OpenCode's positioning. Recording this avoids the tax of a
+perpetually-pending follow-up that no one intends to land.
 
-**Consequences**: TASKS.md item "Promote 'block-dangerous-commands' to a real ctx system Go subcommand…" marked `[-]` skipped. The 2026-04-26-152858 rationale's "Re-add when…" clause is void; the underlying ship-without-the-hook decision remains in force. Other (non-OpenCode) editor integrations that want a dangerous-command safety net will need a different mechanism.
+**Consequences**: TASKS.md item "Promote 'block-dangerous-commands' to a real
+ctx system Go subcommand…" marked `[-]` skipped. The 2026-04-26-152858
+rationale's "Re-add when…" clause is void; the underlying
+ship-without-the-hook decision remains in force. Other (non-OpenCode) editor
+integrations that want a dangerous-command safety net will need a different
+mechanism.
 
-**Related**: Amends [2026-04-26-152858] OpenCode plugin ships without tool.execute.before hook (rationale's deferred re-add is now closed).
+**Related**: Amends [2026-04-26-152858] OpenCode plugin ships without
+tool.execute.before hook (rationale's deferred re-add is now closed).
 
 ---
 
@@ -1965,13 +2263,19 @@ Filename Format, Two-Tier Persistence Model). Users who want session history use
 
 **Status**: Accepted
 
-**Context**: Original PR #72 OpenCode plugin ran 'ctx system post-commit' after every shell tool call, not only after real commits
+**Context**: Original PR #72 OpenCode plugin ran 'ctx system post-commit' after
+every shell tool call, not only after real commits
 
-**Decision**: Editor-integration plugins must filter post-commit to actual git commit invocations
+**Decision**: Editor-integration plugins must filter post-commit to actual git
+commit invocations
 
-**Rationale**: post-commit is meaningful only after a real commit lands; firing on every shell call is noise that trains users to ignore the resulting nudges
+**Rationale**: post-commit is meaningful only after a real commit lands; firing
+on every shell call is noise that trains users to ignore the resulting nudges
 
-**Consequences**: Editor plugins always sniff the actual command string (regex on the extracted command) before triggering capture nudges that target specific commands. Same pattern applies to any future hook that targets a specific porcelain command.
+**Consequences**: Editor plugins always sniff the actual command string (regex
+on the extracted command) before triggering capture nudges that target specific
+commands. Same pattern applies to any future hook that targets a specific
+porcelain command.
 
 ---
 
@@ -1979,13 +2283,20 @@ Filename Format, Two-Tier Persistence Model). Users who want session history use
 
 **Status**: Accepted
 
-**Context**: The natural fit (block-dangerous-commands) doesn't exist as a ctx system Go subcommand; shimming to it would block every shell call on installs without the Claude wrapper because Cobra's unknown-command exit 1 is read as { blocked: true } by OpenCode
+**Context**: The natural fit (block-dangerous-commands) doesn't exist as a ctx
+system Go subcommand; shimming to it would block every shell call on installs
+without the Claude wrapper because Cobra's unknown-command exit 1 is read as {
+blocked: true } by OpenCode
 
 **Decision**: OpenCode plugin ships without tool.execute.before hook
 
-**Rationale**: Better to ship a feature-narrower plugin than one that bricks the editor for users without the wrapper. Re-add when block-dangerous-commands is promoted to the ctx Go binary.
+**Rationale**: Better to ship a feature-narrower plugin than one that bricks the
+editor for users without the wrapper. Re-add when block-dangerous-commands is
+promoted to the ctx Go binary.
 
-**Consequences**: OpenCode users get bootstrap, persistence, post-commit, and task-completion nudges but no dangerous-command safety net. specs/opencode-integration.md records the deliberate omission.
+**Consequences**: OpenCode users get bootstrap, persistence, post-commit, and
+task-completion nudges but no dangerous-command safety net.
+specs/opencode-integration.md records the deliberate omission.
 
 ---
 
@@ -1993,13 +2304,18 @@ Filename Format, Two-Tier Persistence Model). Users who want session history use
 
 **Status**: Accepted
 
-**Context**: TestBinaryIntegration spawns subprocesses; the prior helper did append(os.Environ(), CTX_DIR=...) to override the developer-shell value. Wrong abstraction.
+**Context**: TestBinaryIntegration spawns subprocesses; the prior helper did
+append(os.Environ(), CTX_DIR=...) to override the developer-shell value. Wrong
+abstraction.
 
-**Decision**: Use t.Setenv for subprocess env in tests, not append(os.Environ(), ...)
+**Decision**: Use t.Setenv for subprocess env in tests, not append(os.Environ(),
+...)
 
-**Rationale**: t.Setenv mutates the live process env, exec.Cmd with nil Env inherits it, and cleanup is automatic at test end. One line replaces the helper.
+**Rationale**: t.Setenv mutates the live process env, exec.Cmd with nil Env
+inherits it, and cleanup is automatic at test end. One line replaces the helper.
 
-**Consequence**: Helper deleted, six call sites simplified, no env-dedup logic to maintain. Pattern reusable for other subprocess tests.
+**Consequence**: Helper deleted, six call sites simplified, no env-dedup logic
+to maintain. Pattern reusable for other subprocess tests.
 
 ---
 
@@ -2007,10 +2323,17 @@ Filename Format, Two-Tier Persistence Model). Users who want session history use
 
 **Status**: Accepted
 
-**Context**: Old single-return form returned ('', nil) when CTX_DIR was undeclared. Callers that filtered only on err != nil joined empty stateDir with relative names and wrote state files into CWD instead of .context/state/.
+**Context**: Old single-return form returned ('', nil) when CTX_DIR was
+undeclared. Callers that filtered only on err != nil joined empty stateDir with
+relative names and wrote state files into CWD instead of .context/state/.
 
-**Decision**: Tighten state.Dir / rc.ContextDir to (string, error) with sentinel errors
+**Decision**: Tighten state.Dir / rc.ContextDir to (string, error) with sentinel
+errors
 
-**Rationale**: Returning a sentinel ErrDirNotDeclared makes the empty-path case unrepresentable in a 'looks fine' branch. Forces every caller through the same explicit gate.
+**Rationale**: Returning a sentinel ErrDirNotDeclared makes the empty-path case
+unrepresentable in a 'looks fine' branch. Forces every caller through the same
+explicit gate.
 
-**Consequence**: All callers needed migration; tests had to declare CTX_DIR explicitly. In return, the filepath.Join('', rel) trap is closed by construction.
+**Consequence**: All callers needed migration; tests had to declare CTX_DIR
+explicitly. In return, the filepath.Join('', rel) trap is closed by
+construction.

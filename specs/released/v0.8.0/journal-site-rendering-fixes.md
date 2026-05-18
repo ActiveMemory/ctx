@@ -84,7 +84,7 @@ Functions: `collectTurnNumbers()`, `nextInSequence()`.
 ### 6. Context compaction `<summary>` tags (from previous session, in reduce.go)
 
 **Root cause**: Claude Code's context compaction injects multi-line
-`<summary>...</summary>` blocks that markdown renderers interpret as HTML.
+`<summary>...</summary>` blocks that Markdown renderers interpret as HTML.
 
 **Fix**: `stripSystemReminders` now also strips standalone `<summary>` blocks
 (multi-line) and compaction boilerplate. Safe disambiguation: Claude Code's
@@ -129,7 +129,7 @@ text, so fences serve no structural purpose and actively cause problems.
 | `<pre><code>`  (Type 1) | OK          | None after HTML-escape  | Yes             |
 | `<details><pre>` (old)  | BROKEN      | Type 6 ends at blank    | Yes             |
 
-**Trade-off**: User messages with markdown formatting (bold, links, lists)
+**Trade-off**: User messages with Markdown formatting (bold, links, lists)
 are flattened to plain text. This is acceptable — preserving user input
 verbatim is more valuable than rendering decorative formatting.
 

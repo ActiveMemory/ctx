@@ -2149,14 +2149,14 @@ encryption key at <code>~/.ctx/</code> for the
 For Claude Code, install the <a href="../../operations/integrations/#claude-code-full-integration"><code>ctx</code> plugin</a>
 for automatic hooks and skills.</p>
 <p><code>ctx init</code> also scaffolds four <strong>foundation steering files</strong> in
-<code>.context/steering/</code> — <code>product.md</code>, <code>tech.md</code>, <code>structure.md</code>,
+<code>.context/steering/</code>: <code>product.md</code>, <code>tech.md</code>, <code>structure.md</code>,
 <code>workflow.md</code>. <strong>They are placeholders until you customize
 them</strong> (see the next step); skipping that step has consequences,
 so it is broken out as its own numbered beat rather than
 buried here.</p>
 <h3 id="2-customize-your-steering-files">2. Customize Your Steering Files<a class="headerlink" href="#2-customize-your-steering-files" title="Permanent link">&para;</a></h3>
 <p>Steering files are <strong>behavioral rules prepended to every AI
-prompt</strong> — the layer that tells your AI <em>how to act</em> on this
+prompt</strong>: the layer that tells your AI <em>how to act</em> on this
 specific project. They are distinct from decisions (<em>what</em> was
 chosen) and conventions (<em>how</em> the codebase is written); see
 <a href="../../recipes/steering/"><code>ctx</code> for Steering Files</a> for the full
@@ -2194,7 +2194,7 @@ fill it in:</p>
 <strong>As long as the marker is present, the file is silently
 skipped</strong> on every load path: the agent context packet, MCP
 <code>ctx_steering_get</code>, and native-tool sync (Cursor / Cline /
-Kiro). The skip is deliberate — injecting unfilled placeholders
+Kiro). The skip is deliberate: injecting unfilled placeholders
 into AI prompts is worse than no steering at all, because the
 AI tries to follow "Describe the product..." as if it were a
 rule.</p>

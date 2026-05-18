@@ -30,7 +30,7 @@ Registration: `journal/parser` auto-detection via `Matches(path)`
 Registered implementations:
 1. `ClaudeCode` - `internal/journal/parser/claude.go`
 2. `Copilot` - `internal/journal/parser/copilot.go`
-3. `CopilotCLI` - `internal/journal/parser/copilot_cli.go`
+3. `CopilotCLI` - `internal/journal/parser/copilotcli.go`
 4. `MarkdownSession` - `internal/journal/parser/markdown.go`
 
 How to extend: implement SessionParser interface with `Matches()`
@@ -76,7 +76,7 @@ Registration: `internal/cli/setup/core/*` packages
 5 tool-specific deployers:
 1. `agents/` - AGENTS.md deployment
 2. `copilot/` - GitHub Copilot (instructions + VS Code MCP)
-3. `copilot_cli/` - Copilot CLI (instructions, skills, agent, MCP)
+3. `copilotcli/` - Copilot CLI (instructions, skills, agent, MCP)
 4. (Claude Code via initialize, not setup)
 5. (Cursor/Aider/Windsurf via simpler paths)
 

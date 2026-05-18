@@ -26,7 +26,7 @@ construction, not output. These are in:
 - `dep/core/format.go` — building Mermaid markup
 - `journal/core/section.go` — building index/site content
 - `recall/core/frontmatter.go` — building YAML frontmatter
-- `system/cmd/check_freshness/run.go` — building warning text
+- `system/cmd/checkfreshness/run.go` — building warning text
 
 `fmt.Fprintln` calls that write to an `io.Writer` parameter already
 follow the migrated pattern (stats StreamStats, backup addEntry).

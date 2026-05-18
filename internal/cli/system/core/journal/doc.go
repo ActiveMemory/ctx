@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package journal holds the **shared helpers** that the
-// `check_journal` hook calls when deciding whether to nudge
+// `checkjournal` hook calls when deciding whether to nudge
 // the user about unimported or unenriched session entries.
 //
 // The package is the *measurement layer*; the hook decides

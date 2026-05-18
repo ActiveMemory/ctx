@@ -60,7 +60,7 @@ Use `--full` for the complete conversation.
 
 ### `ctx journal import`
 
-Import sessions to the journal directory as markdown.
+Import sessions to the journal directory as Markdown.
 
 | Flag                 | Default | Purpose                                          |
 |----------------------|---------|--------------------------------------------------|

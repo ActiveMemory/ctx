@@ -19,7 +19,7 @@ import (
 // InfoResetPrompt prints the reset confirmation prompt with an
 // enumeration of the populated essential files that will be
 // overwritten. The prompt is intentionally explicit about the
-// blast radius — the silent "Overwrite existing context? [y/N]"
+// blast radius. The silent "Overwrite existing context? [y/N]"
 // prompt destroyed thousands of lines of curated content in
 // the 2026-04-25 incident.
 //

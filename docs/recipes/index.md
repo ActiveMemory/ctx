@@ -51,6 +51,46 @@ with private context or **multi-repo** setups.
 
 ---
 
+## Knowledge Base (Phase KB)
+
+### [Build a Knowledge Base](build-a-knowledge-base.md)
+
+Stand up the editorial pipeline for knowledge-shaped work
+(research projects, vendor-spec analysis, post-incident reviews).
+Covers the pass-mode contract, source-coverage state-machine
+ledger, topic-adjacency pre-flight, cold-reader rubric,
+closeout/fold mechanism, and folder-shaped topic pages.
+
+**Uses**: `ctx init`, `ctx kb topic new`, `ctx kb note`,
+`ctx kb reindex`, `ctx handover write`,
+`/ctx-kb-ingest`, `/ctx-kb-ask`, `/ctx-kb-site-review`,
+`/ctx-kb-ground`, `/ctx-kb-note`, `/ctx-handover`
+
+---
+
+### [Typical KB Session](typical-kb-session.md)
+
+The everyday flow once the pipeline is set up: session start
+recall, ingest a transcript, ask grounded questions, park
+findings, wrap up via the mandatory handover.
+
+**Uses**: `/ctx-remember`, `/ctx-kb-ingest`, `/ctx-kb-ask`,
+`/ctx-kb-note`, `/ctx-wrap-up`, `/ctx-handover`
+
+---
+
+### [Recover an Aborted KB Session](recover-aborted-session.md)
+
+What to do when the session ends after one or more editorial
+passes but before `/ctx-handover`. Closeouts survive the abort;
+the next session's `/ctx-remember` reads them as unfolded
+postdated artifacts; the next `/ctx-handover` folds them
+retroactively.
+
+**Uses**: `/ctx-remember`, `/ctx-handover`
+
+---
+
 ## Sessions
 
 ### [The Complete Session](session-lifecycle.md)

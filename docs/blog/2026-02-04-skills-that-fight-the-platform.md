@@ -39,7 +39,7 @@ The result is often **nondeterministic** and **unpredictable**.
     the agent: the defaults that already encode **judgment**, **safety**, and 
     **scope control**.
 
-This post catalogues the conflict patterns I have encountered while building
+This post catalogs the conflict patterns I have encountered while building
 `ctx`, and offers guidance on what skills should (*and, more importantly, 
 should not*) do.
 

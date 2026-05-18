@@ -172,4 +172,13 @@ const (
 	TableRowFmt = "| %s | %s |"
 	// TableSepFmt is the Printf format for a two-column separator row.
 	TableSepFmt = "|%s|%s|"
+	// TableRowOpen is the leading "| " a markdown table row
+	// opens with.
+	TableRowOpen = "| "
+	// TableRowClose is the trailing " |" a markdown table row
+	// closes with, with no newline.
+	TableRowClose = " |"
+	// TableCellSep is the " | " separator between adjacent
+	// cells within a markdown table row.
+	TableCellSep = " | "
 )

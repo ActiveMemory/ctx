@@ -12,14 +12,14 @@
 // process invariants.
 //
 // The package is the *measurement layer*; the hooks
-// (`check_map_staleness`, `check_knowledge`,
+// (`checkmapstaleness`, `checkknowledge`,
 // background pruners) decide what to do with the numbers.
 //
 // # Public Surface
 //
 //   - **[ReadMapTracking]**: reads the persisted
 //     architecture-map last-update tracking record.
-//     Used by `check_map_staleness` to decide whether
+//     Used by `checkmapstaleness` to decide whether
 //     ARCHITECTURE.md has fallen behind code changes.
 //   - **[CountModuleCommits](module, since)**: counts
 //     git commits touching a module path since a given

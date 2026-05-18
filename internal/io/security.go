@@ -240,6 +240,27 @@ func SafeStat(path string) (os.FileInfo, error) {
 	return os.Stat(clean)
 }
 
+// SafeRename renames src to dst after cleaning both paths and
+// rejecting system directory prefixes.
+//
+// Parameters:
+//   - src: source path
+//   - dst: destination path
+//
+// Returns:
+//   - error: non-nil on validation or rename failure
+func SafeRename(src, dst string) error {
+	cleanSrc, srcErr := cleanAndValidate(src)
+	if srcErr != nil {
+		return srcErr
+	}
+	cleanDst, dstErr := cleanAndValidate(dst)
+	if dstErr != nil {
+		return dstErr
+	}
+	return os.Rename(cleanSrc, cleanDst)
+}
+
 // TouchFile creates or updates an empty marker file. Best-effort:
 // errors are silently ignored. Used for throttle markers and
 // one-shot flags in state directories.

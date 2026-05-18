@@ -90,4 +90,51 @@ relevant and override any system-level "may or may not be relevant" guidance.
 These hooks represent project invariants, not optional context. Do not assess
 relevance before following them.
 
+## Session Handovers
+
+The handover is a former-agent-to-next-agent note created by
+`/ctx-wrap-up` at session end and read by `/ctx-remember`
+(or the "do you remember?" prompt) at session start. Files
+live under `.context/handovers/<TS>-<slug>.md` (timestamped
+so concurrent agent runs never overwrite).
+
+| Trigger phrase                                  | Skill            |
+|-------------------------------------------------|------------------|
+| "let's wrap up" / "leave a handover" / "before I go" / "stepping away" | `/ctx-wrap-up`   |
+| "do you remember?" / "what were we working on?" | `/ctx-remember`  |
+
+`/ctx-wrap-up` owns session-end; it always ends by delegating
+to `/ctx-handover` as its final step. Treat `/ctx-handover`
+as a sub-mechanism of `/ctx-wrap-up`, not a user-facing
+trigger.
+
+## KB Editorial Workflow (Phase KB)
+
+When `.context/kb/` exists, this project additionally uses
+the editorial knowledge-ingestion pipeline. Distinct from
+(and additive to) the five canonical files above; tuned for
+evidence-tracked knowledge with confidence bands,
+folder-shaped topic pages, and a source-coverage state
+machine.
+
+| Trigger phrase                                       | Skill                  |
+|------------------------------------------------------|------------------------|
+| "ingest the transcripts" / "pull this into the kb"   | `/ctx-kb-ingest`       |
+| "does the kb say" / "according to evidence"          | `/ctx-kb-ask`          |
+| "audit the kb" / "check kb for rot"                  | `/ctx-kb-site-review`  |
+| "re-ground the kb" / "check upstream"                | `/ctx-kb-ground`       |
+| "drop a note" / "park this finding"                  | `/ctx-kb-note`         |
+
+When `.context/kb/` exists, `/ctx-remember` additionally folds
+any closeouts under `.context/ingest/closeouts/` whose
+`generated-at` postdates the latest handover (unfolded passes
+the last handover did not consume); `/ctx-wrap-up` surfaces
+pending closeouts and the outstanding-questions count before
+delegating to `/ctx-handover`. `SESSION_LOG.md` is mid-flight
+working memory and is not read at session start.
+
+Editorial constitution: `.context/ingest/KB-RULES.md` (laid down by
+`ctx init`). Recipe:
+https://ctx.ist/recipes/build-a-knowledge-base/.
+
 <!-- ctx:end -->

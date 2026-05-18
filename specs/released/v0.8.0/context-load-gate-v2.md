@@ -192,8 +192,8 @@ No change from v1. Same matcher, same position:
 
 | File | Change |
 |------|--------|
-| `internal/cli/system/context_load_gate.go` | Rewrite — read files, inject content |
-| `internal/cli/system/context_load_gate_test.go` | Update — test content injection |
+| `internal/cli/system/contextloadgate.go` | Rewrite — read files, inject content |
+| `internal/cli/system/contextloadgate_test.go` | Update — test content injection |
 
 No new files. No hook registration changes. No config changes.
 

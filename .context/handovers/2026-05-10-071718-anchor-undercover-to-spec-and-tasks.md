@@ -29,7 +29,7 @@ flags, `--brief <path>` on `/ctx-spec`, authority boundary sections,
 "light compression" wording standardization), **Phase RG** (require git
 as architectural precondition; refuse-on-no-git with no auto-init),
 **Phase KB** (editorial pipeline + handover; depends on Phase SK +
-Phase RG; sub-phases KB-2 things-wtf port for validation and KB-3 docs).
+Phase RG; sub-phases KB-2 `your-project` port for validation and KB-3 docs).
 
 Saved one feedback memory at `~/.claude/projects/-Users-volkan-Desktop-
 WORKSPACE-ctx/memory/feedback_no_defer_unfamiliar_scope.md` capturing

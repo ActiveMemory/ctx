@@ -1,0 +1,189 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package checkcontextsize
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"time"
+
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/log"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/event"
+	"github.com/ActiveMemory/ctx/internal/config/session"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/warn"
+	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
+	"github.com/ActiveMemory/ctx/internal/rc"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
+)
+
+// Run executes the check-context-size hook logic.
+//
+// Reads hook input from stdin, tracks per-session prompt counts, and emits
+// context checkpoint or window warning messages at adaptive intervals.
+// Also fires a one-shot billing warning when token usage exceeds the
+// user-configured threshold.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - stdin: standard input for hook JSON
+//
+// Returns:
+//   - error: Always nil (hook errors are non-fatal)
+func Run(cmd *cobra.Command, stdin *os.File) error {
+	initialized, initErr := state.Initialized()
+	if initErr != nil {
+		logWarn.Warn(warn.StateInitializedProbe, initErr)
+		return nil
+	}
+	if !initialized {
+		return nil
+	}
+	input := coreSession.ReadInput(stdin)
+	sessionID := input.SessionID
+	if sessionID == "" {
+		sessionID = session.IDUnknown
+	}
+
+	// Pause check: this hook is the designated single emitter
+	if turns := nudge.Paused(sessionID); turns > 0 {
+		writeSetup.Nudge(cmd, nudge.PausedMessage(turns))
+		return nil
+	}
+
+	tmpDir, dirErr := state.Dir()
+	if dirErr != nil {
+		logWarn.Warn(warn.StateDirProbe, dirErr)
+		return nil
+	}
+	counterFile := filepath.Join(tmpDir, stats.ContextSizeCounterPrefix+sessionID)
+	// Unreachable under normal flow: state.Initialized() above already
+	// proved ContextDir succeeds. Kept defensive so a future ContextDir
+	// failure mode lands on stderr instead of silently skipping the
+	// hook.
+	ctxDir, err := rc.ContextDir()
+	if err != nil {
+		logWarn.Warn(warn.ContextDirResolve, err)
+		return nil
+	}
+	logFile := filepath.Join(ctxDir, dir.Logs, stats.ContextSizeLogFile)
+
+	// Increment counter
+	count := counter.Read(counterFile) + 1
+	counter.Write(counterFile, count)
+
+	// Read actual context window usage from session JSONL
+	info, _ := coreSession.ReadTokenInfo(sessionID)
+	tokens := info.Tokens
+	windowSize := coreSession.EffectiveContextWindow(info.Model)
+	pct := 0
+	if windowSize > 0 && tokens > 0 {
+		pct = tokens * stats.PercentMultiplier / windowSize
+	}
+
+	// Billing threshold: one-shot warning when tokens exceed the
+	// user-configured billing_token_warn. Independent of all other
+	// triggers - fires even during wrap-up suppression because cost
+	// guards are never convenience nudges.
+	billingThreshold := rc.BillingTokenWarn()
+	billingHit := billingThreshold > 0 &&
+		tokens >= billingThreshold
+	if billingHit {
+		box, billingErr := nudge.EmitBillingWarning(
+			logFile, sessionID,
+			count, tokens, billingThreshold,
+		)
+		if billingErr != nil {
+			return billingErr
+		}
+		writeSetup.NudgeBlock(cmd, box)
+	}
+
+	// Wrap-up suppression: if the user recently ran /ctx-wrap-up,
+	// suppress checkpoint and window nudges to avoid noise during/after
+	// the wrap-up ceremony. The marker expires after 2 hours.
+	// Stats are still recorded so token usage tracking is continuous.
+	if check.WrappedUpRecently() {
+		log.Message(
+			logFile, sessionID,
+			fmt.Sprintf(
+				desc.Text(text.DescKeyCheckContextSizeSuppressedLogFormat), count),
+		)
+		return coreSession.WriteStats(sessionID, entity.Stats{
+			Timestamp:  time.Now().Format(time.RFC3339),
+			Prompt:     count,
+			Tokens:     tokens,
+			Pct:        pct,
+			WindowSize: windowSize,
+			Model:      info.Model,
+			Event:      event.Suppressed,
+		})
+	}
+
+	// Percentage-based triggers: checkpoint at 60% (one-shot),
+	// warning at 90% (recurring).
+	guardFile := filepath.Join(
+		tmpDir, stats.ContextCheckpointNudgedPrefix+sessionID,
+	)
+	_, guardErr := os.Stat(guardFile)
+	checkpointFired := guardErr == nil
+	trigger := nudge.EvaluateTrigger(pct, checkpointFired)
+
+	if trigger.Checkpoint {
+		io.TouchFile(guardFile)
+	}
+
+	evt := trigger.Event
+	switch {
+	case trigger.Window:
+		box, windowErr := nudge.EmitWindowWarning(
+			logFile, sessionID,
+			count, tokens, pct,
+		)
+		if windowErr != nil {
+			return windowErr
+		}
+		writeSetup.NudgeBlock(cmd, box)
+	case trigger.Checkpoint:
+		box, checkpointErr := nudge.EmitCheckpoint(
+			logFile, sessionID, ctxDir,
+			count, tokens, pct, windowSize,
+		)
+		if checkpointErr != nil {
+			return checkpointErr
+		}
+		writeSetup.NudgeBlock(cmd, box)
+	default:
+		log.Message(logFile, sessionID,
+			fmt.Sprintf(desc.Text(
+				text.DescKeyCheckContextSizeSilentLogFormat), count),
+		)
+	}
+
+	return coreSession.WriteStats(sessionID, entity.Stats{
+		Timestamp:  time.Now().Format(time.RFC3339),
+		Prompt:     count,
+		Tokens:     tokens,
+		Pct:        pct,
+		WindowSize: windowSize,
+		Model:      info.Model,
+		Event:      evt,
+	})
+}

@@ -1724,7 +1724,7 @@
 packet) but none of those can tell the assistant <em>how to
 behave</em> when a specific kind of prompt arrives. That's what
 <strong>steering files</strong> are for.</p>
-<p>A steering file is a small markdown document with YAML
+<p>A steering file is a small Markdown document with YAML
 frontmatter that says: "when the user asks about X, prepend
 these rules to the prompt." <code>ctx</code> manages those files in
 <code>.context/steering/</code>, decides which ones match each prompt,
@@ -1789,7 +1789,7 @@ rather than an empty directory:</p>
 </table>
 <p>Each file starts with an inline HTML comment explaining the
 three inclusion modes, priority semantics, and tool scoping.
-The comment is invisible in rendered markdown but visible
+The comment is invisible in rendered Markdown but visible
 when you open the file to edit it; it's self-documenting
 scaffolding, not forever guidance. Delete the comment once
 you've customized the file.</p>

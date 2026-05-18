@@ -104,7 +104,7 @@ always present so you know whether provenance was captured.
 
 ### 1. Hook Script Changes
 
-In the `UserPromptSubmit` hook (e.g., `ctx system check_reminder`
+In the `UserPromptSubmit` hook (e.g., `ctx system checkreminder`
 or equivalent):
 
 - Parse `session_id` from stdin JSON (already available)

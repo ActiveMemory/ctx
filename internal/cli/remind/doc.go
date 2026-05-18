@@ -26,8 +26,8 @@
 //
 // # The Surface Path
 //
-// At session start, the `check_reminder` system hook
-// (`internal/cli/system/cmd/check_reminder`) reads the
+// At session start, the `checkreminder` system hook
+// (`internal/cli/system/cmd/checkreminder`) reads the
 // reminder store, filters by date and dismissal
 // status, and emits the un-dismissed entries through
 // the VERBATIM relay so the user (and the agent) both

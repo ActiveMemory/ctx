@@ -15,7 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/event"
-	"github.com/ActiveMemory/ctx/internal/config/load_gate"
+	"github.com/ActiveMemory/ctx/internal/config/loadgate"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -49,7 +49,7 @@ func FromMarkers() (time.Time, error) {
 
 	var markers []markerInfo
 	for _, e := range entries {
-		if !strings.HasPrefix(e.Name(), load_gate.PrefixCtxLoaded) {
+		if !strings.HasPrefix(e.Name(), loadgate.PrefixCtxLoaded) {
 			continue
 		}
 		info, infoErr := e.Info()
@@ -98,7 +98,7 @@ func FromEvents() (time.Time, error) {
 	// Scan in reverse for the last context-load-gate event.
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := lines[i]
-		if !strings.Contains(line, load_gate.EventContextLoadGate) {
+		if !strings.Contains(line, loadgate.EventContextLoadGate) {
 			continue
 		}
 		if t, ok := ExtractTimestamp(line); ok {

@@ -30,11 +30,11 @@ import (
 // Returns:
 //   - int: Number of files pruned
 func AutoPrune(days int) int {
-	// Best-effort: this runs from context_load_gate as fire-and-forget
+	// Best-effort: this runs from contextloadgate as fire-and-forget
 	// and must never block session startup. Any state.Dir failure
 	// (including the ErrDirNotDeclared bail signal) is swallowed
 	// uniformly. ErrDirNotDeclared is unreachable here because
-	// context_load_gate already ran state.Initialized; the check
+	// contextloadgate already ran state.Initialized; the check
 	// stays defensive in case a future caller invokes AutoPrune
 	// outside the gate.
 	dir, dirErr := state.Dir()

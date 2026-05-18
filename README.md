@@ -97,6 +97,8 @@ instructions.
 
 ```bash
 # Initialize context directory in your project
+# (git is required: ctx refuses to operate without .git/.
+# Run `git init` first if the project does not have a repo yet.)
 ctx init
 
 # Activate it for the current shell (binds CTX_DIR). Required
@@ -118,6 +120,34 @@ ctx decision add "Use PostgreSQL for primary database" \
   --consequence "Team needs PostgreSQL training; must set up replication"
 ctx learning add "Mock functions must be hoisted in Jest"
 ```
+
+### Knowledge-base workflow (Phase KB)
+
+For knowledge-shaped work (research projects, vendor-spec analysis,
+post-incident reviews), `ctx init` also lays down an editorial
+pipeline distinct from the code-development surface above:
+
+```bash
+# Scaffold a folder-shaped topic page
+ctx kb topic new "Cursor Hooks"
+
+# Run an editorial ingest pass (in your AI assistant)
+/ctx-kb-ingest ./inputs/2026-05-15-call.md "cursor hooks"
+
+# Ask grounded questions, refuses to web-jump
+/ctx-kb-ask "does the kb say hooks fire async?"
+
+# Per-session handover; folds postdated closeouts automatically
+ctx handover write "First session" \
+  --summary "Drafted topic-page; minted EV-018..EV-024" \
+  --next "Re-ingest the v1.1 release notes URL when available"
+```
+
+See the
+[Build a Knowledge Base recipe](https://ctx.ist/recipes/build-a-knowledge-base/)
+for the full workflow, including the pass-mode contract,
+source-coverage state-machine ledger, and the closeout/fold
+mechanism.
 
 `ctx activate` emits `export CTX_DIR=...` for your shell; one-shot
 callers can prefix the binding inline as `CTX_DIR=<abs-path> ctx ...`.

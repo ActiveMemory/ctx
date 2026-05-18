@@ -1824,3 +1824,133 @@ skill.remove:
     Examples:
       ctx skill remove react-patterns
   short: Remove an installed skill
+handover:
+  long: |-
+    Manage per-session handover artifacts under .context/handovers/.
+
+    The handover is the former-agent-to-next-agent note created at
+    session end by /ctx-wrap-up and read at session start by
+    /ctx-remember. Filenames are timestamped (<TS>-<slug>.md) so
+    concurrent agent runs never overwrite each other. Subcommands:
+      write    Write a per-session handover artifact
+
+    Examples:
+      ctx handover write "Cursor Hooks deep dive" \
+        --summary "Drafted topic-page; minted EV-018..EV-024." \
+        --next "Re-ingest the v1.1 release-notes URL."
+  short: Per-session handover artifact writer
+handover.write:
+  long: |-
+    Write a handover under .context/handovers/<TS>-<slug>.md.
+
+    By default, folds closeouts that postdate the latest handover and
+    archives them under .context/archive/closeouts/. --no-fold skips
+    the fold (mid-session checkpoint).
+
+    Examples:
+      ctx handover write "Cursor Hooks deep dive" \
+        --summary "Drafted topic-page; minted EV-018..EV-024." \
+        --next "Re-ingest the v1.1 release-notes URL."
+
+      ctx handover write "Mid-day checkpoint" \
+        --summary "Working through evidence-index reconciliation." \
+        --next "Resolve C-007 contradiction next." --no-fold
+  short: Write a per-session handover artifact
+kb:
+  long: |-
+    Manage the .context/kb/ knowledge base via the editorial pipeline.
+
+    Ingest sources, ask grounded questions, audit the site, re-ground
+    external sources, and scaffold new topics.
+
+    Examples:
+      ctx kb topic new "Cursor Hooks"        # scaffold a topic folder
+      ctx kb note "follow-up: v1.2 SIGTERM"  # park a finding
+      ctx kb reindex                         # refresh the topic index
+      ctx kb ingest ./inputs/cursor-hooks.md # editorial pass
+      ctx kb ask "does the kb say hooks fire async?"
+      ctx kb site-review                     # mechanical audit
+      ctx kb ground                          # re-ground external sources
+  short: Knowledge-base editorial pipeline (Phase KB)
+kb.ask:
+  long: |-
+    Q&A grounded in the kb. The actual pass is performed by the
+    /ctx-kb-ask skill; this CLI surface validates input (refuses on
+    empty question) and prints the canonical skill invocation.
+
+    Examples:
+      ctx kb ask "does the kb say hooks fire async?"
+      ctx kb ask "what does EV-042 cite?"
+  short: Q&A grounded in the kb (driven by the /ctx-kb-ask skill)
+kb.ground:
+  long: |-
+    Refreshes sources listed in .context/ingest/grounding-sources.md.
+    Refuses cleanly when the file is absent or empty.
+
+    Examples:
+      ctx kb ground   # refresh every source listed in grounding-sources.md
+  short: External grounding pass (driven by the /ctx-kb-ground skill)
+kb.ingest:
+  long: |-
+    Runs the editorial-ingestion pipeline against the supplied sources.
+
+    The pass itself is performed by the /ctx-kb-ingest skill; this CLI
+    surface validates input and prints the canonical invocation.
+
+    Examples:
+      ctx kb ingest ./inputs/cursor-hooks.md
+      ctx kb ingest ./inputs/ "cursor hooks"
+      ctx kb ingest https://example.com/spec.html
+  short: Mode-aware editorial pass (driven by the /ctx-kb-ingest skill)
+kb.note:
+  long: |-
+    Appends a one-liner to .context/ingest/findings.md. Never writes
+    to a topic page or evidence-index. Use this when you want to park
+    a finding for the next ingest pass to absorb.
+
+    Examples:
+      ctx kb note "follow-up: chase the v1.2 release-notes for SIGTERM"
+      ctx kb note "Volkan said in chat: 50-source cap was upstream"
+  short: Lightweight capture into .context/ingest/findings.md
+kb.reindex:
+  long: |-
+    Rewrites the managed block bounded by the CTX:KB:TOPICS markers in
+    .context/kb/index.md so the landing page enumerates current topic
+    folders. Run after ctx kb topic new.
+
+    Examples:
+      ctx kb reindex
+  short: Refresh the CTX:KB:TOPICS managed block in .context/kb/index.md
+kb.site-review:
+  long: |-
+    Mechanical structural audit of the kb. Coerces malformed
+    Confidence-band capitalization, flags malformed closeout
+    frontmatter, refuses judgment calls that require evidence. The
+    actual audit is performed by the /ctx-kb-site-review skill.
+
+    Examples:
+      ctx kb site-review
+  short: Mechanical structural audit (driven by the /ctx-kb-site-review skill)
+kb.topic:
+  long: |-
+    Manage kb topic folders. Subcommands:
+      new    Scaffold a folder-shaped topic page from the template
+
+    Examples:
+      ctx kb topic new "Cursor Hooks"
+      ctx kb topic new "cursor/hooks"   # vendor-namespaced slug
+  short: Manage kb topic folders
+kb.topic.new:
+  long: |-
+    Creates .context/kb/topics/<slug>/index.md from the embedded topic
+    template. Refuses when the topic already exists. This is the sole
+    writer of topic-page scaffolds; skills must invoke this command
+    rather than synthesise the scaffold by hand.
+
+    Slug is lowercase + kebab-case. Slashes are preserved for
+    vendor-namespaced topology (e.g. cursor/hooks, cursor/skills).
+
+    Examples:
+      ctx kb topic new "Cursor Hooks"   # → topics/cursor-hooks/index.md
+      ctx kb topic new "cursor/hooks"   # → topics/cursor/hooks/index.md
+  short: Scaffold a folder-shaped topic page from the template

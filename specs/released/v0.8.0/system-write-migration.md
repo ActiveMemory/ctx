@@ -55,18 +55,18 @@ still use write/ functions for consistency and localization.
 | File | Calls |
 |------|-------|
 | `block_dangerous_command/run.go` | 1 |
-| `block_non_path_ctx/run.go` | 1 |
+| `blocknonpathctx/run.go` | 1 |
 | `bootstrap/run.go` | 1 |
 | `check_backup_age/run.go` | 1 |
-| `check_context_size/run.go` | 1 |
-| `check_freshness/run.go` | 1 |
-| `check_journal/run.go` | 1 |
-| `check_memory_drift/run.go` | 1 |
-| `check_persistence/run.go` | 3 |
-| `check_reminder/run.go` | 1 |
-| `check_version/run.go` | 1 |
+| `checkcontextsize/run.go` | 1 |
+| `checkfreshness/run.go` | 1 |
+| `checkjournal/run.go` | 1 |
+| `checkmemorydrift/run.go` | 1 |
+| `checkpersistence/run.go` | 3 |
+| `checkreminder/run.go` | 1 |
+| `checkversion/run.go` | 1 |
 | `events/run.go` | 1 |
-| `mark_journal/run.go` | 2 |
+| `markjournal/run.go` | 2 |
 | `message/cmd/*/run.go` | 12 |
 | `pause/run.go` | 1 |
 

@@ -33,9 +33,9 @@
 //   - [Next] ("ctx_next"): suggests the next task
 //     to work on.
 //   - [CheckTaskCompletion]
-//     ("ctx_check_task_completion"): checks whether
+//     ("ctx_checktaskcompletion"): checks whether
 //     a recent action completed a pending task.
-//   - [SessionEvent] ("ctx_session_event"): records
+//   - [SessionEvent] ("ctx_sessionevent"): records
 //     session start/end lifecycle events.
 //   - [Remind] ("ctx_remind"): lists active
 //     reminders for the current session.

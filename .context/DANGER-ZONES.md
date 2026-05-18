@@ -129,7 +129,7 @@ Enriched 2026-04-03 via GitNexus (blast radius verified)._
 
 1. **DiscoverPath coupling** - 7 direct callers across 4 modules
    (Memory, Publish, Session, Ctximport). All 6 memory subcommands
-   + check_memory_drift hook depend on this. 7 execution flows.
+   + checkmemorydrift hook depend on this. 7 execution flows.
    - Blast radius: d=1: 7, flows: 7, modules: 4
    - Risk: CRITICAL (enriched 2026-04-03 via GitNexus)
    - Modification advice: slug format change breaks all memory

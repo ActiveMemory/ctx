@@ -266,7 +266,7 @@ local context:
 
 ### Shared File Format
 
-Each shared file uses the same markdown format as local files, with
+Each shared file uses the same Markdown format as local files, with
 origin tags:
 
 ```markdown

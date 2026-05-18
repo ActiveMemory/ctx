@@ -169,7 +169,7 @@ core/ taxonomy per Decision 2026-03-06. Key structural changes:
 - **journal**: consumed recall (Decision 2026-03-30); subcommands:
   source, importer, lock, unlock, sync, site, obsidian
 - **system**: expanded to 34 hook subcommands including various
-  check_*, block_*, post_commit, mark_*, cleanup_*
+  check_*, block_*, postcommit, mark_*, cleanup_*
 - **recall**: deleted — merged into journal
 
 **Danger zones**:

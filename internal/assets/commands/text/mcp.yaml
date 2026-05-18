@@ -229,7 +229,7 @@ mcp.prompt-checkpoint-steps:
 
     4. Run ctx_compact if needed
 
-    5. Call ctx_session_event type="end" when done
+    5. Call ctx_sessionevent type="end" when done
 
 
     '
@@ -360,7 +360,7 @@ mcp.format-wrote:
   short: Wrote %s to .context/%s.
 
 mcp.gov-session-not-started:
-  short: '⚠ Session not started. Call ctx_session_event(type="start") to enable tracking.'
+  short: '⚠ Session not started. Call ctx_sessionevent(type="start") to enable tracking.'
 mcp.gov-context-not-loaded:
   short: '⚠ Context not loaded. Call ctx_status() to load context before proceeding.'
 mcp.gov-drift-not-checked:

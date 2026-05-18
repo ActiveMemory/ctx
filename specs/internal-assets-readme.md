@@ -17,7 +17,7 @@ ground: `internal/` (a Go-private import boundary) containing
 TypeScript, shell scripts, and Markdown. The lack of a
 contract document made an experienced reviewer mistake this
 for an architectural smell and propose lifting `integrations/`
-out of `internal/`, before realising every file in there is
+out of `internal/`, before realizing every file in there is
 genuinely embedded and the `//go:embed` no-`../` rule makes
 relocation costly.
 

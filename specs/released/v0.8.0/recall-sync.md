@@ -4,7 +4,7 @@
 
 `ctx recall lock` writes lock state to `.state.json` and updates frontmatter
 for visibility. But from the user's perspective during journal enrichment, the
-natural flow is: edit markdown frontmatter (add `locked: true`), then sweep
+natural flow is: edit Markdown frontmatter (add `locked: true`), then sweep
 all files to propagate that state. The current `lock` command requires naming
 files explicitly, which is friction after a batch enrichment pass.
 

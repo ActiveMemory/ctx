@@ -23,6 +23,13 @@ DO NOT UPDATE FOR:
 - **Package name = folder name**: Go canonical pattern
   - `package initialize` in `initialize/` folder
   - Never `package initcmd` in `init/` folder
+- **Go package names: lowercase, no underscores, no
+  mixedCaps**: per the [Effective Go](https://go.dev/blog/package-names)
+  guidance and the stdlib precedent (`strconv`, `httptest`,
+  `bufio`). Apply to the directory too — `internal/flagbind/`,
+  not `internal/flag_bind/`. Filenames may use underscores
+  (`foo_test.go` is canonical); package names may not. When in
+  doubt, find the closest stdlib analogue and copy its shape.
 - **Maps reference constants**: Use constants as keys, not literals
   - `map[string]X{ConstKey: value}` not `map[string]X{"literal": value}`
 
@@ -220,6 +227,22 @@ DO NOT UPDATE FOR:
 - **Error constructors in internal/err**: Never in per-package err.go
   files — eliminates the broken-window pattern where agents add local
   errors when they see a local err.go exists
+- **Identity sentinels are `entity.Sentinel` consts, not
+  `errors.New`**: Declare `errors.Is` targets as
+  `const ErrX = entity.Sentinel(text.DescKey...)`. The
+  user-facing text lives in `commands/text/errors.yaml` keyed by
+  `err.<pkg>.<name>`; the sentinel's `Error()` resolves it via
+  `desc.Text` at call time. Never write
+  `var ErrX = errors.New("english")` — the English leaks into
+  `.Error()` output and bypasses localization. Never add an
+  `ErrMsg* = "english"` const layer in `internal/config/<pkg>/`
+  to back the sentinel; that layer is dead text once the typed
+  Sentinel does the lookup itself.
+- **Parameterised errors use typed structs**: When the error
+  needs to carry fields (path, name, etc.), define a struct in
+  `internal/err/<area>/` with a pointer-receiver `Error()` and
+  optional `Is(error) bool` for sentinel-compatibility. See
+  `internal/err/context.NotFoundError` for the canonical shape.
 
 ## CLI Structure
 
@@ -270,4 +293,5 @@ DO NOT UPDATE FOR:
   capitalization would otherwise apply: write `CONSTITUTION.md`, not
   CONSTITUTION.Md. The title-case engine refuses to capitalize lowercase tokens
   following a literal . dot, but explicit backticks remain the clearest signal.
-- New editor integrations include an MCP-merge test covering: create / empty file / preserve existing keys / skip when registered / reject malformed JSON
+- New editor integrations include an MCP-merge test covering: create / empty
+  file / preserve existing keys / skip when registered / reject malformed JSON

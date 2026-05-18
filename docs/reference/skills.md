@@ -77,6 +77,12 @@ opinionated behavior on top.
 | [`/ctx-skill-create`](#ctx-skill-create)               | Create, improve, and test skills                                | user-invocable |
 | [`/ctx-pause`](#ctx-pause)                               | Pause context hooks for this session                            | user-invocable |
 | [`/ctx-resume`](#ctx-resume)                             | Resume context hooks after a pause                              | user-invocable |
+| [`/ctx-kb-ingest`](#ctx-kb-ingest)                       | Editorial KB pass (topic-page / triage / evidence-only)         | user-invocable |
+| [`/ctx-kb-ask`](#ctx-kb-ask)                             | Q&A grounded in the KB; refuses to web-jump                     | user-invocable |
+| [`/ctx-kb-site-review`](#ctx-kb-site-review)             | Mechanical KB structural audit                                  | user-invocable |
+| [`/ctx-kb-ground`](#ctx-kb-ground)                       | Re-ground the KB against listed external sources                | user-invocable |
+| [`/ctx-kb-note`](#ctx-kb-note)                           | Park a finding in `ingest/findings.md`                          | user-invocable |
+| [`/ctx-handover`](#ctx-handover)                         | Handover step delegated by `/ctx-wrap-up`; folds postdated closeouts | sub-mechanism  |
 
 ---
 
@@ -171,15 +177,23 @@ End-of-session context persistence ceremony. Gathers signal from
 git diff, recent commits, and conversation themes. Proposes
 candidates (learnings, decisions, conventions, tasks) with complete
 structured fields for user approval, then persists via `ctx add`.
-Offers `/ctx-commit` if uncommitted changes remain.
+Offers `/ctx-commit` if uncommitted changes remain. **Always
+delegates to `/ctx-handover` as its final step**, regardless of
+whether `.context/kb/` exists: KB presence only affects what gets
+folded into the handover, not whether it is written.
 **Ceremony skill**: invoke explicitly at session end.
+
+**Trigger phrases**: "let's wrap up", "save context", "save
+state", "leave a handover", "before I go", "stepping away",
+"end of session"
 
 **Wraps**: `git diff --stat`, `git log`, `ctx learning add`,
 `ctx decision add`, `ctx convention add`, `ctx task add`,
-chains to `/ctx-commit`
+chains to `/ctx-commit`, delegates to `/ctx-handover`
 
 **See also**: [Session Ceremonies](../recipes/session-ceremonies.md),
-[The Complete Session](../recipes/session-lifecycle.md)
+[The Complete Session](../recipes/session-lifecycle.md),
+[`/ctx-handover`](#ctx-handover)
 
 ---
 
@@ -408,7 +422,7 @@ works but with reduced capability. It runs structural checks and notes:
 
 ### `/ctx-link-check`
 
-Scan all markdown files under `docs/` for broken links. Three passes:
+Scan all Markdown files under `docs/` for broken links. Three passes:
 internal links (verify file targets exist on disk), external links
 (HTTP HEAD with timeout, report failures as warnings), and image
 references. Resolves relative paths, strips anchors before checking,
@@ -493,8 +507,9 @@ The skill enforces this **authority order** when sources disagree:
 1. Frozen contracts in `docs/` (release notes, public CLI docs)
 2. Recorded decisions in `.context/DECISIONS.md`
 3. The brief at `<path>`
-4. Agent inference — only when 1–3 are silent, and labeled `TBD`
-   in the resulting spec so it stands out for review.
+4. Agent inference, only when 1 through 3 are silent, and
+   labeled `TBD` in the resulting spec so it stands out for
+   review.
 
 Light compression for clarity is allowed; new facts are not.
 Where the brief is silent, the spec writes `TBD` rather than
@@ -702,6 +717,127 @@ and ceremony behavior. Silent no-op if not paused.
 
 **See also**:
 [Pausing Context Hooks](../recipes/session-pause.md)
+
+---
+
+## Knowledge Base (Phase KB)
+
+Skills for the editorial knowledge-ingestion pipeline. Active when
+`.context/kb/` exists (laid down by `ctx init`). The pipeline gives
+you evidence-tracked knowledge with confidence bands, folder-shaped
+topic pages, a source-coverage state machine, and per-session
+handovers that fold postdated closeouts.
+
+See the
+[Build a Knowledge Base recipe](../recipes/build-a-knowledge-base.md)
+for the full workflow. The editorial constitution lives at
+`.context/ingest/KB-RULES.md`.
+
+### `/ctx-kb-ingest`
+
+Mode-aware editorial pass. Declares its pass-mode
+(`topic-page` / `triage` / `evidence-only`) up front, scans the
+source-coverage ledger for adjacent incomplete topics, synthesizes
+prose into `.context/kb/topics/<slug>/index.md`, mints `EV-###`
+rows in `evidence-index.md`, runs a four-invariant completion
+circuit breaker, and writes a closeout under
+`.context/ingest/closeouts/`. Refuses on empty input.
+
+**Wraps**: `ctx kb ingest`, `ctx kb topic new`, the writer
+packages under `internal/write/kb/`.
+
+**Trigger phrases**: "ingest the transcripts", "pull this into the
+kb", "add evidence from"
+
+**See also**:
+[Build a Knowledge Base](../recipes/build-a-knowledge-base.md),
+[Typical KB Session](../recipes/typical-kb-session.md),
+[`ctx kb` CLI](../cli/kb.md#ctx-kb)
+
+---
+
+### `/ctx-kb-ask`
+
+Q&A grounded in the KB. Cites `EV-###` rows; refuses to web-jump.
+When the KB cannot answer, opens a `Q-###` row in
+`outstanding-questions.md` rather than inventing. Refuses on empty
+question.
+
+**Wraps**: `ctx kb ask`, reads `.context/kb/*.md`
+
+**Trigger phrases**: "does the kb say", "according to evidence"
+
+**See also**: [`ctx kb` CLI](../cli/kb.md#ctx-kb)
+
+---
+
+### `/ctx-kb-site-review`
+
+Mechanical structural audit. Coerces malformed Confidence-band
+capitalization, flags malformed closeout frontmatter, refuses
+judgment calls that require evidence (those go through ingest).
+
+**Wraps**: `ctx kb site-review`
+
+**Trigger phrases**: "audit the kb", "check kb for rot"
+
+**See also**: [`ctx kb` CLI](../cli/kb.md#ctx-kb)
+
+---
+
+### `/ctx-kb-ground`
+
+External re-grounding pass. Reads
+`.context/ingest/grounding-sources.md` and refreshes each listed
+source. Refuses cleanly when the file is absent or empty.
+
+**Wraps**: `ctx kb ground`
+
+**Trigger phrases**: "re-ground the kb", "check upstream"
+
+**See also**: [`ctx kb` CLI](../cli/kb.md#ctx-kb)
+
+---
+
+### `/ctx-kb-note`
+
+Lightweight capture into `.context/ingest/findings.md`. Never
+writes to a topic page or `evidence-index.md`. Use for parking
+findings the next ingest pass should absorb.
+
+**Wraps**: `ctx kb note "<text>"`
+
+**Trigger phrases**: "drop a note", "park this finding"
+
+**See also**: [`ctx kb` CLI](../cli/kb.md#ctx-kb)
+
+---
+
+### `/ctx-handover`
+
+Per-session handover artifact writer; the sub-mechanism that
+`/ctx-wrap-up` delegates to as its final step. Collects
+`--summary` (past tense) and `--next` (future tense, specific)
+and calls `ctx handover write`. Writes the handover to
+`.context/handovers/<TS>-<slug>.md` (timestamped so concurrent
+agent runs never overwrite). Folds postdated closeouts into a
+`## Folded closeouts` section and **physically archives** the
+source closeouts under `.context/archive/closeouts/` (closeouts
+are append-never-rewrite; archival moves bytes but does not
+modify them). `--no-fold` skips the fold for mid-session
+checkpoints.
+
+**Mandatory tail of `/ctx-wrap-up`.** Direct invocation is
+reserved for `--no-fold` mid-session checkpoints and recovery
+after an aborted session.
+
+**Wraps**: `ctx handover write <title> --summary X --next Y`
+
+**See also**:
+[`/ctx-wrap-up`](#ctx-wrap-up),
+[Typical KB Session](../recipes/typical-kb-session.md),
+[Recover an Aborted KB Session](../recipes/recover-aborted-session.md),
+[`ctx handover` CLI](../cli/handover.md#ctx-handover)
 
 ---
 

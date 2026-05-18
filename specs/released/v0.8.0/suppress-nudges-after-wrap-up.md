@@ -64,11 +64,11 @@ This is a single line added to the skill instructions.
 
 | File | Change |
 |------|--------|
-| `internal/cli/system/mark_wrapped_up.go` | New plumbing command |
-| `internal/cli/system/mark_wrapped_up_test.go` | Tests |
+| `internal/cli/system/markwrappedup.go` | New plumbing command |
+| `internal/cli/system/markwrappedup_test.go` | Tests |
 | `internal/cli/system/system.go` | Register `markWrappedUpCmd()` |
-| `internal/cli/system/check_context_size.go` | Check marker before emitting |
-| `internal/cli/system/check_context_size_test.go` | Test suppression |
+| `internal/cli/system/checkcontextsize.go` | Check marker before emitting |
+| `internal/cli/system/checkcontextsize_test.go` | Test suppression |
 | `/ctx-wrap-up` skill (plugin) | Add `ctx system mark-wrapped-up` call |
 
 ## Scope

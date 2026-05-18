@@ -13,7 +13,7 @@ not git-controlled, unbounded growth creates three problems:
    from JSONL sources, so compaction gains are lost unless the
    pipeline knows which entries were compacted
 
-The journal markdown files are derived artifacts — the JSONL source
+The journal Markdown files are derived artifacts — the JSONL source
 files in `~/.claude/projects/` are the originals. Compaction is a
 lossy view optimization, not data destruction.
 
@@ -23,7 +23,7 @@ Inspired by Elasticsearch's hot/warm/cold/frozen index lifecycle:
 
 | Tier     | Age           | Content                                          | File format         |
 |----------|---------------|--------------------------------------------------|---------------------|
-| **Hot**  | 0–N days      | Full markdown, all tool output, code blocks      | Individual `.md`    |
+| **Hot**  | 0–N days      | Full Markdown, all tool output, code blocks      | Individual `.md`    |
 | **Warm** | N–M days      | Frontmatter + summary + key outcomes, body stripped | Individual `.md`  |
 | **Cold** | Not in v1     | Monthly rollup, one section per session           | `YYYY-MM-rollup.md` |
 

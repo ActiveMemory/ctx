@@ -10,7 +10,7 @@
 //
 // When an AI agent connects to the ctx MCP server it
 // signals session start and session end via the
-// ctx_session_event tool. The value passed in the event
+// ctx_sessionevent tool. The value passed in the event
 // field is one of the constants defined here.
 //
 // # Key Constants

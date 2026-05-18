@@ -1,0 +1,185 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package handover
+
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/entity"
+)
+
+const (
+	// ErrTitleRequired signals an empty Title supplied to
+	// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
+	ErrTitleRequired = entity.Sentinel(
+		text.DescKeyErrHandoverTitleRequired,
+	)
+	// ErrSummaryRequired signals an empty Summary supplied to
+	// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
+	ErrSummaryRequired = entity.Sentinel(
+		text.DescKeyErrHandoverSummaryRequired,
+	)
+	// ErrNextRequired signals an empty Next supplied to
+	// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
+	ErrNextRequired = entity.Sentinel(
+		text.DescKeyErrHandoverNextRequired,
+	)
+	// ErrMissingFrontmatter signals a handover file that does
+	// not open with `---`.
+	ErrMissingFrontmatter = entity.Sentinel(
+		text.DescKeyErrHandoverMissingFrontmatter,
+	)
+	// ErrMissingClosingDelim signals a handover whose
+	// frontmatter is never closed by a second `---`.
+	ErrMissingClosingDelim = entity.Sentinel(
+		text.DescKeyErrHandoverMissingClosingDelim,
+	)
+	// ErrMissingGeneratedAt signals a handover whose
+	// frontmatter parsed but has no generated-at value.
+	ErrMissingGeneratedAt = entity.Sentinel(
+		text.DescKeyErrHandoverMissingGeneratedAt,
+	)
+)
+
+// Latest wraps a failure encountered while reading the
+// latest handover during fold.
+//
+// Parameters:
+//   - cause: underlying error.
+//
+// Returns:
+//   - error: wrapped for operator-friendly output.
+func Latest(cause error) error {
+	return fmt.Errorf(desc.Text(text.DescKeyErrHandoverLatest), cause)
+}
+
+// ListCloseouts wraps a closeout-listing failure encountered
+// during fold.
+//
+// Parameters:
+//   - cause: underlying error.
+//
+// Returns:
+//   - error: wrapped for operator-friendly output.
+func ListCloseouts(cause error) error {
+	return fmt.Errorf(desc.Text(text.DescKeyErrHandoverListCloseouts), cause)
+}
+
+// MarshalFrontmatter wraps a `yaml.Marshal` failure while
+// encoding a new handover's YAML header.
+//
+// Parameters:
+//   - cause: underlying error.
+//
+// Returns:
+//   - error: wrapped for operator-friendly output.
+func MarshalFrontmatter(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHandoverMarshalFrontmatter), cause,
+	)
+}
+
+// MkdirHandovers wraps an `os.MkdirAll` failure for the
+// handovers directory.
+//
+// Parameters:
+//   - cause: underlying error.
+//
+// Returns:
+//   - error: wrapped for operator-friendly output.
+func MkdirHandovers(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHandoverMkdirHandovers), cause,
+	)
+}
+
+// WriteFailed wraps an `os.WriteFile` failure for the new
+// handover file.
+//
+// Parameters:
+//   - cause: underlying error.
+//
+// Returns:
+//   - error: wrapped for operator-friendly output.
+func WriteFailed(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHandoverWriteHandover), cause,
+	)
+}
+
+// ArchiveFoldedCloseouts wraps the closeout archival pass
+// following a fold.
+//
+// Parameters:
+//   - cause: underlying error.
+//
+// Returns:
+//   - error: wrapped for operator-friendly output.
+func ArchiveFoldedCloseouts(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHandoverArchiveFoldedCloseouts), cause,
+	)
+}
+
+// ReadFailed wraps an `os.ReadFile` failure while loading a
+// handover from disk.
+//
+// Parameters:
+//   - cause: underlying error.
+//
+// Returns:
+//   - error: wrapped for operator-friendly output.
+func ReadFailed(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHandoverReadHandover), cause,
+	)
+}
+
+// ReadHandoversDir wraps an `os.ReadDir` failure while
+// enumerating handovers.
+//
+// Parameters:
+//   - cause: underlying error.
+//
+// Returns:
+//   - error: wrapped for operator-friendly output.
+func ReadHandoversDir(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHandoverReadHandoversDir), cause,
+	)
+}
+
+// ParseFrontmatter wraps a `yaml.Unmarshal` failure while
+// parsing the handover YAML header.
+//
+// Parameters:
+//   - cause: underlying error.
+//
+// Returns:
+//   - error: wrapped for operator-friendly output.
+func ParseFrontmatter(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHandoverParseFrontmatter), cause,
+	)
+}
+
+// ResolveHead wraps a
+// [github.com/ActiveMemory/ctx/internal/gitmeta.ResolveHead]
+// failure when stamping sha / branch into new handovers.
+//
+// Parameters:
+//   - cause: underlying error.
+//
+// Returns:
+//   - error: wrapped for operator-friendly output.
+func ResolveHead(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHandoverResolveHead), cause,
+	)
+}

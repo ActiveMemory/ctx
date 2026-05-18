@@ -155,3 +155,21 @@ const (
 	Since = "since"
 	Until = "until"
 )
+
+// Handover-write body flag names. Used by the
+// `ctx handover write` subcommand to bind body flags via the
+// shared flagbind helpers.
+const (
+	// Summary is the --summary flag for `ctx handover write`.
+	Summary = "summary"
+	// Next is the --next flag for `ctx handover write`.
+	Next = "next"
+	// Highlights is the --highlights flag for
+	// `ctx handover write`.
+	Highlights = "highlights"
+	// OpenQuestions is the --open-questions flag for
+	// `ctx handover write`.
+	OpenQuestions = "open-questions"
+	// NoFold is the --no-fold flag for `ctx handover write`.
+	NoFold = "no-fold"
+)

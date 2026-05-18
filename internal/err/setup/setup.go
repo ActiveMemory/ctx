@@ -68,8 +68,9 @@ func SyncSteering(cause error) error {
 }
 
 // MissingEmbeddedAsset reports that an asset expected to be
-// embedded in the binary is missing — typically a setup-time
-// invariant violation rather than a user-facing failure.
+// embedded in the binary is missing. This is typically a
+// setup-time invariant violation rather than a user-facing
+// failure.
 //
 // Parameters:
 //   - name: the asset key that was looked up

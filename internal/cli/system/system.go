@@ -10,33 +10,33 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/parent"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/block_non_path_ctx"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/blocknonpathctx"
 	sysBootstrap "github.com/ActiveMemory/ctx/internal/cli/system/cmd/bootstrap"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_anchor_drift"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_ceremony"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_context_size"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_freshness"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_hub_sync"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_journal"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_knowledge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_map_staleness"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_memory_drift"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_persistence"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_reminder"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_resource"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_skill_discovery"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_task_completion"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_version"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/context_load_gate"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkanchordrift"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkceremony"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkcontextsize"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkfreshness"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkhubsync"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkjournal"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkknowledge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkmapstaleness"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkmemorydrift"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkpersistence"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkreminder"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkresource"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkskilldiscovery"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checktaskcompletion"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkversion"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/contextloadgate"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/heartbeat"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/mark_journal"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/mark_wrapped_up"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/markjournal"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/markwrappedup"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/pause"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/post_commit"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/qa_reminder"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/postcommit"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/qareminder"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resume"
-	sessEvent "github.com/ActiveMemory/ctx/internal/cli/system/cmd/session_event"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/specs_nudge"
+	sessEvent "github.com/ActiveMemory/ctx/internal/cli/system/cmd/sessionevent"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/specsnudge"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
@@ -57,31 +57,31 @@ import (
 func Cmd() *cobra.Command {
 	return parent.Cmd(cmd.DescKeySystem, cmd.UseSystem,
 		sysBootstrap.Cmd(),
-		block_non_path_ctx.Cmd(),
-		check_anchor_drift.Cmd(),
-		check_ceremony.Cmd(),
-		check_context_size.Cmd(),
-		check_freshness.Cmd(),
-		check_hub_sync.Cmd(),
-		check_journal.Cmd(),
-		check_knowledge.Cmd(),
-		check_map_staleness.Cmd(),
-		check_memory_drift.Cmd(),
-		check_persistence.Cmd(),
-		check_skill_discovery.Cmd(),
-		check_reminder.Cmd(),
-		check_resource.Cmd(),
-		check_task_completion.Cmd(),
-		check_version.Cmd(),
-		context_load_gate.Cmd(),
+		blocknonpathctx.Cmd(),
+		checkanchordrift.Cmd(),
+		checkceremony.Cmd(),
+		checkcontextsize.Cmd(),
+		checkfreshness.Cmd(),
+		checkhubsync.Cmd(),
+		checkjournal.Cmd(),
+		checkknowledge.Cmd(),
+		checkmapstaleness.Cmd(),
+		checkmemorydrift.Cmd(),
+		checkpersistence.Cmd(),
+		checkskilldiscovery.Cmd(),
+		checkreminder.Cmd(),
+		checkresource.Cmd(),
+		checktaskcompletion.Cmd(),
+		checkversion.Cmd(),
+		contextloadgate.Cmd(),
 		heartbeat.Cmd(),
-		mark_journal.Cmd(),
-		mark_wrapped_up.Cmd(),
+		markjournal.Cmd(),
+		markwrappedup.Cmd(),
 		pause.Cmd(),
-		post_commit.Cmd(),
-		qa_reminder.Cmd(),
+		postcommit.Cmd(),
+		qareminder.Cmd(),
 		resume.Cmd(),
 		sessEvent.Cmd(),
-		specs_nudge.Cmd(),
+		specsnudge.Cmd(),
 	)
 }

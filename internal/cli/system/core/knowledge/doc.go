@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package knowledge is the **measurement helper** the
-// `check_knowledge` system hook uses to evaluate whether
+// `checkknowledge` system hook uses to evaluate whether
 // a project's knowledge files (DECISIONS.md, LEARNINGS.md,
 // CONVENTIONS.md) have outgrown the configured per-file
 // thresholds and warrant a consolidation nudge.

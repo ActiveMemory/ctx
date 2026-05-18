@@ -21,7 +21,7 @@
 //     overwriting existing files.
 //   - claude: creates or merges CLAUDE.md with the
 //     ctx-managed section.
-//   - claude_check: validates CLAUDE.md structure and
+//   - claudecheck: validates CLAUDE.md structure and
 //     renders diagnostic hints.
 //   - entry: creates context file templates (TASKS.md,
 //     DECISIONS.md, etc.) and locates insertion points

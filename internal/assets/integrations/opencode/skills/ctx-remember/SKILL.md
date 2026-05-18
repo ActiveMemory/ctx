@@ -15,8 +15,18 @@ Recall project context and present a structured readback.
 
 **Do this FIRST (silently):**
 1. Read TASKS.md, DECISIONS.md, and LEARNINGS.md from the context directory
-2. Check recent session history (for example via `.context/sessions/` or `ctx journal source --limit 5` when available)
-3. Run `ctx agent` for the full context packet
+2. Read the latest handover under `.context/handovers/` if present.
+   Filenames are timestamped `<TS>-<slug>.md`; the lexicographically
+   last is the newest. Its `## Summary` and `## Next Session` sections
+   are the authoritative recall surface — this is the previous
+   session's note to this one.
+3. If `.context/ingest/closeouts/` exists, list closeouts whose
+   `generated-at` postdates the handover's `generated-at` and read
+   their `## What Changed` sections. These are per-pass audit notes
+   the previous wrap-up did not get a chance to fold. Read-only;
+   `/ctx-remember` does not run any editorial pass.
+4. Check recent session history (for example via `.context/sessions/` or `ctx journal source --limit 5` when available)
+5. Run `ctx agent` for the full context packet
 
 **Then respond with a structured readback:**
 

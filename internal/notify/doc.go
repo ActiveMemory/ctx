@@ -66,7 +66,7 @@
 // `key_rotation_days`, default 90) requires re-running
 // `ctx pad init` *and* `ctx hook notify setup`. The
 // rotation nudge fires from
-// `internal/cli/system/cmd/check_version`.
+// `internal/cli/system/cmd/checkversion`.
 //
 // # Concurrency
 //

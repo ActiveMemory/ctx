@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
-	"github.com/ActiveMemory/ctx/internal/config/load_gate"
+	"github.com/ActiveMemory/ctx/internal/config/loadgate"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
@@ -49,7 +49,7 @@ func WriteOversizeFlag(
 	var flag strings.Builder
 	flag.WriteString(desc.Text(text.DescKeyContextLoadGateOversizeHeader))
 	sep := strings.Repeat(
-		load_gate.ContextLoadSeparatorChar,
+		loadgate.ContextLoadSeparatorChar,
 		stats.ContextSizeOversizeSepLen)
 	flag.WriteString(sep + token.NewlineLF)
 	io.SafeFprintf(&flag,
