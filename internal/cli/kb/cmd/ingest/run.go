@@ -37,16 +37,16 @@ func Run(cobraCmd *cobra.Command, args []string) error {
 	}
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(), token.FormatString,
-		desc.Text(text.DescKeyWriteKbCliIngestDrivenHint),
+		desc.Text(text.DescKeyWriteKbIngestDrivenHint),
 	)
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteKbCliIngestInvokeFormat),
+		desc.Text(text.DescKeyWriteKbIngestInvokeFormat),
 		strings.Join(args, token.Space),
 	)
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(), token.FormatString,
-		desc.Text(text.DescKeyWriteKbCliIngestFallbackHint),
+		desc.Text(text.DescKeyWriteKbIngestFallbackHint),
 	)
 	return nil
 }

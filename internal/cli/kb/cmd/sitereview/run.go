@@ -28,11 +28,11 @@ import (
 func Run(cobraCmd *cobra.Command) error {
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(), token.FormatString,
-		desc.Text(text.DescKeyWriteKbCliSiteReviewDrivenHint),
+		desc.Text(text.DescKeyWriteKbSiteReviewDrivenHint),
 	)
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(), token.FormatString,
-		desc.Text(text.DescKeyWriteKbCliSiteReviewContractPointer),
+		desc.Text(text.DescKeyWriteKbSiteReviewContractPointer),
 	)
 	return nil
 }

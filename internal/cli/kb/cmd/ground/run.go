@@ -53,11 +53,11 @@ func Run(cobraCmd *cobra.Command) error {
 	}
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(), token.FormatString,
-		desc.Text(text.DescKeyWriteKbCliGroundDrivenHint),
+		desc.Text(text.DescKeyWriteKbGroundDrivenHint),
 	)
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(), token.FormatString,
-		desc.Text(text.DescKeyWriteKbCliGroundContractPointer),
+		desc.Text(text.DescKeyWriteKbGroundContractPointer),
 	)
 	return nil
 }

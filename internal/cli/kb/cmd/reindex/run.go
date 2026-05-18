@@ -64,7 +64,7 @@ func Run(cobraCmd *cobra.Command) error {
 	}
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteKbCliReindexed),
+		desc.Text(text.DescKeyWriteKbReindexed),
 		len(slugs),
 		indexPath,
 	)

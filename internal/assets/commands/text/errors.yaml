@@ -806,37 +806,37 @@ err.kb.question.write-row:
   short: 'write questions row: %w'
 err.kb.question.parse-q-number:
   short: 'parse Q number %q: %w'
-err.kb.cli.grounding-missing:
+err.kb.grounding-missing:
   short: 'grounding-sources.md not found at %s; list sources first'
-err.kb.cli.grounding-empty:
+err.kb.grounding-empty:
   short: 'grounding-sources.md is empty at %s; list sources first'
-err.kb.cli.topic-exists:
+err.kb.topic-exists:
   short: 'topic %s already exists at %s'
-err.kb.cli.mkdir-ingest:
+err.kb.mkdir-ingest:
   short: 'mkdir ingest: %w'
-err.kb.cli.open-findings:
+err.kb.open-findings:
   short: 'open findings: %w'
-err.kb.cli.write-finding:
+err.kb.write-finding:
   short: 'write finding: %w'
-err.kb.cli.read-kb-index:
+err.kb.read-kb-index:
   short: 'read kb index: %w'
-err.kb.cli.write-kb-index:
+err.kb.write-kb-index:
   short: 'write kb index: %w'
-err.kb.cli.read-topics-dir:
+err.kb.read-topics-dir:
   short: 'read topics dir: %w'
-err.kb.cli.mkdir-topic:
+err.kb.mkdir-topic:
   short: 'mkdir topic: %w'
-err.kb.cli.read-topic-template:
+err.kb.read-topic-template:
   short: 'read embedded topic template: %w'
-err.kb.cli.write-topic-index:
+err.kb.write-topic-index:
   short: 'write topic index: %w'
-err.kb.cli.ask-no-question:
+err.kb.ask-no-question:
   short: 'no question provided; pass a question or describe it inline'
-err.kb.cli.ingest-no-sources:
+err.kb.ingest-no-sources:
   short: 'no sources provided; pass a folder, a URL, an MCP resource, or describe the materials inline'
-err.kb.cli.note-no-text:
+err.kb.note-no-text:
   short: 'no text provided; pass a one-liner inline'
-err.kb.cli.topic-empty-name:
+err.kb.topic-empty-name:
   short: 'topic name must contain at least one alnum char'
-err.kb.cli.reindex-missing-block:
+err.kb.reindex-missing-block:
   short: 'kb/index.md is missing the CTX:KB:TOPICS managed block'

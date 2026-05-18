@@ -18,24 +18,24 @@ const (
 	// ErrAskNoQuestion signals an empty `ctx kb ask`
 	// invocation.
 	ErrAskNoQuestion = entity.Sentinel(
-		text.DescKeyErrKbCliAskNoQuestion,
+		text.DescKeyErrKbAskNoQuestion,
 	)
 	// ErrIngestNoSources signals an empty `ctx kb ingest`
 	// invocation.
 	ErrIngestNoSources = entity.Sentinel(
-		text.DescKeyErrKbCliIngestNoSources,
+		text.DescKeyErrKbIngestNoSources,
 	)
 	// ErrNoteNoText signals an empty `ctx kb note` invocation.
-	ErrNoteNoText = entity.Sentinel(text.DescKeyErrKbCliNoteNoText)
+	ErrNoteNoText = entity.Sentinel(text.DescKeyErrKbNoteNoText)
 	// ErrTopicEmptyName signals a `ctx kb topic new`
 	// invocation whose name reduces to an empty slug.
 	ErrTopicEmptyName = entity.Sentinel(
-		text.DescKeyErrKbCliTopicEmptyName,
+		text.DescKeyErrKbTopicEmptyName,
 	)
 	// ErrReindexMissingBlock signals a kb landing page that is
 	// missing the CTX:KB:TOPICS managed block.
 	ErrReindexMissingBlock = entity.Sentinel(
-		text.DescKeyErrKbCliReindexMissingBlock,
+		text.DescKeyErrKbReindexMissingBlock,
 	)
 )
 
@@ -48,7 +48,7 @@ const (
 // Returns:
 //   - error: descriptive refusal.
 func GroundingMissing(path string) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbCliGroundingMissing), path)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbGroundingMissing), path)
 }
 
 // GroundingEmpty wraps an empty grounding-sources.md error
@@ -60,7 +60,7 @@ func GroundingMissing(path string) error {
 // Returns:
 //   - error: descriptive refusal.
 func GroundingEmpty(path string) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbCliGroundingEmpty), path)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbGroundingEmpty), path)
 }
 
 // TopicExists wraps a topic-already-exists refusal with the
@@ -74,7 +74,7 @@ func GroundingEmpty(path string) error {
 //   - error: descriptive refusal.
 func TopicExists(slug, indexPath string) error {
 	return fmt.Errorf(
-		desc.Text(text.DescKeyErrKbCliTopicExists), slug, indexPath,
+		desc.Text(text.DescKeyErrKbTopicExists), slug, indexPath,
 	)
 }
 
@@ -86,7 +86,7 @@ func TopicExists(slug, indexPath string) error {
 // Returns:
 //   - error: wrapped failure.
 func MkdirIngest(cause error) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbCliMkdirIngest), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbMkdirIngest), cause)
 }
 
 // OpenFindings wraps a findings-file open failure.
@@ -97,7 +97,7 @@ func MkdirIngest(cause error) error {
 // Returns:
 //   - error: wrapped failure.
 func OpenFindings(cause error) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbCliOpenFindings), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbOpenFindings), cause)
 }
 
 // WriteFinding wraps a findings-file write failure.
@@ -108,7 +108,7 @@ func OpenFindings(cause error) error {
 // Returns:
 //   - error: wrapped failure.
 func WriteFinding(cause error) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbCliWriteFinding), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbWriteFinding), cause)
 }
 
 // ReadKBIndex wraps a kb-index read failure during reindex.
@@ -119,7 +119,7 @@ func WriteFinding(cause error) error {
 // Returns:
 //   - error: wrapped failure.
 func ReadKBIndex(cause error) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbCliReadKBIndex), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbReadKBIndex), cause)
 }
 
 // WriteKBIndex wraps a kb-index write failure during reindex.
@@ -130,7 +130,7 @@ func ReadKBIndex(cause error) error {
 // Returns:
 //   - error: wrapped failure.
 func WriteKBIndex(cause error) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbCliWriteKBIndex), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbWriteKBIndex), cause)
 }
 
 // ReadTopicsDir wraps a topics-dir read failure during reindex.
@@ -141,7 +141,7 @@ func WriteKBIndex(cause error) error {
 // Returns:
 //   - error: wrapped failure.
 func ReadTopicsDir(cause error) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbCliReadTopicsDir), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbReadTopicsDir), cause)
 }
 
 // MkdirTopic wraps a topic-dir create failure.
@@ -152,7 +152,7 @@ func ReadTopicsDir(cause error) error {
 // Returns:
 //   - error: wrapped failure.
 func MkdirTopic(cause error) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbCliMkdirTopic), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbMkdirTopic), cause)
 }
 
 // ReadTopicTemplate wraps an embedded-template read failure.
@@ -164,7 +164,7 @@ func MkdirTopic(cause error) error {
 //   - error: wrapped failure.
 func ReadTopicTemplate(cause error) error {
 	return fmt.Errorf(
-		desc.Text(text.DescKeyErrKbCliReadTopicTemplate), cause,
+		desc.Text(text.DescKeyErrKbReadTopicTemplate), cause,
 	)
 }
 
@@ -177,6 +177,6 @@ func ReadTopicTemplate(cause error) error {
 //   - error: wrapped failure.
 func WriteTopicIndex(cause error) error {
 	return fmt.Errorf(
-		desc.Text(text.DescKeyErrKbCliWriteTopicIndex), cause,
+		desc.Text(text.DescKeyErrKbWriteTopicIndex), cause,
 	)
 }

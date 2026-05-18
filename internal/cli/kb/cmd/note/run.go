@@ -53,14 +53,14 @@ func Run(cobraCmd *cobra.Command, noteText string) error {
 
 	stamp := time.Now().UTC().Format(time.RFC3339)
 	line := fmt.Sprintf(
-		desc.Text(text.DescKeyWriteKbCliFindingLine), stamp, noteText,
+		desc.Text(text.DescKeyWriteKbFindingLine), stamp, noteText,
 	)
 	if _, writeErr := f.WriteString(line); writeErr != nil {
 		return errKbCli.WriteFinding(writeErr)
 	}
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteKbCliAppendedTo),
+		desc.Text(text.DescKeyWriteKbAppendedTo),
 		findings,
 	)
 	return nil

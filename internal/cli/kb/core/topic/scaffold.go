@@ -69,7 +69,7 @@ func Scaffold(cobraCmd *cobra.Command, name string) error {
 	}
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteKbCliScaffolded),
+		desc.Text(text.DescKeyWriteKbScaffolded),
 		indexPath,
 	)
 	return nil

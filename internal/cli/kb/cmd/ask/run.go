@@ -37,16 +37,16 @@ func Run(cobraCmd *cobra.Command, question string, args []string) error {
 	}
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(), token.FormatString,
-		desc.Text(text.DescKeyWriteKbCliAskDrivenHint),
+		desc.Text(text.DescKeyWriteKbAskDrivenHint),
 	)
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(),
-		desc.Text(text.DescKeyWriteKbCliAskInvokeFormat),
+		desc.Text(text.DescKeyWriteKbAskInvokeFormat),
 		strings.Join(args, token.Space),
 	)
 	io.SafeFprintf(
 		cobraCmd.OutOrStdout(), token.FormatString,
-		desc.Text(text.DescKeyWriteKbCliAskContractPointer),
+		desc.Text(text.DescKeyWriteKbAskContractPointer),
 	)
 	return nil
 }
