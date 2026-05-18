@@ -12,34 +12,6 @@ package handover
 // each other.
 const Subdir = "handovers"
 
-// Sentinel error-message constants. These back `errors.New`
-// values in `internal/err/handover/` and are matched via
-// `errors.Is` at the call site. They cannot use desc.Text
-// because the err/handover sentinels are package-level vars
-// evaluated before the embedded YAML lookup is populated;
-// wrapping-format strings and CLI output strings live in
-// commands/text/{errors,write}.yaml instead.
-const (
-	// ErrMsgTitleRequired signals an empty Title supplied to
-	// Write.
-	ErrMsgTitleRequired = "handover title is required"
-	// ErrMsgSummaryRequired signals an empty Summary supplied
-	// to Write.
-	ErrMsgSummaryRequired = "handover summary is required"
-	// ErrMsgNextRequired signals an empty Next supplied to
-	// Write.
-	ErrMsgNextRequired = "handover next-session field is required"
-	// ErrMsgMissingFrontmatter signals a handover file that
-	// does not open with `---`.
-	ErrMsgMissingFrontmatter = "handover missing frontmatter"
-	// ErrMsgMissingClosingDelim signals a handover whose
-	// frontmatter is never closed.
-	ErrMsgMissingClosingDelim = "handover missing closing frontmatter delimiter"
-	// ErrMsgMissingGeneratedAt signals a handover whose
-	// frontmatter parsed but has no generated-at value.
-	ErrMsgMissingGeneratedAt = "handover missing generated-at"
-)
-
 // Section header constants used when composing the handover
 // markdown body. These are structural identifiers, not
 // localizable prose: the read side matches them exactly.

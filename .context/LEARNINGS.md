@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-17 | Sentinel errors use typed zero-data structs with lazy `desc.Text()` — never Go string consts |
 | 2026-05-17 | `_helpers.go` / `_utils.go` filenames are project anti-pattern; use domain nouns |
 | 2026-05-17 | Subagent parallelism shines for mechanical refactor with a worked-example reference |
 | 2026-05-17 | naked_errors audit rejects fmt.Errorf wrapping outside internal/err/<area>/ |
@@ -143,6 +144,52 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-17-180000] Sentinel errors use typed zero-data structs with lazy `desc.Text()` — never Go string consts
+
+**Context**: In a prior Phase KB session I invented an intermediate
+`ErrMsg* = "english string"` constant layer in
+`internal/config/<pkg>/<pkg>.go`, then in `internal/err/<pkg>/<pkg>.go`
+wrote `var ErrX = errors.New(cfgPkg.ErrMsgX)` — backed by a doc comment
+claiming `desc.Text` could not be used because `var` initializers run
+before `lookup.Init()` populates the embedded YAML table. The framing
+was wrong, and the shape contradicted the convention already established
+in the codebase. The pre-existing pattern lives in
+`internal/err/context/context.go` (commit `e524dd98`): typed error
+structs whose `Error()` method calls `assets.TextDesc(...)` /
+`desc.Text(...)` lazily, at call time — not at package init.
+
+**Lesson**: The canonical sentinel shape in this repo is a typed,
+zero-data struct (for unparameterised sentinels) or a typed struct with
+fields (for parameterised errors). The `Error()` method resolves text
+via `desc.Text(text.DescKey...)` so the user-facing string lives in
+`internal/assets/commands/text/errors.yaml`, keyed by a `DescKey<...>`
+constant in `internal/config/embed/text/err_<pkg>.go`. The init-ordering
+concern is genuine for `var ErrX = errors.New(desc.Text(...))` — but the
+fix is to defer the `desc.Text` call into a method, not to materialise
+the English at package init. Identity is preserved because empty-struct
+values are comparable and `errors.Is` finds them through `fmt.Errorf("%w", …)`
+wrappers.
+
+**Application**: When you need an `errors.Is` target, write:
+
+```go
+type missingFooErr struct{}
+func (missingFooErr) Error() string {
+    return desc.Text(text.DescKeyErrPkgMissingFoo)
+}
+var ErrMissingFoo error = missingFooErr{}
+```
+
+For parameterised errors, follow `internal/err/context/context.go`'s
+`NotFoundError` shape: exported struct type with fields, pointer
+receiver on `Error()`, `errors.As` at the call site. Never define an
+`ErrMsg*` string constant in `internal/config/<pkg>/`; never write
+`var ErrX = errors.New("english")`. If you see those, sweep them: text
+to YAML, sentinel to typed struct, doc comment justifying the const layer
+deleted along with the const.
 
 ---
 

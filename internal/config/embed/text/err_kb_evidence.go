@@ -29,4 +29,12 @@ const (
 	// DescKeyErrKbEvidenceParseIDNumber wraps a strconv.Atoi
 	// failure parsing an EV-### number.
 	DescKeyErrKbEvidenceParseIDNumber = "err.kb.evidence.parse-id-number"
+	// DescKeyErrKbEvidenceDuplicateIDMsg is the text key for the
+	// duplicate-id sentinel's own `.Error()` string (the prefix
+	// interpolated via `%w` by the duplicate-id wrapper).
+	DescKeyErrKbEvidenceDuplicateIDMsg = "err.kb.evidence.duplicate-id-msg"
+	// DescKeyErrKbEvidenceInvalidBandMsg is the text key for the
+	// invalid-band sentinel's own `.Error()` string (the prefix
+	// interpolated via `%w` by the invalid-band wrapper).
+	DescKeyErrKbEvidenceInvalidBandMsg = "err.kb.evidence.invalid-band-msg"
 )

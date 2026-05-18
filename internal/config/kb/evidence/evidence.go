@@ -6,22 +6,6 @@
 
 package evidence
 
-// Sentinel error-message constants. These back `errors.New`
-// values declared in `internal/err/kb/evidence/` and are
-// matched via `errors.Is` at the call site. They cannot use
-// desc.Text because the sentinels are package-level vars
-// evaluated before the embedded YAML lookup is populated;
-// wrapping-format strings have moved to
-// commands/text/errors.yaml.
-const (
-	// ErrMsgDuplicateID signals an Append called with a row.ID
-	// already present in the evidence index.
-	ErrMsgDuplicateID = "duplicate EV-### id"
-	// ErrMsgInvalidBand signals a row whose Confidence is not
-	// one of the four canonical bands.
-	ErrMsgInvalidBand = "invalid confidence band"
-)
-
 // Markdown rendering constants for the evidence-index file.
 // Structural literals (headings, table shape, ID format)
 // stay as Go consts.

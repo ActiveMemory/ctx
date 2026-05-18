@@ -44,6 +44,18 @@ err.backup.write-archive:
   short: 'failed to write archive: %w'
 err.context.dir-not-found:
   short: 'context directory not found: '
+err.context.dir-not-declared:
+  short: 'context directory not declared'
+err.context.relative-not-allowed-msg:
+  short: 'context directory must be absolute'
+err.context.non-canonical-basename-msg:
+  short: 'context directory has non-canonical basename'
+err.context.dir-not-a-directory-msg:
+  short: 'context directory is not a directory'
+err.context.dir-stat-msg:
+  short: 'context directory stat failed'
+err.context.not-initialized-msg:
+  short: 'context not initialized'
 err.context.not-declared-zero:
   short: |-
     no context directory specified for this project
@@ -74,6 +86,8 @@ err.context.not-initialized:
     ctx is not initialized in this project: %s
     Run 'ctx init' from the project root to set up context here.
     See: https://ctx.ist/recipes/activating-context/
+err.schema.drift:
+  short: 'schema drift detected'
 err.activate.no-candidates:
   short: |-
     ctx activate: no .context/ directory found from this location
@@ -598,6 +612,10 @@ err.parser.missing-open-delim:
   short: missing opening frontmatter delimiter (---)
 err.parser.missing-close-delim:
   short: missing closing frontmatter delimiter (---)
+err.init.context-populated-msg:
+  short: 'context already populated; refusing to overwrite'
+err.init.reset-requires-interactive-msg:
+  short: 'ctx init --reset requires an interactive terminal'
 err.init-context-populated:
   short: '%w (directory: %s; populated: %s; to discard, run `ctx init %s`, which backs up to %s before overwriting and requires interactive y/N confirmation)'
 err.init-reset-requires-interactive:
@@ -628,6 +646,18 @@ err.handover.parse-frontmatter:
   short: 'parse handover frontmatter: %w'
 err.handover.resolve-head:
   short: 'resolve git head for handover: %w'
+err.handover.title-required:
+  short: 'handover title is required'
+err.handover.summary-required:
+  short: 'handover summary is required'
+err.handover.next-required:
+  short: 'handover next-session field is required'
+err.handover.missing-frontmatter:
+  short: 'handover missing frontmatter'
+err.handover.missing-closing-delim:
+  short: 'handover missing closing frontmatter delimiter'
+err.handover.missing-generated-at:
+  short: 'handover missing generated-at'
 err.closeout.read-closeout:
   short: 'read closeout: %w'
 err.closeout.parse-frontmatter:
@@ -648,6 +678,12 @@ err.closeout.archive-move:
   short: 'archive closeout %s: %w'
 err.closeout.missing-fields:
   short: '%w: %s'
+err.closeout.missing-fields-msg:
+  short: 'closeout frontmatter missing required fields'
+err.closeout.missing-frontmatter:
+  short: 'closeout missing frontmatter'
+err.closeout.mode-required:
+  short: 'closeout mode is required'
 err.gitmeta.missing-git-tree:
   short: '%w: .git/ not found at %s; run `git init` to fix'
 err.gitmeta.missing-git-tree-for-cmd:
@@ -656,6 +692,10 @@ err.gitmeta.stat-git-dir:
   short: 'stat .git at %s: %w'
 err.gitmeta.resolve-head:
   short: 'resolve git head: %w'
+err.gitmeta.missing-git-tree-msg:
+  short: 'git working tree required'
+err.gitmeta.resolve-head-empty:
+  short: 'resolve git head: empty output'
 err.initkb.mkdir:
   short: 'mkdir %s: %w'
 err.initkb.copy-ingest-templates:
@@ -686,10 +726,18 @@ err.kb.evidence.write-row:
   short: 'write evidence row: %w'
 err.kb.evidence.parse-id-number:
   short: 'parse EV number %q: %w'
+err.kb.evidence.duplicate-id-msg:
+  short: 'duplicate EV-### id'
+err.kb.evidence.invalid-band-msg:
+  short: 'invalid confidence band'
 err.kb.sourcecoverage.illegal-transition:
   short: '%w: %s → %s for source %s'
 err.kb.sourcecoverage.unknown-source:
   short: '%w: %s entering at %s'
+err.kb.sourcecoverage.illegal-transition-msg:
+  short: 'illegal state transition'
+err.kb.sourcecoverage.unknown-source-msg:
+  short: 'unknown source for non-initial state'
 err.kb.sourcecoverage.read-ledger:
   short: 'read ledger: %w'
 err.kb.sourcecoverage.mkdir-ledger-dir:
@@ -782,3 +830,13 @@ err.kb.cli.read-topic-template:
   short: 'read embedded topic template: %w'
 err.kb.cli.write-topic-index:
   short: 'write topic index: %w'
+err.kb.cli.ask-no-question:
+  short: 'no question provided; pass a question or describe it inline'
+err.kb.cli.ingest-no-sources:
+  short: 'no sources provided; pass a folder, a URL, an MCP resource, or describe the materials inline'
+err.kb.cli.note-no-text:
+  short: 'no text provided; pass a one-liner inline'
+err.kb.cli.topic-empty-name:
+  short: 'topic name must contain at least one alnum char'
+err.kb.cli.reindex-missing-block:
+  short: 'kb/index.md is missing the CTX:KB:TOPICS managed block'

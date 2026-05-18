@@ -7,25 +7,29 @@
 package gitmeta
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	cfgGitmeta "github.com/ActiveMemory/ctx/internal/config/git_meta"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// ErrMissingGitTree signals that `<projectRoot>/.git` is
-// absent. The PersistentPreRunE catches this via `errors.Is`
-// and wraps it with the failing subcommand name through
-// [MissingGitTreeForCmd]; direct API callers may wrap with
-// [MissingGitTree].
-var ErrMissingGitTree = errors.New(cfgGitmeta.ErrMsgMissingGitTree)
-
-// ErrResolveHeadEmpty signals that `git rev-parse --short HEAD`
-// returned an empty string. Typically: unborn HEAD (repository
-// initialized but no commit yet).
-var ErrResolveHeadEmpty = errors.New(cfgGitmeta.ErrMsgResolveHeadEmpty)
+const (
+	// ErrMissingGitTree signals that `<projectRoot>/.git` is
+	// absent. The PersistentPreRunE catches this via
+	// `errors.Is` and wraps it with the failing subcommand name
+	// through [MissingGitTreeForCmd]; direct API callers may
+	// wrap with [MissingGitTree].
+	ErrMissingGitTree = entity.Sentinel(
+		text.DescKeyErrGitmetaMissingGitTreeMsg,
+	)
+	// ErrResolveHeadEmpty signals that `git rev-parse --short
+	// HEAD` returned an empty string. Typically: unborn HEAD
+	// (repository initialized but no commit yet).
+	ErrResolveHeadEmpty = entity.Sentinel(
+		text.DescKeyErrGitmetaResolveHeadEmpty,
+	)
+)
 
 // MissingGitTree wraps [ErrMissingGitTree] with the
 // project-root path that was scanned. Used by direct API

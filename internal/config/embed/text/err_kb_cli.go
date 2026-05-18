@@ -44,4 +44,19 @@ const (
 	// DescKeyErrKbCliWriteTopicIndex wraps `os.WriteFile` for
 	// the topic index.md.
 	DescKeyErrKbCliWriteTopicIndex = "err.kb.cli.write-topic-index"
+	// DescKeyErrKbCliAskNoQuestion is the text key for the
+	// empty-question-arg sentinel.
+	DescKeyErrKbCliAskNoQuestion = "err.kb.cli.ask-no-question"
+	// DescKeyErrKbCliIngestNoSources is the text key for the
+	// empty-sources-arg sentinel.
+	DescKeyErrKbCliIngestNoSources = "err.kb.cli.ingest-no-sources"
+	// DescKeyErrKbCliNoteNoText is the text key for the
+	// empty-note-arg sentinel.
+	DescKeyErrKbCliNoteNoText = "err.kb.cli.note-no-text"
+	// DescKeyErrKbCliTopicEmptyName is the text key for the
+	// empty-slug topic-new sentinel.
+	DescKeyErrKbCliTopicEmptyName = "err.kb.cli.topic-empty-name"
+	// DescKeyErrKbCliReindexMissingBlock is the text key for
+	// the missing-CTX:KB:TOPICS-block sentinel.
+	DescKeyErrKbCliReindexMissingBlock = "err.kb.cli.reindex-missing-block"
 )

@@ -16,81 +16,84 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgRc "github.com/ActiveMemory/ctx/internal/config/rc"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// ErrDirNotDeclared is the sentinel returned by rc.ContextDir when
-// CTX_DIR is unset or empty. Callers that can legitimately proceed
-// without a declared context directory (init, activate, deactivate,
-// bootstrap) check with errors.Is; everyone else should propagate
-// the error or call rc.RequireContextDir for a user-facing message
-// (see NotDeclared below).
-//
-// The message lives in config/rc (not resolved through desc.Text)
-// because sentinel values are initialized at package load time,
-// before the embedded YAML lookup is populated. Callers that print
-// this to users should wrap it via NotDeclared; the sentinel itself
-// is for errors.Is comparisons, not for display.
-var ErrDirNotDeclared = errors.New(cfgRc.ErrMsgDirNotDeclared)
+const (
+	// ErrDirNotDeclared is the sentinel returned by
+	// rc.ContextDir when CTX_DIR is unset or empty. Callers
+	// that can legitimately proceed without a declared context
+	// directory (init, activate, deactivate, bootstrap) check
+	// with errors.Is; everyone else should propagate the error
+	// or call rc.RequireContextDir for a user-facing message
+	// (see NotDeclared below).
+	ErrDirNotDeclared = entity.Sentinel(
+		text.DescKeyErrContextDirNotDeclared,
+	)
 
-// ErrRelativeNotAllowed is the sentinel returned when CTX_DIR is
-// declared as a relative path. Absolute-only is a hardline: a
-// relative CTX_DIR would resolve differently in every cwd, exactly
-// the silent cwd-dependency this resolver is meant to eliminate.
-//
-// Wrap via [RelativeNotAllowed] for user-facing messages so the
-// offending value is shown.
-var ErrRelativeNotAllowed = errors.New(cfgRc.ErrMsgRelativeNotAllowed)
+	// ErrRelativeNotAllowed is the sentinel returned when
+	// CTX_DIR is declared as a relative path. Absolute-only is
+	// a hardline: a relative CTX_DIR would resolve differently
+	// in every cwd, exactly the silent cwd-dependency this
+	// resolver is meant to eliminate. Wrap via
+	// [RelativeNotAllowed] for user-facing messages so the
+	// offending value is shown.
+	ErrRelativeNotAllowed = entity.Sentinel(
+		text.DescKeyErrContextRelativeNotAllowedMsg,
+	)
 
-// ErrNonCanonicalBasename is the sentinel returned when CTX_DIR's
-// basename is not the canonical [cfgDir.Context]. It catches the
-// common footgun `export CTX_DIR=$(pwd)` (project root instead of
-// the `.context` subdirectory) on first use rather than letting init
-// deposit canonical files into the project root.
-//
-// Wrap via [NonCanonicalBasename] for user-facing messages.
-var ErrNonCanonicalBasename = errors.New(cfgRc.ErrMsgNonCanonicalBasename)
+	// ErrNonCanonicalBasename is the sentinel returned when
+	// CTX_DIR's basename is not the canonical [cfgDir.Context].
+	// It catches the common footgun `export CTX_DIR=$(pwd)`
+	// (project root instead of the `.context` subdirectory) on
+	// first use rather than letting init deposit canonical
+	// files into the project root. Wrap via
+	// [NonCanonicalBasename] for user-facing messages.
+	ErrNonCanonicalBasename = entity.Sentinel(
+		text.DescKeyErrContextNonCanonicalBasenameMsg,
+	)
 
-// ErrContextDirNotFound is the sentinel returned by
-// rc.RequireContextDir when CTX_DIR is shape-valid but the directory
-// does not exist on disk. Distinct from [ErrDirNotDeclared], which
-// fires before any filesystem check.
-//
-// Construct via [Missing]; the legacy [NotFoundError] type also
-// carries this sentinel through its [NotFoundError.Is] method, so
-// callers using either pattern can compare with [errors.Is].
-var ErrContextDirNotFound = errors.New(cfgRc.ErrMsgContextDirNotFound)
+	// ErrContextDirNotFound is the sentinel returned by
+	// rc.RequireContextDir when CTX_DIR is shape-valid but the
+	// directory does not exist on disk. Distinct from
+	// [ErrDirNotDeclared], which fires before any filesystem
+	// check. Construct via [Missing]; the legacy
+	// [NotFoundError] type also carries this sentinel through
+	// its [NotFoundError.Is] method, so callers using either
+	// pattern can compare with [errors.Is].
+	ErrContextDirNotFound = entity.Sentinel(
+		text.DescKeyErrContextDirNotFound,
+	)
 
-// ErrContextDirNotADirectory is the sentinel returned when CTX_DIR
-// points at an existing path that is not a directory (typically a
-// regular file). Symlinks pointing at directories pass.
-var ErrContextDirNotADirectory = errors.New(cfgRc.ErrMsgContextDirNotADirectory)
+	// ErrContextDirNotADirectory is the sentinel returned when
+	// CTX_DIR points at an existing path that is not a
+	// directory (typically a regular file). Symlinks pointing
+	// at directories pass.
+	ErrContextDirNotADirectory = entity.Sentinel(
+		text.DescKeyErrContextDirNotADirectoryMsg,
+	)
 
-// ErrContextDirStat is the sentinel returned when [os.Stat] on
-// CTX_DIR fails for a reason other than not-exist (permission
-// denied, I/O error). Wrap via [StatFailed] to attach the
-// underlying cause.
-var ErrContextDirStat = errors.New(cfgRc.ErrMsgContextDirStat)
+	// ErrContextDirStat is the sentinel returned when [os.Stat]
+	// on CTX_DIR fails for a reason other than not-exist
+	// (permission denied, I/O error). Wrap via [StatFailed] to
+	// attach the underlying cause.
+	ErrContextDirStat = entity.Sentinel(
+		text.DescKeyErrContextDirStatMsg,
+	)
 
-// ErrNotInitialized is the sentinel returned when CTX_DIR is
-// declared but the project lacks the required context files
-// (i.e., `ctx init` has not run there). Distinct from
-// [ErrDirNotDeclared] (no CTX_DIR at all) and from
-// [ErrContextDirNotFound] (declared dir does not exist on disk):
-// here the directory may or may not exist, but the contents do
-// not constitute a ctx project.
-//
-// The motivating bug is the cross-IDE hook leak: Cursor imports
-// Claude Code hooks and fires them in every workspace it opens.
-// With the ctx Claude plugin enabled globally, hooks resolve
-// CTX_DIR=$workspace/.context and call into ctx subcommands. Any
-// such caller that reached [state.Dir] previously mkdir'd a stub
-// `.context/state/` (mode 0750) into the workspace, even though
-// the user never ran `ctx init` there. Returning this sentinel
-// from [state.Dir] before the mkdir prevents the leak.
-//
-// Wrap via [NotInitialized] for user-facing messages so the
-// offending path is shown.
-var ErrNotInitialized = errors.New(cfgRc.ErrMsgNotInitialized)
+	// ErrNotInitialized is the sentinel returned when CTX_DIR
+	// is declared but the project lacks the required context
+	// files (i.e., `ctx init` has not run there). Distinct
+	// from [ErrDirNotDeclared] (no CTX_DIR at all) and from
+	// [ErrContextDirNotFound] (declared dir does not exist on
+	// disk): here the directory may or may not exist, but the
+	// contents do not constitute a ctx project. Wrap via
+	// [NotInitialized] for user-facing messages so the
+	// offending path is shown.
+	ErrNotInitialized = entity.Sentinel(
+		text.DescKeyErrContextNotInitializedMsg,
+	)
+)
 
 // RelativeNotAllowed wraps [ErrRelativeNotAllowed] with the
 // offending value so the user sees what they declared.

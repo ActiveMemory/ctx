@@ -38,18 +38,3 @@ const RefHEAD = "HEAD"
 // ShortLen is the truncation length for short SHAs (git's
 // default --short width).
 const ShortLen = 7
-
-// Sentinel error-message constants. These back `errors.New`
-// values in `internal/err/git_meta/` and are matched via
-// `errors.Is` at the call site. They cannot use desc.Text
-// because the sentinels are package-level vars evaluated
-// before the embedded YAML lookup is populated; wrapping
-// format strings live in commands/text/errors.yaml.
-const (
-	// ErrMsgMissingGitTree is the sentinel for the
-	// "<projectRoot>/.git is absent" condition.
-	ErrMsgMissingGitTree = "git working tree required"
-	// ErrMsgResolveHeadEmpty signals that `git rev-parse --short
-	// HEAD` returned an empty string (typically: unborn HEAD).
-	ErrMsgResolveHeadEmpty = "resolve git head: empty output"
-)

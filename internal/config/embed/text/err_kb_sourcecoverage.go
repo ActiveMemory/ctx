@@ -23,4 +23,12 @@ const (
 	// DescKeyErrKbSourcecoverageWriteLedger wraps a write
 	// failure on the ledger.
 	DescKeyErrKbSourcecoverageWriteLedger = "err.kb.sourcecoverage.write-ledger"
+	// DescKeyErrKbSourcecoverageIllegalTransitionMsg is the text
+	// key for the illegal-transition sentinel's own `.Error()`
+	// string (the prefix interpolated via `%w` by the wrapper).
+	DescKeyErrKbSourcecoverageIllegalTransitionMsg = "err.kb.sourcecoverage.illegal-transition-msg"
+	// DescKeyErrKbSourcecoverageUnknownSourceMsg is the text key
+	// for the unknown-source sentinel's own `.Error()` string
+	// (the prefix interpolated via `%w` by the wrapper).
+	DescKeyErrKbSourcecoverageUnknownSourceMsg = "err.kb.sourcecoverage.unknown-source-msg"
 )

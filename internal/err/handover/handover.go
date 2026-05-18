@@ -7,37 +7,45 @@
 package handover
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	cfgHandover "github.com/ActiveMemory/ctx/internal/config/handover"
+	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
-// ErrTitleRequired signals an empty Title supplied to
-// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
-var ErrTitleRequired = errors.New(cfgHandover.ErrMsgTitleRequired)
-
-// ErrSummaryRequired signals an empty Summary supplied to
-// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
-var ErrSummaryRequired = errors.New(cfgHandover.ErrMsgSummaryRequired)
-
-// ErrNextRequired signals an empty Next supplied to
-// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
-var ErrNextRequired = errors.New(cfgHandover.ErrMsgNextRequired)
-
-// ErrMissingFrontmatter signals a handover file that does not
-// open with `---`.
-var ErrMissingFrontmatter = errors.New(cfgHandover.ErrMsgMissingFrontmatter)
-
-// ErrMissingClosingDelim signals a handover whose frontmatter
-// is never closed by a second `---`.
-var ErrMissingClosingDelim = errors.New(cfgHandover.ErrMsgMissingClosingDelim)
-
-// ErrMissingGeneratedAt signals a handover whose frontmatter
-// parsed but has no generated-at value.
-var ErrMissingGeneratedAt = errors.New(cfgHandover.ErrMsgMissingGeneratedAt)
+const (
+	// ErrTitleRequired signals an empty Title supplied to
+	// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
+	ErrTitleRequired = entity.Sentinel(
+		text.DescKeyErrHandoverTitleRequired,
+	)
+	// ErrSummaryRequired signals an empty Summary supplied to
+	// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
+	ErrSummaryRequired = entity.Sentinel(
+		text.DescKeyErrHandoverSummaryRequired,
+	)
+	// ErrNextRequired signals an empty Next supplied to
+	// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
+	ErrNextRequired = entity.Sentinel(
+		text.DescKeyErrHandoverNextRequired,
+	)
+	// ErrMissingFrontmatter signals a handover file that does
+	// not open with `---`.
+	ErrMissingFrontmatter = entity.Sentinel(
+		text.DescKeyErrHandoverMissingFrontmatter,
+	)
+	// ErrMissingClosingDelim signals a handover whose
+	// frontmatter is never closed by a second `---`.
+	ErrMissingClosingDelim = entity.Sentinel(
+		text.DescKeyErrHandoverMissingClosingDelim,
+	)
+	// ErrMissingGeneratedAt signals a handover whose
+	// frontmatter parsed but has no generated-at value.
+	ErrMissingGeneratedAt = entity.Sentinel(
+		text.DescKeyErrHandoverMissingGeneratedAt,
+	)
+)
 
 // Latest wraps a failure encountered while reading the
 // latest handover during fold.
