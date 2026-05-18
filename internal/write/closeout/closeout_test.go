@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	cfgGitmeta "github.com/ActiveMemory/ctx/internal/config/git_meta"
+	cfgGitmeta "github.com/ActiveMemory/ctx/internal/config/gitmeta"
 	cfgKB "github.com/ActiveMemory/ctx/internal/config/kb"
 	errCloseout "github.com/ActiveMemory/ctx/internal/err/closeout"
 	"github.com/ActiveMemory/ctx/internal/write/closeout"

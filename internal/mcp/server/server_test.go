@@ -258,8 +258,8 @@ func TestToolsList(t *testing.T) {
 	for _, want := range []string{
 		"ctx_status", "ctx_add", "ctx_complete", "ctx_drift",
 		"ctx_journal_source", "ctx_watch_update", "ctx_compact",
-		"ctx_next", "ctx_check_task_completion",
-		"ctx_session_event", "ctx_remind",
+		"ctx_next", "ctx_checktaskcompletion",
+		"ctx_sessionevent", "ctx_remind",
 		"ctx_steering_get", "ctx_search",
 		"ctx_session_start", "ctx_session_end",
 	} {
@@ -803,7 +803,7 @@ func TestToolNextAllComplete(t *testing.T) {
 func TestToolCheckTaskCompletion(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
-		Name: "ctx_check_task_completion",
+		Name: "ctx_checktaskcompletion",
 		Arguments: map[string]interface{}{
 			"recent_action": "Finished build of the MCP server",
 		},
@@ -828,7 +828,7 @@ func TestToolCheckTaskCompletionNoMatch(t *testing.T) {
 
 	// Prime session state to avoid governance warnings in response.
 	request(t, srv, "tools/call", proto.CallToolParams{
-		Name:      "ctx_session_event",
+		Name:      "ctx_sessionevent",
 		Arguments: map[string]interface{}{"type": "start"},
 	})
 	request(t, srv, "tools/call", proto.CallToolParams{
@@ -836,7 +836,7 @@ func TestToolCheckTaskCompletionNoMatch(t *testing.T) {
 	})
 
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
-		Name: "ctx_check_task_completion",
+		Name: "ctx_checktaskcompletion",
 		Arguments: map[string]interface{}{
 			"recent_action": "Updated CSS styles",
 		},
@@ -861,7 +861,7 @@ func TestToolCheckTaskCompletionNoMatch(t *testing.T) {
 func TestToolSessionEventStart(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
-		Name: "ctx_session_event",
+		Name: "ctx_sessionevent",
 		Arguments: map[string]interface{}{
 			"type":   "start",
 			"caller": "vscode",
@@ -890,7 +890,7 @@ func TestToolSessionEventStart(t *testing.T) {
 func TestToolSessionEventEnd(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
-		Name:      "ctx_session_event",
+		Name:      "ctx_sessionevent",
 		Arguments: map[string]interface{}{"type": "end"},
 	})
 	if resp.Error != nil {
@@ -913,7 +913,7 @@ func TestToolSessionEventEnd(t *testing.T) {
 func TestToolSessionEventInvalid(t *testing.T) {
 	srv, _ := newTestServer(t)
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
-		Name:      "ctx_session_event",
+		Name:      "ctx_sessionevent",
 		Arguments: map[string]interface{}{"type": "pause"},
 	})
 	if resp.Error != nil {
@@ -1092,7 +1092,7 @@ func TestSessionStateTracking(t *testing.T) {
 
 	// Start session.
 	request(t, srv, "tools/call", proto.CallToolParams{
-		Name:      "ctx_session_event",
+		Name:      "ctx_sessionevent",
 		Arguments: map[string]interface{}{"type": "start"},
 	})
 
@@ -1102,7 +1102,7 @@ func TestSessionStateTracking(t *testing.T) {
 
 	// End session - should report tool call count.
 	resp := request(t, srv, "tools/call", proto.CallToolParams{
-		Name:      "ctx_session_event",
+		Name:      "ctx_sessionevent",
 		Arguments: map[string]interface{}{"type": "end"},
 	})
 	raw, _ := json.Marshal(resp.Result)

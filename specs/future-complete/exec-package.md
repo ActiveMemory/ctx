@@ -29,8 +29,8 @@ audit command execution, validate inputs, and satisfy gosec.
 |-----------|-----------|------|
 | `config/core/core.go:105` | rev-parse --show-toplevel | literal |
 | `change/core/scan/scan.go:133` | log --since (time) | validated |
-| `system/cmd/post_commit/score.go:33` | log -1 --format=%B | literal |
-| `system/cmd/post_commit/score.go:66` | diff-tree HEAD | literal |
+| `system/cmd/postcommit/score.go:33` | log -1 --format=%B | literal |
+| `system/cmd/postcommit/score.go:66` | diff-tree HEAD | literal |
 | `system/core/health/map_staleness.go:66` | log --oneline --since | validated |
 | `journal/parser/git.go:42` | remote get-url origin | literal |
 

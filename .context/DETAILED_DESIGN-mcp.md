@@ -294,8 +294,8 @@ config/mcp/tool (handler side)
 | ctx_watch_update | No | Apply structured updates |
 | ctx_compact | No | Archive completed tasks |
 | ctx_next | Yes | Next pending task |
-| ctx_check_task_completion | Yes | Match action to tasks |
-| ctx_session_event | No | Signal session start/end |
+| ctx_checktaskcompletion | Yes | Match action to tasks |
+| ctx_sessionevent | No | Signal session start/end |
 | ctx_remind | Yes | List pending reminders |
 
 ## Resources (9 total)

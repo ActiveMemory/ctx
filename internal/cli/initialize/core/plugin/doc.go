@@ -7,7 +7,7 @@
 // Package plugin handles **Claude Code plugin enablement**
 // during `ctx init`, the read/write side of the same
 // settings files that
-// [internal/cli/initialize/core/claude_check] only reads.
+// [internal/cli/initialize/core/claudecheck] only reads.
 //
 // Claude Code keeps two layers of plugin state:
 //

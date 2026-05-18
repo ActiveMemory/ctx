@@ -194,20 +194,20 @@ Not all hooks should be customizable:
 | File | Change |
 |------|--------|
 | `internal/assets/embed.go` | Add `hooks/messages/` to embed directive |
-| `internal/cli/system/qa_reminder.go` | Replace hardcoded string with `loadMessage()` |
-| `internal/cli/system/post_commit.go` | Replace hardcoded string with `loadMessage()` |
-| `internal/cli/system/check_context_size.go` | Replace hardcoded string with `loadMessage()` |
-| `internal/cli/system/check_persistence.go` | Replace hardcoded string with `loadMessage()` |
+| `internal/cli/system/qareminder.go` | Replace hardcoded string with `loadMessage()` |
+| `internal/cli/system/postcommit.go` | Replace hardcoded string with `loadMessage()` |
+| `internal/cli/system/checkcontextsize.go` | Replace hardcoded string with `loadMessage()` |
+| `internal/cli/system/checkpersistence.go` | Replace hardcoded string with `loadMessage()` |
 | `internal/cli/system/check_ceremonies.go` | Replace hardcoded strings with `loadMessage()` |
-| `internal/cli/system/check_journal.go` | Replace hardcoded strings with `loadMessage()` |
-| `internal/cli/system/check_knowledge.go` | Replace hardcoded string with `loadMessage()` |
-| `internal/cli/system/check_map_staleness.go` | Replace hardcoded string with `loadMessage()` |
+| `internal/cli/system/checkjournal.go` | Replace hardcoded strings with `loadMessage()` |
+| `internal/cli/system/checkknowledge.go` | Replace hardcoded string with `loadMessage()` |
+| `internal/cli/system/checkmapstaleness.go` | Replace hardcoded string with `loadMessage()` |
 | `internal/cli/system/check_backup_age.go` | Replace hardcoded string with `loadMessage()` |
-| `internal/cli/system/check_reminders.go` | Replace hardcoded string with `loadMessage()` |
-| `internal/cli/system/check_resources.go` | Replace hardcoded string with `loadMessage()` |
-| `internal/cli/system/check_version.go` | Replace hardcoded strings with `loadMessage()` |
+| `internal/cli/system/checkreminders.go` | Replace hardcoded string with `loadMessage()` |
+| `internal/cli/system/checkresources.go` | Replace hardcoded string with `loadMessage()` |
+| `internal/cli/system/checkversion.go` | Replace hardcoded strings with `loadMessage()` |
 | `internal/cli/system/block_dangerous_commands.go` | Replace hardcoded reasons with `loadMessage()` |
-| `internal/cli/system/block_non_path_ctx.go` | Replace hardcoded reasons with `loadMessage()` |
+| `internal/cli/system/blocknonpathctx.go` | Replace hardcoded reasons with `loadMessage()` |
 
 ### Key Implementation
 

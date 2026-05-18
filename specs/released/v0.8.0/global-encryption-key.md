@@ -59,7 +59,7 @@ Drop: per-project slug directory (`~/.local/ctx/keys/`), the
 | `internal/cli/initialize/run.go` | `initScratchpad()` uses `rc.KeyPath()` — no change needed, but `os.MkdirAll` target dir changes from `~/.local/ctx/keys/` to `~/.ctx/`. |
 | `internal/cli/pad/store.go` | `keyPath()` calls `rc.KeyPath()` — no change. |
 | `internal/notify/notify.go` | `LoadWebhook()` / `SaveWebhook()` call `rc.KeyPath()` — no change. |
-| `internal/cli/system/check_version.go` | `checkKeyAge()` calls `rc.KeyPath()` — no change. |
+| `internal/cli/system/checkversion.go` | `checkKeyAge()` calls `rc.KeyPath()` — no change. |
 | `internal/cli/pad/pad_test.go` | `setupEncrypted()` uses `config.ProjectKeyPath()` — must switch to `config.GlobalKeyPath()`. |
 | `internal/cli/initialize/initialize_test.go` | Same — switch from `ProjectKeyPath()`. |
 

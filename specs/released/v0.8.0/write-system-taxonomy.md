@@ -36,13 +36,13 @@ package, and existing packages absorb shared patterns.
 | `write/stats/` (exists: `write/status/`) | — see below | — |
 | `write/resources/` | `Text` | resources/run.go |
 | `write/message/` | `TemplateVars`, `CtxSpecificWarning`, `OverrideCreated`, `EditHint`, `SourceHeader`, `ContentBlock`, `NoOverride`, `OverrideRemoved`, `ListHeader`, `ListRow` | message/cmd/*/run.go |
-| `write/mark_journal/` | `StageChecked`, `StageMarked` | mark_journal/run.go |
+| `write/markjournal/` | `StageChecked`, `StageMarked` | markjournal/run.go |
 | `write/pause/` | `Confirmed` | pause/run.go |
 
 ### Functions routed to existing packages
 
 - **`write/hook.Nudge`** — already exists, used by all nudge-box hooks
-- **`write/hook.NudgeBlock`** — new: prints box + empty line (check_context_size, check_persistence)
+- **`write/hook.NudgeBlock`** — new: prints box + empty line (checkcontextsize, checkpersistence)
 - **`write/hook.HookContext`** — new: prints JSON hook response (5 hooks)
 - **`write/hook.BlockResponse`** — new: prints JSON block response (2 hooks)
 - **`write/bootstrap.Dir`** — new: quiet-mode directory output

@@ -1093,6 +1093,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bootstrap-vs-steady-state-ingest-first-ground-later" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bootstrap vs Steady State: Ingest First, Ground Later
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-the-editorial-pipeline-is-not" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1227,7 +1238,7 @@ skill is the natural surface.</p>
 <tr>
 <td><code>/ctx-kb-ground</code></td>
 <td>Skill</td>
-<td>Re-grounding against external sources</td>
+<td>Read-only freshness audit over the kb's tracked sources</td>
 </tr>
 <tr>
 <td><code>/ctx-kb-note</code></td>
@@ -1338,9 +1349,16 @@ which a future <code>/ctx-kb-ingest</code> pass can close.</p>
 <p><code>site-review</code> coerces malformed Confidence-band capitalization,
 flags malformed closeout frontmatter, and <strong>refuses to make
 judgment calls that require evidence</strong> (those go through ingest).</p>
-<p><code>ground</code> reads <code>.context/ingest/grounding-sources.md</code> and runs
-the equivalent of a fresh fetch + re-extract pass for each
-listed source, useful when an upstream source has changed.</p>
+<p><code>ground</code> reads <code>.context/ingest/grounding-sources.md</code> — the kb's
+persistent watch list — and walks each declared source (URL,
+in-tree path, or MCP resource) to check whether it has drifted
+since the kb last cited it. The pass is <strong>read-only on the kb's
+prose and evidence</strong>: it annotates the source-coverage ledger's
+<code>Residue</code> / <code>Next action</code> cells and writes a ground closeout, but
+does NOT re-extract claims, mint <code>EV-###</code> rows, or touch topic
+pages. Drifted or new-to-kb sources are flagged for a follow-up
+<code>/ctx-kb-ingest</code>. Use ground for "are the docs still current?"
+hygiene; use <code>/ctx-kb-ingest</code> to actually absorb new material.</p>
 <h2 id="step-5-browse-the-kb-locally">Step 5: Browse the KB Locally<a class="headerlink" href="#step-5-browse-the-kb-locally" title="Permanent link">&para;</a></h2>
 <p><code>.context/kb/</code> is a tree of Markdown files: topic pages live
 under <code>topics/&lt;slug&gt;/index.md</code> and cross-cutting artifacts
@@ -1400,6 +1418,59 @@ underlying CLI, see
 </span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>                  /ctx-remember reads handover + postdated
 </span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>                  unfolded closeouts as the recall surface
 </span></code></pre></div>
+<h2 id="bootstrap-vs-steady-state-ingest-first-ground-later">Bootstrap vs Steady State: Ingest First, Ground Later<a class="headerlink" href="#bootstrap-vs-steady-state-ingest-first-ground-later" title="Permanent link">&para;</a></h2>
+<p><code>/ctx-kb-ingest</code> and <code>/ctx-kb-ground</code> both read sources, which
+makes their relationship easy to misread. The distinction is
+<strong>authority</strong>, not input shape:</p>
+<ul>
+<li><strong>Ingest writes.</strong> It mints <code>EV-###</code> rows, authors topic-page
+  prose, transitions source-coverage ledger states. The source
+  list is per-invocation (CLI args, inline gestures).</li>
+<li><strong>Ground audits.</strong> It walks a <em>persistent watch list</em> in
+  <code>grounding-sources.md</code>, reports drift, annotates the ledger's
+  <code>Residue</code> and <code>Next action</code> cells, and <strong>never writes prose or
+  evidence</strong>. Drifted sources surface as flags pointing at
+  <code>/ctx-kb-ingest</code>.</li>
+</ul>
+<p>This drives the canonical flow:</p>
+<p><strong>Bootstrap (pristine kb).</strong> Use <code>/ctx-kb-ingest &lt;sources&gt;</code> to
+absorb the first wave of material. Ground has nothing to compare
+against in a pristine kb — <code>source-map.md</code> is empty, and
+<code>grounding-sources.md</code> would just prompt for entries.</p>
+<p><strong>Curate the watch list.</strong> Once the kb has content, edit
+<code>grounding-sources.md</code> by hand to list the canonical sources the
+kb's claims depend on — the load-bearing citations worth
+checking for drift. Ground refuses to synthesise this list from
+<code>source-map.md</code> by design; the watch list is a deliberate human
+choice about what's worth tracking.</p>
+<p><strong>Steady state.</strong> Ingest liberally as new material lands. Run
+<code>/ctx-kb-ground</code> periodically — before a release, after a vendor
+version bump, on whatever cadence fits — to detect drift on the
+tracked subset. Drift surfaces as flags in the ground closeout
+pointing at <code>/ctx-kb-ingest</code> for the actual write-side work.</p>
+<p><strong>Rule of thumb:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>"I have new material I want absorbed."</em></td>
+<td><code>/ctx-kb-ingest</code></td>
+</tr>
+<tr>
+<td><em>"Are the sources the kb depends on still current?"</em></td>
+<td><code>/ctx-kb-ground</code></td>
+</tr>
+<tr>
+<td><em>"Is the kb's structure clean (capitalisation, frontmatter)?"</em></td>
+<td><code>/ctx-kb-site-review</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="what-the-editorial-pipeline-is-not">What the Editorial Pipeline Is NOT<a class="headerlink" href="#what-the-editorial-pipeline-is-not" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Not a substitute for <code>DECISIONS.md</code>.</strong> Project-level

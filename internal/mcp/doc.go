@@ -49,8 +49,8 @@
 //	ctx_watch_update       -> Apply structured updates
 //	ctx_compact            -> Archive completed tasks
 //	ctx_next               -> Get next pending task
-//	ctx_check_task_completion -> Nudge on completion
-//	ctx_session_event      -> Signal session lifecycle
+//	ctx_checktaskcompletion -> Nudge on completion
+//	ctx_sessionevent      -> Signal session lifecycle
 //	ctx_remind             -> List active reminders
 //
 // # Prompts

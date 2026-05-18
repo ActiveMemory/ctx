@@ -119,8 +119,8 @@ validation, session tracking, and boundary checks automatically.
 | `ctx_next`                  | Get the next task to work on         |
 | `ctx_compact`               | Archive completed tasks              |
 | `ctx_watch_update`          | Write entry and queue for review     |
-| `ctx_check_task_completion` | Match recent work to open tasks      |
-| `ctx_session_event`         | Signal session start or end          |
+| `ctx_checktaskcompletion` | Match recent work to open tasks      |
+| `ctx_sessionevent`         | Signal session start or end          |
 | `ctx_remind`                | List pending reminders               |
 
 **Rule**: Do NOT run `ctx` in the terminal when the equivalent MCP tool
@@ -135,9 +135,9 @@ responses when governance actions are overdue. Follow this protocol:
 
 ### Session Lifecycle
 
-1. **BEFORE any work**: call `ctx_session_event(type="start")`, then
+1. **BEFORE any work**: call `ctx_sessionevent(type="start")`, then
    `ctx_status()` to load context.
-2. **Before ending**: call `ctx_session_event(type="end")` to flush
+2. **Before ending**: call `ctx_sessionevent(type="end")` to flush
    pending state.
 
 ### During Work
@@ -145,7 +145,7 @@ responses when governance actions are overdue. Follow this protocol:
 - **After making a decision or discovering a gotcha**: call `ctx_add()`
   to persist it immediately, not at session end.
 - **After completing a task**: call `ctx_complete()` or
-  `ctx_check_task_completion()`.
+  `ctx_checktaskcompletion()`.
 - **Every 10-15 tool calls or 15 minutes**: call `ctx_drift()` to
   check for stale context.
 - **Before git commit**: call `ctx_status()` to verify context health.

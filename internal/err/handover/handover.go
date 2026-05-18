@@ -170,7 +170,7 @@ func ParseFrontmatter(cause error) error {
 }
 
 // ResolveHead wraps a
-// [github.com/ActiveMemory/ctx/internal/git_meta.ResolveHead]
+// [github.com/ActiveMemory/ctx/internal/gitmeta.ResolveHead]
 // failure when stamping sha / branch into new handovers.
 //
 // Parameters:

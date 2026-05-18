@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/backup"
 	coreClaude "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
-	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude_check"
+	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claudecheck"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
 	coreKB "github.com/ActiveMemory/ctx/internal/cli/initialize/core/kb"
 	coreMerge "github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"

@@ -170,7 +170,7 @@ From `state.go`:
 - `isInitialized()` — skip if no .context/
 - `logMessage()` — diagnostic logging
 
-From `check_journal.go`:
+From `checkjournal.go`:
 - `newestMtime()` — find recent files
 - `countUnenriched()` — pattern for reading journal content
 - Journal directory path pattern

@@ -8,7 +8,7 @@
 // places ctx's version can diverge: the source-of-truth
 // `VERSION` file, the installed binary's
 // `ctx --version`, and the marketplace plugin manifest. The
-// `check_version` hook calls into here to nudge users when
+// `checkversion` hook calls into here to nudge users when
 // any of the three drift apart.
 //
 // (This is the *system-hook* drift package and is unrelated

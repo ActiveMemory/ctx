@@ -119,7 +119,7 @@ VS Code commands delegate to `ctx` CLI. The extension provides UI
 | `internal/assets/integrations/copilot-cli/skills/ctx-explain/SKILL.md` | New skill |
 | `internal/assets/integrations/copilot-cli/skills/ctx-brainstorm/SKILL.md` | New skill |
 | `internal/assets/integrations/copilot-cli/skills/ctx-spec/SKILL.md` | New skill |
-| `internal/cli/setup/core/copilot_cli/copilot_cli.go` | Deploy new skills |
+| `internal/cli/setup/core/copilotcli/copilotcli.go` | Deploy new skills |
 | `editors/vscode/package.json` | Add slash commands |
 | `editors/vscode/src/extension.ts` | Handle new commands |
 

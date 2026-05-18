@@ -12,7 +12,7 @@ import (
 
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
 	errCloseout "github.com/ActiveMemory/ctx/internal/err/closeout"
-	"github.com/ActiveMemory/ctx/internal/git_meta"
+	"github.com/ActiveMemory/ctx/internal/gitmeta"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 

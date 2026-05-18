@@ -539,7 +539,7 @@ Initialized() first.
 
 **Rationale**: Option (A) makes the invariant ('no .context/state/ in
 uninitialized projects') structurally enforced. The leak's root cause was
-exactly the (B)-style assumption — check_reminder.Run deliberately skipped the
+exactly the (B)-style assumption — checkreminder.Run deliberately skipped the
 gate to print provenance unconditionally, and that path silently produced the
 leak via Preamble -> nudge.Paused -> PauseMarkerPath -> state.Dir. As long as
 Dir() mkdirs unconditionally, every future caller is one missed gate away from

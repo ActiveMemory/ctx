@@ -29,7 +29,7 @@ import (
 //   - closeoutsDir: absolute path to .context/ingest/closeouts/.
 //   - archiveDir: absolute path to .context/archive/closeouts/.
 //   - projectRoot: absolute path to the project root; passed to
-//     [github.com/ActiveMemory/ctx/internal/git_meta.ResolveHead].
+//     [github.com/ActiveMemory/ctx/internal/gitmeta.ResolveHead].
 //   - entry: caller-supplied content + flags.
 //
 // Returns:

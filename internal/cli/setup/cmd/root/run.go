@@ -13,11 +13,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude_check"
+	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claudecheck"
 	coreAgents "github.com/ActiveMemory/ctx/internal/cli/setup/core/agents"
 	coreCline "github.com/ActiveMemory/ctx/internal/cli/setup/core/cline"
 	coreCopilot "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot"
-	coreCopCLI "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot_cli"
+	coreCopCLI "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilotcli"
 	coreCursor "github.com/ActiveMemory/ctx/internal/cli/setup/core/cursor"
 	coreKiro "github.com/ActiveMemory/ctx/internal/cli/setup/core/kiro"
 	coreOpenCode "github.com/ActiveMemory/ctx/internal/cli/setup/core/opencode"

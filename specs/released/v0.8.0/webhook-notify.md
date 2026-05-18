@@ -176,7 +176,7 @@ internal/cli/notify/           ← NEW: CLI command
   notify_test.go               ← CLI integration tests
 
 internal/cli/system/           ← MODIFIED: add notify calls to hooks
-  check_context_size.go        ← Add notify.Send() after VERBATIM output
+  checkcontextsize.go        ← Add notify.Send() after VERBATIM output
   (... other hook files ...)
 ```
 
@@ -209,13 +209,13 @@ The split keeps notification logic reusable: CLI command delegates to
 - `internal/bootstrap/bootstrap.go` — Register `notify.Cmd`
 - `internal/config/tpl_loop.go` — Add `TplLoopNotify`, update loop templates
 - `internal/cli/loop/script.go` — Pass notify into template format calls
-- `internal/cli/system/check_context_size.go` — Add relay/nudge notification
-- `internal/cli/system/check_persistence.go` — Add relay/nudge notification
+- `internal/cli/system/checkcontextsize.go` — Add relay/nudge notification
+- `internal/cli/system/checkpersistence.go` — Add relay/nudge notification
 - `internal/cli/system/check_ceremonies.go` — Add relay/nudge notification
-- `internal/cli/system/check_journal.go` — Add relay/nudge notification
-- `internal/cli/system/check_resources.go` — Add relay/nudge notification
-- `internal/cli/system/check_knowledge.go` — Add relay/nudge notification
-- `internal/cli/system/check_version.go` — Add relay/nudge + key age nudge
-- `internal/cli/system/post_commit.go` — Add relay notification
-- `internal/cli/system/qa_reminder.go` — Add relay notification
-- `internal/cli/system/block_non_path_ctx.go` — Add relay notification
+- `internal/cli/system/checkjournal.go` — Add relay/nudge notification
+- `internal/cli/system/checkresources.go` — Add relay/nudge notification
+- `internal/cli/system/checkknowledge.go` — Add relay/nudge notification
+- `internal/cli/system/checkversion.go` — Add relay/nudge + key age nudge
+- `internal/cli/system/postcommit.go` — Add relay notification
+- `internal/cli/system/qareminder.go` — Add relay notification
+- `internal/cli/system/blocknonpathctx.go` — Add relay notification

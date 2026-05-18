@@ -1554,7 +1554,7 @@ side effect must not fire.</p>
 </span></code></pre></div>
 <p>The <code>nudge.Relay</code> helper in <code>internal/cli/system/core/nudge</code>
 enforces this for the common "log + webhook" pair. Hook <code>Run</code>
-functions that compose their own sequence (<code>session_event</code>,
+functions that compose their own sequence (<code>sessionevent</code>,
 <code>heartbeat</code>, several <code>check_*</code> hooks) follow the same ordering
 explicitly.</p>
 <h3 id="known-gaps">Known Gaps<a class="headerlink" href="#known-gaps" title="Permanent link">&para;</a></h3>

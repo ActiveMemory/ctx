@@ -2046,7 +2046,7 @@ Phase KB-3 (documentation):
   `docs/recipes/build-a-knowledge-base.md`; uses already-specced
   `mcp:<server>:<resource>` syntax in `grounding-sources.md`; zero new ctx code
 - [x] Replace the `ErrMsg`-string-sentinel anti-pattern across
-  `internal/config/{handover,closeout,git_meta,kb/cli,kb/evidence,kb/sourcecoverage,rc,initialize,schema}/`.
+  `internal/config/{handover,closeout,gitmeta,kb/cli,kb/evidence,kb/sourcecoverage,rc,initialize,schema}/`.
   Sentinels became `entity.Sentinel` typed-string consts whose `Error()`
   resolves text from `commands/text/errors.yaml` via
   `desc.Text(text.DescKey...)` at call time. Pre-existing convention

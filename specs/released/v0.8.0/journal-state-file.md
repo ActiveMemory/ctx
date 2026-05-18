@@ -46,7 +46,7 @@ Date strings (not booleans) — provides audit trail at zero extra cost.
 
 ### Phase 4: Wire into check-journal
 
-8. **`internal/cli/system/check_journal.go`** — Replace `countUnenriched()` body: load state, count `.md` files in directory without `enriched` set.
+8. **`internal/cli/system/checkjournal.go`** — Replace `countUnenriched()` body: load state, count `.md` files in directory without `enriched` set.
 
 ### Phase 5: Update tests
 
@@ -79,7 +79,7 @@ Date strings (not booleans) — provides audit trail at zero extra cost.
 | `internal/cli/journal/run.go` | Load state, pass per-file |
 | `internal/cli/journal/journal_test.go` | Update tests |
 | `internal/cli/recall/run.go` | Mark imported on import |
-| `internal/cli/system/check_journal.go` | State-based `countUnenriched` |
+| `internal/cli/system/checkjournal.go` | State-based `countUnenriched` |
 | `internal/assets/.../ctx-journal-normalize/SKILL.md` | State file instructions |
 | `internal/assets/.../ctx-journal-enrich-all/SKILL.md` | State file instructions |
 | `internal/assets/.../ctx-journal-enrich/SKILL.md` | State file instructions |

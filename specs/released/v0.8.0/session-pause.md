@@ -230,19 +230,19 @@ hooks call `paused()` to increment the counter but don't print.
 | `internal/cli/system/resume.go` | New: `ctx system resume` plumbing command |
 | `internal/cli/system/pause_test.go` | Tests for pause/resume/counter |
 | `internal/cli/system/system.go` | Register `pauseCmd()`, `resumeCmd()` |
-| `internal/cli/system/check_context_size.go` | Add pause check + reminder emission |
+| `internal/cli/system/checkcontextsize.go` | Add pause check + reminder emission |
 | `internal/cli/system/check_ceremonies.go` | Add pause check (silent) |
-| `internal/cli/system/check_persistence.go` | Add pause check (silent) |
-| `internal/cli/system/check_journal.go` | Add pause check (silent) |
-| `internal/cli/system/check_reminders.go` | Add pause check (silent) |
-| `internal/cli/system/check_version.go` | Add pause check (silent) |
-| `internal/cli/system/check_resources.go` | Add pause check (silent) |
-| `internal/cli/system/check_knowledge.go` | Add pause check (silent) |
-| `internal/cli/system/check_map_staleness.go` | Add pause check (silent) |
-| `internal/cli/system/context_load_gate.go` | Add pause check (silent) |
-| `internal/cli/system/qa_reminder.go` | Add pause check (silent) |
-| `internal/cli/system/post_commit.go` | Add pause check (silent) |
-| `internal/cli/system/specs_nudge.go` | Add pause check (silent) |
+| `internal/cli/system/checkpersistence.go` | Add pause check (silent) |
+| `internal/cli/system/checkjournal.go` | Add pause check (silent) |
+| `internal/cli/system/checkreminders.go` | Add pause check (silent) |
+| `internal/cli/system/checkversion.go` | Add pause check (silent) |
+| `internal/cli/system/checkresources.go` | Add pause check (silent) |
+| `internal/cli/system/checkknowledge.go` | Add pause check (silent) |
+| `internal/cli/system/checkmapstaleness.go` | Add pause check (silent) |
+| `internal/cli/system/contextloadgate.go` | Add pause check (silent) |
+| `internal/cli/system/qareminder.go` | Add pause check (silent) |
+| `internal/cli/system/postcommit.go` | Add pause check (silent) |
+| `internal/cli/system/specsnudge.go` | Add pause check (silent) |
 | `internal/cli/pause.go` | New: top-level `ctx pause` command |
 | `internal/cli/resume.go` | New: top-level `ctx resume` command |
 | `internal/bootstrap/bootstrap.go` | Register top-level pause/resume commands |

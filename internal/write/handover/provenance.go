@@ -9,7 +9,7 @@ package handover
 import (
 	cfgHandover "github.com/ActiveMemory/ctx/internal/config/handover"
 	errHandover "github.com/ActiveMemory/ctx/internal/err/handover"
-	"github.com/ActiveMemory/ctx/internal/git_meta"
+	"github.com/ActiveMemory/ctx/internal/gitmeta"
 )
 
 // resolveProvenance picks the SHA / branch pair for a new

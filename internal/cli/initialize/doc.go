@@ -49,7 +49,7 @@
 //     foundation file creation.
 //   - **[core/plugin]**: Claude Code plugin
 //     detection and global enablement.
-//   - **[core/claude_check]**: stage-aware detection of
+//   - **[core/claudecheck]**: stage-aware detection of
 //     Claude Code state used to print contextual
 //     guidance during init.
 //   - **[core/merge]**: create-or-merge file

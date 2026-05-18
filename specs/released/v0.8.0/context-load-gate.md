@@ -196,8 +196,8 @@ blocks the tool call.
 
 | File | Change |
 |------|--------|
-| `internal/cli/system/context_load_gate.go` | New — hook implementation |
-| `internal/cli/system/context_load_gate_test.go` | New — unit tests |
+| `internal/cli/system/contextloadgate.go` | New — hook implementation |
+| `internal/cli/system/contextloadgate_test.go` | New — unit tests |
 | `internal/cli/system/system.go` | Register `contextLoadGateCmd()` |
 | `internal/assets/claude/hooks/hooks.json` | Add `.*` matcher entry (first position) |
 

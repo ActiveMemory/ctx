@@ -62,8 +62,8 @@
 | `ctx_watch_update` tool | ✅ | ✅ | 📋 (same server) |
 | `ctx_compact` tool | ✅ | ✅ | 📋 (same server) |
 | `ctx_next` tool | ✅ | ✅ | 📋 (same server) |
-| `ctx_check_task_completion` | ✅ | ✅ | 📋 (same server) |
-| `ctx_session_event` tool | ✅ | ✅ | 📋 (same server) |
+| `ctx_checktaskcompletion` | ✅ | ✅ | 📋 (same server) |
+| `ctx_sessionevent` tool | ✅ | ✅ | 📋 (same server) |
 | `ctx_remind` tool | ✅ | ✅ | 📋 (same server) |
 | 8 context resources | ✅ | ✅ | 📋 (same server) |
 | Resource change notifications | ✅ Poller-based | ✅ Poller-based | 📋 (same server) |

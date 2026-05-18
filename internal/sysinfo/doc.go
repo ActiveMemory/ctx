@@ -13,7 +13,7 @@
 //
 //   - **`ctx sysinfo`**: the top-level user-facing CLI that
 //     prints a snapshot of host resources.
-//   - **`ctx system check_resource`**: the hook that fires a
+//   - **`ctx system checkresource`**: the hook that fires a
 //     pressure warning during sessions when load, memory, or
 //     disk crosses a danger threshold.
 //

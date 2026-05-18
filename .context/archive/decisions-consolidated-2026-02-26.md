@@ -72,7 +72,7 @@ Originals replaced by consolidated entries in DECISIONS.md.
 
 **Rationale**: JSON with hookSpecificOutput.additionalContext is parsed as a directive by Claude Code, while plain text is treated as ambient context the agent can ignore
 
-**Consequences**: Added HookResponse/HookSpecificOutput types and printHookContext() helper to internal/cli/system/input.go; converted qa_reminder.go and post_commit.go; future hooks should use printHookContext() for non-blocking directives
+**Consequences**: Added HookResponse/HookSpecificOutput types and printHookContext() helper to internal/cli/system/input.go; converted qareminder.go and postcommit.go; future hooks should use printHookContext() for non-blocking directives
 
 ---
 

@@ -34,7 +34,7 @@
 //   - [github.com/ActiveMemory/ctx/internal/write/handover]
 //     consumes closeouts via [List] + [PostdatedBy] + [Archive]
 //     during handover fold.
-//   - [github.com/ActiveMemory/ctx/internal/git_meta] supplies
+//   - [github.com/ActiveMemory/ctx/internal/gitmeta] supplies
 //     the (sha, branch) pair stamped into the frontmatter.
 //   - [github.com/ActiveMemory/ctx/internal/config/kb] supplies
 //     the mode + closeout-suffix constants.

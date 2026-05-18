@@ -46,7 +46,7 @@
 //
 //   - [github.com/ActiveMemory/ctx/internal/write/closeout]
 //     supplies the optional fold-source files.
-//   - [github.com/ActiveMemory/ctx/internal/git_meta] stamps
+//   - [github.com/ActiveMemory/ctx/internal/gitmeta] stamps
 //     `sha` / `branch` provenance.
 //   - [github.com/ActiveMemory/ctx/internal/cli/handover/core/path]
 //     resolves `.context/handovers/`.

@@ -8,7 +8,7 @@ package text
 
 // DescKeys for gitmeta error wrappers. The matching YAML
 // entries live in commands/text/errors.yaml; constructors in
-// internal/err/git_meta/ resolve them via desc.Text at error
+// internal/err/gitmeta/ resolve them via desc.Text at error
 // construction time.
 const (
 	// DescKeyErrGitmetaMissingGitTree is the text key for the

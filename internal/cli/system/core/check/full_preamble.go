@@ -55,7 +55,7 @@ import (
 // it over input.SessionID when touching state files keyed by session.
 //
 // The regular [Preamble] stays available for hooks that do not need
-// the Initialized gate or a state directory (e.g. check_reminder,
+// the Initialized gate or a state directory (e.g. checkreminder,
 // which emits provenance unconditionally and gates Initialized inline).
 //
 // Parameters:

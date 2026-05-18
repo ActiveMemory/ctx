@@ -366,7 +366,7 @@ internal/assets/claude/skills/ctx-doctor/
 | `internal/config/gitignore.go` | Add `state/events.jsonl` and `state/events.1.jsonl` to `GitignoreEntries` |
 | `internal/cli/system/system.go` | Register `eventsCmd()` |
 | `internal/bootstrap/bootstrap.go` | Register `doctor.Cmd()` |
-| System hook files (`check_ceremonies.go`, `check_persistence.go`, `check_context_size.go`, `check_journal.go`, `check_reminders.go`, `check_knowledge.go`, `check_map_staleness.go`, `check_version.go`, `check_resources.go`, `context_load_gate.go`, `post_commit.go`, `qa_reminder.go`) | Add `eventlog.Append()` call alongside `notify.Send()` |
+| System hook files (`check_ceremonies.go`, `checkpersistence.go`, `checkcontextsize.go`, `checkjournal.go`, `checkreminders.go`, `checkknowledge.go`, `checkmapstaleness.go`, `checkversion.go`, `checkresources.go`, `contextloadgate.go`, `postcommit.go`, `qareminder.go`) | Add `eventlog.Append()` call alongside `notify.Send()` |
 
 ### Key types and functions
 

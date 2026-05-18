@@ -25,8 +25,8 @@ multiple convention violations accumulated across the changeset.
 ### Magic numbers and strings
 
 6. **source/cmd.go:75** — `"project"`, `"p"` hardcoded
-7. **check_context_size/run.go** — 30, 3, 15 are magic numbers
-8. **post_commit/run.go** — regexes, violation points, and localizable
+7. **checkcontextsize/run.go** — 30, 3, 15 are magic numbers
+8. **postcommit/run.go** — regexes, violation points, and localizable
    strings all hardcoded
 9. **state/state.go:29** — 0o750 hardcoded
 

@@ -12,8 +12,8 @@
 //
 // The package owns the per-session state files under
 // `.context/state/session-<id>.json`, the lightweight
-// counters that hooks like `check_ceremony`,
-// `check_persistence`, and `check_context_size` evaluate
+// counters that hooks like `checkceremony`,
+// `checkpersistence`, and `checkcontextsize` evaluate
 // each time they fire.
 //
 // # Public Surface

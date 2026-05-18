@@ -142,9 +142,9 @@ read and write your context files without shell commands:
 | `ctx_status` | Context health: file count, token estimate |
 | `ctx_steering_get` | Retrieve steering files applicable to the current prompt |
 | `ctx_journal_source` | Query recent AI session history |
-| `ctx_session_event` | Signal session start/end lifecycle events |
+| `ctx_sessionevent` | Signal session start/end lifecycle events |
 | `ctx_watch_update` | Apply structured updates to `.context/` files |
-| `ctx_check_task_completion` | After a write, detect silently completed tasks |
+| `ctx_checktaskcompletion` | After a write, detect silently completed tasks |
 
 You don't invoke these yourself. The agent uses them as needed.
 

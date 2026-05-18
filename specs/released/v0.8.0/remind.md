@@ -251,7 +251,7 @@ internal/cli/remind/
   remind_test.go     Tests
 
 internal/cli/system/
-  check_reminders.go checkRemindersCmd(), runCheckReminders()
+  checkreminders.go checkRemindersCmd(), runCheckReminders()
 
 internal/assets/claude/skills/ctx-remind/
   SKILL.md           Agent skill instructions
@@ -353,7 +353,7 @@ func runAdd(cmd *cobra.Command, message, after string) error {
 ### Core function: runCheckReminders
 
 ```go
-// internal/cli/system/check_reminders.go
+// internal/cli/system/checkreminders.go
 
 func checkRemindersCmd() *cobra.Command {
     return &cobra.Command{

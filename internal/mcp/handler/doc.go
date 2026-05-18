@@ -42,11 +42,11 @@
 //   - **`ctx_remind`**:         read/dismiss reminders via
 //     [remindStore].
 //   - **`ctx_session_*`**:      `session_start`,
-//     `session_end`, `session_event` lifecycle plumbing
+//     `session_end`, `sessionevent` lifecycle plumbing
 //     (covered in [session_hooks.go]).
 //   - **`ctx_steering_get`**:   surface matched steering
 //     files via [steering.go] (see [internal/steering]).
-//   - **`ctx_check_task_completion`**: match recent file
+//   - **`ctx_checktaskcompletion`**: match recent file
 //     edits to open tasks.
 //   - **`ctx_watch_update`**:   apply context updates the
 //     agent emits in `<ctx-update>` blocks.
@@ -86,7 +86,7 @@
 // # Session Hooks
 //
 // [session_hooks.go] implements the three lifecycle tools
-// (`session_start`, `session_end`, `session_event`) the MCP
+// (`session_start`, `session_end`, `sessionevent`) the MCP
 // client calls to mark transitions. They write to per-session
 // state files under `state/` and emit nudge messages when the
 // configured ceremonies have been skipped.

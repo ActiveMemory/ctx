@@ -52,7 +52,7 @@ initialize, loop, pad/edit, event, notify.
 | `hub/store.go` | `dirPerm` → `fs.PermKeyDir` |
 | `server/daemon.go` | Removed aliased `pidFile` const |
 | `server/setup.go` | Removed aliased `dataDirPerm` const |
-| `claudecheck/` | Renamed to `claude_check/` |
+| `claudecheck/` | Renamed to `claudecheck/` |
 | `details.go` | Renamed to `detail.go` (singular) |
 | `steering/types.go` | Docstrings aligned with conventions |
 | `config/entry/entry.go` | Added `AllowedTypes` set |

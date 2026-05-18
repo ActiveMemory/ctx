@@ -108,8 +108,8 @@ Also match `Write` (same hook, same counter).
 
 ### Files Changed
 
-- `internal/cli/system/check_task_completion.go` — new command
-- `internal/cli/system/check_task_completion_test.go` — tests
+- `internal/cli/system/checktaskcompletion.go` — new command
+- `internal/cli/system/checktaskcompletion_test.go` — tests
 - `internal/assets/claude/hooks/hooks.json` — add PostToolUse matcher
 - `internal/config/file.go` — add state filename constant
 - `internal/rc/rc.go` — add `TaskNudgeInterval()` config reader

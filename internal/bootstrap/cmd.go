@@ -22,9 +22,9 @@ import (
 	embedFlag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/validate"
-	errGitmeta "github.com/ActiveMemory/ctx/internal/err/git_meta"
+	errGitmeta "github.com/ActiveMemory/ctx/internal/err/gitmeta"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
-	"github.com/ActiveMemory/ctx/internal/git_meta"
+	"github.com/ActiveMemory/ctx/internal/gitmeta"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeBootstrap "github.com/ActiveMemory/ctx/internal/write/bootstrap"
 )

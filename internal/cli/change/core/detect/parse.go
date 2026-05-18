@@ -13,7 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/config/load_gate"
+	"github.com/ActiveMemory/ctx/internal/config/loadgate"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/format"
@@ -94,7 +94,7 @@ func ParseSinceFlag(since string) (time.Time, string, error) {
 //   - time.Time: Parsed timestamp
 //   - bool: True if extraction succeeded
 func ExtractTimestamp(jsonLine string) (time.Time, bool) {
-	key := load_gate.JSONKeyTimestamp
+	key := loadgate.JSONKeyTimestamp
 	idx := strings.Index(jsonLine, key)
 	if idx < 0 {
 		return time.Time{}, false
