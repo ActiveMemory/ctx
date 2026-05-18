@@ -262,6 +262,49 @@ sources you supply
                   unfolded closeouts as the recall surface
 ```
 
+## Bootstrap vs Steady State: Ingest First, Ground Later
+
+`/ctx-kb-ingest` and `/ctx-kb-ground` both read sources, which
+makes their relationship easy to misread. The distinction is
+**authority**, not input shape:
+
+- **Ingest writes.** It mints `EV-###` rows, authors topic-page
+  prose, transitions source-coverage ledger states. The source
+  list is per-invocation (CLI args, inline gestures).
+- **Ground audits.** It walks a *persistent watch list* in
+  `grounding-sources.md`, reports drift, annotates the ledger's
+  `Residue` and `Next action` cells, and **never writes prose or
+  evidence**. Drifted sources surface as flags pointing at
+  `/ctx-kb-ingest`.
+
+This drives the canonical flow:
+
+**Bootstrap (pristine kb).** Use `/ctx-kb-ingest <sources>` to
+absorb the first wave of material. Ground has nothing to compare
+against in a pristine kb — `source-map.md` is empty, and
+`grounding-sources.md` would just prompt for entries.
+
+**Curate the watch list.** Once the kb has content, edit
+`grounding-sources.md` by hand to list the canonical sources the
+kb's claims depend on — the load-bearing citations worth
+checking for drift. Ground refuses to synthesise this list from
+`source-map.md` by design; the watch list is a deliberate human
+choice about what's worth tracking.
+
+**Steady state.** Ingest liberally as new material lands. Run
+`/ctx-kb-ground` periodically — before a release, after a vendor
+version bump, on whatever cadence fits — to detect drift on the
+tracked subset. Drift surfaces as flags in the ground closeout
+pointing at `/ctx-kb-ingest` for the actual write-side work.
+
+**Rule of thumb:**
+
+| Situation | Skill |
+|---|---|
+| *"I have new material I want absorbed."* | `/ctx-kb-ingest` |
+| *"Are the sources the kb depends on still current?"* | `/ctx-kb-ground` |
+| *"Is the kb's structure clean (capitalisation, frontmatter)?"* | `/ctx-kb-site-review` |
+
 ## What the Editorial Pipeline Is NOT
 
 - **Not a substitute for `DECISIONS.md`.** Project-level

@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-17 | Creator confusion is the strongest doc-quality signal — louder than any user signal |
 | 2026-05-17 | Sentinel errors use typed zero-data structs with lazy `desc.Text()` — never Go string consts |
 | 2026-05-17 | `_helpers.go` / `_utils.go` filenames are project anti-pattern; use domain nouns |
 | 2026-05-17 | Subagent parallelism shines for mechanical refactor with a worked-example reference |
@@ -144,6 +145,45 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-17-200000] Creator confusion is the strongest doc-quality signal — louder than any user signal
+
+**Context**: In this session the project author asked *"why
+external sources only? I can ground on a repo, a MCP query, a
+markdown I dropped into ./inbox — are they also considered
+'external'. Or is there a nomenclature confusion here?"* — and
+explicitly noted *"it is confusing to the very creator of this
+pipeline. -- and that's not a good sign."* Investigation
+confirmed the input contract accepted in-tree paths and MCP
+resources all along, but the SKILL.md ledes, the CLI docs table
+row, and the recipe all framed ground as "external" — which
+the creator's own mental model couldn't reconcile with the
+contract.
+
+**Lesson**: A normal-user reading-confusion signal is "I don't
+understand this." A creator reading-confusion signal is "this
+contradicts what I built." The second is louder by an order
+of magnitude — the creator has the full internal model and a
+strong prior on what the system should say. If they trip over
+the words, the words are wrong, full stop. Don't defend the
+existing framing; don't explain what was meant. Rewrite to
+match what the contract actually does. The creator was a
+control instrument; if even that instrument deflected, the
+docs are mis-anchoring everyone.
+
+**Application**: When the project's own creator asks a
+"do we even need X?" or "wait, isn't X actually doing Y?"
+question, treat it as a doc-bug report, not an architecture
+question. Investigate the literal contract (input/output
+shapes, code-level reality) before debating semantics. If the
+contract is correct but the docs misframe it, the action is
+"rewrite the framing across every doc surface that touches
+it" — skills, recipes, CLI tables, anything user-facing.
+Concrete instance handled this session: dropped "external"
+from ctx-kb-ground's prose, description, pass-mode value,
+recipe Step 4, and CLI table row across all three skill trees.
 
 ---
 
