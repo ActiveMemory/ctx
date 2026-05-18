@@ -85,6 +85,8 @@ have been initialized by `ctx init` (otherwise commands return
 | [`ctx change`](change.md#ctx-change)          | Show what changed since last session                     |
 | [`ctx memory`](memory.md#ctx-memory)          | Bridge Claude Code auto memory into `.context/`          |
 | [`ctx watch`](watch.md#ctx-watch)             | Auto-apply context updates from AI output                |
+| [`ctx kb`](kb.md#ctx-kb)                      | Knowledge-base editorial pipeline (Phase KB)             |
+| [`ctx handover`](handover.md#ctx-handover)    | Write the per-session handover that the next session reads |
 
 ## Sessions
 

@@ -44,8 +44,8 @@ Default 200,000 tokens (Opus/Sonnet). Configurable via `.ctxrc` key
 
 | File | Change |
 |------|--------|
-| `internal/cli/system/check_context_size.go` | Token reading, >80% independent trigger, token line display |
-| `internal/cli/system/check_context_size_test.go` | Tests for new display logic |
+| `internal/cli/system/checkcontextsize.go` | Token reading, >80% independent trigger, token line display |
+| `internal/cli/system/checkcontextsize_test.go` | Tests for new display logic |
 | `internal/assets/hooks/messages/registry.go` | `window` variant entry |
 | `internal/rc/types.go` | `ContextWindow` field on `CtxRC` |
 | `internal/rc/default.go` | `DefaultContextWindow = 200000` |

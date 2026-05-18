@@ -28,9 +28,11 @@
 //
 // # Wrapping Strategy
 //
-// ErrDrift is a plain errors.New sentinel with
-// no cause wrapping. Its message text comes from
-// [internal/config/schema.ErrMsgDrift].
+// ErrDrift is a typed-string sentinel
+// ([github.com/ActiveMemory/ctx/internal/entity.Sentinel])
+// whose `Error()` resolves the user-facing string from the
+// embedded YAML lookup at call time, keyed by
+// `text.DescKeyErrSchemaDrift`.
 //
 // # Concurrency
 //

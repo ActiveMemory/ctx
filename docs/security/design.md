@@ -136,7 +136,7 @@ if sendErr := notify.Send(channel, msg, sessionID, ref); sendErr != nil {
 
 The `nudge.Relay` helper in `internal/cli/system/core/nudge`
 enforces this for the common "log + webhook" pair. Hook `Run`
-functions that compose their own sequence (`session_event`,
+functions that compose their own sequence (`sessionevent`,
 `heartbeat`, several `check_*` hooks) follow the same ordering
 explicitly.
 

@@ -80,7 +80,7 @@ var exemptPackagePaths = []string{
 	"internal/err/",
 	"internal/hub",
 	"internal/cli/hub/core/server",
-	"internal/cli/initialize/core/claude_check",
+	"internal/cli/initialize/core/claudecheck",
 	"internal/sysinfo",
 }
 

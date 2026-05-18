@@ -4,20 +4,20 @@ description: "Normalize journal source markdown for clean rendering. Use after j
 tools: [bash, read, write, edit]
 ---
 
-Reconstruct journal entries as clean markdown from stripped plain text.
+Reconstruct journal entries as clean Markdown from stripped plain text.
 
 ## When to Use
 
 - After `ctx journal site` shows rendering issues
 - When journal entries have fence nesting problems
 - When metadata blocks render as raw `**Key**: value`
-- Before running `ctx-journal-enrich` (clean markdown improves extraction)
+- Before running `ctx-journal-enrich` (clean Markdown improves extraction)
 
 ## When NOT to Use
 
 - On entries already normalized (check `.state.json`)
 - When the site renders correctly
-- On non-journal markdown files
+- On non-journal Markdown files
 
 ## Output Rules
 

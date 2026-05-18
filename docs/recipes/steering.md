@@ -43,7 +43,7 @@ you the first time you initialize a project:
 Each file opens with an **inline HTML comment** that
 explains the three inclusion modes, what `priority` means,
 and the `tools` scope. The comment is invisible in
-rendered markdown but visible when you edit the file.
+rendered Markdown but visible when you edit the file.
 Delete it once the file is yours.
 
 All four default to `inclusion: always` and `priority: 10`,

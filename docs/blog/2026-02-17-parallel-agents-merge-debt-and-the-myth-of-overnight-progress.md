@@ -284,7 +284,7 @@ This is not safety theater; this is **intent preservation**.
 The  thing the `ctx` Manifesto calls "[encoding intent into the
 environment](../index.md#encode-intent-into-the-environment)."
 
-The [Eight Ways a Hook Can Talk][hooks-post] catalogued the full
+The [Eight Ways a Hook Can Talk][hooks-post] cataloged the full
 spectrum: from silent enrichment to hard blocks. 
 
 The key insight was that hooks are not just safety rails: 

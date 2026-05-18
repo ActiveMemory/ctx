@@ -25,9 +25,9 @@ const (
 	// Next is the MCP tool name for suggesting the next task.
 	Next = "ctx_next"
 	// CheckTaskCompletion is the MCP tool name for task completion nudge.
-	CheckTaskCompletion = "ctx_check_task_completion"
+	CheckTaskCompletion = "ctx_checktaskcompletion"
 	// SessionEvent is the MCP tool name for session lifecycle events.
-	SessionEvent = "ctx_session_event"
+	SessionEvent = "ctx_sessionevent"
 	// Remind is the MCP tool name for listing reminders.
 	Remind = "ctx_remind"
 	// SteeringGet is the MCP tool name for retrieving steering files.

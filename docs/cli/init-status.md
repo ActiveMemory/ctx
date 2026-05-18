@@ -19,6 +19,22 @@ Initialize a new `.context/` directory with template files.
 ctx init [flags]
 ```
 
+!!! warning "Git is required"
+    `ctx init` (and every non-administrative `ctx` subcommand)
+    refuses to operate without a `.git/` working tree at the
+    project root. `ctx` already needed git to work properly;
+    that requirement is now enforced rather than assumed.
+
+    Handovers and closeouts stamp the current commit into
+    their frontmatter, and the editorial pipeline pins
+    in-repo evidence to a short SHA (*none of which works
+    without a repo*). 
+
+    Run `git init` first if the project does
+    not already have one. 
+
+    There is no `--allow-no-git` escape hatch. 
+
 **Flags**:
 
 | Flag        | Short | Description                                                                 |
@@ -30,6 +46,12 @@ ctx init [flags]
 **Creates**:
 
 - `.context/` directory with all template files
+- `.context/kb/` (with `index.md` and `topics/`) and
+  `.context/ingest/` (with `KB-RULES.md`, mode prompts,
+  `OPERATOR.md`, `PROMPT.md`, `closeouts/`, `schemas/`) and
+  `.context/handovers/`: the editorial-pipeline scaffolding
+  ([Phase KB](../recipes/build-a-knowledge-base.md)). Embedded
+  templates are copied; existing files are preserved.
 - `.claude/settings.local.json` with pre-approved `ctx` permissions
 - `CLAUDE.md` with bootstrap instructions (or merges into existing)
 

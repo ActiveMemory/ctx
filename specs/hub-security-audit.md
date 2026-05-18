@@ -1364,7 +1364,7 @@ backpressure" track).
 
 ### Low (defense-in-depth, hardening)
 
-#### H-16 — Content not sanitized for markdown injection
+#### H-16 — Content not sanitized for Markdown injection
 
 **Severity**: Low.
 
@@ -1375,7 +1375,7 @@ backpressure" track).
 `validateEntry` does not inspect `Content` beyond size.
 When the client-side renderer writes entries to
 `.context/hub/decisions.md` (and siblings), the content
-is concatenated into a markdown document. A malicious
+is concatenated into a Markdown document. A malicious
 Content field like `\n---\ntitle: Fake\n---\n# Impostor`
 can inject what looks like a new frontmatter block and
 a new entry.

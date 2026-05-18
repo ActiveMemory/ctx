@@ -27,12 +27,12 @@ Zensical uses Python-Markdown (via mkdocs), NOT CommonMark.
 CommonMark has Type 1 blocks (`<pre>`) that only end at the closing tag, but
 Python-Markdown does not implement this. This means:
 
-- `<pre><code>` does NOT protect content from markdown parsing
+- `<pre><code>` does NOT protect content from Markdown parsing
 - `<details><pre>` is even worse (Type 6, also ends at blank lines)
 - Blank lines in tool output content break any HTML-based wrapping
 
 **Solution**: Fenced code blocks (```) correctly survive blank lines and
-prevent all markdown/HTML interpretation. Safe because `stripFences` runs
+prevent all Markdown/HTML interpretation. Safe because `stripFences` runs
 first, removing all fence lines from content.
 
 ## Tool Output Wrapping
@@ -55,7 +55,7 @@ tolerating gaps in turn numbering (e.g., 348 → 350).
    export pipeline; unescape HTML entities if wrappers were present
 3. Emit fenced code block: ``` + raw content + ```
 
-Content is emitted verbatim — no `html.EscapeString`, no markdown escaping.
+Content is emitted verbatim — no `html.EscapeString`, no Markdown escaping.
 
 ### Tool Output Styling
 

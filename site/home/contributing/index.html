@@ -2634,12 +2634,26 @@ directly. All text strings are loaded from YAML via
 cobra is initialized.</p>
 <h4 id="errors-internalerr">Errors: <code>internal/err/</code><a class="headerlink" href="#errors-internalerr" title="Permanent link">&para;</a></h4>
 <p>Domain-specific error constructors live under <code>internal/err/&lt;domain&gt;/</code>.
-Each package mirrors the write structure. Functions return <code>error</code>
-(never custom error types) and load messages from YAML via
-<code>desc.Text(text.DescKey*)</code>.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>internal/err/add/add.go         # errors for ctx add
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>internal/err/config/config.go   # errors for configuration
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>internal/err/cli/cli.go         # errors for CLI argument validation
+Each package mirrors the write structure. Constructor functions return
+<code>error</code> and load messages from YAML via <code>desc.Text(text.DescKey*)</code>.</p>
+<p>Identity sentinels (matched at the call site with <code>errors.Is</code>) are
+declared as <code>entity.Sentinel</code> consts:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">ErrMissingFoo</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">entity</span><span class="p">.</span><span class="nx">Sentinel</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">DescKeyErrPkgMissingFoo</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>entity.Sentinel</code> is a typed string whose <code>Error()</code> resolves the key
+through <code>desc.Text</code> at call time, so the user-facing text stays in
+<code>commands/text/errors.yaml</code> and the sentinel value itself remains
+pure identity. Never declare sentinels as <code>var ErrX = errors.New(...)</code>
+with a hardcoded English string — that bypasses localization and
+materializes the string before the embedded YAML lookup is populated.</p>
+<p>When a sentinel needs to carry fields (a path, a name), use a typed
+struct in <code>internal/err/&lt;domain&gt;/</code> instead. See
+<code>internal/err/context.NotFoundError</code> for the canonical pattern with
+<code>Error()</code>, <code>Is(target error) bool</code>, and an <code>errors.As</code> consumer
+contract.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>internal/err/add/add.go         # errors for ctx add
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>internal/err/config/config.go   # errors for configuration
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>internal/err/cli/cli.go         # errors for CLI argument validation
 </span></code></pre></div>
 <h4 id="config-constants-internalconfig">Config Constants: <code>internal/config/</code><a class="headerlink" href="#config-constants-internalconfig" title="Permanent link">&para;</a></h4>
 <p>Pure-constant leaf packages with zero internal dependencies (stdlib
@@ -2739,7 +2753,7 @@ need prefix-based header detection.</p>
 <h2 id="day-to-day-workflow">Day-to-Day Workflow<a class="headerlink" href="#day-to-day-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="go-code-changes">Go Code Changes<a class="headerlink" href="#go-code-changes" title="Permanent link">&para;</a></h3>
 <p>After modifying Go source files, rebuild and reinstall:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>make<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>make<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
 </span></code></pre></div>
 <p>The <code>ctx</code> binary is statically compiled. There is no hot reload.
 You must rebuild for Go changes to take effect.</p>
@@ -2748,8 +2762,8 @@ You must rebuild for Go changes to take effect.</p>
 <code>internal/assets/claude/hooks/</code>.</p>
 <p>Claude Code caches plugin files, so edits aren't picked up automatically.</p>
 <p><strong>Clear the cache and restart</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>make<span class="w"> </span>plugin-reload<span class="w">   </span><span class="c1"># nukes ~/.claude/plugins/cache/activememory-ctx/</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># then restart Claude Code</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>make<span class="w"> </span>plugin-reload<span class="w">   </span><span class="c1"># nukes ~/.claude/plugins/cache/activememory-ctx/</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># then restart Claude Code</span>
 </span></code></pre></div>
 <p>The plugin will be re-installed from your local marketplace on startup.
 No version bump is needed during development.</p>
@@ -2785,9 +2799,9 @@ is gitignored and swapped between them:</p>
 </tbody>
 </table>
 <p>Use <code>ctx</code> commands to switch:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>dev<span class="w">      </span><span class="c1"># switch to dev profile</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>base<span class="w">     </span><span class="c1"># switch to base profile</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ctx<span class="w"> </span>config<span class="w"> </span>status<span class="w">          </span><span class="c1"># show which profile is active</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>dev<span class="w">      </span><span class="c1"># switch to dev profile</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>base<span class="w">     </span><span class="c1"># switch to base profile</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ctx<span class="w"> </span>config<span class="w"> </span>status<span class="w">          </span><span class="c1"># show which profile is active</span>
 </span></code></pre></div>
 <p>After cloning, run <code>ctx config switch dev</code> to get started with full logging.</p>
 <p>See <a href="../configuration/">Configuration</a> for the full <code>.ctxrc</code> option reference.</p>
@@ -2799,13 +2813,13 @@ knowledge persistence that matters most. For everything else, see
 rsync, Time Machine, Borg, or whichever tool already handles the
 rest of your files.</p>
 <h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># fast: all tests</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>make<span class="w"> </span>audit<span class="w">  </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>make<span class="w"> </span>smoke<span class="w">  </span><span class="c1"># build + run basic commands end-to-end</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># fast: all tests</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>make<span class="w"> </span>audit<span class="w">  </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>make<span class="w"> </span>smoke<span class="w">  </span><span class="c1"># build + run basic commands end-to-end</span>
 </span></code></pre></div>
 <h3 id="running-the-docs-site-locally">Running the Docs Site Locally<a class="headerlink" href="#running-the-docs-site-locally" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>make<span class="w"> </span>site-setup<span class="w">  </span><span class="c1"># one-time: install zensical via pipx</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>make<span class="w"> </span>site-serve<span class="w">  </span><span class="c1"># serve at localhost</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>make<span class="w"> </span>site-setup<span class="w">  </span><span class="c1"># one-time: install zensical via pipx</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>make<span class="w"> </span>site-serve<span class="w">  </span><span class="c1"># serve at localhost</span>
 </span></code></pre></div>
 <hr />
 <h2 id="submitting-changes">Submitting Changes<a class="headerlink" href="#submitting-changes" title="Permanent link">&para;</a></h2>
@@ -2867,7 +2881,7 @@ doc consistency, and tests in one pass.</p>
 <p>By contributing, you agree to the
 <a href="https://github.com/ActiveMemory/ctx/blob/main/CONTRIBUTING_DCO.md">Developer Certificate of Origin</a>.</p>
 <p>All commits must be signed off:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
 </span></code></pre></div>
 <h3 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h3>
 <p>Contributions are licensed under the

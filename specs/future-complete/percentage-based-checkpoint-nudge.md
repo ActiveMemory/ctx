@@ -52,7 +52,7 @@ Replace both trigger mechanisms with two percentage-based thresholds:
 - `CheckpointLateInterval` (3) — deleted
 - `ContextCheckpointMinPct` (20) — deleted (subsumed by 60%)
 - `ContextWindowThresholdPct` (80) — replaced by 90%
-- All counter-based branching in `check_context_size/run.go`
+- All counter-based branching in `checkcontextsize/run.go`
 - Counter file (`context-check-{sessionID}`) — no longer needed for
   nudge decisions (still needed for prompt count in stats/logging)
 

@@ -11,7 +11,7 @@ exists today; the only workaround is manual line breaks.
 
 - Elevate `internal/cli/journal/core/wrap/` to `internal/wrap/`
   so wrapping logic is shared between journal and context formatting
-- Add list-aware wrapping: 2-space continuation indent for markdown
+- Add list-aware wrapping: 2-space continuation indent for Markdown
   list items (`- [ ]`, `- [x]`, `- [-]`, `- `)
 - New `ctx fmt` subcommand that formats all context files in-place
 - `make fmt-context` target as convenience alias
@@ -132,7 +132,7 @@ func ListItem(line string, width int) []string
 
 ## Non-Goals
 
-- Perfect markdown rendering. Good enough for humans and agents.
+- Perfect Markdown rendering. Good enough for humans and agents.
 - Reflowing already-wrapped paragraphs into optimal line lengths.
   Only lines exceeding the width get wrapped.
 - Formatting non-context files (README, specs, etc.)

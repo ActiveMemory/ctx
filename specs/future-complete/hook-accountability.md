@@ -48,7 +48,7 @@ Add a minimum context window percentage threshold below which
 counter-based checkpoints are suppressed. The `windowTrigger` (>80%)
 remains independent and unchanged.
 
-**Current logic** (`check_context_size/run.go:112-116`):
+**Current logic** (`checkcontextsize/run.go:112-116`):
 ```go
 if count > 30 {
     counterTriggered = count%3 == 0

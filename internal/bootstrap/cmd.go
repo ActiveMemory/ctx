@@ -9,7 +9,9 @@
 package bootstrap
 
 import (
+	"errors"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 
@@ -20,7 +22,9 @@ import (
 	embedFlag "github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	ctxContext "github.com/ActiveMemory/ctx/internal/context/validate"
+	errGitmeta "github.com/ActiveMemory/ctx/internal/err/gitmeta"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
+	"github.com/ActiveMemory/ctx/internal/gitmeta"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeBootstrap "github.com/ActiveMemory/ctx/internal/write/bootstrap"
 )
@@ -100,6 +104,21 @@ func RootCmd() *cobra.Command {
 			if !ctxContext.Initialized(ctxDir) {
 				cmd.SilenceUsage = true
 				return errInit.NotInitialized()
+			}
+
+			// Phase RG: require git as architectural precondition.
+			// The project root is the parent of the declared
+			// .context/ directory. RequireGitTree refuses when
+			// <projectRoot>/.git is absent.
+			projectRoot := filepath.Dir(ctxDir)
+			if gitErr := gitmeta.RequireGitTree(projectRoot); gitErr != nil {
+				cmd.SilenceUsage = true
+				if errors.Is(gitErr, errGitmeta.ErrMissingGitTree) {
+					return errGitmeta.MissingGitTreeForCmd(
+						cmd.Name(), projectRoot,
+					)
+				}
+				return gitErr
 			}
 
 			return nil

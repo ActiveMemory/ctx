@@ -44,6 +44,18 @@ err.backup.write-archive:
   short: 'failed to write archive: %w'
 err.context.dir-not-found:
   short: 'context directory not found: '
+err.context.dir-not-declared:
+  short: 'context directory not declared'
+err.context.relative-not-allowed-msg:
+  short: 'context directory must be absolute'
+err.context.non-canonical-basename-msg:
+  short: 'context directory has non-canonical basename'
+err.context.dir-not-a-directory-msg:
+  short: 'context directory is not a directory'
+err.context.dir-stat-msg:
+  short: 'context directory stat failed'
+err.context.not-initialized-msg:
+  short: 'context not initialized'
 err.context.not-declared-zero:
   short: |-
     no context directory specified for this project
@@ -74,6 +86,8 @@ err.context.not-initialized:
     ctx is not initialized in this project: %s
     Run 'ctx init' from the project root to set up context here.
     See: https://ctx.ist/recipes/activating-context/
+err.schema.drift:
+  short: 'schema drift detected'
 err.activate.no-candidates:
   short: |-
     ctx activate: no .context/ directory found from this location
@@ -598,6 +612,10 @@ err.parser.missing-open-delim:
   short: missing opening frontmatter delimiter (---)
 err.parser.missing-close-delim:
   short: missing closing frontmatter delimiter (---)
+err.init.context-populated-msg:
+  short: 'context already populated; refusing to overwrite'
+err.init.reset-requires-interactive-msg:
+  short: 'ctx init --reset requires an interactive terminal'
 err.init-context-populated:
   short: '%w (directory: %s; populated: %s; to discard, run `ctx init %s`, which backs up to %s before overwriting and requires interactive y/N confirmation)'
 err.init-reset-requires-interactive:
@@ -608,3 +626,217 @@ err.init-backup-read:
   short: 'read %s for backup: %w'
 err.init-backup-write:
   short: 'write backup %s: %w'
+err.handover.latest:
+  short: 'latest handover: %w'
+err.handover.list-closeouts:
+  short: 'list closeouts for fold: %w'
+err.handover.marshal-frontmatter:
+  short: 'marshal handover frontmatter: %w'
+err.handover.mkdir-handovers:
+  short: 'mkdir handovers dir: %w'
+err.handover.write-handover:
+  short: 'write handover: %w'
+err.handover.archive-folded-closeouts:
+  short: 'archive folded closeouts: %w'
+err.handover.read-handover:
+  short: 'read handover: %w'
+err.handover.read-handovers-dir:
+  short: 'read handovers dir: %w'
+err.handover.parse-frontmatter:
+  short: 'parse handover frontmatter: %w'
+err.handover.resolve-head:
+  short: 'resolve git head for handover: %w'
+err.handover.title-required:
+  short: 'handover title is required'
+err.handover.summary-required:
+  short: 'handover summary is required'
+err.handover.next-required:
+  short: 'handover next-session field is required'
+err.handover.missing-frontmatter:
+  short: 'handover missing frontmatter'
+err.handover.missing-closing-delim:
+  short: 'handover missing closing frontmatter delimiter'
+err.handover.missing-generated-at:
+  short: 'handover missing generated-at'
+err.closeout.read-closeout:
+  short: 'read closeout: %w'
+err.closeout.parse-frontmatter:
+  short: 'parse closeout frontmatter: %w'
+err.closeout.marshal-frontmatter:
+  short: 'marshal closeout frontmatter: %w'
+err.closeout.read-closeouts-dir:
+  short: 'read closeouts dir: %w'
+err.closeout.resolve-head:
+  short: 'resolve git head for closeout: %w'
+err.closeout.mkdir-closeouts:
+  short: 'mkdir closeouts dir: %w'
+err.closeout.write-closeout:
+  short: 'write closeout: %w'
+err.closeout.mkdir-archive:
+  short: 'mkdir closeout archive dir: %w'
+err.closeout.archive-move:
+  short: 'archive closeout %s: %w'
+err.closeout.missing-fields:
+  short: '%w: %s'
+err.closeout.missing-fields-msg:
+  short: 'closeout frontmatter missing required fields'
+err.closeout.missing-frontmatter:
+  short: 'closeout missing frontmatter'
+err.closeout.mode-required:
+  short: 'closeout mode is required'
+err.gitmeta.missing-git-tree:
+  short: '%w: .git/ not found at %s; run `git init` to fix'
+err.gitmeta.missing-git-tree-for-cmd:
+  short: '%w: ctx %s: .git/ not found at %s; run `git init` to fix'
+err.gitmeta.stat-git-dir:
+  short: 'stat .git at %s: %w'
+err.gitmeta.resolve-head:
+  short: 'resolve git head: %w'
+err.gitmeta.missing-git-tree-msg:
+  short: 'git working tree required'
+err.gitmeta.resolve-head-empty:
+  short: 'resolve git head: empty output'
+err.initkb.mkdir:
+  short: 'mkdir %s: %w'
+err.initkb.copy-ingest-templates:
+  short: 'copy ingest templates: %w'
+err.initkb.copy-schemas:
+  short: 'copy schemas: %w'
+err.initkb.copy-landing:
+  short: 'copy kb landing: %w'
+err.initkb.read-embed:
+  short: 'read embed %s: %w'
+err.initkb.mkdir-for:
+  short: 'mkdir for %s: %w'
+err.initkb.write-file:
+  short: 'write %s: %w'
+err.initkb.read-dir:
+  short: 'read %s: %w'
+err.kb.evidence.duplicate-id:
+  short: '%w: %s'
+err.kb.evidence.invalid-band:
+  short: '%w: %q'
+err.kb.evidence.read-index:
+  short: 'read evidence-index: %w'
+err.kb.evidence.mkdir-dir:
+  short: 'mkdir evidence-index parent: %w'
+err.kb.evidence.open-index:
+  short: 'open evidence-index: %w'
+err.kb.evidence.write-row:
+  short: 'write evidence row: %w'
+err.kb.evidence.parse-id-number:
+  short: 'parse EV number %q: %w'
+err.kb.evidence.duplicate-id-msg:
+  short: 'duplicate EV-### id'
+err.kb.evidence.invalid-band-msg:
+  short: 'invalid confidence band'
+err.kb.sourcecoverage.illegal-transition:
+  short: '%w: %s → %s for source %s'
+err.kb.sourcecoverage.unknown-source:
+  short: '%w: %s entering at %s'
+err.kb.sourcecoverage.illegal-transition-msg:
+  short: 'illegal state transition'
+err.kb.sourcecoverage.unknown-source-msg:
+  short: 'unknown source for non-initial state'
+err.kb.sourcecoverage.read-ledger:
+  short: 'read ledger: %w'
+err.kb.sourcecoverage.mkdir-ledger-dir:
+  short: 'mkdir ledger parent: %w'
+err.kb.sourcecoverage.write-ledger:
+  short: 'write ledger: %w'
+err.kb.glossary.read-file:
+  short: 'stat glossary: %w'
+err.kb.glossary.mkdir-dir:
+  short: 'mkdir glossary parent: %w'
+err.kb.glossary.open-file:
+  short: 'open glossary: %w'
+err.kb.glossary.write-row:
+  short: 'write glossary row: %w'
+err.kb.timeline.read-file:
+  short: 'stat timeline: %w'
+err.kb.timeline.mkdir-dir:
+  short: 'mkdir timeline parent: %w'
+err.kb.timeline.open-file:
+  short: 'open timeline: %w'
+err.kb.timeline.write-row:
+  short: 'write timeline row: %w'
+err.kb.sourcemap.read-file:
+  short: 'stat source-map: %w'
+err.kb.sourcemap.mkdir-dir:
+  short: 'mkdir source-map parent: %w'
+err.kb.sourcemap.open-file:
+  short: 'open source-map: %w'
+err.kb.sourcemap.write-row:
+  short: 'write source-map row: %w'
+err.kb.relationship.read-file:
+  short: 'stat relationship-map: %w'
+err.kb.relationship.mkdir-dir:
+  short: 'mkdir relationship-map parent: %w'
+err.kb.relationship.open-file:
+  short: 'open relationship-map: %w'
+err.kb.relationship.write-row:
+  short: 'write relationship-map row: %w'
+err.kb.contradiction.read-file:
+  short: 'read contradictions: %w'
+err.kb.contradiction.mkdir-dir:
+  short: 'mkdir contradictions parent: %w'
+err.kb.contradiction.open-file:
+  short: 'open contradictions: %w'
+err.kb.contradiction.write-row:
+  short: 'write contradictions row: %w'
+err.kb.contradiction.parse-c-number:
+  short: 'parse C number %q: %w'
+err.kb.decision.read-file:
+  short: 'read decisions: %w'
+err.kb.decision.mkdir-dir:
+  short: 'mkdir decisions parent: %w'
+err.kb.decision.open-file:
+  short: 'open decisions: %w'
+err.kb.decision.write-row:
+  short: 'write decisions row: %w'
+err.kb.decision.parse-dd-number:
+  short: 'parse DD number %q: %w'
+err.kb.question.read-file:
+  short: 'read questions: %w'
+err.kb.question.mkdir-dir:
+  short: 'mkdir questions parent: %w'
+err.kb.question.open-file:
+  short: 'open questions: %w'
+err.kb.question.write-row:
+  short: 'write questions row: %w'
+err.kb.question.parse-q-number:
+  short: 'parse Q number %q: %w'
+err.kb.grounding-missing:
+  short: 'grounding-sources.md not found at %s; list sources first'
+err.kb.grounding-empty:
+  short: 'grounding-sources.md is empty at %s; list sources first'
+err.kb.topic-exists:
+  short: 'topic %s already exists at %s'
+err.kb.mkdir-ingest:
+  short: 'mkdir ingest: %w'
+err.kb.open-findings:
+  short: 'open findings: %w'
+err.kb.write-finding:
+  short: 'write finding: %w'
+err.kb.read-kb-index:
+  short: 'read kb index: %w'
+err.kb.write-kb-index:
+  short: 'write kb index: %w'
+err.kb.read-topics-dir:
+  short: 'read topics dir: %w'
+err.kb.mkdir-topic:
+  short: 'mkdir topic: %w'
+err.kb.read-topic-template:
+  short: 'read embedded topic template: %w'
+err.kb.write-topic-index:
+  short: 'write topic index: %w'
+err.kb.ask-no-question:
+  short: 'no question provided; pass a question or describe it inline'
+err.kb.ingest-no-sources:
+  short: 'no sources provided; pass a folder, a URL, an MCP resource, or describe the materials inline'
+err.kb.note-no-text:
+  short: 'no text provided; pass a one-liner inline'
+err.kb.topic-empty-name:
+  short: 'topic name must contain at least one alnum char'
+err.kb.reindex-missing-block:
+  short: 'kb/index.md is missing the CTX:KB:TOPICS managed block'

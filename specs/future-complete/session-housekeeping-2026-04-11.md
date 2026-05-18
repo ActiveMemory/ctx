@@ -67,7 +67,7 @@ Removed `templates/`, `steering/`, `hooks/`, `skills/` rows from the
 Replaced with:
 
 - The 8-row table of actual core context files.
-- A note labelling `templates/` and `steering/` as
+- A note labeling `templates/` and `steering/` as
   implementation-detail-but-user-editable with links.
 - An "Outside `.context/`" subsection pointing at the skill and hook
   home pages.

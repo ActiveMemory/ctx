@@ -571,7 +571,7 @@ no bash, no regex maintenance.
 ### F. New: stale-anchor sanity hook
 
 New Go subcommand: `ctx system check-anchor-drift`
-(`internal/cli/system/cmd/check_anchor_drift/`).
+(`internal/cli/system/cmd/checkanchordrift/`).
 
 **The diagnostic problem:** every hook line carries a
 `CTX_DIR="${CLAUDE_PROJECT_DIR:?…}/.context"` inline assignment.
@@ -803,7 +803,7 @@ individually.
     that the wrapper doesn't accidentally swallow upstream
     errors.
 
-- `internal/cli/system/cmd/check_anchor_drift/run_test.go`:
+- `internal/cli/system/cmd/checkanchordrift/run_test.go`:
   - `TestCheckAnchorDrift_Match` — `CTX_DIR_INHERITED` and
     `CTX_DIR` equal after filepath.Clean: silent.
   - `TestCheckAnchorDrift_Mismatch` — `CTX_DIR_INHERITED=/project-a/.context`,

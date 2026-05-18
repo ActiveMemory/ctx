@@ -169,15 +169,15 @@ injection_token_warn: 12000
 | `internal/rc/types.go` | Add `InjectionTokenWarn int` field |
 | `internal/rc/default.go` | Add `DefaultInjectionTokenWarn = 15000` |
 | `internal/rc/rc.go` | Add default to `Default()` |
-| `internal/cli/system/context_load_gate.go` | Write flag file when over threshold |
-| `internal/cli/system/check_context_size.go` | Read flag, append nudge, delete flag |
-| `internal/cli/system/context_load_gate_test.go` | Test flag write behavior |
-| `internal/cli/system/check_context_size_test.go` | Test nudge append behavior |
+| `internal/cli/system/contextloadgate.go` | Write flag file when over threshold |
+| `internal/cli/system/checkcontextsize.go` | Read flag, append nudge, delete flag |
+| `internal/cli/system/contextloadgate_test.go` | Test flag write behavior |
+| `internal/cli/system/checkcontextsize_test.go` | Test nudge append behavior |
 | `.gitignore` | Add `.context/state/` entry |
 
 ### Key Implementation
 
-#### context_load_gate.go — Flag Writer
+#### contextloadgate.go — Flag Writer
 
 After the existing `printHookContext` and webhook call, add:
 
@@ -209,7 +209,7 @@ if warnThreshold > 0 && totalTokens > warnThreshold {
 This requires tracking per-file token counts during the injection loop
 (a small `[]struct{ name string; tokens int }` accumulator).
 
-#### check_context_size.go — Flag Reader
+#### checkcontextsize.go — Flag Reader
 
 Inside the `if shouldCheck` block, before emitting the message:
 
@@ -237,7 +237,7 @@ if data, err := os.ReadFile(oversizeFile); err == nil {
 
 ## Testing
 
-### Unit Tests — context_load_gate_test.go
+### Unit Tests — contextloadgate_test.go
 
 - **Under threshold**: totalTokens < warn → no flag file written
 - **Over threshold**: totalTokens > warn → flag file exists with correct content
@@ -245,7 +245,7 @@ if data, err := os.ReadFile(oversizeFile); err == nil {
 - **Per-file breakdown in flag**: verify file names and token counts appear
 - **State dir auto-created**: works even when `state/` doesn't exist yet
 
-### Unit Tests — check_context_size_test.go
+### Unit Tests — checkcontextsize_test.go
 
 - **Flag present at checkpoint**: nudge includes oversize warning line
 - **Flag absent at checkpoint**: normal checkpoint, no oversize line

@@ -24,7 +24,7 @@
 //     this server provides (`ctx_status`, `ctx_add`,
 //     `ctx_complete`, `ctx_drift`, `ctx_journal_source`,
 //     `ctx_search`, `ctx_steering_get`, `ctx_remind`,
-//     `ctx_session_*`, `ctx_check_task_completion`,
+//     `ctx_session_*`, `ctx_checktaskcompletion`,
 //     `ctx_watch_update`).
 //   - **`tools/call`**: invoke one tool with a typed
 //     arguments map.

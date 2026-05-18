@@ -135,7 +135,7 @@ Dismissing an ID that doesn't exist:
 | `created` | string | always | UTC RFC3339 timestamp |
 | `after` | string | nullable | Date gate (YYYY-MM-DD), null if immediate |
 
-JSON (not markdown) because:
+JSON (not Markdown) because:
 - Structured fields (id, date) need reliable parsing.
 - No human editing expected — the CLI is the interface.
 - Small file, no performance concern.
@@ -251,7 +251,7 @@ internal/cli/remind/
   remind_test.go     Tests
 
 internal/cli/system/
-  check_reminders.go checkRemindersCmd(), runCheckReminders()
+  checkreminders.go checkRemindersCmd(), runCheckReminders()
 
 internal/assets/claude/skills/ctx-remind/
   SKILL.md           Agent skill instructions
@@ -353,7 +353,7 @@ func runAdd(cmd *cobra.Command, message, after string) error {
 ### Core function: runCheckReminders
 
 ```go
-// internal/cli/system/check_reminders.go
+// internal/cli/system/checkreminders.go
 
 func checkRemindersCmd() *cobra.Command {
     return &cobra.Command{
@@ -433,7 +433,7 @@ func runCheckReminders(cmd *cobra.Command) error {
   would mean "I asked to be reminded but ctx decided not to." Reminders
   fire every session until dismissed.
 
-- **JSON not markdown.** Reminders have structured fields (id, date).
+- **JSON not Markdown.** Reminders have structured fields (id, date).
   Markdown would require fragile parsing. The file is small and
   machine-managed — no reason for human-readable format.
 

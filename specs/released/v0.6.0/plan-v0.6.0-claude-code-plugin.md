@@ -267,16 +267,16 @@ internal/cli/system/
 ├── system.go                  # Parent command (Hidden=true)
 ├── input.go                   # HookInput/ToolInput types, readInput()
 ├── state.go                   # secureTempDir, counter, log, throttle helpers
-├── check_context_size.go      # Adaptive prompt counter
-├── check_context_size_test.go
-├── check_persistence.go       # Context file mtime watcher
-├── check_persistence_test.go
-├── check_journal.go           # Unimported sessions + unenriched entries
-├── check_journal_test.go
-├── block_non_path_ctx.go      # Command pattern blocker
-├── block_non_path_ctx_test.go
-├── post_commit.go             # Post-commit context capture nudge
-├── post_commit_test.go
+├── checkcontextsize.go      # Adaptive prompt counter
+├── checkcontextsize_test.go
+├── checkpersistence.go       # Context file mtime watcher
+├── checkpersistence_test.go
+├── checkjournal.go           # Unimported sessions + unenriched entries
+├── checkjournal_test.go
+├── blocknonpathctx.go      # Command pattern blocker
+├── blocknonpathctx_test.go
+├── postcommit.go             # Post-commit context capture nudge
+├── postcommit_test.go
 ├── cleanup_tmp.go             # Old temp file removal
 └── cleanup_tmp_test.go
 ```

@@ -3,7 +3,7 @@
 ## Problem
 
 When the ctx plugin is installed globally and Claude runs in a
-non-ctx project, unsolicited relay alerts fire from `check_resource`
+non-ctx project, unsolicited relay alerts fire from `checkresource`
 and `check_backup_age`. Users see "Load Xx CPU count" and backup-age
 warnings in projects that don't use ctx at all.
 
@@ -15,7 +15,7 @@ no-op behavior when ctx is not initialized — this matches the
 existing pattern in 18 other hooks.
 
 Scope limited to hooks that emit user-visible relay alerts. Safety
-hooks (`block_dangerous_command`, `block_non_path_ctx`) intentionally
+hooks (`block_dangerous_command`, `blocknonpathctx`) intentionally
 run regardless of ctx state.
 
 ## Non-Goals

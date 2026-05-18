@@ -13,7 +13,7 @@
 //
 //   - **`ctx hook event`**: user-facing query: "what did
 //     the hooks do during the last session?".
-//   - **`ctx system check_persistence`** and friends: read
+//   - **`ctx system checkpersistence`** and friends: read
 //     the log to detect "you committed but never wrote a
 //     decision" patterns and nudge accordingly.
 //

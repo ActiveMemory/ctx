@@ -44,7 +44,7 @@ Read on for details on each stage.
 
 | Tool                      | Type     | Purpose                                                          |
 |---------------------------|----------|------------------------------------------------------------------|
-| `ctx journal import`       | Command  | Import session JSONL to editable markdown                        |
+| `ctx journal import`       | Command  | Import session JSONL to editable Markdown                        |
 | `ctx journal site`        | Command  | Generate a static site from journal entries                      |
 | `ctx journal obsidian`    | Command  | Generate an Obsidian vault from journal entries                  |
 | `ctx serve`               | Command  | Serve any zensical directory (default: journal)                  |
@@ -60,7 +60,7 @@ Read on for details on each stage.
 ### Step 1: Import Sessions to Markdown
 
 Raw session data lives as JSONL files in Claude Code's internal storage. The
-first step is converting these into readable, editable markdown.
+first step is converting these into readable, editable Markdown.
 
 ```bash
 # Import all sessions from the current project

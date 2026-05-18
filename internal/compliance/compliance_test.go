@@ -998,12 +998,14 @@ func TestDocGoSubcommandDrift(t *testing.T) {
 
 		rel, _ := filepath.Rel(root, path)
 
-		// Normalize: hyphens → underscores, apply aliases.
+		// Normalize: drop hyphens (Go package names have no
+		// separator; CLI commands hyphenate the same noun).
+		// Apply aliases for explicit overrides.
 		normalize := func(name string) string {
 			if alias, ok := knownAliases[name]; ok {
 				return alias
 			}
-			return strings.ReplaceAll(name, "-", "_")
+			return strings.ReplaceAll(name, "-", "")
 		}
 
 		// Expand combined entries (e.g., "pause/resume") and check

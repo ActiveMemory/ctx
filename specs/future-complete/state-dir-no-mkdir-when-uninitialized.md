@@ -24,7 +24,7 @@ includes `ctx system check-reminder`, whose `Run` deliberately calls
 provenance prints unconditionally:
 
 ```
-check_reminder.Run
+checkreminder.Run
   └─ coreCheck.Preamble                      # before the Initialized gate
        └─ nudge.Paused(sessionID)
             └─ PauseMarkerPath
@@ -113,7 +113,7 @@ No CLI surface change. This is a library-internal contract change.
 | `internal/err/context/errors.go` (or wherever `ErrDirNotDeclared` lives) | Add `ErrNotInitialized` sentinel error. |
 | `internal/cli/system/core/state/state.go` | Insert `Initialized()` check between `rc.ContextDir()` and `SafeMkdirAll`. Update package-level docstring on `Dir()` to document the new contract. |
 | `internal/cli/system/core/state/state_test.go` (new or existing) | Add unit tests: uninitialized → returns `ErrNotInitialized`, no mkdir occurs; initialized → mkdir runs as before; `dirOverride` bypasses the gate. |
-| `internal/cli/system/cmd/check_reminder/run.go` | No code change required — the existing `if dirErr != nil { return nil }` branch in `Preamble`'s call chain absorbs the new error. Add a comment cross-referencing this spec to document why the order is now safe. |
+| `internal/cli/system/cmd/checkreminder/run.go` | No code change required — the existing `if dirErr != nil { return nil }` branch in `Preamble`'s call chain absorbs the new error. Add a comment cross-referencing this spec to document why the order is now safe. |
 | Other call sites of `state.Dir()` | Two-pass audit during implementation. Pass 1 — hook commands and other non-interactive callers: confirm the existing `dirErr != nil → return nil` branch absorbs `ErrNotInitialized` without warning. Pass 2 — interactive callers (every entry point reachable from a user-typed `ctx ...` subcommand): wrap the call so `errors.Is(err, errCtx.ErrNotInitialized)` produces the stderr message above and a non-zero exit. The full classified list is part of the PR description and must be exhaustive (no "rest as follow-up"). |
 | `specs/tests/regression/uninit-no-state-leak/` | Add a test harness that simulates the Cursor scenario end-to-end. See Testing section. |
 
@@ -208,7 +208,7 @@ per hook.
   command.** Users diagnose via `ctx system bootstrap` and `ctx
   status`; no new surface needed.
 - **Not redesigning the `Preamble` / `FullPreamble` split.** The
-  `check_reminder` "provenance-first" ordering is preserved exactly;
+  `checkreminder` "provenance-first" ordering is preserved exactly;
   the fix sits below it in the call stack. A future cleanup may
   collapse the two preamble variants, but it is not required to close
   this leak.

@@ -56,9 +56,9 @@ platform-specific code.
 | File | Purpose |
 |------|---------|
 | `resources.go` | NEW: `runResources()`, `outputResourcesText()`, `outputResourcesJSON()` |
-| `check_resources.go` | NEW: Hidden hook subcommand — VERBATIM relay on DANGER only |
+| `checkresources.go` | NEW: Hidden hook subcommand — VERBATIM relay on DANGER only |
 | `resources_test.go` | NEW: Output formatting tests with constructed snapshots |
-| `check_resources_test.go` | NEW: Hook output tests |
+| `checkresources_test.go` | NEW: Hook output tests |
 
 ## Files to Modify
 
@@ -123,7 +123,7 @@ IMPORTANT: Relay this resource warning to the user VERBATIM.
 1. `internal/sysinfo/` package — types, threshold logic, platform collectors, tests
 2. `internal/cli/system/resources.go` — user-facing output formatting
 3. `internal/cli/system/system.go` — un-hide, add RunE
-4. `internal/cli/system/check_resources.go` — hook subcommand
+4. `internal/cli/system/checkresources.go` — hook subcommand
 5. Cross-compilation check + manual test on dev machine
 
 ## Verification

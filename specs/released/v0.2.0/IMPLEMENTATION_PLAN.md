@@ -103,7 +103,7 @@ Session Files → Parser → Rendered HTML → HTTP Server
 - [ ] Pattern-based extraction (deterministic)
 - [ ] LLM refinement pass (optional)
 - [ ] Deduplication across sessions
-- [ ] ctx-compatible markdown output
+- [ ] ctx-compatible Markdown output
 
 ### Extraction Targets
 

@@ -20,10 +20,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	ctxFmt "github.com/ActiveMemory/ctx/internal/cli/fmt"
 	"github.com/ActiveMemory/ctx/internal/cli/guide"
+	"github.com/ActiveMemory/ctx/internal/cli/handover"
 	"github.com/ActiveMemory/ctx/internal/cli/hook"
 	cliHub "github.com/ActiveMemory/ctx/internal/cli/hub"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/cli/journal"
+	"github.com/ActiveMemory/ctx/internal/cli/kb"
 	"github.com/ActiveMemory/ctx/internal/cli/learning"
 	"github.com/ActiveMemory/ctx/internal/cli/load"
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
@@ -108,6 +110,8 @@ func artifacts() []registration {
 		{task.Cmd, embedCmd.GroupArtifacts},
 		{convention.Cmd, embedCmd.GroupArtifacts},
 		{reindex.Cmd, embedCmd.GroupArtifacts},
+		{kb.Cmd, embedCmd.GroupArtifacts},
+		{handover.Cmd, embedCmd.GroupArtifacts},
 	}
 }
 

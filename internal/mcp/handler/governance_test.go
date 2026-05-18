@@ -37,9 +37,9 @@ func TestCheckGovernance_SessionNotStarted(t *testing.T) {
 
 func TestCheckGovernance_SessionNotStarted_SuppressedForSessionEvent(t *testing.T) {
 	d := newTestDeps()
-	got := CheckGovernance(d, "ctx_session_event")
+	got := CheckGovernance(d, "ctx_sessionevent")
 	if strings.Contains(got, "Session not started") {
-		t.Errorf("session-not-started should be suppressed for ctx_session_event, got: %q", got)
+		t.Errorf("session-not-started should be suppressed for ctx_sessionevent, got: %q", got)
 	}
 }
 

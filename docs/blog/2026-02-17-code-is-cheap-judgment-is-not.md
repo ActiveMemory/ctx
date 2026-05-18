@@ -199,7 +199,7 @@ it should exist.**
 ### Defense in Depth Proved Boundaries Require Judgment
 
 In [Defense in Depth][security-post], the entire security model
-for unattended AI agents came down to: **markdown is not a
+for unattended AI agents came down to: **Markdown is not a
 security boundary**. Telling an AI "*don't do bad things*" is
 production (*of instructions*). Setting up an unprivileged user in
 a network-isolated container is **judgment** (*about risk*).

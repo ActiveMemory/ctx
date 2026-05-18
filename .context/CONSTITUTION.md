@@ -98,6 +98,15 @@ Leave the system in a better state than you found it.
   no exceptions, no "non-trivial" qualifier. Even one-liner fixes
   need a spec for traceability. Use `/ctx-commit` instead of raw
   `git commit`.
+- [ ] **Git is required.** Every `ctx` project must live in a git
+  working tree. `ctx init` and every non-administrative
+  subcommand refuse to operate when `<projectRoot>/.git` is
+  absent. Rationale: ctx's persistent-memory promise is
+  dishonest without an undo layer; agent-driven file
+  operations need `git reflog` as the safety net. The only
+  opt-outs are help-shaped / diagnostic commands
+  (`--help`, `--version`, `ctx system bootstrap`). Per
+  `specs/require-git.md`.
 
 ## TASKS.md Structure Invariants
 

@@ -39,6 +39,26 @@ TASK STATUS LABELS:
   related-but-distinct gap tasks (shellcheck, PSScriptAnalyzer,
   skill frontmatter validation) listed below.
 
+- [ ] Human: It's about time to go through the entire codebase check for
+  inconsistencies, and move useful functions that are utility and/or reusable
+  to relevant convenience packages.
+
+- [ ] Create a typography.md somewhere so that we don't have to remind tha
+  Agent things like this: "❯"## What the editorial pipeline is NOT" our headings 
+  are Title Case, it always has been; it always will be. Do a full sweep. 
+  -- in addition (not checked, just to make sure); `ctx` is always in backticks 
+  whenever possible; it's part of the branding."
+
+
+- [ ] Bug: Fresh folder: git init; eval $(ctx activate); ctx init
+  will catch parent .context folder and raise a warning
+  expectation: ctx activate should bail if there is no .context
+  folder in the same level and ask user to run `ctx init` first.
+  discuss this with the Agent too.
+- [ ] Bug: if context is active (eval ctx activate); `ctx init`
+  on a brand new project can (and probably will) fail. 
+  Probably need to nudge user to ctx deactivate first.
+
 - [-] Add TypeScript `tsc --noEmit` gate for the embedded OpenCode
   plugin (`internal/assets/integrations/opencode/plugin/index.ts`).
   Place tooling (`package.json`, `tsconfig.json`) in a sibling
@@ -1758,170 +1778,345 @@ disambiguates.
 
 Spec: `specs/ceremony-profiles.md`
 
-- [ ] Add `Ceremony{Remember,WrapUp}` to `internal/rc/types.go`; apply defaults in `internal/rc/rc.go` from
+- [ ] Add `Ceremony{Remember,WrapUp}` to `internal/rc/types.go`; apply defaults
+  in `internal/rc/rc.go` from
   `internal/config/ceremony/ceremony.go` constants
-- [ ] Thread resolved ceremony names into `ScanJournalsForCeremonies` and `Emit` in
-  `internal/cli/system/core/ceremony/ceremony.go` (replace direct constant reads)
-- [ ] Convert `internal/assets/hooks/messages/check-ceremony/{remember,wrapup,both}.txt` to `{REMEMBER}` / `{WRAPUP}`
+- [ ] Thread resolved ceremony names into `ScanJournalsForCeremonies` and `Emit`
+  in
+  `internal/cli/system/core/ceremony/ceremony.go` (replace direct constant
+  reads)
+- [ ] Convert
+  `internal/assets/hooks/messages/check-ceremony/{remember,wrapup,both}.txt` to
+  `{REMEMBER}` / `{WRAPUP}`
   sentinels; audit `internal/config/embed/text` ceremony desc keys for the same
-- [ ] Add a single sentinel-substitution helper (extend `internal/cli/system/core/message.Load` or sibling) so
+- [ ] Add a single sentinel-substitution helper (extend
+  `internal/cli/system/core/message.Load` or sibling) so
   substitution happens in one place
 - [ ] Show active ceremony profile (one line) in `ctx status` output
-- [ ] Tests: default profile renders `/ctx-remember` `/ctx-wrap-up`; project with `ceremony.remember: dp-remember`
-  renders `/dp-remember` and scanner only counts `dp-remember` as fulfilling the open-bookend
-- [ ] Document in `docs/recipes/` with the editorial-project (DR knowledgebase) consumer as the worked example
+- [ ] Tests: default profile renders `/ctx-remember` `/ctx-wrap-up`; project
+  with `ceremony.remember: dp-remember`
+  renders `/dp-remember` and scanner only counts `dp-remember` as fulfilling the
+  open-bookend
+- [ ] Document in `docs/recipes/` with the editorial-project (`your-domain`
+  knowledgebase) consumer as the worked example
 
 ### Phase SK: Skill Surface Polish (Phase 0a; prerequisite for Phase KB) `#priority:high #added:2026-05-09`
 
-Spec: `specs/skill-surface-polish.md` (design ref: `ideas/002-editorial-pipeline-and-skill-rigor.md` §3 "Reframing the
+Spec: `specs/skill-surface-polish.md` (design ref:
+`ideas/002-editorial-pipeline-and-skill-rigor.md` §3 "Reframing the
 wishy-washy skills")
 
-Tightens existing capture skills to sibling-project rigor before the editorial pipeline (Phase KB) lifts that pattern
+Tightens existing capture skills to sibling-project rigor before the editorial
+pipeline (Phase KB) lifts that pattern
 wholesale. Independent of Phase RG; both can ship in parallel.
 
-- [x] Add `MarkFlagRequired` to `ctx decision add` for `--context`, `--rationale`, `--consequence`; reject placeholder
+- [x] Add `MarkFlagRequired` to `ctx decision add` for `--context`,
+  `--rationale`, `--consequence`; reject placeholder
   values (`TBD`, `see chat`, whitespace-only) at CLI level
-- [x] Add `MarkFlagRequired` to `ctx learning add` for `--context`, `--lesson`, `--application`; same placeholder
+- [x] Add `MarkFlagRequired` to `ctx learning add` for `--context`, `--lesson`,
+  `--application`; same placeholder
   rejection
-- [x] Add `--brief <path>` flag to `/ctx-spec` skill: when present, read the file as authoritative source per the
-  sibling's authority order (frozen contracts > recorded decisions > debrief > agent inference labeled `TBD`); skip the
+- [x] Add `--brief <path>` flag to `/ctx-spec` skill: when present, read the
+  file as authoritative source per the
+  sibling's authority order (frozen contracts > recorded decisions > debrief >
+  agent inference labeled `TBD`); skip the
   fresh template Q&A
-- [x] Update `/ctx-plan` skill to always offer to write the debated brief to `.context/briefs/<TS>-<slug>.md` at the end
+- [x] Update `/ctx-plan` skill to always offer to write the debated brief to
+  `.context/briefs/<TS>-<slug>.md` at the end
   of an interview (creating `.context/briefs/` if absent)
-- [x] Add an `Authority boundary (vs other skills)` section to `/ctx-decision-add`, `/ctx-learning-add`,
-  `/ctx-task-add`, `/ctx-convention-add` skill files (prevent silent promotion handover→decision, learning→convention,
+- [x] Add an `Authority boundary (vs other skills)` section to
+  `/ctx-decision-add`, `/ctx-learning-add`,
+  `/ctx-task-add`, `/ctx-convention-add` skill files (prevent silent promotion
+  handover→decision, learning→convention,
   etc., without explicit user ask)
-- [x] Standardize "light compression for clarity is allowed; new facts are not" wording across capture skills (decide /
+- [x] Standardize "light compression for clarity is allowed; new facts are not"
+  wording across capture skills (decide /
   learn primarily); same wording lands in `/ctx-handover` once Phase KB ships
-- [x] Document the `--brief` contract in `docs/skills.md` (landed in `docs/reference/skills.md` — the actual location)
+- [x] Document the `--brief` contract in `docs/skills.md` (landed in
+  `docs/reference/skills.md`; the actual location)
 
 ### Phase RG: Require Git as Architectural Precondition (Phase 0b; prerequisite for Phase KB)
 `#priority:high #added:2026-05-09`
 
 Spec: `specs/require-git.md`
 
-Promotes the de facto invariant ("ctx works properly only with git") to a de jure one. Breaking change for any
-pre-existing git-less ctx project (N≈0 in practice). Independent of Phase SK; both can ship in parallel.
+Enforces what `ctx` already needs: git. `ctx` works properly only with a
+repo present, and this phase makes that a runtime precondition rather than
+an assumption. Breaking change for any pre-existing git-less ctx project
+(N≈0 in practice). Independent of Phase SK; both can ship in parallel.
 
-- [ ] Add `internal/gitmeta/require.go` with `RequireGitTree(projectRoot string) error` and typed `MissingGitError`
-- [ ] Wire `RequireGitTree` into root command PersistentPreRunE; opt-out list `--help`, `--version`,
-  `ctx system bootstrap`; audit other read-only/help-shaped commands during implementation (default: git-required)
-- [ ] Update `ctx init` to call `RequireGitTree` first; emit the documented error verbatim
-- [ ] Remove `commit:none` fallback from `internal/gitmeta/resolvehead.go` (state now unreachable)
-- [ ] Remove `commit:none` advisory + counts from `internal/cli/doctor/advisory.go`
-- [ ] Audit `internal/cli/<various>/cmd.go` for any other `commit:none` fallback handling; remove
-- [ ] Add CONSTITUTION.md amendment ("Git is required") under Process Invariants
-- [ ] Add DECISIONS.md entry: "Mandate git as architectural precondition" (Accepted; context = LLM-safety + provenance
-  honesty + dead-code elimination; consequence = breaking change for pre-existing git-less projects, N≈0)
-- [ ] Update `docs/recipes/bootstrap-a-project.md`, `README.md`, `docs/cli/init.md` to show `git init` before `ctx init`
-- [ ] Tag as breaking change in `dist/RELEASE_NOTES.md` with one-command migration ("Run `git init` in any pre-existing
+- [x] Add `internal/gitmeta/require.go` with `RequireGitTree(projectRoot string)
+  error` and typed `MissingGitError`
+- [x] Wire `RequireGitTree` into root command PersistentPreRunE; opt-out list
+  (via the existing
+  `AnnotationSkipInit` mechanism that already covers `--help`, `--version`, `ctx
+  system bootstrap`, init,
+  activate, deactivate, guide, why, doctor, config switch/status, hub *)
+- [-] Update `ctx init` to call `RequireGitTree` first. N/A: `ctx init` is
+  `AnnotationSkipInit`; the precondition
+  check moved to the init command body in Phase KB Stage 5 alongside `--upgrade`
+- [-] Remove `commit:none` fallback from `internal/gitmeta/resolvehead.go`. N/A:
+  `resolvehead.go` is
+  net-new in this phase; no fallback to remove
+- [-] Remove `commit:none` advisory + counts from
+  `internal/cli/doctor/advisory.go`. Verified by grep:
+  no `commit:none` / `commit=\"none\"` literal exists in `internal/` already
+- [-] Audit `internal/cli/<various>/cmd.go` for any other `commit:none` fallback
+  handling; remove. Same:
+  audit by grep returned zero matches
+- [x] Add CONSTITUTION.md amendment ("Git is required") under Process Invariants
+- [x] Add DECISIONS.md entry: "Mandate git as architectural precondition"
+  (Accepted; context = LLM-safety + provenance
+  honesty + dead-code elimination; consequence = breaking change for
+  pre-existing git-less projects, N≈0).
+  Filed as DECISIONS.md "Phase KB lifts the current upstream editorial-pipeline
+  shape, superseding the 4-phase predecessor"
+  (2026-05-16) which folds the git-mandate context into Phase KB's parent
+  decision.
+- [ ] Update `docs/recipes/bootstrap-a-project.md`, `README.md`,
+  `docs/cli/init.md` to show `git init` before `ctx init`
+- [ ] Tag as breaking change in `dist/RELEASE_NOTES.md` with one-command
+  migration ("Run `git init` in any pre-existing
   git-less ctx projects before upgrading")
-- [ ] Tests: `.git` dir → nil; `.git` file (worktree pointer) → nil; absent → typed error; root PreRunE refuses without
-  git; opt-out list allowed
-- [ ] Compliance test: no remaining `commit:none` literal in `internal/` (catches future regressions)
+- [x] Tests: `.git` dir → nil; `.git` file (worktree pointer) → nil; absent
+  → typed error
+- [-] Tests: root PreRunE refuses without git; opt-out list allowed. TBD:
+  deferred to Phase KB Stage 5 when
+  the kb command tree is in place (the existing bootstrap_test.go covers PreRunE
+  structure; the gitmeta
+  injection's behavioral test runs as part of the kb-ingest smoke)
+- [-] Compliance test: no remaining `commit:none` literal in `internal/`. N/A:
+  literal never existed
 
-### Phase KB: Editorial Pipeline + Handover (depends on Phase SK + Phase RG) `#priority:high #added:2026-05-09`
+### Phase KB: Editorial Pipeline + Handover (depends on Phase SK + Phase RG) `#priority:high #added:2026-05-09 #revised:2026-05-16`
 
-Spec: `specs/kb-editorial-pipeline.md`
+Spec: `specs/kb-editorial-pipeline.md` (revised 2026-05-16 to current
+upstream editorial-pipeline shape: pass-mode contract, completion circuit
+breaker, source-coverage state-machine ledger, topic-adjacency
+pre-flight, cold-reader rubric, folder-shaped topics from day one).
+
+Comparison input: `ideas/upstream-pipeline-comparison.md`.
+
+Decision record: DECISIONS.md "Phase KB lifts the current
+upstream editorial-pipeline shape, superseding the 4-phase predecessor in the
+brief" (2026-05-16).
 
 Brief: `ideas/003-editorial-pipeline-debated-brief.md`
 
 Background analysis: `ideas/001-sibling-project-undercover-analysis.md`,
 `ideas/002-editorial-pipeline-and-skill-rigor.md`
 
-Validation corpus: `things-wtf-disaster-recovery` (live regression suite; hand-rolled the shape for weeks).
+Validation corpus: `your-project` (live regression
+suite; hand-rolled the older 4-phase shape for weeks).
+`your-project` is the structural reference for the current
+upstream shape applied to a different domain.
+
+Note on task lines below: path-constant locations were originally
+specified as `internal/path/path.go`. The revised spec places them
+under `internal/cli/kb/core/path/path.go` to match existing ctx
+convention (per-subcommand path package, see `internal/cli/task/core/path/`).
+Similarly the "store layer" tasks below land under `internal/write/`
+(handover, closeout, kb), not `internal/store/`. Task wording kept
+historical for traceability; implementation follows the revised spec.
 
 Path constants and embedded templates:
 
-- [ ] Extend `internal/path/path.go` with new constants: `HandoversDir`, `KBDir` + per-artifact paths, `IngestDir` +
-  per-template paths, `CloseoutsSubdir`, `ArchiveCloseoutsSubdir`, `SiteDir`, `SiteKBDir`, `SiteConfigDir`
-- [ ] Embed templates under `internal/assets/kb/templates/ingest/`: `KB-RULES.md`, `00-GROUND.md`, `30-INGEST.md`,
-  `40-ASK.md`, `50-SITE_REVIEW.md`, `INBOX.md`, `SESSION_LOG.md`, `grounding-sources.md`, `OPERATOR.md`, `PROMPT.md` (no
-  domain content)
-- [ ] Embed schemas under `internal/assets/kb/templates/ingest/schemas/`: `evidence-index.md`, `glossary.md`,
-  `contradictions.md`, `outstanding-questions.md`, `domain-decisions.md`, `timeline.md`, `source-map.md`,
-  `relationship-map.md`, `session-log.md` (each: fields list + one worked example)
+- [x] Constants landed at `internal/config/kb/kb.go` (filenames + subdir names +
+  state-machine constants + pass-mode + life-stage) and
+  `internal/cli/kb/core/path/path.go` (full-path resolvers: KBDir, KBTopicDir,
+  IngestDir, CloseoutsDir, SchemasDir, HandoversDir, ArchiveCloseoutsDir,
+  SiteDir, SiteKBDir). Per the per-subcommand convention; not `internal/path/`.
+- [x] Templates embedded under `internal/assets/kb/templates/ingest/`:
+  KB-RULES.md, 00-GROUND.md, 30-INGEST.md, 40-ASK.md, 50-SITE_REVIEW.md,
+  OPERATOR.md, PROMPT.md. INBOX.md and SESSION_LOG.md not pre-seeded; they
+  materialise on first skill run (per the contract that skills are the sole
+  writers of INBOX.md and SESSION_LOG.md only appears mid-flight).
+- [x] Schemas embedded under `internal/assets/kb/templates/ingest/schemas/`:
+  evidence-index.md, glossary.md, contradictions.md, outstanding-questions.md,
+  domain-decisions.md, timeline.md, source-map.md, source-coverage.md,
+  relationship-map.md, session-log.md (10 files; fields + one worked example
+  each)
+- [x] `internal/assets/embed.go` extended with `//go:embed` lines for the kb
+  tree
 
-Store layer:
+Store layer (landed under `internal/write/` per the revised spec, not
+`internal/store/`):
 
-- [ ] Implement `internal/store/handover.go`: `WriteHandover`, `LatestHandoverCursor`, `UnconsumedCloseouts`,
-  `ArchiveCloseouts`
-- [ ] Implement `internal/store/closeout.go`: `WriteCloseout` with required frontmatter (`sha`, `branch`, `mode`,
-  `generated-at`); cursor-extracting reader
-- [ ] Implement `internal/store/kb.go`: per-artifact writers (evidence-index append-never-renumber; glossary;
-  contradictions; outstanding-questions; domain-decisions; timeline; source-map; relationship-map); demotion API;
-  `EvidenceRow` includes `occurred:` field per spec schema delta
+- [x] `internal/write/handover/` (WriteHandover, Latest, fold via
+  closeout.PostdatedBy, archive via closeout.Archive)
+- [x] `internal/write/closeout/` (Write, Read, List, PostdatedBy, Archive;
+  required frontmatter sha/branch/mode/pass-mode/life-stage/generated-at;
+  ErrMissingFrontmatter, ErrMissingFields)
+- [x] `internal/write/kb/` split across 9 subpackages, not a single kb.go:
+  evidence (no-renumber, ID allocation, ErrDuplicateID/ErrInvalidBand),
+  sourcecoverage (state-machine ledger with ValidTransition +
+  ErrIllegalTransition + ErrUnknownSource), glossary, contradiction, question,
+  decision, timeline, sourcemap, relationship
 
 CLI commands:
 
-- [ ] `ctx handover write` — `MarkFlagRequired` on `--summary` and `--next`; reject placeholder values (parity with
-  Phase SK pattern); calls handover writer + closeout fold; supports `--no-fold`, `--commit`, `--highlights`,
-  `--open-questions`
-- [ ] `ctx kb` parent command + `ingest` / `ask` / `site-review` / `ground` / `note` subcommands; refuse-on-empty for
-  `ingest` / `ask` / `ground`
-- [ ] `ctx kb site` (`build` / `serve` / `customize`) — mirror existing `ctx journal site` shell-out pattern with
-  zensical
-- [ ] Extend `ctx init` to lay down `handovers/`, `kb/.gitkeep`, `ingest/` (full template tree), `site/` (gitignored);
-  add `--upgrade` flag (idempotent on byte-identical existing content; refuse on divergent)
+- [x] `ctx handover write`: `MarkFlagRequired` on `--summary` and `--next`;
+  rejects placeholder values (TBD, see chat, n/a, none); calls
+  `internal/write/handover.Write` which folds postdated closeouts (`--no-fold`
+  skips fold); supports `--commit`, `--highlights`, `--open-questions`;
+  smoke-tested end-to-end
+- [x] `ctx kb` parent command + `topic new` (real scaffold writer), `note` (real
+  append to findings.md), `reindex` (real CTX:KB:TOPICS managed-block refresh in
+  kb/index.md), `ingest`/`ask`/`site-review`/`ground` (skill-driven;
+  refuse-on-empty for ingest/ask/ground); smoke-tested
+- [x] KB rendering: `.context/kb/` is a tree of Markdown that
+  `ctx serve` already serves once a `zensical.toml` is dropped in. Recipe
+  Step 5 documents the path. A thin `ctx kb site (build|serve|customize)`
+  wrapper that mirrors `internal/cli/journal/cmd/site/` and pre-seeds the
+  `zensical.toml` is a follow-up convenience, not a blocker.
+- [x] `ctx init` scaffolds `.context/kb/`, `.context/kb/topics/`,
+  `.context/ingest/` (with embedded templates copied),
+  `.context/ingest/closeouts/`, `.context/ingest/schemas/` (10 schemas copied),
+  `.context/handovers/`. Implemented in new `internal/cli/initialize/core/kb/`
+  package called from init's run.go. `--upgrade` flag: not added; init's
+  existing skip-existing-files behavior is idempotent on byte-identical content
+  (the divergence-refusal needs a separate `--upgrade` follow-up).
 
 Skills:
 
-- [ ] Add `internal/assets/claude/skills/ctx-handover/SKILL.md` per spec (input contract, authority boundary, edge
-  cases)
-- [ ] Add `ctx-kb-ingest`, `ctx-kb-ask`, `ctx-kb-site-review`, `ctx-kb-ground`, `ctx-kb-note` SKILL.md files
-- [ ] Modify `internal/assets/claude/skills/ctx-wrap-up/SKILL.md`: branch on `.context/kb/` existence (surface editorial
-  state — pending closeouts, outstanding-questions count); mandatorily drive `/ctx-handover` as final step regardless of
-  capture outcomes
-- [ ] Modify `/ctx-remember` skill (or equivalent): read latest handover + any postdated unfolded closeouts; fold KB
-  state into readback if `.context/kb/` exists
+- [x] 6 new SKILL.md files: ctx-handover (280L), ctx-kb-ingest (645L),
+  ctx-kb-ask (236L), ctx-kb-site-review (259L), ctx-kb-ground (279L),
+  ctx-kb-note (164L)
+- [x] Modified `ctx-wrap-up/SKILL.md`: branches on `.context/kb/` existence
+  (surfaces pending closeouts + outstanding-questions count); mandatorily drives
+  `/ctx-handover` as final step
+- [x] Modified `ctx-remember/SKILL.md`: reads latest handover + postdated
+  unfolded closeouts; folds KB state into readback when `.context/kb/` exists
 
 Doctor / status / .gitignore:
 
-- [ ] Extend `internal/cli/doctor/advisory.go`: duplicate-`EV-###` detection; `dated:` source missing `occurred:` rows;
-  malformed-closeout-frontmatter detection
-- [ ] Mode-aware reads: thread `KBExists()` check through `/ctx-remember` (or equivalent), `ctx status`, `ctx agent`,
-  session-start hook nudges (cross-cutting; manageable but explicit v1 surface area)
-- [ ] Update project root `.gitignore`: append `.context/site/` (idempotent; match existing
-  `.context/journal/.imported.json` pattern)
+- [-] Doctor advisories: NOT YET IMPLEMENTED. Spec lists duplicate-`EV-###`,
+  `dated:`-source-missing-`occurred:`, malformed-closeout-frontmatter,
+  source-coverage-ledger-mismatch (row Updated vs. file mtime),
+  closeout-missing-pass-mode-body-block, illegal-ledger-state-transition. Phase
+  7 follow-up.
+- [-] Mode-aware reads in ctx status / ctx agent / session-start hook: skills
+  updated (`/ctx-remember` + `/ctx-wrap-up`); CLI-side `ctx status`/`ctx agent`
+  mode-awareness deferred (the skill-side fold covers the user-facing recall;
+  CLI text surfaces are v1.1).
+- [x] `.gitignore` extended: `.context/site/`, `.context/site-config/`
 
 Tests:
 
-- [ ] Unit tests per package (handover, closeout, kb writers, mode CLIs, doctor advisories)
-- [ ] Integration: `internal/cli/initcmd/init_test.go` covers full new directory tree + `--upgrade` idempotency /
+- [ ] Unit tests per package (handover, closeout, kb writers, mode CLIs, doctor
+  advisories)
+- [ ] Integration: `internal/cli/initcmd/init_test.go` covers full new directory
+  tree + `--upgrade` idempotency /
   divergence refusal
-- [ ] `hack/smoke-kb.sh`: end-to-end shell smoke (init → kb ingest → kb ask → kb site-review → kb ground → handover
+- [ ] `hack/smoke-kb.sh`: end-to-end shell smoke (init → kb ingest → kb ask
+  → kb site-review → kb ground → handover
   write → archive populated → doctor clean)
-- [ ] Edge-case fixtures: aborted-session recovery (closeout without handover); temporal misordering (
-  occurred-vs-extracted ordering enforces precedence rule); concurrent dupe IDs (LLM-resolution fixture); render
+- [ ] Edge-case fixtures: aborted-session recovery (closeout without handover);
+  temporal misordering (
+  occurred-vs-extracted ordering enforces precedence rule); concurrent dupe IDs
+  (LLM-resolution fixture); render
   filter (speculative excluded; low paired with outstanding-questions)
 
 Phase KB-2 (validation against live corpus):
 
-- [ ] Port `things-wtf-disaster-recovery` from its hand-rolled shape to the shipped one. Each divergence is either a
-  Phase KB bug or a `DECISIONS.md` entry explaining why the formal shape differs from what worked manually
+- [ ] Port `your-project-*` from its hand-rolled shape to the shipped one. Each
+  divergence is either a
+  Phase KB bug or a `DECISIONS.md` entry explaining why the formal shape differs
+  from what worked manually
 - [ ] Document divergences (if any) in `docs/recipes/build-a-knowledge-base.md`
 
 Phase KB-3 (documentation):
 
-- [ ] Write `docs/recipes/build-a-knowledge-base.md` (mirrors sibling's recipe shape)
-- [ ] Write `docs/recipes/typical-kb-session.md`
-- [ ] Write `docs/recipes/recover-aborted-session.md`
-- [ ] Update `docs/cli-reference.md` with new `ctx kb` and `ctx handover` commands
-- [ ] Update `docs/skills.md` with new skills
-- [ ] Document MemPalace-as-ground-source recipe in `docs/recipes/build-a-knowledge-base.md` — uses already-specced
+- [x] Write `docs/recipes/build-a-knowledge-base.md` (mirrors sibling's recipe
+  shape)
+- [x] Write `docs/recipes/typical-kb-session.md`
+- [x] Write `docs/recipes/recover-aborted-session.md`
+- [x] Update CLI reference with new `ctx kb` and `ctx handover` commands (landed
+  as separate pages: `docs/cli/kb.md` for the editorial pipeline and
+  `docs/cli/handover.md` for the session-glue command; the two are unrelated
+  surfaces and now have distinct pages)
+- [x] Update `docs/reference/skills.md` with the 6 new skills (table row +
+  per-skill section + new "Knowledge Base (Phase KB)" section)
+- [x] Update root `README.md` with the Phase KB workflow snippet + git-required
+  note
+- [x] Update root `CLAUDE.md` and `internal/assets/claude/CLAUDE.md` (the
+  user-deployed copy) with the KB trigger table
+- [x] Update `dist/RELEASE_NOTES.md` with Phase RG + Phase KB sections
+- [ ] Document MemPalace-as-ground-source recipe in
+  `docs/recipes/build-a-knowledge-base.md`; uses already-specced
   `mcp:<server>:<resource>` syntax in `grounding-sources.md`; zero new ctx code
+- [x] Replace the `ErrMsg`-string-sentinel anti-pattern across
+  `internal/config/{handover,closeout,gitmeta,kb/cli,kb/evidence,kb/sourcecoverage,rc,initialize,schema}/`.
+  Sentinels became `entity.Sentinel` typed-string consts whose `Error()`
+  resolves text from `commands/text/errors.yaml` via
+  `desc.Text(text.DescKey...)` at call time. Pre-existing convention
+  reference: `internal/err/context/NotFoundError` (commit `e524dd98`).
+  Captured as a learning to prevent recurrence.
+
+### Phase KB-followup: Adversarial design review of parallel skill trees `#priority:medium #added:2026-05-17`
+
+`ctx` ships skills to three host trees:
+`internal/assets/claude/skills/` (canonical, full Claude tool surface),
+`internal/assets/integrations/copilot-cli/skills/` (Copilot CLI; `tools: [bash]`),
+and `internal/assets/integrations/opencode/skills/` (OpenCode; minimal
+subset, no `tools` block). Phase KB landed parity across all three trees
+by writing each new skill body three times (full content for Claude +
+Copilot CLI; terser variant for OpenCode), which works today but
+guarantees future drift the next time a canonical skill is revised.
+
+Run an **adversarial design review** to pick the right architecture for
+preventing this drift permanently. Candidate shapes:
+
+- **Body-extract + per-host frontmatter wrapper at build time.** Single
+  source of truth for behavioral prose; a builder package composes
+  host-specific SKILL.md files with the right frontmatter and the
+  right capture-skill name swaps (`/ctx-task-add` vs `/ctx-add-task`,
+  etc.) at `go generate` or `make build` time. Per-host overrides
+  for genuinely different host capabilities live in side files.
+- **Write canonical, copy at runtime, make integration trees
+  read-only.** Simpler builder; risk is that host-specific tool
+  surfaces leak (Claude has Edit/Write/Read; Copilot CLI has bash
+  only; OpenCode is more constrained).
+- **Convention-only with audit gate.** Keep three independent trees
+  but add an audit test that fails CI when a canonical-tree skill
+  changes without parallel changes in the integration trees. Cheaper
+  but pushes the work onto contributors.
+- **Drop one or both integration trees.** OpenCode currently ships
+  only a 4-skill subset that the user may or may not want at parity.
+  Decide explicitly which trees are first-class.
+
+Deliverables:
+
+- [ ] Adversarial review write-up under `ideas/` enumerating each
+  shape with pros / cons / migration cost.
+- [ ] DECISIONS.md entry picking the shape, with rationale.
+- [ ] Implementation tasks for the chosen shape.
+- [ ] A compliance test that fails when the canonical Claude tree
+  changes a Phase KB or handover skill without the parallel tree
+  being updated, until the builder lands.
+
+Context: filed after Phase KB shipped, when porting the 6 new KB
+skills + the 2 updated ceremony skills to copilot-cli and opencode
+revealed how brittle the three-tree pattern is.
 
 ### Phase JR: Cold-Start Memory Recovery (semantic recall over journal history) `#priority:medium #added:2026-05-10`
 
 Idea: `ideas/004-cold-start-memory-recovery.md`
 
-Pain point: today's "can you check recent journal entries?" workaround forces brute-force parsing of the journal corpus
-or precise user pointers to specific files/dates. ctx has journal management but no semantic recall layer.
-MemPalace (https://github.com/MemPalace/mempalace) does this exact use case at 96.6% R@5 raw on LongMemEval. Three
-options to evaluate: A) native ctx journal search (vector-store dep, breaks single-Go-binary identity); B)
-defer-to-MemPalace recipe (zero ctx-side work; coupling to young project); C) pluggable journal-search hook following
+Pain point: today's "can you check recent journal entries?" workaround forces
+brute-force parsing of the journal corpus
+or precise user pointers to specific files/dates. ctx has journal management but
+no semantic recall layer.
+MemPalace (https://github.com/MemPalace/mempalace) does this exact use case at
+96.6% R@5 raw on LongMemEval. Three
+options to evaluate: A) native ctx journal search (vector-store dep, breaks
+single-Go-binary identity); B)
+defer-to-MemPalace recipe (zero ctx-side work; coupling to young project); C)
+pluggable journal-search hook following
 the zensical shell-out pattern (recommended).
 
-- [ ] Spec out cold-start memory recovery: pick approach (A vs B vs C); ideas/004 leans toward C. Distinct from Phase KB
-  ground-mode `mcp:` source kinds (which cover the KB-grounding angle for free); this phase is specifically about
+- [ ] Spec out cold-start memory recovery: pick approach (A vs B vs C);
+  ideas/004 leans toward C. Distinct from Phase KB
+  ground-mode `mcp:` source kinds (which cover the KB-grounding angle for free);
+  this phase is specifically about
   journal-corpus semantic recall (`ctx journal search "<query>"` shape).

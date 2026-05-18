@@ -65,7 +65,7 @@ For projects with many architectural decisions, use a `decisions/` directory:
 
 A module that:
 - Discovers and reads context files
-- Parses markdown into structured data
+- Parses Markdown into structured data
 - Assembles context for AI consumption
 - Handles missing files gracefully
 
@@ -93,7 +93,7 @@ A single Go binary (`ctx`) with commands for human operators:
 
 ## Constraints
 
-1. **No binary files** — All context must be text-based markdown
+1. **No binary files** — All context must be text-based Markdown
 2. **No external services** — Everything runs locally, offline-capable
 3. **No magic** — Explicit is better than implicit; all context loading visible
 4. **No lock-in** — If you delete the CLI, the files remain useful

@@ -2255,12 +2255,9 @@ binds to it; every <code>ctx</code> subsystem reads the project from its parent.
 <h2 id="why-not-walk-up-automatically">Why Not Walk Up Automatically?<a class="headerlink" href="#why-not-walk-up-automatically" title="Permanent link">&para;</a></h2>
 <p>Nested projects, submodules, rogue agent-created <code>.context/</code>
 directories, and sub-agent sessions all produced silent misrouting
-under the old walk-up model. See the
-<a href="https://github.com/ActiveMemory/ctx/blob/main/specs/explicit-context-dir.md">explicit-context-dir spec</a>
-and <a href="https://github.com/ActiveMemory/ctx/blob/main/specs/context-resolution-analysis.md">the analysis doc</a>
-for the full reasoning.</p>
-<p>The short version: <code>ctx</code> decided to stop guessing and require the
-caller to declare. Every other decision flows from there.</p>
+under a walk-up model. For consistency, <code>ctx</code> does not guess, 
+and  requires the caller to declare. Every other decision flows from
+there.</p>
 
 
 

@@ -58,7 +58,7 @@ import "github.com/ActiveMemory/ctx/internal/config"  // everything
 `cli/`, `content/`, `copilot/`, `crypto/`, `ctx/`, `dir/`,
 `entry/`, `env/`, `event/`, `flag/`, `fmt/`, `format/`,
 `freshness/`, `fs/`, `git/`, `heartbeat/`, `hook/`, `http/`,
-`knowledge/`, `load_gate/`, `loop/`, `marker/`, `msg/`, `nudge/`,
+`knowledge/`, `loadgate/`, `loop/`, `marker/`, `msg/`, `nudge/`,
 `obsidian/`, `pad/`, `project/`, `reminder/`, `rss/`, `runtime/`,
 `session/`, `stats/`, `sync/`, `sysinfo/`, `time/`, `token/`,
 `trace/`, `version/`, `vscode/`, `warn/`, `watch/`, `why/`,

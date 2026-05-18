@@ -214,7 +214,7 @@ Suggest the next pending task based on priority and position.
 
 **Arguments:** None. **Read-only.**
 
-### `ctx_check_task_completion`
+### `ctx_checktaskcompletion`
 
 Advisory check: after a write operation, detect if any pending tasks
 were silently completed. Returns nudge text if a match is found.
@@ -225,7 +225,7 @@ were silently completed. Returns nudge text if a match is found.
 
 **Read-only.**
 
-### `ctx_session_event`
+### `ctx_sessionevent`
 
 Signal a session lifecycle event. Type `end` triggers the session-end
 persistence ceremony - human confirmation required.

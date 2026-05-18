@@ -26,7 +26,7 @@ import "time"
 //   - AddsPerformed: Entry additions by type (decision, learning, etc.)
 //   - SessionStartedAt: Session start timestamp
 //   - PendingFlush: Updates awaiting human confirmation
-//   - SessionStarted: Whether session_event:start has fired
+//   - SessionStarted: Whether sessionevent:start has fired
 //   - ContextLoaded: Whether context files have been read
 //   - LastDriftCheck: Timestamp of most recent drift check
 //   - LastContextWrite: Timestamp of most recent .context write
@@ -101,7 +101,7 @@ func (ss *MCPSession) PendingCount() int {
 // RecordSessionStart marks the session as explicitly started and
 // resets the session start timestamp.
 //
-// Called by the session_event tool when the agent reports a "start"
+// Called by the sessionevent tool when the agent reports a "start"
 // event. Sets SessionStarted to true and captures the current wall
 // time so governance checks can measure elapsed time.
 func (ss *MCPSession) RecordSessionStart() {

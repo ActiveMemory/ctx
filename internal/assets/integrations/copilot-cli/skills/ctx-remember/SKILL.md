@@ -45,7 +45,23 @@ feel like a file search rather than genuine recall:
    ```bash
    ctx journal source --limit 3
    ```
-4. **Present the structured readback** (see format below)
+4. **Read the latest handover.** Look under
+   `.context/handovers/`, sort by filename (timestamped
+   `<TS>-<slug>.md`; the newest is the lexicographically
+   last), and read its `## Summary` and `## Next Session`
+   sections as the authoritative recall surface. The
+   handover is the previous session's note to this one.
+   Skip only if `.context/handovers/` is empty or absent.
+5. **Read postdated closeouts, if any.** When
+   `.context/ingest/closeouts/` exists, list closeouts whose
+   `generated-at` postdates the handover's `generated-at`
+   and read their `## What Changed` sections. These are
+   per-pass audit notes the previous wrap-up did not get a
+   chance to fold into a handover. This step is read-only:
+   `/ctx-remember` does not run any editorial pass. If the
+   directory does not exist or holds no postdated entries,
+   skip the step.
+6. **Present the structured readback** (see format below)
 
 ## Readback Format
 

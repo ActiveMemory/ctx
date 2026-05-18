@@ -20,8 +20,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/backup"
 	coreClaude "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
-	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude_check"
+	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claudecheck"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/entry"
+	coreKB "github.com/ActiveMemory/ctx/internal/cli/initialize/core/kb"
 	coreMerge "github.com/ActiveMemory/ctx/internal/cli/initialize/core/merge"
 	corePad "github.com/ActiveMemory/ctx/internal/cli/initialize/core/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/plugin"
@@ -249,6 +250,17 @@ func Run(
 		// Non-fatal: warn but continue
 		label := desc.Text(text.DescKeyInitLabelScratchpad)
 		initialize.InfoWarnNonFatal(cmd, label, padErr)
+	}
+
+	// Phase KB: scaffold the editorial-pipeline directories
+	// and copy embedded templates (KB-RULES, mode prompts,
+	// schemas, kb landing). Per-file existence is preserved.
+	if kbErr := coreKB.Scaffold(contextDir); kbErr != nil {
+		// Non-fatal: warn but continue. The KB surfaces are
+		// opt-in for users who run /ctx-kb-ingest et al; a
+		// scaffold failure should not block init.
+		kbLabel := desc.Text(text.DescKeyInitLabelKB)
+		initialize.InfoWarnNonFatal(cmd, kbLabel, kbErr)
 	}
 
 	// Create project root files

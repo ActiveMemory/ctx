@@ -133,7 +133,7 @@ const (
 	KeyMCP = "mcp"
 	// FileIndexTs is the embedded-asset filename for the OpenCode
 	// plugin source. The setup deploys this content to a flat file
-	// under [DirOpenCodePlugins], NOT preserving the index.ts name —
+	// under [DirOpenCodePlugins], NOT preserving the index.ts name.
 	// OpenCode only auto-loads top-level files in .opencode/plugins/,
 	// so subdirectory layouts (.opencode/plugins/<name>/index.ts)
 	// are silently ignored.

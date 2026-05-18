@@ -181,7 +181,7 @@ three tiers, all shipped in this spec.
 | Case | Expected behavior |
 |------|-------------------|
 | `planContent` is empty string | Treat as absent — no plan section rendered |
-| `planContent` contains markdown that conflicts with journal formatting | Render inside a fenced details block to isolate formatting |
+| `planContent` contains Markdown that conflicts with journal formatting | Render inside a fenced details block to isolate formatting |
 | `isApiErrorMessage` on a message with useful text content | Still collapse — API errors are always retry noise, the useful response comes in the next message |
 | Multiple consecutive API error messages | Collapse into one line: "⚠ N API errors (retried)" |
 | `sourceToolAssistantUUID` references a UUID not in the current session | Store as-is — cross-session references are valid for subagent chains |
@@ -201,7 +201,7 @@ deserialize. If absent, zero value. The schema validation spec
 
 | Error condition | User-facing message | Recovery |
 |-----------------|---------------------|----------|
-| `planContent` fails to render as markdown | Fall back to raw text in `<pre>` block | Automatic |
+| `planContent` fails to render as Markdown | Fall back to raw text in `<pre>` block | Automatic |
 | Unknown `entrypoint` value | Store as-is, no warning | None needed |
 
 ## Interface

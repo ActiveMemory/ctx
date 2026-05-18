@@ -21,7 +21,7 @@ as an Obsidian vault. Reuses the existing scan/parse/index infrastructure from
   `buildTopicIndex`, `buildKeyFileIndex`, `buildTypeIndex` functions.
   The new command is an alternative output backend, not a parallel pipeline.
 - **Wikilinks native**: All internal links use `[[target|display]]` format.
-  No markdown relative links.
+  No Markdown relative links.
 - **Graph-optimized**: Every entry links to its topic/type MOCs. MOCs link
   to entries. This creates hub-and-spoke graph topology.
 - **Minimal vault config**: Just `.obsidian/` with `app.json` enforcing
@@ -124,7 +124,7 @@ Changes:
 
 ### 2. Link Conversion
 
-All markdown links to journal entries become wikilinks:
+All Markdown links to journal entries become wikilinks:
 
 | Source (site format)                        | Obsidian output                              |
 |---------------------------------------------|----------------------------------------------|
@@ -313,7 +313,7 @@ const (
 ### Wikilink Conversion Strategy
 
 1. Parse content line-by-line
-2. Match markdown links with regex: `\[([^\]]+)\]\(([^)]+)\)`
+2. Match Markdown links with regex: `\[([^\]]+)\]\(([^)]+)\)`
 3. For each match:
    - If target starts with `http://` or `https://` — skip (external)
    - Strip `.md` extension from target
@@ -325,7 +325,7 @@ const (
 
 ## Testing
 
-- Unit tests for wikilink conversion (markdown link → wikilink)
+- Unit tests for wikilink conversion (Markdown link → wikilink)
 - Unit tests for frontmatter transformation (topics → tags, aliases)
 - Unit tests for MOC generation (verify wikilink format in output)
 - Integration test: run full pipeline on test fixtures, verify vault structure
