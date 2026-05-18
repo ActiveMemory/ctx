@@ -203,9 +203,28 @@ cobra is initialized.
 #### Errors: `internal/err/`
 
 Domain-specific error constructors live under `internal/err/<domain>/`.
-Each package mirrors the write structure. Functions return `error`
-(never custom error types) and load messages from YAML via
-`desc.Text(text.DescKey*)`.
+Each package mirrors the write structure. Constructor functions return
+`error` and load messages from YAML via `desc.Text(text.DescKey*)`.
+
+Identity sentinels (matched at the call site with `errors.Is`) are
+declared as `entity.Sentinel` consts:
+
+```go
+const ErrMissingFoo = entity.Sentinel(text.DescKeyErrPkgMissingFoo)
+```
+
+`entity.Sentinel` is a typed string whose `Error()` resolves the key
+through `desc.Text` at call time, so the user-facing text stays in
+`commands/text/errors.yaml` and the sentinel value itself remains
+pure identity. Never declare sentinels as `var ErrX = errors.New(...)`
+with a hardcoded English string — that bypasses localization and
+materializes the string before the embedded YAML lookup is populated.
+
+When a sentinel needs to carry fields (a path, a name), use a typed
+struct in `internal/err/<domain>/` instead. See
+`internal/err/context.NotFoundError` for the canonical pattern with
+`Error()`, `Is(target error) bool`, and an `errors.As` consumer
+contract.
 
 ```
 internal/err/add/add.go         # errors for ctx add

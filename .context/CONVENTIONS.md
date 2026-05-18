@@ -220,6 +220,22 @@ DO NOT UPDATE FOR:
 - **Error constructors in internal/err**: Never in per-package err.go
   files — eliminates the broken-window pattern where agents add local
   errors when they see a local err.go exists
+- **Identity sentinels are `entity.Sentinel` consts, not
+  `errors.New`**: Declare `errors.Is` targets as
+  `const ErrX = entity.Sentinel(text.DescKey...)`. The
+  user-facing text lives in `commands/text/errors.yaml` keyed by
+  `err.<pkg>.<name>`; the sentinel's `Error()` resolves it via
+  `desc.Text` at call time. Never write
+  `var ErrX = errors.New("english")` — the English leaks into
+  `.Error()` output and bypasses localization. Never add an
+  `ErrMsg* = "english"` const layer in `internal/config/<pkg>/`
+  to back the sentinel; that layer is dead text once the typed
+  Sentinel does the lookup itself.
+- **Parameterised errors use typed structs**: When the error
+  needs to carry fields (path, name, etc.), define a struct in
+  `internal/err/<area>/` with a pointer-receiver `Error()` and
+  optional `Is(error) bool` for sentinel-compatibility. See
+  `internal/err/context.NotFoundError` for the canonical shape.
 
 ## CLI Structure
 
