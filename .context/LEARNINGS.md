@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-22 | Cross-language coverage gap: TS-typed integrations are a fourth surface beyond Go |
 | 2026-05-21 | Sentinel-removal refactors cascade through test surface |
 | 2026-05-20 | macOS /var symlink trips path-equality; use EvalSymlinks with parent-resolution fallback |
 | 2026-05-20 | Handover filenames are archaeology; parse by generated-at, not filename |
@@ -149,6 +150,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-22-161720] Cross-language coverage gap: TS-typed integrations are a fourth surface beyond Go
+
+**Context**: specs/cwd-anchored-context.md removed the CTX_DIR env channel. Three Go test suites caught orphan refs after deletion: audit/TestNoDeadExports (dead consts), audit/TestFlagYAMLMatchesConstants + TestExamplesYAMLLinkage + TestDescKeyYAMLLinkage (orphan YAML keys), compliance/TestDocGoSubcommandDrift (stale doc.go prose). Jumbo commit fc7db228 landed with all four green. But internal/assets/integrations/opencode/plugin/index.ts is a SEPARATE FOURTH surface — TypeScript, not Go — that local 'make lint' and 'go test ./...' never exercise. CI's tsc --noEmit (driven by tools/typecheck/opencode/) surfaced TS2339 on 'output.cwd does not exist on @opencode-ai/plugin shell.env output type'. Fix landed in 40d024a3 but cost a CI round-trip.
+
+**Lesson**: When removing or renaming an env channel, feature flag, or any cross-language contract, the cleanup checklist is FOUR surfaces, not three: (1) Go code (build + lint + test), (2) audit/compliance tests (orphan consts, YAML keys, doc.go drift), (3) asset templates (CLAUDE.md, AGENT_PLAYBOOK, hooks.json, INSTRUCTIONS.md), (4) TypeScript-typed integrations — opencode plugin and the vscode extension. The TS surface is invisible to Go's test suite by design; the typecheck only runs in CI unless invoked explicitly from tools/typecheck/opencode/ or editors/vscode/.
+
+**Application**: Before committing any change that touches internal/assets/integrations/opencode/plugin/ or editors/vscode/, run 'cd tools/typecheck/opencode && npx tsc --noEmit' (and the vscode equivalent). Longer-term: add a 'make typecheck' target wrapping both tsc invocations and include it in the pre-commit checklist alongside 'make lint' and 'go test ./...'. Add it to docs/operations/runbooks/release-checklist.md as a release gate too.
 
 ---
 
