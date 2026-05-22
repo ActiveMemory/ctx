@@ -3,15 +3,20 @@
 // wires OpenCode lifecycle hooks to ctx system calls.
 //
 // Hook signatures match @opencode-ai/plugin v1.4.x:
-//   - shell.env, tool.execute.after, and
-//     experimental.session.compacting take (input, output) and
-//     mutate output rather than returning a value.
+//   - tool.execute.after and experimental.session.compacting
+//     take (input, output) and mutate output rather than
+//     returning a value.
 //   - event is a single dispatcher keyed on input.event.type;
 //     it is NOT an object of named per-event handlers.
-// ctx subprocess calls go through a cwd-anchored BunShell built
-// from ctx.directory — shell.env only forces the agent's shell
-// tool to start in the project root, not the plugin's own ctx.$
-// calls (those already use cwd: ctx.directory).
+// ctx subprocess calls from inside the plugin go through a
+// cwd-anchored BunShell built from ctx.directory (ctx.$.cwd(...)),
+// so the Go binary resolves $PWD/.context/ correctly without any
+// env-var injection (per specs/cwd-anchored-context.md).
+// The agent's own shell tool is NOT anchored by the plugin — the
+// OpenCode SDK's shell.env hook only exposes `env`, not `cwd`,
+// so it cannot force the agent's shell into the project root.
+// Users must launch OpenCode from the project root for the
+// agent-side ctx commands to resolve.
 // All ctx.$ invocations use .nothrow().quiet(): nothrow swallows
 // non-zero exits, quiet keeps stdout/stderr in BunShell's buffer
 // instead of echoing to OpenCode's process stdout (which would
@@ -48,9 +53,6 @@ function extractCommand(input: unknown): string {
 export default (async (ctx) => {
   const $ = ctx.$.cwd(ctx.directory)
   return {
-    "shell.env": async (input, output) => {
-      output.cwd = input.cwd
-    },
     event: async ({ event }) => {
       if (event.type === "session.created") {
         await $`ctx system bootstrap`.nothrow().quiet()
