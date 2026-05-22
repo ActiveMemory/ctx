@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-22 | OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored |
 | 2026-05-21 | Substrate vs. artifact placement: .context/ vs. project root |
 | 2026-05-21 | Spec steps 1+2 merged into a single commit (cwd-anchored-context) |
 | 2026-05-20 | Anchor ctx to CWD; drop activate, drop env-var resolver, drop all walks (proposed) |
@@ -146,6 +147,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-22-161800] OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored
+
+**Status**: Accepted
+
+**Context**: specs/cwd-anchored-context.md changed ctx's resolver from CTX_DIR env-var to $PWD/.context/. The opencode plugin (internal/assets/integrations/opencode/plugin/index.ts) previously injected CTX_DIR into the agent's shell tool via the shell.env hook so agent-issued 'ctx' commands resolved to the right project. Under cwd-anchored, ctx no longer reads CTX_DIR; the only way to make ctx resolve correctly is to ensure the shell tool's cwd is the project root. But @opencode-ai/plugin v1.4.x exposes only 'env' on the shell.env hook output type ({ env: Record<string, string>; }) — no 'cwd' field. The plugin cannot force the agent shell into the project root from inside the SDK contract.
+
+**Decision**: OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored
+
+**Rationale**: Decision: drop the shell.env handler entirely and document that users must launch OpenCode from the project root. Plugin-internal subprocess calls (ctx.$.cwd(ctx.directory)) remain anchored, so the ceremony invocations (session.created, session.idle, tool.execute.after, experimental.session.compacting) still work. Only the agent-issued shell commands lack an anchoring channel. Alternatives considered: (1) keep the handler with a dummy env injection 'in case the SDK adds cwd' — rejected as dead code with no semantic load; (2) inject PWD/OLDPWD to influence the shell's cwd — rejected as brittle and outside the SDK type contract; (3) patch @opencode-ai/plugin upstream to expose cwd on shell.env — deferred (real upstream work, coordination required, degrades gracefully without it); (4) document the launch-from-root requirement and remove the handler — CHOSEN. The cwd-anchored error message ('ctx: no .context/ at <pwd>. Run `ctx init` here, or cd to a project that has one.') is itself clear and self-fixing, so the friction is bounded.
+
+**Consequence**: Agent-issued 'ctx' commands fail with the clear cwd-anchored error when OpenCode is launched from outside the project root. User re-launches from the right directory. Plugin's own ceremony calls continue to work. Trade-off: minor user-facing friction in exchange for not building unsupported SDK behaviour into the plugin. Escalation path if this becomes recurring: alternative 3 (upstream SDK PR adding cwd to shell.env output type). See also: specs/cwd-anchored-context.md, LEARNINGS.md 'Cross-language coverage gap'.
+
+---
 
 ## [2026-05-21-203052] Substrate vs. artifact placement: .context/ vs. project root
 
