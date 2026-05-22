@@ -27,7 +27,7 @@ import (
 //
 // Returns:
 //   - time.Time: Marker file modification time on success.
-//   - error: [errCtx.ErrDirNotDeclared] when no context dir is
+//   - error: [errCtx.ErrNoCtxHere] when no context dir is
 //     declared; the underlying error from [os.ReadDir] when the state
 //     directory cannot be read; [os.ErrNotExist] when fewer than two
 //     marker files exist (no previous session to compare against).
@@ -78,7 +78,7 @@ func FromMarkers() (time.Time, error) {
 //
 // Returns:
 //   - time.Time: Event timestamp on success.
-//   - error: [errCtx.ErrDirNotDeclared] when no context dir is
+//   - error: [errCtx.ErrNoCtxHere] when no context dir is
 //     declared; the underlying error from the event log reader when
 //     the file cannot be read; [os.ErrNotExist] when no matching
 //     load-gate event is present or its timestamp cannot be parsed.

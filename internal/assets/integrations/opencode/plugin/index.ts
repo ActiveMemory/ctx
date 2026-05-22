@@ -8,9 +8,10 @@
 //     mutate output rather than returning a value.
 //   - event is a single dispatcher keyed on input.event.type;
 //     it is NOT an object of named per-event handlers.
-// ctx subprocess calls go through a CTX_DIR-aware BunShell built
-// from ctx.directory — shell.env only injects CTX_DIR into the
-// agent's shell tool, not into the plugin's own ctx.$ calls.
+// ctx subprocess calls go through a cwd-anchored BunShell built
+// from ctx.directory — shell.env only forces the agent's shell
+// tool to start in the project root, not the plugin's own ctx.$
+// calls (those already use cwd: ctx.directory).
 // All ctx.$ invocations use .nothrow().quiet(): nothrow swallows
 // non-zero exits, quiet keeps stdout/stderr in BunShell's buffer
 // instead of echoing to OpenCode's process stdout (which would
@@ -45,11 +46,10 @@ function extractCommand(input: unknown): string {
 }
 
 export default (async (ctx) => {
-  const ctxDir = `${ctx.directory}/.context`
-  const $ = ctx.$.env({ ...process.env, CTX_DIR: ctxDir })
+  const $ = ctx.$.cwd(ctx.directory)
   return {
     "shell.env": async (input, output) => {
-      output.env.CTX_DIR = `${input.cwd}/.context`
+      output.cwd = input.cwd
     },
     event: async ({ event }) => {
       if (event.type === "session.created") {

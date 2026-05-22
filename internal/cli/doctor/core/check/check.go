@@ -82,7 +82,7 @@ func ContextInitialized(report *Report) error {
 //   - report: Report to append the result to
 //
 // Returns:
-//   - error: [errCtx.ErrDirNotDeclared] when the context directory
+//   - error: [errCtx.ErrNoCtxHere] when the context directory
 //     cannot be resolved; the runner renders a standard "did not run"
 //     line in that case.
 func RequiredFiles(report *Report) error {
@@ -194,14 +194,14 @@ func CtxrcValidation(report *Report) error {
 //   - report: Report to append the result to
 //
 // Returns:
-//   - error: [errCtx.ErrDirNotDeclared] when the context directory
+//   - error: [errCtx.ErrNoCtxHere] when the context directory
 //     cannot be resolved via [load.Do]; the runner renders a standard
 //     "did not run" line in that case. Transient load failures are
 //     reported inline as a StatusWarning and return nil.
 func Drift(report *Report) error {
 	c, loadErr := load.Do("")
 	if loadErr != nil {
-		if errors.Is(loadErr, errCtx.ErrDirNotDeclared) {
+		if errors.Is(loadErr, errCtx.ErrNoCtxHere) {
 			return loadErr
 		}
 		report.Results = append(report.Results, Result{
@@ -390,7 +390,7 @@ func EventLogging(report *Report) error {
 //   - report: Report to append the result to
 //
 // Returns:
-//   - error: [errCtx.ErrDirNotDeclared] when the context directory
+//   - error: [errCtx.ErrNoCtxHere] when the context directory
 //     cannot be resolved; the runner renders a standard "did not run"
 //     line in that case.
 func Webhook(report *Report) error {
@@ -424,7 +424,7 @@ func Webhook(report *Report) error {
 //   - report: Report to append the result to
 //
 // Returns:
-//   - error: [errCtx.ErrDirNotDeclared] when the context directory
+//   - error: [errCtx.ErrNoCtxHere] when the context directory
 //     cannot be resolved; the runner renders a standard "did not run"
 //     line in that case.
 func Reminders(report *Report) error {
@@ -491,7 +491,7 @@ func Reminders(report *Report) error {
 //   - report: Report to append the result to
 //
 // Returns:
-//   - error: [errCtx.ErrDirNotDeclared] when the context directory
+//   - error: [errCtx.ErrNoCtxHere] when the context directory
 //     cannot be resolved; a missing TASKS.md ([os.ErrNotExist]) is a
 //     legitimate skip and returns nil; any other read failure
 //     (permissions, I/O) is propagated so the runner can report it.
@@ -561,7 +561,7 @@ func TaskCompletion(report *Report) error {
 //   - report: Report to append the result to
 //
 // Returns:
-//   - error: [errCtx.ErrDirNotDeclared] when context load fails
+//   - error: [errCtx.ErrNoCtxHere] when context load fails
 //     for that reason; the runner renders a standard "did not run"
 //     line. Other load failures return nil without emitting a Result.
 func ContextTokenSize(report *Report) error {
@@ -575,7 +575,7 @@ func ContextTokenSize(report *Report) error {
 	var totalTokens int
 	c, loadErr := load.Do("")
 	if loadErr != nil {
-		if errors.Is(loadErr, errCtx.ErrDirNotDeclared) {
+		if errors.Is(loadErr, errCtx.ErrNoCtxHere) {
 			return loadErr
 		}
 		return nil
@@ -645,7 +645,7 @@ func ContextTokenSize(report *Report) error {
 //   - report: Report to append the result to
 //
 // Returns:
-//   - error: [errCtx.ErrDirNotDeclared] when the event log path
+//   - error: [errCtx.ErrNoCtxHere] when the event log path
 //     cannot be resolved because no context directory is declared;
 //     the runner renders a standard "did not run" line. Transient
 //     read or parse failures return nil and emit a StatusInfo
@@ -659,7 +659,7 @@ func RecentEventActivity(report *Report) error {
 		entity.EventQueryOpts{Last: 1},
 	)
 	if queryErr != nil {
-		if errors.Is(queryErr, errCtx.ErrDirNotDeclared) {
+		if errors.Is(queryErr, errCtx.ErrNoCtxHere) {
 			return queryErr
 		}
 		report.Results = append(report.Results, Result{

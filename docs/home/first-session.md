@@ -54,22 +54,7 @@ This created your `.context/` directory with template files.
 
 For Claude Code, [install the `ctx` plugin](getting-started.md#installation) to get automatic hooks and skills.
 
-## Step 2: Activate the Project
-
-Tell `ctx` which `.context/` directory the rest of these commands
-should use:
-
-```bash
-eval "$(ctx activate)"
-```
-
-You only need to run this once per terminal. If you skip it, the
-next steps fail with `Error: no context directory specified`. Direnv
-users can wire it into `.envrc` and forget about it. For more
-options (multiple `.context/` directories, scripts, CI), see
-[Activating a Context Directory](../recipes/activating-context.md).
-
-## Step 3: Populate Your Context
+## Step 2: Populate Your Context
 
 Add a **task** and a **decision**: These are the entries your AI will remember:
 

@@ -89,23 +89,6 @@ check-context-size.billing-log-format:
   short: prompt#%d BILLING-WARNING tokens=%d threshold=%d
 relay.prefix-format:
   short: '%s: %s'
-check-anchor-drift.box-title:
-  short: Anchor Drift
-check-anchor-drift.content:
-  short: |-
-    CTX_DIR (your shell) and CLAUDE_PROJECT_DIR/.context
-    point at different projects.
-
-      shell:    %s
-      claude:   %s
-
-    Re-run `eval "$(ctx activate)"` from this project to
-    realign, or close this Claude Code session and reopen
-    it from the right working directory.
-check-anchor-drift.relay-message:
-  short: CTX_DIR diverges from Claude project anchor
-check-anchor-drift.relay-prefix:
-  short: 'IMPORTANT: Relay this anchor drift notice to the user VERBATIM before answering their question.'
 check-context-size.billing-relay-format:
   short: Billing threshold exceeded (%s tokens > %s)
 check-context-size.billing-relay-prefix:

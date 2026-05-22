@@ -1936,21 +1936,21 @@ the next unit of work, executes it, updates tracking, and stops.</p>
 </span><span id="__span-2-63"><a id="__codelineno-2-63" name="__codelineno-2-63" href="#__codelineno-2-63"></a>
 </span><span id="__span-2-64"><a id="__codelineno-2-64" name="__codelineno-2-64" href="#__codelineno-2-64"></a>1. `cd` into the sub-repo directory (`~/WORKSPACE/&lt;repo-name&gt;`, NOT
 </span><span id="__span-2-65"><a id="__codelineno-2-65" name="__codelineno-2-65" href="#__codelineno-2-65"></a>   `~/WORKSPACE` itself).
-</span><span id="__span-2-66"><a id="__codelineno-2-66" name="__codelineno-2-66" href="#__codelineno-2-66"></a>2. Verify `CTX_DIR` already points at THIS sub-repo&#39;s `.context/`:
+</span><span id="__span-2-66"><a id="__codelineno-2-66" name="__codelineno-2-66" href="#__codelineno-2-66"></a>2. Verify `$PWD/.context/` exists for THIS sub-repo:
 </span><span id="__span-2-67"><a id="__codelineno-2-67" name="__codelineno-2-67" href="#__codelineno-2-67"></a>
 </span><span id="__span-2-68"><a id="__codelineno-2-68" name="__codelineno-2-68" href="#__codelineno-2-68"></a>    ```bash
-</span><span id="__span-2-69"><a id="__codelineno-2-69" name="__codelineno-2-69" href="#__codelineno-2-69"></a>    test &quot;$CTX_DIR&quot; = &quot;$PWD/.context&quot; || {
-</span><span id="__span-2-70"><a id="__codelineno-2-70" name="__codelineno-2-70" href="#__codelineno-2-70"></a>      echo &quot;STOP: CTX_DIR=$CTX_DIR but this sub-repo needs $PWD/.context.&quot;
-</span><span id="__span-2-71"><a id="__codelineno-2-71" name="__codelineno-2-71" href="#__codelineno-2-71"></a>      echo &quot;Re-launch the agent with CTX_DIR set to the sub-repo:&quot;
-</span><span id="__span-2-72"><a id="__codelineno-2-72" name="__codelineno-2-72" href="#__codelineno-2-72"></a>      echo &quot;  cd $PWD &amp;&amp; CTX_DIR=\&quot;\$PWD/.context\&quot; claude --print &#39;Follow .arch-explorer/PROMPT.md&#39; --allowedTools &#39;*&#39;&quot;
+</span><span id="__span-2-69"><a id="__codelineno-2-69" name="__codelineno-2-69" href="#__codelineno-2-69"></a>    test -d &quot;$PWD/.context&quot; || {
+</span><span id="__span-2-70"><a id="__codelineno-2-70" name="__codelineno-2-70" href="#__codelineno-2-70"></a>      echo &quot;STOP: no .context/ at $PWD. Re-launch the agent from&quot;
+</span><span id="__span-2-71"><a id="__codelineno-2-71" name="__codelineno-2-71" href="#__codelineno-2-71"></a>      echo &quot;this sub-repo&#39;s root:&quot;
+</span><span id="__span-2-72"><a id="__codelineno-2-72" name="__codelineno-2-72" href="#__codelineno-2-72"></a>      echo &quot;  cd $PWD &amp;&amp; claude --print &#39;Follow .arch-explorer/PROMPT.md&#39; --allowedTools &#39;*&#39;&quot;
 </span><span id="__span-2-73"><a id="__codelineno-2-73" name="__codelineno-2-73" href="#__codelineno-2-73"></a>      exit 1
 </span><span id="__span-2-74"><a id="__codelineno-2-74" name="__codelineno-2-74" href="#__codelineno-2-74"></a>    }
 </span><span id="__span-2-75"><a id="__codelineno-2-75" name="__codelineno-2-75" href="#__codelineno-2-75"></a>    ```
 </span><span id="__span-2-76"><a id="__codelineno-2-76" name="__codelineno-2-76" href="#__codelineno-2-76"></a>
-</span><span id="__span-2-77"><a id="__codelineno-2-77" name="__codelineno-2-77" href="#__codelineno-2-77"></a>    If it fails, STOP. The agent cannot change `CTX_DIR` for itself:
-</span><span id="__span-2-78"><a id="__codelineno-2-78" name="__codelineno-2-78" href="#__codelineno-2-78"></a>    child shells and skill invocations inherit the parent Claude
-</span><span id="__span-2-79"><a id="__codelineno-2-79" name="__codelineno-2-79" href="#__codelineno-2-79"></a>    process environment, which only the caller can control. Do not
-</span><span id="__span-2-80"><a id="__codelineno-2-80" name="__codelineno-2-80" href="#__codelineno-2-80"></a>    proceed, do not run `ctx` commands, do not skip the check.
+</span><span id="__span-2-77"><a id="__codelineno-2-77" name="__codelineno-2-77" href="#__codelineno-2-77"></a>    If it fails, STOP. `ctx` reads `$PWD/.context/`; the agent
+</span><span id="__span-2-78"><a id="__codelineno-2-78" name="__codelineno-2-78" href="#__codelineno-2-78"></a>    cannot change its own working directory after launch — only the
+</span><span id="__span-2-79"><a id="__codelineno-2-79" name="__codelineno-2-79" href="#__codelineno-2-79"></a>    caller controls it. Do not proceed, do not run `ctx` commands,
+</span><span id="__span-2-80"><a id="__codelineno-2-80" name="__codelineno-2-80" href="#__codelineno-2-80"></a>    do not skip the check.
 </span><span id="__span-2-81"><a id="__codelineno-2-81" name="__codelineno-2-81" href="#__codelineno-2-81"></a>3. If phase is `bootstrap`:
 </span><span id="__span-2-82"><a id="__codelineno-2-82" name="__codelineno-2-82" href="#__codelineno-2-82"></a>    - Run `ctx init`, confirm `.context/` exists.
 </span><span id="__span-2-83"><a id="__codelineno-2-83" name="__codelineno-2-83" href="#__codelineno-2-83"></a>    - Then run `/ctx-architecture` (structural baseline).
@@ -2078,29 +2078,30 @@ the next unit of work, executes it, updates tracking, and stops.</p>
 </span></code></pre></div>
 <hr />
 <h2 id="invocation">Invocation<a class="headerlink" href="#invocation" title="Permanent link">&para;</a></h2>
-<p>The caller MUST set <code>CTX_DIR</code> to the sub-repo the agent will work on.
-The agent verifies this at Step 3.2 and stops if it does not match.
-The wrapper reads the manifest to pick the current sub-repo, then
-launches <code>claude</code> with <code>CTX_DIR</code> pinned to that sub-repo's <code>.context/</code>.</p>
+<p>The caller MUST launch the agent with its working directory set
+to the sub-repo. The agent verifies this at Step 3.2 and stops if
+<code>$PWD/.context/</code> is missing. The wrapper reads the manifest to
+pick the current sub-repo, <code>cd</code>s into it, then launches <code>claude</code>.</p>
 <p><strong>Single run (safest for quota):</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>~/WORKSPACE
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">REPO</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.repos[.current_repo_index]&#39;</span><span class="w"> </span>.arch-explorer/manifest.json<span class="k">)</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">CTX_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PWD</span><span class="s2">/</span><span class="nv">$REPO</span><span class="s2">/.context&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>claude<span class="w"> </span>--print<span class="w"> </span><span class="s2">&quot;Follow .arch-explorer/PROMPT.md&quot;</span><span class="w"> </span>--allowedTools<span class="w"> </span><span class="s1">&#39;*&#39;</span>
 </span></code></pre></div>
 <p><strong>Batch of N runs:</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>~/WORKSPACE
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nv">REPO</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.repos[.current_repo_index]&#39;</span><span class="w"> </span>.arch-explorer/manifest.json<span class="k">)</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nv">CTX_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PWD</span><span class="s2">/</span><span class="nv">$REPO</span><span class="s2">/.context&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>claude<span class="w"> </span>--print<span class="w"> </span><span class="s2">&quot;Follow .arch-explorer/PROMPT.md&quot;</span><span class="w"> </span>--allowedTools<span class="w"> </span><span class="s1">&#39;*&#39;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="o">(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>claude<span class="w"> </span>--print<span class="w"> </span><span class="s2">&quot;Follow .arch-explorer/PROMPT.md&quot;</span><span class="w"> </span>--allowedTools<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="o">)</span>
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Run </span><span class="nv">$i</span><span class="s2"> complete (repo: </span><span class="nv">$REPO</span><span class="s2">) ---&quot;</span>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">done</span>
 </span></code></pre></div>
 <p><strong>Resume after interruption:</strong></p>
 <p>Just run the wrapper again. The manifest tracks state; the agent picks
-up where it left off. <code>CTX_DIR</code> is recomputed from the manifest on
-each invocation, so the right sub-repo is always bound.</p>
+up where it left off. The sub-repo directory is recomputed from the
+manifest on each invocation, so the agent is always anchored at the
+right project root.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Start small</strong>: list 1-2 repos in the manifest first. Add more
@@ -2119,9 +2120,10 @@ each invocation, so the right sub-repo is always bound.</p>
 <ul>
 <li>2026-04-07: Original prompt created as <code>hack/agents/architecture-explorer.md</code>.</li>
 <li>2026-04-16: Moved to docs as a runbook for discoverability.</li>
-<li>2026-04-20: Added <code>CTX_DIR</code> verification at Step 3.2 and per-invocation
-  <code>CTX_DIR</code> binding in the wrapper, so the agent writes artifacts to the
-  sub-repo's <code>.context/</code> instead of the inherited workspace one.</li>
+<li>2026-04-20: Added per-invocation working-directory pinning in the
+  wrapper (formerly via <code>CTX_DIR</code>; now via <code>cd "$REPO"</code>), so the
+  agent writes artifacts to the sub-repo's <code>.context/</code> instead of
+  the inherited workspace one.</li>
 </ul>
 
 

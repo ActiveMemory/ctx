@@ -9,20 +9,15 @@ package opencode
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 
 	"github.com/spf13/cobra"
 
-	cfgDir "github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	mcpServer "github.com/ActiveMemory/ctx/internal/config/mcp/server"
-	cfgShell "github.com/ActiveMemory/ctx/internal/config/shell"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errSetup "github.com/ActiveMemory/ctx/internal/err/setup"
@@ -33,14 +28,15 @@ import (
 // launchCommand returns the OpenCode `command` array for the ctx
 // MCP server. The emitted argv is:
 //
-//	["sh", "-c", `exec env CTX_DIR="$PWD/.context" /abs/path/to/ctx mcp serve`]
+//	[/abs/path/to/ctx, mcp, serve]
 //
-// The binary path is resolved to an absolute path at setup time via
-// exec.LookPath, so that OpenCode can spawn the MCP child regardless
-// of the PATH inherited by non-interactive shells. `$PWD` is set by
-// sh to the CWD OpenCode chose when spawning the MCP child. `exec`
-// replaces the shell so the MCP child becomes ctx itself, with no
-// sh process layered between OpenCode and the JSON-RPC stream.
+// Under the cwd-anchored resolution model
+// (spec: specs/cwd-anchored-context.md) ctx anchors to its
+// working directory, so the OpenCode-chosen CWD is sufficient
+// project context; no env-var wrapper or shell layer is needed.
+// The binary path is resolved to an absolute path at setup time
+// via exec.LookPath so OpenCode can spawn the MCP child regardless
+// of the PATH inherited by non-interactive shells.
 //
 // Returns:
 //   - []string: argv suitable for OpenCode's McpLocalConfig.command.
@@ -51,32 +47,7 @@ func launchCommand() []string {
 			bin = abs
 		}
 	}
-	binAndArgs := append([]string{bin}, mcpServer.Args()...)
-	quoted := make([]string, 0, len(binAndArgs))
-	for _, arg := range binAndArgs {
-		quoted = append(quoted, posixShellQuote(arg))
-	}
-	script := fmt.Sprintf(
-		cfgShell.FormatPOSIXSpawnRelativeCtxDir,
-		env.CtxDir, cfgDir.Context,
-		strings.Join(quoted, token.Space),
-	)
-	return []string{cfgShell.Sh, cfgShell.CmdFlag, script}
-}
-
-// posixShellQuote wraps s in single quotes, escaping embedded single
-// quotes using the canonical close-escape-reopen POSIX pattern so the
-// resulting token is safe to embed in a `sh -c` script.
-//
-// Parameters:
-//   - s: raw argv token to quote for POSIX shell evaluation
-//
-// Returns:
-//   - string: single-quoted, escape-safe shell token
-func posixShellQuote(s string) string {
-	return cfgShell.SingleQuote +
-		strings.ReplaceAll(s, cfgShell.SingleQuote, cfgShell.SingleQuoteEscaped) +
-		cfgShell.SingleQuote
+	return append([]string{bin}, mcpServer.Args()...)
 }
 
 // globalConfigPath returns the path to the OpenCode global config

@@ -7,6 +7,7 @@
 package rc
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"sync"
@@ -14,9 +15,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 )
@@ -45,13 +46,12 @@ func Default() *CtxRC {
 // RC returns the loaded configuration, initializing it on the first
 // call.
 //
-// Under the single-source-anchor resolution model
-// (spec: specs/single-source-context-anchor.md), `.ctxrc` is read
-// from `filepath.Dir(ContextDir())/.ctxrc`: the project root, which
-// by contract is the parent of [ContextDir]. CWD has no say. When
-// no context directory is declared, `.ctxrc` is not read and
-// defaults apply. Environment overrides (CTX_TOKEN_BUDGET) are
-// applied afterward. The result is cached for subsequent calls.
+// Under the cwd-anchored resolution model
+// (spec: specs/cwd-anchored-context.md), `.ctxrc` is read from
+// `$PWD/.ctxrc`: the project root, which by contract is the parent
+// of [ContextDir]. When `$PWD/.context/` is absent, `.ctxrc` is not
+// read and defaults apply. Environment overrides (CTX_TOKEN_BUDGET)
+// are applied afterward. The result is cached for subsequent calls.
 //
 // Returns:
 //   - *CtxRC: The loaded and cached configuration
@@ -62,59 +62,65 @@ func RC() *CtxRC {
 	return rc
 }
 
-// ContextDir returns the context directory as a cleaned absolute
-// path after validating its declaration *shape*.
+// ContextDir returns the project's context directory.
 //
-// This is the **declaration shape** validator: it observes [env.CtxDir]
-// and checks the value is set, absolute, and canonically named. It
-// performs **no filesystem syscalls**. Diagnostic callers that must
-// describe declared state without erroring on broken state (for
-// example, the `check-anchor-drift` hook) use this directly.
-//
-// Operating callers that need a usable directory should call
-// [RequireContextDir] instead; it adds the boundary stat/IsDir
-// checks. Mixing the two is a convention violation: an operating
-// caller getting a shape-valid but non-existent path here would
-// surface as a confusing downstream error
-// (`open .../TASKS.md: no such file or directory`) instead of the
-// friendly tailored not-found error from [RequireContextDir].
+// Under the cwd-anchored resolution model
+// (spec: specs/cwd-anchored-context.md), the answer is always
+// `$PWD/.context/`: ctx anchors to its working directory the way
+// `zensical` anchors to `zensical.toml` or Claude Code anchors to
+// `$CLAUDE_PROJECT_DIR`. There is no env-var channel, no upward
+// walk, no candidate scan. A single [os.Stat] checks the
+// directory exists; absence and wrong-type are typed errors.
 //
 // Rejection conditions, in order:
 //
-//  1. Unset/empty: [errCtx.ErrDirNotDeclared].
-//  2. Relative path (not [filepath.IsAbs]):
-//     [errCtx.ErrRelativeNotAllowed]. Absolute-only is a hardline:
-//     `filepath.Abs` *would* absolutize via cwd, exactly the silent
-//     cwd-dependency this resolver is meant to eliminate.
-//  3. Cleaned basename != [dir.Context]: [errCtx.ErrNonCanonicalBasename].
-//     Catches the common footgun `export CTX_DIR=$(pwd)` (project
-//     root instead of the `.context` subdirectory) on first use
-//     rather than letting init deposit canonical files in the
-//     project root.
+//  1. [os.Getwd] failure: wrapped via [errCtx.StatFailed](".", err)
+//     so callers can match [errCtx.ErrContextDirStat] uniformly.
+//     Rare; usually an unlinked or permission-locked working
+//     directory.
+//  2. `$PWD/.context/` does not exist:
+//     [errCtx.NoCtxHere](cwd) wrapping [errCtx.ErrNoCtxHere].
+//     Callers that can proceed without a project (init, bootstrap
+//     diagnostics) check with [errors.Is]; everyone else
+//     propagates.
+//  3. `$PWD/.context` exists but is a regular file (or other
+//     non-directory): [errCtx.NotADir](path) wrapping
+//     [errCtx.ErrContextDirNotADirectory].
+//  4. Stat failed for another reason (permission, I/O):
+//     [errCtx.StatFailed](path, cause) wrapping
+//     [errCtx.ErrContextDirStat].
 //
-// [filepath.Clean] runs unconditionally to normalize separators,
-// dot segments, and trailing slashes, but the input itself must be
-// absolute. Symlinks are not resolved: the basename guard checks
-// the *declared* name, not the symlink target name.
+// Symlinks at `$PWD/.context` resolve transparently to their
+// targets: a symlink-to-directory passes, a symlink-to-file is
+// rejected as not-a-directory.
 //
 // Returns:
-//   - string: cleaned absolute path when declared and shape-valid;
-//     "" on error.
-//   - error: [errCtx.ErrDirNotDeclared] / [errCtx.ErrRelativeNotAllowed]
-//     / [errCtx.ErrNonCanonicalBasename] depending on what failed.
+//   - string: absolute path to `$PWD/.context` when present.
+//   - error: typed errCtx error depending on which check failed.
 func ContextDir() (string, error) {
-	raw := os.Getenv(env.CtxDir)
-	if raw == "" {
-		return "", errCtx.ErrDirNotDeclared
+	cwd, cwdErr := os.Getwd()
+	if cwdErr != nil {
+		// Surface the raw [os.Getwd] failure through the
+		// [errCtx.ErrContextDirStat] sentinel so callers (and
+		// tests) can match it with [errors.Is] alongside any
+		// other stat-class diagnostic. The placeholder "." is
+		// used because the actual cwd path is unknown by
+		// definition once Getwd has failed (typically: process's
+		// cwd was unlinked or chmod'd to deny lookup).
+		return "", errCtx.StatFailed(token.Dot, cwdErr)
 	}
-	if !filepath.IsAbs(raw) {
-		return "", errCtx.RelativeNotAllowed(raw)
+	candidate := filepath.Join(cwd, dir.Context)
+	info, statErr := os.Stat(candidate)
+	if statErr != nil {
+		if errors.Is(statErr, os.ErrNotExist) {
+			return "", errCtx.NoCtxHere(cwd)
+		}
+		return "", errCtx.StatFailed(candidate, statErr)
 	}
-	abs := filepath.Clean(raw)
-	if filepath.Base(abs) != dir.Context {
-		return "", errCtx.NonCanonicalBasename(filepath.Base(abs))
+	if !info.IsDir() {
+		return "", errCtx.NotADir(candidate)
 	}
-	return abs, nil
+	return candidate, nil
 }
 
 // TokenBudget returns the configured default token budget.
@@ -251,15 +257,15 @@ func NotifyEvents() []string {
 
 // KeyPath returns the resolved encryption key file path.
 //
-// Under the explicit-context-dir model the caller must have a
-// declared context directory. The previous implementation silently
-// handed "" to [crypto.ResolveKeyPath] when ContextDir failed, which
-// either filepath.Join'd a CWD-relative `.ctx.key` path or fell
-// through to the global `~/.ctx/.ctx.key`: exactly the class of
+// Under the cwd-anchored model the caller must be at a project
+// root. The previous implementation silently handed "" to
+// [crypto.ResolveKeyPath] when ContextDir failed, which either
+// filepath.Join'd a CWD-relative `.ctx.key` path or fell through
+// to the global `~/.ctx/.ctx.key`: exactly the class of
 // silent-wrong-location / wrong-key-rotation bug this branch aims
 // to eliminate. The error is propagated instead so callers handle
-// the absence of a project rather than rotating encryption against
-// a surprise key.
+// the absence of a project rather than rotating encryption
+// against a surprise key.
 //
 // Within ResolveKeyPath the existing priority still applies:
 // key_path in .ctxrc (explicit) > project-local
@@ -267,7 +273,7 @@ func NotifyEvents() []string {
 //
 // Returns:
 //   - string: Resolved path to the encryption key file
-//   - error: [errCtx.ErrDirNotDeclared] or any other ContextDir
+//   - error: [errCtx.ErrNoCtxHere] or any other ContextDir
 //     resolver failure, propagated unchanged
 func KeyPath() (string, error) {
 	ctxDir, err := ContextDir()

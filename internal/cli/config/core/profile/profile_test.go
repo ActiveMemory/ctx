@@ -78,6 +78,11 @@ func TestCopy_Success(t *testing.T) {
 // TestDetect_Dev verifies detection of the dev profile.
 func TestDetect_Dev(t *testing.T) {
 	root := t.TempDir()
+	if mkErr := os.MkdirAll(
+		filepath.Join(root, ".context"), 0o700,
+	); mkErr != nil {
+		t.Fatal(mkErr)
+	}
 	if writeErr := os.WriteFile(
 		filepath.Join(root, file.CtxRC),
 		[]byte(devContent), 0o600,
@@ -95,6 +100,11 @@ func TestDetect_Dev(t *testing.T) {
 // TestDetect_Base verifies detection of the base profile.
 func TestDetect_Base(t *testing.T) {
 	root := t.TempDir()
+	if mkErr := os.MkdirAll(
+		filepath.Join(root, ".context"), 0o700,
+	); mkErr != nil {
+		t.Fatal(mkErr)
+	}
 	if writeErr := os.WriteFile(
 		filepath.Join(root, file.CtxRC),
 		[]byte(baseContent), 0o600,

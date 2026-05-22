@@ -43,11 +43,11 @@ my-project/
 └── src/
 ```
 
-`ctx` reads `.ctxrc` from the **project root** (*i.e. the parent of
-`CTX_DIR`, or `dirname(CTX_DIR)/.ctxrc`*). It does not walk up from CWD.
-That means whichever project you've activated via `eval "$(ctx activate)"`
-(or by exporting `CTX_DIR` directly), its paired `.ctxrc` is what governs the
-invocation. There is no global or user-level config file: configuration is
+`ctx` reads `.ctxrc` from the **current working directory** (the
+project root, sibling of `.context/`). It does not walk up. `ctx`
+commands must be run from the project root; subdirectories are
+not supported by design (see [Getting Started](getting-started.md)).
+There is no global or user-level config file: configuration is
 always per-project.
 
 !!! note "Contributors: Dev Configuration Profile"
@@ -55,15 +55,6 @@ always per-project.
     `.ctxrc.dev`). The working copy is gitignored and swapped between them
     via `ctx config switch dev` / `ctx config switch base`.
     See [Contributing: Configuration Profiles](contributing.md#configuration-profiles).
-
-!!! tip "Using a Different `.context` Directory"
-    You point `ctx` at a `.context/` directory by setting the
-    `CTX_DIR` environment variable, not through `.ctxrc`. `ctx`
-    does not search the filesystem. Use `eval "$(ctx activate)"`
-    to bind `CTX_DIR` for your shell. `CTX_DIR` must be an
-    absolute path with `.context` as its basename.
-
-    See [Environment Variables](#environment-variables) below for details.
 
 <!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort -u | grep -v 'desc\|events\|path\|review_url\|profile\|key_path') <(sed -n '/^# \.ctxrc:/,/^```$/p' docs/home/configuration.md | grep -oP '^# ([a-z_]+):' | sed 's/^# //;s/://' | sort -u) -->
 ### Full Reference
@@ -180,17 +171,13 @@ behind this ordering.
 
 Environment variables override `.ctxrc` values but are overridden by CLI flags.
 
-| Variable           | Description                                                 | Equivalent `.ctxrc` key |
-|--------------------|-------------------------------------------------------------|-------------------------|
-| `CTX_DIR`          | Declare the context directory path (required, no fallback)  | *(none)*                |
-| `CTX_TOKEN_BUDGET` | Override the default token budget                           | `token_budget`          |
+| Variable           | Description                       | Equivalent `.ctxrc` key |
+|--------------------|-----------------------------------|-------------------------|
+| `CTX_TOKEN_BUDGET` | Override the default token budget | `token_budget`          |
 
 ### Examples
 
 ```bash
-# Use a shared context directory
-CTX_DIR=/shared/team-context ctx status
-
 # Increase token budget for a single run
 CTX_TOKEN_BUDGET=16000 ctx agent
 ```
@@ -209,13 +196,6 @@ CLI flags have the highest priority and override both environment variables and
 | `--version`     | Show version and exit                                      |
 | `--help`        | Show command help and exit                                 |
 
-### Examples
-
-```bash
-# Point to a different context directory inline:
-CTX_DIR=/path/to/project/.context ctx status
-```
-
 ---
 
 ## Priority Order
@@ -229,9 +209,8 @@ CLI flags  >  Environment variables  >  .ctxrc  >  Built-in defaults
 ```
 
 The context directory itself is resolved differently: it lives *outside*
-this priority chain. `CTX_DIR` (env) must be declared; `.ctxrc` does not
-carry a fallback for it, and there is no built-in default. See
-[Activating a Context Directory](../recipes/activating-context.md).
+this priority chain. `ctx` always reads `$PWD/.context/`; if that path
+does not exist, the command refuses with a clear error.
 
 **Example resolution for `token_budget`:**
 
@@ -244,26 +223,6 @@ carry a fallback for it, and there is no built-in default. See
 ---
 
 ## Examples
-
-### External `.context` Directory
-
-Store a project's context outside the project tree (*useful when a
-repo is read-only, or when you want to keep notes adjacent rather
-than checked in*). Declare the path via `CTX_DIR`:
-
-```bash
-export CTX_DIR=/home/you/ctx-stores/my-project/.context
-```
-
-!!! warning "One `.context/` per project"
-    The parent of the context directory is the project root by
-    contract: `ctx sync`, `ctx drift`, and the memory-drift hook
-    all read the codebase from `filepath.Dir(ContextDir())`.
-    Pointing two projects at the same `.context/` directory will
-    collide their journals, state, and secrets. To share knowledge
-    (CONSTITUTION / CONVENTIONS / ARCHITECTURE) across projects,
-    use [`ctx hub`](../recipes/hub-overview.md), not a shared
-    `.context/`.
 
 ### Custom Token Budget
 

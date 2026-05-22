@@ -35,18 +35,17 @@ by MCP clients (Claude Desktop, Cursor, VS Code Copilot), **not run
 directly from a shell**. See [Configuration](#configuration) below
 for how each host launches it.
 
-**Flags:** None. The server uses the declared context directory
-from `CTX_DIR`. As with every other `ctx` command, that variable
-must be set: the server does not walk the filesystem.
+**Flags:** None. The server resolves the context directory by
+reading `$PWD/.context/`. The MCP host must launch the server
+from the project root (or its launch wrapper must `cd` first).
+There is no env-var or walk-up resolution.
 
 **Examples**:
 
 ```bash
-# Normal invocation (by an MCP client via stdio transport)
+# Normal invocation (by an MCP client via stdio transport,
+# from the project root)
 ctx mcp serve
-
-# Pin a context directory for a specific workspace
-CTX_DIR=/path/to/project/.context ctx mcp serve
 
 # Verify the binary starts without a client attached (Ctrl-C to exit)
 ctx mcp serve < /dev/null

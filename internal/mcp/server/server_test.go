@@ -41,10 +41,9 @@ func newTestServer(t *testing.T) (*Server, string) {
 	if err := os.MkdirAll(contextDir, 0o755); err != nil {
 		t.Fatalf("mkdir: %v", err)
 	}
-	// Tools dispatched through the MCP server call rc.ContextDir()
-	// for paths under .context/; declare it so they resolve without
-	// the "context directory not declared" error.
-	t.Setenv("CTX_DIR", contextDir)
+	// Tools dispatched through the MCP server call rc.ContextDir(),
+	// which reads $PWD/.context/. The os.Chdir above ensures the
+	// resolver finds contextDir.
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 	files := map[string]string{

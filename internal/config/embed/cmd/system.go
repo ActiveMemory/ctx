@@ -22,9 +22,6 @@ const (
 	// UseSystemBlockNonPathCtx is the cobra Use string for the system block non
 	// path ctx command.
 	UseSystemBlockNonPathCtx = "block-non-path-ctx"
-	// UseSystemCheckAnchorDrift is the cobra Use string for the system check
-	// anchor drift command.
-	UseSystemCheckAnchorDrift = "check-anchor-drift"
 	// UseSystemCheckCeremony is the cobra Use string for the system check
 	// ceremony command.
 	UseSystemCheckCeremony = "check-ceremony"
@@ -106,9 +103,6 @@ const (
 	// DescKeySystemBlockNonPathCtx is the description key for the system block
 	// non path ctx command.
 	DescKeySystemBlockNonPathCtx = "system.blocknonpathctx"
-	// DescKeySystemCheckAnchorDrift is the description key for the system
-	// check anchor drift command.
-	DescKeySystemCheckAnchorDrift = "system.checkanchordrift"
 	// DescKeySystemCheckCeremony is the description key for the system check
 	// ceremony command.
 	DescKeySystemCheckCeremony = "system.checkceremony"

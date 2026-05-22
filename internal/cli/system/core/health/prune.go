@@ -32,8 +32,8 @@ import (
 func AutoPrune(days int) int {
 	// Best-effort: this runs from contextloadgate as fire-and-forget
 	// and must never block session startup. Any state.Dir failure
-	// (including the ErrDirNotDeclared bail signal) is swallowed
-	// uniformly. ErrDirNotDeclared is unreachable here because
+	// (including the ErrNoCtxHere bail signal) is swallowed
+	// uniformly. ErrNoCtxHere is unreachable here because
 	// contextloadgate already ran state.Initialized; the check
 	// stays defensive in case a future caller invokes AutoPrune
 	// outside the gate.

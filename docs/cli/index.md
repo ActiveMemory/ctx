@@ -25,30 +25,16 @@ All commands support these flags:
 | `--version`     | Show version                                               |
 | `--tool <name>` | Override active AI tool identifier (e.g. `kiro`, `cursor`) |
 
-**Tell `ctx` which `.context/` to use.** `ctx` does not search the
-filesystem for `.context/`: you have to declare it. Three ways:
-
-- `eval "$(ctx activate)"` (recommended): binds `CTX_DIR` for the
-  current shell.
-- `export CTX_DIR=/abs/path/to/.context` directly, then run any
-  `ctx` command.
-- `CTX_DIR=/abs/path/to/.context ctx <command>` inline, for a
-  one-shot or CI step.
-
-`CTX_DIR` must be an absolute path with `.context` as its basename.
-Relative paths and other names are rejected on first use; the
-basename guard catches the common footgun
-(`export CTX_DIR=$(pwd)`) before stray writes can leak to the
-project root.
-
-If you forget, commands fail fast with a linkable
-`Error: no context directory specified` pointing at
-[Activating a Context Directory](../recipes/activating-context.md).
-A handful of commands run without a declaration because they don't
-need a project: `ctx init`, `ctx activate`, `ctx deactivate`,
-`ctx version`, `ctx help`, `ctx system bootstrap`, `ctx doctor`,
-`ctx guide`, `ctx why`, `ctx config switch/status`, and
-`ctx hub *`.
+**Tell `ctx` which `.context/` to use.** `ctx` reads
+`$PWD/.context/` — run commands from the project root (the
+directory that holds both `.git/` and `.context/`). There is no
+env-var or walk-up resolution; `ctx` does not search the
+filesystem. If `$PWD/.context/` is missing, commands fail fast
+with a clear error pointing at `ctx init`. A handful of commands
+run without that gate because they don't need a project:
+`ctx init`, `ctx version`, `ctx help`, `ctx system bootstrap`,
+`ctx doctor`, `ctx guide`, `ctx why`, `ctx config switch/status`,
+and `ctx hub *`.
 
 **Initialization required.** Once declared, the target must already
 have been initialized by `ctx init` (otherwise commands return
@@ -60,8 +46,6 @@ have been initialized by `ctx init` (otherwise commands return
 | Command                                             | Description                                              |
 |-----------------------------------------------------|----------------------------------------------------------|
 | [`ctx init`](init-status.md#ctx-init)               | Initialize `.context/` directory with templates          |
-| [`ctx activate`](init-status.md#ctx-activate)       | Emit `export CTX_DIR=...` to bind context for the shell  |
-| [`ctx deactivate`](init-status.md#ctx-deactivate)   | Emit `unset CTX_DIR` to clear the binding                |
 | [`ctx status`](init-status.md#ctx-status)           | Show context summary (files, tokens, drift)              |
 | [`ctx guide`](guide.md#ctx-guide)                   | Quick-reference cheat sheet                              |
 | [`ctx why`](why.md#ctx-why)                         | Read the philosophy behind `ctx`                         |
@@ -154,7 +138,6 @@ have been initialized by `ctx init` (otherwise commands return
 
 | Variable                | Description                                         |
 |-------------------------|-----------------------------------------------------|
-| `CTX_DIR`               | Override default context directory path             |
 | `CTX_TOKEN_BUDGET`      | Override default token budget                       |
 | `CTX_SESSION_ID`        | Active AI session ID (used by `ctx trace` for context linking) |
 

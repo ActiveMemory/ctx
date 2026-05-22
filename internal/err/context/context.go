@@ -7,140 +7,67 @@
 package context
 
 import (
-	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	cfgDir "github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgRc "github.com/ActiveMemory/ctx/internal/config/rc"
-	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
 const (
-	// ErrDirNotDeclared is the sentinel returned by
-	// rc.ContextDir when CTX_DIR is unset or empty. Callers
-	// that can legitimately proceed without a declared context
-	// directory (init, activate, deactivate, bootstrap) check
-	// with errors.Is; everyone else should propagate the error
-	// or call rc.RequireContextDir for a user-facing message
-	// (see NotDeclared below).
-	ErrDirNotDeclared = entity.Sentinel(
-		text.DescKeyErrContextDirNotDeclared,
-	)
-
-	// ErrRelativeNotAllowed is the sentinel returned when
-	// CTX_DIR is declared as a relative path. Absolute-only is
-	// a hardline: a relative CTX_DIR would resolve differently
-	// in every cwd, exactly the silent cwd-dependency this
-	// resolver is meant to eliminate. Wrap via
-	// [RelativeNotAllowed] for user-facing messages so the
-	// offending value is shown.
-	ErrRelativeNotAllowed = entity.Sentinel(
-		text.DescKeyErrContextRelativeNotAllowedMsg,
-	)
-
-	// ErrNonCanonicalBasename is the sentinel returned when
-	// CTX_DIR's basename is not the canonical [cfgDir.Context].
-	// It catches the common footgun `export CTX_DIR=$(pwd)`
-	// (project root instead of the `.context` subdirectory) on
-	// first use rather than letting init deposit canonical
-	// files into the project root. Wrap via
-	// [NonCanonicalBasename] for user-facing messages.
-	ErrNonCanonicalBasename = entity.Sentinel(
-		text.DescKeyErrContextNonCanonicalBasenameMsg,
-	)
-
-	// ErrContextDirNotFound is the sentinel returned by
-	// rc.RequireContextDir when CTX_DIR is shape-valid but the
-	// directory does not exist on disk. Distinct from
-	// [ErrDirNotDeclared], which fires before any filesystem
-	// check. Construct via [Missing]; the legacy
-	// [NotFoundError] type also carries this sentinel through
-	// its [NotFoundError.Is] method, so callers using either
-	// pattern can compare with [errors.Is].
-	ErrContextDirNotFound = entity.Sentinel(
-		text.DescKeyErrContextDirNotFound,
+	// ErrNoCtxHere is the sentinel returned by rc.ContextDir
+	// when $PWD/.context/ does not exist as a directory. Under the
+	// cwd-anchored resolution model
+	// (spec: specs/cwd-anchored-context.md), this is the canonical
+	// "this process is not at a ctx project root" signal. Callers
+	// that can legitimately proceed without a project (init,
+	// bootstrap diagnostics) check with errors.Is; everyone else
+	// should propagate. Wrap via [NoCtxHere] for user-facing
+	// messages so the offending cwd is shown.
+	ErrNoCtxHere = entity.Sentinel(
+		text.DescKeyErrContextNoContextHereMsg,
 	)
 
 	// ErrContextDirNotADirectory is the sentinel returned when
-	// CTX_DIR points at an existing path that is not a
-	// directory (typically a regular file). Symlinks pointing
-	// at directories pass.
+	// $PWD/.context exists but is not a directory (typically a
+	// regular file). Symlinks pointing at directories pass.
 	ErrContextDirNotADirectory = entity.Sentinel(
 		text.DescKeyErrContextDirNotADirectoryMsg,
 	)
 
 	// ErrContextDirStat is the sentinel returned when [os.Stat]
-	// on CTX_DIR fails for a reason other than not-exist
+	// on $PWD/.context fails for a reason other than not-exist
 	// (permission denied, I/O error). Wrap via [StatFailed] to
 	// attach the underlying cause.
 	ErrContextDirStat = entity.Sentinel(
 		text.DescKeyErrContextDirStatMsg,
 	)
 
-	// ErrNotInitialized is the sentinel returned when CTX_DIR
-	// is declared but the project lacks the required context
-	// files (i.e., `ctx init` has not run there). Distinct
-	// from [ErrDirNotDeclared] (no CTX_DIR at all) and from
-	// [ErrContextDirNotFound] (declared dir does not exist on
-	// disk): here the directory may or may not exist, but the
-	// contents do not constitute a ctx project. Wrap via
-	// [NotInitialized] for user-facing messages so the
-	// offending path is shown.
+	// ErrNotInitialized is the sentinel returned when $PWD/.context
+	// exists as a directory but the project lacks the required
+	// context files (i.e., `ctx init` has not run there). Distinct
+	// from [ErrNoCtxHere] (no .context at all) and from
+	// [ErrContextDirNotADirectory] (path exists but is the wrong
+	// type). Wrap via [NotInitialized] for user-facing messages so
+	// the offending path is shown.
 	ErrNotInitialized = entity.Sentinel(
 		text.DescKeyErrContextNotInitializedMsg,
 	)
 )
 
-// RelativeNotAllowed wraps [ErrRelativeNotAllowed] with the
-// offending value so the user sees what they declared.
+// NoCtxHere wraps [ErrNoCtxHere] with the offending cwd so
+// the user sees where ctx was looking.
 //
 // Parameters:
-//   - raw: the rejected CTX_DIR value
+//   - cwd: the working directory that lacked .context/
 //
 // Returns:
-//   - error: wrapping [ErrRelativeNotAllowed] for [errors.Is] matches
-func RelativeNotAllowed(raw string) error {
+//   - error: wrapping [ErrNoCtxHere] for [errors.Is] matches
+func NoCtxHere(cwd string) error {
 	return fmt.Errorf(cfgRc.FmtWrapColon,
-		ErrRelativeNotAllowed,
-		fmt.Sprintf(desc.Text(text.DescKeyErrContextRelativeNotAllowed), raw),
-	)
-}
-
-// NonCanonicalBasename wraps [ErrNonCanonicalBasename] with the
-// offending basename so the user sees how their declaration deviated
-// from the canonical `.context`.
-//
-// Parameters:
-//   - base: the rejected basename (e.g., "tmp", "myctx")
-//
-// Returns:
-//   - error: wrapping [ErrNonCanonicalBasename] for [errors.Is] matches
-func NonCanonicalBasename(base string) error {
-	return fmt.Errorf(cfgRc.FmtWrapColon,
-		ErrNonCanonicalBasename,
-		fmt.Sprintf(
-			desc.Text(text.DescKeyErrContextNonCanonicalBasename),
-			cfgDir.Context, base,
-		),
-	)
-}
-
-// Missing wraps [ErrContextDirNotFound] with the missing path so
-// the user sees which directory was expected.
-//
-// Parameters:
-//   - path: absolute path that does not exist
-//
-// Returns:
-//   - error: wrapping [ErrContextDirNotFound] for [errors.Is] matches
-func Missing(path string) error {
-	return fmt.Errorf(cfgRc.FmtWrapBare,
-		ErrContextDirNotFound,
-		path,
+		ErrNoCtxHere,
+		fmt.Sprintf(desc.Text(text.DescKeyErrContextNoContextHere), cwd),
 	)
 }
 
@@ -180,7 +107,7 @@ func StatFailed(path string, cause error) error {
 // directory so the user sees which project is not initialized.
 //
 // Parameters:
-//   - path: absolute path to the (declared but uninitialized) context dir
+//   - path: absolute path to the (existing but uninitialized) context dir
 //
 // Returns:
 //   - error: wrapping [ErrNotInitialized] for [errors.Is] matches
@@ -191,7 +118,13 @@ func NotInitialized(path string) error {
 	)
 }
 
-// NotFoundError is returned when the context directory does not exist.
+// NotFoundError is returned by the context loader when the loaded
+// directory has no readable files. Distinct from a bare
+// [ErrNoCtxHere]: the directory exists but its contents are
+// empty or unreadable. Callers using `errors.AsType[*NotFoundError]`
+// can still recover the missing path; callers using
+// `errors.Is(err, ErrNoCtxHere)` will also match via the
+// type's [NotFoundError.Is] method.
 type NotFoundError struct {
 	Dir string
 }
@@ -204,17 +137,17 @@ func (e *NotFoundError) Error() string {
 	return desc.Text(text.DescKeyErrContextDirNotFound) + e.Dir
 }
 
-// Is reports whether target matches the not-found sentinel. Lets
-// callers using errors.Is(err, ErrContextDirNotFound) match instances
-// of [NotFoundError] without rewriting them.
+// Is reports whether target matches the no-context-here sentinel.
+// Lets callers using `errors.Is(err, ErrNoCtxHere)` match
+// instances of [NotFoundError] without rewriting them.
 //
 // Parameters:
 //   - target: error to compare against
 //
 // Returns:
-//   - bool: true when target is the not-found sentinel
+//   - bool: true when target is [ErrNoCtxHere]
 func (e *NotFoundError) Is(target error) bool {
-	return target == ErrContextDirNotFound
+	return target == ErrNoCtxHere
 }
 
 // NotFound returns a NotFoundError for the given directory.
@@ -223,7 +156,7 @@ func (e *NotFoundError) Is(target error) bool {
 //   - path: path to the missing context directory
 //
 // Returns:
-//   - *NotFoundError: typed error for errors.As matching
+//   - *NotFoundError: typed error for errors.AsType matching
 func NotFound(path string) *NotFoundError {
 	return &NotFoundError{Dir: path}
 }
@@ -253,51 +186,4 @@ func FileSymlink(file string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrValidateContextFileSymlink), file,
 	)
-}
-
-// NotDeclared returns the standard "no context directory specified"
-// error used by rc.RequireContextDir when CTX_DIR has not been
-// declared.
-//
-// The returned message is tailored by how many .context/ candidates
-// are visible from the caller's CWD, so users get a next-step hint
-// specific to their situation:
-//
-//   - zero candidates:  suggest `ctx init`.
-//   - one candidate:    name it as the likely target and suggest
-//     `eval "$(ctx activate)"`.
-//   - many candidates:  list all of them and refer the user to
-//     `ctx activate` from a more specific cwd.
-//
-// The scan that produces candidates is read-only (rc.ScanCandidates)
-// and never binds anything; resolution itself stays explicit.
-//
-// Parameters:
-//   - candidates: absolute paths of every visible .context/
-//     directory, ordered innermost-first. Empty/nil when none.
-//
-// Returns:
-//   - error: a multi-line, actionable message ready to be returned
-//     from a Cobra Run function.
-func NotDeclared(candidates []string) error {
-	switch len(candidates) {
-	case 0:
-		return errors.New(desc.Text(text.DescKeyErrContextNotDeclaredZero))
-	case 1:
-		return fmt.Errorf(
-			desc.Text(text.DescKeyErrContextNotDeclaredOne),
-			candidates[0],
-		)
-	default:
-		var b strings.Builder
-		for _, p := range candidates {
-			b.WriteString(token.Indent2)
-			b.WriteString(p)
-			b.WriteString(token.NewlineLF)
-		}
-		return fmt.Errorf(
-			desc.Text(text.DescKeyErrContextNotDeclaredMany),
-			strings.TrimRight(b.String(), token.NewlineLF),
-		)
-	}
 }

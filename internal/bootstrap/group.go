@@ -7,14 +7,12 @@
 package bootstrap
 
 import (
-	"github.com/ActiveMemory/ctx/internal/cli/activate"
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
 	"github.com/ActiveMemory/ctx/internal/cli/change"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
 	"github.com/ActiveMemory/ctx/internal/cli/connection"
 	"github.com/ActiveMemory/ctx/internal/cli/convention"
-	"github.com/ActiveMemory/ctx/internal/cli/deactivate"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
@@ -61,8 +59,6 @@ import (
 func gettingStarted() []registration {
 	return []registration{
 		{initialize.Cmd, embedCmd.GroupGettingStarted},
-		{activate.Cmd, embedCmd.GroupGettingStarted},
-		{deactivate.Cmd, embedCmd.GroupGettingStarted},
 		{status.Cmd, embedCmd.GroupGettingStarted},
 		{guide.Cmd, embedCmd.GroupGettingStarted},
 	}

@@ -35,14 +35,12 @@ Or fork first on GitHub, then clone your fork.
 
 ```bash
 ctx init
-eval "$(ctx activate)"
 ```
 
 `ctx init` creates the `.context/` directory with knowledge files
-and the `.claude/` directory with agent configuration.
-`eval "$(ctx activate)"` tells `ctx` to use that directory for the
-rest of this runbook. If you skip the second line, the later steps
-fail with `Error: no context directory specified`.
+and the `.claude/` directory with agent configuration. Run
+subsequent `ctx` commands from the project root; `ctx` reads
+`$PWD/.context/`.
 
 If `ctx` is not yet installed, proceed to Step 3 first, then come back.
 

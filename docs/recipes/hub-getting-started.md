@@ -85,7 +85,6 @@ inside a project at `.context/.connect.enc`, so you have to tell
 
 ```bash
 cd ~/projects/alpha
-eval "$(ctx activate)"
 ctx connection register localhost:9900 --token ctx_adm_7f3a1c2d...
 ```
 
@@ -124,7 +123,6 @@ ctx connection publish decision "Use UTC timestamps everywhere"
 
 ```bash
 cd ~/projects/beta
-eval "$(ctx activate)"   # bind CTX_DIR for this project
 ctx connection register localhost:9900 --token ctx_adm_7f3a1c2d...
 ctx connection subscribe decision learning convention
 ctx connection sync

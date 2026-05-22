@@ -58,7 +58,7 @@ Install the extension and the `ctx` binary, then `ctx init` your project:
 3. **From your project root**, run:
 
    ```bash
-   ctx init && eval "$(ctx activate)"
+   ctx init
    ```
 
 4. **Open Copilot Chat** in VS Code and type `@ctx /init` to verify

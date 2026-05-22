@@ -35,7 +35,6 @@ func TestInitCommand(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -81,7 +80,6 @@ func TestInitCreatesSteeringHooksSkillsDirs(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -116,7 +114,6 @@ func TestInitSkipsExistingSteeringHooksSkillsDirs(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	// Pre-create the directories with a marker file inside each.
@@ -167,7 +164,6 @@ func TestInitMergeInsertsAfterH1(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	existingContent := "# My Amazing Project\n\n" +
@@ -221,7 +217,6 @@ func TestInitMergeInsertsAtTopWhenNoH1(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	existingContent := "## Build Instructions\n\nRun make build.\n\n" +
@@ -271,7 +266,6 @@ func TestInitCreatesPermissions(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -330,7 +324,6 @@ func TestInitMergesPermissions(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	if err = os.MkdirAll(".claude", 0750); err != nil {
@@ -401,7 +394,6 @@ func TestInitWithExistingClaudeMdWithCtxMarker(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	existingContent := "# My Project\n\n" +
@@ -466,7 +458,6 @@ func TestRunInit_Minimal(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -506,7 +497,6 @@ func TestRunInit_RefuseWhenPopulated(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -564,7 +554,6 @@ func TestRunInit_ResetRequiresInteractive(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -601,7 +590,6 @@ func TestRunInit_ResetWithConfirmationBacksUp(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -671,7 +659,6 @@ func TestRunInit_ResetDeclinedNoChanges(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -722,7 +709,6 @@ func TestRunInit_Merge(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	mdContent := "# My Project\n\nExisting.\n"
@@ -759,7 +745,6 @@ func TestInitScaffoldsFoundationSteeringFiles(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -806,7 +791,6 @@ func TestInitNoSteeringInitFlagSkipsScaffold(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, ".context"))
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -831,3 +815,10 @@ func TestInitNoSteeringInitFlagSkipsScaffold(t *testing.T) {
 		)
 	}
 }
+
+// Note: the former TestRunInit_EnvCwdMismatch_* tests have been
+// removed. Under the cwd-anchored resolution model
+// (spec: specs/cwd-anchored-context.md) init always targets
+// `$PWD/.context/`; the env-vs-cwd mismatch class can no longer
+// occur. The mismatch guard (envmatch package and ErrEnvCwdMismatch
+// sentinel) was deleted in the same change.

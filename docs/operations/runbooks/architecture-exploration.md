@@ -144,21 +144,21 @@ focus as input upfront.
 
 1. `cd` into the sub-repo directory (`~/WORKSPACE/<repo-name>`, NOT
    `~/WORKSPACE` itself).
-2. Verify `CTX_DIR` already points at THIS sub-repo's `.context/`:
+2. Verify `$PWD/.context/` exists for THIS sub-repo:
 
     ```bash
-    test "$CTX_DIR" = "$PWD/.context" || {
-      echo "STOP: CTX_DIR=$CTX_DIR but this sub-repo needs $PWD/.context."
-      echo "Re-launch the agent with CTX_DIR set to the sub-repo:"
-      echo "  cd $PWD && CTX_DIR=\"\$PWD/.context\" claude --print 'Follow .arch-explorer/PROMPT.md' --allowedTools '*'"
+    test -d "$PWD/.context" || {
+      echo "STOP: no .context/ at $PWD. Re-launch the agent from"
+      echo "this sub-repo's root:"
+      echo "  cd $PWD && claude --print 'Follow .arch-explorer/PROMPT.md' --allowedTools '*'"
       exit 1
     }
     ```
 
-    If it fails, STOP. The agent cannot change `CTX_DIR` for itself:
-    child shells and skill invocations inherit the parent Claude
-    process environment, which only the caller can control. Do not
-    proceed, do not run `ctx` commands, do not skip the check.
+    If it fails, STOP. `ctx` reads `$PWD/.context/`; the agent
+    cannot change its own working directory after launch — only the
+    caller controls it. Do not proceed, do not run `ctx` commands,
+    do not skip the check.
 3. If phase is `bootstrap`:
     - Run `ctx init`, confirm `.context/` exists.
     - Then run `/ctx-architecture` (structural baseline).
@@ -289,17 +289,17 @@ When every repo has reached its stopping condition, print:
 
 ## Invocation
 
-The caller MUST set `CTX_DIR` to the sub-repo the agent will work on.
-The agent verifies this at Step 3.2 and stops if it does not match.
-The wrapper reads the manifest to pick the current sub-repo, then
-launches `claude` with `CTX_DIR` pinned to that sub-repo's `.context/`.
+The caller MUST launch the agent with its working directory set
+to the sub-repo. The agent verifies this at Step 3.2 and stops if
+`$PWD/.context/` is missing. The wrapper reads the manifest to
+pick the current sub-repo, `cd`s into it, then launches `claude`.
 
 **Single run (safest for quota):**
 
 ```bash
 cd ~/WORKSPACE
 REPO=$(jq -r '.repos[.current_repo_index]' .arch-explorer/manifest.json)
-CTX_DIR="$PWD/$REPO/.context" \
+cd "$REPO" && \
   claude --print "Follow .arch-explorer/PROMPT.md" --allowedTools '*'
 ```
 
@@ -309,8 +309,8 @@ CTX_DIR="$PWD/$REPO/.context" \
 cd ~/WORKSPACE
 for i in $(seq 1 5); do
   REPO=$(jq -r '.repos[.current_repo_index]' .arch-explorer/manifest.json)
-  CTX_DIR="$PWD/$REPO/.context" \
-    claude --print "Follow .arch-explorer/PROMPT.md" --allowedTools '*'
+  (cd "$REPO" && \
+    claude --print "Follow .arch-explorer/PROMPT.md" --allowedTools '*')
   echo "--- Run $i complete (repo: $REPO) ---"
 done
 ```
@@ -318,8 +318,9 @@ done
 **Resume after interruption:**
 
 Just run the wrapper again. The manifest tracks state; the agent picks
-up where it left off. `CTX_DIR` is recomputed from the manifest on
-each invocation, so the right sub-repo is always bound.
+up where it left off. The sub-repo directory is recomputed from the
+manifest on each invocation, so the agent is always anchored at the
+right project root.
 
 ## Tips
 
@@ -339,6 +340,7 @@ each invocation, so the right sub-repo is always bound.
 
 - 2026-04-07: Original prompt created as `hack/agents/architecture-explorer.md`.
 - 2026-04-16: Moved to docs as a runbook for discoverability.
-- 2026-04-20: Added `CTX_DIR` verification at Step 3.2 and per-invocation
-  `CTX_DIR` binding in the wrapper, so the agent writes artifacts to the
-  sub-repo's `.context/` instead of the inherited workspace one.
+- 2026-04-20: Added per-invocation working-directory pinning in the
+  wrapper (formerly via `CTX_DIR`; now via `cd "$REPO"`), so the
+  agent writes artifacts to the sub-repo's `.context/` instead of
+  the inherited workspace one.

@@ -72,12 +72,9 @@ func TestBinaryIntegration(t *testing.T) {
 		t.Fatalf("failed to create .git dir: %v", err)
 	}
 
-	// Under the explicit-context-dir model each subprocess invocation
-	// must declare CTX_DIR. t.Setenv mutates the current process env
-	// and exec.Cmd with cmd.Env == nil inherits that env, so a single
-	// Setenv here propagates to every child below, and is unset
-	// automatically at test end.
-	t.Setenv("CTX_DIR", filepath.Join(testDir, ".context"))
+	// Subprocesses below each set cmd.Dir = testDir, so they
+	// resolve $PWD/.context to testDir/.context per the cwd-anchored
+	// resolver. No env-var declaration is needed.
 
 	// Subtest: ctx init creates expected files
 	t.Run("init creates expected files", func(t *testing.T) {

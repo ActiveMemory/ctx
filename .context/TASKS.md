@@ -43,21 +43,90 @@ TASK STATUS LABELS:
   inconsistencies, and move useful functions that are utility and/or reusable
   to relevant convenience packages.
 
-- [ ] Create a typography.md somewhere so that we don't have to remind tha
+- [x] Create a typography.md somewhere so that we don't have to remind tha
   Agent things like this: "❯"## What the editorial pipeline is NOT" our headings 
   are Title Case, it always has been; it always will be. Do a full sweep. 
   -- in addition (not checked, just to make sure); `ctx` is always in backticks 
   whenever possible; it's part of the branding."
+  Landed at `.context/typography.md` (contributor/agent surface, not
+  public docs); CONVENTIONS.md points at it. Codifies Title Case, monotype
+  `ctx`, no em-dashes/smart-quotes/quad-backticks, banner/icon header
+  shape, recipe Problem→TL;DR arc, admonition variants. Sweep across
+  existing docs deferred (linter already enforces the hard rules on every
+  edit).
 
-
-- [ ] Bug: Fresh folder: git init; eval $(ctx activate); ctx init
+- [x] Bug: Fresh folder: git init; eval $(ctx activate); ctx init
   will catch parent .context folder and raise a warning
   expectation: ctx activate should bail if there is no .context
   folder in the same level and ask user to run `ctx init` first.
   discuss this with the Agent too.
-- [ ] Bug: if context is active (eval ctx activate); `ctx init`
+  Fixed by `specs/activate-strict-cwd.md`: dropped the upward walk
+  in `internal/cli/activate/core/resolve/`; `ctx activate` now
+  succeeds iff `$PWD/.context/` exists, otherwise returns
+  `errActivate.NoLocalContext` naming `$PWD` and pointing at
+  `ctx init`. Removed `writeActivate.AlsoVisible`,
+  `FormatAlsoVisibleAdvisory`, multi-candidate test. New test
+  `TestActivate_DeepSubdir_WithParentContext_Bails` guards the
+  regression.
+- [x] Bug: if context is active (eval ctx activate); `ctx init`
   on a brand new project can (and probably will) fail. 
   Probably need to nudge user to ctx deactivate first.
+  Paired with the activate strict-CWD fix above. Strict activate
+  reduces how often this fires (no more silent parent-binds), but
+  the deliberate path (activated A, cd to B, ran `ctx init`) still
+  needs an init-side guard: refuse when `$CTX_DIR` is set and
+  `realpath($CTX_DIR) != realpath($PWD/.context)`; suggest
+  `ctx deactivate` or a `cd` back to A.
+  Fixed: env-vs-cwd mismatch guard added to
+  `internal/cli/initialize/cmd/root/run.go` via new
+  `internal/cli/initialize/core/envmatch/` package
+  (symlink-aware via `filepath.EvalSymlinks`, with parent-resolution
+  fallback for paths that do not yet exist). Skipped when
+  `--caller` is set (editors / scripted callers pre-set CTX_DIR by
+  contract). New typed error `errInit.ErrEnvCwdMismatch` with
+  multi-line message naming both paths and pointing at
+  `ctx deactivate`. Three tests guard the regression
+  (`EnvCwdMismatch_Refuses`, `EnvCwdMatch_Succeeds`,
+  `EnvCwdMismatch_CallerSkipsGuard`).
+
+- [ ] Bug: `ctx handover write` emits literal `branch: --show-current`
+  in handover frontmatter instead of the resolved branch name. Spotted
+  during the 2026-05-20 wrap-up; the handover at
+  `.context/handovers/20260521T045353Z-...md` shows the issue. Looks
+  like `gitmeta`'s branch resolver is leaking a `git symbolic-ref`
+  flag literal. Read side parses it but downstream tooling that
+  expects `main` (or whatever) will get tripped. #priority:medium
+  #added:2026-05-20
+
+- [x] Implement `specs/cwd-anchored-context.md` — drop the `CTX_DIR`
+  env channel and `ctx activate`/`ctx deactivate` entirely; resolver
+  becomes a single `os.Stat($PWD/.context)`; `gitmeta` stops walking
+  too. Multi-step (rc + gitmeta simplification → init guard removal
+  → hook `cd` migration → activate/deactivate deletion → docs sweep).
+  Supersedes `specs/activate-strict-cwd.md` (marked superseded) and
+  large sections of `specs/single-source-context-anchor.md` (marked
+  superseded).
+  #priority:medium #added:2026-05-20
+  Done end-to-end on `feat/cwd-anchored-context` (uncommitted, jumbo
+  strategy). Steps 1+2 (rc + gitmeta + init guard) were landed in a
+  prior session; steps 3–5 (hook `cd` migration, activate/deactivate
+  deletion, docs sweep) landed this session. Net diff: ~1410
+  insertions, ~4560 deletions, 196 files. Deletions include four
+  package directories (`internal/cli/activate/`, `internal/cli/deactivate/`,
+  `internal/write/activate/`, `internal/err/activate/`), the
+  check-anchor-drift system subcommand and its core/anchor package,
+  the `internal/config/shell/` package, the `err_activate.go` and
+  `activate.go` flag/text files, two recipes (`activating-context.md`,
+  `external-context.md`), and YAML entries across
+  `commands.yaml`/`examples.yaml`/`flags.yaml`/`errors.yaml`/`hooks.yaml`/`write.yaml`.
+  Hooks migrated: `internal/assets/claude/hooks/hooks.json` now uses
+  `cd "${CLAUDE_PROJECT_DIR:?...}" && ctx system <verb>` instead of
+  the `CTX_DIR=` prefix; check-anchor-drift hook line removed. Tests
+  cleaned of dead `t.Setenv("CTX_DIR", ...)` calls across init,
+  pad, remind, checkreminder, notify, change/core, mcp/server, and
+  drift suites; `mcp/cmd/root/cmd_test.go` rewritten to test the
+  cwd-anchored fail-closed behaviour. Lint clean (`golangci-lint run`),
+  full `go test ./...` green.
 
 - [-] Add TypeScript `tsc --noEmit` gate for the embedded OpenCode
   plugin (`internal/assets/integrations/opencode/plugin/index.ts`).
@@ -73,17 +142,29 @@ TASK STATUS LABELS:
   convention) rather than Bun; `tsc` is the same compiler either
   way and `@types/bun` provides Bun globals to the type-checker.
 
-- [ ] Add `shellcheck` gate for embedded shell scripts
+- [x] Add `shellcheck` gate for embedded shell scripts
   (`internal/assets/integrations/copilot-cli/scripts/*.sh` and
   `internal/assets/hooks/trace/*.sh`). Run in CI; fail on findings
   at severity `warning` and above. #priority:low #added:2026-05-11
   #grounding-gap
+  Done: `hack/lint-shellcheck.sh` (severity=warning, scoped to
+  embedded scripts), `make lint-shellcheck` target, `audit` target
+  invokes it when shellcheck is present, dedicated `shellcheck`
+  CI job (`.github/workflows/ci.yml`). 10 embedded scripts scan
+  clean at warning+.
 
-- [ ] Add `PSScriptAnalyzer` gate for embedded PowerShell scripts
+- [x] Add `PSScriptAnalyzer` gate for embedded PowerShell scripts
   (`internal/assets/integrations/copilot-cli/scripts/*.ps1`). Run in
   CI on a Windows or pwsh-enabled runner; fail on findings at
   severity `Warning` and above. #priority:low #added:2026-05-11
   #grounding-gap
+  Done: `hack/lint-powershell.sh` (severity=Warning, scoped to
+  embedded `*.ps1`), `make lint-powershell` target, `audit`
+  target invokes it when pwsh is present, dedicated
+  `powershell` CI job that `Install-Module`s PSScriptAnalyzer
+  on the ubuntu-latest runner (pwsh ships pre-installed on
+  GitHub Actions ubuntu images). Local verification deferred to
+  CI (no pwsh on dev box).
 
 - [ ] Add skill frontmatter validity test covering every embedded
   `SKILL.md` (Claude skills, OpenCode skills, Copilot CLI skills):
@@ -2052,6 +2133,201 @@ Phase KB-3 (documentation):
   `desc.Text(text.DescKey...)` at call time. Pre-existing convention
   reference: `internal/err/context/NotFoundError` (commit `e524dd98`).
   Captured as a learning to prevent recurrence.
+
+- [ ] Bug / gap: Phase KB scaffold has no retrofit path for projects
+  that pre-date the kb subsystem. `coreKB.Scaffold(contextDir)` is
+  only called from `internal/cli/initialize/cmd/root/run.go`'s init
+  flow; `ctx init` itself refuses on populated projects without
+  `--reset` (destructive). On the ctx project this branch is in,
+  `.context/kb/` and `.context/ingest/` were missing entirely until
+  hand-rolled on 2026-05-21 by copying
+  `internal/assets/kb/templates/{ingest,kb}/*` into place. Add a
+  dedicated `ctx kb init` subcommand (or `ctx init --kb-only`) that
+  calls `coreKB.Scaffold` and nothing else; existing per-file
+  preservation in `Scaffold` already makes it idempotent. Wire the
+  command annotation so it bypasses the require-context-dir
+  PreRunE gate (the gate already passes when `.context/` exists,
+  but a freshly-init'd project in the same shell session must work
+  too). Update `docs/recipes/build-a-knowledge-base.md` to point at
+  the new subcommand for retrofit. #priority:medium #added:2026-05-21
+
+- [ ] Bug / gap: `ctx init` refuses on a populated project without
+  `--reset`, but `--reset` is destructive (it backs up populated
+  files then overwrites them). There is no path between "project
+  already exists, do nothing" and "blow it all away." Add an
+  `--upgrade` mode that runs the scaffolding stages that are
+  per-file-existence-preserving (kb, steering foundation, entry
+  templates, scratchpad bootstrap if absent, gitignore amends,
+  Makefile.ctx, settings.local.json permission merge) but skips
+  reset-required stages (CLAUDE.md merge, populated-file refuse).
+  Pairs with `ctx kb init` above; same shape, broader surface.
+  #priority:medium #added:2026-05-21
+
+#### Adjacent-tool kb ingests `#added:2026-05-21`
+
+The kb's declared scope (`.context/kb/index.md`) covers design
+lessons and operational patterns from adjacent / inspirational
+AI infrastructure projects. Each entry below is a separate
+`/ctx-kb-ingest` pass. Topic slugs follow the
+lowercase-kebab-case convention used by `ctx kb topic new`.
+Suggested invocation per row is a starting point; the operator
+can refine the source URL during the pass. Mark
+`[x]` only when the topic page clears the cold-reader rubric and
+the source-coverage ledger has the row at `comprehensive` (or
+honestly at `topic-page-drafted` if the page is good but the
+ledger admits residue).
+
+- [x] `vllm` — landing page ingested 2026-05-21 in this branch's
+  scaffold pass. Page deferred (build-validation gap); follow-up
+  per-category deep dive tracked via the source-coverage ledger.
+  See `.context/kb/topics/vllm/index.md`.
+
+- [ ] `claude-code` — Anthropic's official CLI for Claude. Surface
+  to study: hooks, slash commands, skills (`~/.claude/skills/`),
+  settings.json, plugin system. Suggested seed:
+  `/ctx-kb-ingest https://docs.claude.com/en/docs/claude-code claude-code`.
+  Question: how does Claude Code's hook + skill surface compare
+  to ctx's, and what entry points (e.g. settings.json structure)
+  is ctx echoing vs diverging from? #priority:medium
+
+- [ ] `opencode` — sst/opencode terminal AI agent. Surface to
+  study: plugin model (TypeScript `index.ts`), MCP-server
+  registration, skill discovery, command palette shape.
+  Suggested seed: `/ctx-kb-ingest https://opencode.ai/docs opencode`.
+  Question: ctx already integrates with OpenCode via
+  `internal/assets/integrations/opencode/` — what's the kb
+  reading of that integration as a pattern, and where could it
+  generalise to other host CLIs? #priority:medium
+
+- [ ] `cursor` — Cursor editor. Surface to study: workspace
+  hooks (`.cursorrules`, `.cursor/`), MCP integration, the
+  cross-IDE settings-leak that motivated ctx's state.Initialized
+  gate (spec: `specs/state-dir-no-mkdir-when-uninitialized.md`).
+  Suggested seed:
+  `/ctx-kb-ingest https://cursor.com/docs cursor`. Question: how
+  does Cursor's workspace-level hook discipline shape what ctx
+  has to defend against (cross-workspace state leaks), and what
+  would ctx-on-Cursor parity look like beyond the current
+  defensive gate? #priority:medium
+
+- [ ] `gitnexus` — code-intelligence MCP toolchain that ships as
+  a companion to ctx (see `.claude/skills/gitnexus/`,
+  `GITNEXUS.md`). Surface to study: MCP tool catalogue (cypher,
+  impact, route_map, tool_map, group_*), graph-backed code
+  navigation, the impedance match with Go projects of ctx's
+  size. Suggested seed:
+  `/ctx-kb-ingest GITNEXUS.md gitnexus` plus discovery enabled
+  to pull official docs. Question: which GitNexus capabilities
+  is ctx *not* using that would meaningfully change how ctx
+  develops itself (e.g. blast-radius checks pre-refactor)?
+  #priority:medium
+
+- [ ] `mempalace` — memory-palace / spatial-recall AI project
+  (operator: confirm the canonical URL; tentative
+  `https://github.com/mempalace` or similar). Surface to study:
+  whatever the project's memory-persistence model is, and how it
+  differs from ctx's file-anchored memory model. Question: is
+  there a spatial / graph / vector substrate worth lifting into
+  ctx's memory layer, or is the contrast purely contrastive
+  (ctx commits to file-anchored; mempalace commits to
+  something else)? #priority:low
+
+- [ ] `deepwiki` — Devin's auto-generated wiki for any GitHub
+  repo. Surface to study: how it derives a wiki structure from
+  code+commits, and whether that output is usable as a ctx
+  substrate (per reminder [6]: *"use deepwiki to enhance docs
+  of ctx and use it as a substrate for further analysis of
+  other stuff"*). Suggested seed:
+  `/ctx-kb-ingest https://deepwiki.com/ActiveMemory/ctx deepwiki`.
+  Question: is deepwiki's auto-derived structure complementary
+  to ctx's hand-authored docs (use both, treat them as
+  different views) or competitive (one supersedes the other)?
+  Connects to reminders [6, 7]. #priority:medium
+
+- [ ] `zensical` — static-site generator that anchors to
+  `zensical.toml` (referenced as the canonical
+  config-file-anchored precedent in
+  `specs/cwd-anchored-context.md`). Surface to study: the
+  anchor-to-config-file pattern, recipe library shape, how
+  zensical handles cwd vs config-dir resolution. Question: ctx
+  cited zensical as precedent for the cwd-anchored decision;
+  what other zensical patterns are worth borrowing or
+  rejecting? #priority:low
+
+- [ ] Discuss: rename `ctx kb site build` (referenced in the
+  `/ctx-kb-ingest` skill's circuit-breaker item #3 but absent
+  from the installed binary) into a top-level family —
+  `ctx site kb build`, `ctx site journal build`, etc. The
+  motivation: ctx now ships multiple site-shaped surfaces
+  (kb topic pages, journal entries, possibly more); the
+  current `kb site-review` placement under `kb/` no longer
+  generalises. A top-level `site` subcommand would let each
+  domain register its own `build` and `review` verbs without
+  cross-domain namespace bleed. Open questions: where do the
+  per-domain build implementations live (`internal/cli/site/cmd/kb/build/`?
+  `internal/cli/kb/cmd/site/build/`?), how does this interact
+  with the existing `kb site-review` / `ctx kb reindex`, and
+  what becomes of the `/ctx-kb-ingest` skill's circuit-breaker
+  reference? Treat this as a naming + topology discussion before
+  any code lands; the vllm topic page is `topic-page: deferred`
+  partly because of the missing build subcommand, so resolving
+  this unblocks the circuit breaker too. #priority:medium #added:2026-05-21
+
+Each row is a single `/ctx-kb-ingest` pass when started; further
+follow-ups for that tool (per-category deep dives, sub-page
+splits) get tracked on the source-coverage ledger, not as
+TASKS.md children. Open a new TASKS row only when a *different*
+adjacent tool joins the list.
+
+- [ ] Feature: skill usage tally + ceremony-time nudge.
+  Motivation: ctx ships 60+ skills; discoverability is a real
+  problem. A usage tally would (a) surface usage patterns, and
+  (b) let ceremonies remind the operator about under-used skills
+  that might help current work. Two phases:
+
+  **Phase 1 — instrument.** Extend the journal-enrich pipeline
+  (`/ctx-journal-enrich-all` or sibling) to scan
+  `~/.claude/projects/*/*.jsonl` for `Skill` tool uses and write
+  two artifacts:
+  - **Time-series** at `~/.ctx/state/skill-usage.jsonl`:
+    append-only, one row per invocation, fields
+    `{ts, project, session_id, skill_name, source: "claude-code"|"opencode"|...}`.
+  - **Aggregate** at `~/.ctx/state/skill-usage.json`: derived
+    rollup, `{skill_name → {count, first_used, last_used, projects[]}}`.
+  Stays in `~/.ctx/state/` (user-global), not per-project, so
+  patterns survive across projects.
+
+  **Phase 2 — wire ceremony nudges (NOT auto-prompts).** Surface
+  the tally inside two existing ceremonies, never as session-start
+  noise:
+  - `/ctx-remember`: at the end of the recall readback, add a
+    *"unused-but-might-help"* line that names 1-3 skills with
+    `last_used > 30d ago` (or `never`) whose descriptions match
+    keywords from current TASKS.md focus / branch name / recent
+    commits.
+  - `/ctx-wrap-up`: in the candidate-proposal phase, include a
+    *"this session's skill mix"* line summarising which skills
+    fired this session, and surface 1-2 skills that would have
+    fit the work but weren't invoked.
+  - Explicitly NOT in `/ctx-handover` — that ceremony is for the
+    next agent, not introspection.
+
+  Hard anti-patterns: stale-skill-name pollution (when skills
+  rename, the tally must reconcile by reading the current skill
+  catalogue and dropping unknowns to a `*.deprecated.jsonl`
+  archive); skill-nudge inside a tool-use loop (only at ceremony
+  invocation, never via PreToolUse hook); LLM-judged matching at
+  Phase 1 (start with naive string-match of skill descriptions
+  against TASKS.md / branch / recent commits; revisit if the
+  signal is too weak).
+
+  Open questions: where exactly the journal-enrich pipeline
+  writes the artifacts (does it touch `~/.ctx/` or keep
+  per-project state and aggregate at read time?); whether the
+  nudge text is rendered by ctx or by the skill itself reading
+  the JSON; whether the "match current work" heuristic lives in
+  Go or in the skill prompt. Tackle these at spec time, not
+  implementation time. #priority:medium #added:2026-05-21
 
 ### Phase KB-followup: Adversarial design review of parallel skill trees `#priority:medium #added:2026-05-17`
 

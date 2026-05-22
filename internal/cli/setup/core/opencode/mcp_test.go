@@ -71,35 +71,31 @@ func TestEnsureMCPConfig_CreatesFile(t *testing.T) {
 	if !ok {
 		t.Fatalf("command must be an array per OpenCode schema, got %T", ctxServer["command"])
 	}
+	// Under the cwd-anchored resolution model the emitted argv is
+	// the direct [/abs/path/to/ctx, mcp, serve] form — no shell
+	// wrapper, no env-var injection. OpenCode picks the CWD and
+	// ctx anchors to it.
 	if got := len(cmdArr); got != 3 {
-		t.Fatalf("command length = %d, want 3 (sh -c <script>)", got)
+		t.Fatalf("command length = %d, want 3 ([bin mcp serve])", got)
 	}
-	if cmdArr[0] != "sh" || cmdArr[1] != "-c" {
-		t.Errorf("command prefix = [%q %q], want [sh -c]", cmdArr[0], cmdArr[1])
-	}
-	script, ok := cmdArr[2].(string)
+	bin, ok := cmdArr[0].(string)
 	if !ok {
-		t.Fatalf("command[2] must be a script string, got %T", cmdArr[2])
+		t.Fatalf("command[0] must be a string, got %T", cmdArr[0])
 	}
-	wantSubs := []string{
-		`exec env`,
-		`CTX_DIR="$PWD/.context"`,
-		`'mcp' 'serve'`,
+	if !strings.HasPrefix(bin, "/") {
+		t.Errorf("command[0] should be an absolute path, got %q", bin)
 	}
-	for _, s := range wantSubs {
-		if !strings.Contains(script, s) {
-			t.Errorf("launch script missing %q\nfull script: %s", s, script)
-		}
+	if cmdArr[1] != "mcp" {
+		t.Errorf("command[1] = %q, want \"mcp\"", cmdArr[1])
 	}
-	// Binary path should be absolute (resolved at setup time).
-	if !strings.Contains(script, "/") {
-		t.Errorf("binary path should be absolute, got script: %s", script)
+	if cmdArr[2] != "serve" {
+		t.Errorf("command[2] = %q, want \"serve\"", cmdArr[2])
 	}
 	if _, hasArgs := ctxServer["args"]; hasArgs {
 		t.Error("args field must not be set; OpenCode schema folds args into command array")
 	}
 	if _, hasEnv := ctxServer["environment"]; hasEnv {
-		t.Error("environment field must not be set; CTX_DIR is computed from $PWD inside the sh wrapper")
+		t.Error("environment field must not be set; cwd-anchored ctx needs no env-var injection")
 	}
 	enabled, ok := ctxServer["enabled"].(bool)
 	if !ok || !enabled {
@@ -201,7 +197,7 @@ func TestEnsureMCPConfig_RefreshesStaleCtxServer(t *testing.T) {
 	ctxServer, _ := servers["ctx"].(map[string]interface{})
 	cmdArr, ok := ctxServer["command"].([]interface{})
 	if !ok || len(cmdArr) != 3 {
-		t.Fatalf("command = %T %v, want refreshed [sh -c script]", ctxServer["command"], ctxServer["command"])
+		t.Fatalf("command = %T %v, want refreshed [bin mcp serve]", ctxServer["command"], ctxServer["command"])
 	}
 	if enabled, _ := ctxServer["enabled"].(bool); !enabled {
 		t.Fatalf("enabled = %v, want true after refresh", ctxServer["enabled"])
@@ -211,23 +207,31 @@ func TestEnsureMCPConfig_RefreshesStaleCtxServer(t *testing.T) {
 	}
 }
 
-func TestEnsureMCPConfig_QuotesBinaryPathInLaunchScript(t *testing.T) {
+// TestEnsureMCPConfig_DirectCommandShape covers the LookPath-failure
+// branch: with no `ctx` binary on PATH, launchCommand still emits the
+// three-element [bin, mcp, serve] argv (bin is the literal command
+// name as a best-effort placeholder; OpenCode's loader will resolve
+// it at spawn time). No shell wrapper is emitted under the
+// cwd-anchored resolution model.
+func TestEnsureMCPConfig_DirectCommandShape(t *testing.T) {
 	t.Setenv("PATH", t.TempDir())
 	cmdArr := launchCommand()
 	if got := len(cmdArr); got != 3 {
 		t.Fatalf("command length = %d, want 3", got)
 	}
-	script := cmdArr[2]
-	if !strings.Contains(script, `'ctx' 'mcp' 'serve'`) {
-		t.Fatalf("launch script not safely quoted: %s", script)
+	if cmdArr[1] != "mcp" {
+		t.Errorf("command[1] = %q, want \"mcp\"", cmdArr[1])
+	}
+	if cmdArr[2] != "serve" {
+		t.Errorf("command[2] = %q, want \"serve\"", cmdArr[2])
 	}
 }
 
 // TestEnsureMCPConfig_ResolvesBinaryToAbsolutePath covers the
-// LookPath-success branch that the QuotesBinaryPath test deliberately
-// skips. With a fake `ctx` binary on PATH, launchCommand should embed
-// the absolute path so OpenCode can spawn the MCP child even from
-// non-interactive shells whose PATH may not contain ctx.
+// LookPath-success branch. With a fake `ctx` binary on PATH,
+// launchCommand should embed the absolute path so OpenCode can spawn
+// the MCP child even from non-interactive shells whose PATH may not
+// contain ctx.
 func TestEnsureMCPConfig_ResolvesBinaryToAbsolutePath(t *testing.T) {
 	binDir := t.TempDir()
 	fake := filepath.Join(binDir, "ctx")
@@ -240,10 +244,15 @@ func TestEnsureMCPConfig_ResolvesBinaryToAbsolutePath(t *testing.T) {
 	if got := len(cmdArr); got != 3 {
 		t.Fatalf("command length = %d, want 3", got)
 	}
-	script := cmdArr[2]
-	wantQuoted := "'" + fake + "' 'mcp' 'serve'"
-	if !strings.Contains(script, wantQuoted) {
-		t.Fatalf("launch script does not embed absolute binary path: got %q, want substring %q", script, wantQuoted)
+	// filepath.Abs may canonicalize through symlinks (e.g. /var ↔
+	// /private/var on macOS), so compare the resolved forms.
+	gotResolved, _ := filepath.EvalSymlinks(cmdArr[0])
+	wantResolved, _ := filepath.EvalSymlinks(fake)
+	if gotResolved != wantResolved {
+		t.Fatalf("command[0] = %q, want absolute path to fake ctx %q", cmdArr[0], fake)
+	}
+	if cmdArr[1] != "mcp" || cmdArr[2] != "serve" {
+		t.Errorf("command tail = [%q %q], want [mcp serve]", cmdArr[1], cmdArr[2])
 	}
 }
 

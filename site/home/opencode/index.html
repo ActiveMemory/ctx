@@ -1964,9 +1964,9 @@ instead of remembered.</p>
 <h2 id="setup-one-command">Setup (One Command)<a class="headerlink" href="#setup-one-command" title="Permanent link">&para;</a></h2>
 <p>Install the <code>ctx</code> binary first (<a href="../getting-started/#installation">installation docs</a>),
 then run from your project root:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>opencode<span class="w"> </span>--write<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>ctx<span class="w"> </span>activate<span class="k">)</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>opencode<span class="w"> </span>--write<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>init
 </span></code></pre></div>
-<p>This does three things:</p>
+<p>This does two things:</p>
 <ol>
 <li><strong><code>ctx setup opencode --write</code></strong>: generates the project-local OpenCode plugin,
    skills, and <code>AGENTS.md</code>, then merges the <code>ctx</code> MCP server into OpenCode's
@@ -1976,7 +1976,6 @@ then run from your project root:</p>
    project-local config; the same reason the Copilot CLI integration
    writes to <code>~/.copilot/mcp-config.json</code>.</li>
 <li><strong><code>ctx init</code></strong>: creates the <code>.context/</code> directory with template files.</li>
-<li><strong><code>eval "$(ctx activate)"</code></strong>: binds <code>CTX_DIR</code> for your shell.</li>
 </ol>
 <h3 id="what-gets-created">What Gets Created<a class="headerlink" href="#what-gets-created" title="Permanent link">&para;</a></h3>
 <table>
@@ -2042,7 +2041,7 @@ do anything; it just works.</p>
 <tr>
 <td>Every shell call</td>
 <td><code>shell.env</code></td>
-<td>Injects <code>CTX_DIR</code> so all <code>ctx</code> commands in the agent's shell resolve to the right project</td>
+<td>Ensures the agent's shell <code>cd</code>s to the project root so all <code>ctx</code> commands resolve to the right project</td>
 </tr>
 <tr>
 <td>Context compaction</td>
@@ -2183,8 +2182,8 @@ refreshed plugin</strong>. OpenCode only loads plugins at launch, not mid-sessio
 <tbody>
 <tr>
 <td><code>opencode mcp list</code> shows <code>ctx ✗ failed MCP error -32000: Connection closed</code></td>
-<td><code>CTX_DIR</code> not resolving in the MCP subprocess</td>
-<td>Re-run <code>ctx setup opencode --write</code> to regenerate the sh-wrapper that sets <code>CTX_DIR</code></td>
+<td>MCP subprocess started outside the project root</td>
+<td>Re-run <code>ctx setup opencode --write</code> to regenerate the sh-wrapper that <code>cd</code>s to the project root before invoking <code>ctx</code></td>
 </tr>
 <tr>
 <td>Plugin installed but no hooks fire</td>

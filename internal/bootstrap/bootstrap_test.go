@@ -16,7 +16,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/spf13/cobra"
 
@@ -131,7 +130,7 @@ func TestRootCmdPersistentPreRun_CtxDirEnv(t *testing.T) {
 	if err := os.MkdirAll(ctxDir, 0o700); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv(env.CtxDir, ctxDir)
+	t.Chdir(tmp)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 
@@ -154,8 +153,10 @@ func TestRootCmdPersistentPreRun_CtxDirEnv(t *testing.T) {
 	if ctxErr != nil {
 		t.Fatalf("ContextDir: %v", ctxErr)
 	}
-	if got != ctxDir {
-		t.Errorf("ContextDir() = %q, want %q", got, ctxDir)
+	gotResolved, _ := filepath.EvalSymlinks(got)
+	wantResolved, _ := filepath.EvalSymlinks(ctxDir)
+	if gotResolved != wantResolved {
+		t.Errorf("ContextDir() = %q, want %q", gotResolved, wantResolved)
 	}
 }
 
@@ -204,7 +205,7 @@ func TestInitGuard_BlocksUninitializedCommand(t *testing.T) {
 	if err := os.MkdirAll(ctxDir, 0o700); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv(env.CtxDir, ctxDir)
+	t.Chdir(tmp)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 
@@ -232,7 +233,7 @@ func TestInitGuard_AllowsAnnotatedCommand(t *testing.T) {
 	if err := os.MkdirAll(ctxDir, 0o700); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv(env.CtxDir, ctxDir)
+	t.Chdir(tmp)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 
@@ -256,7 +257,7 @@ func TestInitGuard_AllowsHiddenCommand(t *testing.T) {
 	if err := os.MkdirAll(ctxDir, 0o700); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv(env.CtxDir, ctxDir)
+	t.Chdir(tmp)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 
@@ -342,7 +343,7 @@ func TestInitGuard_AllowsInitializedCommand(t *testing.T) {
 		}
 	}
 
-	t.Setenv(env.CtxDir, ctxDir)
+	t.Chdir(tmp)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 

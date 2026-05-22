@@ -15,14 +15,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// declareCtxDir creates a CTX_DIR-pointed `.context/` under a fresh
-// tempDir, optionally seeding the required files so [state.Initialized]
-// will return true. Returns the absolute path of the .context dir.
+// declareCtxDir creates a `.context/` under a fresh tempDir, chdirs
+// into the tempDir so that `$PWD/.context/` resolves there, and
+// optionally seeds the required files so [state.Initialized] will
+// return true. Returns the absolute path of the .context dir.
 func declareCtxDir(t *testing.T, initialized bool) string {
 	t.Helper()
 	tempDir := t.TempDir()
@@ -38,7 +38,7 @@ func declareCtxDir(t *testing.T, initialized bool) string {
 			}
 		}
 	}
-	t.Setenv(env.CtxDir, ctxDir)
+	t.Chdir(tempDir)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 	return ctxDir
@@ -88,21 +88,20 @@ func TestDir_Uninitialized(t *testing.T) {
 
 // TestDir_UninitializedDoesNotCreateContextDir is the strongest
 // form of the invariant: if .context/ itself does not exist on
-// disk (Initialized returns false because the required files are
-// absent — they are absent because the dir is absent), Dir must
-// neither create .context/ nor .context/state/. This is the
-// observed Cursor leak shape: opening a non-ctx workspace and
+// disk, Dir must surface ErrNoCtxHere (cwd-anchored variant)
+// and must NOT materialize .context/ or .context/state/. This is
+// the observed Cursor leak shape: opening a non-ctx workspace and
 // submitting one prompt must leave the filesystem unchanged.
 func TestDir_UninitializedDoesNotCreateContextDir(t *testing.T) {
 	tempDir := t.TempDir()
 	ctxDir := filepath.Join(tempDir, dir.Context) // does not exist on disk
-	t.Setenv(env.CtxDir, ctxDir)
+	t.Chdir(tempDir)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 
 	_, err := state.Dir()
-	if !errors.Is(err, errCtx.ErrNotInitialized) {
-		t.Fatalf("Dir() error = %v, want errors.Is(.., ErrNotInitialized)", err)
+	if !errors.Is(err, errCtx.ErrNoCtxHere) {
+		t.Fatalf("Dir() error = %v, want errors.Is(.., ErrNoCtxHere)", err)
 	}
 	if _, statErr := os.Stat(ctxDir); !os.IsNotExist(statErr) {
 		t.Errorf(".context/ was materialized: stat err = %v (want IsNotExist)", statErr)
@@ -113,17 +112,17 @@ func TestDir_UninitializedDoesNotCreateContextDir(t *testing.T) {
 	}
 }
 
-// TestDir_NotDeclared preserves the existing CTX_DIR-unset
-// behavior: the resolver-level ErrDirNotDeclared sentinel
-// propagates out of Dir unchanged.
-func TestDir_NotDeclared(t *testing.T) {
-	t.Setenv(env.CtxDir, "")
+// TestDir_NoContextHere: cwd lacks `.context/` → ErrNoCtxHere
+// propagates out of Dir.
+func TestDir_NoContextHere(t *testing.T) {
+	tempDir := t.TempDir()
+	t.Chdir(tempDir)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 
 	_, err := state.Dir()
-	if !errors.Is(err, errCtx.ErrDirNotDeclared) {
-		t.Errorf("Dir() error = %v, want errors.Is(.., ErrDirNotDeclared)", err)
+	if !errors.Is(err, errCtx.ErrNoCtxHere) {
+		t.Errorf("Dir() error = %v, want errors.Is(.., ErrNoCtxHere)", err)
 	}
 }
 

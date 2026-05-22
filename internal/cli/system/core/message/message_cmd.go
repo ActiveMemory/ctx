@@ -46,7 +46,7 @@ func FormatTemplateVars(info *messages.HookMessageInfo) string {
 
 // OverridePath returns the user override file path for a hook/variant.
 //
-// Any resolver error (including [errCtx.ErrDirNotDeclared]) is
+// Any resolver error (including [errCtx.ErrNoCtxHere]) is
 // propagated. The previous empty-string return silently produced a
 // CWD-relative path when joined by callers, which was exactly the
 // "silent write to wrong location" class of bug this branch aims to

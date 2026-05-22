@@ -48,8 +48,8 @@ an `enriched` date:
 
 ```bash
 # List unenriched entries using state file
-CTX_DIR=$(ctx system bootstrap -q)
-for f in "$CTX_DIR/journal/"*.md; do
+CTX_PATH=$(ctx system bootstrap -q)
+for f in "$CTX_PATH/journal/"*.md; do
   name=$(basename "$f")
   ctx system mark-journal --check "$name" enriched || echo "$f"
 done | head -10

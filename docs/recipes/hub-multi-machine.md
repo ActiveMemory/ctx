@@ -111,7 +111,6 @@ On workstation `A`:
 
 ```bash
 cd ~/projects/x
-eval "$(ctx activate)"
 ctx connection register nexus.local:9900 --token ctx_adm_...
 ctx connection subscribe decision learning convention
 ```
@@ -120,7 +119,6 @@ On workstation `B`:
 
 ```bash
 cd ~/projects/y
-eval "$(ctx activate)"
 ctx connection register nexus.local:9900 --token ctx_adm_...
 ctx connection subscribe decision learning convention
 ```

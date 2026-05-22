@@ -25,7 +25,7 @@ import (
 // checks and producing either JSON or human-readable output.
 //
 // Context-dependent checks that fail with
-// [errCtx.ErrDirNotDeclared] emit exactly one "did not run
+// [errCtx.ErrNoCtxHere] emit exactly one "did not run
 // (cascade)" line; later dependent checks are silently skipped
 // so the report shows one loud entry instead of N copies of the
 // same message. Non-dependent checks (companion config, plugin,
@@ -109,7 +109,7 @@ func Run(cmd *cobra.Command, jsonOutput bool) error {
 	}
 
 	// Track whether a context-dependent check has already
-	// failed due to errCtx.ErrDirNotDeclared. Subsequent
+	// failed due to errCtx.ErrNoCtxHere. Subsequent
 	// dependent failures with the same root cause are folded
 	// into a single diagnostic.
 	ctxCascadeAnnounced := false
@@ -119,7 +119,7 @@ func Run(cmd *cobra.Command, jsonOutput bool) error {
 		if err == nil {
 			continue
 		}
-		if errors.Is(err, errCtx.ErrDirNotDeclared) {
+		if errors.Is(err, errCtx.ErrNoCtxHere) {
 			if ctxCascadeAnnounced {
 				// Already reported once; skip silently.
 				continue

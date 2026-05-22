@@ -21,13 +21,6 @@ How do you manage work items that span multiple sessions without losing context?
     `ctx task add`. The agent automatically picks up session ID, branch,
     and commit hash from its context, so no manual flags are needed.
 
-!!! warning "Activate the Project First"
-    Run `eval "$(ctx activate)"` once per terminal in the project
-    root. If you skip it, the `ctx task add` / `ctx task ...`
-    commands below fail with `Error: no context directory
-    specified`. See
-    [Activating a Context Directory](activating-context.md).
-
 ## TL;DR
 
 **Manage Tasks**:

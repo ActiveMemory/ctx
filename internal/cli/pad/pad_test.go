@@ -21,7 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/validate"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	errPad "github.com/ActiveMemory/ctx/internal/err/pad"
 	"github.com/spf13/cobra"
@@ -502,7 +501,6 @@ func TestNoKey_EncryptedFileExists(t *testing.T) {
 	})
 
 	ctxDir := filepath.Join(tmpDir, dir.Context)
-	t.Setenv(env.CtxDir, ctxDir)
 	rc.Reset()
 
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
@@ -862,7 +860,6 @@ func TestEnsureKey_EncFileExistsNoKey(t *testing.T) {
 	})
 
 	ctxDir := filepath.Join(tmpDir, dir.Context)
-	t.Setenv(env.CtxDir, ctxDir)
 	rc.Reset()
 
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
@@ -897,7 +894,6 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 	})
 
 	ctxDir := filepath.Join(tmpDir, dir.Context)
-	t.Setenv(env.CtxDir, ctxDir)
 	rc.Reset()
 
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
