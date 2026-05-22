@@ -55,10 +55,17 @@ fi
 
 echo "Running PSScriptAnalyzer (severity=$SEVERITY) on ${#TARGETS[@]} script(s)..."
 
-# Inline pwsh script: Import-Module, run Invoke-ScriptAnalyzer
-# against every target at the chosen severity floor, print all
-# findings, exit non-zero if any.
-PS_SCRIPT='
+# Write the analyzer driver to a temp file and invoke via `pwsh
+# -File`. `-Command` would run the inline body but does NOT bind
+# subsequent positional args (-Severity / -Paths) to the script's
+# `param()` block — they are interpreted as additional pwsh
+# commands and the param values fall back to empty. `-File`
+# semantics pass remaining args into the script's parameter
+# binder, which is what we need for $Severity / $Paths.
+PS_FILE="$(mktemp).ps1"
+trap 'rm -f "$PS_FILE"' EXIT
+
+cat > "$PS_FILE" <<'PSEOF'
 param([string]$Severity, [string[]]$Paths)
 
 if (-not (Get-Module -ListAvailable -Name PSScriptAnalyzer)) {
@@ -88,7 +95,7 @@ if ($findings.Count -gt 0) {
   Write-Error "PSScriptAnalyzer: $($findings.Count) finding(s) at severity >= $Severity"
   exit 1
 }
-'
+PSEOF
 
-pwsh -NoProfile -Command "$PS_SCRIPT" -Severity "$SEVERITY" -Paths "${TARGETS[@]}"
+pwsh -NoProfile -File "$PS_FILE" -Severity "$SEVERITY" -Paths "${TARGETS[@]}"
 echo "PSScriptAnalyzer: no findings at severity >= $SEVERITY."
