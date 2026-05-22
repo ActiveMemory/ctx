@@ -22,7 +22,8 @@ func TestRequireGitTree_DirAccepted(t *testing.T) {
 	if err := os.MkdirAll(filepath.Join(root, ".git"), 0o755); err != nil {
 		t.Fatalf("setup: %v", err)
 	}
-	if err := gitmeta.RequireGitTree(root); err != nil {
+	t.Chdir(root)
+	if err := gitmeta.RequireGitTree(); err != nil {
 		t.Fatalf("want nil; got %v", err)
 	}
 }
@@ -38,21 +39,27 @@ func TestRequireGitTree_WorktreePointerFileAccepted(t *testing.T) {
 	); err != nil {
 		t.Fatalf("setup: %v", err)
 	}
-	if err := gitmeta.RequireGitTree(root); err != nil {
+	t.Chdir(root)
+	if err := gitmeta.RequireGitTree(); err != nil {
 		t.Fatalf("want nil; got %v", err)
 	}
 }
 
 func TestRequireGitTree_MissingReturnsSentinel(t *testing.T) {
 	root := t.TempDir()
-	err := gitmeta.RequireGitTree(root)
+	t.Chdir(root)
+	err := gitmeta.RequireGitTree()
 	if err == nil {
 		t.Fatal("want error; got nil")
 	}
 	if !errors.Is(err, errGitmeta.ErrMissingGitTree) {
 		t.Fatalf("want ErrMissingGitTree; got %v", err)
 	}
-	if !strings.Contains(err.Error(), root) {
+	// The error references $PWD; on macOS the resolved tempdir
+	// may go through /private, so compare against the resolved
+	// form rather than the raw t.TempDir return value.
+	wantPath, _ := filepath.EvalSymlinks(root)
+	if !strings.Contains(err.Error(), wantPath) && !strings.Contains(err.Error(), root) {
 		t.Errorf("want project root in error message: %q", err.Error())
 	}
 }

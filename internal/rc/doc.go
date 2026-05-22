@@ -9,36 +9,32 @@
 // truth for context directory location, token budget, encryption
 // settings, and the dozens of other knobs that shape ctx behavior.
 //
-// # Context-Directory Resolution (explicit-only)
+// # Context-Directory Resolution (cwd-anchored)
 //
-// Under the explicit-context-dir model
-// (spec: specs/explicit-context-dir.md), rc does NOT walk the
-// filesystem looking for a .context/ directory. Every non-exempt
-// command must declare the target explicitly.
+// Under the cwd-anchored resolution model
+// (spec: specs/cwd-anchored-context.md), rc does NOT walk the
+// filesystem and does NOT consult any environment variable.
+// `$PWD/.context/` is the answer, full stop. The user (or their
+// AI tool) is responsible for being at the project root.
 //
-// [ContextDir] returns the declared path or the empty string:
+// [ContextDir] returns the absolute path to `$PWD/.context/` after
+// a single [os.Stat], or a typed errCtx error:
 //
-//  1. CLI override set via [OverrideContextDir] (--context-dir
-//     flag) wins if present.
-//  2. CTX_DIR environment variable is consulted next.
-//  3. Otherwise the empty string is returned. Exempt callers
-//     (ctx init, activate, deactivate, system bootstrap) handle
-//     empty themselves; every other command should call
-//     [RequireContextDir] instead, which returns a tailored error
-//     whose message depends on how many .context/ candidates are
-//     visible from CWD.
+//   - [errCtx.ErrNoCtxHere] when the directory is absent;
+//   - [errCtx.ErrContextDirNotADirectory] when the path exists but
+//     is a regular file;
+//   - [errCtx.ErrContextDirStat] when stat fails for permission /
+//     I/O reasons.
 //
-// [ScanCandidates] is a read-only upward scan used by the
-// `ctx activate` subcommand and by [RequireContextDir]'s error
-// formatter. It does not resolve, bind, or select a directory.
+// [RequireContextDir] is a thin wrapper retained as the canonical
+// "I need a usable directory" call shape for operating commands.
 //
 // # Configuration File (.ctxrc)
 //
-// Once [ContextDir] is declared, [load] reads `.ctxrc` from
-// `filepath.Dir(ContextDir())`: the project root, which by contract
-// is the parent of [ContextDir]. CWD has no say. When no context
-// directory is declared, `.ctxrc` is not read at all and defaults
-// apply.
+// When `$PWD/.context/` is present, [load] reads `.ctxrc` from
+// `$PWD/.ctxrc`: the project root, which by contract is the parent
+// of [ContextDir]. When `.context/` is absent, `.ctxrc` is not
+// read at all and defaults apply.
 //
 // Environment overrides (CTX_TOKEN_BUDGET) are applied after the
 // YAML merge so users can tune per-session without editing the

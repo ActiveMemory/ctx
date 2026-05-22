@@ -20,7 +20,8 @@ import (
 
 func setupStateDir(t *testing.T) string {
 	t.Helper()
-	ctxDir := filepath.Join(t.TempDir(), dir.Context)
+	root := t.TempDir()
+	ctxDir := filepath.Join(root, dir.Context)
 	if mkErr := os.MkdirAll(ctxDir, 0o750); mkErr != nil {
 		t.Fatal(mkErr)
 	}
@@ -35,7 +36,7 @@ func setupStateDir(t *testing.T) string {
 			t.Fatalf("seed required file %s: %v", f, wrErr)
 		}
 	}
-	t.Setenv("CTX_DIR", ctxDir)
+	t.Chdir(root)
 	rc.Reset()
 	stateDir := filepath.Join(ctxDir, dir.State)
 	if mkErr := os.MkdirAll(stateDir, 0o750); mkErr != nil {

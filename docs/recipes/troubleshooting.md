@@ -137,34 +137,25 @@ QA reminder events from that specific session.
 
 ## Common Problems
 
-### "No context directory specified for this project"
+### "No `.context/` at this directory"
 
-**Symptoms**: Any `ctx` command fails with
-`Error: no context directory specified for this project` (*possibly
-with a likely-candidate hint or a candidate list depending on what's
-visible from your CWD*).
+**Symptoms**: Any `ctx` command fails with `ctx: no .context/ at
+<pwd>. Run \`ctx init\` here, or cd to a project that has one.`
 
-**Cause**: `ctx` does not search the filesystem for a `.context/`
-directory. You have to declare which one to use before running
-day-to-day commands.
+**Cause**: `ctx` reads `$PWD/.context/` and you ran the command
+from a directory that does not have one.
 
-**Fix**: bind `CTX_DIR` for the current shell:
-
-```bash
-eval "$(ctx activate)"
-```
-
-See [Activating a Context Directory](activating-context.md) for the
-full recipe (one-shot `CTX_DIR=...` inline form, CI patterns, direnv
-setup).
+**Fix**: either `cd` into a project root that already has
+`.context/`, or run `ctx init` in the current directory to create
+one.
 
 ### "`ctx`: Not Initialized"
 
-**Symptoms**: After declaring `CTX_DIR`, the command fails with
-`ctx: not initialized - run "ctx init" first`.
+**Symptoms**: `ctx` finds `.context/` at `$PWD` but the command
+fails with `ctx: not initialized - run "ctx init" first`.
 
-**Cause**: The declared directory exists but hasn't been initialized
-with template files.
+**Cause**: The directory exists but hasn't been populated with
+template files.
 
 **Fix**:
 
@@ -173,10 +164,10 @@ ctx init          # create .context/ with template files
 ctx init --minimal  # or just the essentials (CONSTITUTION, TASKS, DECISIONS)
 ```
 
-**Commands that work without CTX_DIR or initialization**: `ctx init`,
-`ctx activate`, `ctx deactivate`, `ctx setup`, `ctx doctor`,
-`ctx guide`, `ctx why`, `ctx config switch/status`, `ctx hub *`, and
-help-only grouping commands.
+**Commands that work without `.context/` or initialization**: `ctx init`,
+`ctx setup`, `ctx doctor`, `ctx guide`, `ctx why`,
+`ctx config switch/status`, `ctx hub *`, and help-only grouping
+commands.
 
 ### "My CLI and My Claude Code Session Disagree on the Project"
 
@@ -184,20 +175,15 @@ help-only grouping commands.
 wrong `.context/`; or you ran `ctx remind add` in shell A and the
 reminder shows up in project B's notifications.
 
-**Cause**: `CTX_DIR` is sourced from three different surfaces, and
-they can drift apart:
+**Cause**: Different shells were launched from different working
+directories. `ctx` reads `$PWD/.context/`; if your terminal tab
+is `cd`'d into project A and your Claude Code session is in
+project B, `!`-pragma calls write to A while in-session calls
+write to B.
 
-| Surface                            | Source of `CTX_DIR`                         | Bound when                              |
-|------------------------------------|---------------------------------------------|-----------------------------------------|
-| Claude Code hooks                  | `${CLAUDE_PROJECT_DIR}/.context` (injected) | Every hook line; the project Claude is in |
-| `!`-pragma in chat / interactive shell | Whatever the parent shell exported      | When you ran `eval "$(ctx activate)"`   |
-| New shell tab opened mid-session   | Whatever your shellrc exports               | Login                                   |
-
-When these drift, the per-prompt `check-anchor-drift` hook fires a
-verbatim warning naming both values. To fix: re-run
-`eval "$(ctx activate)"` from inside the project the Claude Code
-session is editing, or close the shell tab and reopen it from the
-right working directory.
+**Fix**: `cd` the shell into the same project root the Claude
+Code session is in, or close the tab and reopen it from the right
+working directory.
 
 ### "My Hook Isn't Firing"
 

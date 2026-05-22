@@ -26,7 +26,7 @@ import (
 // Returning ctxDir alongside stateDir lets hooks that need to
 // [filepath.Join] paths under the context root skip a second
 // [rc.ContextDir] call: the Initialized gate above already proves
-// ContextDir succeeds, so re-checking ErrDirNotDeclared is dead code.
+// ContextDir succeeds, so re-checking ErrNoCtxHere is dead code.
 //
 // Returns ok=false when the hook should bail silently. The bail
 // reasons and how callers see them:
@@ -38,7 +38,7 @@ import (
 //   - state.Dir resolver failure: logs [warn.StateDirProbe] then bails.
 //   - rc.ContextDir resolver failure after Initialized returned true:
 //     logs [warn.ContextDirResolve] then bails. Reachable only if a
-//     future ContextDir error is added beyond ErrDirNotDeclared.
+//     future ContextDir error is added beyond ErrNoCtxHere.
 //
 // Recommended call shape: alias `!ok` as `bailSilently` so the
 // intent reads as a deliberate bail rather than swallowed-error

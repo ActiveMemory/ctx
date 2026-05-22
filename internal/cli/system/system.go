@@ -12,7 +12,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/blocknonpathctx"
 	sysBootstrap "github.com/ActiveMemory/ctx/internal/cli/system/cmd/bootstrap"
-	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkanchordrift"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkceremony"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkcontextsize"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkfreshness"
@@ -58,7 +57,6 @@ func Cmd() *cobra.Command {
 	return parent.Cmd(cmd.DescKeySystem, cmd.UseSystem,
 		sysBootstrap.Cmd(),
 		blocknonpathctx.Cmd(),
-		checkanchordrift.Cmd(),
 		checkceremony.Cmd(),
 		checkcontextsize.Cmd(),
 		checkfreshness.Cmd(),

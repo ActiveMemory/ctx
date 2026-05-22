@@ -130,18 +130,18 @@ func TestRunServe_ZensicalNotFound(t *testing.T) {
 
 func TestRunServe_DefaultDir(t *testing.T) {
 	// When no args are given, serveRoot.Run uses the default
-	// journal-site directory under the declared context dir.
+	// journal-site directory under the cwd-anchored context dir.
 	//
-	// Declare CTX_DIR to point at a nonexistent .context/ so the
-	// default journal-site path resolves to something that does
-	// not exist on disk and the run errors with "directory not
-	// found" rather than the "context directory not declared"
-	// message.
+	// Create a real .context/ directory in tempDir and chdir
+	// there so the resolver succeeds, but leave the journal-site
+	// subdir absent so the run errors with "directory not found".
 	tempDir := t.TempDir()
-	origDir, _ := os.Getwd()
-	_ = os.Chdir(tempDir)
-	defer func() { _ = os.Chdir(origDir) }()
-	t.Setenv("CTX_DIR", filepath.Join(tempDir, ".context"))
+	if mkErr := os.MkdirAll(
+		filepath.Join(tempDir, ".context"), 0o700,
+	); mkErr != nil {
+		t.Fatalf("setup: %v", mkErr)
+	}
+	t.Chdir(tempDir)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 

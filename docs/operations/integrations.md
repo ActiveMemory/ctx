@@ -16,19 +16,10 @@ icon: lucide/plug
 Context works with any AI tool that can read files. This guide covers setup 
 for popular AI coding assistants.
 
-!!! warning "Activate the Project Before Running `ctx` Commands"
-    After `ctx init`, run:
-
-    ```bash
-    eval "$(ctx activate)"
-    ```
-
-    This tells `ctx` which `.context/` directory the rest of the
-    commands on this page should use. If you skip it, you'll see
-    `Error: no context directory specified`. The `ctx setup <tool>`
-    commands work without activation, but most others (`ctx agent`,
-    `ctx add`, `ctx status`, `ctx watch`) need it. See
-    [Activating a Context Directory](../recipes/activating-context.md).
+!!! tip "Run From the Project Root"
+    `ctx` reads `$PWD/.context/`. Run the commands on this page from
+    the project root (the directory that holds `.context/` and
+    `.git/`).
 
 ## Claude Code (Full Integration)
 
@@ -36,12 +27,10 @@ Claude Code has the deepest integration via the **`ctx` plugin**.
 
 ### Setup
 
-First, install `ctx` and initialize your project, then activate it
-for the current shell:
+First, install `ctx` and initialize your project:
 
 ```bash
 ctx init
-eval "$(ctx activate)"
 ```
 
 Then, install the `ctx` plugin in Claude Code:
@@ -578,7 +567,6 @@ ctx setup opencode --write
 
 # Initialize context
 ctx init
-eval "$(ctx activate)"
 ```
 
 ### What Gets Created
@@ -598,7 +586,7 @@ The plugin wires OpenCode lifecycle events to `ctx system`:
 - **`tool.execute.after` (shell, on `git commit`)**: runs `ctx system post-commit`.
 - **`tool.execute.after` (edit/write)**: runs `ctx system check-task-completion`.
 - **`session.idle`**: runs persistence and task-completion checks (silent: output is buffered, not surfaced to the TUI).
-- **`shell.env`**: injects `CTX_DIR` into the agent's shell so `ctx` commands resolve to the right project.
+- **`shell.env`**: ensures the agent's shell starts in the project root so `ctx` commands resolve to the right project.
 - **`experimental.session.compacting`**: pushes `ctx system bootstrap` output into the compaction context so the agent keeps breadcrumbs back to `.context/`.
 
 The plugin is a single file with no runtime dependencies; no `bun install`

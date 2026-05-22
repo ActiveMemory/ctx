@@ -36,7 +36,7 @@ func JournalDir() (string, error) {
 
 // DirLine returns a one-line context directory identifier.
 //
-// Emits a warn log on any non-ErrDirNotDeclared resolver error. This
+// Emits a warn log on any non-ErrNoCtxHere resolver error. This
 // loudness is intentional: the primary caller is an AI agent whose
 // incorrect invocations must be visible to the human reading the
 // TUI. Do not silence this; do not move the log to a caller that
@@ -49,7 +49,7 @@ func JournalDir() (string, error) {
 func DirLine() (string, error) {
 	d, err := rc.ContextDir()
 	if err != nil {
-		if !errors.Is(err, errCtx.ErrDirNotDeclared) {
+		if !errors.Is(err, errCtx.ErrNoCtxHere) {
 			logWarn.Warn(warn.ContextDirResolve, err)
 		}
 		return "", err
@@ -59,7 +59,7 @@ func DirLine() (string, error) {
 
 // AppendDir appends a bracketed context directory footer to msg.
 //
-// Emits a warn log on any non-ErrDirNotDeclared resolver error. This
+// Emits a warn log on any non-ErrNoCtxHere resolver error. This
 // loudness is intentional: the primary caller is an AI agent whose
 // incorrect invocations must be visible to the human reading the
 // TUI. Do not silence this; do not move the log to a caller that
@@ -77,7 +77,7 @@ func DirLine() (string, error) {
 func AppendDir(msg string) (string, error) {
 	d, err := rc.ContextDir()
 	if err != nil {
-		if !errors.Is(err, errCtx.ErrDirNotDeclared) {
+		if !errors.Is(err, errCtx.ErrNoCtxHere) {
 			logWarn.Warn(warn.ContextDirResolve, err)
 		}
 		return msg, err

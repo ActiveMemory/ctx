@@ -28,7 +28,7 @@ import (
 // hook callers as silent no-ops, by interactive callers as
 // user-facing errors:
 //
-//   - [errCtx.ErrDirNotDeclared]: CTX_DIR is unset.
+//   - [errCtx.ErrNoCtxHere]: CTX_DIR is unset.
 //   - [errCtx.ErrNotInitialized]: CTX_DIR is set, but the project
 //     lacks the required context files (`ctx init` has not run).
 //
@@ -51,7 +51,7 @@ import (
 // Returns:
 //   - string: Absolute path to the state directory; always non-empty
 //     when the error is nil.
-//   - error: [errCtx.ErrDirNotDeclared] when CTX_DIR is unset;
+//   - error: [errCtx.ErrNoCtxHere] when CTX_DIR is unset;
 //     [errCtx.ErrNotInitialized] (wrapped via [errCtx.NotInitialized]
 //     for the user-facing path) when the project is not initialized;
 //     resolver errors otherwise; mkdir failures otherwise.
@@ -62,7 +62,7 @@ func Dir() (string, error) {
 	ctxDir, err := rc.ContextDir()
 	if err != nil {
 		// Propagate every resolver error (including
-		// ErrDirNotDeclared) so callers can match on it via
+		// ErrNoCtxHere) so callers can match on it via
 		// errors.Is when they need to special-case the absence.
 		return "", err
 	}
@@ -108,7 +108,7 @@ func SetDirForTest(d string) {
 func Initialized() (bool, error) {
 	ctxDir, err := rc.ContextDir()
 	if err != nil {
-		if errors.Is(err, errCtx.ErrDirNotDeclared) {
+		if errors.Is(err, errCtx.ErrNoCtxHere) {
 			return false, nil
 		}
 		return false, err

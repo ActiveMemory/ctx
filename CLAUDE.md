@@ -14,7 +14,7 @@ This project uses Context (`ctx`) for context persistence across sessions.
    This tells you where the context directory is.
    If it returns any error, relay the error output to the user
    verbatim, point them at
-   https://ctx.ist/recipes/activating-context/ for setup, and STOP.
+   https://ctx.ist/home/getting-started/ for setup, and STOP.
    Do not try to activate, initialize, or otherwise recover: **those
    are the user's decisions**. Wait for their next instruction.
 2. **Read AGENT_PLAYBOOK.md** from the context directory: it explains

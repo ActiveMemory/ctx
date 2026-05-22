@@ -56,7 +56,7 @@ const (
 	ContextDirResolve = "resolve context dir: %v"
 
 	// RCNoContextDir is the stderr message emitted by rc.load when
-	// it observes ErrDirNotDeclared. Exempt commands (init,
+	// it observes ErrNoCtxHere. Exempt commands (init,
 	// activate, doctor, hub *, etc.) legitimately reach this state;
 	// they call accessors and want defaults. Operating commands
 	// should never reach it because [bootstrap/cmd.go]'s
@@ -67,7 +67,7 @@ const (
 	// auto_archive = true, etc.) regardless of what the user's
 	// .ctxrc says, with no diagnostic. This message makes the
 	// silence visible so the call site can be evaluated.
-	RCNoContextDir = "rc.RC: no CTX_DIR declared; " +
+	RCNoContextDir = "rc.RC: no .context/ at $PWD; " +
 		"defaults applied " +
 		"(investigate calling command if unexpected)"
 

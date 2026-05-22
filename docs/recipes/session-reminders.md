@@ -25,12 +25,6 @@ ctx remind dismiss 1       # or batch: ctx remind dismiss 1 3-5
 Reminders surface automatically at session start: VERBATIM, every
 session, until you dismiss them.
 
-!!! warning "Activate the Project First"
-    Run `eval "$(ctx activate)"` once per terminal in the project
-    root. If you skip it, `ctx remind ...` fails with
-    `Error: no context directory specified`. See
-    [Activating a Context Directory](activating-context.md).
-
 ## Commands and Skills Used
 
 | Tool                 | Type        | Purpose                                 |

@@ -14,9 +14,4 @@ const (
 	//   fmt.Errorf(FmtWrapColon, ErrFoo, "tailored detail")
 	//   ↦ "<ErrFoo.Error()>: tailored detail".
 	FmtWrapColon = "%w: %s"
-	// FmtWrapBare appends the tailored detail directly to the
-	// sentinel without a separator. Used when the sentinel message
-	// already ends with whatever separator the caller wants
-	// (e.g., a trailing space-colon for "context directory not found: ").
-	FmtWrapBare = "%w%s"
 )

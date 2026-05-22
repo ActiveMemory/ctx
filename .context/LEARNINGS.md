@@ -17,6 +17,10 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-21 | Sentinel-removal refactors cascade through test surface |
+| 2026-05-20 | macOS /var symlink trips path-equality; use EvalSymlinks with parent-resolution fallback |
+| 2026-05-20 | Handover filenames are archaeology; parse by generated-at, not filename |
+| 2026-05-20 | /ctx-plan is named after its input, not its output |
 | 2026-05-17 | Creator confusion is the strongest doc-quality signal — louder than any user signal |
 | 2026-05-17 | Sentinel errors use typed zero-data structs with lazy `desc.Text()` — never Go string consts |
 | 2026-05-17 | `_helpers.go` / `_utils.go` filenames are project anti-pattern; use domain nouns |
@@ -145,6 +149,46 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-21-140230] Sentinel-removal refactors cascade through test surface
+
+**Context**: Spec specs/cwd-anchored-context.md decomposed the work into 5 discrete steps; in practice steps 1 and 2 had to merge. Removing ErrDirNotDeclared from rc.ContextDir cascaded through ~10 errors.Is consumers and ~30 test fixtures that used t.Setenv(env.CtxDir, ...).
+
+**Lesson**: Spec-level decomposition that treats 'swap resolver' and 'remove init guard' as separable does not survive contact when the second step references the soon-to-be-deleted sentinel from the first. Both have to compile against the new sentinel set in the same commit.
+
+**Application**: When a future spec proposes step boundaries that hinge on a sentinel rename or removal, plan the merged commit up front rather than discover the cascade mid-implementation. The compile-surface analysis belongs at spec time, not implementation time.
+
+---
+
+## [2026-05-20-214839] macOS /var symlink trips path-equality; use EvalSymlinks with parent-resolution fallback
+
+**Context**: TestRunInit_EnvCwdMatch_Succeeds in internal/cli/initialize/init_test.go failed on first run despite a deliberate setup where the env path and cwd candidate matched. Diagnosis: t.TempDir() returns paths like /var/folders/..., os.Getwd() after t.Chdir() returns the canonical /private/var/folders/... (because macOS's /var is a symlink to /private/var). filepath.Clean preserves the symlink form; equality fails.
+
+**Lesson**: filepath.Clean alone is insufficient for path equality on macOS (and other systems with symlinked top-level dirs). filepath.EvalSymlinks resolves the symlinks but fails when the target path does not yet exist — common case for /Users/volkan/Desktop/WORKSPACE/ctx/.context BEFORE ctx init runs. The right pattern is a layered fallback: try EvalSymlinks(full), then EvalSymlinks(parent) + rejoin basename, then filepath.Clean as last resort.
+
+**Application**: Encapsulated as internal/cli/initialize/core/envmatch/{envmatch.go,internal.go}. The Same(a, b) public function calls resolve() on each side; resolve() tries EvalSymlinks on the full path, falls back to EvalSymlinks on the parent (rejoining the basename), and falls through to filepath.Clean if both fail. Reusable for any future env-vs-cwd-style equality check. The package is per-feature (core/envmatch/) per the cmd/core/ purity rule enforced by internal/compliance/TestCmdDirPurity.
+
+---
+
+## [2026-05-20-214830] Handover filenames are archaeology; parse by generated-at, not filename
+
+**Context**: User observed three coexisting handover filename shapes: .context/HANDOVER-2026-04-22.md (pre-skill root file), .context/handovers/YYYY-MM-DD-HHMMSS-slug.md (skill-era pre-CLI), .context/handovers/<RFC3339Compact>-slug.md (current CLI). User asked whether this was a regression or a skill-interpretation problem.
+
+**Lesson**: Neither. The .context/HANDOVER-* root file predates the handovers/ directory contract entirely (the body even said 'delete this file after reading'). The YYYY-MM-DD-HHMMSS shape was an earlier skill iteration writing free-form before ctx handover write existed (commit 60543e46, 2026-05-17, introduced the CLI as sole writer per the anti-pattern note in /ctx-handover SKILL.md). The current parser at internal/write/handover/parse.go:75-107 keys on the 'generated-at' YAML frontmatter, not the filename — so legacy shapes still sort correctly via LatestHandoverCursor. Only files without frontmatter (the root April file) are invisible.
+
+**Application**: When unifying filename shapes across history, use git mv to preserve rename detection. Derive the canonical timestamp from the file's own generated-at frontmatter rather than from the filename — that's the source of truth the parser uses anyway. If a handover predates frontmatter entirely (rare, pre-skill era), it's safe to delete because the parser never read it.
+
+---
+
+## [2026-05-20-214821] /ctx-plan is named after its input, not its output
+
+**Context**: Agent (and apparently other agents in prior sessions per user observation) repeatedly inverted the canonical chain, treating /ctx-spec as the entry point and /ctx-plan as a post-spec step. The skill description starts 'stress-test a plan' (implying user brings a plan IN) while line 44 of the body says 'the deliverable is a debated brief, not a task list' (the OUTPUT is a brief, not a plan).
+
+**Lesson**: Skill names that reference their INPUT bias the agent toward the wrong canonical position. The /ctx-plan skill takes a plan and produces a brief; the natural mental model when scanning the name is 'plan = output', which makes the agent place it AFTER spec instead of before. Also: /ctx-spec's 'When to Use' section listed /ctx-brainstorm as a predecessor but never /ctx-plan, so an agent skimming the top of the skill never learned the full chain.
+
+**Application**: Made the canonical chain explicit at the top of both /ctx-plan and /ctx-spec skills (Canonical Chain block with the brainstorm → plan → spec → implement diagram) and in AGENT_PLAYBOOK_GATE Planning Work section. /ctx-spec When-to-Use now lists /ctx-plan as a predecessor; When-NOT-to-Use says 'when the bet is contested but not yet stress-tested, use /ctx-plan first'. /ctx-plan description now ends with '; produces a debated brief at .context/briefs/<TS>-<slug>.md that /ctx-spec --brief consumes'.
 
 ---
 

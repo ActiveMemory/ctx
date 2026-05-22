@@ -285,8 +285,10 @@ func TestCheckSyncStaleness(t *testing.T) {
 			defer func() { _ = os.Chdir(origDir) }()
 
 			writeCtxRC(t, tmpDir, fmt.Sprintf("steering:\n  dir: %s\n", steeringDir))
-			// Declare CTX_DIR so rc.ContextDir() resolves (no walk-up).
-			t.Setenv("CTX_DIR", filepath.Join(tmpDir, ".context"))
+			// chdir above into tmpDir; resolver reads $PWD/.context.
+			if mkErr := os.MkdirAll(filepath.Join(tmpDir, ".context"), 0o755); mkErr != nil {
+				t.Fatalf("mkdir .context: %v", mkErr)
+			}
 			rc.Reset()
 			defer rc.Reset()
 
@@ -349,6 +351,14 @@ func TestCheckRCTool(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tmpDir := t.TempDir()
+
+			// Under the cwd-anchored model, rc.RC() reads
+			// $PWD/.ctxrc only when $PWD/.context/ exists.
+			if mkErr := os.MkdirAll(
+				filepath.Join(tmpDir, ".context"), 0o700,
+			); mkErr != nil {
+				t.Fatal(mkErr)
+			}
 
 			origDir := chdir(t, tmpDir)
 			defer func() { _ = os.Chdir(origDir) }()

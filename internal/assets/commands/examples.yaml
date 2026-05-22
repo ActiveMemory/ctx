@@ -9,14 +9,6 @@
 #
 # See also: commands.yaml (Short/Long), flags.yaml (flag descriptions).
 
-activate:
-  short: |2-
-      eval "$(ctx activate)"
-
-deactivate:
-  short: |2-
-      eval "$(ctx deactivate)"
-
 convention.add:
   short: |2-
       ctx convention add "Use camelCase for function names"
@@ -437,9 +429,6 @@ system.blocknonpathctx:
 
 bootstrap:
   short: '  ctx system bootstrap'
-
-system.checkanchordrift:
-  short: '  ctx system check-anchor-drift'
 
 system.checkceremony:
   short: '  ctx system check-ceremony'

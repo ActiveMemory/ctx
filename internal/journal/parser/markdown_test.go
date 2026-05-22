@@ -221,6 +221,13 @@ func TestIsSessionHeader_CustomPrefix(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	ctxrcDir := t.TempDir()
+	// Under the cwd-anchored model, rc.RC() reads $PWD/.ctxrc only
+	// when $PWD/.context/ exists.
+	if mkErr := os.MkdirAll(
+		filepath.Join(ctxrcDir, ".context"), 0o700,
+	); mkErr != nil {
+		t.Fatal(mkErr)
+	}
 	ctxrcContent := "session_prefixes:\n  - \"Session:\"\n  - \"セッション:\"\n"
 	rcPath := filepath.Join(ctxrcDir, ".ctxrc")
 	if err := os.WriteFile(rcPath, []byte(ctxrcContent), 0600); err != nil {

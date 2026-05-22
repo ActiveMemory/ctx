@@ -32,7 +32,7 @@ import (
 //   - the encrypted file is missing (webhook never configured).
 //
 // Any resolver or I/O failure is propagated (including
-// [errCtx.ErrDirNotDeclared]) so callers can distinguish
+// [errCtx.ErrNoCtxHere]) so callers can distinguish
 // "no context dir" from "no webhook configured" rather than
 // being forced to treat them identically. [Send] treats any error
 // as "no webhook, silently skip"; interactive callers (e.g.

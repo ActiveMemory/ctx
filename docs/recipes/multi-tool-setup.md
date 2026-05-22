@@ -24,7 +24,6 @@ which AI tool you use.
 ```bash
 cd your-project
 ctx init                      # creates .context/
-eval "$(ctx activate)"        # bind CTX_DIR for this shell
 source <(ctx completion zsh)  # shell completion (or bash/fish)
 
 # ## Claude Code (automatic after plugin install) ##
@@ -32,7 +31,7 @@ claude /plugin marketplace add ActiveMemory/ctx
 claude /plugin install ctx@activememory-ctx
 
 # ## OpenCode ##
-ctx setup opencode --write && ctx init && eval "$(ctx activate)"
+ctx setup opencode --write && ctx init
 
 # ## Cursor / Aider / Copilot / Windsurf ##
 ctx setup cursor # or: aider, copilot, windsurf
@@ -42,13 +41,8 @@ npx gitnexus analyze          # code knowledge graph
 # Add Gemini Search MCP server for grounded web search
 ```
 
-!!! warning "Activate the Project Once Per Shell"
-    Run `eval "$(ctx activate)"` after `ctx init`. The `ctx setup`,
-    `ctx init`, and `ctx completion` commands work without it, but
-    if you skip the `eval`, most others (`ctx agent`, `ctx load`,
-    `ctx watch`, `ctx journal ...`) fail with `Error: no context
-    directory specified`. See
-    [Activating a Context Directory](activating-context.md).
+Run subsequent `ctx` commands from the project root; `ctx` always
+reads `$PWD/.context/`.
 
 Create a [`.ctxrc`](../home/configuration.md) in your project root to configure
 token budgets, context directory, drift thresholds, and more.
@@ -93,31 +87,12 @@ This produces the following structure:
   AGENT_PLAYBOOK.md   # How AI tools should use this system
 ```
 
-!!! note "Using a Different `.context` Directory"
-    The `.context/` directory doesn't have to live inside your project. Point
-    `ctx` to an external folder by exporting `CTX_DIR` (the only
-    declaration channel).
-
-    Useful when context must stay private while the code is public, or
-    when you want to commit notes to a separate repo.
-
-    **Caveats** (the recipe covers both with workarounds):
-
-    * **Code-aware operations degrade silently.** `ctx sync`, `ctx drift`,
-      and the memory-drift hook read the codebase from
-      `dirname(CTX_DIR)`. With an external `.context/`, that's the
-      context repo, not your code repo. They scan the wrong tree without
-      erroring. The recipe shows a symlink workaround that keeps both
-      healthy.
-    * **One `.context/` per project, always.** Sharing one directory
-      across multiple projects corrupts journals, state, and secrets.
-      For cross-project knowledge sharing (CONSTITUTION, CONVENTIONS,
-      ARCHITECTURE, etc.) use [`ctx hub`](hub-overview.md), not a
-      shared `.context/`.
-
-    See [External Context](external-context.md) for the full recipe
-    and [Configuration](../home/configuration.md#environment-variables)
-    for the resolver details.
+!!! note "One `.context/` per project"
+    `ctx` reads `$PWD/.context/`; the directory always lives
+    alongside `.git/` at the project root. Sharing one directory
+    across multiple projects corrupts journals, state, and
+    secrets. For cross-project knowledge sharing (CONSTITUTION,
+    CONVENTIONS, ARCHITECTURE, etc.) use [`ctx hub`](hub-overview.md).
 
 For Claude Code, install the **`ctx` plugin** to get hooks and skills:
 
@@ -173,7 +148,7 @@ as `ActiveMemory/ctx`.
 Run the one-liner from the project root:
 
 ```bash
-ctx setup opencode --write && ctx init && eval "$(ctx activate)"
+ctx setup opencode --write && ctx init
 ```
 
 This deploys a lifecycle plugin, slash command skills, `AGENTS.md`, and
@@ -192,7 +167,7 @@ Install the **`ctx`** extension from the
 (publisher: `activememory`). Then, from your project root:
 
 ```bash
-ctx init && eval "$(ctx activate)"
+ctx init
 ```
 
 Open Copilot Chat and type `@ctx /init` to verify. The extension
@@ -479,12 +454,6 @@ bring your own search engine, bring your own code intelligence. The
 current integration is MCP-based and limited to Gemini Search and
 GitNexus. If you use a different search or code intelligence tool,
 skills will degrade gracefully to built-in capabilities.
-
-## Next Up
-
-**[Keeping Context in a Separate Repo →](external-context.md)**: Store
-context files outside the project tree for multi-repo or open source
-setups.
 
 ## See Also
 

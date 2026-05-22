@@ -11,9 +11,6 @@ package hook
 const (
 	// BlockNonPathCtx is the hook name for blocking non-PATH ctx invocations.
 	BlockNonPathCtx = "block-non-path-ctx"
-	// CheckAnchorDrift is the hook name for the stale-anchor sanity hook
-	// added by specs/single-source-context-anchor.md.
-	CheckAnchorDrift = "check-anchor-drift"
 	// CheckCeremony is the hook name for ceremony usage checks.
 	CheckCeremony = "check-ceremony"
 	// CheckContextSize is the hook name for context window size checks.

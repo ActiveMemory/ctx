@@ -1,12 +1,17 @@
 ---
 title: Single-Source Context Anchor
-status: proposed
+status: superseded
 date: 2026-04-24
 owner: jose
 scope: architectural — resolver, hooks, settings, deletions
 supersedes:
   - specs/rc-contextdir-upward-walk.md
   - specs/explicit-context-dir.md
+superseded-by:
+  - specs/cwd-anchored-context.md (large sections of this spec, including
+    the `CTX_DIR` env-var declaration model and the check-anchor-drift
+    hook, are replaced by anchoring `ctx` to `$PWD/.context/`; the
+    basename guard and no-walk-up principle survive in stronger form)
 related:
   - specs/hook-guard-uninitialized.md
   - specs/deprecate-ctx-backup.md

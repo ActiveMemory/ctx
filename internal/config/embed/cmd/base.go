@@ -8,10 +8,6 @@ package cmd
 
 // Use strings for cobra command registration.
 const (
-	// UseActivate is the cobra Use string for the activate command.
-	UseActivate = "activate"
-	// UseDeactivate is the cobra Use string for the deactivate command.
-	UseDeactivate = "deactivate"
 	// UseAgent is the cobra Use string for the agent command.
 	UseAgent = "agent"
 	// UseChange is the cobra Use string for the change command.
@@ -72,10 +68,6 @@ const (
 
 // DescKeys for base commands.
 const (
-	// DescKeyActivate is the description key for the activate command.
-	DescKeyActivate = "activate"
-	// DescKeyDeactivate is the description key for the deactivate command.
-	DescKeyDeactivate = "deactivate"
 	// DescKeyAgent is the description key for the agent command.
 	DescKeyAgent = "agent"
 	// DescKeyChange is the description key for the change command.

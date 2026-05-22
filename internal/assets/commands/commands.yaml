@@ -8,41 +8,6 @@
 #
 # See also: examples.yaml (Example fields), flags.yaml (flag descriptions).
 
-activate:
-  long: |-
-    Emit a shell-specific export statement that binds CTX_DIR to the
-    selected .context/ directory for the current shell.
-
-    Intended usage:
-
-        eval "$(ctx activate)"      # bind the one visible .context/
-
-    Activate scans upward from the current working directory
-    collecting every .context/ directory found. When exactly one is
-    visible it emits its path; when none or several are found it
-    refuses and prints the candidates so a human chooses explicitly
-    (typically by `cd`-ing closer to the project root).
-
-    When the parent shell already has CTX_DIR set to a different
-    value, the output gains a leading `# ctx: replacing stale ...`
-    comment so the user sees the change in `eval` output before the
-    replacement takes effect.
-
-    Activate is the only command in the CLI that walks the filesystem
-    during resolution. All other commands read CTX_DIR and error
-    loudly when it is undeclared, relative, or non-canonical.
-  short: Emit shell export to bind CTX_DIR
-deactivate:
-  long: |-
-    Emit a shell-specific `unset CTX_DIR` statement for the current
-    shell.
-
-    Intended usage:
-
-        eval "$(ctx deactivate)"
-
-    Pairs with `ctx activate` for symmetric shell integration.
-  short: Emit shell unset for CTX_DIR
 convention:
   long: |-
     Manage the CONVENTIONS.md file.
@@ -1186,21 +1151,6 @@ system.blocknonpathctx:
   short: Block non-PATH ctx invocations
 bootstrap:
   short: Print context location for AI agents
-system.checkanchordrift:
-  long: |-
-    Compares the parent shell's CTX_DIR (captured as
-    CTX_DIR_INHERITED before the standard hook injection)
-    against the Claude-injected CLAUDE_PROJECT_DIR/.context
-    anchor. When the two diverge, emits a VERBATIM warning
-    banner naming both values so the user can spot when
-    their interactive CLI / `!`-pragma calls are writing to
-    a different project than Claude Code is in.
-
-    Hook event: UserPromptSubmit
-    Output: VERBATIM warning (when drifted), silent otherwise
-    Silent when: CTX_DIR_INHERITED is empty (no shell-level
-    activation), or matches CTX_DIR after filepath.Clean.
-  short: Stale-anchor sanity hook
 system.checkceremony:
   long: |-
     Scans the last 3 journal entries for /ctx-remember and /ctx-wrap-up

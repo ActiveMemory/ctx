@@ -1668,29 +1668,16 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Tell <code>ctx</code> which <code>.context/</code> to use.</strong> <code>ctx</code> does not search the
-filesystem for <code>.context/</code>: you have to declare it. Three ways:</p>
-<ul>
-<li><code>eval "$(ctx activate)"</code> (recommended): binds <code>CTX_DIR</code> for the
-  current shell.</li>
-<li><code>export CTX_DIR=/abs/path/to/.context</code> directly, then run any
-  <code>ctx</code> command.</li>
-<li><code>CTX_DIR=/abs/path/to/.context ctx &lt;command&gt;</code> inline, for a
-  one-shot or CI step.</li>
-</ul>
-<p><code>CTX_DIR</code> must be an absolute path with <code>.context</code> as its basename.
-Relative paths and other names are rejected on first use; the
-basename guard catches the common footgun
-(<code>export CTX_DIR=$(pwd)</code>) before stray writes can leak to the
-project root.</p>
-<p>If you forget, commands fail fast with a linkable
-<code>Error: no context directory specified</code> pointing at
-<a href="../recipes/activating-context/">Activating a Context Directory</a>.
-A handful of commands run without a declaration because they don't
-need a project: <code>ctx init</code>, <code>ctx activate</code>, <code>ctx deactivate</code>,
-<code>ctx version</code>, <code>ctx help</code>, <code>ctx system bootstrap</code>, <code>ctx doctor</code>,
-<code>ctx guide</code>, <code>ctx why</code>, <code>ctx config switch/status</code>, and
-<code>ctx hub *</code>.</p>
+<p><strong>Tell <code>ctx</code> which <code>.context/</code> to use.</strong> <code>ctx</code> reads
+<code>$PWD/.context/</code> — run commands from the project root (the
+directory that holds both <code>.git/</code> and <code>.context/</code>). There is no
+env-var or walk-up resolution; <code>ctx</code> does not search the
+filesystem. If <code>$PWD/.context/</code> is missing, commands fail fast
+with a clear error pointing at <code>ctx init</code>. A handful of commands
+run without that gate because they don't need a project:
+<code>ctx init</code>, <code>ctx version</code>, <code>ctx help</code>, <code>ctx system bootstrap</code>,
+<code>ctx doctor</code>, <code>ctx guide</code>, <code>ctx why</code>, <code>ctx config switch/status</code>,
+and <code>ctx hub *</code>.</p>
 <p><strong>Initialization required.</strong> Once declared, the target must already
 have been initialized by <code>ctx init</code> (otherwise commands return
 <code>ctx: not initialized</code>).</p>
@@ -1707,14 +1694,6 @@ have been initialized by <code>ctx init</code> (otherwise commands return
 <tr>
 <td><a href="init-status/#ctx-init"><code>ctx init</code></a></td>
 <td>Initialize <code>.context/</code> directory with templates</td>
-</tr>
-<tr>
-<td><a href="init-status/#ctx-activate"><code>ctx activate</code></a></td>
-<td>Emit <code>export CTX_DIR=...</code> to bind context for the shell</td>
-</tr>
-<tr>
-<td><a href="init-status/#ctx-deactivate"><code>ctx deactivate</code></a></td>
-<td>Emit <code>unset CTX_DIR</code> to clear the binding</td>
 </tr>
 <tr>
 <td><a href="init-status/#ctx-status"><code>ctx status</code></a></td>
@@ -2005,10 +1984,6 @@ have been initialized by <code>ctx init</code> (otherwise commands return
 </tr>
 </thead>
 <tbody>
-<tr>
-<td><code>CTX_DIR</code></td>
-<td>Override default context directory path</td>
-</tr>
 <tr>
 <td><code>CTX_TOKEN_BUDGET</code></td>
 <td>Override default token budget</td>
