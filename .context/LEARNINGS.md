@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-23 | Unicode block separation makes diacritic-stripping surgical — no per-script handling needed for Arabic/Indic/Hebrew/CJK |
 | 2026-05-22 | vitest's mocked `execFile` fires callbacks synchronously; real Node defers to `process.nextTick` — closure-capture patterns can TDZ-trap under the mock |
 | 2026-05-22 | Double-excluded tests rot compounding — re-enable cost = sum of all drift since last green, not just the original bug |
 | 2026-05-22 | Group git flag constants by subcommand, not by "loose flags" — cross-group flags enable wrong-subcommand bugs |
@@ -154,6 +155,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-23-001000] Unicode block separation makes diacritic-stripping surgical — no per-script handling needed for Arabic/Indic/Hebrew/CJK
+
+**Context**: While building `i18n.MatchKey` (commit 978582f5) for diacritic-insensitive placeholder matching, the natural reflex was "this is going to need per-script special cases — CJK doesn't have case, Arabic has shadda/fatha that are meaning-changing, Bengali vowel signs are script-essential, Hebrew niqqud distinguishes words." I sized the work assuming we'd need a script-aware policy, possibly with a locale config or an opt-in flag for "strip all combining marks" vs "strip only Latin-style decoration". Empirical test across Turkish/German/French/Spanish/Catalan/Czech/Vietnamese (should collapse) and Arabic/Bengali/Devanagari/Hindi/Hebrew/Chinese/Korean (should preserve) showed the entire policy fits in one numeric range: U+0300..U+036F.
+
+**Lesson**: Unicode pre-separated combining marks by intent at the codepoint level. The "Combining Diacritical Marks" block (U+0300–U+036F) holds Latin/general decorative marks: acute, grave, diaeresis, tilde, cedilla, caron, the Turkish combining dot, the Vietnamese horn, etc. Script-essential marks live in separate blocks per script: Arabic in U+0610–U+06ED, Bengali in U+0980–U+09FF, Devanagari in U+0900–U+097F, Hebrew niqqud in U+0591–U+05C7, and so on. The block boundaries are not coincidental — they encode the same distinction a reasonable design would want to make. So a narrow byte-range strip is exactly the right primitive: it expresses "remove decoration, keep structural marks" in one comparison, without needing to know anything about the input's script.
+
+**Application**: When designing comparison/normalization primitives for international input, check the Unicode block boundaries before reaching for per-script special cases or a config field. Often the standardization committee already drew the line you want, and an arithmetic range check (`r >= 0x0300 && r <= 0x036F`) does the work. Verify empirically across the scripts you care about — but expect the answer to be cleaner than your initial sizing. The general rule: when Unicode has put related characters in their own block, treat that block as a meaningful unit of policy. (For ctx, this is now `cfgI18n.CombiningMarksLatinStart`/`End` and the `MatchKey` implementation in `internal/i18n/matchkey.go`.)
 
 ---
 
