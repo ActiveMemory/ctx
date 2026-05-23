@@ -23,7 +23,7 @@ related:
 CWD via `rc.ScanCandidates`, picking the innermost candidate and
 emitting the rest as "also visible upward" advisories. The walk was
 preserved as a deliberate carve-out under
-[single-source-context-anchor.md](single-source-context-anchor.md) on
+[single-source-context-anchor.md](../single-source-context-anchor.md) on
 the rationale that activate is "user-invoked discovery, not silent
 resolution" and that workspace-shared `.context/` next to per-project
 ones is a legitimate layout.
