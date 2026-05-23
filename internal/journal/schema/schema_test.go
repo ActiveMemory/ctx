@@ -66,6 +66,37 @@ func TestKnownField(t *testing.T) {
 	}
 }
 
+// TestKnownField_PostV1FieldDrift pins the optional fields
+// added to OptionalFields after the initial 1.0.0 schema —
+// guards against silent regression of the drift-fix that
+// landed on 2026-05-23. Each field name here corresponds to
+// JSONL data observed in user-submitted journals from
+// Claude Code versions beyond the 2.1.92 range covered by
+// 1.0.0. If a future refactor drops one of these from
+// OptionalFields, this test fires immediately and the
+// schema-drift CLI starts complaining about it again.
+func TestKnownField_PostV1FieldDrift(t *testing.T) {
+	s := Default()
+	for _, field := range []string{
+		"interruptedMessageId",
+		"attributionPlugin",
+		"attributionSkill",
+		"apiErrorStatus",
+		"errorDetails",
+	} {
+		t.Run(field, func(t *testing.T) {
+			for _, rt := range []string{"user", "assistant"} {
+				if !s.KnownField(rt, field) {
+					t.Errorf(
+						"%q should be known for %q (post-1.0 drift fix)",
+						field, rt,
+					)
+				}
+			}
+		})
+	}
+}
+
 func TestKnownRecordType(t *testing.T) {
 	s := Default()
 

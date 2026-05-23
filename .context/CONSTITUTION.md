@@ -98,6 +98,19 @@ Leave the system in a better state than you found it.
   no exceptions, no "non-trivial" qualifier. Even one-liner fixes
   need a spec for traceability. Use `/ctx-commit` instead of raw
   `git commit`.
+  **The trailer must be truthful** — it points at the design
+  rationale this commit serves. Reaching for the most-recent
+  spec to satisfy the gate is a violation even though it
+  syntactically passes. For chore-class commits (gitignore
+  additions, lockfile bumps, formatting passes — full list in
+  `specs/meta/chores.md`) the correct trailer is either
+  (a) bundle into the next functional commit so the chore
+  inherits that commit's spec, or (b) cite `specs/meta/chores.md`
+  if a standalone chore commit is unavoidable. Other
+  improvisations (citing an adjacent spec, citing the previous
+  commit's spec) are violations. The Spec Verification Step in
+  `AGENT_PLAYBOOK.md` is the procedure that gates correct use.
+  Per `specs/spec-trailer-discipline.md`.
 - [ ] **Git is required.** Every `ctx` project must live in a git
   working tree. `ctx init` and every non-administrative
   subcommand refuse to operate when `<projectRoot>/.git` is

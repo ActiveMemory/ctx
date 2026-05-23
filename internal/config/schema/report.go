@@ -70,8 +70,17 @@ const (
 
 // Schema version and CC version range.
 const (
-	// Version is the current schema version.
-	Version = "1.0.0"
+	// Version is the current schema version. Bumped to
+	// 1.1.0 on 2026-05-23 when five new optional fields
+	// (interruptedMessageId, attributionPlugin,
+	// attributionSkill, apiErrorStatus, errorDetails)
+	// were added to OptionalFields. MINOR bump because
+	// adding optional fields is backwards-compatible
+	// per semver \u2014 old records still validate.
+	Version = "1.1.0"
 	// CCVersionRange is the CC version range tested.
-	CCVersionRange = "2.1.2\u20132.1.92"
+	// 2.1.150 is the version observed in user-submitted
+	// drift reports; CC versions in between added the new
+	// fields incrementally.
+	CCVersionRange = "2.1.2\u20132.1.150"
 )
