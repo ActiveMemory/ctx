@@ -7,8 +7,12 @@
 package validate
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func TestRejectPlaceholderAcceptsLegitimate(t *testing.T) {
@@ -62,5 +66,44 @@ func TestRejectPlaceholderTrimsBeforeMatching(t *testing.T) {
 	err := RejectPlaceholder("consequence", "  TBD  ")
 	if err == nil {
 		t.Error("padded placeholder should still be rejected")
+	}
+}
+
+// TestRejectPlaceholderHonorsCtxrcExtensions wires the
+// whole flow end-to-end: seed a .ctxrc with a custom
+// `placeholders:` list, verify both the shipped default
+// (tbd) and the user-supplied entry (iptal) reject. Guards
+// against the validator silently dropping the merge step.
+func TestRejectPlaceholderHonorsCtxrcExtensions(t *testing.T) {
+	tmpDir := t.TempDir()
+	ctxDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(ctxDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	rcContent := "placeholders:\n  - iptal\n  - yapılacak\n"
+	if err := os.WriteFile(
+		filepath.Join(tmpDir, ".ctxrc"), []byte(rcContent), 0o644,
+	); err != nil {
+		t.Fatal(err)
+	}
+	testctx.Declare(t, tmpDir)
+
+	for _, v := range []string{"tbd", "TBD", "iptal", "IPTAL", "Iptal", "yapılacak"} {
+		if err := RejectPlaceholder("context", v); err == nil {
+			t.Errorf("RejectPlaceholder(%q) = nil, want error (default+user merge)", v)
+		}
+	}
+	// A non-placeholder still passes through.
+	if err := RejectPlaceholder("context", "a real reason"); err != nil {
+		t.Errorf("RejectPlaceholder(%q) = %v, want nil", "a real reason", err)
+	}
+	// Turkish dotted-I sanity check: the user list contains plain
+	// "iptal", so "İPTAL" (with dotted İ) does NOT match — i18n.Fold
+	// preserves the linguistic distinction between İ and i, by
+	// design (see specs/i18n-fold-helper-and-ban.md). A user who
+	// wants both rejected adds both spellings to .ctxrc.
+	if err := RejectPlaceholder("context", "İPTAL"); err != nil {
+		t.Errorf("RejectPlaceholder(\"İPTAL\") = %v, want nil "+
+			"(distinct from user-supplied \"iptal\" under Unicode fold)", err)
 	}
 }

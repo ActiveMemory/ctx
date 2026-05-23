@@ -51,6 +51,15 @@ import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 //     when adding tasks (overrides defaults when set)
 //   - SpecNudgeMinLen: Task content length threshold
 //     for spec nudge (default 150)
+//   - Placeholders: Extra placeholder strings rejected by
+//     `ctx decision add` / `ctx learning add` body-flag
+//     validators. EXTEND semantics — appended to the
+//     shipped defaults (loaded from
+//     `internal/assets/i18n/placeholders/en.yaml`)
+//     rather than replacing them. Useful for project
+//     vocabulary like Tarzan Turkish ("iptal",
+//     "yapılacak") where the user wants the shipped
+//     English list to keep applying.
 //   - Tool: Active AI tool identifier (e.g., claude,
 //     cursor, cline, kiro, codex)
 //   - Steering: Steering layer configuration overrides
@@ -82,6 +91,7 @@ type CtxRC struct {
 	ClassifyRules       []cfgMemory.ClassifyRule `yaml:"classify_rules"`
 	SpecSignalWords     []string                 `yaml:"spec_signal_words"`
 	SpecNudgeMinLen     int                      `yaml:"spec_nudge_min_len"`
+	Placeholders        []string                 `yaml:"placeholders"`
 	Notify              *NotifyConfig            `yaml:"notify"`
 	Steering            *SteeringRC              `yaml:"steering"`
 	Hooks               *HooksRC                 `yaml:"hooks"`

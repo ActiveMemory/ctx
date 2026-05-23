@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 )
 
 // declareContext sets up a tempDir layout with a .context/ directory
@@ -586,5 +587,95 @@ func TestHooksEnabled_ExplicitFalse(t *testing.T) {
 `)
 	if HooksEnabled() {
 		t.Error("HooksEnabled() = true, want false")
+	}
+}
+
+func TestPlaceholders_DefaultsOnly(t *testing.T) {
+	declareContext(t, "")
+	set, err := Placeholders()
+	if err != nil {
+		t.Fatalf("Placeholders(): %v", err)
+	}
+	// Shipped en.yaml has 9 entries.
+	if len(set) != 9 {
+		t.Errorf("len(set) = %d, want 9 (en defaults only)", len(set))
+	}
+	for _, want := range []string{"tbd", "n/a", "see chat", "to be done"} {
+		if _, ok := set[want]; !ok {
+			t.Errorf("set missing default %q", want)
+		}
+	}
+}
+
+func TestPlaceholders_UserExtendsDefaults(t *testing.T) {
+	declareContext(t, "placeholders:\n"+
+		"  - iptal\n"+
+		"  - yapılacak\n")
+	set, err := Placeholders()
+	if err != nil {
+		t.Fatalf("Placeholders(): %v", err)
+	}
+	if len(set) != 11 {
+		t.Errorf("len(set) = %d, want 11 (9 defaults + 2 user)", len(set))
+	}
+	for _, want := range []string{"tbd", "iptal", "yapılacak"} {
+		if _, ok := set[want]; !ok {
+			t.Errorf("set missing %q (default+user merge)", want)
+		}
+	}
+}
+
+func TestPlaceholders_FoldsUserEntriesCaseInsensitively(t *testing.T) {
+	declareContext(t, "placeholders:\n"+
+		"  - İPTAL\n")
+	set, err := Placeholders()
+	if err != nil {
+		t.Fatalf("Placeholders(): %v", err)
+	}
+	// "İPTAL" folds to "i̇ptal" (i + combining dot above).
+	// The validator will compare i18n.Fold(input) against
+	// this key; both "İPTAL" and "İptal" fold identically,
+	// so either should hit.
+	if _, ok := set[i18n.Fold("İPTAL")]; !ok {
+		t.Errorf("set missing folded user entry %q", i18n.Fold("İPTAL"))
+	}
+	if _, ok := set[i18n.Fold("İptal")]; !ok {
+		t.Errorf("Fold(İptal) should match the same set key as Fold(İPTAL)")
+	}
+}
+
+func TestPlaceholders_TrimsAndSkipsEmptyUserEntries(t *testing.T) {
+	declareContext(t, "placeholders:\n"+
+		"  - \"  spaced  \"\n"+
+		"  - \"\"\n"+
+		"  - \"   \"\n")
+	set, err := Placeholders()
+	if err != nil {
+		t.Fatalf("Placeholders(): %v", err)
+	}
+	// 9 defaults + 1 real user entry (after trim+empty-skip).
+	if len(set) != 10 {
+		t.Errorf("len(set) = %d, want 10 (9 defaults + 1 trimmed user)", len(set))
+	}
+	if _, ok := set["spaced"]; !ok {
+		t.Errorf("set missing trimmed user entry %q", "spaced")
+	}
+}
+
+func TestPlaceholders_UserDuplicateOfDefaultDedupes(t *testing.T) {
+	declareContext(t, "placeholders:\n"+
+		"  - TBD\n"+
+		"  - tbd\n"+
+		"  - new-marker\n")
+	set, err := Placeholders()
+	if err != nil {
+		t.Fatalf("Placeholders(): %v", err)
+	}
+	// 9 defaults + 1 new (TBD/tbd both fold to existing "tbd").
+	if len(set) != 10 {
+		t.Errorf("len(set) = %d, want 10 (defaults + 1 distinct user)", len(set))
+	}
+	if _, ok := set["new-marker"]; !ok {
+		t.Errorf("set missing %q", "new-marker")
 	}
 }
