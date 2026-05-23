@@ -141,7 +141,7 @@ TASK STATUS LABELS:
   cwd-anchored fail-closed behaviour. Lint clean (`golangci-lint run`),
   full `go test ./...` green.
 
-- [-] Add TypeScript `tsc --noEmit` gate for the embedded OpenCode
+- [x] Add TypeScript `tsc --noEmit` gate for the embedded OpenCode
   plugin (`internal/assets/integrations/opencode/plugin/index.ts`).
   Place tooling (`package.json`, `tsconfig.json`) in a sibling
   directory outside `internal/assets/` so it does not pollute the
@@ -179,12 +179,21 @@ TASK STATUS LABELS:
   GitHub Actions ubuntu images). Local verification deferred to
   CI (no pwsh on dev box).
 
-- [ ] Add skill frontmatter validity test covering every embedded
+- [x] Add skill frontmatter validity test covering every embedded
   `SKILL.md` (Claude skills, OpenCode skills, Copilot CLI skills):
   assert required keys present and values typed correctly. Extend
   `internal/assets/embed_test.go` or add a dedicated test under
   `internal/assets/read/skill/`. #priority:medium #added:2026-05-11
   #grounding-gap
+  Done: `internal/assets/read/skill/frontmatter_test.go` walks all
+  3 skill trees (claude, opencode integrations, copilot-cli
+  integrations), parses YAML frontmatter on each `SKILL.md`, and
+  asserts `name` matches the containing directory's basename and
+  `description` is a non-empty string. Reports every violation in
+  a single pass (`t.Errorf`, not `t.Fatalf`). Validated 106 files
+  across the three trees; baseline was already clean so the test
+  freezes the convention as a ratchet. Per
+  `specs/test-skill-frontmatter.md`.
 
 - [x] Add CI guardrails for the VS Code extension at
   `editors/vscode/` (separately-published deliverable, ships via
