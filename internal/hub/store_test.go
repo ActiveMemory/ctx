@@ -145,6 +145,70 @@ func TestStoreRegisterAndValidate(t *testing.T) {
 	}
 }
 
+// TestStoreValidateToken_RejectsNearMissTokens pins the
+// timing-attack-resistance contract of Store.ValidateToken.
+//
+// The implementation uses an O(1) map lookup on
+// s.tokenIdx[bearerToken] followed by a defensive
+// crypto/subtle.ConstantTimeCompare against the stored
+// token. The CTC is technically redundant once the map
+// lookup hits — Go map keys match exact-byte by
+// definition — but it's the explicit signal of intent
+// that would catch a future "simplification" PR
+// collapsing both checks back to a single == or
+// strings.HasPrefix.
+//
+// This test exercises the *behavior* that the CTC
+// defends: no near-miss token (one byte off, prefix
+// only, extra suffix bytes, case-shifted) ever
+// validates. If a regression replaces the careful
+// chain with a prefix matcher or a non-constant
+// comparison, these cases start passing when they
+// shouldn't.
+func TestStoreValidateToken_RejectsNearMissTokens(t *testing.T) {
+	dir := t.TempDir()
+	s, err := NewStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	const valid = "tok_abc123_with_some_length"
+	if regErr := s.RegisterClient(ClientInfo{
+		ID: "c1", ProjectName: "near-miss-proj", Token: valid,
+	}); regErr != nil {
+		t.Fatal(regErr)
+	}
+
+	// Sanity: the valid token still validates.
+	if s.ValidateToken(valid) == nil {
+		t.Fatal("valid token should validate; suite bug")
+	}
+
+	rejected := []struct {
+		name, token string
+	}{
+		{"empty", ""},
+		{"last byte changed", valid[:len(valid)-1] + "X"},
+		{"first byte changed", "X" + valid[1:]},
+		{"middle byte changed", valid[:len(valid)/2] + "X" + valid[len(valid)/2+1:]},
+		{"prefix only", valid[:len(valid)/2]},
+		{"extra suffix appended", valid + "X"},
+		{"case-shifted", "TOK_ABC123_WITH_SOME_LENGTH"},
+		{"whitespace-padded", " " + valid + " "},
+		{"all-X same length", "XXXXXXXXXXXXXXXXXXXXXXXXXXX"},
+	}
+	for _, tc := range rejected {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := s.ValidateToken(tc.token); got != nil {
+				t.Errorf(
+					"ValidateToken(%q) = %+v; want nil "+
+						"(near-miss/partial-match must not validate)",
+					tc.token, got,
+				)
+			}
+		})
+	}
+}
+
 func TestStoreStats(t *testing.T) {
 	dir := t.TempDir()
 	s, err := NewStore(dir)

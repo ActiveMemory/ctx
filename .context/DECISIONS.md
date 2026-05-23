@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-23 | MCP gateway not worth the coupling cost; companion tools stay peer-MCP and remain not-vouched-for-by-ctx |
 | 2026-05-23 | Keep `i18n.Fold` strict; add `i18n.MatchKey` as the separate diacritic-insensitive primitive |
 | 2026-05-22 | OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored |
 | 2026-05-21 | Substrate vs. artifact placement: .context/ vs. project root |
@@ -148,6 +149,34 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-23-020000] MCP gateway not worth the coupling cost; companion tools stay peer-MCP and remain not-vouched-for-by-ctx
+
+**Status**: Accepted
+
+**Context**: Builds on the 2026-03-12 "Recommend companion RAGs as peer MCP servers not bridge through ctx" and the earlier 2026-03-06 "Peer MCP model for external tool integration" decisions. Those framed the choice as architectural (markdown-on-filesystem invariant, avoid plugin registries). The new framing, surfaced during the triage of architecture-pipeline tasks, names a stronger ownership-shaped reason: an MCP gateway through ctx would couple ctx to the lifecycle of every gatewayed tool. If ctx proxied GitNexus, users couldn't independently `pip install gitnexus` or uninstall it — ctx would become the install/uninstall surface, the upgrade path, the version-compatibility owner. That coupling is a tax we don't want to pay for a tool we don't ship.
+
+**Decision**: MCP gateway not worth the coupling cost; companion tools stay peer-MCP and remain not-vouched-for-by-ctx.
+
+**Rationale**: Three independent considerations converge:
+
+1. **Composition is already MCP's job.** Agents already compose multiple MCP servers. Adding a gateway through ctx duplicates the composition layer without adding capability — the agent could just talk to GitNexus directly. The peer model preserves that property.
+2. **Ownership coupling is bidirectional.** A gateway makes ctx vouch for the peer (install, uninstall, version compatibility, error surface translation). It also makes the peer's failures surface as ctx failures from the agent's perspective, blurring the diagnostic boundary. Both directions add support burden disproportionate to the value of "one extra abstraction layer".
+3. **The skills already work without it.** `/ctx-architecture-enrich` and `/ctx-architecture-failure-analysis` reference GitNexus by name in their SKILL.md instructions. The agent invokes GitNexus directly via its own MCP client. No gateway involved, no abstraction needed — the skill names the tool it expects and the agent either has it configured or doesn't. Doctor-style checks (existing TASKS.md item at line 1346) handle the "is it there?" surface without proxying.
+
+Alternatives considered and rejected: (1) Gateway through ctx — rejected for the ownership reasons above. (2) Pluggable graph-tool abstraction with multiple candidate implementations (the now-skipped TASKS.md item) — implies ctx vouches for the interface contract across implementations, same ownership trap. (3) Optional gateway as opt-in — added complexity without removing the coupling for users who opt in; cleaner to have no gateway at all.
+
+**Consequence**: 
+
+- **Pluggable graph tool interface task** (TASKS.md "Explore pluggable graph tool interface", `#added:2026-03-25-120000`) **skipped** as a direct consequence — pluggability without ownership is incoherent.
+- **GitNexus stays named-by-convention** in skill text. SKILL.md instructions can reference `gitnexus.*` MCP tool names directly; agents either have the configuration or fail explicitly.
+- **Architecture pipeline 4th step** (`ctx-architecture-next`, added today) is *itself* gateway-free: it consumes only the Markdown artifacts produced by the prior three steps, so the synthesis layer has no MCP dependency at all. That's the right shape for any future pipeline-completing skill: read what's on disk, write a new artifact.
+- **Doctor / preflight checks** for companion-tool availability remain valid (TASKS.md line 1346, "Update `ctx doctor` to check for graph tool availability"). Checking that a peer exists is not the same as proxying through it.
+- **The earlier 2026-03-12 peer-MCP decision is not superseded** — it's reinforced. This entry adds the ownership lens; the architectural reasoning from that entry still applies.
+
+See also: `ideas/spec-companion-intelligence.md` (the original peer-MCP design), `ideas/gitnexus-contextmode-analysis.md`, the now-skipped pluggable-interface task in TASKS.md.
+
+---
 
 ## [2026-05-23-001500] Keep `i18n.Fold` strict; add `i18n.MatchKey` as the separate diacritic-insensitive primitive
 
