@@ -76,6 +76,11 @@ dist/
 .context/site/
 .context/site-config/
 
+# Generated reports (schema drift, audit dumps, etc.). Operator-local;
+# regenerated on demand by the relevant `ctx ... check` / `ctx ... report`
+# command. No need to version.
+.context/reports/
+
 # VS Code extension build artifacts
 editors/vscode/node_modules/
 editors/vscode/dist/
