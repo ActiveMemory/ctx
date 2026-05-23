@@ -390,33 +390,6 @@ TASK STATUS LABELS:
   Unavailable — an Unavailable would prove the walk cycled past auth
   into the unrouted second peer (the exact regression to catch).
 
-- [ ] Add file locking to ctx connect sync state to prevent concurrent sync
-  races. Two sync processes (hook + manual) can both load the same LastSequence,
-  process the same entries, and write duplicate content to .context/shared/.
-  #priority:medium #added:2026-04-08-194557
-  Triaged 2026-05-23: a "lock" exists at
-  `internal/cli/connection/core/sync/state.go:42-50` but it's a check-then-write
-  TOCTOU pattern, not real locking — two concurrent syncs can both pass the
-  existence check. Filed as
-  [#93](https://github.com/ActiveMemory/ctx/issues/93) with proposed fixes
-  (atomic O_CREATE|O_EXCL or syscall.Flock) and the three regression tests
-  the fix should add.
-
-- [ ] Fix fanout broadcast entry loss: non-blocking send drops entries to slow
-  listeners silently. Log when entries are dropped. Consider per-listener
-  backpressure or disconnect-on-lag. Buffer of 64 is too small for busy hubs.
-  #priority:medium #added:2026-04-08-194542
-
-- [ ] Prevent duplicate client registration in hub store: RegisterClient should
-  reject if ProjectName already exists. Add token revocation support (delete
-  client by ID/project). Currently tokens are valid forever with no way to
-  disable compromised ones. #priority:medium #added:2026-04-08-194529
-
-- [ ] Fix hub cluster: NewCluster result is discarded (not stored on Server), so
-  Raft runs but leadership status is never queryable. Store cluster reference on
-  Server, wire IsLeader/LeaderAddr into Status RPC and hub status command.
-  #priority:medium #added:2026-04-08-194511
-
 - [ ] Use crypto/subtle.ConstantTimeCompare for hub token validation instead of
   string equality. Current Store.ValidateToken uses == which is vulnerable to
   timing attacks. Also replace O(n) linear scan with a map[string]*ClientInfo
@@ -541,6 +514,54 @@ global state mutation.
 - [x] Add Gemini Search integration: cross-reference
   discovered patterns against known failure modes in similar
   systems. #added:2026-03-25-060000
+
+- [ ] ctx-architecture-next — fourth step in the architecture
+  pipeline (map → enrich → hunt → **prescribe**).
+  **Context**: The three existing skills produce inputs
+  (`ARCHITECTURE.md`, `DETAILED_DESIGN*.md` from
+  `/ctx-architecture`; enriched verifications from
+  `/ctx-architecture-enrich`; ranked failure inventory from
+  `/ctx-architecture-failure-analysis`'s `DANGER-ZONES.md`).
+  But the agent then has to synthesize "so what do I DO?" on
+  its own, every time, from those raw artifacts. The fourth
+  step closes the pipeline by producing `NEXT-ACTIONS.md` —
+  a sequenced, prioritized fix plan that maps each danger
+  zone to a concrete next move (refactor, test, doc,
+  escalate, accept) with effort estimates and a suggested
+  order.
+  **Distinct from ctx-architecture-extend (skipped)**: that
+  was about *where features grow*; this is about *what to
+  fix first*. Extend overlapped with DETAILED_DESIGN and
+  enrich's registration sites. Next has no overlap — pure
+  synthesis layer over the prior three artifacts. The
+  pipeline is now 4 because each step has a distinct output
+  document: map(ARCHITECTURE) → enrich(verified ARCHITECTURE)
+  → hunt(DANGER-ZONES) → prescribe(NEXT-ACTIONS).
+  **No MCP gateway required**: this skill consumes only the
+  three Markdown artifacts produced by the prior skills,
+  which already absorbed any GitNexus-derived signal during
+  the enrich step. The synthesis is a pure-reasoning pass on
+  the agent side. Aligns with the decision that ctx does not
+  proxy / gateway companion MCPs; see DECISIONS.md
+  "MCP gateway not worth the coupling cost".
+  Scope sketch (refine when implementing):
+    - [ ] Design SKILL.md: inputs (three artifacts), output
+      shape (`NEXT-ACTIONS.md` with ranked sections), quality
+      checklist (every action cites a danger zone; every
+      danger zone has an action OR an explicit "accepted"
+      rationale).
+    - [ ] Define the action taxonomy: refactor, test, doc,
+      escalate, accept. Each carries effort estimate (S/M/L)
+      and a suggested sequence position.
+    - [ ] Reference run against ctx itself: produce
+      `NEXT-ACTIONS.md` from the existing DANGER-ZONES.md if
+      one has been generated; otherwise generate the whole
+      4-step pipeline against ctx as the worked example.
+    - [ ] Document the pipeline order in
+      `docs/recipes/architecture-mapping.md` (or wherever the
+      existing 3-step recipe lives): "run all four in
+      sequence; each step's output feeds the next".
+  #priority:medium #added:2026-05-23
 
 - [-] ctx-architecture-extend
   Skipped: extension point analysis is covered by /ctx-architecture
@@ -1374,11 +1395,21 @@ Not a fit (keep in `ctx`):
   graph/RAG MCP is configured in .ctxrc, verify connection status, recommend
   installation if missing #added:2026-03-25-120000
 
-- [ ] Explore pluggable graph tool interface — replace hardcoded GitNexus
+- [-] Explore pluggable graph tool interface — replace hardcoded GitNexus
   references in skill text with configurable .ctxrc graph_tool key. Skills use
   template placeholder instead of literal tool names. Define minimum interface
   contract (query, context, impact). Spec:
   `ideas/spec-mcp-warm-up-ceremony.md` #added:2026-03-25-120000
+  **Skipped 2026-05-23**: contradicts the committed-to-GitNexus
+  direction recorded in DECISIONS.md "MCP gateway not worth the
+  coupling cost". Pluggable abstraction implies multiple
+  candidate graph tools, which in turn implies ctx vouches for
+  the interface contract across implementations — exactly the
+  ownership coupling we're avoiding. If a second viable graph
+  tool emerges that's worth the cost of pluggability, revisit
+  by un-skipping; the design sketch in
+  `ideas/spec-mcp-warm-up-ceremony.md` stays available as the
+  starting point.
 
 ### Phase: ctx Hub follow-ups (PR #60)
 
