@@ -16,16 +16,24 @@ var RequiredFields = []string{
 }
 
 // Optional fields that may appear on message records.
+//
+// Grouped by concept for review; order is not load-bearing.
+// New fields enter at the end of their concept group with a
+// brief note on the version that introduced them when known.
 var OptionalFields = []string{
 	"gitBranch", "slug", "requestId",
 	"thinkingMetadata", "todos", "permissionMode",
 	"logicalParentUuid", "isMeta", "compactMetadata",
 	"isVisibleInTranscriptOnly", "isCompactSummary",
+	"interruptedMessageId", // CC ≥ 2.1.~100: tracks parent of an interrupt
 	"agentId", "teamName", "agentName", "agentColor",
 	"promptId", "entrypoint", "agentSetting",
+	// CC ≥ 2.1.~110: skill/plugin invocation provenance.
+	"attributionPlugin", "attributionSkill",
 	"sourceToolAssistantUUID", "toolUseResult",
 	"sourceToolUseID", "origin", "planContent",
 	"isApiErrorMessage", "error", "apiError",
+	"apiErrorStatus", "errorDetails", // CC ≥ 2.1.~120: richer API-error envelope
 }
 
 // JSONL record type values.
