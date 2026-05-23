@@ -2650,4 +2650,14 @@ lands).
   `NoModelsServed` integration test. `make lint` clean; full
   `go test ./...` green.
 
-- [ ] .context/proposals/* + !.context/proposals/.gitkeep missing from internal/config/file/ignore.go init template. The Task 1 decision body (DECISIONS 2026-05-22-220000) called for this addition alongside Phase BE's proposal-queue writer; the writer landed in a601c1cb but the gitignore template was never updated. Without it, fresh ctx init projects will commit AI-generated extract outputs by default. Two-line fix: add the entry to the WriteGitignore string in internal/config/file/ignore.go, mirroring the handovers/ entry shape. #session:8f8cab12 #branch:feat/vllm-integration #commit:671473c0 #added:2026-05-23-171343
+- [x] .context/proposals/* + !.context/proposals/.gitkeep missing from internal/config/file/ignore.go init template. The Task 1 decision body (DECISIONS 2026-05-22-220000) called for this addition alongside Phase BE's proposal-queue writer; the writer landed in a601c1cb but the gitignore template was never updated. Without it, fresh ctx init projects will commit AI-generated extract outputs by default. Two-line fix: add the entry to the WriteGitignore string in internal/config/file/ignore.go, mirroring the handovers/ entry shape. #session:8f8cab12 #branch:feat/vllm-integration #commit:671473c0 #added:2026-05-23-171343
+  Done 2026-05-23. Added two entries to `file.Gitignore` in
+  `internal/config/file/ignore.go` using `cfgProposal.Subdir`,
+  mirroring the handover carve-out shape exactly. The carve-out
+  is a no-op until a `.gitkeep` is placed; the proposal writer
+  creates the directory lazily on first `ctx ai extract`. Did
+  NOT add a `.gitkeep` stub to `kb.Scaffold` — that's scope
+  creep beyond the task description (which said "two-line fix",
+  mirroring the gitignore entry shape only). Doc-comment on
+  `file.Gitignore` updated to name the proposals carve-out
+  alongside handovers and cite DECISIONS 2026-05-22-220000.
