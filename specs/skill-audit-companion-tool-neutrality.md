@@ -110,6 +110,47 @@ Search: cross-reference" lines to name the capabilities,
 list the canonical tools as examples, and let the agent
 self-route based on what's connected.
 
+## Doc updates (follow-on within scope)
+
+After the SKILL.md rewrites landed, a check across `docs/`
+surfaced six files that also named GitNexus and Gemini
+Search prescriptively. Two categories:
+
+**Operational / descriptive docs** (rewritten to
+capability-first matching the SKILL.md tone):
+
+- `docs/operations/runbooks/architecture-exploration.md` —
+  "via GitNexus" → "via a code-intelligence MCP (canonical:
+  GitNexus)"; preflight smoke-test wording; graceful-fail
+  rationale.
+- `docs/recipes/architecture-deep-dive.md` — "graph-backed
+  data from GitNexus"; "Requires: GitNexus MCP server".
+- `docs/reference/skills.md` — failure-analysis skill
+  description.
+- `docs/cli/index.md` — `companion_check` field
+  parenthetical.
+
+**Install-guide docs** (kept concrete; added one-liner
+naming equivalents):
+
+- `docs/home/getting-started.md` — Section 7's companion
+  tool sublist gains a "canonical examples; equivalents
+  work" preamble. The install commands stay because the
+  doc's purpose IS install guidance.
+- `docs/recipes/multi-tool-setup.md` — Companion Tools
+  section preamble similarly clarifies that named tools
+  are canonical examples. Individual tool sections still
+  give concrete setup steps for the canonical impls.
+
+This split is intentional: when a doc's job is "tell me
+how to install something," that doc names specific tools.
+When a doc's job is "describe what a skill does," it
+describes capabilities. The decision recorded in
+`DECISIONS.md` (2026-05-23 "Skill body text uses
+capability-first language; install-guide docs name
+canonical implementations") captures the rule for
+future contributors.
+
 ## Out of Scope
 
 - **`allowed-tools` frontmatter genericization.** The

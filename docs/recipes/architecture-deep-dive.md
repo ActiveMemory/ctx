@@ -84,7 +84,8 @@ dependencies).
 ```
 
 Takes the Pass 1 artifacts as baseline and layers on verified,
-graph-backed data from GitNexus:
+graph-backed data from a code-intelligence MCP (canonical:
+GitNexus; equivalents include sourcegraph-cody):
 
 - Blast radius numbers for key functions
 - Execution flow traces through hot paths
@@ -99,7 +100,9 @@ Z would affect 12 downstream consumers."
 **When to run**: After Pass 1, when you need quantified
 confidence for refactoring decisions or risk assessment.
 
-**Requires**: GitNexus MCP server connected.
+**Requires**: a code-intelligence MCP connected (canonical:
+GitNexus; equivalents work if they expose symbol-index,
+blast-radius, and execution-flow queries).
 
 ### Pass 3: Hunt for Failure Modes
 

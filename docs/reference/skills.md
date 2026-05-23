@@ -618,8 +618,10 @@ Produces `.context/DANGER-ZONES.md` with ranked findings split
 into Critical (risk >= 7, silent/cascading) and Elevated tiers.
 
 **Wraps**: reads architecture artifacts, source code; writes
-`DANGER-ZONES.md`. Optionally uses GitNexus for blast radius
-and Gemini Search for cross-referencing known failure patterns.
+`DANGER-ZONES.md`. Optionally uses a code-intelligence MCP
+(canonical: GitNexus) for blast radius and a
+web-search-with-citations MCP (canonical: Gemini Search) for
+cross-referencing known failure patterns.
 
 **Relationship**:
 

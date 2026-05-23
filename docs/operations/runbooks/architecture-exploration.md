@@ -27,7 +27,8 @@ workspace directory (e.g., `~/WORKSPACE/`).
 **Companion skills**:
 
 - `/ctx-architecture`: structural baseline and principal analysis
-- `/ctx-architecture-enrich`: code intelligence enrichment via GitNexus
+- `/ctx-architecture-enrich`: code intelligence enrichment via a
+  code-intelligence MCP (canonical: GitNexus)
 - `/ctx-architecture-failure-analysis`: adversarial failure analysis
 
 ---
@@ -109,7 +110,7 @@ Each repo progresses through these phases in order:
 |-------|-------|-------------|
 | `bootstrap` | `ctx init` + `/ctx-architecture` | None |
 | `principal` | `/ctx-architecture principal` | bootstrap done |
-| `enriched` | `/ctx-architecture-enrich` | principal done, GitNexus indexed |
+| `enriched` | `/ctx-architecture-enrich` | principal done, code-intelligence MCP indexed (canonical: GitNexus) |
 | `frontier-N` | `/ctx-architecture` (re-run) | enriched done |
 
 **`bootstrap` is a single composite unit:** `ctx init` followed by
@@ -166,10 +167,12 @@ focus as input upfront.
     - Run `/ctx-architecture` (add `principal` argument for principal phase).
     - The skill will read existing artifacts and build on them.
 5. If phase is `enriched`:
-    - Verify GitNexus is connected: call `mcp__gitnexus__list_repos`.
+    - Verify a code-intelligence MCP is connected. Canonical
+      smoke test: `mcp__gitnexus__list_repos` (or the equivalent
+      smoke test for your configured tool).
     - Success = non-empty list returned with no error.
-    - If GitNexus unavailable, log as `enriched-skipped` and advance
-      to `frontier-1`.
+    - If no code-intelligence MCP is available, log as
+      `enriched-skipped` and advance to `frontier-1`.
     - Run `/ctx-architecture-enrich`.
 6. If phase is a lens run (`lens-security`, etc.):
     - Run `/ctx-architecture` with lens focus prepended as instruction
@@ -255,8 +258,9 @@ it, produce no further output. Execution is complete.
    already recorded as completed, skip it.
 4. **Log everything.** Every run gets a run-log entry, even failures
    and skips.
-5. **Fail gracefully.** If a skill fails (missing GitNexus, broken repo,
-   etc.), log the failure with reason and advance to the next phase or
+5. **Fail gracefully.** If a skill fails (no code-intelligence MCP
+   connected, broken repo, etc.), log the failure with reason and
+   advance to the next phase or
    repo. Don't retry in the same invocation.
 6. **Respect `ctx` conventions.** Each repo gets its own `.context/`
    directory. Never write architecture artifacts outside `.context/`.
@@ -326,9 +330,10 @@ right project root.
 
 - **Start small**: list 1-2 repos in the manifest first. Add more
   once you're confident in the output quality.
-- **GitNexus is optional**: the enrichment phase is skipped
-  gracefully if GitNexus isn't connected. You still get structural
-  and principal analysis.
+- **The code-intelligence MCP is optional**: the enrichment phase
+  is skipped gracefully if no such MCP is connected (canonical:
+  GitNexus; equivalents work). You still get structural and
+  principal analysis.
 - **Review between batches**: check the run-log and generated
   artifacts between batch runs. The agent is additive-only, but
   early course correction saves wasted runs.

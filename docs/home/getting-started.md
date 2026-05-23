@@ -314,18 +314,22 @@ or previous session topics.
 
 ### 7. Set Up Companion Tools (Highly Recommended)
 
-`ctx` works on its own, but two companion MCP servers unlock significantly
-better agent behavior. The investment is small and the benefits compound
-over sessions:
+`ctx` works on its own, but two MCP capabilities unlock significantly
+better agent behavior. ctx names canonical implementations below as
+its tested defaults; if your toolchain provides the same capabilities
+through different MCP servers (Firecrawl / Exa / Tavily for web
+search; sourcegraph-cody for the code graph), use those instead.
+The investment is small and the benefits compound over sessions:
 
-* **[Gemini Search](https://github.com/nicobailon/gemini-code-search-mcp)**
-: grounded web search with citations. Skills like `/ctx-code-review`
-  and `/ctx-explain` use it for up-to-date documentation lookups instead
-  of relying on training data.
+* **Web search with citations** — canonical:
+  **[Gemini Search](https://github.com/nicobailon/gemini-code-search-mcp)**.
+  Skills like `/ctx-code-review` and `/ctx-explain` use it for
+  up-to-date documentation lookups instead of relying on training data.
 
-* **[GitNexus](https://github.com/nicobailon/gitnexus-mcp)**: code
-  knowledge graph with symbol resolution, blast radius analysis, and
-  domain clustering. Skills like `/ctx-refactor` and `/ctx-code-review`
+* **Code knowledge graph** — canonical:
+  **[GitNexus](https://github.com/nicobailon/gitnexus-mcp)**.
+  Provides symbol resolution, blast radius analysis, and domain
+  clustering. Skills like `/ctx-refactor` and `/ctx-code-review`
   use it for impact analysis and dependency awareness.
 
 ```bash
@@ -333,8 +337,11 @@ over sessions:
 npx gitnexus analyze
 ```
 
-Both are optional MCP servers: if they are not connected, skills degrade
-gracefully to built-in capabilities. See
+(For non-GitNexus code-intelligence MCPs, apply that tool's own
+indexing step instead.)
+
+Both capabilities are optional: if no compatible MCP is connected,
+skills degrade gracefully to built-in capabilities. See
 [Companion Tools](../recipes/multi-tool-setup.md#companion-tools-highly-recommended)
 for setup details and verification.
 
