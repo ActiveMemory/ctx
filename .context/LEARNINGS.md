@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-23 | Closing a stale TASKS.md item often means writing the test, not the code — verify before assuming the work is undone |
 | 2026-05-23 | Unicode block separation makes diacritic-stripping surgical — no per-script handling needed for Arabic/Indic/Hebrew/CJK |
 | 2026-05-22 | vitest's mocked `execFile` fires callbacks synchronously; real Node defers to `process.nextTick` — closure-capture patterns can TDZ-trap under the mock |
 | 2026-05-22 | Double-excluded tests rot compounding — re-enable cost = sum of all drift since last green, not just the original bug |
@@ -155,6 +156,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-23-003000] Closing a stale TASKS.md item often means writing the test, not the code — verify before assuming the work is undone
+
+**Context**: TASKS.md line 375 ("Improve hub failover client: distinguish auth errors from connection errors") had been open since 2026-04-08. On triage, `internal/hub/failover.go:61-63` already called `authErr(callErr)` and returned immediately on Unauthenticated/PermissionDenied; `internal/hub/err_check.go:22-30` `authErr()` checked exactly those two codes. The behavior was implemented in the original failover feature commit (8bcb6208) without the task being closed. But the test suite never asserted the invariant — three existing failover tests covered happy path, skip-bad-peer, and all-bad-peers, none of them exercised "auth fails → walk stops". A future refactor could have silently deleted the auth-fast-fail branch and all three would still pass. Commit 22cffc27 added `TestFailoverClient_FailsFastOnAuthError` and closed the task.
+
+**Lesson**: Stale TASKS.md items frequently describe work that's *already done in code* but *not asserted in tests*. The task stays open not because nothing happened but because nothing pinned the behavior down so the task author could mark it complete. Reading a task description and assuming the code surface is missing is a misdiagnosis. The right pattern: `git log` / `git blame` / grep the symbols the task names; if the implementation exists, the task's value shifts from "build the thing" to "lock the thing down with a test that would catch its regression". Closes the task AND defends the behavior.
+
+**Application**: When triaging TASKS.md, especially items older than a few weeks, run a "what's the implementation status?" sweep before scoping work. For each candidate: grep the function/file/behavior the task names; if it exists, check the test file for an assertion that exercises the named invariant (not just adjacent invariants). If the assertion is missing, the task closes by writing the regression test — frequently a single test function. This pattern applies to behavior-named tasks ("X should fail fast on Y", "Z should reject malformed W") much more than to feature-named tasks ("add the X command"). For ctx specifically, hub/connect/replication-adjacent tasks accreted this way during the original implementation push; the failover-auth task was one example, others (file locking on connect sync, fanout broadcast entry loss) are still on TASKS.md and may warrant the same triage.
 
 ---
 
