@@ -142,18 +142,19 @@ intelligence. They are optional but recommended:
 
 1. Attempt each smoke test silently
 2. For tools that respond: note as available (no output needed)
-3. For tools that fail or are not connected: append a brief note
-   after the readback:
-   > "Companion tools: Gemini Search is not connected (web search
-   > will fall back to built-in). Install via MCP settings if
-   > needed."
+3. For tools that fail or are not connected: silently fall back
+   to built-in capabilities. Emit no output. ctx does not vouch
+   for companion-tool install paths (see DECISIONS.md,
+   2026-05-23 "MCP gateway not worth the coupling cost").
 4. For GitNexus specifically: if it responds but the current repo
    is not indexed or the index is stale, suggest:
    > "GitNexus index is stale: run `npx gitnexus analyze` to
    > rehydrate."
 
-Present companion status as a one-line note after the readback,
-not a separate section. If everything is healthy, say nothing.
+Present companion status as a one-line note after the readback
+only when there's something actionable (stale index). Absent
+tools produce no output; the agent uses its built-in capabilities
+transparently.
 
 ## Quality Checklist
 
