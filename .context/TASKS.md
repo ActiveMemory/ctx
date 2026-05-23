@@ -394,6 +394,13 @@ TASK STATUS LABELS:
   races. Two sync processes (hook + manual) can both load the same LastSequence,
   process the same entries, and write duplicate content to .context/shared/.
   #priority:medium #added:2026-04-08-194557
+  Triaged 2026-05-23: a "lock" exists at
+  `internal/cli/connection/core/sync/state.go:42-50` but it's a check-then-write
+  TOCTOU pattern, not real locking — two concurrent syncs can both pass the
+  existence check. Filed as
+  [#93](https://github.com/ActiveMemory/ctx/issues/93) with proposed fixes
+  (atomic O_CREATE|O_EXCL or syscall.Flock) and the three regression tests
+  the fix should add.
 
 - [ ] Fix fanout broadcast entry loss: non-blocking send drops entries to slow
   listeners silently. Log when entries are dropped. Consider per-listener
