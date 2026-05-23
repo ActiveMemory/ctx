@@ -284,7 +284,7 @@ TASK STATUS LABELS:
   `--phase` flag too, and we can have a auditor/normalizer for the current
   task document; or a skill that does a semantic pass, or both too.
 
-- [ ] Localize the placeholder set used by `RejectPlaceholder`
+- [x] Localize the placeholder set used by `RejectPlaceholder`
   (decision add / learning add and any future body-flag validators).
   Move the shipped defaults out of `internal/config/validate/placeholder.go`
   Go constants into an embedded YAML asset, add a `.ctxrc placeholders:`
@@ -295,18 +295,26 @@ TASK STATUS LABELS:
   Ship `en` only in v1; ctx has no locale-specific assets yet, so the
   structure is established but no `tr.yaml` lands in this work.
   Spec: `specs/placeholder-i18n.md` #priority:high #added:2026-05-11
-  #prerequisite-for-locale-work
-  In progress (2026-05-22): prerequisite #1 of 3 landed — the
-  `internal/i18n` package with `Fold` (Unicode case folding via
-  `golang.org/x/text/cases`) is now the project-mandated
-  case-fold primitive, enforced by a new compliance AST test
-  (`TestNoDirectStringsToLower`) that bans direct
-  `strings.ToLower` calls outside `internal/i18n/`. No
-  allowlist; all 48 existing callsites swept across 33 files in
-  one go. Per `specs/i18n-fold-helper-and-ban.md`. Still pending:
-  (2) move placeholder defaults from Go constants to embedded
-  YAML asset; (3) add `.ctxrc placeholders:` override with
-  EXTEND semantics.
+  #prerequisite-for-locale-work #completed:2026-05-22
+  Done in three commits:
+  (1) `internal/i18n` package with `Fold` + AST ban on direct
+  `strings.ToLower` (see `specs/i18n-fold-helper-and-ban.md`,
+  commit 435d6670; 48 callsites swept).
+  (2) Default placeholder list moved to embedded
+  `internal/assets/i18n/placeholders/en.yaml` behind a
+  memoizing loader at `internal/assets/read/placeholders/`
+  (commit b78c853a; deleted the now-dead
+  `internal/config/validate/` package).
+  (3) `.ctxrc placeholders:` field added with EXTEND merge
+  semantics: `rc.Placeholders()` returns the union of
+  shipped defaults + user entries, folded and deduped. Schema
+  updated in `ctxrc.schema.json`. Five new rc tests cover
+  defaults-only, extend, Unicode-fold of user entries,
+  trim+empty-skip, and dedupe-after-fold; one validator
+  integration test (`TestRejectPlaceholderHonorsCtxrcExtensions`)
+  exercises the .ctxrc override end-to-end with a documented
+  Turkish dotted-I sanity check that the Fold semantics
+  preserve İ ≠ i.
 
 - [x] Establish `internal/i18n` package + ban direct
   `strings.ToLower` via AST test. Prerequisite for the

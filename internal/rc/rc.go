@@ -10,8 +10,11 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/placeholders"
+	"github.com/ActiveMemory/ctx/internal/config/asset"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
@@ -20,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 )
 
 // Default returns a new CtxRC with hardcoded default values.
@@ -377,6 +381,46 @@ func SpecNudgeMinLen() int {
 		return cfgEntry.SpecNudgeMinLen
 	}
 	return n
+}
+
+// Placeholders returns the active rejected-placeholder set
+// for body-flag validators (`ctx decision add` /
+// `ctx learning add`). EXTEND semantics: the shipped
+// defaults (loaded from
+// `internal/assets/i18n/placeholders/<locale>.yaml`) are
+// always present; any entries listed under `placeholders:`
+// in `.ctxrc` are appended after Unicode case folding
+// (via `internal/i18n.Fold`) and whitespace trimming.
+// Empty user entries are skipped; duplicates collapse to a
+// single set membership.
+//
+// The set keys are already case-folded; callers compare
+// against `i18n.Fold(strings.TrimSpace(input))`.
+//
+// Returns:
+//   - map[string]struct{}: folded placeholder set ready
+//     for O(1) lookup.
+//   - error: non-nil only if the embedded defaults YAML
+//     fails to load (build-time invariant violation).
+func Placeholders() (map[string]struct{}, error) {
+	defaults, loadErr := placeholders.Load(asset.LocaleEN)
+	if loadErr != nil {
+		return nil, loadErr
+	}
+	// Copy so caller mutations don't leak into the
+	// loader's memoized cache.
+	merged := make(map[string]struct{}, len(defaults)+len(RC().Placeholders))
+	for k := range defaults {
+		merged[k] = struct{}{}
+	}
+	for _, raw := range RC().Placeholders {
+		trimmed := strings.TrimSpace(raw)
+		if trimmed == "" {
+			continue
+		}
+		merged[i18n.Fold(trimmed)] = struct{}{}
+	}
+	return merged, nil
 }
 
 // FreshnessFiles returns the configured list of files to track for

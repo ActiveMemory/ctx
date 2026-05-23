@@ -362,6 +362,7 @@ func TestSchemaCoversCtxRC(t *testing.T) {
 		ClassifyRules       []int  `yaml:"classify_rules"`
 		SpecSignalWords     []int  `yaml:"spec_signal_words"`
 		SpecNudgeMinLen     int    `yaml:"spec_nudge_min_len"`
+		Placeholders        []int  `yaml:"placeholders"`
 		Notify              *int   `yaml:"notify"`
 		FreshnessFiles      []int  `yaml:"freshness_files"`
 		Tool                string `yaml:"tool"`

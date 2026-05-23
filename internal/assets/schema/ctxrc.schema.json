@@ -157,6 +157,13 @@
       "description": "Task content length above which a spec nudge fires regardless of signal words. Default: 150.",
       "minimum": 0
     },
+    "placeholders": {
+      "type": "array",
+      "description": "Extra placeholder strings rejected by `ctx decision add` / `ctx learning add` body-flag validators. EXTEND semantics: entries are appended to the shipped defaults (loaded from the embedded en.yaml), not replacing them. Useful for project vocabulary like Tarzan Turkish (`iptal`, `yapılacak`) where the user wants the shipped English list to keep applying. Matching is Unicode case-fold-insensitive after whitespace trimming; substring matches are accepted as legitimate prose. Empty entries are skipped.",
+      "items": {
+        "type": "string"
+      }
+    },
     "provenance_required": {
       "type": "object",
       "description": "Controls which provenance flags are required for ctx add. Default: all true. Set to false to relax per-project.",

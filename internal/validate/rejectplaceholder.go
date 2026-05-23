@@ -9,10 +9,9 @@ package validate
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/assets/read/placeholders"
-	"github.com/ActiveMemory/ctx/internal/config/asset"
 	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
 	"github.com/ActiveMemory/ctx/internal/i18n"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // RejectPlaceholder returns an error if value is empty,
@@ -22,12 +21,11 @@ import (
 // whitespace trimming. Only the entire trimmed input is
 // checked — substring matches are not rejected.
 //
-// The active set is the shipped default for the `en`
-// locale (loaded from
-// `internal/assets/i18n/placeholders/en.yaml`). A future
-// commit will extend this with `.ctxrc placeholders:`
-// override values (EXTEND semantics: user list appended
-// to defaults).
+// The active set is the merged result from [rc.Placeholders]:
+// the shipped default locale (loaded from
+// `internal/assets/i18n/placeholders/<locale>.yaml`) plus
+// any user-supplied entries from `.ctxrc placeholders:`
+// (EXTEND semantics — user list appended to defaults).
 //
 // Callers loop over their body flags themselves and call
 // this per (flag, value) pair so the wiring is visible at
@@ -44,12 +42,11 @@ func RejectPlaceholder(flag, value string) error {
 	if trimmed == "" {
 		return errCli.FlagEmpty(flag)
 	}
-	set, err := placeholders.Load(asset.LocaleEN)
-	if err != nil {
-		// The asset is embedded, so a load failure here
-		// is a build-time invariant violation, not a
-		// user-facing condition. Fail closed: reject the
-		// value so the operator notices.
+	set, loadErr := rc.Placeholders()
+	if loadErr != nil {
+		// The embedded defaults YAML failed to load.
+		// That's a build-time invariant violation, not
+		// user input. Fail closed so the operator notices.
 		return errCli.FlagPlaceholder(flag, value)
 	}
 	if _, hit := set[i18n.Fold(trimmed)]; hit {
