@@ -214,7 +214,14 @@ func TestRunAll_TimeoutEnforcement(t *testing.T) {
 	input := &HookInput{TriggerType: "context-add", Tool: "test"}
 
 	start := time.Now()
-	agg, err := RunAll(hooksDir, cfgTrigger.ContextAdd, input, 1*time.Second)
+	// 3s per-hook timeout (not 1s): under `go test ./...`
+	// parallel CPU pressure the "fast" hook can be
+	// queued behind the slow hook's SIGKILL delivery,
+	// then itself exceed 1s in fork/exec/exit. 3s still
+	// demonstrates timeout enforcement (sleep 30 hook is
+	// killed at 3s, far short of its 30s natural runtime)
+	// without the queued-behind-kill race.
+	agg, err := RunAll(hooksDir, cfgTrigger.ContextAdd, input, 3*time.Second)
 	elapsed := time.Since(start)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
