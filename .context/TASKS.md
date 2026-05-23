@@ -2628,7 +2628,20 @@ lands).
 
 ### Phase BE: AI Backend (Block A — issue #92)
 
-- [ ] Phase BE Task 10: write docs/recipes/local-inference-with-vllm.md (end-to-end ctx setup --backend vllm -> ctx ai ping -> ctx ai extract flow, single recipe per spec §Non-Goals) plus docs/cli/ai.md CLI reference for the new ctx ai namespace (ping + extract verbs, --backend flag, .ctxrc backends shape). Spec is explicit: ONE recipe, not a recipe-surface rework. Completes Phase BE. #session:8f8cab12 #branch:feat/vllm-integration #commit:671473c0 #added:2026-05-23-171408
+- [x] Phase BE Task 10: write docs/recipes/local-inference-with-vllm.md (end-to-end ctx setup --backend vllm -> ctx ai ping -> ctx ai extract flow, single recipe per spec §Non-Goals) plus docs/cli/ai.md CLI reference for the new ctx ai namespace (ping + extract verbs, --backend flag, .ctxrc backends shape). Spec is explicit: ONE recipe, not a recipe-surface rework. Completes Phase BE. #session:8f8cab12 #branch:feat/vllm-integration #commit:671473c0 #added:2026-05-23-171408
+  Done 2026-05-23. New `docs/cli/ai.md` documents the namespace,
+  ping + extract verbs, full backend roster table (vllm, openai,
+  openai-compatible, anthropic, ollama, lmstudio with default
+  endpoints + env-var names), and the `.ctxrc backends:` shape.
+  New `docs/recipes/local-inference-with-vllm.md` walks the
+  end-to-end vLLM flow in five steps (start vllm -> setup
+  --backend -> ping -> extract -> review/apply) plus
+  troubleshooting table and tips. Extended `docs/cli/setup.md`
+  with a `ctx setup --backend` section (the writer shipped in
+  1fea44dc was previously undocumented in cli ref). Registered
+  the recipe in `docs/recipes/index.md` under a new "AI Backends"
+  group and added `ctx ai` to `docs/cli/index.md` under
+  Integrations. Closes Phase BE.
 
 - [x] Expand Backend.Models(ctx context.Context) ([]string, error) interface method to give ctx ai ping its 'first model listed' enrichment per specs/ctx-ai-backend.md §Behavior. Current ping only confirms reachability; spec requires reporting the first model from /v1/models. Implementation sketch: (1) add Models method to Backend interface in internal/backend/types.go; (2) implement on *openAICompat in openaicompat.go by reusing the GET /v1/models call and parsing the data[].id array; (3) wire into internal/cli/ai/cmd/ping/run.go to surface 'backend X reachable, first model: Y'; (4) update write/ai InfoPingOK signature and YAML. Pulled out of Phase BE Task 7 closeout (Task 7 row in TASKS.md flags this). #session:8f8cab12 #branch:feat/vllm-integration #commit:671473c0 #added:2026-05-23-171359
   Done 2026-05-23. Added `Models(ctx) ([]string, error)` to the

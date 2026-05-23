@@ -207,6 +207,21 @@ entries into structured context files with heuristic classification.
 
 ---
 
+## AI Backends
+
+### [Local Inference with vLLM](local-inference-with-vllm.md)
+
+End-to-end flow for wiring a local vLLM server into `ctx` as an
+optional, fail-closed AI layer: start the server, write the entry
+with `ctx setup --backend vllm`, verify with `ctx ai ping`, drive a
+structured extraction with `ctx ai extract`. Every AI-produced
+edit lands in the proposal queue, not in canonical `.context/*.md`.
+
+**Uses**: `ctx setup --backend`, `ctx ai ping`, `ctx ai extract`,
+`ctx journal source`, `ctx decision/learning/task add`
+
+---
+
 ## Hooks and Notifications
 
 ### [Hook Output Patterns](hook-output-patterns.md)

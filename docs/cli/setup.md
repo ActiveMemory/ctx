@@ -60,3 +60,54 @@ ctx setup cline --write
 # Generate OpenCode plugin, skills, AGENTS.md, and global MCP config
 ctx setup opencode --write
 ```
+
+## `ctx setup --backend`
+
+Write an AI backend entry into `.ctxrc` instead of templating an
+editor tool. The `--backend` mode is mutually exclusive with the
+positional tool argument: backend writing and editor-tool
+templating are separate operations.
+
+```bash
+ctx setup --backend <name> [--endpoint <url>] [--api-key-env <var>]
+```
+
+The writer round-trips `.ctxrc` through a yaml.Node tree so
+unrelated top-level keys and comments are preserved. Re-running
+the same `--backend` name updates the existing entry in place;
+new names append.
+
+**Flags**:
+
+| Flag             | Description                                                                                  |
+|------------------|----------------------------------------------------------------------------------------------|
+| `--backend`      | Backend type label (`vllm`, `openai`, `anthropic`, `ollama`, `lmstudio`, `openai-compatible`) |
+| `--endpoint`     | Override the backend's default endpoint URL                                                  |
+| `--api-key-env`  | Override the env-var name the backend reads for its bearer token                             |
+
+Per-vendor defaults (endpoint + env-var name) auto-apply for the
+six known backends; user values in `.ctxrc` always win.
+
+**Examples**:
+
+```bash
+# Wire a local vLLM at the default endpoint
+ctx setup --backend vllm
+
+# Wire vLLM on a non-default port
+ctx setup --backend vllm --endpoint http://gpu-host:8080
+
+# Wire OpenAI with the canonical env-var name
+ctx setup --backend openai
+# (api_key_env defaults to OPENAI_API_KEY)
+
+# Wire a generic OpenAI-compatible endpoint with a custom key var
+ctx setup --backend openai-compatible \
+  --endpoint https://router.example.com \
+  --api-key-env ROUTER_API_KEY
+```
+
+See [`ctx ai`](ai.md#ctx-ai) for the verbs that dispatch through a
+configured backend, and the
+[Local Inference with vLLM](../recipes/local-inference-with-vllm.md)
+recipe for the end-to-end flow.

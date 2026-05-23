@@ -87,6 +87,7 @@ have been initialized by `ctx init` (otherwise commands return
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx setup`](setup.md#ctx-setup)             | Generate AI tool integration configs                     |
+| [`ctx ai`](ai.md#ctx-ai)                      | Dispatch through a configured AI backend (ping, extract) |
 | [`ctx steering`](steering.md#ctx-steering)    | Manage steering files (behavioral rules for AI tools)    |
 | [`ctx trigger`](trigger.md#ctx-trigger)       | Manage lifecycle triggers (scripts for automation)       |
 | [`ctx skill`](skill.md#ctx-skill)             | Manage reusable instruction bundles                      |
