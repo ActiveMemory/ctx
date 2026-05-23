@@ -148,6 +148,23 @@ const (
 	Until = "until"
 )
 
+// Setup-backend flag names. Used by the `ctx setup`
+// command's `--backend <name>` mode for templating an AI
+// backend entry into `.ctxrc`.
+const (
+	// Backend is the --backend flag for `ctx setup`,
+	// dispatching to the .ctxrc-templating path instead
+	// of the per-tool config writer.
+	Backend = "backend"
+	// Endpoint is the --endpoint flag for `ctx setup
+	// --backend`; the base URL of the backend server.
+	Endpoint = "endpoint"
+	// APIKeyEnv is the --api-key-env flag for `ctx setup
+	// --backend`; the name of the env var the backend
+	// will read the bearer token from at runtime.
+	APIKeyEnv = "api-key-env"
+)
+
 // Handover-write body flag names. Used by the
 // `ctx handover write` subcommand to bind body flags via the
 // shared flagbind helpers.

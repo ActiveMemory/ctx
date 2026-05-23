@@ -378,3 +378,39 @@ func DeployNoSteering(cmd *cobra.Command) {
 	cmd.Println(desc.Text(
 		text.DescKeyWriteSetupNoSteeringToSync))
 }
+
+// InfoBackendApplied prints the confirmation block for
+// `ctx setup --backend <name>`: the headline plus a
+// secondary line indicating whether `.ctxrc` was created,
+// updated in place, or appended to.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - name: the backend type label written.
+//   - path: absolute path of the `.ctxrc` that was
+//     written.
+//   - created: true when `.ctxrc` did not exist before.
+//   - updated: true when an existing entry was replaced
+//     in place; false when a new entry was appended (and
+//     created is false).
+func InfoBackendApplied(
+	cmd *cobra.Command,
+	name, path string,
+	created, updated bool,
+) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSetupBackendApplied),
+		name, path,
+	))
+	switch {
+	case created:
+		cmd.Println(desc.Text(text.DescKeyWriteSetupBackendCreated))
+	case updated:
+		cmd.Println(desc.Text(text.DescKeyWriteSetupBackendUpdated))
+	default:
+		cmd.Println(desc.Text(text.DescKeyWriteSetupBackendAppended))
+	}
+}

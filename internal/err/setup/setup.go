@@ -11,6 +11,28 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/entity"
+)
+
+const (
+	// ErrMissingToolOrBackend signals that `ctx setup` was
+	// invoked without either a positional tool name or
+	// `--backend <name>` flag. One must be supplied.
+	ErrMissingToolOrBackend = entity.Sentinel(
+		text.DescKeyErrSetupMissingToolOrBackend,
+	)
+	// ErrBackendAndToolConflict signals that `ctx setup`
+	// was invoked with BOTH a positional tool argument and
+	// the `--backend` flag. These are mutually exclusive
+	// dispatches.
+	ErrBackendAndToolConflict = entity.Sentinel(
+		text.DescKeyErrSetupBackendAndToolConflict,
+	)
+	// ErrBackendNameRequired signals that `--backend` was
+	// passed with an empty value.
+	ErrBackendNameRequired = entity.Sentinel(
+		text.DescKeyErrSetupBackendNameRequired,
+	)
 )
 
 // CreateDir wraps a failure to create a setup directory.
@@ -80,5 +102,50 @@ func SyncSteering(cause error) error {
 func MissingEmbeddedAsset(name string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrSetupMissingEmbeddedAsset), name,
+	)
+}
+
+// ReadCtxrc wraps a failure to read `.ctxrc` during
+// backend setup.
+//
+// Parameters:
+//   - path: the .ctxrc path
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: wrapped for operator-friendly output
+func ReadCtxrc(path string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrSetupReadCtxrc), path, cause,
+	)
+}
+
+// ParseCtxrc wraps a YAML parse failure on `.ctxrc`
+// during backend setup. The file is in user space, so
+// surface a clear cause.
+//
+// Parameters:
+//   - path: the .ctxrc path
+//   - cause: the underlying YAML parse error
+//
+// Returns:
+//   - error: wrapped for operator-friendly output
+func ParseCtxrc(path string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrSetupParseCtxrc), path, cause,
+	)
+}
+
+// MarshalCtxrc wraps a YAML marshal failure when
+// serializing the updated `.ctxrc` document.
+//
+// Parameters:
+//   - cause: the underlying YAML marshal error
+//
+// Returns:
+//   - error: wrapped for operator-friendly output
+func MarshalCtxrc(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrSetupMarshalCtxrc), cause,
 	)
 }

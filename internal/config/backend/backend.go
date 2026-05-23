@@ -51,6 +51,12 @@ const (
 	// DefaultEndpointLMStudio is the LM Studio default
 	// local listener address.
 	DefaultEndpointLMStudio = "http://localhost:1234"
+	// DefaultEndpointVLLM is the vLLM canonical default
+	// local listener address. Used by `ctx setup --backend
+	// vllm` when --endpoint is not passed; vLLM
+	// deployments routinely vary the port so the user can
+	// always override.
+	DefaultEndpointVLLM = "http://localhost:8000"
 )
 
 // Default API-key environment variable names for each

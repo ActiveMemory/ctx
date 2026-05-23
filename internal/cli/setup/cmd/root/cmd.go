@@ -10,10 +10,12 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreBackend "github.com/ActiveMemory/ctx/internal/cli/setup/core/backend"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	errSetup "github.com/ActiveMemory/ctx/internal/err/setup"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
@@ -29,7 +31,12 @@ import (
 //   - *cobra.Command: Configured setup command that
 //     accepts a tool name argument
 func Cmd() *cobra.Command {
-	var write bool
+	var (
+		write     bool
+		backend   string
+		endpoint  string
+		apiKeyEnv string
+	)
 
 	short, long := desc.Command(cmd.DescKeySetup)
 	c := &cobra.Command{
@@ -38,8 +45,19 @@ func Cmd() *cobra.Command {
 		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
 		Example:     desc.Example(cmd.DescKeySetup),
-		Args:        cobra.ExactArgs(1),
+		Args:        cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if backend != "" {
+				if len(args) > 0 {
+					return errSetup.ErrBackendAndToolConflict
+				}
+				return coreBackend.Setup(
+					cmd, backend, endpoint, apiKeyEnv,
+				)
+			}
+			if len(args) == 0 {
+				return errSetup.ErrMissingToolOrBackend
+			}
 			return Run(cmd, args, write)
 		},
 	}
@@ -47,6 +65,15 @@ func Cmd() *cobra.Command {
 	flagbind.BoolFlagP(c, &write,
 		cFlag.Write, cFlag.ShortWrite,
 		flag.DescKeySetupWrite,
+	)
+	flagbind.StringFlag(c, &backend,
+		cFlag.Backend, flag.DescKeySetupBackend,
+	)
+	flagbind.StringFlag(c, &endpoint,
+		cFlag.Endpoint, flag.DescKeySetupEndpoint,
+	)
+	flagbind.StringFlag(c, &apiKeyEnv,
+		cFlag.APIKeyEnv, flag.DescKeySetupAPIKeyEnv,
 	)
 
 	return c

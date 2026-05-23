@@ -655,6 +655,14 @@ write.setup-cline-sync:
   short: '  Syncs:   .clinerules/ (steering files)'
 write.setup-no-steering-to-sync:
   short: '  No steering files to sync (run ctx steering init first)'
+write.setup-backend-applied:
+  short: 'backend %q written to %s'
+write.setup-backend-created:
+  short: '  (created new .ctxrc)'
+write.setup-backend-updated:
+  short: '  (replaced existing entry)'
+write.setup-backend-appended:
+  short: '  (appended new entry)'
 
 write.skill-no-skills:
   short: 'No skills installed.'

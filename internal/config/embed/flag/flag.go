@@ -25,6 +25,15 @@ const (
 	DescKeyInitializeCaller = "initialize.caller"
 	// DescKeySetupWrite is the description key for the setup write flag.
 	DescKeySetupWrite = "setup.write"
+	// DescKeySetupBackend is the description key for the
+	// `ctx setup --backend` flag.
+	DescKeySetupBackend = "setup.backend"
+	// DescKeySetupEndpoint is the description key for the
+	// `ctx setup --endpoint` flag.
+	DescKeySetupEndpoint = "setup.endpoint"
+	// DescKeySetupAPIKeyEnv is the description key for the
+	// `ctx setup --api-key-env` flag.
+	DescKeySetupAPIKeyEnv = "setup.api-key-env"
 	// DescKeySteeringSyncAll is the description key for the steering sync all
 	// flag.
 	DescKeySteeringSyncAll = "steering.sync.all"

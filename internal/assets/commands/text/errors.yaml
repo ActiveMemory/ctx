@@ -438,6 +438,18 @@ err.setup.missing-embedded-asset:
   short: 'embedded asset missing: %s'
 err.setup.sync-steering:
   short: 'sync steering: %w'
+err.setup.missing-tool-or-backend:
+  short: 'ctx setup needs either a positional tool name or `--backend <name>`'
+err.setup.backend-and-tool-conflict:
+  short: '`--backend` is mutually exclusive with a positional tool argument; pass one or the other'
+err.setup.backend-name-required:
+  short: '`--backend` requires a non-empty backend type name'
+err.setup.read-ctxrc:
+  short: 'read .ctxrc at %s: %w'
+err.setup.parse-ctxrc:
+  short: 'parse .ctxrc at %s: %w'
+err.setup.marshal-ctxrc:
+  short: 'marshal updated .ctxrc: %w'
 err.skill.create-dest:
   short: 'skill: create destination: %w'
 err.skill.install:

@@ -64,4 +64,17 @@ const (
 	// DescKeyWriteSetupNoSteeringToSync is the message when no
 	// steering files are available for sync.
 	DescKeyWriteSetupNoSteeringToSync = "write.setup-no-steering-to-sync"
+	// DescKeyWriteSetupBackendApplied is the headline emitted
+	// after `ctx setup --backend` writes `.ctxrc`. Interpolates
+	// the backend name and the .ctxrc path.
+	DescKeyWriteSetupBackendApplied = "write.setup-backend-applied"
+	// DescKeyWriteSetupBackendCreated is the secondary line
+	// when `.ctxrc` did not exist before.
+	DescKeyWriteSetupBackendCreated = "write.setup-backend-created"
+	// DescKeyWriteSetupBackendUpdated is the secondary line
+	// when an existing entry was replaced in place.
+	DescKeyWriteSetupBackendUpdated = "write.setup-backend-updated"
+	// DescKeyWriteSetupBackendAppended is the secondary line
+	// when a new entry was appended to existing backends.
+	DescKeyWriteSetupBackendAppended = "write.setup-backend-appended"
 )

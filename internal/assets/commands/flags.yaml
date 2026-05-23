@@ -71,6 +71,12 @@ trigger.test.tool:
   short: Tool name for mock input
 setup.write:
   short: Write the configuration file instead of printing
+setup.backend:
+  short: Configure an AI backend in .ctxrc (vllm, openai, anthropic, ollama, lmstudio, openai-compatible) instead of templating an editor tool
+setup.endpoint:
+  short: Override the backend's default endpoint URL (e.g., http://localhost:8000 for vllm)
+setup.api-key-env:
+  short: Override the env-var name the backend reads for its bearer token
 initialize.reset:
   short: Reset an existing context (interactive only; backs up existing files to .context/.backup-init-<ISO>/ before overwriting)
 initialize.merge:

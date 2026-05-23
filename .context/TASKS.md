@@ -2508,13 +2508,43 @@ lands).
   fixtures). `wrappers_test.go` covers default-substitution and
   user-overrides-win for all four wrappers.
 
-- [ ] Extend the `ctx setup` family with `--backend <name>`:
+- [x] Extend the `ctx setup` family with `--backend <name>`:
   templates endpoint + auth wiring into `.ctxrc` and (where
   applicable) downstream AI-tool configs (`ANTHROPIC_BASE_URL`,
   `OPENAI_BASE_URL`). Honours existing env-var values: warn but
   do not overwrite. Lives in new `internal/cli/setup/core/backend/`
   subpackage. Spec: `specs/ctx-ai-backend.md` §Implementation.
   #priority:medium #added:2026-05-21
+  Done 2026-05-23. `.ctxrc` writing via yaml.v3 Node-tree
+  round-trip preserves unrelated top-level keys and comments.
+  Idempotent: re-running `ctx setup --backend X` with the same
+  name updates the existing entry in place; new names append.
+  New flags `--backend`, `--endpoint`, `--api-key-env` on
+  `ctx setup`; mutual-exclusive with the positional tool arg.
+  Per-vendor defaults (endpoint + env-var name) auto-applied
+  for the six known backends (vllm, openai, anthropic, ollama,
+  lmstudio, openai-compatible); user overrides always win.
+  New package `internal/cli/setup/core/backend/` houses
+  `Setup` / `Apply` / `Resolve` plus unexported yaml.Node
+  helpers; output flows through new
+  `writeSetup.InfoBackendApplied`. Errors in
+  `internal/err/setup/`: 3 sentinels (`ErrMissingToolOrBackend`,
+  `ErrBackendAndToolConflict`, `ErrBackendNameRequired`) +
+  3 wrapping constructors (`ReadCtxrc`, `ParseCtxrc`,
+  `MarshalCtxrc`). YAML key constants moved to
+  `internal/config/rc/` (`YAMLKeyBackends`,
+  `YAMLKeyBackendName`); default endpoint for vllm added to
+  `internal/config/backend/`. gosec G101 path exemptions
+  added to `.golangci.yml` for `internal/config/flag/` and
+  `internal/config/embed/flag/` (flag-name constants are
+  user-facing CLI strings, not credentials). Downstream-tool
+  env-var templating (writing `ANTHROPIC_BASE_URL` into
+  Claude settings, etc.) is deferred to a follow-up commit
+  per the spec's "(where applicable)" qualifier — per-tool
+  policy varies and deserves its own opt-in flags. 7
+  apply_test.go tests cover greenfield create, appends to
+  existing backends, idempotent update, no-timeout omits
+  field, preserves other keys, empty-but-existing file.
 
 - [ ] Build the AI command surface per the namespace decision from
   the first task. Minimum verbs: `ping` (reachability + first model

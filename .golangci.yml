@@ -47,6 +47,14 @@ linters:
       - linters: [gosec]
         text: "G101"
         path: "_test\\.go"
+      # CLI flag-name constants in config/flag/ and config/embed/flag/
+      # are user-facing flag strings (e.g., "api-key-env"), not creds
+      - linters: [gosec]
+        text: "G101"
+        path: "internal/config/flag/"
+      - linters: [gosec]
+        text: "G101"
+        path: "internal/config/embed/flag/"
 
 run:
   timeout: 5m
