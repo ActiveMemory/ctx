@@ -2546,7 +2546,7 @@ lands).
   existing backends, idempotent update, no-timeout omits
   field, preserves other keys, empty-but-existing file.
 
-- [ ] Build the AI command surface per the namespace decision from
+- [x] Build the AI command surface per the namespace decision from
   the first task. Minimum verbs: `ping` (reachability + first model
   listed) plus the validation consumer chosen below. All AI
   commands honour `--backend` flag (falls back to
@@ -2554,23 +2554,17 @@ lands).
   and surface upstream errors verbatim. Spec:
   `specs/ctx-ai-backend.md` §Interface. #priority:medium
   #added:2026-05-21
-  Namespace decision (Task 1) chose `ctx ai <verb>`; this task
-  implements `ctx ai ping` plus the validation-consumer verb.
-  Partial 2026-05-23: `ctx ai ping` shipped. Full task remains
-  open pending the validation-consumer verb (`ctx ai extract`)
-  AND the "first model listed" output addition to ping (requires
-  expanding Backend interface with `Models(ctx)` or similar).
-  Landed in this push: `internal/backend/factories.go`
-  (RegisterAll wires the six unexported factories to a Registry);
-  `internal/cli/ai/core/resolve/` (Build + Pick helpers that
-  construct a Registry from rc.Backends() + rc.DefaultBackend());
-  `internal/cli/ai/` parent cmd via `parent.Cmd` helper;
-  `internal/cli/ai/cmd/ping/` subcmd with `--backend` flag;
-  `internal/write/ai/` output helpers; ctx ai registered in
-  `internal/bootstrap/group.go` under the integrations group.
-  4 ping tests cover happy path, no-backends-configured (fails
-  with ErrNoBackends), unknown-named-backend (ErrBackendNotFound),
-  unreachable (ErrUnreachable + ECONNREFUSED chain).
+  Ping landed 2026-05-23 in `2569da68`: factories.RegisterAll
+  exposes the six unexported factories; resolve.Build/Pick
+  helpers construct a Registry from rc.Backends() +
+  rc.DefaultBackend(); ai parent via parent.Cmd; ai/cmd/ping/
+  with --backend flag; write/ai output helpers; ctx ai
+  registered in bootstrap under integrations. 4 ping tests
+  cover happy / no-backends / unknown-named / unreachable.
+  Extract landed 2026-05-23 in `a601c1cb`: see Task 9 row
+  below for the full breakdown. Outstanding: "first model
+  listed" output addition to ping needs a Backend.Models()
+  interface expansion; queued for next session.
 
 - [x] Add the deterministic-core boundary guard: a unit test (or
   lint check) that fails if `internal/cli/agent/`,
@@ -2592,7 +2586,7 @@ lands).
   Sanity probe confirmed the test catches a deliberate
   violation; probe removed.
 
-- [ ] Ship the validation consumer from block B: pick *one*
+- [x] Ship the validation consumer from block B: pick *one*
   extraction command (the spec recommends `ctx compact <input>
   --emit decisions,learnings,tasks,open-questions` as the cheapest
   per the brief). Implements the full pattern end-to-end:
@@ -2603,7 +2597,21 @@ lands).
   against a fake OpenAI-compatible httptest server. Spec:
   `specs/ctx-ai-backend.md` §Testing and Open Question #5.
   #priority:medium #added:2026-05-21
-  Validator chosen (Task 1): `ctx ai extract` (fresh verb in the
+  Done 2026-05-23 in `a601c1cb`. `ctx ai extract` reads stdin,
+  dispatches a JSON-mode chat completion (response_format
+  json_object) through the configured backend, writes a
+  proposal under `.context/proposals/<TS>-extract.md`.
+  Canonical `.context/*.md` files are never written directly;
+  a dedicated regression test (DoesNotTouchCanonicalFiles)
+  seeds TASKS.md and asserts bytes-identical before/after.
+  New packages: config/extract/ (prompt + template + role
+  labels), config/proposal/ (subdir + default slug),
+  err/proposal/ (Mkdir/Write/ReadInput/EmptyInput),
+  write/proposal/ (RFC3339-compact filename + kebab slug),
+  cli/ai/core/extract/ (Compose helper), cli/ai/cmd/extract/
+  (cmd + run). 4 extract tests cover happy / empty-input /
+  no-backend / canonical-files-untouched. Validator chosen
+  (Task 1): `ctx ai extract` (fresh verb in the
   ai namespace, not retrofit onto `ctx compact`). Proposal queue
   location chosen: `.context/proposals/<TS>-<slug>.md`,
   gitignored by default.
