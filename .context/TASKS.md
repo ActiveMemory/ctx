@@ -2630,6 +2630,24 @@ lands).
 
 - [ ] Phase BE Task 10: write docs/recipes/local-inference-with-vllm.md (end-to-end ctx setup --backend vllm -> ctx ai ping -> ctx ai extract flow, single recipe per spec §Non-Goals) plus docs/cli/ai.md CLI reference for the new ctx ai namespace (ping + extract verbs, --backend flag, .ctxrc backends shape). Spec is explicit: ONE recipe, not a recipe-surface rework. Completes Phase BE. #session:8f8cab12 #branch:feat/vllm-integration #commit:671473c0 #added:2026-05-23-171408
 
-- [ ] Expand Backend.Models(ctx context.Context) ([]string, error) interface method to give ctx ai ping its 'first model listed' enrichment per specs/ctx-ai-backend.md §Behavior. Current ping only confirms reachability; spec requires reporting the first model from /v1/models. Implementation sketch: (1) add Models method to Backend interface in internal/backend/types.go; (2) implement on *openAICompat in openaicompat.go by reusing the GET /v1/models call and parsing the data[].id array; (3) wire into internal/cli/ai/cmd/ping/run.go to surface 'backend X reachable, first model: Y'; (4) update write/ai InfoPingOK signature and YAML. Pulled out of Phase BE Task 7 closeout (Task 7 row in TASKS.md flags this). #session:8f8cab12 #branch:feat/vllm-integration #commit:671473c0 #added:2026-05-23-171359
+- [x] Expand Backend.Models(ctx context.Context) ([]string, error) interface method to give ctx ai ping its 'first model listed' enrichment per specs/ctx-ai-backend.md §Behavior. Current ping only confirms reachability; spec requires reporting the first model from /v1/models. Implementation sketch: (1) add Models method to Backend interface in internal/backend/types.go; (2) implement on *openAICompat in openaicompat.go by reusing the GET /v1/models call and parsing the data[].id array; (3) wire into internal/cli/ai/cmd/ping/run.go to surface 'backend X reachable, first model: Y'; (4) update write/ai InfoPingOK signature and YAML. Pulled out of Phase BE Task 7 closeout (Task 7 row in TASKS.md flags this). #session:8f8cab12 #branch:feat/vllm-integration #commit:671473c0 #added:2026-05-23-171359
+  Done 2026-05-23. Added `Models(ctx) ([]string, error)` to the
+  `Backend` interface; implemented on `*openAICompat` by issuing
+  `GET /v1/models` and parsing `data[].id` into an ordered slice
+  via a new `modelsResponse` wire shape. Empty-list responses
+  surface as new sentinel `ErrEmptyModels` + constructor
+  `EmptyModels(name)` so callers can distinguish "reachable but
+  unusable" from a transport failure. `ctx ai ping` now calls
+  `b.Models(ctx)` after a successful `Ping`, surfaces the first
+  model via the extended `writeAI.InfoPingOK(cmd, name, model)`
+  signature; YAML `write.ai-ping-ok` template now reads
+  `backend %q reachable; first model: %q`. vllm inherits Models
+  from the embedded openAICompat unchanged (cold-start retry
+  remains scoped to Ping; once Ping returns, the listener is up,
+  so a follow-up Models call doesn't need its own retry). New
+  test rows: openaicompat Models {happy, order-preserved,
+  empty, unhealthy, bad-JSON, unreachable} and a ping
+  `NoModelsServed` integration test. `make lint` clean; full
+  `go test ./...` green.
 
 - [ ] .context/proposals/* + !.context/proposals/.gitkeep missing from internal/config/file/ignore.go init template. The Task 1 decision body (DECISIONS 2026-05-22-220000) called for this addition alongside Phase BE's proposal-queue writer; the writer landed in a601c1cb but the gitignore template was never updated. Without it, fresh ctx init projects will commit AI-generated extract outputs by default. Two-line fix: add the entry to the WriteGitignore string in internal/config/file/ignore.go, mirroring the handovers/ entry shape. #session:8f8cab12 #branch:feat/vllm-integration #commit:671473c0 #added:2026-05-23-171343

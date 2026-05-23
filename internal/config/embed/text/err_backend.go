@@ -89,4 +89,11 @@ const (
 	// DescKeyErrBackendEmptyChoices is the wrapper format
 	// key for EmptyChoices; interpolates the backend name.
 	DescKeyErrBackendEmptyChoices = "err.backend.empty-choices"
+	// DescKeyErrBackendEmptyModelsMsg is the sentinel
+	// message lookup key for ErrEmptyModels.
+	DescKeyErrBackendEmptyModelsMsg = "err.backend.empty-models-msg"
+	// DescKeyErrBackendEmptyModels is the wrapper format
+	// key for EmptyModels; interpolates the sentinel and
+	// the offending backend name.
+	DescKeyErrBackendEmptyModels = "err.backend.empty-models"
 )

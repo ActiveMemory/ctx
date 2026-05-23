@@ -20,6 +20,9 @@ type fakeBackend struct{ name string }
 
 func (b *fakeBackend) Name() string               { return b.name }
 func (b *fakeBackend) Ping(context.Context) error { return nil }
+func (b *fakeBackend) Models(context.Context) ([]string, error) {
+	return []string{b.name + "/dummy"}, nil
+}
 func (b *fakeBackend) Complete(context.Context, Request) (Response, error) {
 	return Response{}, nil
 }

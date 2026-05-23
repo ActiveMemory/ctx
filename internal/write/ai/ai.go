@@ -21,12 +21,14 @@ import (
 // Parameters:
 //   - cmd: cobra command for output. Nil is a no-op.
 //   - name: the backend type label that responded.
-func InfoPingOK(cmd *cobra.Command, name string) {
+//   - model: the first model the upstream `/v1/models`
+//     response listed.
+func InfoPingOK(cmd *cobra.Command, name, model string) {
 	if cmd == nil {
 		return
 	}
 	cmd.Println(fmt.Sprintf(
-		desc.Text(text.DescKeyWriteAIPingOK), name,
+		desc.Text(text.DescKeyWriteAIPingOK), name, model,
 	))
 }
 

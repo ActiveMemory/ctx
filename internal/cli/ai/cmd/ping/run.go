@@ -39,6 +39,10 @@ func Run(cobraCmd *cobra.Command, backendName string) error {
 	if pingErr := b.Ping(cobraCmd.Context()); pingErr != nil {
 		return pingErr
 	}
-	writeAI.InfoPingOK(cobraCmd, b.Name())
+	models, modelsErr := b.Models(cobraCmd.Context())
+	if modelsErr != nil {
+		return modelsErr
+	}
+	writeAI.InfoPingOK(cobraCmd, b.Name(), models[0])
 	return nil
 }

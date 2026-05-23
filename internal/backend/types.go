@@ -31,6 +31,14 @@ type Backend interface {
 	// and a parseable model list. Wraps the underlying
 	// transport error otherwise.
 	Ping(ctx context.Context) error
+	// Models returns the model IDs the backend currently
+	// serves, in the order the upstream `/v1/models`
+	// response lists them. Used by `ctx ai ping` to surface
+	// the first model after a successful reachability
+	// check. Wraps the underlying transport / parse error
+	// on failure; returns [errBackend.ErrEmptyModels] when
+	// the server lists no models.
+	Models(ctx context.Context) ([]string, error)
 	// Complete issues a single non-streaming chat
 	// completion against `/v1/chat/completions`.
 	Complete(ctx context.Context, req Request) (Response, error)

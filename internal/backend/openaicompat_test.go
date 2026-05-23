@@ -106,6 +106,96 @@ func TestOpenAICompat_Ping_Unhealthy(t *testing.T) {
 	}
 }
 
+func TestOpenAICompat_Models_Happy(t *testing.T) {
+	srv := fakeOpenAIServer(t, testModel)
+	defer srv.Close()
+	b, err := newOpenAICompat(Config{Name: "x", Endpoint: srv.URL})
+	if err != nil {
+		t.Fatalf("ctor: %v", err)
+		return
+	}
+	models, modelsErr := b.Models(context.Background())
+	if modelsErr != nil {
+		t.Fatalf("Models: %v", modelsErr)
+	}
+	if len(models) != 1 || models[0] != testModel {
+		t.Errorf("Models = %v, want [%q]", models, testModel)
+	}
+}
+
+func TestOpenAICompat_Models_OrderPreserved(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"object":"list","data":[{"id":"a"},{"id":"b"},{"id":"c"}]}`))
+	}))
+	defer srv.Close()
+	b, _ := newOpenAICompat(Config{Name: "x", Endpoint: srv.URL})
+	models, err := b.Models(context.Background())
+	if err != nil {
+		t.Fatalf("Models: %v", err)
+	}
+	want := []string{"a", "b", "c"}
+	if len(models) != len(want) {
+		t.Fatalf("len = %d, want %d", len(models), len(want))
+	}
+	for i, m := range want {
+		if models[i] != m {
+			t.Errorf("models[%d] = %q, want %q", i, models[i], m)
+		}
+	}
+}
+
+func TestOpenAICompat_Models_Empty(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"object":"list","data":[]}`))
+	}))
+	defer srv.Close()
+	b, _ := newOpenAICompat(Config{Name: "x", Endpoint: srv.URL})
+	_, err := b.Models(context.Background())
+	if !errors.Is(err, errBackend.ErrEmptyModels) {
+		t.Fatalf("got %v, want ErrEmptyModels", err)
+	}
+}
+
+func TestOpenAICompat_Models_Unhealthy(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		http.Error(w, "engine starting", http.StatusServiceUnavailable)
+	}))
+	defer srv.Close()
+	b, _ := newOpenAICompat(Config{Name: "x", Endpoint: srv.URL})
+	_, err := b.Models(context.Background())
+	if !errors.Is(err, errBackend.ErrUnhealthyStatus) {
+		t.Fatalf("got %v, want ErrUnhealthyStatus", err)
+	}
+}
+
+func TestOpenAICompat_Models_BadJSON(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte("not json"))
+	}))
+	defer srv.Close()
+	b, _ := newOpenAICompat(Config{Name: "x", Endpoint: srv.URL})
+	_, err := b.Models(context.Background())
+	if err == nil || !strings.Contains(err.Error(), "parse response") {
+		t.Fatalf("got %v, want parse-response error", err)
+	}
+}
+
+func TestOpenAICompat_Models_Unreachable(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	url := srv.URL
+	srv.Close()
+	b, _ := newOpenAICompat(Config{Name: "x", Endpoint: url})
+	_, err := b.Models(context.Background())
+	if !errors.Is(err, errBackend.ErrUnreachable) {
+		t.Fatalf("got %v, want ErrUnreachable", err)
+	}
+}
+
 func TestOpenAICompat_Ping_Unreachable(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)

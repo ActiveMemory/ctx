@@ -664,7 +664,7 @@ write.setup-backend-updated:
 write.setup-backend-appended:
   short: '  (appended new entry)'
 write.ai-ping-ok:
-  short: 'backend %q reachable'
+  short: 'backend %q reachable; first model: %q'
 write.ai-extract-written:
   short: 'proposal written to %s'
 

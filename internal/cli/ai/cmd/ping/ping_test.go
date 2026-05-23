@@ -30,6 +30,8 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+const testFirstModel = "test-model"
+
 func newModelsServer(t *testing.T) *httptest.Server {
 	t.Helper()
 	mux := http.NewServeMux()
@@ -37,7 +39,20 @@ func newModelsServer(t *testing.T) *httptest.Server {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]any{
 			"object": "list",
-			"data":   []map[string]any{{"id": "test-model"}},
+			"data":   []map[string]any{{"id": testFirstModel}},
+		})
+	})
+	return httptest.NewServer(mux)
+}
+
+func newEmptyModelsServer(t *testing.T) *httptest.Server {
+	t.Helper()
+	mux := http.NewServeMux()
+	mux.HandleFunc("/v1/models", func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"object": "list",
+			"data":   []map[string]any{},
 		})
 	})
 	return httptest.NewServer(mux)
@@ -82,6 +97,28 @@ backends:
 	}
 	if !strings.Contains(out.String(), "reachable") {
 		t.Errorf("expected 'reachable' in output; got %q", out.String())
+	}
+	if !strings.Contains(out.String(), testFirstModel) {
+		t.Errorf("expected first model %q in output; got %q",
+			testFirstModel, out.String())
+	}
+}
+
+func TestPing_NoModelsServed(t *testing.T) {
+	srv := newEmptyModelsServer(t)
+	defer srv.Close()
+	declareProject(t, `default_backend: openai-compatible
+backends:
+  - name: openai-compatible
+    endpoint: `+srv.URL+`
+`)
+	cmd := aiPing.Cmd()
+	cmd.SetOut(&bytes.Buffer{})
+	cmd.SetErr(&bytes.Buffer{})
+	cmd.SetContext(context.Background())
+	err := cmd.Execute()
+	if !errors.Is(err, errBackend.ErrEmptyModels) {
+		t.Fatalf("got %v, want ErrEmptyModels", err)
 	}
 }
 

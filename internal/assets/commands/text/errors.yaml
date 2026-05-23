@@ -870,6 +870,10 @@ err.backend.read-response:
   short: 'read response from backend %q: %w'
 err.backend.empty-choices:
   short: 'backend %q returned no completion choices'
+err.backend.empty-models-msg:
+  short: 'backend reachable but lists no models'
+err.backend.empty-models:
+  short: '%w: backend %q reachable but lists no models'
 err.proposal.mkdir:
   short: 'mkdir %s: %w'
 err.proposal.write:

@@ -65,6 +65,66 @@ func (b *openAICompat) Ping(ctx context.Context) error {
 	return nil
 }
 
+// Models implements [Backend] by issuing
+// `GET <endpoint>/v1/models` and parsing the response
+// `data[].id` array. Reachability errors flow through
+// [errBackend.ErrUnreachable]; non-200 responses through
+// [errBackend.ErrUnhealthyStatus]; a 200 response with an
+// empty `data` array surfaces as
+// [errBackend.ErrEmptyModels] so callers can distinguish
+// "reachable but unusable" from a true transport failure.
+//
+// Parameters:
+//   - ctx: caller-provided context for cancellation.
+//
+// Returns:
+//   - []string: ordered list of model IDs as the server
+//     reported them.
+//   - error: nil on success, typed sentinel on failure.
+func (b *openAICompat) Models(ctx context.Context) ([]string, error) {
+	u := b.base.JoinPath(cfgBackend.PathV1, cfgBackend.PathModels).String()
+	req, reqErr := http.NewRequestWithContext(
+		ctx, http.MethodGet, u, nil,
+	)
+	if reqErr != nil {
+		return nil, errBackend.Unreachable(b.name, u, reqErr)
+	}
+	if b.apiKey != "" {
+		req.Header.Set(
+			cfgBackend.HeaderAuthorization,
+			cfgBackend.AuthBearerPrefix+b.apiKey,
+		)
+	}
+	resp, doErr := b.httpClient.Do(req)
+	if doErr != nil {
+		return nil, errBackend.Unreachable(b.name, u, doErr)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	raw, readErr := io.ReadAll(
+		io.LimitReader(resp.Body, cfgBackend.MaxResponseBytes),
+	)
+	if readErr != nil {
+		return nil, errBackend.ReadResponse(b.name, readErr)
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, errBackend.UnhealthyStatus(
+			b.name, resp.StatusCode, excerpt(raw),
+		)
+	}
+	var parsed modelsResponse
+	if unmarshalErr := json.Unmarshal(raw, &parsed); unmarshalErr != nil {
+		return nil, errBackend.ParseResponse(b.name, unmarshalErr)
+	}
+	if len(parsed.Data) == 0 {
+		return nil, errBackend.EmptyModels(b.name)
+	}
+	ids := make([]string, len(parsed.Data))
+	for i, m := range parsed.Data {
+		ids[i] = m.ID
+	}
+	return ids, nil
+}
+
 // Complete implements [Backend] by issuing
 // `POST <endpoint>/v1/chat/completions`. Maps the public
 // [Request] to the OpenAI wire shape, validates the

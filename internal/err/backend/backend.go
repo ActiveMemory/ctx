@@ -85,6 +85,14 @@ const (
 	ErrUpstreamStatus = entity.Sentinel(
 		text.DescKeyErrBackendUpstreamStatusMsg,
 	)
+	// ErrEmptyModels signals that `/v1/models` returned
+	// HTTP 200 with an empty `data` array. The backend is
+	// reachable but has no models loaded — distinct from
+	// transport failure so `ctx ai ping` can report a
+	// usable recovery hint. Wrapped by [EmptyModels].
+	ErrEmptyModels = entity.Sentinel(
+		text.DescKeyErrBackendEmptyModelsMsg,
+	)
 )
 
 // MissingEndpoint wraps [ErrMissingEndpoint] with the
@@ -245,6 +253,22 @@ func EmptyChoices(name string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrBackendEmptyChoices),
 		name,
+	)
+}
+
+// EmptyModels wraps [ErrEmptyModels] with the backend
+// name so users can tell which backend has no models
+// loaded.
+//
+// Parameters:
+//   - name: the backend type label.
+//
+// Returns:
+//   - error: wraps [ErrEmptyModels] for errors.Is.
+func EmptyModels(name string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrBackendEmptyModels),
+		ErrEmptyModels, name,
 	)
 }
 

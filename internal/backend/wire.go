@@ -88,3 +88,24 @@ type chatResponseMessage struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
 }
+
+// modelsResponse mirrors the OpenAI-compatible
+// `/v1/models` response payload. Only the `data[].id`
+// field is consumed; other fields (object, owned_by,
+// created) are intentionally absent so a wire version
+// bump does not break parsing.
+//
+// Fields:
+//   - Data: ordered list of available models.
+type modelsResponse struct {
+	Data []modelsResponseEntry `json:"data"`
+}
+
+// modelsResponseEntry is one entry in the models array.
+//
+// Fields:
+//   - ID: the model identifier accepted by the
+//     `/v1/chat/completions` `model` field.
+type modelsResponseEntry struct {
+	ID string `json:"id"`
+}
