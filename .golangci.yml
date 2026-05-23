@@ -38,6 +38,15 @@ linters:
       - linters: [gosec]
         text: "G101"
         path: "internal/config/embed/text/"
+      # Env-var name constants in config/backend/ name where to
+      # read credentials from; they are not credentials themselves
+      - linters: [gosec]
+        text: "G101"
+        path: "internal/config/backend/"
+      # Test files use sk-test-* literals as fixtures, not real keys
+      - linters: [gosec]
+        text: "G101"
+        path: "_test\\.go"
 
 run:
   timeout: 5m

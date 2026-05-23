@@ -18,6 +18,52 @@ const (
 	// NameVLLM is the registered backend type label for
 	// the vLLM wrapper (adds cold-start retry).
 	NameVLLM = "vllm"
+	// NameOpenAI is the registered backend type label for
+	// the OpenAI wrapper.
+	NameOpenAI = "openai"
+	// NameAnthropic is the registered backend type label
+	// for the Anthropic wrapper. Anthropic ships an
+	// OpenAI-compatible `/v1/chat/completions` endpoint;
+	// the wrapper inherits the contract floor and points
+	// at api.anthropic.com by default.
+	NameAnthropic = "anthropic"
+	// NameOllama is the registered backend type label for
+	// the Ollama wrapper.
+	NameOllama = "ollama"
+	// NameLMStudio is the registered backend type label
+	// for the LM Studio wrapper.
+	NameLMStudio = "lmstudio"
+)
+
+// Default endpoints for each per-vendor wrapper. Applied
+// only when Config.Endpoint is empty so the user override
+// in `.ctxrc` always wins.
+const (
+	// DefaultEndpointOpenAI is the OpenAI public API
+	// base URL.
+	DefaultEndpointOpenAI = "https://api.openai.com"
+	// DefaultEndpointAnthropic is the Anthropic public
+	// API base URL.
+	DefaultEndpointAnthropic = "https://api.anthropic.com"
+	// DefaultEndpointOllama is the Ollama default local
+	// listener address.
+	DefaultEndpointOllama = "http://localhost:11434"
+	// DefaultEndpointLMStudio is the LM Studio default
+	// local listener address.
+	DefaultEndpointLMStudio = "http://localhost:1234"
+)
+
+// Default API-key environment variable names for each
+// per-vendor wrapper. Applied only when Config.APIKeyEnv
+// is empty so the user override in `.ctxrc` always wins.
+// Ollama and LM Studio default to no auth — empty values
+// mean no Authorization header is sent.
+const (
+	// EnvOpenAIAPIKey is the canonical OpenAI key env var.
+	EnvOpenAIAPIKey = "OPENAI_API_KEY"
+	// EnvAnthropicAPIKey is the canonical Anthropic key
+	// env var.
+	EnvAnthropicAPIKey = "ANTHROPIC_API_KEY"
 )
 
 // URL scheme tokens accepted in Config.Endpoint. The

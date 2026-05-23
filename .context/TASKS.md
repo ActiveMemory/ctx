@@ -2483,7 +2483,7 @@ lands).
   empty-choices, cold-start retry-then-succeed, non-dial
   return-immediately, window-expires, context-cancelled.
 
-- [ ] Add the named-backend implementations: `openai`, `anthropic`,
+- [x] Add the named-backend implementations: `openai`, `anthropic`,
   `ollama`, `lmstudio` in `internal/backend/`. Each is a thin
   wrapper over `openaicompat` with backend-specific defaults
   (endpoint, auth header shape, env-var name). Anthropic uses the
@@ -2491,6 +2491,22 @@ lands).
   OpenAI-compatible floor for `/v1/chat/completions`. Spec:
   `specs/ctx-ai-backend.md` §Approach. #priority:medium
   #added:2026-05-21
+  Done 2026-05-23. Four per-vendor files (`openai.go`,
+  `anthropic.go`, `ollama.go`, `lmstudio.go`), each an unexported
+  constructor that fills empty Config fields with vendor defaults
+  then delegates to `newOpenAICompat`. User overrides in `.ctxrc`
+  always win — defaults only fill gaps. Anthropic uses its
+  OpenAI-compatible `/v1/chat/completions` endpoint (not native
+  Messages API; native Messages translation is out of thin-wrapper
+  scope). Ollama / LM Studio default to no auth (their default
+  installs are unauthenticated). New constants in
+  `internal/config/backend/`: NameOpenAI/Anthropic/Ollama/LMStudio,
+  DefaultEndpoint{OpenAI,Anthropic,Ollama,LMStudio},
+  Env{OpenAI,Anthropic}APIKey. gosec G101 path exemption added to
+  `.golangci.yml` for `internal/config/backend/` (env-var name
+  constants are not credentials) and for `_test.go` (sk-test-*
+  fixtures). `wrappers_test.go` covers default-substitution and
+  user-overrides-win for all four wrappers.
 
 - [ ] Extend the `ctx setup` family with `--backend <name>`:
   templates endpoint + auth wiring into `.ctxrc` and (where
