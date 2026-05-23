@@ -88,22 +88,52 @@ func TestRejectPlaceholderHonorsCtxrcExtensions(t *testing.T) {
 	}
 	testctx.Declare(t, tmpDir)
 
-	for _, v := range []string{"tbd", "TBD", "iptal", "IPTAL", "Iptal", "yapılacak"} {
+	// All Turkish casual variants of "iptal" reject against
+	// the single user entry. MatchKey normalizes İ→i and
+	// case-folds throughout, so the user only ever needs
+	// one spelling in .ctxrc.
+	for _, v := range []string{
+		"tbd", "TBD",
+		"iptal", "IPTAL", "Iptal", "İPTAL", "İptal",
+		"yapılacak",
+	} {
 		if err := RejectPlaceholder("context", v); err == nil {
-			t.Errorf("RejectPlaceholder(%q) = nil, want error (default+user merge)", v)
+			t.Errorf("RejectPlaceholder(%q) = nil, want error (default+user merge under MatchKey)", v)
 		}
 	}
 	// A non-placeholder still passes through.
 	if err := RejectPlaceholder("context", "a real reason"); err != nil {
 		t.Errorf("RejectPlaceholder(%q) = %v, want nil", "a real reason", err)
 	}
-	// Turkish dotted-I sanity check: the user list contains plain
-	// "iptal", so "İPTAL" (with dotted İ) does NOT match — i18n.Fold
-	// preserves the linguistic distinction between İ and i, by
-	// design (see specs/i18n-fold-helper-and-ban.md). A user who
-	// wants both rejected adds both spellings to .ctxrc.
-	if err := RejectPlaceholder("context", "İPTAL"); err != nil {
-		t.Errorf("RejectPlaceholder(\"İPTAL\") = %v, want nil "+
-			"(distinct from user-supplied \"iptal\" under Unicode fold)", err)
+}
+
+// TestRejectPlaceholder_DiacriticInsensitiveCrossKeyboard
+// exercises the German and French symmetry properties: a
+// user can write the placeholder in their .ctxrc with or
+// without diacritics, and casual typing in either direction
+// still rejects.
+func TestRejectPlaceholder_DiacriticInsensitiveCrossKeyboard(t *testing.T) {
+	tmpDir := t.TempDir()
+	ctxDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(ctxDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	// Mixed: German entry with sharp-s, French entry with
+	// accents. Both should reject their ASCII typings.
+	rcContent := "placeholders:\n  - Straße\n  - café\n"
+	if err := os.WriteFile(
+		filepath.Join(tmpDir, ".ctxrc"), []byte(rcContent), 0o644,
+	); err != nil {
+		t.Fatal(err)
+	}
+	testctx.Declare(t, tmpDir)
+
+	for _, v := range []string{
+		"Straße", "STRASSE", "strasse",
+		"café", "CAFÉ", "cafe", "CAFE",
+	} {
+		if err := RejectPlaceholder("context", v); err == nil {
+			t.Errorf("RejectPlaceholder(%q) = nil; should reject under MatchKey", v)
+		}
 	}
 }

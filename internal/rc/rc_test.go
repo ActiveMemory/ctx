@@ -625,22 +625,22 @@ func TestPlaceholders_UserExtendsDefaults(t *testing.T) {
 	}
 }
 
-func TestPlaceholders_FoldsUserEntriesCaseInsensitively(t *testing.T) {
+func TestPlaceholders_NormalizesUserEntriesDiacriticInsensitively(t *testing.T) {
 	declareContext(t, "placeholders:\n"+
 		"  - İPTAL\n")
 	set, err := Placeholders()
 	if err != nil {
 		t.Fatalf("Placeholders(): %v", err)
 	}
-	// "İPTAL" folds to "i̇ptal" (i + combining dot above).
-	// The validator will compare i18n.Fold(input) against
-	// this key; both "İPTAL" and "İptal" fold identically,
-	// so either should hit.
-	if _, ok := set[i18n.Fold("İPTAL")]; !ok {
-		t.Errorf("set missing folded user entry %q", i18n.Fold("İPTAL"))
-	}
-	if _, ok := set[i18n.Fold("İptal")]; !ok {
-		t.Errorf("Fold(İptal) should match the same set key as Fold(İPTAL)")
+	// "İPTAL" MatchKey-normalizes to "iptal" (Fold gives
+	// "i̇ptal"; strip-combining drops U+0307 → "iptal").
+	// Validator inputs go through the same MatchKey, so
+	// İPTAL / İptal / IPTAL / iptal all converge on the
+	// same set key.
+	for _, variant := range []string{"İPTAL", "İptal", "IPTAL", "iptal"} {
+		if _, ok := set[i18n.MatchKey(variant)]; !ok {
+			t.Errorf("set missing %q (MatchKey=%q)", variant, i18n.MatchKey(variant))
+		}
 	}
 }
 

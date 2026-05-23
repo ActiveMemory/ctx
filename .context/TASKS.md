@@ -296,7 +296,7 @@ TASK STATUS LABELS:
   structure is established but no `tr.yaml` lands in this work.
   Spec: `specs/placeholder-i18n.md` #priority:high #added:2026-05-11
   #prerequisite-for-locale-work #completed:2026-05-22
-  Done in three commits:
+  Done in four commits:
   (1) `internal/i18n` package with `Fold` + AST ban on direct
   `strings.ToLower` (see `specs/i18n-fold-helper-and-ban.md`,
   commit 435d6670; 48 callsites swept).
@@ -307,14 +307,24 @@ TASK STATUS LABELS:
   `internal/config/validate/` package).
   (3) `.ctxrc placeholders:` field added with EXTEND merge
   semantics: `rc.Placeholders()` returns the union of
-  shipped defaults + user entries, folded and deduped. Schema
-  updated in `ctxrc.schema.json`. Five new rc tests cover
-  defaults-only, extend, Unicode-fold of user entries,
-  trim+empty-skip, and dedupe-after-fold; one validator
-  integration test (`TestRejectPlaceholderHonorsCtxrcExtensions`)
-  exercises the .ctxrc override end-to-end with a documented
-  Turkish dotted-I sanity check that the Fold semantics
-  preserve İ ≠ i.
+  shipped defaults + user entries, normalized and deduped.
+  Schema updated in `ctxrc.schema.json`. Tests cover
+  defaults-only, extend, normalization of user entries,
+  trim+empty-skip, and dedupe-after-normalize.
+  (4) `i18n.MatchKey` added as the placeholder-matching
+  primitive: `Fold + NFKD + strip(U+0300..U+036F)`. Wired
+  into `placeholders.Load`, `rc.Placeholders`, and
+  `RejectPlaceholder` so vocabulary entries and user
+  input both normalize the same way. `İPTAL`/`İptal`/
+  `Straße`/`café` now reject against `iptal`/`strasse`/
+  `cafe` entries — a Turkish/German/French dev only
+  needs one spelling in `.ctxrc`. Script-essential marks
+  for Arabic, Indic, Hebrew, CJK are preserved (they
+  live outside the Latin combining-marks block).
+  Constants live in `internal/config/i18n/` per the
+  magic-value audit contract. Fold stays a strict
+  Unicode primitive; MatchKey is the casual-comparison
+  variant.
 
 - [x] Establish `internal/i18n` package + ban direct
   `strings.ToLower` via AST test. Prerequisite for the
@@ -2493,3 +2503,88 @@ the zensical shell-out pattern (recommended).
   ground-mode `mcp:` source kinds (which cover the KB-grounding angle for free);
   this phase is specifically about
   journal-corpus semantic recall (`ctx journal search "<query>"` shape).
+
+### Phase EVA: `ctx kb ev append` helper — eliminate Edit-anchor brittleness for append-only structured rows `#priority:medium #added:2026-05-23`
+
+**Pain point**: agents performing `/ctx-kb-ingest` passes append `EV-###`
+rows to `.context/kb/evidence-index.md` via the Edit tool. The append-only
+invariant means new rows go at the bottom; never reordered, never
+renumbered. Today's append pattern picks an `old_string` anchor on the
+NEW row's start (`| EV-NNN | ...`) and prepends the new EV before it — but
+when the anchor is the prior tail row, the natural-reading intent
+"insert after EV-NNN" gets accidentally implemented as "insert
+before EV-NNN" — silently swapping order. Observed 3+ times in a single
+DR-kb session (2026-05-23), each requiring a delete + re-insert correction
+that burns context and risks deeper mistakes during fixup.
+
+**Why this matters**: the `evidence-index.md` schema is a pipe-delimited
+table with append-only ordering as a structural invariant
+(`KB-RULES.md` §Source-coverage ledger + glossary expectations).
+Mis-ordered rows aren't caught by `ctx kb site build` because the
+build only validates references and Markdown syntax, not row ordering.
+A future row that cites `EV-948` before `EV-949` appears in the file
+would still resolve and build clean — but the resulting reading order
+is hostile to humans + future agents diffing the table.
+
+**Why a sort script is the WRONG fix**: sorting after the fact would
+normalize my own mistakes silently. If an agent accidentally minted
+the right ID with the wrong claim content (e.g., EV-950 carrying what
+should have been EV-949's claim), sorting would happily preserve the
+broken claim under the wrong ID. The actual issue is using a free-form
+text-editing tool (Edit) for what should be a typed append operation.
+
+**Proposed shape**: add `ctx kb ev append` CLI subcommand that takes
+structured input (claim summary + source short-name + locator + sha +
+confidence band + tags + extracted-date) and appends a correctly-formatted
+row to `evidence-index.md` after the highest existing `EV-###` row.
+Behaviors:
+
+- Read `evidence-index.md`; find the highest `EV-NNN`; assign new row
+  `EV-(NNN+1)`; refuse if `--ev` is supplied and doesn't match (catch
+  agents that try to mint a specific ID).
+- Validate confidence band is one of `{speculative, low, medium, high}`.
+- Validate tags are comma-separated kebab-case slugs.
+- Append the row + a newline; preserve all other content byte-for-byte.
+- Print the assigned `EV-NNN` to stdout for downstream citation.
+- Exit non-zero on any validation failure with a precise error.
+
+**Companion: `ctx kb ev next`** — returns the next available EV number
+without appending. Lets skills cite the EV ID inline in topic-page prose
+BEFORE the row exists, then mint it via `ctx kb ev append --ev EV-NNN`.
+
+**Skill changes**:
+
+- `/ctx-kb-ingest` skill prose updated to invoke `ctx kb ev append` /
+  `ctx kb ev next` instead of Edit-based row insertion.
+- Same pattern applies to `Q-###` rows in `outstanding-questions.md` —
+  consider `ctx kb question open` as a parallel helper if `outstanding-
+  questions.md` exhibits similar issues (no direct evidence yet but
+  same shape).
+
+Deliverables:
+
+- [ ] Spec the structured append surface (CLI flags + stdin shape +
+  validation rules + output contract). Tradeoff to decide: full
+  positional flags vs YAML/JSON stdin payload.
+- [ ] Implement `cmd/kb/ev/append.go` + `cmd/kb/ev/next.go`.
+- [ ] Add table-driven tests covering: highest-ID detection edge cases
+  (empty file, only header rows, malformed prior row); validation
+  failures; concurrent-write protection (file lock or
+  read-modify-write check); ID-skip detection (refuse if `--ev` would
+  create a gap).
+- [ ] Update `/ctx-kb-ingest` skill prose to use the new CLI instead
+  of Edit anchors.
+- [ ] Update `KB-RULES.md` if necessary to make the helper the
+  blessed path for `EV-###` appends.
+- [ ] Optionally extend to `ctx kb question open` for `Q-###` rows
+  with the same anti-pattern protection.
+
+Context: filed 2026-05-23 after observing 3+ Edit-anchor swap mistakes
+during a single DR-kb session that drained ~15 EVs across 9 ingest passes.
+Each mistake was self-corrected but required a delete + re-insert that
+burned context and added rework. The pattern would compound across the
+kb's lifetime as more agents append rows; treating it as a tooling gap
+rather than a discipline problem is the long-term fix. Source pointer:
+DR-kb session a5736210 closeouts under
+`~/Desktop/WORKSPACE/things-wtf-disaster-recovery-next/.context/ingest/closeouts/`
+20260523T044000Z + 20260523T060000Z + 20260523T080000Z reference the issue.

@@ -389,17 +389,22 @@ func SpecNudgeMinLen() int {
 // defaults (loaded from
 // `internal/assets/i18n/placeholders/<locale>.yaml`) are
 // always present; any entries listed under `placeholders:`
-// in `.ctxrc` are appended after Unicode case folding
-// (via `internal/i18n.Fold`) and whitespace trimming.
-// Empty user entries are skipped; duplicates collapse to a
-// single set membership.
+// in `.ctxrc` are appended after normalization via
+// [i18n.MatchKey] (Unicode case fold + diacritic strip)
+// and whitespace trimming. Empty user entries are
+// skipped; duplicates collapse to a single set
+// membership.
 //
-// The set keys are already case-folded; callers compare
-// against `i18n.Fold(strings.TrimSpace(input))`.
+// The set keys are MatchKey-normalized; callers compare
+// against `i18n.MatchKey(strings.TrimSpace(input))`. The
+// diacritic-insensitive contract means casual keyboard
+// variation between vocabulary entries and user input
+// matches transparently: `İPTAL` hits `iptal`, `Straße`
+// hits `strasse`, `café` hits `cafe`.
 //
 // Returns:
-//   - map[string]struct{}: folded placeholder set ready
-//     for O(1) lookup.
+//   - map[string]struct{}: normalized placeholder set
+//     ready for O(1) lookup.
 //   - error: non-nil only if the embedded defaults YAML
 //     fails to load (build-time invariant violation).
 func Placeholders() (map[string]struct{}, error) {
@@ -418,7 +423,7 @@ func Placeholders() (map[string]struct{}, error) {
 		if trimmed == "" {
 			continue
 		}
-		merged[i18n.Fold(trimmed)] = struct{}{}
+		merged[i18n.MatchKey(trimmed)] = struct{}{}
 	}
 	return merged, nil
 }

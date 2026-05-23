@@ -16,10 +16,19 @@ import (
 
 // RejectPlaceholder returns an error if value is empty,
 // whitespace-only, or matches the active placeholder set
-// (TBD, see chat, n/a, etc.). Matching is Unicode
-// case-fold-insensitive (via internal/i18n.Fold) after
+// (TBD, see chat, n/a, etc.). Matching is case- and
+// diacritic-insensitive (via [i18n.MatchKey]) after
 // whitespace trimming. Only the entire trimmed input is
 // checked — substring matches are not rejected.
+//
+// Diacritic-insensitivity means a Turkish dev typing
+// `İPTAL`, `İptal`, or `iptal` all reject against a
+// single `iptal` entry in `.ctxrc`; a German dev typing
+// `Straße` rejects against `strasse`; etc. Script-essential
+// marks (Arabic hamza, Indic vowel signs, Hebrew niqqud)
+// are preserved — they're outside the Latin combining-marks
+// block that MatchKey strips. See specs/i18n-fold-helper-
+// and-ban.md for the full contract.
 //
 // The active set is the merged result from [rc.Placeholders]:
 // the shipped default locale (loaded from
@@ -49,7 +58,7 @@ func RejectPlaceholder(flag, value string) error {
 		// user input. Fail closed so the operator notices.
 		return errCli.FlagPlaceholder(flag, value)
 	}
-	if _, hit := set[i18n.Fold(trimmed)]; hit {
+	if _, hit := set[i18n.MatchKey(trimmed)]; hit {
 		return errCli.FlagPlaceholder(flag, value)
 	}
 	return nil

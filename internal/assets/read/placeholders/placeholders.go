@@ -30,9 +30,16 @@ var loadedMu sync.RWMutex
 // lazily on first Load(locale).
 var loaded = make(map[string]map[string]struct{})
 
-// Load returns the case-folded placeholder set for locale,
+// Load returns the normalized placeholder set for locale,
 // memoized on first call per locale. Callers compare
-// against `i18n.Fold(strings.TrimSpace(input))`.
+// against `i18n.MatchKey(strings.TrimSpace(input))`.
+//
+// Set keys are pre-normalized via [i18n.MatchKey] (case
+// fold + diacritic strip) so the validator hot path is a
+// single MatchKey + O(1) lookup. The same primitive runs
+// on YAML entries at load time, so a casual user typing
+// `iptal` hits a vocabulary entry written as `İptal`,
+// and vice versa.
 //
 // Parameters:
 //   - locale: locale identifier matching a file under
@@ -41,9 +48,9 @@ var loaded = make(map[string]map[string]struct{})
 //     `asset.LocaleEN`).
 //
 // Returns:
-//   - map[string]struct{}: the folded placeholder set.
-//     Keys are already case-folded; callers must fold
-//     their input before lookup.
+//   - map[string]struct{}: the normalized placeholder
+//     set. Keys are already MatchKey-normalized; callers
+//     must apply MatchKey to their input before lookup.
 //   - error: non-nil if the locale file is missing or the
 //     YAML is malformed.
 func Load(locale string) (map[string]struct{}, error) {
@@ -66,7 +73,7 @@ func Load(locale string) (map[string]struct{}, error) {
 
 	set := make(map[string]struct{}, len(parsed.Placeholders))
 	for _, raw := range parsed.Placeholders {
-		set[i18n.Fold(raw)] = struct{}{}
+		set[i18n.MatchKey(raw)] = struct{}{}
 	}
 
 	loadedMu.Lock()
