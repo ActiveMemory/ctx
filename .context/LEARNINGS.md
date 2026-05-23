@@ -17,6 +17,8 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-22 | Group git flag constants by subcommand, not by "loose flags" — cross-group flags enable wrong-subcommand bugs |
+| 2026-05-22 | `git rev-parse` echoes unknown long-flag args back as literal stdout with exit 0 — the error guard never trips |
 | 2026-05-22 | Cross-language coverage gap: TS-typed integrations are a fourth surface beyond Go |
 | 2026-05-21 | Sentinel-removal refactors cascade through test surface |
 | 2026-05-20 | macOS /var symlink trips path-equality; use EvalSymlinks with parent-resolution fallback |
@@ -150,6 +152,26 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-22-220100] Group git flag constants by subcommand, not by "loose flags" — cross-group flags enable wrong-subcommand bugs
+
+**Context**: `internal/config/git/git.go` had a constant group commented "Rev-parse flags" that contained `FlagShowCurrent`, but `--show-current` is a `git branch` flag — rev-parse doesn't recognize it. The misclassification meant `internal/gitmeta/branch.go` confidently wrote `Run(cfgGit.RevParse, cfgGit.FlagShowCurrent, ...)` and the call site looked internally consistent at review time: the constants it imported all came from the "Rev-parse flags" group. The bug (literal `branch: --show-current` in handover frontmatter) shipped because the constants file said the flag belonged where it didn't. Fixed in commit 5670f5b2 by splitting `FlagShowCurrent` into a new "Branch subcommand flags" group.
+
+**Lesson**: When flag constants are grouped only by "what command surface they appear on" (e.g. "loose CLI flags") rather than by the subcommand they're actually valid for, future call sites can mix-and-match constants that the comment says are compatible but git rejects. The group comment functions as informal type information; let it tell the truth.
+
+**Application**: In `internal/config/git/git.go` and any similar config package wrapping a CLI's flag surface, group constants by the subcommand whose argv they're valid in (`// Branch subcommand flags`, `// Rev-parse flags`, `// Log subcommand flags`). Flags that genuinely span subcommands (`-C`, `--`) go under a separate "Cross-subcommand flags" group with the spanning explicitly called out. When adding a new flag constant, the first question is "which `git X` subcommand accepts this?" — the answer dictates the group.
+
+---
+
+## [2026-05-22-220000] `git rev-parse` echoes unknown long-flag args back as literal stdout with exit 0 — the error guard never trips
+
+**Context**: `internal/gitmeta.resolveBranchOrDetached` was invoking `git rev-parse --show-current` and returning the result if `runErr == nil`. The function has a defensive fallback (`return BranchDetached` on error), but the error path never fired because rev-parse exits 0 even when handed an unknown long-flag — it just echoes the literal arg back as its only line of output. Result: the resolver returned the string `"--show-current"` verbatim and shipped it into handover frontmatter. Confirmed on git 2.50.0: `$ git rev-parse --show-current` → `--show-current` (exit 0); compare `$ git rev-parse --not-a-real-flag` → same echo-back behavior.
+
+**Lesson**: A non-zero exit guard around a git invocation does NOT catch wrong-subcommand-with-wrong-flag bugs against rev-parse. rev-parse treats unknown args as candidate revision/object names, fails to resolve them, and falls back to echoing them as literal output rather than erroring. Other subcommands (`git branch --bogus`) error loudly with exit ≠ 0; rev-parse specifically is the one that swallows silently. The defensive `if err != nil { return fallback }` pattern is necessary but not sufficient when wrapping rev-parse.
+
+**Application**: When wrapping `git rev-parse`, validate the output shape (e.g. length, prefix, hex-ness for SHAs, no `--` prefix for branch names) before returning, not just the exit code. The `TestResolveHead_RealRepoReturnsBranchName` regression test that landed with the fix asserts both `ref.Branch == "trunk"` AND `!strings.Contains(ref.Branch, "--")` — the second assertion is the one that would catch a future regression where someone reintroduces a different wrong-flag invocation.
 
 ---
 
