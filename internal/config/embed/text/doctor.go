@@ -14,7 +14,7 @@ const (
 	DescKeyDoctorCheckDidNotRun = "doctor.check-did-not-run"
 	// DescKeyDoctorCheckDidNotRunCascade is emitted once for the
 	// first context-dependent check that fails with
-	// [errCtx.ErrDirNotDeclared]; later dependent checks are
+	// [errCtx.ErrNoCtxHere]; later dependent checks are
 	// silently skipped so the report shows one loud line instead
 	// of the same message N times.
 	DescKeyDoctorCheckDidNotRunCascade = "doctor.check-did-not-run-cascade"

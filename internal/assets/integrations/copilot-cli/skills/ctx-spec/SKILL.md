@@ -6,12 +6,33 @@ description: "Scaffold a feature spec from the project template. Use when planni
 Scaffold a new spec from `specs/tpl/spec-template.md` and walk through
 each section with the user to produce a complete design document.
 
+## Canonical Chain
+
+The project's design-to-implementation pipeline is:
+
+```text
+/ctx-brainstorm  →  /ctx-plan  →  /ctx-spec  →  /ctx-implement
+   (vague)      (contested)    (committed)     (execution)
+```
+
+`/ctx-spec` is the third step. It consumes the *debated brief*
+produced by `/ctx-plan` (via `--brief <path>`) or writes a fresh
+spec interactively when no brief is needed. Specs are committed
+artifacts under `specs/`; briefs are working state under
+`.context/briefs/` that the spec absorbs.
+
+Do not invert the order. A spec without a settled bet ahead of
+it is a wishlist; running `/ctx-plan` after `/ctx-spec` is fixing
+the foundation while the building is up.
+
 ## When to Use
 
 - Before implementing a non-trivial feature
 - When a task says "Spec: `specs/X.md`" and the file does not exist
 - When `/ctx-brainstorm` has produced a validated design that needs
   a written artifact
+- When `/ctx-plan` has produced a debated brief that needs a
+  committed spec (use `--brief <path>`)
 - When the user says "let's spec this out" or "write a spec for..."
 
 ## When NOT to Use
@@ -19,6 +40,8 @@ each section with the user to produce a complete design document.
 - Bug fixes or small changes (just do them)
 - When a spec already exists (read it instead)
 - When the design is still vague (use `/ctx-brainstorm` first)
+- When the bet is contested but not yet stress-tested (use
+  `/ctx-plan` first; its output is the brief this skill consumes)
 
 ## Usage Examples
 

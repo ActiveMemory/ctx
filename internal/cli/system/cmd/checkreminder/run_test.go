@@ -17,7 +17,6 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkreminder"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -38,7 +37,7 @@ func TestRun_NoLeakInUninitializedProject(t *testing.T) {
 	ctxDir := filepath.Join(tempDir, dir.Context) // not on disk
 	stateDir := filepath.Join(ctxDir, dir.State)
 
-	t.Setenv(env.CtxDir, ctxDir)
+	t.Chdir(tempDir)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
 

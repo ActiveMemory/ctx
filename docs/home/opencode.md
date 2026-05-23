@@ -45,10 +45,10 @@ Install the `ctx` binary first ([installation docs](getting-started.md#installat
 then run from your project root:
 
 ```bash
-ctx setup opencode --write && ctx init && eval "$(ctx activate)"
+ctx setup opencode --write && ctx init
 ```
 
-This does three things:
+This does two things:
 
 1. **`ctx setup opencode --write`**: generates the project-local OpenCode plugin,
    skills, and `AGENTS.md`, then merges the `ctx` MCP server into OpenCode's
@@ -58,7 +58,6 @@ This does three things:
    project-local config; the same reason the Copilot CLI integration
    writes to `~/.copilot/mcp-config.json`.
 2. **`ctx init`**: creates the `.context/` directory with template files.
-3. **`eval "$(ctx activate)"`**: binds `CTX_DIR` for your shell.
 
 ### What Gets Created
 
@@ -83,7 +82,7 @@ do anything; it just works.
 | Agent idle | `session.idle` | Runs persistence and task-completion checks (silent: output is buffered, not surfaced to the TUI) |
 | After `git commit` | `tool.execute.after` | Runs `ctx system post-commit` to capture context state |
 | After file edit | `tool.execute.after` | Runs `ctx system check-task-completion` to detect silent task completions |
-| Every shell call | `shell.env` | Injects `CTX_DIR` so all `ctx` commands in the agent's shell resolve to the right project |
+| Every shell call | `shell.env` | Ensures the agent's shell `cd`s to the project root so all `ctx` commands resolve to the right project |
 | Context compaction | `experimental.session.compacting` | Pushes `ctx system bootstrap` output into the compaction context so the agent retains breadcrumbs to re-read context files post-compaction |
 
 The compaction hook matters most. When OpenCode compresses your context
@@ -158,7 +157,7 @@ refreshed plugin**. OpenCode only loads plugins at launch, not mid-session.
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| `opencode mcp list` shows `ctx ✗ failed MCP error -32000: Connection closed` | `CTX_DIR` not resolving in the MCP subprocess | Re-run `ctx setup opencode --write` to regenerate the sh-wrapper that sets `CTX_DIR` |
+| `opencode mcp list` shows `ctx ✗ failed MCP error -32000: Connection closed` | MCP subprocess started outside the project root | Re-run `ctx setup opencode --write` to regenerate the sh-wrapper that `cd`s to the project root before invoking `ctx` |
 | Plugin installed but no hooks fire | Flat-file vs. subdirectory discovery mismatch (OpenCode requires `.opencode/plugins/<name>.ts`, not a subfolder) | Verify the plugin is at `.opencode/plugins/ctx.ts`. Check with `opencode --print-logs --log-level DEBUG` |
 | `ctx agent` Markdown leaking into the TUI | BunShell command missing `.nothrow().quiet()` | Update to the latest plugin: `ctx setup opencode --write` and restart |
 

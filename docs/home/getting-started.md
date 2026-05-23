@@ -250,22 +250,7 @@ tool scoping are covered in
 [Writing Steering Files](../recipes/steering.md) and
 [`ctx steering`](../cli/steering.md).
 
-### 3. Activate the Project
-
-Tell `ctx` which `.context/` directory the rest of these commands
-should use:
-
-```bash
-eval "$(ctx activate)"
-```
-
-You only need to run this once per terminal. If you skip it, the
-next steps fail with `Error: no context directory specified`. Direnv
-users can wire it into `.envrc` and forget about it. For more
-options (multiple `.context/` directories, scripts, CI), see
-[Activating a Context Directory](../recipes/activating-context.md).
-
-### 4. Check Status
+### 3. Check Status
 
 ```bash
 ctx status
@@ -273,7 +258,7 @@ ctx status
 
 Shows context summary: files present, token estimate, and recent activity.
 
-### 5. Start Using with AI
+### 4. Start Using with AI
 
 With Claude Code (*and the `ctx` plugin installed*), context loads automatically
 via hooks.
@@ -290,7 +275,7 @@ For other tools, paste the output of:
 ctx agent --budget 8000
 ```
 
-### 5B. Set Up for Your AI Tool
+### 5. Set Up for Your AI Tool
 
 If you use an MCP-compatible tool, generate the integration config
 with `ctx setup`:

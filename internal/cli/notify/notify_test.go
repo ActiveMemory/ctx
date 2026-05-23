@@ -33,8 +33,6 @@ func setupCLITest(t *testing.T) (string, func()) {
 		p := filepath.Join(ctxPath, f)
 		_ = os.WriteFile(p, []byte("# "+f+"\n"), 0o600)
 	}
-	// Declare context dir explicitly (explicit-context-dir model).
-	t.Setenv("CTX_DIR", ctxPath)
 	rc.Reset()
 	return tempDir, func() {
 		_ = os.Chdir(origDir)

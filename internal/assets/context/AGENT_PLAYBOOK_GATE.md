@@ -36,8 +36,21 @@ When a task involves reading, modifying, or reasoning about a file:
 Do not begin implementation without a spec.
 
 Every commit requires a `Spec:` trailer. Every piece of work needs
-a spec; no exceptions. Scale the spec to the work. Use `/ctx-spec`
-to scaffold.
+a spec; no exceptions. Scale the spec to the work.
+
+The design-to-implementation chain is:
+
+```text
+/ctx-brainstorm  →  /ctx-plan  →  /ctx-spec  →  /ctx-implement
+   (vague)      (contested)    (committed)     (execution)
+```
+
+`/ctx-brainstorm` shapes a vague idea into a bet. `/ctx-plan`
+attacks the bet and writes a debated brief to
+`.context/briefs/<TS>-<slug>.md`. `/ctx-spec` (optionally
+`--brief <path>`) absorbs the brief into a committed spec under
+`specs/`. Skip the predecessors only when the step's input is
+already settled.
 
 ## Proactive Persistence
 

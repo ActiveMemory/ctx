@@ -3,7 +3,13 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
-| 2026-05-17 | entity.Sentinel lives in internal/entity/ because the cross-package-types audit treats entity/ as the canonical home for shared types |
+| 2026-05-22 | OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored |
+| 2026-05-21 | Substrate vs. artifact placement: .context/ vs. project root |
+| 2026-05-21 | Spec steps 1+2 merged into a single commit (cwd-anchored-context) |
+| 2026-05-20 | Anchor ctx to CWD; drop activate, drop env-var resolver, drop all walks (proposed) |
+| 2026-05-20 | ctx activate is strict-CWD; drop upward walk |
+| 2026-05-20 | Gitignore .context/handovers/; track only .gitkeep |
+| 2026-05-17 | `entity.Sentinel` lives in `internal/entity/` because the cross-package-types audit treats `entity/` as the canonical home for shared types |
 | 2026-05-16 | Phase KB lifts the current upstream editorial-pipeline shape, superseding the 4-phase predecessor in the brief |
 | 2026-05-11 | Embedded and separately-published harnesses use distinct CI and release pipelines |
 | 2026-05-11 | Embedded foreign-language assets under internal/assets/ are intentional, not a smell |
@@ -141,6 +147,90 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-22-161800] OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored
+
+**Status**: Accepted
+
+**Context**: specs/cwd-anchored-context.md changed ctx's resolver from CTX_DIR env-var to $PWD/.context/. The opencode plugin (internal/assets/integrations/opencode/plugin/index.ts) previously injected CTX_DIR into the agent's shell tool via the shell.env hook so agent-issued 'ctx' commands resolved to the right project. Under cwd-anchored, ctx no longer reads CTX_DIR; the only way to make ctx resolve correctly is to ensure the shell tool's cwd is the project root. But @opencode-ai/plugin v1.4.x exposes only 'env' on the shell.env hook output type ({ env: Record<string, string>; }) — no 'cwd' field. The plugin cannot force the agent shell into the project root from inside the SDK contract.
+
+**Decision**: OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored
+
+**Rationale**: Decision: drop the shell.env handler entirely and document that users must launch OpenCode from the project root. Plugin-internal subprocess calls (ctx.$.cwd(ctx.directory)) remain anchored, so the ceremony invocations (session.created, session.idle, tool.execute.after, experimental.session.compacting) still work. Only the agent-issued shell commands lack an anchoring channel. Alternatives considered: (1) keep the handler with a dummy env injection 'in case the SDK adds cwd' — rejected as dead code with no semantic load; (2) inject PWD/OLDPWD to influence the shell's cwd — rejected as brittle and outside the SDK type contract; (3) patch @opencode-ai/plugin upstream to expose cwd on shell.env — deferred (real upstream work, coordination required, degrades gracefully without it); (4) document the launch-from-root requirement and remove the handler — CHOSEN. The cwd-anchored error message ('ctx: no .context/ at <pwd>. Run `ctx init` here, or cd to a project that has one.') is itself clear and self-fixing, so the friction is bounded.
+
+**Consequence**: Agent-issued 'ctx' commands fail with the clear cwd-anchored error when OpenCode is launched from outside the project root. User re-launches from the right directory. Plugin's own ceremony calls continue to work. Trade-off: minor user-facing friction in exchange for not building unsupported SDK behaviour into the plugin. Escalation path if this becomes recurring: alternative 3 (upstream SDK PR adding cwd to shell.env output type). See also: specs/cwd-anchored-context.md, LEARNINGS.md 'Cross-language coverage gap'.
+
+---
+
+## [2026-05-21-203052] Substrate vs. artifact placement: .context/ vs. project root
+
+**Status**: Accepted
+
+**Context**: Question surfaced while scaffolding specs/ctx-ai-backend.md and specs/ctx-ai-extraction-and-recall.md. User observed that specs/ is the only folder (aside from GETTING_STARTED.md) ctx-managed but outside .context/, and asked whether the placement was philosophically correct. Initial 'state vs. artifact' framing was challenged with 'by that token, isn't kb a project artifact?' — exposing that the binary cut was too coarse.
+
+**Decision**: Substrate vs. artifact placement: .context/ vs. project root
+
+**Rationale**: Distinguish cognitive substrate (lives under .context/) from project artifact (lives at root) by the *consumption/mutation path*, not by who manages the files. Substrate is read AND written through ctx-mediated paths (ctx agent, ctx decision add, /ctx-kb-ingest, /ctx-handover, ceremonies); artifacts are read AND edited directly by humans (specs/, CLAUDE.md, GETTING_STARTED.md, docs/). Three coupling tests sharpen the line: (a) queried via ctx-mediated paths, (b) tightly coupled to ctx pipeline machinery, (c) authored under ctx skill discipline. The kb passes all three (kb closeouts fold into handovers, /ctx-kb-ingest enforces pass-mode and citations, /ctx-kb-ask is the primary read path) so it stays under .context/. Specs pass none (referenced by commits, never loaded by ctx agent, no pipeline coupling) so they live at root. Rejected alternatives: (1) move specs/ under .context/specs/ for boundary cleanliness — fails because specs are project artifacts written for humans/reviewers/community devs and hiding them under a dotfile breaks navigability; (2) move kb/ to project root because it has artifact-like properties — fails because kb machinery (closeouts, source-coverage ledger, evidence-index schema) cannot be lifted out of .context/ without splitting things that live together; (3) keep the original 'state vs. artifact' framing — too binary, kb pushback proved a third axis was needed.
+
+**Consequence**: Codified as a CONVENTIONS.md entry under 'File Organization'. Placement test for new ctx-related files or folders: is this consumed/mutated through ctx-mediated paths (substrate, .context/) or read/edited directly by humans (artifact, root)? Visibility complaint about .context/ being a dotfile is acknowledged but acceptable — humans navigate substrate via ctx commands and generated views (ctx site kb build, ctx serve), not via file browsers. Trade-off: the rule's correctness depends on the ctx-mediated paths actually existing for substrate files; if substrate is added but no skill/command consumes it, the placement test misclassifies. See also: CONVENTIONS.md 'File Organization' section.
+
+---
+
+## [2026-05-21-140236] Spec steps 1+2 merged into a single commit (cwd-anchored-context)
+
+**Status**: Accepted
+
+**Context**: Yesterday's spec (specs/cwd-anchored-context.md) decomposed the cwd-anchored refactor into 5 sequential steps, each intended to land as a separate commit. Step 1 (resolver swap, rc.ContextDir → cwd-anchored os.Stat) cannot compile without Step 2 (init guard removal, deletion of internal/cli/initialize/core/envmatch/) because envmatch references the soon-to-be-deleted ErrDirNotDeclared sentinel.
+
+**Decision**: Spec steps 1+2 merged into a single commit (cwd-anchored-context)
+
+**Rationale**: Cleanest commit boundaries beat strict spec adherence when the spec's boundaries are mechanically infeasible. Steps 1 and 2 were merged into one atomic commit; remaining steps 3 (hook cd migration), 4 (activate/deactivate deletion), 5 (docs sweep) stay as discrete commits per the spec.
+
+**Consequence**: Spec stays authoritative for what; commit-slicing diverges for practical reasons. Future cwd-anchored work follows a 4-commit (merged) decomposition, not the spec's 5. Spec text remains as-written; the divergence is documented here, not in the spec.
+
+---
+
+## [2026-05-20-214812] Anchor ctx to CWD; drop activate, drop env-var resolver, drop all walks (proposed)
+
+**Status**: Accepted
+
+**Context**: Even after strict-CWD activate landed, eval $(ctx activate) remains an opaque per-shell ceremony. Two-channel resolution (env CTX_DIR + cwd) is the residual complexity; activate/deactivate exist only because of the env channel; the env channel exists to avoid the walk. With .context/ mandated as .git/'s sibling (CONSTITUTION require-git), if cwd must contain .context/ then both .context/ AND .git/ are in cwd — and every resolver across rc, gitmeta, and the activate commands collapses to os.Stat.
+
+**Decision**: Anchor ctx to CWD; drop activate, drop env-var resolver, drop all walks (proposed)
+
+**Rationale**: User counter to the agent's walk-to-.git/ proposal: the walk infrastructure (rc.ScanCandidates, gitmeta upward walk) is precisely what we want to delete; keeping ANY walk forces us to maintain two implementations. Mental model anchor matches zensical (zensical.toml), helm (Chart.yaml), terraform (.tf), Claude Code ($CLAUDE_PROJECT_DIR). Subdir convenience tax is a fixed per-shell cost (cd $(git rev-parse --show-toplevel)) for the user who knows their project root; agents pay no tax (cd is mechanical for them).
+
+**Consequence**: Spec written at specs/cwd-anchored-context.md (314L); supersedes specs/activate-strict-cwd.md entirely and large sections of specs/single-source-context-anchor.md. Implementation queued as TASKS.md item at #priority:medium #added:2026-05-20 — multi-step (rc + gitmeta resolver simplification → init guard removal → hook cd migration → activate/deactivate deletion → docs sweep), estimated ~600-1000 LOC net deletion. Four open questions to resolve before code: CTX_DIR transition policy, deprecation shim, editor-integration grep, implementation order.
+
+---
+
+## [2026-05-20-214801] ctx activate is strict-CWD; drop upward walk
+
+**Status**: Accepted
+
+**Context**: Bug TASKS:58 — fresh git init under a workspace with its own .context/ silently bound the parent context because activate walked up past the git boundary. Previous design (specs/single-source-context-anchor.md) preserved walk-up under 'interactive discovery' on the rationale that workspace-shared .context/ next to per-project ones was a legitimate layout.
+
+**Decision**: ctx activate is strict-CWD; drop upward walk
+
+**Rationale**: ctx activate is a state-setting command (exports CTX_DIR); state commands follow git's read-vs-state pattern (read walks freely, state refuses to cross repo boundaries). The workspace-shared use case is preserved by user action (cd to workspace before activating), not by inferred walk. The 'also visible upward' stderr advisory was invisible to eval-bindable invocations anyway.
+
+**Consequence**: scan() in internal/cli/activate/core/resolve/internal.go collapsed from 49 LOC walking via rc.ScanCandidates to a single os.Stat; resolve.Selected() signature went (string, []string, error) → (string, error); writeActivate.AlsoVisible and FormatAlsoVisibleAdvisory deleted; errActivate.NoCandidates renamed to NoLocalContext(cwd) and now names PWD verbatim. Spec: specs/activate-strict-cwd.md.
+
+---
+
+## [2026-05-20-214753] Gitignore .context/handovers/; track only .gitkeep
+
+**Status**: Accepted
+
+**Context**: Per-session, operator-specific artifacts that grow without bound and can leak host/internal identifiers (ari, asgard, broadcom-class) into public mirrors when the project's .context/ is committed.
+
+**Decision**: Gitignore .context/handovers/; track only .gitkeep
+
+**Rationale**: Aligns with the existing per-personal-state gitignore family (journal, memory, state, logs, reminders.json, scratchpad.enc); the directory's .gitkeep keeps the read-side missing-dir gate passing on fresh clones; the rest of the closeout-fold pipeline already lives in .context/archive/closeouts/ which IS tracked.
+
+**Consequence**: ctx init template (internal/config/file/ignore.go) added .context/handovers/* and !.context/handovers/.gitkeep; existing tracked handovers untracked via git rm --cached but kept on disk; the 'handover is the sole authoritative recall artifact' phrasing in KB-RULES.md still holds — it's local-machine authoritative.
+
+---
 
 ## [2026-05-17-181500] `entity.Sentinel` lives in `internal/entity/` because the cross-package-types audit treats `entity/` as the canonical home for shared types
 

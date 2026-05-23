@@ -9,14 +9,6 @@ package flag
 // PrefixLong is a CLI flag prefix for display formatting.
 const PrefixLong = "--"
 
-// Activate / deactivate command flag names.
-const (
-	// Shell selects the shell dialect for `ctx activate` and
-	// `ctx deactivate` emitters. When unset, the command
-	// auto-detects from $SHELL, falling back to bash.
-	Shell = "shell"
-)
-
 // Add command flag names: used for both flag registration and error display.
 const (
 	Application = "application"

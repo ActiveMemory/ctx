@@ -66,6 +66,12 @@ dist/
 .context/journal-site/
 .context/journal-obsidian/
 
+# Session handovers (per-session, operator-specific, unbounded growth).
+# .gitkeep stays tracked so the read-side missing-dir gate passes for
+# fresh clones.
+.context/handovers/*
+!.context/handovers/.gitkeep
+
 # KB rendered site output (Phase KB; analogous to journal-site)
 .context/site/
 .context/site-config/

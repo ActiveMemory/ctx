@@ -44,54 +44,28 @@ err.backup.write-archive:
   short: 'failed to write archive: %w'
 err.context.dir-not-found:
   short: 'context directory not found: '
-err.context.dir-not-declared:
-  short: 'context directory not declared'
-err.context.relative-not-allowed-msg:
-  short: 'context directory must be absolute'
-err.context.non-canonical-basename-msg:
-  short: 'context directory has non-canonical basename'
+err.context.no-context-here-msg:
+  short: 'no .context here'
+err.context.no-context-here:
+  short: |-
+    ctx: no .context/ at %s
+    Run `ctx init` here, or `cd` to a directory that has .context/.
 err.context.dir-not-a-directory-msg:
   short: 'context directory is not a directory'
 err.context.dir-stat-msg:
   short: 'context directory stat failed'
 err.context.not-initialized-msg:
   short: 'context not initialized'
-err.context.not-declared-zero:
-  short: |-
-    no context directory specified for this project
-    See: https://ctx.ist/recipes/activating-context/
-err.context.not-declared-one:
-  short: |-
-    no context directory specified; a likely candidate is at %s
-    See: https://ctx.ist/recipes/activating-context/
-err.context.not-declared-many:
-  short: |-
-    no context directory specified; multiple candidates visible:
-    %s
-    See: https://ctx.ist/recipes/activating-context/
-err.context.relative-not-allowed:
-  short: |-
-    CTX_DIR must be an absolute path; got %q
-    See: https://ctx.ist/recipes/activating-context/
-err.context.non-canonical-basename:
-  short: |-
-    CTX_DIR basename must be %q; got %q
-    See: https://ctx.ist/recipes/activating-context/
 err.context.dir-not-a-directory:
-  short: 'CTX_DIR points at a file, not a directory: %s'
+  short: '.context/ at %s is not a directory'
 err.context.dir-stat:
-  short: 'cannot stat CTX_DIR %s: %w'
+  short: 'cannot stat .context/ at %s: %w'
 err.context.not-initialized:
   short: |-
     ctx is not initialized in this project: %s
     Run 'ctx init' from the project root to set up context here.
-    See: https://ctx.ist/recipes/activating-context/
 err.schema.drift:
   short: 'schema drift detected'
-err.activate.no-candidates:
-  short: |-
-    ctx activate: no .context/ directory found from this location
-    See: https://ctx.ist/recipes/activating-context/
 err.cli.no-tool-specified:
   short: 'no tool specified: use --tool <tool> or set the tool field in .ctxrc'
 err.config.golden-not-found:

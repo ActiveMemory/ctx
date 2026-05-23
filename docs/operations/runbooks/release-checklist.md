@@ -57,19 +57,15 @@ All tests must pass. No exceptions.
 
 ### 5. Check Context Health
 
-Activate the project so the next commands know which `.context/`
-to read:
+Run from the project root:
 
 ```bash
-eval "$(ctx activate)"
 ctx drift          # broken references, stale patterns
 ctx status         # context file health
 /ctx-link-check    # dead links in docs
 ```
 
-Fix anything flagged. If you see `Error: no context directory
-specified`, you skipped the `eval` line above. See
-[Activating a Context Directory](../../recipes/activating-context.md).
+Fix anything flagged.
 
 ### 6. Review TASKS.md
 

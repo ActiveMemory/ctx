@@ -208,22 +208,12 @@ write.init-anatomy-preamble:
 
     The `.context/` directory is your project's persistent memory.
     Its parent (this directory) is the project root by contract;
-    that's what `ctx sync` and drift detection scan. `CTX_DIR`
-    must be an absolute path ending in `.context`. One `.context/`
-    per project; knowledge sharing across projects goes through
-    `ctx hub`, not a shared directory.
+    that's what `ctx sync` and drift detection scan. `ctx` always
+    reads `$PWD/.context/` — run commands from the project root.
+    One `.context/` per project; knowledge sharing across projects
+    goes through `ctx hub`, not a shared directory.
 
-    Full reference: https://ctx.ist/recipes/activating-context/
-write.init-activate-hint:
-  short: |4-
-
-      Bind CTX_DIR for this shell (required before other ctx commands):
-
-        eval "$(ctx activate)"
-
-      Or export the absolute path directly (skip the scan):
-
-        export CTX_DIR=%s
+    Full reference: https://ctx.ist/home/getting-started/
 write.init-next-steps-block:
   short: |4-
 

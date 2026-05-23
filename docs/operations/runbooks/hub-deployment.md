@@ -86,7 +86,6 @@ first.
 
 ```bash
 # In the project directory on the client machine:
-eval "$(ctx activate)"
 ctx connection register <hub-address> --token <client-token>
 ```
 
@@ -96,16 +95,14 @@ Verify the connection:
 ctx connection status
 ```
 
-If the client doesn't have a project yet, run `ctx init` first, then
-`eval "$(ctx activate)"`. See
-[Activating a Context Directory](../../recipes/activating-context.md).
+If the client doesn't have a project yet, run `ctx init` first in
+the project root.
 
 ## Step 5: Verify Sync
 
-Push a test entry from one client and verify it arrives. Make sure
-each client already ran `eval "$(ctx activate)"` from Step 4:
-otherwise `ctx add` and `ctx status` fail with
-`Error: no context directory specified`.
+Push a test entry from one client and verify it arrives. Run each
+command on the client from inside the project directory; `ctx`
+reads `$PWD/.context/`.
 
 ```bash
 # Client A (in its project directory, after activating):

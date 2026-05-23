@@ -28,6 +28,15 @@ func setupTestDir(t *testing.T, enableLog bool) string {
 	t.Helper()
 	tmpDir := t.TempDir()
 
+	// Under the cwd-anchored model, rc.RC() reads $PWD/.ctxrc only
+	// when $PWD/.context/ exists. Materialize the dir up front so
+	// the event_log setting is honored.
+	if mkErr := os.MkdirAll(
+		filepath.Join(tmpDir, dir.Context), 0o700,
+	); mkErr != nil {
+		t.Fatalf("failed to create .context: %v", mkErr)
+	}
+
 	// Write .ctxrc at the project root (the parent of the .context/
 	// that testctx will declare).
 	rcContent := "event_log: false\n"

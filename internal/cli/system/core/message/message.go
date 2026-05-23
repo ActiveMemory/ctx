@@ -62,7 +62,7 @@ func Load(hk, variant string, vars map[string]any, fallback string) string {
 		if data, readErr := io.SafeReadFile(overrideDir, filename); readErr == nil {
 			return renderTemplate(string(data), vars, fallback)
 		}
-	case !errors.Is(ctxErr, errCtx.ErrDirNotDeclared):
+	case !errors.Is(ctxErr, errCtx.ErrNoCtxHere):
 		logWarn.Warn(warn.ContextDirResolve, ctxErr)
 	}
 

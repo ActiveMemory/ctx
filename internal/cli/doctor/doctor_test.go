@@ -26,11 +26,12 @@ import (
 
 func setupContextDir(t *testing.T) string {
 	t.Helper()
-	dir := filepath.Join(t.TempDir(), cfgDir.Context)
+	root := t.TempDir()
+	dir := filepath.Join(root, cfgDir.Context)
 	if mkErr := os.MkdirAll(dir, 0o700); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	t.Setenv("CTX_DIR", dir)
+	t.Chdir(root)
 	rc.Reset()
 
 	// Create required files.
@@ -68,11 +69,12 @@ func TestDoctor_Healthy(t *testing.T) {
 }
 
 func TestDoctor_MissingRequiredFiles(t *testing.T) {
-	dir := filepath.Join(t.TempDir(), cfgDir.Context)
+	root := t.TempDir()
+	dir := filepath.Join(root, cfgDir.Context)
 	if mkErr := os.MkdirAll(dir, 0o700); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	t.Setenv("CTX_DIR", dir)
+	t.Chdir(root)
 	rc.Reset()
 
 	cmd := Cmd()

@@ -15,7 +15,6 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core/store"
@@ -40,7 +39,6 @@ func setup(t *testing.T) string {
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv(env.CtxDir, ctxDir)
 	rc.Reset()
 
 	return tmpDir

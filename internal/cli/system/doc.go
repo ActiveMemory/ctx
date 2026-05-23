@@ -37,7 +37,6 @@
 // commands output JSON with a "decision" field.
 //
 // UserPromptSubmit hooks (hidden):
-//   - check-anchor-drift: stale CTX_DIR vs project anchor warning
 //   - check-context-size: adaptive prompt counter
 //   - check-persistence: context file mtime watcher
 //   - check-ceremony: session ceremony reminder

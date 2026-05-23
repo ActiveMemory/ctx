@@ -1045,9 +1045,10 @@ answer to "where does this project's context live?".</p>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>-q<span class="w">              </span><span class="c1"># Just the context directory path</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">          </span><span class="c1"># Structured output for automation</span>
 </span></code></pre></div>
-<p><strong>Note</strong>: <code>-q</code> prints just the resolved directory path. See
-<a href="../../recipes/activating-context/">Activating a Context Directory</a>
-if you hit a "<em>no context directory specified</em>" error.</p>
+<p><strong>Note</strong>: <code>-q</code> prints just the resolved directory path. <code>ctx</code>
+reads <code>$PWD/.context/</code>; if you hit a "<em>no context here</em>" error,
+run <code>ctx init</code> from the project root or <code>cd</code> to one that already
+has <code>.context/</code>.</p>
 
 
 

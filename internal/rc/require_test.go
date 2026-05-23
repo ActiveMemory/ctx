@@ -11,32 +11,30 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"strings"
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 )
 
-// TestRequireContextDir_PathDoesNotExist: shape-valid declaration
-// pointing at a path that doesn't exist on disk → ErrContextDirNotFound.
-func TestRequireContextDir_PathDoesNotExist(t *testing.T) {
-	t.Setenv(env.CtxDir, "/nonexistent-test-dir/.context")
+// TestRequireContextDir_NoContextHere: cwd has no .context/ →
+// ErrNoCtxHere.
+func TestRequireContextDir_NoContextHere(t *testing.T) {
+	tempDir := t.TempDir()
+	t.Chdir(tempDir)
 	Reset()
 	t.Cleanup(Reset)
 
 	got, err := RequireContextDir()
-	if !errors.Is(err, errCtx.ErrContextDirNotFound) {
-		t.Errorf("RequireContextDir() err = %v, want ErrContextDirNotFound",
-			err)
+	if !errors.Is(err, errCtx.ErrNoCtxHere) {
+		t.Errorf("RequireContextDir() err = %v, want ErrNoCtxHere", err)
 	}
 	if got != "" {
 		t.Errorf("RequireContextDir() = %q, want \"\"", got)
 	}
 }
 
-// TestRequireContextDir_PathIsAFile: CTX_DIR points at an existing
+// TestRequireContextDir_PathIsAFile: $PWD/.context exists as a
 // regular file → ErrContextDirNotADirectory.
 func TestRequireContextDir_PathIsAFile(t *testing.T) {
 	tempDir := t.TempDir()
@@ -44,7 +42,7 @@ func TestRequireContextDir_PathIsAFile(t *testing.T) {
 	if err := os.WriteFile(filePath, []byte("not a dir"), 0o600); err != nil {
 		t.Fatalf("write: %v", err)
 	}
-	t.Setenv(env.CtxDir, filePath)
+	t.Chdir(tempDir)
 	Reset()
 	t.Cleanup(Reset)
 
@@ -75,6 +73,11 @@ func TestRequireContextDir_StatPermissionDenied(t *testing.T) {
 	if err := os.MkdirAll(target, 0o700); err != nil {
 		t.Fatalf("mkdir target: %v", err)
 	}
+
+	// t.Chdir must happen *before* the chmod-0 lockdown: a chmod-0
+	// directory cannot be made the cwd. Once cwd is set, the chmod
+	// prevents the resolver from stat'ing children.
+	t.Chdir(parent)
 	if err := os.Chmod(parent, 0); err != nil {
 		t.Fatalf("chmod: %v", err)
 	}
@@ -87,7 +90,6 @@ func TestRequireContextDir_StatPermissionDenied(t *testing.T) {
 		_ = os.Chmod(parent, 0o700) //nolint:gosec // dir needs rwx for cleanup
 	})
 
-	t.Setenv(env.CtxDir, target)
 	Reset()
 	t.Cleanup(Reset)
 
@@ -95,28 +97,28 @@ func TestRequireContextDir_StatPermissionDenied(t *testing.T) {
 	if err == nil {
 		t.Fatal("RequireContextDir() err = nil, want non-nil")
 	}
-	// Either ErrContextDirNotFound or ErrContextDirStat depending on
+	// Either ErrNoCtxHere or ErrContextDirStat depending on
 	// the underlying syscall: macOS often returns ENOENT through a
 	// chmod-0 parent because lookup short-circuits, while Linux
 	// typically surfaces EACCES. Both are acceptable diagnostics for
 	// the user.
 	if !errors.Is(err, errCtx.ErrContextDirStat) &&
-		!errors.Is(err, errCtx.ErrContextDirNotFound) {
+		!errors.Is(err, errCtx.ErrNoCtxHere) {
 		t.Errorf(
-			"RequireContextDir() err = %v, want ErrContextDirStat or ErrContextDirNotFound",
+			"RequireContextDir() err = %v, want ErrContextDirStat or ErrNoCtxHere",
 			err)
 	}
 }
 
-// TestRequireContextDir_HappyPath: existing dir, canonical name →
-// returns absolute path, nil error.
+// TestRequireContextDir_HappyPath: cwd has .context/ → returns
+// absolute path, nil error.
 func TestRequireContextDir_HappyPath(t *testing.T) {
 	tempDir := t.TempDir()
 	target := filepath.Join(tempDir, dir.Context)
 	if err := os.MkdirAll(target, 0o700); err != nil {
 		t.Fatalf("mkdir: %v", err)
 	}
-	t.Setenv(env.CtxDir, target)
+	t.Chdir(tempDir)
 	Reset()
 	t.Cleanup(Reset)
 
@@ -128,70 +130,5 @@ func TestRequireContextDir_HappyPath(t *testing.T) {
 	wantResolved, _ := filepath.EvalSymlinks(target)
 	if gotResolved != wantResolved {
 		t.Errorf("RequireContextDir() = %q, want %q", gotResolved, wantResolved)
-	}
-}
-
-// TestRequireContextDir_DelegatesShapeChecks: ContextDir shape
-// errors flow through with their precise meaning preserved. Only
-// the truly-unset case gets rewrapped as the tailored
-// "no context directory specified" message with candidate hints;
-// relative and non-canonical-basename errors propagate unchanged so
-// the user sees what's wrong with the value they declared instead
-// of "you didn't declare it" when they actually did.
-func TestRequireContextDir_DelegatesShapeChecks(t *testing.T) {
-	cases := []struct {
-		name           string
-		val            string
-		wantSentinel   error
-		wantMsgContain string
-	}{
-		{
-			name:           "unset",
-			val:            "",
-			wantSentinel:   errCtx.ErrDirNotDeclared,
-			wantMsgContain: "no context directory specified",
-		},
-		{
-			name:           "relative",
-			val:            "relative-path",
-			wantSentinel:   errCtx.ErrRelativeNotAllowed,
-			wantMsgContain: "absolute",
-		},
-		{
-			name:           "non-canonical",
-			val:            "/tmp/notdotcontext",
-			wantSentinel:   errCtx.ErrNonCanonicalBasename,
-			wantMsgContain: "notdotcontext",
-		},
-	}
-	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
-			t.Setenv(env.CtxDir, c.val)
-			Reset()
-			t.Cleanup(Reset)
-
-			got, err := RequireContextDir()
-			if err == nil {
-				t.Fatalf("RequireContextDir() err = nil, want non-nil for %q",
-					c.val)
-			}
-			if got != "" {
-				t.Errorf("RequireContextDir() = %q, want \"\"", got)
-			}
-			// "unset" gets rewrapped into a tailored message that no
-			// longer wraps the original sentinel. The other two
-			// shape errors propagate the sentinel unchanged.
-			if c.name != "unset" && !errors.Is(err, c.wantSentinel) {
-				t.Errorf("RequireContextDir() err = %v, want errors.Is matching %v",
-					err, c.wantSentinel)
-			}
-			if msg := err.Error(); msg == "" {
-				t.Error("RequireContextDir() returned empty error message")
-			}
-			if !strings.Contains(err.Error(), c.wantMsgContain) {
-				t.Errorf("RequireContextDir() msg = %q; want substring %q",
-					err.Error(), c.wantMsgContain)
-			}
-		})
 	}
 }

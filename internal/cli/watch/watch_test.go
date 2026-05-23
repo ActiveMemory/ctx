@@ -15,7 +15,6 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
@@ -27,7 +26,6 @@ func TestRunWatch_NoContext(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
-	t.Setenv(env.CtxDir, "")
 
 	cmd := Cmd()
 	var buf bytes.Buffer
@@ -39,12 +37,10 @@ func TestRunWatch_NoContext(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error when no .context/ exists")
 	}
-	// Under the explicit-context-dir model, the top-level gate is
-	// rc.RequireContextDir which surfaces a multi-line actionable
-	// message. The previous 'ctx init' suggestion belonged to the
-	// old initialize.ContextNotInitialized fallback.
-	if !strings.Contains(err.Error(), "no context directory") {
-		t.Errorf("error = %q, want 'no context directory' message", err.Error())
+	// Under the cwd-anchored model, rc.RequireContextDir reports
+	// that $PWD has no .context here.
+	if !strings.Contains(err.Error(), ".context") {
+		t.Errorf("error = %q, want .context mention", err.Error())
 	}
 }
 

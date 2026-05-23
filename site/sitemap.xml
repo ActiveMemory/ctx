@@ -73,9 +73,6 @@
         <loc>https://ctx.ist/recipes/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/activating-context/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/recipes/guide-your-agent/</loc>
       </url>
       <url>
@@ -83,9 +80,6 @@
       </url>
       <url>
         <loc>https://ctx.ist/recipes/multilingual-sessions/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/recipes/external-context/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/session-lifecycle/</loc>
