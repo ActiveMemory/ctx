@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-23 | yaml.v3 Node-tree round-trip preserves comments and unrelated keys when mutating user-edited YAML |
 | 2026-05-22 | vLLM HTTP surface: cold-start is ECONNREFUSED, top-level guided_json, /v1/models id may diverge from HF id |
 | 2026-05-22 | Cross-language coverage gap: TS-typed integrations are a fourth surface beyond Go |
 | 2026-05-21 | Sentinel-removal refactors cascade through test surface |
@@ -151,6 +152,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-23-171325] yaml.v3 Node-tree round-trip preserves comments and unrelated keys when mutating user-edited YAML
+
+**Context**: ctx setup --backend needs to add/update one entry in .ctxrc backends: without nuking the user's other settings or comments. Full-struct round-trip via yaml.Unmarshal -> modify -> yaml.Marshal reformats the entire file. The Node API (parseDocument -> mutate selected child nodes -> yaml.Marshal(node)) preserves the document's structural shape.
+
+**Lesson**: For mutating user-edited YAML files (.ctxrc, .claude/settings.json, etc.), use yaml.v3's *yaml.Node tree, find the target key, and replace just that subtree. It's more code than struct round-trip but doesn't lose comments or reorder unrelated keys.
+
+**Application**: Reference shape: internal/cli/setup/core/backend/{apply.go,node.go}. Helpers: findChildValue(mapping, key), mapValueString(mapping, key), appendMappingPair(mapping, key, value), buildEntryNode(struct) (marshal-then-unmarshal-as-Node trick for omitempty). Future ctx work on user-editable YAML/JSON files should follow this pattern, not the destructive struct round-trip.
 
 ---
 
