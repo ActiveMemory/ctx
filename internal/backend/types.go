@@ -174,6 +174,24 @@ type vllm struct {
 	coldStartInterval time.Duration
 }
 
+// llamacpp is the llama.cpp (llama-server) backend.
+// Embeds *openAICompat for the wire work and overrides
+// Ping with cold-start retry on ECONNREFUSED (llama-server
+// does not bind the listener until the model is fully
+// loaded; the OS returns ECONNREFUSED during that window).
+//
+// Fields:
+//   - openAICompat: embedded generic backend providing
+//     Name/Complete and the base Ping.
+//   - coldStartWindow: maximum wall-clock during which
+//     Ping retries on refused.
+//   - coldStartInterval: sleep between retry attempts.
+type llamacpp struct {
+	*openAICompat
+	coldStartWindow   time.Duration
+	coldStartInterval time.Duration
+}
+
 // openAICompat is a generic OpenAI-compatible HTTP
 // backend used directly for `openai-compatible` configs
 // and embedded by per-vendor wrappers (vllm, openai, ...)

@@ -33,6 +33,9 @@ const (
 	// NameLMStudio is the registered backend type label
 	// for the LM Studio wrapper.
 	NameLMStudio = "lmstudio"
+	// NameLlamaCpp is the registered backend type label
+	// for the llama.cpp (llama-server) wrapper.
+	NameLlamaCpp = "llamacpp"
 )
 
 // Default endpoints for each per-vendor wrapper. Applied
@@ -57,6 +60,9 @@ const (
 	// deployments routinely vary the port so the user can
 	// always override.
 	DefaultEndpointVLLM = "http://localhost:8000"
+	// DefaultEndpointLlamaCpp is the llama-server default
+	// local listener address.
+	DefaultEndpointLlamaCpp = "http://localhost:8080"
 )
 
 // Default API-key environment variable names for each
