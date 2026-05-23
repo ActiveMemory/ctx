@@ -26,6 +26,7 @@ const (
 	DirIntegrationsOpenCodeSkill  = "integrations/opencode/skills"
 	DirHooksMessages              = "hooks/messages"
 	DirHooksTrace                 = "hooks/trace"
+	DirI18nPlaceholders           = "i18n/placeholders"
 	DirJournal                    = "journal"
 	DirPermissions                = "permissions"
 	DirProject                    = "project"
@@ -63,6 +64,15 @@ const (
 	FilePluginJSON            = "plugin.json"
 	FileRegistryYAML          = "registry.yaml"
 	FileSKILLMd               = "SKILL.md"
+)
+
+// Locale identifiers for the i18n asset tree. Each
+// locale's placeholder list lives at
+// `<DirI18nPlaceholders>/<locale>.yaml`. Only `en` ships
+// in v1; the directory structure is established now so
+// `tr.yaml` etc. can land without a refactor.
+const (
+	LocaleEN = "en"
 )
 
 // Subdirectory name within a skill directory.

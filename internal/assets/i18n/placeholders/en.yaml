@@ -1,0 +1,23 @@
+# Locale: en (English).
+# Placeholder strings rejected from required body flags
+# on `ctx decision add` / `ctx learning add` and other
+# body-flag validators. Matching is case-fold-insensitive
+# (Unicode fold via internal/i18n.Fold) after whitespace
+# trimming. Only the entire trimmed input is checked
+# against this list — substring matches are allowed,
+# because real prose may legitimately contain "TBD"
+# inside a longer sentence.
+#
+# This is the shipped default set. Users may extend it
+# in `.ctxrc` under `placeholders:` (EXTEND semantics:
+# user list is appended to defaults, not replacing them).
+placeholders:
+  - tbd
+  - n/a
+  - na
+  - none
+  - see chat
+  - see above
+  - see below
+  - pending
+  - to be done

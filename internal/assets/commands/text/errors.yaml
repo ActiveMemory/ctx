@@ -370,6 +370,10 @@ err.parser.walk-dir:
   short: 'walk directory: %w'
 err.parser.git-not-found:
   short: git not found in PATH; install git to enable remote URL enrichment
+err.placeholders.parse-locale:
+  short: 'parse placeholder locale %q: %w'
+err.placeholders.read-locale:
+  short: 'read placeholder locale %q: %w'
 err.prompt.list-entry-templates:
   short: 'failed to list entry templates: %w'
 err.prompt.list-templates:

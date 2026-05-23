@@ -23,6 +23,7 @@ import (
 //go:embed hooks/messages/*/*.txt hooks/messages/registry.yaml hooks/trace/*.sh
 //go:embed schema/*.json why/*.md
 //go:embed permissions/*.txt commands/*.yaml commands/text/*.yaml journal/*.css
+//go:embed i18n/placeholders/*.yaml
 //go:embed kb/templates/ingest/*.md kb/templates/ingest/schemas/*.md
 //go:embed kb/templates/kb/index.md kb/templates/kb/topics/_template/index.md
 var FS embed.FS
