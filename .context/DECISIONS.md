@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-23 | Keep `i18n.Fold` strict; add `i18n.MatchKey` as the separate diacritic-insensitive primitive |
 | 2026-05-22 | OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored |
 | 2026-05-21 | Substrate vs. artifact placement: .context/ vs. project root |
 | 2026-05-21 | Spec steps 1+2 merged into a single commit (cwd-anchored-context) |
@@ -147,6 +148,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-23-001500] Keep `i18n.Fold` strict; add `i18n.MatchKey` as the separate diacritic-insensitive primitive
+
+**Status**: Accepted
+
+**Context**: The placeholder localization task (line 287, specs/placeholder-i18n.md) introduced `internal/i18n.Fold` (commit 435d6670) as the project-mandated case-fold primitive. Field testing in the validator integration test surfaced an ergonomic problem: `Fold` preserves Unicode-defined linguistic distinctions (`İ` ≠ `i`, `ü` ≠ `u`), so a Turkish user with a Turkish keyboard typing `İPTAL` would not reject against an `iptal` entry in `.ctxrc` — they'd need to enumerate every diacritic variant of their vocabulary. Same problem for German `Straße`/`strasse`, French `café`/`cafe`, etc. The bilingual case (English keyboard plus Turkish prose) made the friction unavoidable for non-English users.
+
+**Decision**: Keep `i18n.Fold` strict; add `i18n.MatchKey` as the separate diacritic-insensitive primitive.
+
+**Rationale**: Two distinct primitives with explicit contracts beats one primitive that conflates them. `Fold` stays a strict Unicode case-fold (`cases.Fold` semantics, `İ` ≠ `i`) — required for callers that need linguistic-precision: identifier deduplication, parsing, security-relevant comparison. `MatchKey` is `Fold + NFKD + strip(U+0300..U+036F)` — collapses Latin/general diacritics (Turkish dotted-I, German umlaut, French accents, Vietnamese horn) so casual keyboard variation matches transparently. Alternatives considered: (1) tighten `Fold` itself to include the strip step — rejected as conflating two contracts; any future caller that wants Unicode-precise comparison would silently get the looser semantics, with no compile-time signal. (2) Provide one primitive with an options/flags arg — rejected as bloated API for two distinct use cases. (3) Document the friction and let users enumerate variants — rejected as user-hostile for non-English projects, which is exactly the population the localization spec was meant to serve. (4) Two primitives, picked at call site — CHOSEN. The `Picking the right primitive` section in `internal/i18n/doc.go` gives the rule: "if your matcher compares user input against a vocabulary list and the user might type with or without diacritics, use MatchKey; otherwise Fold."
+
+**Consequence**: Two primitives to maintain (small — both are ~10 LoC over the upstream `cases` package). Call sites pick the right one explicitly. The placeholder validator uses MatchKey at all three sites (loader, .ctxrc merge, input lookup). Tests guard both halves: MatchKey collapses Turkish/German/French/Spanish/Catalan/Czech/Vietnamese as expected; preserves script-essential marks for Arabic/Indic/Hebrew/CJK; Fold stays strict. The compliance AST ban applies to both — no new direct `strings.ToLower` callers can enter the codebase without using one of these. See also: specs/i18n-fold-helper-and-ban.md, LEARNINGS.md `Unicode block separation makes diacritic-stripping surgical`.
+
+---
 
 ## [2026-05-22-161800] OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored
 
