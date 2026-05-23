@@ -34,6 +34,9 @@ const (
 	// DescKeySetupAPIKeyEnv is the description key for the
 	// `ctx setup --api-key-env` flag.
 	DescKeySetupAPIKeyEnv = "setup.api-key-env"
+	// DescKeyAIPingBackend is the description key for the
+	// `ctx ai ping --backend` flag.
+	DescKeyAIPingBackend = "ai.ping.backend"
 	// DescKeySteeringSyncAll is the description key for the steering sync all
 	// flag.
 	DescKeySteeringSyncAll = "steering.sync.all"

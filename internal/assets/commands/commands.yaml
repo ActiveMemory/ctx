@@ -31,6 +31,39 @@ convention.add:
       ctx convention add "Use camelCase for function names"
       ctx convention add "All API responses use JSON"
   short: Add a new convention entry to CONVENTIONS.md
+ai:
+  short: Dispatch through a configured AI backend (optional, local-first AI capabilities)
+  long: |-
+    `ctx ai` is the namespace for optional AI capabilities that
+    dispatch through a configured backend (vLLM, OpenAI,
+    Anthropic, Ollama, LM Studio, or any OpenAI-compatible
+    endpoint). The backend is read from .ctxrc; configure one
+    via `ctx setup --backend <name>`.
+
+    All `ctx ai *` commands fail closed when no backend is
+    configured: there is no silent degradation to a non-AI
+    path. The deterministic ctx core (`ctx agent`, `ctx
+    status`, ceremony hooks) is untouched whether or not a
+    backend is set up.
+
+    Verbs:
+      ping      reachability check against the configured
+                backend's /v1/models endpoint
+ai.ping:
+  short: Check reachability of the configured AI backend
+  long: |-
+    Issue GET /v1/models against the configured AI backend and
+    report the result. Fails closed when no backend is
+    configured.
+
+    Pass --backend <name> to ping a specific backend when more
+    than one is configured. Without --backend, ctx uses the
+    `default_backend:` key from .ctxrc if set, or the single
+    configured backend if exactly one is configured.
+  examples: |
+    Examples:
+      ctx ai ping
+      ctx ai ping --backend vllm
 agent:
   long: |-
     Print a concise context packet optimized for AI consumption.

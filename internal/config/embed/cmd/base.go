@@ -8,6 +8,12 @@ package cmd
 
 // Use strings for cobra command registration.
 const (
+	// UseAI is the cobra Use string for the ai parent
+	// command (`ctx ai`).
+	UseAI = "ai"
+	// UseAIPing is the cobra Use string for the ai ping
+	// subcommand (`ctx ai ping`).
+	UseAIPing = "ping"
 	// UseAgent is the cobra Use string for the agent command.
 	UseAgent = "agent"
 	// UseChange is the cobra Use string for the change command.
@@ -68,6 +74,12 @@ const (
 
 // DescKeys for base commands.
 const (
+	// DescKeyAI is the description key for the ai parent
+	// command (`ctx ai`).
+	DescKeyAI = "ai"
+	// DescKeyAIPing is the description key for the ai ping
+	// subcommand (`ctx ai ping`).
+	DescKeyAIPing = "ai.ping"
 	// DescKeyAgent is the description key for the agent command.
 	DescKeyAgent = "agent"
 	// DescKeyChange is the description key for the change command.

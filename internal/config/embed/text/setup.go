@@ -78,3 +78,11 @@ const (
 	// when a new entry was appended to existing backends.
 	DescKeyWriteSetupBackendAppended = "write.setup-backend-appended"
 )
+
+// DescKeys for `ctx ai *` write output.
+const (
+	// DescKeyWriteAIPingOK is the success message printed
+	// after `ctx ai ping` confirms the backend is
+	// reachable.
+	DescKeyWriteAIPingOK = "write.ai-ping-ok"
+)

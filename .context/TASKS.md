@@ -2556,6 +2556,21 @@ lands).
   #added:2026-05-21
   Namespace decision (Task 1) chose `ctx ai <verb>`; this task
   implements `ctx ai ping` plus the validation-consumer verb.
+  Partial 2026-05-23: `ctx ai ping` shipped. Full task remains
+  open pending the validation-consumer verb (`ctx ai extract`)
+  AND the "first model listed" output addition to ping (requires
+  expanding Backend interface with `Models(ctx)` or similar).
+  Landed in this push: `internal/backend/factories.go`
+  (RegisterAll wires the six unexported factories to a Registry);
+  `internal/cli/ai/core/resolve/` (Build + Pick helpers that
+  construct a Registry from rc.Backends() + rc.DefaultBackend());
+  `internal/cli/ai/` parent cmd via `parent.Cmd` helper;
+  `internal/cli/ai/cmd/ping/` subcmd with `--backend` flag;
+  `internal/write/ai/` output helpers; ctx ai registered in
+  `internal/bootstrap/group.go` under the integrations group.
+  4 ping tests cover happy path, no-backends-configured (fails
+  with ErrNoBackends), unknown-named-backend (ErrBackendNotFound),
+  unreachable (ErrUnreachable + ECONNREFUSED chain).
 
 - [ ] Add the deterministic-core boundary guard: a unit test (or
   lint check) that fails if `internal/cli/agent/`,

@@ -663,6 +663,8 @@ write.setup-backend-updated:
   short: '  (replaced existing entry)'
 write.setup-backend-appended:
   short: '  (appended new entry)'
+write.ai-ping-ok:
+  short: 'backend %q reachable'
 
 write.skill-no-skills:
   short: 'No skills installed.'
