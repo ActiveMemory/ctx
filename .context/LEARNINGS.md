@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-22 | vitest's mocked `execFile` fires callbacks synchronously; real Node defers to `process.nextTick` — closure-capture patterns can TDZ-trap under the mock |
 | 2026-05-22 | Double-excluded tests rot compounding — re-enable cost = sum of all drift since last green, not just the original bug |
 | 2026-05-22 | Group git flag constants by subcommand, not by "loose flags" — cross-group flags enable wrong-subcommand bugs |
 | 2026-05-22 | `git rev-parse` echoes unknown long-flag args back as literal stdout with exit 0 — the error guard never trips |
@@ -153,6 +154,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-22-230000] vitest's mocked `execFile` fires callbacks synchronously; real Node defers to `process.nextTick` — closure-capture patterns can TDZ-trap under the mock
+
+**Context**: While scaffolding eslint for `editors/vscode/` (commit 198803de), the `prefer-const` rule flagged `let disposable: T | undefined;` in `runCtx()`. The `disposable` is referenced inside the `execFile` callback (`disposable?.dispose()`) but assigned only after `execFile` returns (the cancellation listener needs `child` to kill, and `child` only exists once `execFile` is called). My refactor: declare `const disposable` after `child = execFile(...)`, and let the inline callback close over `disposable` — relying on Node's `execFile` guarantee that callbacks fire on `process.nextTick` at the earliest (never synchronously, even on immediate-failure paths). This is safe in production. But under vitest, `cp.execFile` is replaced by `vi.mock("child_process")` whose mock callback **fires synchronously** at the point execFile returns. That synchronous invocation reads `disposable` from inside the callback before the `const disposable = ...` line has executed → `ReferenceError: Cannot access 'disposable' before initialization`. Reverted to `let` with an `// eslint-disable-next-line prefer-const` comment.
+
+**Lesson**: vitest's mock factory (`vi.mock("child_process")`) does not preserve Node's async-deferral guarantees. Even APIs that are guaranteed to be asynchronous in production can fire synchronously in the test surface, because the mock is just `vi.fn()` returning a synchronous invocation of whatever the test wires up. This means a closure pattern that's *provably* safe by Node's contract can still TDZ-trap, because the TDZ check happens at runtime regardless of which environment fired the callback. The trap is invisible under typecheck (TypeScript can't reason about callback firing order) and invisible under static analysis (eslint flagged the const opportunity but couldn't see the temporal dependency).
+
+**Application**: When eslint or any analyzer suggests tightening a `let` to `const` in code that captures the variable through an async callback, verify under the *test* runner, not just real-Node semantics. A safe heuristic: if the variable is referenced lexically *before* its declaration (via a closure that fires later), the safe form is `let` with an `eslint-disable-next-line` comment that names the test-mock constraint. Splitting the declaration earlier and assigning later is the lowest-friction pattern that's robust to mock-side synchronicity quirks. The general rule generalizes beyond execFile: any mocked-async API (`fs.readFile`, `dns.lookup`, `http.request`, etc.) can collapse to sync under `vi.mock()`.
 
 ---
 
