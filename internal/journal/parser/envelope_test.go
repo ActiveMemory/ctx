@@ -153,6 +153,7 @@ func TestBuildSessionEntrypoint(t *testing.T) {
 	sess := p.buildSession("s1", rawMsgs, "/test/s1.jsonl")
 	if sess == nil {
 		t.Fatal("expected session, got nil")
+		return
 	}
 	if sess.Entrypoint != "ide" {
 		t.Errorf(

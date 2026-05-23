@@ -72,6 +72,7 @@ func TestBackwardCompat_HookRunAll_NonExistentDir(t *testing.T) {
 	}
 	if agg == nil {
 		t.Fatal("expected non-nil AggregatedOutput")
+		return
 	}
 	if agg.Cancelled {
 		t.Error("expected Cancelled to be false")

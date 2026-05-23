@@ -207,6 +207,7 @@ func TestParseLine(t *testing.T) {
 			if tt.wantMsg {
 				if msg == nil {
 					t.Fatal("ParseLine() returned nil message, want non-nil")
+					return
 				}
 				if sessID != tt.wantSess {
 					t.Errorf("sessionID = %q, want %q", sessID, tt.wantSess)

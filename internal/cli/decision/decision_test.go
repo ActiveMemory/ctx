@@ -22,6 +22,7 @@ func TestCmd(t *testing.T) {
 
 	if cmd == nil {
 		t.Fatal("Cmd() returned nil")
+		return
 	}
 
 	if cmd.Use != "decision" {

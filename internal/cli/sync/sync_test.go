@@ -150,6 +150,7 @@ func TestCmd_HasDryRunFlag(t *testing.T) {
 	flag := cmd.Flags().Lookup("dry-run")
 	if flag == nil {
 		t.Fatal("expected --dry-run flag")
+		return
 	}
 	if flag.DefValue != "false" {
 		t.Errorf("dry-run default = %q, want 'false'", flag.DefValue)

@@ -427,6 +427,7 @@ func TestCmd_Flags(t *testing.T) {
 	cmd := Cmd()
 	if cmd == nil {
 		t.Fatal("Cmd() returned nil")
+		return
 	}
 	if cmd.Use != "init" {
 		t.Errorf("Cmd().Use = %q, want %q", cmd.Use, "init")

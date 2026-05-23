@@ -207,6 +207,7 @@ func TestFindByName_Found(t *testing.T) {
 	}
 	if info == nil {
 		t.Fatal("expected hook info, got nil")
+		return
 	}
 	if info.Name != "notify" {
 		t.Errorf("expected name %q, got %q", "notify", info.Name)

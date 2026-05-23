@@ -124,6 +124,7 @@ func TestStoreRegisterAndValidate(t *testing.T) {
 	found := s.ValidateToken("tok_abc")
 	if found == nil {
 		t.Fatal("expected to find client")
+		return
 	}
 	if found.ProjectName != "alpha" {
 		t.Errorf("wrong project: %q", found.ProjectName)

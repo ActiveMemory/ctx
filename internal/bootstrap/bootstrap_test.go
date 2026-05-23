@@ -32,6 +32,7 @@ func TestRootCmd(t *testing.T) {
 
 	if cmd == nil {
 		t.Fatal("RootCmd() returned nil")
+		return
 	}
 
 	if cmd.Use != "ctx" {
@@ -366,6 +367,7 @@ func TestRootCmdToolFlag(t *testing.T) {
 	f := cmd.PersistentFlags().Lookup(flag.Tool)
 	if f == nil {
 		t.Fatal("--tool flag not found")
+		return
 	}
 	if f.DefValue != "" {
 		t.Errorf("--tool default = %q, want empty", f.DefValue)

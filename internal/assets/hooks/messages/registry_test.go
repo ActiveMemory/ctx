@@ -51,6 +51,7 @@ func TestLookupKnownEntry(t *testing.T) {
 	info := Lookup("check-persistence", "nudge")
 	if info == nil {
 		t.Fatal("Lookup(check-persistence, nudge) = nil, want non-nil")
+		return
 	}
 	if info.Category != cfgHook.CategoryCustomizable {
 		t.Errorf("category = %q, want %q", info.Category, cfgHook.CategoryCustomizable)
