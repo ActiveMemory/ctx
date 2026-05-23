@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-22 | Double-excluded tests rot compounding — re-enable cost = sum of all drift since last green, not just the original bug |
 | 2026-05-22 | Group git flag constants by subcommand, not by "loose flags" — cross-group flags enable wrong-subcommand bugs |
 | 2026-05-22 | `git rev-parse` echoes unknown long-flag args back as literal stdout with exit 0 — the error guard never trips |
 | 2026-05-22 | Cross-language coverage gap: TS-typed integrations are a fourth surface beyond Go |
@@ -152,6 +153,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-22-223000] Double-excluded tests rot compounding — re-enable cost = sum of all drift since last green, not just the original bug
+
+**Context**: `editors/vscode/src/extension.test.ts` was excluded from CI's TypeScript typecheck via `tsconfig.ci.json`'s `**/*.test.ts` glob AND was never run under `npm test` in any CI job. The task to re-enable it (TASKS.md line 228) named two breakages — handler rename (`handleComplete`/`handleTasks` → `handleTask`) and a `fakeToken` listener signature mismatch. Both fixed quickly. But the moment vitest actually executed for the first time in months, 18 additional argv assertions failed: every handler in `extension.ts` had grown an `args.push("--no-color")` call between when the tests were written and now, and not one of those assertions had been updated. `expect.anything()` and `expect.any(Function)` happily passed the typecheck because they admit any shape — the typecheck would not have caught these even if the carve-out had been removed. Only execution did. Commit cf2a109c.
+
+**Lesson**: A test suite excluded from BOTH typecheck and execution rots compounding, not linearly. Every unrelated change in the production code lands without resistance, and the cost of re-enabling is the sum of *all* drift since the suite was last green — not just the bug whose mention triggered the re-enable. The two exclusion layers (typecheck-side `exclude:` and CI-job-side missing-step) each provide false comfort that the other one might be catching something. Together they catch nothing.
+
+**Application**: When adding a tooling exclude of any kind (`tsconfig` exclude glob, `go test ./... -short` skipping a directory, vitest `testPathIgnorePatterns`, `pytest --ignore`), file an immediate follow-up TASKS.md item whose acceptance criterion is *removal* of the exclude with a deadline or trigger. Treat the exclude as borrowed-time, not a stable state. When re-enabling, expect drift-debt: budget for fixing 5–20× more than the named scope and don't ship a partial fix that re-disables on first failure. In code review, an exclude addition without a paired follow-up should be a comment.
 
 ---
 
