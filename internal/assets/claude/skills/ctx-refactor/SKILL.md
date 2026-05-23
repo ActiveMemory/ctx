@@ -16,9 +16,10 @@ Refactoring changes structure, not outcomes.
 ## When NOT to Use
 
 - User wants to add new behavior (that's a feature, not a refactor)
-- User wants a rename across the codebase (prefer
-  `/gitnexus-refactoring` if GitNexus is available; otherwise
-  use grep-based search to find all references before renaming)
+- User wants a rename across the codebase (if you have an
+  external rename-aware skill, e.g. the GitNexus suite ships
+  `/gitnexus-refactoring`, invoke it; otherwise use grep-based
+  search to find all references before renaming)
 
 ## Rules
 

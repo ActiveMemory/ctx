@@ -132,12 +132,16 @@ Skip this section entirely if `companion_check: false` is set in
 the field value.
 
 **Companion tools** enhance ctx skills with web search and code
-intelligence. They are optional but recommended:
+intelligence. They are optional but recommended. ctx names canonical
+implementations below; if your MCP toolchain provides equivalent
+capabilities through different servers (e.g. Firecrawl / Exa /
+Tavily for web search; sourcegraph-cody for code graph), use
+whatever you have connected.
 
-| Tool          | Purpose                                                | Smoke test                                                           |
-|---------------|--------------------------------------------------------|----------------------------------------------------------------------|
-| Gemini Search | Grounded web search with citations                     | Call `mcp__gemini-search__search_with_grounding` with a simple query |
-| GitNexus      | Code knowledge graph (symbols, blast radius, clusters) | Call `mcp__gitnexus__list_repos`                                     |
+| Capability                | Canonical example | Smoke test for the canonical example                                 |
+|---------------------------|-------------------|----------------------------------------------------------------------|
+| Web search with citations | Gemini Search     | Call `mcp__gemini-search__search_with_grounding` with a simple query |
+| Code knowledge graph      | GitNexus          | Call `mcp__gitnexus__list_repos`                                     |
 
 **Check procedure:**
 

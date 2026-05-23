@@ -14,8 +14,9 @@ Review the specified code change focusing on substance over style.
 
 ## When NOT to Use
 
-- User wants a full PR review with GitHub integration (use
-  `/gitnexus-pr-review` instead)
+- User wants a full PR review with GitHub integration — if
+  you have an external PR-review skill (the GitNexus suite
+  ships `/gitnexus-pr-review`), invoke it instead
 - User wants an architecture-level review (use `/ctx-architecture`)
 
 ## Review Checklist

@@ -30,8 +30,10 @@ to questions never asked.
 
 - After `/ctx-architecture` or `/ctx-architecture principal` has
   produced artifacts
-- After `npx gitnexus analyze --embeddings` completes on a project
-  that already has architecture artifacts
+- After a code-intelligence MCP has indexed the project
+  (canonical: GitNexus via `npx gitnexus analyze --embeddings`;
+  equivalents apply their own indexing step) and architecture
+  artifacts already exist
 - When the user says "enrich the architecture", "run enrichment
   pass", "add graph data", "quantify the danger zones"
 - When DANGER-ZONES.md exists but lacks blast radius numbers
@@ -42,8 +44,8 @@ to questions never asked.
 
 - As a substitute for `/ctx-architecture` - if no architecture
   artifacts exist, run `/ctx-architecture` first
-- When GitNexus MCP is not connected or the index is stale -
-  preflight will catch this
+- When no code-intelligence MCP is connected, or the index is
+  stale — preflight will catch this
 - Immediately after `/ctx-architecture` in the same session without
   user request - let the user review the base artifacts first
 
@@ -83,25 +85,36 @@ to generate the baseline, then run this skill to enrich it.
 
 ### 1.2 Verify Code Intelligence Tools
 
-Check each tool silently:
+Check each capability silently:
 
-**GitNexus** (required):
-- Call `mcp__gitnexus__list_repos` to verify connection
-- Check that the current project is indexed
-- Compare the index timestamp against the latest git commit to
-  detect staleness
+**Code-intelligence MCP** (required for this skill):
 
-If GitNexus is not connected or the project is not indexed:
+This skill's entire purpose is code-graph-verified enrichment,
+so it cannot run without a code-intelligence MCP. The canonical
+implementation is GitNexus (`mcp__gitnexus__list_repos`,
+`mcp__gitnexus__impact`, etc.); equivalents that expose the
+same capabilities (symbol index, blast-radius queries, indexed
+repo state) work equally well.
+
+- Attempt the smoke-test call for whichever code-intelligence
+  MCP your toolchain provides
+- For GitNexus specifically: also check that the current
+  project is indexed and compare the index timestamp against
+  the latest git commit to detect staleness
+
+If no code-intelligence MCP is connected:
 
 ```
-GitNexus is not connected (or this project is not indexed).
-This skill requires a code intelligence graph.
+This skill requires a code-intelligence MCP (e.g., GitNexus,
+sourcegraph-cody, or equivalent). None is connected.
 
-To set up: add the GitNexus MCP server, then run:
+If you have GitNexus, configure the MCP and run:
   npx gitnexus analyze --embeddings
+If you use a different code-intelligence MCP, configure it
+per its docs and re-run this skill.
 ```
 
-If the index is stale (commits after last index):
+For GitNexus, if the index is stale (commits after last index):
 
 - **≤ 5 commits behind**: warn and proceed.
   ```
@@ -117,10 +130,17 @@ If the index is stale (commits after last index):
   Run `npx gitnexus analyze` to update, then re-run this skill.
   ```
 
-**Gemini Search** (optional):
-- Attempt a simple query to verify connection
+(For non-GitNexus code-intelligence MCPs, apply the same
+staleness check using whatever the underlying tool exposes.)
+
+**Web-search-with-citations MCP** (optional):
+
+- Canonical example: Gemini Search
+  (`mcp__gemini-search__search_with_grounding`)
+- Equivalents: Firecrawl, Exa, Tavily, or any MCP that
+  returns grounded results with citations
 - If available: note silently, use for upstream pattern lookups
-- If not available: note silently, proceed without it
+- If not available: silently fall back to built-in web search
 
 ### 1.3 Read Baseline Artifacts
 
