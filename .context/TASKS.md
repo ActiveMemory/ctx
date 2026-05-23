@@ -2572,13 +2572,25 @@ lands).
   with ErrNoBackends), unknown-named-backend (ErrBackendNotFound),
   unreachable (ErrUnreachable + ECONNREFUSED chain).
 
-- [ ] Add the deterministic-core boundary guard: a unit test (or
+- [x] Add the deterministic-core boundary guard: a unit test (or
   lint check) that fails if `internal/cli/agent/`,
   `internal/cli/status/`, or any deterministic-ceremony hook
   imports `internal/backend/`. This is the structural enforcement
   for Invariant 2 — without it, the additive/optional discipline
   is honour-system only. Spec: `specs/ctx-ai-backend.md` §Validation
   Rules and §Testing. #priority:medium #added:2026-05-21
+  Done 2026-05-23. `internal/audit/deterministic_core_test.go`
+  walks all internal/ packages, isolates the deterministic-core
+  prefix set (`internal/cli/agent`, `internal/cli/status`,
+  `internal/cli/load`, `internal/cli/system/cmd/`), and fails
+  on any non-test import of the forbidden AI-layer prefix set
+  (`internal/backend`, `internal/cli/ai`, `internal/write/ai`).
+  Setup-time backend writer
+  (`internal/cli/setup/core/backend/`) and rc accessors
+  (`rc.Backends()`) are intentionally NOT in the forbidden set:
+  they touch the on-disk config, not the runtime HTTP client.
+  Sanity probe confirmed the test catches a deliberate
+  violation; probe removed.
 
 - [ ] Ship the validation consumer from block B: pick *one*
   extraction command (the spec recommends `ctx compact <input>
