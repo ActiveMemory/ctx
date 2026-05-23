@@ -40,11 +40,11 @@
 //
 // # Rev-Parse and Common Flags
 //
-// Rev-parse flags (FlagShort, FlagShowCurrent,
-// FlagShowToplevel, FlagGitDir) and general flags
-// (FlagCached, FlagChangeDir, FlagNameOnly,
-// FlagOneline, FlagSince, etc.) are defined as named
-// constants.
+// Rev-parse flags (FlagShort, FlagShowToplevel,
+// FlagGitDir), branch-subcommand flags
+// (FlagShowCurrent), and general flags (FlagCached,
+// FlagChangeDir, FlagNameOnly, FlagOneline, FlagSince,
+// etc.) are defined as named constants.
 //
 // # Format Strings
 //

@@ -33,9 +33,13 @@ const (
 // Rev-parse flags.
 const (
 	FlagShort        = "--short"
-	FlagShowCurrent  = "--show-current"
 	FlagShowToplevel = "--show-toplevel"
 	FlagGitDir       = "--git-dir"
+)
+
+// Branch subcommand flags.
+const (
+	FlagShowCurrent = "--show-current"
 )
 
 // Common flags and format strings for git commands.

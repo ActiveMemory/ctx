@@ -28,7 +28,7 @@ import (
 func resolveBranchOrDetached(projectRoot string) string {
 	out, runErr := execGit.Run(
 		cfgGit.FlagChangeDir, projectRoot,
-		cfgGit.RevParse, cfgGit.FlagShowCurrent,
+		cfgGit.Branch, cfgGit.FlagShowCurrent,
 	)
 	if runErr != nil {
 		return cfgGitmeta.BranchDetached

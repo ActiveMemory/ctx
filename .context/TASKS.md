@@ -89,7 +89,7 @@ TASK STATUS LABELS:
   (`EnvCwdMismatch_Refuses`, `EnvCwdMatch_Succeeds`,
   `EnvCwdMismatch_CallerSkipsGuard`).
 
-- [ ] Bug: `ctx handover write` emits literal `branch: --show-current`
+- [x] Bug: `ctx handover write` emits literal `branch: --show-current`
   in handover frontmatter instead of the resolved branch name. Spotted
   during the 2026-05-20 wrap-up; the handover at
   `.context/handovers/20260521T045353Z-...md` shows the issue. Looks
@@ -97,6 +97,19 @@ TASK STATUS LABELS:
   flag literal. Read side parses it but downstream tooling that
   expects `main` (or whatever) will get tripped. #priority:medium
   #added:2026-05-20
+  Fixed: `internal/gitmeta/branch.go` was running
+  `git rev-parse --show-current`; `--show-current` is a
+  `git branch` flag, not a rev-parse flag, and rev-parse echoes
+  unknown args verbatim (exit 0), which is why the literal string
+  reached the frontmatter. Swapped `cfgGit.RevParse` for
+  `cfgGit.Branch`; moved `FlagShowCurrent` into a new
+  "Branch subcommand flags" group in `internal/config/git/git.go`
+  (its prior "Rev-parse flags" home was the misclassification that
+  let the bug land); fixed stale docs in `gitmeta/head.go` and
+  `config/git/doc.go`. New regression test
+  `TestResolveHead_RealRepoReturnsBranchName` initializes a real
+  git repo on `trunk` and asserts the resolved branch contains no
+  `--` flag literal.
 
 - [x] Implement `specs/cwd-anchored-context.md` — drop the `CTX_DIR`
   env channel and `ctx activate`/`ctx deactivate` entirely; resolver

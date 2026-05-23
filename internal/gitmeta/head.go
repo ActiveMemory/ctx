@@ -26,8 +26,8 @@ import (
 //     resolved from git (or "detached").
 //
 // Otherwise, `git rev-parse --short HEAD` returns the
-// abbreviated SHA, and `git rev-parse --abbrev-ref HEAD`
-// (via FlagShowCurrent) returns the current branch.
+// abbreviated SHA, and `git branch --show-current` returns
+// the current branch.
 //
 // Parameters:
 //   - projectRoot: absolute path to the project root; passed

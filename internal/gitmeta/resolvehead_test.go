@@ -7,6 +7,8 @@
 package gitmeta_test
 
 import (
+	"os/exec"
+	"strings"
 	"testing"
 
 	cfgGitmeta "github.com/ActiveMemory/ctx/internal/config/gitmeta"
@@ -71,5 +73,46 @@ func TestResolveHead_NoOverridesAndNoGitFails(t *testing.T) {
 	_, err := gitmeta.ResolveHead(t.TempDir())
 	if err == nil {
 		t.Fatal("want error in dir without git; got nil")
+	}
+}
+
+// TestResolveHead_RealRepoReturnsBranchName guards against
+// the `git rev-parse --show-current` regression where the
+// branch resolver was emitting the literal flag string
+// "--show-current" because rev-parse echoes unknown args
+// rather than erroring. The correct invocation is
+// `git branch --show-current`.
+func TestResolveHead_RealRepoReturnsBranchName(t *testing.T) {
+	t.Setenv(cfgGitmeta.EnvCtxTaskCommit, "")
+	t.Setenv(cfgGitmeta.EnvGithubActions, "")
+	t.Setenv(cfgGitmeta.EnvGithubSHA, "")
+
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git not on PATH")
+	}
+
+	tmp := t.TempDir()
+	runGit := func(args ...string) {
+		t.Helper()
+		//nolint:gosec // G204: test fixture, args are hardcoded literals
+		cmd := exec.Command("git", append([]string{"-C", tmp}, args...)...)
+		if out, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("git %v: %v\n%s", args, err, out)
+		}
+	}
+	runGit("init", "--initial-branch=trunk")
+	runGit("config", "user.email", "test@example.com")
+	runGit("config", "user.name", "Test")
+	runGit("commit", "--allow-empty", "-m", "init")
+
+	ref, err := gitmeta.ResolveHead(tmp)
+	if err != nil {
+		t.Fatalf("ResolveHead: %v", err)
+	}
+	if ref.Branch != "trunk" {
+		t.Errorf("Branch: want %q; got %q", "trunk", ref.Branch)
+	}
+	if strings.Contains(ref.Branch, "--") {
+		t.Errorf("Branch leaks a flag literal: %q", ref.Branch)
 	}
 }
