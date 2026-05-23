@@ -2396,3 +2396,151 @@ the zensical shell-out pattern (recommended).
   ground-mode `mcp:` source kinds (which cover the KB-grounding angle for free);
   this phase is specifically about
   journal-corpus semantic recall (`ctx journal search "<query>"` shape).
+
+## Phase BE: AI Backend (Block A — issue #92)
+
+Spec: `specs/ctx-ai-backend.md`. Read the spec before starting any BE task.
+Tracks issue #92 (https://github.com/ActiveMemory/ctx/issues/92).
+
+Block A is the foundation — optional, local-first AI backend layer talking to
+any OpenAI-compatible HTTP endpoint (vLLM canonical, plus openai, anthropic,
+ollama, lmstudio wrappers). Strictly additive: fails closed when no backend
+is configured; never degrades silently to a non-AI path. Block B (structured
+extraction) and Block C (embedding-backed recall) build on this layer in
+follow-up specs (`specs/ctx-ai-extraction-and-recall.md`, re-debated after A
+lands).
+
+- [x] Decide the AI command CLI namespace: `ctx ai <verb>` (new
+  top-level) vs. flags on existing commands (`--use-ai`, `--emit`,
+  etc.). Foundational; expensive to unwind once shipped. Record
+  the call as a `.context/DECISIONS.md` entry naming the chosen
+  shape and the rejected alternative with rationale. Blocks every
+  other task in this group. Spec: `specs/ctx-ai-backend.md` Open
+  Question #1. #priority:medium #added:2026-05-21
+  Done 2026-05-22: chose `ctx ai <verb>` namespace; all four open
+  questions resolved together. Decision recorded in DECISIONS.md
+  entry `2026-05-22-220000` (CLI namespace + validator
+  `ctx ai extract` + proposals dir `.context/proposals/<TS>-<slug>.md`
+  + companion-skill absorbs into `/ctx-setup`). Committed in
+  `5467d8aa`.
+
+- [x] Implement the backend contract and registry: new
+  `internal/backend/` package with `Backend` interface (`Name`,
+  `Ping`, `Complete`), `Request`/`Response` types, and a
+  `Registry` (`Register`, `Resolve`, `Default`). No per-backend
+  implementations yet; this is the abstraction surface that later
+  tasks plug into. Unit tests cover single/multiple/default/missing
+  backend resolution. Spec: `specs/ctx-ai-backend.md` §Implementation.
+  #priority:medium #added:2026-05-21
+  Done 2026-05-22 in `5467d8aa`. `Config` is an alias for
+  `entity.BackendConfig` (cross-package types rule); sentinels
+  `ErrBackendNotFound`, `ErrNoBackends`, `ErrAmbiguousDefault`,
+  `ErrDuplicateRegistration` plus constructors `NotFound(name)`
+  and `DuplicateRegistration(name)` live in `internal/err/backend/`.
+  Registry tests cover register/resolve/duplicate/unknown/empty/
+  single-implicit-default/explicit-default/ambiguous.
+
+- [x] Extend `internal/rc/` to parse and validate the `.ctxrc`
+  `[backends]` table per the spec's Configuration section:
+  per-backend `endpoint`, `api_key_env`, `timeout`, `default_model`,
+  plus optional `[backends].default`. Refuse malformed tables with
+  a clear parse error naming the offending key. Add fixtures and
+  round-trip tests. Spec: `specs/ctx-ai-backend.md` §Configuration.
+  #priority:medium #added:2026-05-21
+  Done 2026-05-22 in `5467d8aa`. YAML shape is a list of objects
+  (`backends: - name: vllm ...`) plus a top-level
+  `default_backend:` key. `rc.Backends()` returns
+  `[]entity.BackendConfig` with timeouts parsed via
+  `time.ParseDuration`; unparseable timeouts emit a warning
+  (`cfgWarn.BackendInvalidTimeout`) and yield zero so the
+  backend's own default applies (matches existing rc parsing
+  posture: parse failures are warnings, not hard errors). Tests
+  cover empty, single, multiple-with-order, malformed-timeout,
+  empty-timeout.
+
+- [x] Implement the minimum viable backend set: `vllm` (canonical
+  local) and generic `openai-compatible` (the contract floor) in
+  `internal/backend/vllm.go` and `internal/backend/openaicompat.go`.
+  Both must implement `Ping` (HTTP GET on `/v1/models`) and
+  `Complete` (POST `/v1/chat/completions`). Fail closed on
+  unreachable / 4xx / 5xx / timeout; never retry with a different
+  model. Spec: `specs/ctx-ai-backend.md` §Approach and §Edge Cases.
+  #priority:medium #added:2026-05-21
+  Done 2026-05-22 in `56febc1c`. openaicompat is the wire floor
+  (URL via `url.URL.JoinPath`, Bearer auth, body excerpts capped at
+  512B, response read capped at 8MB); vllm embeds it and overrides
+  Ping with `coldStartRetry` on `syscall.ECONNREFUSED` over a
+  90s default window (per LEARNINGS `2026-05-22-230000` gotcha —
+  cold-start manifests as refused, not 503). Six new sentinels in
+  `internal/err/backend/` cover MissingEndpoint, InvalidEndpoint,
+  MissingModel, Unreachable, UnhealthyStatus, UpstreamStatus.
+  `err.backend.unreachable` uses two `%w` directives (Go 1.20+)
+  so `errors.Is(err, syscall.ECONNREFUSED)` matches the chain.
+  Magic strings/numbers moved to new package `internal/config/backend/`
+  (NameOpenAICompat, NameVLLM, scheme/path/header constants,
+  defaults). 14 httptest-driven tests cover happy paths, auth,
+  unreachable, unhealthy, upstream-status, parse-error,
+  empty-choices, cold-start retry-then-succeed, non-dial
+  return-immediately, window-expires, context-cancelled.
+
+- [ ] Add the named-backend implementations: `openai`, `anthropic`,
+  `ollama`, `lmstudio` in `internal/backend/`. Each is a thin
+  wrapper over `openaicompat` with backend-specific defaults
+  (endpoint, auth header shape, env-var name). Anthropic uses the
+  Messages API endpoint where supported but inherits the
+  OpenAI-compatible floor for `/v1/chat/completions`. Spec:
+  `specs/ctx-ai-backend.md` §Approach. #priority:medium
+  #added:2026-05-21
+
+- [ ] Extend the `ctx setup` family with `--backend <name>`:
+  templates endpoint + auth wiring into `.ctxrc` and (where
+  applicable) downstream AI-tool configs (`ANTHROPIC_BASE_URL`,
+  `OPENAI_BASE_URL`). Honours existing env-var values: warn but
+  do not overwrite. Lives in new `internal/cli/setup/core/backend/`
+  subpackage. Spec: `specs/ctx-ai-backend.md` §Implementation.
+  #priority:medium #added:2026-05-21
+
+- [ ] Build the AI command surface per the namespace decision from
+  the first task. Minimum verbs: `ping` (reachability + first model
+  listed) plus the validation consumer chosen below. All AI
+  commands honour `--backend` flag (falls back to
+  `[backends].default`), fail closed when no backend configured,
+  and surface upstream errors verbatim. Spec:
+  `specs/ctx-ai-backend.md` §Interface. #priority:medium
+  #added:2026-05-21
+  Namespace decision (Task 1) chose `ctx ai <verb>`; this task
+  implements `ctx ai ping` plus the validation-consumer verb.
+
+- [ ] Add the deterministic-core boundary guard: a unit test (or
+  lint check) that fails if `internal/cli/agent/`,
+  `internal/cli/status/`, or any deterministic-ceremony hook
+  imports `internal/backend/`. This is the structural enforcement
+  for Invariant 2 — without it, the additive/optional discipline
+  is honour-system only. Spec: `specs/ctx-ai-backend.md` §Validation
+  Rules and §Testing. #priority:medium #added:2026-05-21
+
+- [ ] Ship the validation consumer from block B: pick *one*
+  extraction command (the spec recommends `ctx compact <input>
+  --emit decisions,learnings,tasks,open-questions` as the cheapest
+  per the brief). Implements the full pattern end-to-end:
+  schema-constrained dispatch through the backend, JSON validation,
+  proposal artifact written to the provisional proposal queue
+  location (settled later by the B+C spec). `.context/*.md` files
+  must remain unchanged. Integration test confirms the round-trip
+  against a fake OpenAI-compatible httptest server. Spec:
+  `specs/ctx-ai-backend.md` §Testing and Open Question #5.
+  #priority:medium #added:2026-05-21
+  Validator chosen (Task 1): `ctx ai extract` (fresh verb in the
+  ai namespace, not retrofit onto `ctx compact`). Proposal queue
+  location chosen: `.context/proposals/<TS>-<slug>.md`,
+  gitignored by default.
+
+- [ ] Write the documentation deliverables: one new recipe
+  (`docs/recipes/local-inference-with-vllm.md` or
+  `docs/recipes/ai-backend-setup.md`) covering the
+  `ctx setup --backend vllm` flow end-to-end, plus a CLI reference
+  page under `docs/cli/` for whichever command surface the
+  namespace decision produced. The recipe is *one file*, not a
+  recipe-surface rework — that scope was explicitly rejected in
+  the brief. Spec: `specs/ctx-ai-backend.md` §Non-Goals.
+  #priority:medium #added:2026-05-21
