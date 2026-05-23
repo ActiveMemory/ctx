@@ -50,6 +50,16 @@ func readMCP(t *testing.T, path string) map[string]interface{} {
 func TestEnsureMCPConfig_CreatesFile(t *testing.T) {
 	home := setOpenCodeHome(t)
 
+	// Seed a fake `ctx` on PATH so launchCommand's exec.LookPath
+	// resolves to an absolute path even in CI shells that don't
+	// have ctx installed.
+	binDir := t.TempDir()
+	fake := filepath.Join(binDir, "ctx")
+	if err := os.WriteFile(fake, []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
+		t.Fatalf("seed fake ctx: %v", err)
+	}
+	t.Setenv("PATH", binDir)
+
 	var buf bytes.Buffer
 	if err := ensureMCPConfig(testCmd(&buf)); err != nil {
 		t.Fatalf("ensureMCPConfig: %v", err)
