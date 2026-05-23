@@ -275,6 +275,13 @@ function runCtx(
       return;
     }
     let disposed = false;
+    // `disposable` must be declared (not just const-assigned) before
+    // the execFile callback can reference it. The cancellation
+    // listener can only register after `child` exists, so a const
+    // initializer is impossible here; and mocked execFile (vitest)
+    // fires the callback synchronously, which would TDZ-trap a
+    // const-declared-later pattern.
+    // eslint-disable-next-line prefer-const
     let disposable: { dispose(): void } | undefined;
     // Use shell on Windows so execFile can resolve PATH executables
     // without requiring the .exe extension.

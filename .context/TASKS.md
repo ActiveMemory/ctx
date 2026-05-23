@@ -252,7 +252,7 @@ TASK STATUS LABELS:
   Per `specs/fix-vscode-extension-tests.md`. `npm run lint`
   deferred — see follow-up below.
 
-- [ ] Scaffold ESLint config for `editors/vscode/` and wire
+- [x] Scaffold ESLint config for `editors/vscode/` and wire
   `npm run lint` into the `vscode-extension` CI job. The
   `lint` script (`eslint src --ext ts`) already exists in
   `package.json` but no `.eslintrc*` is checked in, so the
@@ -262,6 +262,22 @@ TASK STATUS LABELS:
   and whether `editors/vscode/` should share config with
   `tools/typecheck/opencode/` (which also has no lint set
   up). #priority:low #added:2026-05-22
+  Done: ESLint 9 flat config at `editors/vscode/eslint.config.js`,
+  composing `js.configs.recommended` +
+  `tseslint.configs.recommended`. Correctness-only ruleset:
+  `no-explicit-any: off` (VS Code API shim leans on `any`
+  deliberately), `no-unused-vars: error` with `^_` ignore
+  pattern. Per-package config (opencode-typecheck pkg left for
+  a separate task). Updated `lint` script to drop legacy
+  `--ext` flag (rejected by ESLint 9). One real violation
+  surfaced + fixed: `extension.ts:278 prefer-const` —
+  attempted a closure refactor first but vitest's mock fires
+  `execFile` callbacks synchronously (real Node defers to
+  `process.nextTick`), which hit a TDZ on `disposable`.
+  Reverted to `let` with eslint-disable-next-line + inline
+  rationale. Added `npm run lint` step to the CI
+  `vscode-extension` job between typecheck and test. Audit
+  clean. Per `specs/scaffold-vscode-eslint.md`.
 
 - [ ] The target project (to be given to the Agent) has a good "phasing"
   mechanism for tasks; implement that; maybe `ctx task add` can have a

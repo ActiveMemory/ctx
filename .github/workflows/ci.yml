@@ -115,6 +115,10 @@ jobs:
         working-directory: editors/vscode
         run: npx tsc --noEmit -p tsconfig.ci.json
 
+      - name: Lint (eslint)
+        working-directory: editors/vscode
+        run: npm run lint
+
       - name: Test (vitest)
         working-directory: editors/vscode
         run: npm test

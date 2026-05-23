@@ -67,7 +67,8 @@ func allGoFiles(t *testing.T, root string) []string {
 		isSkipped := info.Name() == "vendor" ||
 			info.Name() == ".git" ||
 			info.Name() == "dist" ||
-			info.Name() == "site"
+			info.Name() == "site" ||
+			info.Name() == "node_modules"
 		if info.IsDir() && isSkipped {
 			return filepath.SkipDir
 		}
