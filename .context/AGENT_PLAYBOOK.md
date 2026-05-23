@@ -339,6 +339,60 @@ include: "Read `specs/feature-name.md` before starting any PX task."
 read the spec first. Don't rely on the task description alone: it's a
 summary, not the full design.
 
+## Spec Verification Step (run before drafting every commit message)
+
+The CONSTITUTION says the `Spec:` trailer must be truthful — it points at
+the design rationale this commit serves. The failure mode this procedure
+prevents: reaching for the most-recent spec in working memory to satisfy
+the gate when no spec genuinely covers the work. That's a violation even
+though it syntactically passes.
+
+Before writing the commit message body, answer these two questions to
+yourself out loud (in your reasoning, not in tool calls):
+
+1. **What is the spec for this work?** Name a specific file path.
+2. **Why does it cover this commit specifically?** Articulate the overlap
+   between the spec's content and the diff in one sentence. If your
+   sentence hand-waves ("it's adjacent", "we touched something similar",
+   "it's the most recent"), the trailer is wrong.
+
+If you can't write a non-hand-waving answer to #2, the trailer is wrong.
+Three correct responses, in order of preference:
+
+- **(a) Scaffold a fresh spec for this work.** Scale to the change — a
+  one-paragraph spec for a one-line fix is fine. Spec lives in `specs/`,
+  the trailer cites it, you proceed.
+- **(b) Bundle this change into the next functional commit** so it
+  inherits that commit's legitimate spec. This is the right answer for
+  small chores that arose as part of larger work (a gitignore line that
+  surfaced while fixing a bug — fold it into the bug-fix commit).
+- **(c) Cite `specs/meta/chores.md`** *if and only if* the diff fits one
+  of the explicitly listed chore categories there (gitignore additions,
+  lockfile bumps, formatting passes, typo fixes, mechanical file moves,
+  license-header updates). Citing the meta spec is a declarative claim
+  that the diff is in the chore class — anyone reviewing can verify by
+  inspecting the diff.
+
+Anti-patterns to avoid (these are the heuristic drifts that produce
+wrong trailers):
+
+- **Reusing the previous commit's spec** because it's in working memory.
+  If the previous spec doesn't pass the verification step for this
+  commit, it's wrong even if it was right for the previous one.
+- **Citing an adjacent spec** ("we modified files this spec mentions
+  tangentially"). Adjacency is not coverage; specs describe design
+  rationale, not file ownership.
+- **Citing a spec that's in working memory because you just read it.**
+  Working memory ≠ relevance.
+- **Improvising to satisfy the gate.** The gate is enforcing truthfulness;
+  improvisation defeats the gate's purpose even when it passes
+  syntactically.
+
+When in doubt — when the closest candidate spec is a stretch and you
+aren't sure whether to scaffold — ask the user. The cost of one
+clarifying question is much smaller than the cost of a fabricated
+traceability link landing in `git log` permanently.
+
 ## When to Consolidate vs Add Features
 
 **Signs you should consolidate first:**
