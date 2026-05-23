@@ -19,18 +19,19 @@ import (
 )
 
 // declareContext sets up a tempDir layout with a .context/ directory
-// and a .ctxrc at the project root (the parent of CTX_DIR), declares
-// CTX_DIR via t.Setenv, and resets the rc singleton. The helper
-// matches the single-source-anchor resolution model
-// (spec: specs/single-source-context-anchor.md): .ctxrc is read from
-// filepath.Dir(ContextDir())/.ctxrc, not CWD.
+// and a .ctxrc at the project root, t.Chdir's into tempDir so that
+// `$PWD/.context` resolves to the test's .context, and resets the
+// rc singleton. Mirrors the cwd-anchored resolution model
+// (spec: specs/cwd-anchored-context.md): rc.ContextDir() is
+// `filepath.Join($PWD, ".context")`, and .ctxrc is read from
+// `$PWD/.ctxrc`.
 //
 // Parameters:
-//   - t: test handle for Setenv/TempDir/Cleanup wiring.
+//   - t: test handle for Chdir/TempDir/Cleanup wiring.
 //   - content: YAML body to write into .ctxrc; empty for "no file".
 //
 // Returns:
-//   - string: absolute path of the declared .context/ directory.
+//   - string: absolute path of the test .context/ directory.
 func declareContext(t *testing.T, content string) string {
 	t.Helper()
 	tempDir := t.TempDir()
@@ -44,7 +45,7 @@ func declareContext(t *testing.T, content string) string {
 			t.Fatalf("write .ctxrc: %v", wrErr)
 		}
 	}
-	t.Setenv(env.CtxDir, ctxDir)
+	t.Chdir(tempDir)
 	Reset()
 	t.Cleanup(Reset)
 	return ctxDir
@@ -70,14 +71,11 @@ func TestDefaultRC(t *testing.T) {
 	}
 }
 
-// TestGetRC_NoFile: no CTX_DIR declared and no .ctxrc anywhere →
-// defaults apply.
-func TestGetRC_NoFile(t *testing.T) {
+// TestGetRC_NoContext: cwd has no .context/ → defaults apply (no
+// .ctxrc to read).
+func TestGetRC_NoContext(t *testing.T) {
 	tempDir := t.TempDir()
 	t.Chdir(tempDir)
-
-	// Ensure no env leak from other tests.
-	t.Setenv(env.CtxDir, "")
 	Reset()
 	t.Cleanup(Reset)
 
@@ -91,8 +89,8 @@ func TestGetRC_NoFile(t *testing.T) {
 	}
 }
 
-// TestGetRC_WithFile: CTX_DIR declared, .ctxrc adjacent → values
-// picked up.
+// TestGetRC_WithFile: cwd has .context/ and .ctxrc adjacent →
+// values picked up.
 func TestGetRC_WithFile(t *testing.T) {
 	declareContext(t, `token_budget: 4000
 priority_order:
@@ -130,162 +128,63 @@ func TestGetRC_TokenBudgetEnvOverride(t *testing.T) {
 	}
 }
 
-// TestContextDir_RejectsUnset: CTX_DIR unset → ErrDirNotDeclared.
-func TestContextDir_RejectsUnset(t *testing.T) {
-	t.Setenv(env.CtxDir, "")
+// TestContextDir_NoDotContext: cwd has no .context/ →
+// errCtx.ErrNoCtxHere.
+func TestContextDir_NoDotContext(t *testing.T) {
+	tempDir := t.TempDir()
+	t.Chdir(tempDir)
 	Reset()
 	t.Cleanup(Reset)
 
 	got, err := ContextDir()
-	if !errors.Is(err, errCtx.ErrDirNotDeclared) {
-		t.Errorf("ContextDir() err = %v, want ErrDirNotDeclared", err)
+	if !errors.Is(err, errCtx.ErrNoCtxHere) {
+		t.Errorf("ContextDir() err = %v, want ErrNoCtxHere", err)
 	}
 	if got != "" {
 		t.Errorf("ContextDir() = %q, want \"\"", got)
 	}
 }
 
-// TestContextDir_RejectsEmpty: CTX_DIR set to empty string is
-// treated as unset. Spec contract: declared-or-not, no
-// in-between.
-func TestContextDir_RejectsEmpty(t *testing.T) {
-	t.Setenv(env.CtxDir, "")
-	Reset()
-	t.Cleanup(Reset)
-
-	_, err := ContextDir()
-	if !errors.Is(err, errCtx.ErrDirNotDeclared) {
-		t.Errorf("ContextDir() err = %v, want ErrDirNotDeclared", err)
+// TestContextDir_RejectsNotADirectory: cwd has .context as a
+// regular file → ErrContextDirNotADirectory.
+func TestContextDir_RejectsNotADirectory(t *testing.T) {
+	tempDir := t.TempDir()
+	filePath := filepath.Join(tempDir, dir.Context)
+	if err := os.WriteFile(filePath, []byte("oops"), 0600); err != nil {
+		t.Fatalf("seed regular file: %v", err)
 	}
-}
-
-// TestContextDir_RejectsRelative_DotContext: critical regression
-// guard against silent cwd-dependency. Without IsAbs check,
-// CTX_DIR=.context would be cwd-absolutized via filepath.Abs and
-// pass the basename guard, defeating the resolver.
-func TestContextDir_RejectsRelative_DotContext(t *testing.T) {
-	t.Setenv(env.CtxDir, ".context")
+	t.Chdir(tempDir)
 	Reset()
 	t.Cleanup(Reset)
 
 	got, err := ContextDir()
-	if !errors.Is(err, errCtx.ErrRelativeNotAllowed) {
-		t.Errorf("ContextDir() err = %v, want ErrRelativeNotAllowed", err)
+	if !errors.Is(err, errCtx.ErrContextDirNotADirectory) {
+		t.Errorf("ContextDir() err = %v, want ErrContextDirNotADirectory", err)
 	}
 	if got != "" {
 		t.Errorf("ContextDir() = %q, want \"\"", got)
 	}
 }
 
-// TestContextDir_RejectsRelative_DotSlashContext: another shape of
-// relative path, same expected error.
-func TestContextDir_RejectsRelative_DotSlashContext(t *testing.T) {
-	t.Setenv(env.CtxDir, "./.context")
-	Reset()
-	t.Cleanup(Reset)
-
-	_, err := ContextDir()
-	if !errors.Is(err, errCtx.ErrRelativeNotAllowed) {
-		t.Errorf("ContextDir() err = %v, want ErrRelativeNotAllowed", err)
-	}
-}
-
-// TestContextDir_RejectsRelative_DotDot: dot-dot relative path
-// also rejected.
-func TestContextDir_RejectsRelative_DotDot(t *testing.T) {
-	t.Setenv(env.CtxDir, "../foo/.context")
-	Reset()
-	t.Cleanup(Reset)
-
-	_, err := ContextDir()
-	if !errors.Is(err, errCtx.ErrRelativeNotAllowed) {
-		t.Errorf("ContextDir() err = %v, want ErrRelativeNotAllowed", err)
-	}
-}
-
-// TestContextDir_RejectsNonCanonicalBasename: catches the common
-// `export CTX_DIR=$(pwd)` footgun on first use rather than
-// letting init deposit canonical files in the project root.
-func TestContextDir_RejectsNonCanonicalBasename(t *testing.T) {
-	t.Setenv(env.CtxDir, "/tmp/notdotcontext")
-	Reset()
-	t.Cleanup(Reset)
-
-	_, err := ContextDir()
-	if !errors.Is(err, errCtx.ErrNonCanonicalBasename) {
-		t.Errorf("ContextDir() err = %v, want ErrNonCanonicalBasename", err)
-	}
-	if err != nil && !contains(err.Error(), "notdotcontext") {
-		t.Errorf("err message %q should include offending basename", err.Error())
-	}
-}
-
-// TestContextDir_RejectsRoot: filepath.Base("/") returns "/", not
-// ".context", so root path is rejected by the basename guard.
-func TestContextDir_RejectsRoot(t *testing.T) {
-	t.Setenv(env.CtxDir, "/")
-	Reset()
-	t.Cleanup(Reset)
-
-	_, err := ContextDir()
-	if !errors.Is(err, errCtx.ErrNonCanonicalBasename) {
-		t.Errorf("ContextDir() err = %v, want ErrNonCanonicalBasename", err)
-	}
-}
-
-// TestContextDir_AcceptsCanonical: canonical absolute `.context`
-// path is the happy path.
-func TestContextDir_AcceptsCanonical(t *testing.T) {
-	t.Setenv(env.CtxDir, "/tmp/.context")
-	Reset()
-	t.Cleanup(Reset)
+// TestContextDir_AcceptsCwdContext: cwd has .context/ → returns
+// `$PWD/.context`.
+func TestContextDir_AcceptsCwdContext(t *testing.T) {
+	ctxDir := declareContext(t, "")
 
 	got, err := ContextDir()
 	if err != nil {
 		t.Fatalf("ContextDir() err = %v, want nil", err)
 	}
-	if got != "/tmp/.context" {
-		t.Errorf("ContextDir() = %q, want %q", got, "/tmp/.context")
+	gotResolved, _ := filepath.EvalSymlinks(got)
+	wantResolved, _ := filepath.EvalSymlinks(ctxDir)
+	if gotResolved != wantResolved {
+		t.Errorf("ContextDir() = %q, want %q", gotResolved, wantResolved)
 	}
 }
 
-// TestContextDir_NormalizesTrailingSlash: filepath.Clean strips
-// trailing slash; basename guard still passes.
-func TestContextDir_NormalizesTrailingSlash(t *testing.T) {
-	t.Setenv(env.CtxDir, "/tmp/.context/")
-	Reset()
-	t.Cleanup(Reset)
-
-	got, err := ContextDir()
-	if err != nil {
-		t.Fatalf("ContextDir() err = %v, want nil", err)
-	}
-	if got != "/tmp/.context" {
-		t.Errorf("ContextDir() = %q, want %q", got, "/tmp/.context")
-	}
-}
-
-// TestContextDir_NormalizesDotSegments: filepath.Clean
-// canonicalizes dot segments.
-func TestContextDir_NormalizesDotSegments(t *testing.T) {
-	t.Setenv(env.CtxDir, "/tmp/./.context")
-	Reset()
-	t.Cleanup(Reset)
-
-	got, err := ContextDir()
-	if err != nil {
-		t.Fatalf("ContextDir() err = %v, want nil", err)
-	}
-	if got != "/tmp/.context" {
-		t.Errorf("ContextDir() = %q, want %q", got, "/tmp/.context")
-	}
-}
-
-// TestContextDir_AcceptsSymlinkNamedDotContext: a symlink whose
-// basename is `.context` (regardless of where it points) passes
-// the basename guard. The resolver checks the *declared* name,
-// not the symlink target name.
-func TestContextDir_AcceptsSymlinkNamedDotContext(t *testing.T) {
+// TestContextDir_AcceptsSymlinkDir: symlink at $PWD/.context
+// pointing at a real directory passes (Stat follows symlinks).
+func TestContextDir_AcceptsSymlinkDir(t *testing.T) {
 	tempDir := t.TempDir()
 	target := filepath.Join(tempDir, "actual-target")
 	if err := os.MkdirAll(target, 0700); err != nil {
@@ -295,76 +194,23 @@ func TestContextDir_AcceptsSymlinkNamedDotContext(t *testing.T) {
 	if err := os.Symlink(target, link); err != nil {
 		t.Skipf("symlink unsupported: %v", err)
 	}
-	t.Setenv(env.CtxDir, link)
-	Reset()
-	t.Cleanup(Reset)
-
-	got, err := ContextDir()
-	if err != nil {
-		t.Fatalf("ContextDir() err = %v, want nil", err)
-	}
-	if got != link {
-		t.Errorf("ContextDir() = %q, want %q (declared symlink path)", got, link)
-	}
-}
-
-// contains is a small helper for substring checks in error
-// messages. Avoids pulling strings.Contains everywhere.
-func contains(haystack, needle string) bool {
-	for i := 0; i+len(needle) <= len(haystack); i++ {
-		if haystack[i:i+len(needle)] == needle {
-			return true
-		}
-	}
-	return false
-}
-
-// TestContextDir_Unset: no env declaration → errCtx.ErrDirNotDeclared.
-// Under the single-source-anchor model, unset is a valid signal used by
-// exempt commands and rc.RequireContextDir's error path.
-func TestContextDir_Unset(t *testing.T) {
-	tempDir := t.TempDir()
 	t.Chdir(tempDir)
-	t.Setenv(env.CtxDir, "")
-	Reset()
-	t.Cleanup(Reset)
-
-	got, err := ContextDir()
-	if err == nil {
-		t.Errorf("ContextDir() err = nil, want errCtx.ErrDirNotDeclared")
-	}
-	if got != "" {
-		t.Errorf("ContextDir() = %q, want \"\" (unset)", got)
-	}
-}
-
-// TestContextDir_EnvOnly: CTX_DIR env set with canonical absolute
-// `.context` path → resolves to that path.
-func TestContextDir_EnvOnly(t *testing.T) {
-	tempDir := t.TempDir()
-	target := filepath.Join(tempDir, dir.Context)
-	_ = os.MkdirAll(target, 0700)
-	t.Setenv(env.CtxDir, target)
 	Reset()
 	t.Cleanup(Reset)
 
 	got, err := ContextDir()
 	if err != nil {
 		t.Fatalf("ContextDir() err = %v, want nil", err)
-	}
-	if !filepath.IsAbs(got) {
-		t.Errorf("ContextDir() = %q, want absolute path", got)
 	}
 	gotResolved, _ := filepath.EvalSymlinks(got)
-	wantResolved, _ := filepath.EvalSymlinks(target)
+	wantResolved, _ := filepath.EvalSymlinks(link)
 	if gotResolved != wantResolved {
-		t.Errorf("ContextDir() = %q, want %q (env)", gotResolved, wantResolved)
+		t.Errorf("ContextDir() = %q, want %q", gotResolved, wantResolved)
 	}
 }
 
-// TestRequireContextDir_Declared: a declared CTX_DIR yields the
-// path and no error.
-func TestRequireContextDir_Declared(t *testing.T) {
+// TestRequireContextDir_Present: cwd has .context/ → path + nil err.
+func TestRequireContextDir_Present(t *testing.T) {
 	ctxDir := declareContext(t, "")
 
 	got, err := RequireContextDir()
@@ -378,12 +224,11 @@ func TestRequireContextDir_Declared(t *testing.T) {
 	}
 }
 
-// TestRequireContextDir_Undeclared: no override, no env → error
-// with a tailored, non-empty message.
-func TestRequireContextDir_Undeclared(t *testing.T) {
+// TestRequireContextDir_Absent: cwd has no .context/ → typed error
+// with a non-empty user-facing message.
+func TestRequireContextDir_Absent(t *testing.T) {
 	tempDir := t.TempDir()
 	t.Chdir(tempDir)
-	t.Setenv(env.CtxDir, "")
 	Reset()
 	t.Cleanup(Reset)
 
@@ -391,69 +236,14 @@ func TestRequireContextDir_Undeclared(t *testing.T) {
 	if err == nil {
 		t.Fatalf("RequireContextDir() err = nil, want non-nil")
 	}
+	if !errors.Is(err, errCtx.ErrNoCtxHere) {
+		t.Errorf("RequireContextDir() err = %v, want ErrNoCtxHere", err)
+	}
 	if got != "" {
 		t.Errorf("RequireContextDir() path = %q, want \"\" on error", got)
 	}
 	if msg := err.Error(); msg == "" {
 		t.Error("RequireContextDir() returned empty error message")
-	}
-}
-
-// TestScanCandidates_NoMatches: empty tree → empty slice.
-func TestScanCandidates_NoMatches(t *testing.T) {
-	tempDir := t.TempDir()
-	t.Chdir(tempDir)
-
-	got := ScanCandidates(tempDir)
-	if len(got) != 0 {
-		t.Errorf("ScanCandidates() = %v, want []", got)
-	}
-}
-
-// TestScanCandidates_SelfMatch: .context/ exists at start dir →
-// one candidate, same path.
-func TestScanCandidates_SelfMatch(t *testing.T) {
-	tempDir := t.TempDir()
-	ctxPath := filepath.Join(tempDir, dir.Context)
-	_ = os.MkdirAll(ctxPath, 0700)
-
-	got := ScanCandidates(tempDir)
-	if len(got) != 1 {
-		t.Fatalf("ScanCandidates() len = %d, want 1", len(got))
-	}
-
-	wantResolved, _ := filepath.EvalSymlinks(ctxPath)
-	gotResolved, _ := filepath.EvalSymlinks(got[0])
-	if gotResolved != wantResolved {
-		t.Errorf("ScanCandidates()[0] = %q, want %q", gotResolved, wantResolved)
-	}
-}
-
-// TestScanCandidates_ManyAncestors: nested .context/ dirs upward
-// are all returned, innermost first.
-func TestScanCandidates_ManyAncestors(t *testing.T) {
-	tempDir := t.TempDir()
-	inner := filepath.Join(tempDir, "inner", "deep")
-	innerCtx := filepath.Join(tempDir, "inner", dir.Context)
-	outerCtx := filepath.Join(tempDir, dir.Context)
-
-	for _, d := range []string{inner, innerCtx, outerCtx} {
-		if mkErr := os.MkdirAll(d, 0700); mkErr != nil {
-			t.Fatalf("mkdir %s: %v", d, mkErr)
-		}
-	}
-
-	got := ScanCandidates(inner)
-	if len(got) < 2 {
-		t.Fatalf("ScanCandidates() len = %d, want >= 2", len(got))
-	}
-
-	// Innermost first: the first candidate must be in the parent of
-	// the start dir (i.e., inner/.context).
-	innerResolved, _ := filepath.EvalSymlinks(innerCtx)
-	gotInner, _ := filepath.EvalSymlinks(got[0])
-	if gotInner != innerResolved {
-		t.Errorf("ScanCandidates()[0] = %q, want %q (innermost)", gotInner, innerResolved)
 	}
 }
 

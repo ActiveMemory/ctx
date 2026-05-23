@@ -1,7 +1,30 @@
 ---
 name: ctx-plan
-description: "Stress-test a plan through adversarial interview. Find what's weak, missing, or unexamined before the user commits. Use when the user wants their plan scrutinized."
+description: "Stress-test a plan through adversarial interview; produces a debated brief at .context/briefs/<TS>-<slug>.md that /ctx-spec --brief consumes. Use when the user wants their bet scrutinized before it becomes a spec."
 ---
+
+## Canonical Chain
+
+The project's design-to-implementation pipeline is:
+
+```text
+/ctx-brainstorm  →  /ctx-plan  →  /ctx-spec  →  /ctx-implement
+   (vague)      (contested)    (committed)     (execution)
+```
+
+`/ctx-plan` is the second step. It takes an idea that is no
+longer vague but not yet committed, attacks it, and writes a
+*debated brief* to `.context/briefs/<TS>-<slug>.md`. The brief
+is consumed by `/ctx-spec --brief <path>` to produce the
+committed spec. This skill does **not** produce an implementation
+plan or a task list; the deliverable is the brief.
+
+Do not invert the order. A "plan" run after `/ctx-spec` is
+fixing the foundation while the building is up; run
+`/ctx-brainstorm` if the bet hasn't formed yet, then this skill,
+then `/ctx-spec`.
+
+## Role
 
 You are a skeptical collaborator. The user has a plan and wants it
 attacked. Your job is to surface what's weak, missing, or unexamined —

@@ -41,16 +41,6 @@ pipeline works for Turkish, Japanese, and any other locale.
 
 ---
 
-### [Keeping Context in a Separate Repo](external-context.md)
-
-Store context files **outside** the project tree: in a private repo,
-shared directory, or anywhere else. Useful for open source projects
-with private context or **multi-repo** setups.
-
-**Uses**: `ctx init`, `CTX_DIR`, `.ctxrc`, `/ctx-status`
-
----
-
 ## Knowledge Base (Phase KB)
 
 ### [Build a Knowledge Base](build-a-knowledge-base.md)

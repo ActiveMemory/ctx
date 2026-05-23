@@ -23,23 +23,19 @@ import (
 	writeRC "github.com/ActiveMemory/ctx/internal/write/rc"
 )
 
-// load builds the runtime configuration under the
-// single-source-anchor model
-// (spec: specs/single-source-context-anchor.md).
+// load builds the runtime configuration under the cwd-anchored
+// resolution model (spec: specs/cwd-anchored-context.md).
 //
 // Lookup rules:
 //
-//   - When a context directory has been declared via CTX_DIR,
-//     `.ctxrc` is read from
-//     `filepath.Dir(ContextDir()) + "/.ctxrc"`: the project root,
-//     which by contract is the parent of [ContextDir]. CWD has no
-//     say. This is the "configuration belongs to the project root"
-//     rule.
-//   - When no context directory is declared, `.ctxrc` is not read
-//     at all: there is no project to configure. Defaults apply.
-//   - Environment overrides (CTX_TOKEN_BUDGET) are applied after the
-//     YAML merge so users can tune per-session without editing the
-//     file.
+//   - When `$PWD/.context/` exists, `.ctxrc` is read from
+//     `$PWD/.ctxrc`: the project root, which by contract is the
+//     parent of [ContextDir].
+//   - When `$PWD/.context/` is absent, `.ctxrc` is not read at all:
+//     there is no project to configure. Defaults apply.
+//   - Environment overrides (CTX_TOKEN_BUDGET) are applied after
+//     the YAML merge so users can tune per-session without editing
+//     the file.
 //
 // Returns:
 //   - *CtxRC: Configuration with file values (when .ctxrc is
@@ -56,15 +52,14 @@ func load() *CtxRC {
 				writeRC.ParseWarning(rcPath, yamlErr)
 			}
 		}
-	case errors.Is(pathErr, errCtx.ErrDirNotDeclared):
-		// CTX_DIR not declared. **Expected** for exempt commands
-		// (ctx init, activate, deactivate, doctor, version,
-		// hub *, etc.) that legitimately call accessors before
-		// any project exists; defaults are the right answer for
-		// them. **Unexpected** for operating commands, which
-		// should have been gated by [bootstrap/cmd.go]'s
-		// PersistentPreRunE call to RequireContextDir before
-		// reaching any RC accessor.
+	case errors.Is(pathErr, errCtx.ErrNoCtxHere):
+		// No `.context/` at cwd. **Expected** for exempt commands
+		// (ctx init, doctor, version, hub *, etc.) that
+		// legitimately call accessors before any project exists;
+		// defaults are the right answer for them. **Unexpected**
+		// for operating commands, which should have been gated by
+		// [bootstrap/cmd.go]'s PersistentPreRunE call to
+		// RequireContextDir before reaching any RC accessor.
 		//
 		// If an operating command ever slips past that gate, this
 		// branch would silently hand back default config
@@ -77,10 +72,10 @@ func load() *CtxRC {
 		// keep running.
 		logWarn.Warn(cfgWarn.RCNoContextDir)
 	default:
-		// Unexpected resolver failure (relative path,
-		// non-canonical basename, etc.). Surface loudly rather
-		// than swallowing; defaults still apply so commands that
-		// do not require a project can still boot. Same noisy-TUI
+		// Unexpected resolver failure (stat permission denied,
+		// wrong-type path, etc.). Surface loudly rather than
+		// swallowing; defaults still apply so commands that do
+		// not require a project can still boot. Same noisy-TUI
 		// principle documented on resolve.DirLine /
 		// resolve.AppendDir.
 		logWarn.Warn(cfgWarn.ContextDirResolve, pathErr)
@@ -97,14 +92,14 @@ func load() *CtxRC {
 }
 
 // ctxrcPath returns the absolute path to the `.ctxrc` file adjacent
-// to the declared context directory.
+// to the project's context directory.
 //
 // Returns:
 //   - string: Absolute path to .ctxrc on success; "" on error.
-//   - error: errCtx.ErrDirNotDeclared when no context directory has
-//     been declared; any other resolver error from ContextDir is
-//     propagated unchanged so the caller decides policy rather than
-//     this helper silently returning an empty path.
+//   - error: errCtx.ErrNoCtxHere when `$PWD/.context/` is absent;
+//     any other resolver error from ContextDir is propagated
+//     unchanged so the caller decides policy rather than this
+//     helper silently returning an empty path.
 func ctxrcPath() (string, error) {
 	ctxDir, err := ContextDir()
 	if err != nil {

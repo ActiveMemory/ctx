@@ -15,41 +15,44 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// Declare wires CTX_DIR to <tempDir>/.context, redirects HOME to
-// tempDir so user-home writes (e.g. ~/.claude/settings.json) stay
-// inside the temp tree, resets rc state, and returns the absolute
-// path that CTX_DIR now points to.
+// Declare positions the test at tempDir as if the user had `cd`'d
+// there. Under the cwd-anchored resolution model
+// (spec: specs/cwd-anchored-context.md), this is what `ctx` needs
+// to resolve `<tempDir>/.context` from any subsequent call.
 //
-// HOME isolation matters because `ctx init` reads and writes
-// ~/.claude/settings.json. Without isolation, parallel `go test
-// ./...` packages all read-modify-write the same real file and race.
+// Side effects:
 //
-// Typical pattern:
-//
-//	tmpDir := t.TempDir()
-//	t.Chdir(tmpDir)
-//	ctxPath := testctx.Declare(t, tmpDir)
-//	_ = initialize.Cmd().Execute()   // materialize .context/
-//	// subsequent ctx commands in the same process resolve to ctxPath
+//   - [t.Chdir](tempDir): subsequent ctx calls resolve via $PWD.
+//   - [t.Setenv]("HOME", tempDir): redirects user-home writes
+//     (e.g. ~/.claude/settings.json) into the temp tree so
+//     parallel-package `go test ./...` runs do not race on the
+//     real config file.
+//   - [rc.Reset]: clears any cached rc state from prior tests in
+//     the process; registered as a [t.Cleanup] for symmetry on
+//     test exit.
 //
 // Declare does NOT create the directory; that is the caller's
-// responsibility, typically via `ctx init`. Tests that only need the
-// environment declared (without materializing .context/) can skip the
-// init step.
+// responsibility, typically via `ctx init`. Tests that only need
+// the cwd positioned (without materializing .context/) can skip
+// the init step.
+//
+// Note: [t.Chdir] is incompatible with [t.Parallel] (it changes
+// process-global state). Tests using Declare must not call
+// t.Parallel.
 //
 // Parameters:
-//   - t:       test handle (required for t.Setenv / t.Cleanup).
+//   - t:       test handle (required for t.Chdir / t.Setenv / t.Cleanup).
 //   - tempDir: absolute path to the per-test temp directory, usually
 //     the value returned by t.TempDir().
 //
 // Returns:
-//   - string: absolute path `<tempDir>/.context`.
+//   - string: absolute path `<tempDir>/.context` (whether or not
+//     it has been materialized).
 func Declare(t *testing.T, tempDir string) string {
 	t.Helper()
-	ctxDir := filepath.Join(tempDir, dir.Context)
-	t.Setenv(env.CtxDir, ctxDir)
+	t.Chdir(tempDir)
 	t.Setenv(env.Home, tempDir)
 	rc.Reset()
 	t.Cleanup(rc.Reset)
-	return ctxDir
+	return filepath.Join(tempDir, dir.Context)
 }

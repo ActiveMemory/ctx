@@ -7,7 +7,6 @@
 package drift
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -67,33 +66,7 @@ func TestReportStatus(t *testing.T) {
 }
 
 func TestDetect(t *testing.T) {
-	// Create a temp directory for testing
-	tmpDir, err := os.MkdirTemp("", "drift-test-*")
-	if err != nil {
-		t.Fatalf("failed to create temp dir: %v", err)
-	}
-	defer func(path string) {
-		rmErr := os.RemoveAll(path)
-		if rmErr != nil {
-			fmt.Printf("failed to remove temp dir %q: %v", path, rmErr)
-		}
-	}(tmpDir)
-
-	// Save and restore the current working directory
-	origDir, err := os.Getwd()
-	if err != nil {
-		t.Fatalf("failed to get current dir: %v", err)
-	}
-	if err = os.Chdir(tmpDir); err != nil {
-		t.Fatalf("failed to chdir: %v", err)
-	}
-	defer func(dir string) {
-		chdirErr := os.Chdir(dir)
-		if chdirErr != nil {
-			fmt.Printf("failed to chdir: %v", chdirErr)
-		}
-	}(origDir)
-
+	tmpDir := t.TempDir()
 	testctx.Declare(t, tmpDir)
 
 	// Create a .context directory with test files
@@ -146,32 +119,8 @@ func TestDetect(t *testing.T) {
 }
 
 func TestCheckPathReferences(t *testing.T) {
-	// Create a temp directory for testing
-	tmpDir, err := os.MkdirTemp("", "drift-path-test-*")
-	if err != nil {
-		t.Fatalf("failed to create temp dir: %v", err)
-	}
-	defer func(path string) {
-		rmErr := os.RemoveAll(path)
-		if rmErr != nil {
-			fmt.Printf("failed to remove temp dir %q: %v", path, rmErr)
-		}
-	}(tmpDir)
-
-	// Save and restore the current working directory
-	origDir, err := os.Getwd()
-	if err != nil {
-		t.Fatalf("failed to get current dir: %v", err)
-	}
-	if err = os.Chdir(tmpDir); err != nil {
-		t.Fatalf("failed to chdir: %v", err)
-	}
-	defer func(dir string) {
-		chdirErr := os.Chdir(dir)
-		if chdirErr != nil {
-			fmt.Printf("failed to chdir: %v", chdirErr)
-		}
-	}(origDir)
+	tmpDir := t.TempDir()
+	t.Chdir(tmpDir)
 
 	// Create the top-level directory so the path passes the
 	// "top dir exists" filter but the full file path is still dead.
@@ -490,31 +439,8 @@ func TestCheckEntryCountDisabled(t *testing.T) {
 }
 
 func TestCheckMissingPackages(t *testing.T) {
-	// Create a temp directory with an internal/ tree
-	tmpDir, err := os.MkdirTemp("", "drift-pkg-test-*")
-	if err != nil {
-		t.Fatalf("failed to create temp dir: %v", err)
-	}
-	defer func(path string) {
-		rmErr := os.RemoveAll(path)
-		if rmErr != nil {
-			fmt.Printf("failed to remove temp dir %q: %v", path, rmErr)
-		}
-	}(tmpDir)
-
-	origDir, err := os.Getwd()
-	if err != nil {
-		t.Fatalf("failed to get current dir: %v", err)
-	}
-	if err = os.Chdir(tmpDir); err != nil {
-		t.Fatalf("failed to chdir: %v", err)
-	}
-	defer func(dir string) {
-		chdirErr := os.Chdir(dir)
-		if chdirErr != nil {
-			fmt.Printf("failed to chdir: %v", chdirErr)
-		}
-	}(origDir)
+	tmpDir := t.TempDir()
+	t.Chdir(tmpDir)
 
 	// Create internal/ subdirectories
 	dirs := []string{

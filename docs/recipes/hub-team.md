@@ -31,14 +31,11 @@ without ceremony.
 - Each team member has `ctx` installed and has
   `ctx connection register`-ed their working projects with
   the hub.
-- Each project on each workstation has been activated for
-  the shell with `eval "$(ctx activate)"`. The hub server
-  (`ctx hub start`, etc.) doesn't need this, but the
-  client side (`ctx connection ...`, `ctx add --share`)
-  lives in a project and does. If you skip activation,
-  those client commands fail with `Error: no context
-  directory specified`. See
-  [Activating a Context Directory](activating-context.md).
+- Client-side commands (`ctx connection ...`,
+  `ctx add --share`) must be run from each project's root —
+  `ctx` reads `$PWD/.context/`. The hub server
+  (`ctx hub start`, etc.) doesn't need this; it operates on
+  the hub data directory rather than a project.
 
 ## Trust Model: Read This First
 

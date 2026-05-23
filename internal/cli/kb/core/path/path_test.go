@@ -16,8 +16,9 @@ import (
 	cfgKB "github.com/ActiveMemory/ctx/internal/config/kb"
 )
 
-// canonicalCtxDir builds a CTX_DIR honoring the rc-required
-// `.context` basename and points the env var at it.
+// canonicalCtxDir creates $TMP/.context, chdirs into $TMP so the
+// cwd-anchored resolver finds it, and returns the absolute ctx-dir
+// path.
 func canonicalCtxDir(t *testing.T) string {
 	t.Helper()
 	root := t.TempDir()
@@ -25,7 +26,7 @@ func canonicalCtxDir(t *testing.T) string {
 	if err := os.MkdirAll(ctxDir, 0o755); err != nil {
 		t.Fatalf("setup: %v", err)
 	}
-	t.Setenv("CTX_DIR", ctxDir)
+	t.Chdir(root)
 	return ctxDir
 }
 

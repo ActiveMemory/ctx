@@ -30,6 +30,14 @@ func setupProfiles(t *testing.T) string {
 	t.Helper()
 	root := t.TempDir()
 
+	// Under the cwd-anchored model, rc.RC() reads $PWD/.ctxrc only
+	// when $PWD/.context/ exists. Materialize the dir up front.
+	if mkErr := os.MkdirAll(
+		filepath.Join(root, ".context"), 0o700,
+	); mkErr != nil {
+		t.Fatal(mkErr)
+	}
+
 	if writeErr := os.WriteFile(
 		filepath.Join(root, file.CtxRCDev), []byte(devContent), 0o600,
 	); writeErr != nil {

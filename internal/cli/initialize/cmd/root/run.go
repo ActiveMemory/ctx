@@ -8,7 +8,6 @@ package root
 
 import (
 	"bufio"
-	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -38,12 +37,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/sync"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
@@ -52,20 +49,15 @@ import (
 // Creates a .context/ directory with template files. Handles existing
 // directories, minimal mode, and CLAUDE.md merge operations.
 //
-// Under the single-source-anchor resolution model
-// (spec: specs/single-source-context-anchor.md), init is exempt from
-// the require-context-dir gate. It resolves the target in priority
-// order:
-//
-//  1. CTX_DIR env var (read by rc.ContextDir).
-//  2. Fall back to `<cwd>/.context/` and create it there.
-//
-// The basename guard does not apply at init time because init
-// *creates* the canonical-named directory.
+// Under the cwd-anchored resolution model
+// (spec: specs/cwd-anchored-context.md), init is the command that
+// *creates* `$PWD/.context/`. It does not consult any env var and
+// it does not walk: the target is always `$PWD/.context/`. Users
+// who want to init a different project `cd` there first.
 //
 // # Existing-context handling
 //
-// When the target .context/ already contains a populated context
+// When `$PWD/.context/` already contains a populated context
 // (any file in ctx.FilesRequired exists), behavior depends on
 // --reset:
 //
@@ -84,10 +76,6 @@ import (
 // templates as before.
 //
 // Spec: specs/ctx-init-overwrite-safety.md.
-//
-// After materializing the directory, init prints the shell activation
-// hint via InfoActivateHint so the user's next ctx call in a new
-// process finds the right CTX_DIR.
 //
 // Parameters:
 //   - cmd: Cobra command for output and input streams
@@ -117,25 +105,14 @@ func Run(
 		}
 	}
 
-	// Under the explicit-context-dir resolution model, rc.ContextDir()
-	// returns an error when neither --context-dir nor CTX_DIR is declared.
-	// `ctx init` is an exempt command: fall back to cwd/.context so a
-	// user running `ctx init` in a fresh project gets the expected
-	// behavior. Spec: specs/explicit-context-dir.md. The fallback is
-	// reserved for the not-declared case; propagate any other resolver
-	// failure (e.g. malformed .ctxrc) so operators see the real error
-	// rather than a silent redirection to the working directory.
-	contextDir, ctxErr := rc.ContextDir()
-	if ctxErr != nil {
-		if !errors.Is(ctxErr, errCtx.ErrDirNotDeclared) {
-			return ctxErr
-		}
-		cwd, cwdErr := os.Getwd()
-		if cwdErr != nil {
-			return errFs.ReadInput(cwdErr)
-		}
-		contextDir = filepath.Join(cwd, dir.Context)
+	// Under the cwd-anchored resolution model
+	// (spec: specs/cwd-anchored-context.md), init always targets
+	// `$PWD/.context/`. No env-var lookup, no fallback dance.
+	cwd, cwdErr := os.Getwd()
+	if cwdErr != nil {
+		return errFs.ReadInput(cwdErr)
 	}
+	contextDir := filepath.Join(cwd, dir.Context)
 
 	// Existing-context handling: refuse by default; --reset takes a
 	// backup and only proceeds on interactive y/N confirmation.
@@ -311,7 +288,6 @@ func Run(
 		initialize.InfoWarnNonFatal(cmd, file.FileGitignore, ignoreErr)
 	}
 
-	initialize.InfoActivateHint(cmd, contextDir)
 	initialize.InfoNextSteps(cmd)
 	initialize.InfoWorkflowTips(cmd)
 

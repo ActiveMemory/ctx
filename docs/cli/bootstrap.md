@@ -41,6 +41,7 @@ ctx system bootstrap -q              # Just the context directory path
 ctx system bootstrap --json          # Structured output for automation
 ```
 
-**Note**: `-q` prints just the resolved directory path. See
-[Activating a Context Directory](../recipes/activating-context.md)
-if you hit a "*no context directory specified*" error.
+**Note**: `-q` prints just the resolved directory path. `ctx`
+reads `$PWD/.context/`; if you hit a "*no context here*" error,
+run `ctx init` from the project root or `cd` to one that already
+has `.context/`.

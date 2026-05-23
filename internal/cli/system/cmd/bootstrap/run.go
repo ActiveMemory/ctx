@@ -17,7 +17,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	errBackup "github.com/ActiveMemory/ctx/internal/err/backup"
-	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/bootstrap"
 )
@@ -25,27 +24,24 @@ import (
 // Run executes the bootstrap command, emitting context directory info,
 // rules, and next steps for the calling agent.
 //
-// Resolution under the explicit-context-dir model
-// (spec: specs/explicit-context-dir.md):
-//
-//   - When --context-dir or CTX_DIR is declared, bootstrap validates
-//     the directory exists and then emits its usual report.
-//   - When neither is declared, bootstrap returns the tailored
-//     "not declared" error with a candidate-count hint. Bootstrap
-//     does NOT walk to guess; walk logic lives only in
-//     `ctx activate`.
+// Resolution under the cwd-anchored model
+// (spec: specs/cwd-anchored-context.md): `$PWD/.context/` is the
+// answer or it is an error. No env var, no walk, no candidate
+// scan. The typed error from rc.ContextDir is propagated unchanged
+// (errCtx.ErrNoCtxHere) so the cobra layer renders it for the
+// user; the only extra wrapping here is the backup-dir fallback
+// for downstream stat races we cannot otherwise distinguish.
 //
 // Parameters:
 //   - cmd: Cobra command providing flags and output streams.
 //
 // Returns:
-//   - error: non-nil if the context directory is not declared, does
-//     not exist, or JSON encoding fails.
+//   - error: non-nil when `$PWD/.context/` is absent / not a
+//     directory / unreadable, or when JSON encoding fails.
 func Run(cmd *cobra.Command) error {
 	dir, err := rc.ContextDir()
 	if err != nil {
-		cwd, _ := os.Getwd()
-		return errCtx.NotDeclared(rc.ScanCandidates(cwd))
+		return err
 	}
 
 	if _, statErr := os.Stat(dir); os.IsNotExist(statErr) {

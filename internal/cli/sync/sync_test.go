@@ -14,7 +14,6 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
@@ -87,16 +86,15 @@ func TestSyncCommand_NoContext(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
-	t.Setenv(env.CtxDir, "")
 
 	_, err := runSyncCmd()
 	if err == nil {
 		t.Fatal("expected error when no .context/ exists")
 	}
-	// Under the explicit-context-dir model, the error reports that
-	// no context directory has been declared.
-	if !strings.Contains(err.Error(), "context directory") {
-		t.Errorf("error = %q, want context directory mention", err.Error())
+	// Under the cwd-anchored model, the error reports that $PWD has
+	// no .context here.
+	if !strings.Contains(err.Error(), ".context") {
+		t.Errorf("error = %q, want .context mention", err.Error())
 	}
 }
 

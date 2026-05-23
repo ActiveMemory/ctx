@@ -13,7 +13,6 @@ import (
 	"testing"
 
 	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/steering"
 	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
@@ -86,13 +85,8 @@ func TestCheckSteeringTools(t *testing.T) {
 				}
 			}
 
-			// chdir so rc reads .ctxrc from tmpDir
-			origDir := chdir(t, tmpDir)
-			defer func() { _ = os.Chdir(origDir) }()
-
 			writeCtxRC(t, tmpDir, fmt.Sprintf("steering:\n  dir: %s\n", steeringDir))
 			testctx.Declare(t, tmpDir)
-			defer rc.Reset()
 
 			report := &Report{
 				Warnings:   []Issue{},
@@ -183,12 +177,8 @@ func TestCheckHookPerms(t *testing.T) {
 			hooksDir := filepath.Join(tmpDir, ".context", "hooks")
 			tt.setup(t, hooksDir)
 
-			origDir := chdir(t, tmpDir)
-			defer func() { _ = os.Chdir(origDir) }()
-
 			writeCtxRC(t, tmpDir, fmt.Sprintf("hooks:\n  dir: %s\n", hooksDir))
-			rc.Reset()
-			defer rc.Reset()
+			testctx.Declare(t, tmpDir)
 
 			report := &Report{
 				Warnings:   []Issue{},
@@ -281,14 +271,13 @@ func TestCheckSyncStaleness(t *testing.T) {
 			steeringDir := filepath.Join(tmpDir, ".context", "steering")
 			tt.setup(t, tmpDir, steeringDir)
 
-			origDir := chdir(t, tmpDir)
-			defer func() { _ = os.Chdir(origDir) }()
-
 			writeCtxRC(t, tmpDir, fmt.Sprintf("steering:\n  dir: %s\n", steeringDir))
-			// Declare CTX_DIR so rc.ContextDir() resolves (no walk-up).
-			t.Setenv("CTX_DIR", filepath.Join(tmpDir, ".context"))
-			rc.Reset()
-			defer rc.Reset()
+			// Resolver reads $PWD/.context, so the dir must exist before
+			// testctx.Declare positions cwd at tmpDir.
+			if mkErr := os.MkdirAll(filepath.Join(tmpDir, ".context"), 0o755); mkErr != nil {
+				t.Fatalf("mkdir .context: %v", mkErr)
+			}
+			testctx.Declare(t, tmpDir)
 
 			report := &Report{
 				Warnings:   []Issue{},
@@ -350,12 +339,16 @@ func TestCheckRCTool(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tmpDir := t.TempDir()
 
-			origDir := chdir(t, tmpDir)
-			defer func() { _ = os.Chdir(origDir) }()
+			// Under the cwd-anchored model, rc.RC() reads
+			// $PWD/.ctxrc only when $PWD/.context/ exists.
+			if mkErr := os.MkdirAll(
+				filepath.Join(tmpDir, ".context"), 0o700,
+			); mkErr != nil {
+				t.Fatal(mkErr)
+			}
 
 			writeCtxRC(t, tmpDir, tt.rcContent)
 			testctx.Declare(t, tmpDir)
-			defer rc.Reset()
 
 			report := &Report{
 				Warnings:   []Issue{},
@@ -416,16 +409,4 @@ func writeCtxRC(t *testing.T, dir, content string) {
 	if err := os.WriteFile(filepath.Join(dir, ".ctxrc"), []byte(content), 0o644); err != nil {
 		t.Fatal(err)
 	}
-}
-
-func chdir(t *testing.T, dir string) string {
-	t.Helper()
-	origDir, err := os.Getwd()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err := os.Chdir(dir); err != nil {
-		t.Fatal(err)
-	}
-	return origDir
 }

@@ -53,6 +53,11 @@ func chdirWithCleanup(t *testing.T, dir string) {
 
 func TestStatus_Dev(t *testing.T) {
 	root := t.TempDir()
+	if mkErr := os.MkdirAll(
+		filepath.Join(root, ".context"), 0o700,
+	); mkErr != nil {
+		t.Fatal(mkErr)
+	}
 	if writeErr := os.WriteFile(
 		filepath.Join(root, file.CtxRC), []byte(devContent), 0o600,
 	); writeErr != nil {
@@ -73,6 +78,11 @@ func TestStatus_Dev(t *testing.T) {
 
 func TestStatus_Base(t *testing.T) {
 	root := t.TempDir()
+	if mkErr := os.MkdirAll(
+		filepath.Join(root, ".context"), 0o700,
+	); mkErr != nil {
+		t.Fatal(mkErr)
+	}
 	if writeErr := os.WriteFile(
 		filepath.Join(root, file.CtxRC), []byte(baseContent), 0o600,
 	); writeErr != nil {

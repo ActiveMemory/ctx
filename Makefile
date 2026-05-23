@@ -2,7 +2,8 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt fmt-context lint lint-style lint-drift clean all release build-all help \
+.PHONY: build test vet fmt fmt-context lint lint-style lint-drift lint-shellcheck lint-powershell \
+clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall \
 sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills gemini-search \
@@ -119,6 +120,14 @@ lint-style:
 lint-drift:
 	@./hack/lint-drift.sh
 
+## lint-shellcheck: Run shellcheck on embedded *.sh scripts (warning+)
+lint-shellcheck:
+	@./hack/lint-shellcheck.sh
+
+## lint-powershell: Run PSScriptAnalyzer on embedded *.ps1 scripts (Warning+)
+lint-powershell:
+	@./hack/lint-powershell.sh
+
 ## audit: Run all CI checks locally (fmt, vet, lint, drift, docs, test)
 audit:
 	@echo "==> Checking formatting..."
@@ -129,6 +138,18 @@ audit:
 	@golangci-lint run --timeout=5m
 	@echo "==> Running style checks..."
 	@$(MAKE) --no-print-directory lint-style
+	@if command -v shellcheck >/dev/null 2>&1; then \
+		echo "==> Running shellcheck..."; \
+		$(MAKE) --no-print-directory lint-shellcheck; \
+	else \
+		echo "==> Skipping shellcheck (not installed locally; CI enforces this)"; \
+	fi
+	@if command -v pwsh >/dev/null 2>&1; then \
+		echo "==> Running PSScriptAnalyzer..."; \
+		$(MAKE) --no-print-directory lint-powershell; \
+	else \
+		echo "==> Skipping PSScriptAnalyzer (pwsh not installed locally; CI enforces this)"; \
+	fi
 	@echo "==> Checking version sync..."
 	@$(MAKE) --no-print-directory check-version-sync
 	@echo "==> Checking why docs freshness..."

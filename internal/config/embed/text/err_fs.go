@@ -68,47 +68,30 @@ const (
 
 // DescKeys for context directory errors.
 const (
-	// DescKeyErrContextDirNotFound is the text key for err context dir not found
-	// messages.
+	// DescKeyErrContextDirNotFound is the text key for the legacy
+	// NotFoundError type's stringified message. Retained for the
+	// context/load.NotFoundError shape; under the cwd-anchored
+	// model the canonical sentinel is ErrNoCtxHere.
 	DescKeyErrContextDirNotFound = "err.context.dir-not-found"
-	// DescKeyErrContextNotDeclaredZero is the text key used when CTX_DIR
-	// is not set and no .context/ candidate is visible from CWD.
-	DescKeyErrContextNotDeclaredZero = "err.context.not-declared-zero"
-	// DescKeyErrContextNotDeclaredOne is the text key used when CTX_DIR
-	// is not set and exactly one .context/ candidate is visible from CWD.
-	DescKeyErrContextNotDeclaredOne = "err.context.not-declared-one"
-	// DescKeyErrContextNotDeclaredMany is the text key used when CTX_DIR
-	// is not set and two or more .context/ candidates are visible from CWD.
-	DescKeyErrContextNotDeclaredMany = "err.context.not-declared-many"
-	// DescKeyErrContextRelativeNotAllowed is the text key for the
-	// "CTX_DIR must be absolute" rejection.
-	DescKeyErrContextRelativeNotAllowed = "err.context.relative-not-allowed"
-	// DescKeyErrContextNonCanonicalBasename is the text key for the
-	// "CTX_DIR basename must be .context" rejection.
-	DescKeyErrContextNonCanonicalBasename = "err.context.non-canonical-basename"
+	// DescKeyErrContextNoContextHere is the text key for the
+	// user-facing message wrapped by NoCtxHere(cwd) when
+	// $PWD/.context does not exist.
+	DescKeyErrContextNoContextHere = "err.context.no-context-here"
+	// DescKeyErrContextNoContextHereMsg is the text key for the
+	// ErrNoCtxHere sentinel's own `.Error()` string (the
+	// prefix interpolated via `%w` by the NoCtxHere wrapper).
+	DescKeyErrContextNoContextHereMsg = "err.context.no-context-here-msg"
 	// DescKeyErrContextDirNotADirectory is the text key for the
-	// "CTX_DIR points at a file, not a directory" rejection.
+	// "$PWD/.context is a regular file, not a directory" rejection.
 	DescKeyErrContextDirNotADirectory = "err.context.dir-not-a-directory"
 	// DescKeyErrContextDirStat is the text key for stat failures
 	// other than not-exist (permission denied, I/O error).
 	DescKeyErrContextDirStat = "err.context.dir-stat"
 	// DescKeyErrContextNotInitialized is the text key for the
 	// "context directory exists but ctx init has not run" rejection.
-	// Used when state.Dir() is invoked in a project that has CTX_DIR
-	// declared but lacks the required context files.
+	// Used when state.Dir() is invoked in a project that has
+	// $PWD/.context present but the required context files absent.
 	DescKeyErrContextNotInitialized = "err.context.not-initialized"
-	// DescKeyErrContextDirNotDeclared is the text key for the
-	// ErrDirNotDeclared sentinel's own `.Error()` string.
-	DescKeyErrContextDirNotDeclared = "err.context.dir-not-declared"
-	// DescKeyErrContextRelativeNotAllowedMsg is the text key for
-	// the ErrRelativeNotAllowed sentinel's own `.Error()` string
-	// (the prefix interpolated via `%w` by the wrapper format
-	// DescKeyErrContextRelativeNotAllowed).
-	DescKeyErrContextRelativeNotAllowedMsg = "err.context.relative-not-allowed-msg"
-	// DescKeyErrContextNonCanonicalBasenameMsg is the text key
-	// for the ErrNonCanonicalBasename sentinel's own `.Error()`
-	// string.
-	DescKeyErrContextNonCanonicalBasenameMsg = "err.context.non-canonical-basename-msg"
 	// DescKeyErrContextDirNotADirectoryMsg is the text key for
 	// the ErrContextDirNotADirectory sentinel's own `.Error()`
 	// string.

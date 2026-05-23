@@ -16,7 +16,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
@@ -98,7 +97,6 @@ func TestRunDrift_NoContext(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
-	t.Setenv(env.CtxDir, "")
 
 	rc.Reset()
 	defer rc.Reset()
@@ -112,9 +110,9 @@ func TestRunDrift_NoContext(t *testing.T) {
 	if runErr == nil {
 		t.Fatal("expected error when no .context/ exists")
 	}
-	// Under the explicit-context-dir model, the error is "no context
-	// directory specified" because nothing declared one.
-	if !strings.Contains(runErr.Error(), "context directory") {
+	// Under the cwd-anchored model, the error is "no .context here"
+	// because $PWD/.context does not exist.
+	if !strings.Contains(runErr.Error(), ".context") {
 		t.Errorf("unexpected error: %v", runErr)
 	}
 }
@@ -260,7 +258,6 @@ func TestRunDrift_GenericError(t *testing.T) {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
-	t.Setenv(env.CtxDir, filepath.Join(tmpDir, dir.Context))
 
 	rc.Reset()
 	defer rc.Reset()

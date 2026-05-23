@@ -11,7 +11,6 @@ package bootstrap
 import (
 	"errors"
 	"os"
-	"path/filepath"
 
 	"github.com/spf13/cobra"
 
@@ -63,8 +62,7 @@ func RootCmd() *cobra.Command {
 			//     supply their own guards).
 			//   - Cobra's built-in shell-completion subcommands.
 			//   - Commands annotated with AnnotationSkipInit (init,
-			//     activate, deactivate, guide, why, doctor, config
-			//     switch/status, hub *).
+			//     guide, why, doctor, config switch/status, hub *).
 			//   - Grouping commands without a Run / RunE of their own
 			//     (they just print help for their subtree).
 			if cmd.Hidden {
@@ -80,14 +78,12 @@ func RootCmd() *cobra.Command {
 				return nil
 			}
 
-			// Under the single-source-anchor model, every non-exempt
-			// command requires CTX_DIR to be declared and to point at
-			// an existing .context/ directory. RequireContextDir
-			// returns a tailored error (with a next-step hint based on
-			// how many .context/ candidates are visible from CWD) when
-			// the declaration is missing or broken. The parent of the
-			// declared directory is the project root by contract; CWD
-			// has no say in project identity.
+			// Under the cwd-anchored model
+			// (spec: specs/cwd-anchored-context.md), every non-exempt
+			// command requires `$PWD/.context/` to exist as a
+			// directory. RequireContextDir wraps the single os.Stat
+			// and returns errCtx.ErrNoCtxHere when absent. The
+			// project root is the cwd itself by contract.
 			ctxDir, reqErr := rc.RequireContextDir()
 			if reqErr != nil {
 				// Actionable error, not a usage problem. Suppress
@@ -99,7 +95,7 @@ func RootCmd() *cobra.Command {
 				return reqErr
 			}
 
-			// Require initialization: the declared directory must
+			// Require initialization: the cwd's .context/ must
 			// have been initialized before other commands operate.
 			if !ctxContext.Initialized(ctxDir) {
 				cmd.SilenceUsage = true
@@ -107,15 +103,19 @@ func RootCmd() *cobra.Command {
 			}
 
 			// Phase RG: require git as architectural precondition.
-			// The project root is the parent of the declared
-			// .context/ directory. RequireGitTree refuses when
-			// <projectRoot>/.git is absent.
-			projectRoot := filepath.Dir(ctxDir)
-			if gitErr := gitmeta.RequireGitTree(projectRoot); gitErr != nil {
+			// `.context/` and `.git/` are siblings by contract, so
+			// `$PWD/.git/` must exist alongside the `.context/` we
+			// just validated.
+			cwd, cwdErr := os.Getwd()
+			if cwdErr != nil {
+				cmd.SilenceUsage = true
+				return cwdErr
+			}
+			if gitErr := gitmeta.RequireGitTree(); gitErr != nil {
 				cmd.SilenceUsage = true
 				if errors.Is(gitErr, errGitmeta.ErrMissingGitTree) {
 					return errGitmeta.MissingGitTreeForCmd(
-						cmd.Name(), projectRoot,
+						cmd.Name(), cwd,
 					)
 				}
 				return gitErr

@@ -118,7 +118,6 @@ When registering a client, give it the **full peer list**:
 
 ```bash
 # In the project directory on the client:
-eval "$(ctx activate)"
 ctx connection register hub-a.lan:9900 \
   --token ctx_adm_... \
   --peers hub-b.lan:9900,hub-c.lan:9900

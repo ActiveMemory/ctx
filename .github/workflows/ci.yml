@@ -114,3 +114,31 @@ jobs:
       - name: Type-check production code
         working-directory: editors/vscode
         run: npx tsc --noEmit -p tsconfig.ci.json
+
+  shellcheck:
+    name: ShellCheck (embedded *.sh)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Run shellcheck
+        run: ./hack/lint-shellcheck.sh
+
+  powershell:
+    name: PSScriptAnalyzer (embedded *.ps1)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+
+      - name: Run PSScriptAnalyzer
+        run: ./hack/lint-powershell.sh

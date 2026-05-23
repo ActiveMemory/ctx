@@ -13,6 +13,13 @@ DO NOT UPDATE FOR:
 - Personal preferences without team consensus
 -->
 
+## Typography and Document Shape
+
+See [`typography.md`](typography.md) for the full guide: Title Case
+headings, monotype `` `ctx` ``, no em-dashes / smart quotes / quad
+backticks, doc frontmatter / banner conventions, recipe arc, admonition
+variants. Linters in `hack/` enforce the hard rules.
+
 ## Naming
 
 - **Constants use semantic prefixes**: Group related constants with prefixes
@@ -295,3 +302,5 @@ DO NOT UPDATE FOR:
   following a literal . dot, but explicit backticks remain the clearest signal.
 - New editor integrations include an MCP-merge test covering: create / empty
   file / preserve existing keys / skip when registered / reject malformed JSON
+
+- Substrate vs. artifact placement: cognitive substrate (consumed and mutated via ctx-mediated paths — `ctx agent`, `ctx decision add`, `/ctx-kb-ingest`, `/ctx-handover`, ceremonies) lives under `.context/`; project artifacts (read and edited directly by humans — `specs/`, `CLAUDE.md`, `GETTING_STARTED.md`, `docs/`) live at the project root; tool config and tool homes (`.ctxrc`, `.claude/`) live at root by dotfile/tool convention. The kb is substrate, not artifact: direct file edits remain possible per Invariant 1, but the skill-mediated path is the discipline. Rationale recorded in DECISIONS.md.

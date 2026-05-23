@@ -101,12 +101,8 @@ instructions.
 # Run `git init` first if the project does not have a repo yet.)
 ctx init
 
-# Activate it for the current shell (binds CTX_DIR). Required
-# before every other command: ctx no longer walks up the
-# filesystem looking for .context/.
-eval "$(ctx activate)"
-
-# Check context status
+# Run subsequent commands from the project root. ctx always
+# reads $PWD/.context/; there is no env-var or walk-up.
 ctx status
 
 # Get an AI-ready context packet
@@ -149,14 +145,12 @@ for the full workflow, including the pass-mode contract,
 source-coverage state-machine ledger, and the closeout/fold
 mechanism.
 
-`ctx activate` emits `export CTX_DIR=...` for your shell; one-shot
-callers can prefix the binding inline as `CTX_DIR=<abs-path> ctx ...`.
-The value must be an absolute path with `.context` as its basename;
-relative paths and other names are rejected on first use. A small
-allowlist (`init`, `activate`, `deactivate`, `version`, `help`,
-`system bootstrap`, `doctor`, `guide`, `why`, `config switch/status`,
-`hub *`) runs without CTX_DIR declared; every other command exits
-with a next-step hint when it is unset.
+`ctx` reads `$PWD/.context/` — run commands from the project root
+(the directory that holds both `.git/` and `.context/`). A small
+allowlist (`init`, `version`, `help`, `system bootstrap`, `doctor`,
+`guide`, `why`, `config switch/status`, `hub *`) runs without
+`.context/` present; every other command exits with a next-step
+hint when it is missing.
 
 ## Documentation
 
