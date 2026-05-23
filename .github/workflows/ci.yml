@@ -111,9 +111,17 @@ jobs:
         working-directory: editors/vscode
         run: npm run build
 
-      - name: Type-check production code
+      - name: Type-check (production + tests)
         working-directory: editors/vscode
         run: npx tsc --noEmit -p tsconfig.ci.json
+
+      - name: Test (vitest)
+        working-directory: editors/vscode
+        run: npm test
+
+      - name: Package dry-run (vsce)
+        working-directory: editors/vscode
+        run: npx vsce package --no-dependencies --out /tmp/ctx-extension.vsix
 
   shellcheck:
     name: ShellCheck (embedded *.sh)

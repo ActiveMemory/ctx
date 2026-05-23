@@ -225,7 +225,7 @@ TASK STATUS LABELS:
   `docs/recipes/multi-tool-setup.md`. #priority:medium
   #added:2026-05-11 #completed:2026-05-11 #grounding-gap
 
-- [ ] Fix `editors/vscode/src/extension.test.ts` type errors and
+- [x] Fix `editors/vscode/src/extension.test.ts` type errors and
   re-enable test-file type-checking + vitest in CI. Two distinct
   bugs: (1) tests import handlers (`handleComplete`, `handleTasks`,
   `handleRemind`, `handlePad`, `handleNotify`, `handleSystem`,
@@ -239,6 +239,29 @@ TASK STATUS LABELS:
   the `vscode-extension` CI job. Also worth adding `npm run lint`
   (eslint) and a `vsce package` dry-run step.
   #priority:medium #added:2026-05-11 #grounding-gap
+  Done: handler-name drift (`handleComplete`/`handleTasks` →
+  merged `handleTask` with subcommand dispatch) and fakeToken
+  signature both fixed. Surfaced a third latent bug once vitest
+  actually ran: 18 argv assertions across all handlers were
+  missing `"--no-color"` (every handler appends it). Fixed
+  inline. Dropped `**/*.test.ts` exclude from
+  `editors/vscode/tsconfig.ci.json` so CI typecheck now covers
+  tests. Added `npm test` + `npx vsce package --no-dependencies`
+  steps to the `vscode-extension` job in `.github/workflows/ci.yml`.
+  53/53 vitest pass; vsce dry-run produces a 9-file 26.65 KB vsix.
+  Per `specs/fix-vscode-extension-tests.md`. `npm run lint`
+  deferred — see follow-up below.
+
+- [ ] Scaffold ESLint config for `editors/vscode/` and wire
+  `npm run lint` into the `vscode-extension` CI job. The
+  `lint` script (`eslint src --ext ts`) already exists in
+  `package.json` but no `.eslintrc*` is checked in, so the
+  script crashes today. Decision needed: which preset
+  (`@typescript-eslint/recommended` vs. `recommended-type-checked`),
+  whether to include style rules or stay correctness-only,
+  and whether `editors/vscode/` should share config with
+  `tools/typecheck/opencode/` (which also has no lint set
+  up). #priority:low #added:2026-05-22
 
 - [ ] The target project (to be given to the Agent) has a good "phasing"
   mechanism for tasks; implement that; maybe `ctx task add` can have a
