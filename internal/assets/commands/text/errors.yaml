@@ -826,3 +826,35 @@ err.backend.duplicate-registration-msg:
   short: 'backend type already registered'
 err.backend.duplicate-registration:
   short: '%w: %s'
+err.backend.missing-endpoint-msg:
+  short: 'backend endpoint is required'
+err.backend.missing-endpoint:
+  short: '%w: backend %q has no endpoint'
+err.backend.invalid-endpoint-msg:
+  short: 'backend endpoint is invalid'
+err.backend.invalid-endpoint:
+  short: '%w: backend %q endpoint %q must be an http:// or https:// URL'
+err.backend.missing-model-msg:
+  short: 'no model specified and no default_model configured'
+err.backend.missing-model:
+  short: '%w for backend %q'
+err.backend.unreachable-msg:
+  short: 'backend unreachable'
+err.backend.unreachable:
+  short: '%w: backend %q at %s: %w'
+err.backend.unhealthy-status-msg:
+  short: 'backend ping returned non-2xx'
+err.backend.unhealthy-status:
+  short: '%w: backend %q ping returned HTTP %d: %s'
+err.backend.upstream-status-msg:
+  short: 'backend returned non-2xx'
+err.backend.upstream-status:
+  short: '%w: backend %q returned HTTP %d: %s'
+err.backend.marshal-request:
+  short: 'marshal request for backend %q: %w'
+err.backend.parse-response:
+  short: 'parse response from backend %q: %w'
+err.backend.read-response:
+  short: 'read response from backend %q: %w'
+err.backend.empty-choices:
+  short: 'backend %q returned no completion choices'

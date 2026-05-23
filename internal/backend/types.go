@@ -8,6 +8,8 @@ package backend
 
 import (
 	"context"
+	"net/http"
+	"net/url"
 	"sync"
 	"time"
 )
@@ -153,4 +155,43 @@ type Registry struct {
 	factories map[string]Factory
 	configs   map[string]Config
 	deflt     string
+}
+
+// vllm is the vLLM backend. Embeds *openAICompat for the
+// wire work and overrides Ping with cold-start retry on
+// ECONNREFUSED (the vLLM listener is not yet bound while
+// weights are loading; OS returns refused, not 503).
+//
+// Fields:
+//   - openAICompat: embedded generic backend providing
+//     Name/Complete and the base Ping.
+//   - coldStartWindow: maximum wall-clock during which
+//     Ping retries on refused.
+//   - coldStartInterval: sleep between retry attempts.
+type vllm struct {
+	*openAICompat
+	coldStartWindow   time.Duration
+	coldStartInterval time.Duration
+}
+
+// openAICompat is a generic OpenAI-compatible HTTP
+// backend used directly for `openai-compatible` configs
+// and embedded by per-vendor wrappers (vllm, openai, ...)
+// so the wire work lives in one place.
+//
+// Fields:
+//   - name: registered backend type label.
+//   - base: pre-parsed endpoint URL (for url.JoinPath).
+//   - apiKey: resolved Authorization Bearer value or "".
+//   - timeout: per-request deadline applied via the
+//     embedded httpClient.
+//   - defaultModel: used when Request.Model is empty.
+//   - httpClient: net/http client honoring the timeout.
+type openAICompat struct {
+	name         string
+	base         *url.URL
+	apiKey       string
+	timeout      time.Duration
+	defaultModel string
+	httpClient   *http.Client
 }
