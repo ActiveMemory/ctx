@@ -85,4 +85,8 @@ const (
 	// after `ctx ai ping` confirms the backend is
 	// reachable.
 	DescKeyWriteAIPingOK = "write.ai-ping-ok"
+	// DescKeyWriteAIExtractWritten is the success message
+	// printed after `ctx ai extract` writes a proposal
+	// file. Interpolates the file path.
+	DescKeyWriteAIExtractWritten = "write.ai-extract-written"
 )

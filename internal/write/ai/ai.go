@@ -29,3 +29,18 @@ func InfoPingOK(cmd *cobra.Command, name string) {
 		desc.Text(text.DescKeyWriteAIPingOK), name,
 	))
 }
+
+// InfoExtractWritten prints the success message after
+// `ctx ai extract` writes a proposal file.
+//
+// Parameters:
+//   - cmd: cobra command for output. Nil is a no-op.
+//   - path: absolute path of the proposal file written.
+func InfoExtractWritten(cmd *cobra.Command, path string) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteAIExtractWritten), path,
+	))
+}

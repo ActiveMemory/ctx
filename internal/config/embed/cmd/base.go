@@ -14,6 +14,9 @@ const (
 	// UseAIPing is the cobra Use string for the ai ping
 	// subcommand (`ctx ai ping`).
 	UseAIPing = "ping"
+	// UseAIExtract is the cobra Use string for the ai
+	// extract subcommand (`ctx ai extract`).
+	UseAIExtract = "extract"
 	// UseAgent is the cobra Use string for the agent command.
 	UseAgent = "agent"
 	// UseChange is the cobra Use string for the change command.
@@ -80,6 +83,9 @@ const (
 	// DescKeyAIPing is the description key for the ai ping
 	// subcommand (`ctx ai ping`).
 	DescKeyAIPing = "ai.ping"
+	// DescKeyAIExtract is the description key for the ai
+	// extract subcommand (`ctx ai extract`).
+	DescKeyAIExtract = "ai.extract"
 	// DescKeyAgent is the description key for the agent command.
 	DescKeyAgent = "agent"
 	// DescKeyChange is the description key for the change command.

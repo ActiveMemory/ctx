@@ -665,6 +665,8 @@ write.setup-backend-appended:
   short: '  (appended new entry)'
 write.ai-ping-ok:
   short: 'backend %q reachable'
+write.ai-extract-written:
+  short: 'proposal written to %s'
 
 write.skill-no-skills:
   short: 'No skills installed.'

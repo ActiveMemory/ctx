@@ -9,6 +9,7 @@ package ai
 import (
 	"github.com/spf13/cobra"
 
+	aiExtract "github.com/ActiveMemory/ctx/internal/cli/ai/cmd/extract"
 	aiPing "github.com/ActiveMemory/ctx/internal/cli/ai/cmd/ping"
 	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
@@ -21,5 +22,9 @@ import (
 //   - *cobra.Command: parent command with ping (and
 //     future extract) registered as subcommands.
 func Cmd() *cobra.Command {
-	return parent.Cmd(cmd.DescKeyAI, cmd.UseAI, aiPing.Cmd())
+	return parent.Cmd(
+		cmd.DescKeyAI, cmd.UseAI,
+		aiPing.Cmd(),
+		aiExtract.Cmd(),
+	)
 }

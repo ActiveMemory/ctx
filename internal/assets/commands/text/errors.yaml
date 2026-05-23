@@ -870,3 +870,11 @@ err.backend.read-response:
   short: 'read response from backend %q: %w'
 err.backend.empty-choices:
   short: 'backend %q returned no completion choices'
+err.proposal.mkdir:
+  short: 'mkdir %s: %w'
+err.proposal.write:
+  short: 'write proposal %s: %w'
+err.proposal.read-input:
+  short: 'read extract input: %w'
+err.proposal.empty-input:
+  short: 'extract input is empty; nothing to extract'

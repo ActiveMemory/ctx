@@ -49,6 +49,26 @@ ai:
     Verbs:
       ping      reachability check against the configured
                 backend's /v1/models endpoint
+ai.extract:
+  short: Extract decisions, learnings, tasks, and open questions from stdin into a proposal
+  long: |-
+    Read free text from stdin, dispatch a JSON-mode chat
+    completion through the configured AI backend, and write the
+    response as a proposal under .context/proposals/<TS>-extract.md.
+
+    Canonical .context/*.md files are never written directly:
+    every AI-produced edit lands as a proposed patch in the
+    queue for human (or agent) ratification. The proposal file
+    is markdown wrapping the model's raw JSON response inside a
+    fenced code block.
+
+    Use the proposal queue as a draft store: after review,
+    apply selected candidates via the appropriate `ctx
+    <noun> add` command.
+  examples: |
+    Examples:
+      cat session-notes.md | ctx ai extract
+      ctx journal source --limit 5 | ctx ai extract --backend vllm
 ai.ping:
   short: Check reachability of the configured AI backend
   long: |-

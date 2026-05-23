@@ -79,6 +79,8 @@ setup.api-key-env:
   short: Override the env-var name the backend reads for its bearer token
 ai.ping.backend:
   short: Pick which configured backend to ping (defaults to .ctxrc default_backend)
+ai.extract.backend:
+  short: Pick which configured backend to dispatch extract through (defaults to .ctxrc default_backend)
 initialize.reset:
   short: Reset an existing context (interactive only; backs up existing files to .context/.backup-init-<ISO>/ before overwriting)
 initialize.merge:

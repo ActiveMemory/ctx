@@ -37,6 +37,9 @@ const (
 	// DescKeyAIPingBackend is the description key for the
 	// `ctx ai ping --backend` flag.
 	DescKeyAIPingBackend = "ai.ping.backend"
+	// DescKeyAIExtractBackend is the description key for
+	// the `ctx ai extract --backend` flag.
+	DescKeyAIExtractBackend = "ai.extract.backend"
 	// DescKeySteeringSyncAll is the description key for the steering sync all
 	// flag.
 	DescKeySteeringSyncAll = "steering.sync.all"
