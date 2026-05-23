@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-22 | ctx ai backend: settle four open questions (CLI namespace, validator, proposals dir, skill) |
 | 2026-05-22 | OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored |
 | 2026-05-21 | Substrate vs. artifact placement: .context/ vs. project root |
 | 2026-05-21 | Spec steps 1+2 merged into a single commit (cwd-anchored-context) |
@@ -147,6 +148,25 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-22-220000] ctx ai backend: settle four open questions (CLI namespace, validator, proposals dir, skill)
+
+**Status**: Accepted
+
+**Context**: `specs/ctx-ai-backend.md` (Block A foundation for the ctx AI backend layer; tracked by issue #92) was written with five open questions explicitly punted to the implementer. Before any code lands, four are foundational and expensive to unwind once shipped (users will script against whichever shape ships). The fifth question (default extraction model) the spec already resolves by leaving model choice to the user with recipe-level recommendations.
+
+**Decision**: Settle the four foundational open questions as follows:
+
+1. **CLI namespace (Q1)**: New top-level `ctx ai <verb>` namespace. Rejected: `--use-ai` flags on existing commands (`ctx compact --use-ai`, `ctx ingest --extract`).
+2. **Validation consumer (Q5)**: `ctx ai extract` as a fresh verb in the ai namespace. Rejected: retrofitting `ctx compact --use-ai`.
+3. **Proposal queue location (Q2)**: `.context/proposals/<TS>-<slug>.md`, gitignored by default, mirroring the `.context/handovers/` shape. Block B+C supplementary spec may relocate later if the editorial pipeline pulls it under `.context/ingest/`.
+4. **Companion skill (Q4)**: Absorb `--backend` handling into the existing `/ctx-setup` skill rather than creating a new `/ctx-ai-setup` skill.
+
+**Rationale**: The four resolutions reinforce a single principle: the AI layer is *additive and orthogonal* to ctx's existing surfaces. (1) and (2) keep the surface self-contained — `ctx ai` is the namespace where ctx itself is a client of an inference server, distinct from every other ctx command where ctx is the substrate that AI tools talk *to*. Existing integrations (Claude Code skills, OpenCode plugin, Cursor, Copilot CLI, MCP server) are unchanged; they neither read nor depend on `internal/backend/`. This matches the spec's Invariant 2 (zero runtime deps for core functionality) and is the structural counterpart to Task 8's compile-time guard test. Worst case if `ctx ai` proves wrong-shaped: deprecate the namespace and absorb verbs elsewhere — far cheaper than reversing flag-creep on existing commands. (3) reuses the handover shape already in use across the codebase (per-session timestamped artifact, gitignored, fold-on-recall), so the proposal queue inherits the audit-trail discipline `.context/handovers/` already proved out. (4) avoids setup-family bloat — `/ctx-setup` already absorbs Claude Code, OpenCode, Cursor, Copilot CLI variants; one more `--backend` switch is cheaper than another skill file and matches users' "I run setup once per project" mental model.
+
+**Consequence**: Spec Task 1 in `specs/ctx-ai-backend.md` is satisfied by this entry; remaining Tasks 2-10 may proceed. New package boundary: `internal/cli/ai/` houses the new namespace; `internal/backend/` houses the backend abstraction with no CLI surface of its own. `.context/proposals/` joins the per-session gitignored family (alongside `handovers/`, `memory/`, `journal/`, `state/`, `logs/`, `reminders.json`, `scratchpad.enc`). The `ctx init` template (`internal/config/file/ignore.go`) must add `.context/proposals/*` + `!.context/proposals/.gitkeep` in the same change that creates the directory. `/ctx-setup` skill gains a `--backend <name>` flag and per-backend templating logic; no new skill file ships in this phase. The B+C re-debate (`specs/ctx-ai-extraction-and-recall.md`) inherits a clean slate: it can confirm `.context/proposals/` or relocate it without unwinding A's surface. See also: `specs/ctx-ai-backend.md` Open Questions section; issue #92.
+
+---
 
 ## [2026-05-22-161800] OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored
 

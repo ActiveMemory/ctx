@@ -57,6 +57,13 @@ import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 //   - Hooks: Hook system configuration overrides
 //   - ProvenanceRequired: Per-project relaxation of
 //     provenance flags for ctx add (default: all required)
+//   - Backends: AI inference backends configured for
+//     `ctx ai *` commands. Each entry's Name must match
+//     a registered backend type (vllm, openai, ...).
+//   - DefaultBackend: Name of the backend selected by
+//     `ctx ai *` commands when no `--backend` flag is
+//     passed. Required only if more than one backend is
+//     configured; with a single backend it is implicit.
 type CtxRC struct {
 	Profile             string                   `yaml:"profile"`
 	Tool                string                   `yaml:"tool"`
@@ -86,6 +93,31 @@ type CtxRC struct {
 	Steering            *SteeringRC              `yaml:"steering"`
 	Hooks               *HooksRC                 `yaml:"hooks"`
 	ProvenanceRequired  *ProvenanceConfig        `yaml:"provenance_required"`
+	Backends            []backendCfg             `yaml:"backends"`
+	DefaultBackend      string                   `yaml:"default_backend"`
+}
+
+// backendCfg is the on-disk YAML shape of a single
+// entry in the `backends:` list. The unexported element
+// type keeps the wire shape internal to rc; callers
+// consume the converted [backend.Config] returned by
+// [Backends]. Timeout is a string here (e.g., "30s") and
+// is parsed via [time.ParseDuration] in the accessor.
+//
+// Fields:
+//   - Name: backend type label, e.g., "vllm".
+//   - Endpoint: base URL with scheme.
+//   - APIKeyEnv: env var name that holds the bearer
+//     token. Empty means no auth header.
+//   - Timeout: duration string per [time.ParseDuration].
+//   - DefaultModel: model ID used when a request omits
+//     one.
+type backendCfg struct {
+	Name         string `yaml:"name"`
+	Endpoint     string `yaml:"endpoint"`
+	APIKeyEnv    string `yaml:"api_key_env"`
+	Timeout      string `yaml:"timeout"`
+	DefaultModel string `yaml:"default_model"`
 }
 
 // ProvenanceConfig controls which provenance flags are

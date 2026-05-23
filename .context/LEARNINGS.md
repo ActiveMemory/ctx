@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-22 | vLLM HTTP surface: cold-start is ECONNREFUSED, top-level guided_json, /v1/models id may diverge from HF id |
 | 2026-05-22 | Cross-language coverage gap: TS-typed integrations are a fourth surface beyond Go |
 | 2026-05-21 | Sentinel-removal refactors cascade through test surface |
 | 2026-05-20 | macOS /var symlink trips path-equality; use EvalSymlinks with parent-resolution fallback |
@@ -150,6 +151,25 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-22-230000] vLLM HTTP surface: cold-start is ECONNREFUSED, top-level guided_json, /v1/models id may diverge from HF id
+
+**Context**: Research pass for issue #92 (specs/ctx-ai-backend.md, Block A) needed ground truth on vLLM's OpenAI-compatible HTTP server before writing `internal/backend/vllm.go`. Spec was written assuming theoretical OpenAI parity; actual vLLM has several Go-author-relevant divergences not inferable from the OpenAI API alone.
+
+**Lesson**: Eight load-bearing facts for a Go HTTP client speaking to vLLM:
+
+1. **Cold-start is `ECONNREFUSED`, not HTTP 503**. The listener doesn't exist yet while the engine loads weights (5-10 min for a 7B model on first HF download; tens of seconds warm). Once up, `/health` returns 200; 503 means the engine *died* after starting. Three states, not two. Client retry loop keys on dial errors, not status codes.
+2. **`guided_json`, `guided_regex`, `guided_choice`, `guided_grammar`, `guided_decoding_backend` are top-level request fields** on the wire. The OpenAI Python SDK demands `extra_body` because it strips unknown fields; a Go client writing raw JSON puts them at the top level.
+3. **`response_format: {"type":"json_schema",...}` works on current vLLM**, so the common-case schema-constrained call can stay on the pure OpenAI surface. Reach for `guided_json` only when XGrammar's schema subset fails.
+4. **`/v1/models` `id` may not equal the HF repo name** when `--served-model-name` is set. The client must read the server's reported id rather than assume HF naming.
+5. **`/health` 200 + `/v1/models` 200 are both reliable up-signals**; either suffices for ctx's Ping.
+6. **Auth**: `Authorization: Bearer <key>`. The recommended secret channel is env `VLLM_API_KEY`, *not* the `--api-key` CLI flag (the flag leaks via `/proc/<pid>/cmdline`).
+7. **Embeddings need a separate server process** launched with `--task embed` and an embedding-class model (e.g., `BAAI/bge-large-en-v1.5`). A chat-task vLLM does not expose working embeddings. Block C will need two endpoints.
+8. **SSE streaming**: `Content-Type: text/event-stream`, frames are `data: <json>\n\n`, terminator is the literal string `data: [DONE]\n\n` — parse SSE before attempting `json.Unmarshal`.
+
+**Application**: Write `internal/backend/vllm.go` (and `openaicompat.go` as the shared floor) with: retry-on-dial-error during a configurable cold-start window; `guided_json` and `response_format` BOTH as top-level fields on the Request marshalling; Ping that accepts either `/health` 200 or `/v1/models` 200; Bearer auth pulled from the env var named by `Config.APIKeyEnv` (empty means no header). Default smoke-test model: `Qwen/Qwen2.5-1.5B-Instruct`, not the spec's `openai/gpt-oss-120b` placeholder (real model but H100-class). Embeddings deferred to Block C with a separate Backend constructor.
 
 ---
 

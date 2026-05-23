@@ -814,3 +814,15 @@ err.kb.topic-empty-name:
   short: 'topic name must contain at least one alnum char'
 err.kb.reindex-missing-block:
   short: 'kb/index.md is missing the CTX:KB:TOPICS managed block'
+err.backend.backend-not-found-msg:
+  short: 'backend not found'
+err.backend.backend-not-found:
+  short: '%w: %s'
+err.backend.no-backends:
+  short: 'no backend configured; run `ctx setup --backend <name>`'
+err.backend.ambiguous-default:
+  short: 'multiple backends configured; pass `--backend <name>` or set `[backends].default` in .ctxrc'
+err.backend.duplicate-registration-msg:
+  short: 'backend type already registered'
+err.backend.duplicate-registration:
+  short: '%w: %s'

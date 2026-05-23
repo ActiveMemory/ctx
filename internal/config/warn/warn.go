@@ -55,6 +55,15 @@ const (
 	// return but catches future regressions loudly.
 	ContextDirResolve = "resolve context dir: %v"
 
+	// BackendInvalidTimeout is the stderr format for unparseable
+	// timeout strings in .ctxrc `backends:` entries. Args:
+	// backend name, raw timeout string, parse error. The warning
+	// is followed by zero-Timeout config so the backend's own
+	// default applies; ctx keeps booting rather than failing on
+	// a single typo.
+	BackendInvalidTimeout = "rc.Backends: backend %q has " +
+		"unparseable timeout %q (%v); using backend default"
+
 	// RCNoContextDir is the stderr message emitted by rc.load when
 	// it observes ErrNoCtxHere. Exempt commands (init,
 	// activate, doctor, hub *, etc.) legitimately reach this state;
