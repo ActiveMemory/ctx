@@ -28,6 +28,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -219,7 +220,7 @@ func ModelContextWindow(model string) int {
 		return 0
 	}
 
-	lower := strings.ToLower(model)
+	lower := i18n.Fold(model)
 
 	// 1M models: explicit [1m] suffix OR Opus 4.6+ (always 1M).
 	if strings.Contains(lower, claude.ModelSuffix1M) {
@@ -285,7 +286,7 @@ func ClaudeSettingsHas1M() bool {
 	if jsonErr := json.Unmarshal(data, &settings); jsonErr != nil {
 		return false
 	}
-	return strings.Contains(strings.ToLower(settings.Model), claude.ModelSuffix1M)
+	return strings.Contains(i18n.Fold(settings.Model), claude.ModelSuffix1M)
 }
 
 // FormatTokenCount formats a token count as a human-readable abbreviated

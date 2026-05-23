@@ -6,7 +6,7 @@
 
 package entry
 
-import "strings"
+import "github.com/ActiveMemory/ctx/internal/i18n"
 
 // Entry type constants for context updates.
 //
@@ -74,7 +74,7 @@ const SpecNudgeMinLen = 150
 // Returns:
 //   - string: canonical entry constant, or Unknown
 func FromUserInput(s string) string {
-	switch strings.ToLower(s) {
+	switch i18n.Fold(s) {
 	case "task", "tasks":
 		return Task
 	case "decision", "decisions":

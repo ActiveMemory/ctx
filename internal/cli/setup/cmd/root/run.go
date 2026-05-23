@@ -7,8 +7,6 @@
 package root
 
 import (
-	"strings"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
@@ -24,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/err/config"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
@@ -41,7 +40,7 @@ import (
 // Returns:
 //   - error: Non-nil if the tool is not supported or file write fails
 func Run(cmd *cobra.Command, args []string, writeFile bool) error {
-	tool := strings.ToLower(args[0])
+	tool := i18n.Fold(args[0])
 
 	switch tool {
 	case cfgHook.ToolAgents:

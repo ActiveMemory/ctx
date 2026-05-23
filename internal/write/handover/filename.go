@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 )
 
 // buildFilename derives a handover's on-disk name. Shape:
@@ -52,7 +53,7 @@ func buildFilename(now time.Time, title string) string {
 //     characters stripped and leading / trailing hyphens
 //     trimmed.
 func titleToSlug(s string) string {
-	low := strings.ToLower(strings.TrimSpace(s))
+	low := i18n.Fold(strings.TrimSpace(s))
 	low = strings.ReplaceAll(low, token.Space, token.Dash)
 	low = regex.Slug.ReplaceAllString(low, "")
 	low = strings.Trim(low, token.Dash)

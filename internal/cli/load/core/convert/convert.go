@@ -11,6 +11,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 )
 
 // FileNameToTitle converts a context file name to a
@@ -37,7 +38,7 @@ func FileNameToTitle(name string) string {
 	for i, w := range words {
 		if len(w) > 0 {
 			words[i] = strings.ToUpper(w[:1]) +
-				strings.ToLower(w[1:])
+				i18n.Fold(w[1:])
 		}
 	}
 	return strings.Join(words, token.Space)

@@ -11,6 +11,7 @@ import (
 
 	cfgValidate "github.com/ActiveMemory/ctx/internal/config/validate"
 	errCli "github.com/ActiveMemory/ctx/internal/err/cli"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 )
 
 // RejectPlaceholder returns an error if value is empty,
@@ -33,7 +34,7 @@ func RejectPlaceholder(flag, value string) error {
 	if trimmed == "" {
 		return errCli.FlagEmpty(flag)
 	}
-	if _, hit := cfgValidate.Placeholders[strings.ToLower(trimmed)]; hit {
+	if _, hit := cfgValidate.Placeholders[i18n.Fold(trimmed)]; hit {
 		return errCli.FlagPlaceholder(flag, value)
 	}
 	return nil

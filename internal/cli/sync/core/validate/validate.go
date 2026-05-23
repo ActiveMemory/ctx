@@ -19,6 +19,7 @@ import (
 	cfgSync "github.com/ActiveMemory/ctx/internal/config/sync"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -45,7 +46,7 @@ func CheckPackageFiles(ctx *entity.Context) []Action {
 				hasDepsDoc = true
 			} else {
 				for _, f := range ctx.Files {
-					if strings.Contains(strings.ToLower(string(f.Content)),
+					if strings.Contains(i18n.Fold(string(f.Content)),
 						cfgSync.KeywordDependencies,
 					) {
 						hasDepsDoc = true
@@ -94,10 +95,10 @@ func CheckConfigFiles(ctx *entity.Context) []Action {
 			// Check if CONVENTIONS.md mentions this
 			var convContent string
 			if f := ctx.File(cfgCtx.Convention); f != nil {
-				convContent = strings.ToLower(string(f.Content))
+				convContent = i18n.Fold(string(f.Content))
 			}
 
-			keyword := strings.ToLower(strings.TrimPrefix(cfg.Pattern, token.PrefixDot))
+			keyword := i18n.Fold(strings.TrimPrefix(cfg.Pattern, token.PrefixDot))
 			keyword = strings.TrimSuffix(keyword, token.GlobStar)
 			if convContent == "" || !strings.Contains(convContent, keyword) {
 				actions = append(actions, Action{
@@ -145,7 +146,7 @@ func CheckNewDirectories(ctx *entity.Context) ([]Action, error) {
 	// Get ARCHITECTURE.md content
 	var archContent string
 	if f := ctx.File(cfgCtx.Architecture); f != nil {
-		archContent = strings.ToLower(string(f.Content))
+		archContent = i18n.Fold(string(f.Content))
 	}
 
 	// Scan top-level directories at the project root (parent of the

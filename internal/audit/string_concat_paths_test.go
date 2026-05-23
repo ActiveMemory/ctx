@@ -19,6 +19,7 @@
 package audit
 
 import (
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"go/ast"
 	"go/token"
 	"strings"
@@ -115,7 +116,7 @@ func TestNoStringConcatPaths(t *testing.T) {
 // looksLikePathVar reports whether name contains a path-related
 // substring at a word boundary (case-insensitive).
 func looksLikePathVar(name string) bool {
-	lower := strings.ToLower(name)
+	lower := i18n.Fold(name)
 	for _, hint := range pathVarHints {
 		idx := strings.Index(lower, hint)
 		if idx < 0 {

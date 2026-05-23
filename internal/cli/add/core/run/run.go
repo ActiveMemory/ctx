@@ -8,7 +8,6 @@ package run
 
 import (
 	"path/filepath"
-	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -23,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entry"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
 	"github.com/ActiveMemory/ctx/internal/hub"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/trace"
 	writeAdd "github.com/ActiveMemory/ctx/internal/write/add"
@@ -50,7 +50,7 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 		cmd.SilenceUsage = true
 		return ctxErr
 	}
-	fType := strings.ToLower(args[0])
+	fType := i18n.Fold(args[0])
 
 	content, extractErr := extract.Content(args, flags)
 	if extractErr != nil || content == "" {

@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/err/journal"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
@@ -74,9 +75,9 @@ func MatchJournalFiles(
 	// Build a set of matching base names, then expand to include parts.
 	matchedBases := make(map[string]bool)
 	for _, f := range mdFiles {
-		lower := strings.ToLower(f)
+		lower := i18n.Fold(f)
 		for _, pat := range patterns {
-			if strings.Contains(lower, strings.ToLower(pat)) {
+			if strings.Contains(lower, i18n.Fold(pat)) {
 				base := MultipartBase(f)
 				matchedBases[base] = true
 			}

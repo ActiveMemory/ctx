@@ -40,6 +40,7 @@ import (
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 	errPrompt "github.com/ActiveMemory/ctx/internal/err/prompt"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
@@ -133,7 +134,7 @@ func Run(
 			if readErr != nil {
 				return errFs.ReadInput(readErr)
 			}
-			response = strings.TrimSpace(strings.ToLower(response))
+			response = strings.TrimSpace(i18n.Fold(response))
 			if response != cli.ConfirmShort && response != cli.ConfirmLong {
 				initialize.InfoAborted(cmd)
 				return nil

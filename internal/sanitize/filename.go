@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 )
 
 // Filename converts a topic string to a safe filename component.
@@ -31,7 +32,7 @@ func Filename(s string) string {
 	// Remove leading/trailing hyphens
 	s = strings.Trim(s, token.Dash)
 	// Convert to lowercase
-	s = strings.ToLower(s)
+	s = i18n.Fold(s)
 	// Limit length
 	if len(s) > file.MaxNameLen {
 		s = s[:file.MaxNameLen]

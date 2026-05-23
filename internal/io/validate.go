@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errHTTP "github.com/ActiveMemory/ctx/internal/err/http"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 )
 
 // rejectDangerousPath returns an error if the resolved absolute path
@@ -72,7 +73,7 @@ func validateHTTPScheme(rawURL string) error {
 	if parseErr != nil {
 		return errHTTP.ParseURL(parseErr)
 	}
-	scheme := strings.ToLower(parsed.Scheme)
+	scheme := i18n.Fold(parsed.Scheme)
 	if scheme != cfgHTTP.SchemeHTTP && scheme != cfgHTTP.SchemeHTTPS {
 		return errHTTP.UnsafeURLScheme(parsed.Scheme)
 	}

@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	errSteering "github.com/ActiveMemory/ctx/internal/err/steering"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -79,7 +80,7 @@ func Filter(
 	files []*SteeringFile, prompt string,
 	manualNames []string, tool string,
 ) []*SteeringFile {
-	promptLower := strings.ToLower(prompt)
+	promptLower := i18n.Fold(prompt)
 
 	var result []*SteeringFile
 	for _, sf := range files {

@@ -26,6 +26,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/err/date"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	sharedFmt "github.com/ActiveMemory/ctx/internal/format"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/parse"
 	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
@@ -84,8 +85,8 @@ func RunList(cmd *cobra.Command, opts Opts) error {
 	var filtered []*entity.Session
 	for _, s := range sessions {
 		if opts.Project != "" && !strings.Contains(
-			strings.ToLower(s.Project),
-			strings.ToLower(opts.Project),
+			i18n.Fold(s.Project),
+			i18n.Fold(opts.Project),
 		) {
 			continue
 		}

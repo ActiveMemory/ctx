@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/context/token"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
 
@@ -66,7 +67,7 @@ func Relevance(eb *index.EntryBlock, keywords []string) float64 {
 	if len(keywords) == 0 {
 		return 0.0
 	}
-	text := strings.ToLower(eb.BlockContent())
+	text := i18n.Fold(eb.BlockContent())
 	matches := 0
 	for _, kw := range keywords {
 		if strings.Contains(text, kw) {
@@ -113,7 +114,7 @@ func ExtractTaskKeywords(tasks []string) []string {
 	var keywords []string
 	for _, t := range tasks {
 		// Split on whitespace and common punctuation
-		words := strings.FieldsFunc(strings.ToLower(t), func(r rune) bool {
+		words := strings.FieldsFunc(i18n.Fold(t), func(r rune) bool {
 			alnum := (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9')
 			return !alnum && r != '-' && r != '_'
 		})

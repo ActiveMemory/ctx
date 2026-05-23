@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -58,7 +59,7 @@ func NeedsSpec(content string) bool {
 	if len(content) > rc.SpecNudgeMinLen() {
 		return true
 	}
-	lower := strings.ToLower(content)
+	lower := i18n.Fold(content)
 	for _, word := range rc.SpecSignalWords() {
 		if strings.Contains(lower, word) {
 			return true

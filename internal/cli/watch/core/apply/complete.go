@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
@@ -57,8 +58,8 @@ func completeTask(query string) error {
 		match := regex.Task.FindStringSubmatch(line)
 		if match != nil && task.Pending(match) {
 			if strings.Contains(
-				strings.ToLower(task.Content(match)),
-				strings.ToLower(query),
+				i18n.Fold(task.Content(match)),
+				i18n.Fold(query),
 			) {
 				matchedLine = i
 				break

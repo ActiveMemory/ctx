@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	cfgSteering "github.com/ActiveMemory/ctx/internal/config/steering"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 )
 
 // matchInclusion checks whether a steering file should be
@@ -34,7 +35,7 @@ func matchInclusion(
 		if sf.Description == "" {
 			return false
 		}
-		return strings.Contains(promptLower, strings.ToLower(sf.Description))
+		return strings.Contains(promptLower, i18n.Fold(sf.Description))
 	case cfgSteering.InclusionManual:
 		return slices.Contains(manualNames, sf.Name)
 	default:

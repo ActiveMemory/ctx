@@ -17,6 +17,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	libNotify "github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -196,7 +197,7 @@ func TestTest_NoWebhookConfigured(t *testing.T) {
 	}
 
 	output := buf.String()
-	if !strings.Contains(strings.ToLower(output), "no webhook") {
+	if !strings.Contains(i18n.Fold(output), "no webhook") {
 		t.Errorf("output = %q, want mention of 'no webhook'", output)
 	}
 }

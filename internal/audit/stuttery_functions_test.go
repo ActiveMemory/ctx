@@ -19,6 +19,7 @@
 package audit
 
 import (
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"go/ast"
 	"strings"
 	"testing"
@@ -92,10 +93,10 @@ func TestNoStutteryFunctions(t *testing.T) {
 // and checks each word.
 func stutters(funcName, pkgName string) bool {
 	words := splitPascalCase(funcName)
-	lower := strings.ToLower(pkgName)
+	lower := i18n.Fold(pkgName)
 
 	for _, w := range words {
-		if strings.ToLower(w) == lower {
+		if i18n.Fold(w) == lower {
 			return true
 		}
 	}

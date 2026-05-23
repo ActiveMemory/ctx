@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 )
 
 // Path returns a slug that preserves `/` so vendor-namespaced
@@ -29,7 +30,7 @@ import (
 //   - string: kebab-case slug; lowercase; hyphen / slash
 //     separated; no other non-alnum runes.
 func Path(s string) string {
-	low := strings.ToLower(strings.TrimSpace(s))
+	low := i18n.Fold(strings.TrimSpace(s))
 	low = strings.ReplaceAll(low, token.Space, token.Dash)
 	low = regex.TopicSlug.ReplaceAllString(low, "")
 	low = strings.Trim(low, token.Dash+token.Slash)
@@ -55,7 +56,7 @@ func FromTitle(title string) string {
 	var sb strings.Builder
 	prevHyphen := false
 
-	for _, r := range strings.ToLower(title) {
+	for _, r := range i18n.Fold(title) {
 		switch {
 		case (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9'):
 			sb.WriteRune(r)

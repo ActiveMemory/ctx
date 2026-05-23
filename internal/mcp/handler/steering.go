@@ -19,6 +19,7 @@ import (
 	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errMcp "github.com/ActiveMemory/ctx/internal/err/mcp"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -99,7 +100,7 @@ func Search(d *entity.MCPDeps, query string) (string, error) {
 		return "", errMcp.SearchRead(d.ContextDir, readErr)
 	}
 
-	queryLower := strings.ToLower(query)
+	queryLower := i18n.Fold(query)
 	var sb strings.Builder
 	matches := 0
 
@@ -118,7 +119,7 @@ func Search(d *entity.MCPDeps, query string) (string, error) {
 		for scanner.Scan() {
 			lineNum++
 			line := scanner.Text()
-			if strings.Contains(strings.ToLower(line), queryLower) {
+			if strings.Contains(i18n.Fold(line), queryLower) {
 				ctxIo.SafeFprintf(&sb,
 					desc.Text(text.DescKeyMCPSearchHitLine),
 					e.Name(), lineNum, line)

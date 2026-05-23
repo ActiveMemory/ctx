@@ -26,6 +26,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/index"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -163,7 +164,7 @@ func checkConstitution(_ *entity.Context, report *Report) {
 		if entry.IsDir() {
 			continue
 		}
-		name := strings.ToLower(entry.Name())
+		name := i18n.Fold(entry.Name())
 		for _, pattern := range secretPatterns {
 			if strings.Contains(name, pattern) &&
 				!strings.HasSuffix(name, file.ExtExample) &&

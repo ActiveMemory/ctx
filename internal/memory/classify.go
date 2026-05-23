@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -26,7 +27,7 @@ import (
 // Returns:
 //   - Classification: Target file and matched keywords
 func Classify(entry Entry) Classification {
-	lower := strings.ToLower(entry.Text)
+	lower := i18n.Fold(entry.Text)
 
 	for _, rule := range rc.ClassifyRules() {
 		var matched []string

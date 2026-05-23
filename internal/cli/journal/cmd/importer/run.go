@@ -28,6 +28,7 @@ import (
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/journal/schema"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
@@ -79,10 +80,10 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	if opts.All {
 		toImport = sessions
 	} else {
-		qry := strings.ToLower(args[0])
+		qry := i18n.Fold(args[0])
 		for _, s := range sessions {
-			if strings.HasPrefix(strings.ToLower(s.ID), qry) ||
-				strings.Contains(strings.ToLower(s.Slug), qry) {
+			if strings.HasPrefix(i18n.Fold(s.ID), qry) ||
+				strings.Contains(i18n.Fold(s.Slug), qry) {
 				toImport = append(toImport, s)
 			}
 		}

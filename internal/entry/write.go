@@ -9,7 +9,6 @@ package entry
 import (
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/format"
 	coreAppend "github.com/ActiveMemory/ctx/internal/cli/add/core/insert"
@@ -18,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -36,7 +36,7 @@ import (
 //   - error: Non-nil if the type is unknown, the file
 //     doesn't exist, or write fails
 func Write(params entity.EntryParams) error {
-	fType := strings.ToLower(params.Type)
+	fType := i18n.Fold(params.Type)
 
 	fileName, ok := entry.CtxFile(fType)
 	if !ok {

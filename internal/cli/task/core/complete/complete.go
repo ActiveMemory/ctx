@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errTask "github.com/ActiveMemory/ctx/internal/err/task"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
@@ -87,7 +88,7 @@ func Complete(query, contextDir string) (string, int, error) {
 
 			// Match by text (case-insensitive partial match)
 			if !isNumber && strings.Contains(
-				strings.ToLower(taskText), strings.ToLower(query),
+				i18n.Fold(taskText), i18n.Fold(query),
 			) {
 				if matchedLine != -1 {
 					return "", 0, errTask.MultipleMatches(query)

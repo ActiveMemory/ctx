@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
 
@@ -40,6 +41,6 @@ func Import(cmd *cobra.Command, plan entity.ImportPlan) (bool, error) {
 	if readErr != nil {
 		return false, errFs.ReadInput(readErr)
 	}
-	response = strings.TrimSpace(strings.ToLower(response))
+	response = strings.TrimSpace(i18n.Fold(response))
 	return response == cli.ConfirmShort || response == cli.ConfirmLong, nil
 }

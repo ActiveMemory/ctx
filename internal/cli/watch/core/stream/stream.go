@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/watch"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	writeWatch "github.com/ActiveMemory/ctx/internal/write/watch"
 )
 
@@ -77,7 +78,7 @@ func Process(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 			if len(match) >= watch.ContextUpdateMinGroups {
 				openingTag := match[1]
 				update := apply.ContextUpdate{
-					Type:        strings.ToLower(ExtractAttribute(openingTag, cli.AttrType)),
+					Type:        i18n.Fold(ExtractAttribute(openingTag, cli.AttrType)),
 					Content:     strings.TrimSpace(match[2]),
 					Section:     ExtractAttribute(openingTag, cli.AttrSection),
 					Context:     ExtractAttribute(openingTag, cli.AttrContext),

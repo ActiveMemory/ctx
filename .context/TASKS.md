@@ -296,6 +296,34 @@ TASK STATUS LABELS:
   structure is established but no `tr.yaml` lands in this work.
   Spec: `specs/placeholder-i18n.md` #priority:high #added:2026-05-11
   #prerequisite-for-locale-work
+  In progress (2026-05-22): prerequisite #1 of 3 landed — the
+  `internal/i18n` package with `Fold` (Unicode case folding via
+  `golang.org/x/text/cases`) is now the project-mandated
+  case-fold primitive, enforced by a new compliance AST test
+  (`TestNoDirectStringsToLower`) that bans direct
+  `strings.ToLower` calls outside `internal/i18n/`. No
+  allowlist; all 48 existing callsites swept across 33 files in
+  one go. Per `specs/i18n-fold-helper-and-ban.md`. Still pending:
+  (2) move placeholder defaults from Go constants to embedded
+  YAML asset; (3) add `.ctxrc placeholders:` override with
+  EXTEND semantics.
+
+- [x] Establish `internal/i18n` package + ban direct
+  `strings.ToLower` via AST test. Prerequisite for the
+  placeholder localization above and for any future i18n
+  work. New `internal/i18n.Fold(s)` backed by
+  `cases.Fold(HandleFinalSigma(true))`. Compliance test
+  `TestNoDirectStringsToLower` walks all .go files
+  (production + test) and fails on any `strings.ToLower`
+  call outside `internal/i18n/`. No allowlist — all 48
+  existing callsites across 33 files swapped in one
+  commit. ASCII paths are byte-identical to the prior
+  behavior (cases.Fold preserves ASCII); non-ASCII paths
+  (slug generation, search queries, filename
+  sanitization, classification, steering match) get
+  Unicode-correct folding for free. Per
+  `specs/i18n-fold-helper-and-ban.md`.
+  #priority:high #added:2026-05-22 #completed:2026-05-22
 
 ### Misc
 

@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/parse"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
@@ -70,8 +71,8 @@ func ForEachPending(lines []string, fn func(Pending) bool) {
 // Returns:
 //   - bool: true if at least 2 significant words overlap
 func ContainsOverlap(action, taskText string) bool {
-	actionWords := parse.WordSet(strings.ToLower(action))
-	taskWords := strings.Fields(strings.ToLower(taskText))
+	actionWords := parse.WordSet(i18n.Fold(action))
+	taskWords := strings.Fields(i18n.Fold(taskText))
 
 	matchCount := 0
 	for _, w := range taskWords {

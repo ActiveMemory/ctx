@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errSession "github.com/ActiveMemory/ctx/internal/err/session"
 	sharedFmt "github.com/ActiveMemory/ctx/internal/format"
+	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/parse"
 	writeRecall "github.com/ActiveMemory/ctx/internal/write/journal"
 )
@@ -72,13 +73,13 @@ func RunShow(
 	case len(showArgs) == 0:
 		return errSession.IDRequired()
 	default:
-		q := strings.ToLower(showArgs[0])
+		q := i18n.Fold(showArgs[0])
 		var matches []*entity.Session
 		for _, s := range sessions {
 			if strings.HasPrefix(
-				strings.ToLower(s.ID), q,
+				i18n.Fold(s.ID), q,
 			) || strings.Contains(
-				strings.ToLower(s.Slug), q,
+				i18n.Fold(s.Slug), q,
 			) {
 				matches = append(matches, s)
 			}
