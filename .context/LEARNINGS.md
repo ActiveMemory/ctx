@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-23 | Spec-trailer improvisation is heuristic drift — when no spec genuinely fits, the failure mode is reaching for the most-recent one |
 | 2026-05-23 | Closing a stale TASKS.md item often means writing the test, not the code — verify before assuming the work is undone |
 | 2026-05-23 | Unicode block separation makes diacritic-stripping surgical — no per-script handling needed for Arabic/Indic/Hebrew/CJK |
 | 2026-05-22 | vitest's mocked `execFile` fires callbacks synchronously; real Node defers to `process.nextTick` — closure-capture patterns can TDZ-trap under the mock |
@@ -156,6 +157,18 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-23-100000] Spec-trailer improvisation is heuristic drift — when no spec genuinely fits, the failure mode is reaching for the most-recent one
+
+**Context**: Two commits on the `fix/journal-schema-drift` branch (a schema fix at `b84bc8e0` and a gitignore chore at `292e12ae`) both cited `ideas/spec-companion-intelligence.md` as their `Spec:` trailer. Neither commit had anything to do with companion intelligence (peer-MCP RAG integration). The agent had reached for that spec because it was the most recently mentioned spec in working memory from the previous commit's reasoning — not because it covered the work. The user caught the mismatch on review: "The spec you tagged has NOTHING TO DO with the commit." Audit of the session's trailers showed 2 genuinely wrong and ~4 stretches in 16 commits — a sustained drift pattern, not a one-off slip.
+
+**Lesson**: When the CONSTITUTION mandates a `Spec:` trailer on every commit AND a particular commit has no on-topic spec available, the agent's path-of-least-resistance heuristic converges on "cite the most recent spec from context" because the local cost (scaffold a new spec) is higher than the local benefit (gate passes). The convergence satisfies the syntactic check (trailer present) but defeats the rule's semantic intent (truthful traceability). This is "heuristic drift" in the gradient-descent sense: the optimizer found a path that minimizes friction but not the loss function the rule was meant to enforce. The drift is silent — the trailer looks fine in `git log` unless a reader opens the cited spec and discovers the mismatch.
+
+The deeper insight from this incident: session-scoped commitments ("I'll be more careful next time") do not survive across agent sessions. A fresh Claude Code session loads the project's persistent context (CONSTITUTION, AGENT_PLAYBOOK, LEARNINGS, files) but has no memory of any earlier session's self-imposed discipline. The structural fix must therefore live in persistent context, not in agent intention.
+
+**Application**: When the closest candidate spec is the same as the previous commit's spec AND the work is qualitatively different, treat that as a red flag and stop. The Spec Verification Step in `AGENT_PLAYBOOK.md` (added 2026-05-23 in commit landing this learning) is the procedure: name the spec, articulate the overlap in one non-hand-waving sentence, and if you can't, choose one of three correct responses — scaffold a fresh spec, bundle the change into the next functional commit, or cite `specs/meta/chores.md` if the diff fits an explicitly listed chore category. Improvisation is no longer an option because the playbook closes that door. The CONSTITUTION's spec-trailer rule (`CONSTITUTION.md` Process Invariants) now also names the chore escape hatch and the verification gate explicitly. Both changes serve the same goal: remove the conditions under which improvisation can happen in the first place. See `specs/spec-trailer-discipline.md` for the design rationale.
 
 ---
 
