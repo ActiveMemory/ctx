@@ -58,7 +58,12 @@ func TestRunAll_CancelPropagation(t *testing.T) {
 		"#!/bin/sh\necho '{\"cancel\": false, \"context\": \"should not appear\"}'")
 
 	input := &HookInput{TriggerType: "pre-tool-use", Tool: "test"}
-	agg, err := RunAll(hooksDir, cfgTrigger.PreToolUse, input, 5*time.Second)
+	// Bumped from 5s to 30s: under `go test ./...` parallel CPU
+	// pressure fork/exec slows enough that 2 hooks × 5s per-hook
+	// timeout reliably exceeded 10s. The test's assertions don't
+	// depend on a short timeout — cancellation should return in
+	// milliseconds — so 30s is just headroom against load.
+	agg, err := RunAll(hooksDir, cfgTrigger.PreToolUse, input, 30*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -90,7 +95,7 @@ func TestRunAll_ContextAggregation(t *testing.T) {
 		"#!/bin/sh\necho '{\"cancel\": false, \"context\": \"more context\"}'")
 
 	input := &HookInput{TriggerType: "session-start", Tool: "test"}
-	agg, err := RunAll(hooksDir, cfgTrigger.SessionStart, input, 5*time.Second)
+	agg, err := RunAll(hooksDir, cfgTrigger.SessionStart, input, 30*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -123,7 +128,7 @@ func TestRunAll_NonZeroExitCode(t *testing.T) {
 		"#!/bin/sh\necho '{\"cancel\": false, \"context\": \"survived\"}'")
 
 	input := &HookInput{TriggerType: "post-tool-use", Tool: "test"}
-	agg, err := RunAll(hooksDir, cfgTrigger.PostToolUse, input, 5*time.Second)
+	agg, err := RunAll(hooksDir, cfgTrigger.PostToolUse, input, 30*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -157,7 +162,7 @@ func TestRunAll_InvalidJSONOutput(t *testing.T) {
 		"#!/bin/sh\necho '{\"cancel\": false, \"context\": \"valid\"}'")
 
 	input := &HookInput{TriggerType: "file-save", Tool: "test"}
-	agg, err := RunAll(hooksDir, cfgTrigger.FileSave, input, 5*time.Second)
+	agg, err := RunAll(hooksDir, cfgTrigger.FileSave, input, 30*time.Second)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
