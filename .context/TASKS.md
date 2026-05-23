@@ -372,10 +372,23 @@ TASK STATUS LABELS:
 
 - [ ] Human: test `ctx init` on a fresh ubuntu install.
 
-- [ ] Improve hub failover client: distinguish auth errors
+- [x] Improve hub failover client: distinguish auth errors
   (Unauthenticated/PermissionDenied) from connection errors. Fail fast on auth
   failures instead of cycling through all peers with the same invalid token.
-  #priority:low #added:2026-04-08-194612
+  #priority:low #added:2026-04-08-194612 #completed:2026-05-23
+  Implementation already landed (commit 8bcb6208, the original failover
+  feature): `internal/hub/failover.go:61-63` calls `authErr(callErr)` and
+  returns immediately on auth errors; `internal/hub/err_check.go:22-30`
+  `authErr()` checks both `codes.Unauthenticated` and
+  `codes.PermissionDenied`. The task was open because no test specifically
+  asserted the auth-fast-fail path — the three existing failover tests
+  cover happy-path, skip-bad-peer, and all-bad-peers but not the
+  "stop walking on auth failure" invariant. Added
+  `TestFailoverClient_FailsFastOnAuthError`: seeds a bogus token, lists
+  two peers (real server first, unrouted port second), asserts the
+  returned gRPC code is Unauthenticated/PermissionDenied rather than
+  Unavailable — an Unavailable would prove the walk cycled past auth
+  into the unrouted second peer (the exact regression to catch).
 
 - [ ] Add file locking to ctx connect sync state to prevent concurrent sync
   races. Two sync processes (hook + manual) can both load the same LastSequence,
