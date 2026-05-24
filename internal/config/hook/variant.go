@@ -45,6 +45,9 @@ const (
 	VariantOversize = "oversize"
 	// VariantPulse selects the heartbeat pulse variant.
 	VariantPulse = "pulse"
+	// VariantAudits selects the audits variant of the
+	// check-audit hook.
+	VariantAudits = "audits"
 	// VariantReminders selects the reminders variant.
 	VariantReminders = "reminders"
 	// VariantStale selects the staleness variant.

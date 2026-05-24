@@ -332,6 +332,23 @@ remind:
       ctx remind list
       ctx remind dismiss 1
 
+audit:
+  short: |2-
+      ctx audit
+      ctx audit show surface
+      ctx audit dismiss surface
+
+audit.list:
+  short: '  ctx audit list'
+
+audit.show:
+  short: '  ctx audit show surface'
+
+audit.dismiss:
+  short: |2-
+      ctx audit dismiss surface
+      ctx audit dismiss --all
+
 remind.add:
   short: '  ctx remind add "Review PR #42 tomorrow"'
 

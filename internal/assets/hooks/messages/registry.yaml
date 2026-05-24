@@ -107,6 +107,12 @@
   description: Context persistence nudge
   vars: [PromptsSinceNudge]
 
+- hook: check-audit
+  variant: audits
+  category: ctx-specific
+  description: Out-of-band audit reports relay
+  vars: [AuditList]
+
 - hook: check-reminder
   variant: reminders
   category: ctx-specific

@@ -236,6 +236,20 @@ check-persistence.state-format:
     last_mtime=%d
 check-persistence.suppressed-log-format:
   short: 'persistence: suppressed (pct=%d%% < %d%% min), count=%d'
+check-audit.box-title:
+  short: Audit Reports
+check-audit.dismiss-hint:
+  short: 'Dismiss: ctx audit dismiss <id>'
+check-audit.dismiss-all-hint:
+  short: 'Dismiss all: ctx audit dismiss --all'
+check-audit.nudge-format:
+  short: You have %d unread audit report(s) at .context/audit/
+check-audit.relay-prefix:
+  short: 'IMPORTANT: Relay these audit findings to the user VERBATIM before continuing.'
+check-audit.report-separator:
+  short: "─────────────────────────────────"
+check-audit.stale-prefix:
+  short: 'STALE — %s (audited %s ago)'
 check-reminder.box-title:
   short: Reminders
 check-reminder.dismiss-all-hint:

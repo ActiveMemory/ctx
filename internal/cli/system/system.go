@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/parent"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/blocknonpathctx"
 	sysBootstrap "github.com/ActiveMemory/ctx/internal/cli/system/cmd/bootstrap"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkaudit"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkceremony"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkcontextsize"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkfreshness"
@@ -67,6 +68,7 @@ func Cmd() *cobra.Command {
 		checkmemorydrift.Cmd(),
 		checkpersistence.Cmd(),
 		checkskilldiscovery.Cmd(),
+		checkaudit.Cmd(),
 		checkreminder.Cmd(),
 		checkresource.Cmd(),
 		checktaskcompletion.Cmd(),

@@ -360,6 +360,22 @@ err.pad.history-read:
   short: 'read pad history: %w'
 err.pad.history-restore:
   short: 'restore pad from snapshot: %w'
+err.audit.read-report:
+  short: 'read audit report %s: %w'
+err.audit.parse-report:
+  short: 'parse audit report %s: %w'
+err.audit.write-dismissal:
+  short: 'write audit dismissal ledger: %w'
+err.audit.read-dismissal:
+  short: 'read audit dismissal ledger: %w'
+err.audit.unknown-id:
+  short: 'unknown audit id: %s'
+err.audit.id-required:
+  short: 'audit id required (use --all to dismiss every report)'
+err.audit.no-frontmatter:
+  short: 'audit report missing yaml frontmatter'
+err.audit.unterminated-frontmatter:
+  short: 'audit report frontmatter is not terminated by a closing delimiter'
 err.parser.file-error:
   short: '%s: %w'
 err.parser.no-match:

@@ -27,6 +27,9 @@ const (
 	CheckMemoryDrift = "check-memory-drift"
 	// CheckPersistence is the hook name for context persistence nudges.
 	CheckPersistence = "check-persistence"
+	// CheckAudit is the hook name for out-of-band audit channel
+	// relays.
+	CheckAudit = "check-audit"
 	// CheckReminder is the hook name for session reminder checks.
 	CheckReminder = "check-reminder"
 	// CheckResource is the hook name for resource usage checks.
