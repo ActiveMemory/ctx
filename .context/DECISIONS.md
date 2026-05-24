@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-24 | Discipline enforcement belongs on the verbatim-relay channel, run out-of-band |
 | 2026-05-24 | Pad snapshot-on-mutate at the store.WriteEntries choke point |
 | 2026-05-23 | Skill body text uses capability-first language with canonical tools as examples; install-guide docs name canonical implementations; `allowed-tools` frontmatter stays MCP-specific |
 | 2026-05-23 | MCP gateway not worth the coupling cost; companion tools stay peer-MCP and remain not-vouched-for-by-ctx |
@@ -151,6 +152,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-24-112626] Discipline enforcement belongs on the verbatim-relay channel, run out-of-band
+
+**Status**: Accepted
+
+**Context**: pad-undo Phase 1 shipped a user-facing command (ctx pad undo) without matching SKILL.md/recipe updates. The agent had read CONVENTIONS.md at session start AND knew the Constitution forbids 'I can create a follow-up task', yet still labeled the docs work 'Phase 2'. The user asked: how do we prevent this for future agents, not just this session? In-band advisory prose demonstrably does not survive mid-task tunnel vision.
+
+**Decision**: Discipline enforcement belongs on the verbatim-relay channel, run out-of-band
+
+**Rationale**: Verbatim relay is the ONE discipline channel in this codebase that empirically survives tunnel vision: the bordered reminder boxes (ctx remind, journal/knowledge notices) get echoed by agents every turn without filtering because the relay bypasses agent judgment. So move discipline checks onto that proven channel rather than inventing a new mechanism. Run the auditor OUT OF BAND (separate Claude Code session) for two reasons: (1) fresh-context judgment — the implementer cannot grade its own homework; (2) cost — a per-commit in-band AI gate burns API tokens on every commit, whereas a manually-triggered separate session bills against the user's interactive plan and lets them choose when to spend cycles. Programmatic test gates (internal/audit, internal/compliance) stay for mechanical checks but cannot make judgment calls like 'which recipe should mention this flag'.
+
+**Consequence**: New generic channel: out-of-band-skill writes .context/audit/<kind>.md, ctx system check-audit hook relays unread reports verbatim, ctx audit list/show/dismiss manages lifecycle. Dismissal is digest-bound so fresh findings re-surface. The channel is kind-agnostic — the hook relays any report file, so sibling skills (/ctx-spec-trailer-audit, /ctx-capture-audit) plug in with zero hook changes. Trade-off: no automated trigger in Phase 1 (no cron/post-commit) — relies on user discipline to actually run the auditor; a user who never runs it gets no nags. Naming collision with the existing internal/audit/ AST-tests package is tolerated (different layers, no compile conflict) but flagged in the spec.
+
+---
 
 ## [2026-05-24-092912] Pad snapshot-on-mutate at the store.WriteEntries choke point
 
