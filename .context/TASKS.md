@@ -1408,6 +1408,25 @@ Eliminates `jq` build dependency. Testable, cross-platform.
   blocked: prerequisite ctxctl does not exist yet. Deferred.
   #added:2026-03-29-082958
 
+- [ ] **Bootstrap `cmd/ctxctl` with the audit channel as its first
+  inhabitant.** Create the maintainer binary (same module, per this
+  section's dividing line — NOT a separate go.mod; rationale: keeps
+  the ~25 audit files in `internal/` reusable, and binary-level
+  import-graph isolation keeps them out of the `ctx` binary anyway).
+  Move the audit channel out of `ctx`: drop `audit.Cmd` from
+  bootstrap/group.go, drop `checkaudit.Cmd()` from system.go, remove
+  `check-audit` from the shipped hooks.json (resolves the
+  deliberately-dirty working-tree edit), and re-expose as `ctxctl
+  audit list/show/dismiss` + `ctxctl audit-relay`. Wire ctx's
+  repo-local (gitignored) `.claude/settings.local.json` to call
+  `ctxctl audit-relay`. Refines the Phase-BT rule "hooks must call
+  ctx" → shipped hooks call ctx, repo-local dev hooks may call ctxctl.
+  Driver: the audit channel (shipped in aefce517) is maintainer
+  tooling — its UserPromptSubmit hook would tax every end user's
+  every prompt for a feature they never use. Unblocks the
+  build/release subcommands below. Spec: specs/ctxctl-bootstrap.md
+  #priority:high #added:2026-05-24
+
 Dividing line: `ctx` is the user/agent tool, `ctxctl` is
 the maintainer/contributor
 tool. If a developer clones the repo and needs to build, test, release,
