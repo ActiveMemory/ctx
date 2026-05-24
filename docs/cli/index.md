@@ -198,7 +198,7 @@ hooks:                       # Hook system configuration
 | `archive_after_days`    | `int`      | `7`            | Days before completed tasks are archived                                                                       |
 | `scratchpad_encrypt`    | `bool`     | `true`         | Encrypt scratchpad with AES-256-GCM                                                                            |
 | `event_log`             | `bool`     | `false`        | Enable local hook event logging to `.context/state/events.jsonl`                                               |
-| `companion_check`       | `bool`     | `true`         | Check companion tool availability (Gemini Search, GitNexus) during `/ctx-remember`                             |
+| `companion_check`       | `bool`     | `true`         | Check companion tool availability (canonical: Gemini Search, GitNexus; equivalents work) during `/ctx-remember`|
 | `entry_count_learnings` | `int`      | `30`           | Drift warning when `LEARNINGS.md` exceeds this count                                                           |
 | `entry_count_decisions` | `int`      | `20`           | Drift warning when `DECISIONS.md` exceeds this count                                                           |
 | `convention_line_count` | `int`      | `200`          | Line count warning for `CONVENTIONS.md`                                                                        |

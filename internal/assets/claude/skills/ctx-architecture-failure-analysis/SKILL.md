@@ -53,8 +53,11 @@ If they don't exist, stop and tell the user to run
 - `.context/DANGER-ZONES.md`: existing danger zones from
   `/ctx-architecture` principal mode (used as starting points,
   not as the final word)
-- GitNexus MCP: blast radius estimation, shared-state detection
-- Gemini Search: cross-reference against known failure patterns
+- Code-intelligence MCP (canonical: GitNexus; equivalents include
+  sourcegraph-cody): blast radius estimation, shared-state detection
+- Web-search-with-citations MCP (canonical: Gemini Search;
+  equivalents include Firecrawl, Exa, Tavily): cross-reference
+  against known failure patterns
 
 ## Process
 
@@ -237,8 +240,9 @@ This phase is mandatory. Skipping it produces smart fiction.
 For each surviving finding:
 
 1. **Blast radius**: If this fails, what breaks?
-   - If GitNexus is available, use `impact` to get caller
-     chains and dependency graphs
+   - If a code-intelligence MCP is available (canonical:
+     GitNexus's `impact`; equivalents include sourcegraph-cody),
+     use it to get caller chains and dependency graphs
    - Otherwise, estimate from the architecture dependency graph
 
 2. **Detection gap**: Would existing tests catch this?
@@ -261,10 +265,13 @@ For each surviving finding:
    - **Critical**: Total >= 7 AND failure is silent or cascading
    - **Elevated**: All others
 
-5. **Cross-reference**: If Gemini Search is available, search
-   for the pattern in known incident databases, blog posts,
-   and similar project post-mortems. This grounds findings in
-   real-world evidence.
+5. **Cross-reference**: If a web-search-with-citations MCP is
+   available (canonical: Gemini Search; equivalents include
+   Firecrawl, Exa, Tavily), search for the pattern in known
+   incident databases, blog posts, and similar project
+   post-mortems. This grounds findings in real-world evidence.
+   If no such MCP is connected, fall back to built-in web
+   search.
 
 ### Phase 5: Write DANGER-ZONES.md
 
@@ -380,7 +387,9 @@ Before writing DANGER-ZONES.md, verify:
 - [ ] Each finding names the triggering precondition explicitly
 - [ ] Summary report includes confidence breakdown and
   challenge drop count
-- [ ] If GitNexus available: blast radius was verified with
-  impact analysis
-- [ ] If Gemini available: findings were cross-referenced
+- [ ] If a code-intelligence MCP is available (canonical:
+  GitNexus): blast radius was verified with its impact-analysis
+  surface
+- [ ] If a web-search-with-citations MCP is available
+  (canonical: Gemini Search): findings were cross-referenced
   against known patterns

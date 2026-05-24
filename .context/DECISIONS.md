@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-23 | Skill body text uses capability-first language with canonical tools as examples; install-guide docs name canonical implementations; `allowed-tools` frontmatter stays MCP-specific |
 | 2026-05-23 | MCP gateway not worth the coupling cost; companion tools stay peer-MCP and remain not-vouched-for-by-ctx |
 | 2026-05-23 | Keep `i18n.Fold` strict; add `i18n.MatchKey` as the separate diacritic-insensitive primitive |
 | 2026-05-22 | OpenCode plugin: agent shell tool not anchored to project root under cwd-anchored |
@@ -149,6 +150,48 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-23-030000] Skill body text uses capability-first language with canonical tools as examples; install-guide docs name canonical implementations; `allowed-tools` frontmatter stays MCP-specific
+
+**Status**: Accepted
+
+**Context**: The 2026-05-23 "MCP gateway not worth the coupling cost" decision rejected pluggable abstraction over companion tools at the code/protocol layer (no gateway, no plugin registry). But that decision left an open question: skill body text was still hard-coding specific tool names (GitNexus, Gemini Search), and so were several `docs/` pages. The hard-coding is *its own* form of vouching — just static prescription instead of dynamic dispatch. A user with Firecrawl / sourcegraph-cody / vLLM read the skill and saw instructions naming tools they don't have; the agent couldn't self-route because the skill text told it to use specific MCP server names.
+
+Three rule choices were considered for the body-text layer:
+
+1. Pluggable abstraction with `.ctxrc`-declared capability mapping — rejected by the prior decision (it IS the interface-contract ownership cost we ruled out).
+2. Per-tool skill variants (`ctx-architecture-enrich-gitnexus`, `…-sourcegraph`, …) — explodes the skill count without removing the prescription, just sliced thinner.
+3. **Capability-first body text with canonical tools as examples** — chosen.
+
+A parallel question existed for `docs/`: an install guide LEGITIMATELY names tools (its job is "tell me what to install"). Genericizing install commands would harm newcomers. The right split: operational/descriptive docs use the same capability-first phrasing as skills; install-guide docs name canonical implementations explicitly, with a one-liner noting equivalents work.
+
+The `allowed-tools` frontmatter is a separate concern. Genericizing to `mcp__*` would grant skills access to EVERY connected MCP — a permission expansion, not a cosmetic change. Operators with different toolchains edit `allowed-tools` in their local skill copy or fork. A separate spec can revisit if needed.
+
+**Decision**: Three layered rules.
+
+1. **Skill body text** uses capability-first language ("a code-intelligence MCP", "a web-search-with-citations MCP") with the canonical implementation listed as an example ("canonical: GitNexus; equivalents include sourcegraph-cody"). Operational example calls (e.g. `mcp__gitnexus__impact({…})`) stay as canonical-impl illustrations.
+2. **Install-guide docs** (`docs/home/getting-started.md`, `docs/recipes/multi-tool-setup.md`) name canonical implementations directly and provide concrete setup commands. A preamble notes that equivalents work for non-canonical toolchains.
+3. **`allowed-tools` frontmatter** stays MCP-specific. Skills ship with `mcp__gitnexus__*`, `mcp__gemini-search__*` in the allowlist. Operators using different MCP servers edit the allowlist in their local skill copies.
+
+**Rationale**: Three reinforcing properties:
+
+- **Manifesto-aligned.** ctx no longer prescribes specific tools in skill bodies. Agents self-route based on what's connected.
+- **No new abstraction layer.** Pure text rewrite. Zero code change, zero interface contract, zero coupling.
+- **Discoverability preserved.** Canonical tools stay first-listed in every section so newcomers immediately learn what to install if they're starting from zero.
+
+Alternatives explicitly rejected: code-level pluggability (2026-05-23 MCP-gateway decision); per-tool skill variants (maintenance explosion without solving the smell); "remove all tool names" (loses discoverability for new users who do want a recommendation).
+
+**Consequence**:
+
+- Eight skill files updated (commit f554f758): ctx-refactor, ctx-explain, ctx-code-review, ctx-remember (claude + copilot-cli), ctx-architecture, ctx-architecture-enrich, ctx-architecture-failure-analysis. Prescriptive references to specific tools rewritten as capability-first with canonical examples.
+- Six docs updated alongside (this commit): architecture-exploration runbook, architecture-deep-dive recipe, skills.md reference, cli/index.md schema, getting-started.md install guide, multi-tool-setup.md recipe.
+- `specs/skill-audit-companion-tool-neutrality.md` documents the per-file rewrites and the install-guide-vs-operational split for future contributors.
+- New skill authors follow this rule: describe the capability, name the canonical implementation as an example, leave `allowed-tools` MCP-specific.
+- If a real second-viable graph-tool ecosystem emerges and operators consistently ask for pluggable `allowed-tools`, the prior MCP-gateway decision can be revisited; the present decision doesn't preclude that future evolution.
+
+See also: `specs/skill-audit-companion-tool-neutrality.md`, `specs/ctx-remember-silent-companion-fallback.md` (the install-nag fix that preceded this audit), the 2026-05-23 "MCP gateway not worth the coupling cost" decision above.
+
+---
 
 ## [2026-05-23-020000] MCP gateway not worth the coupling cost; companion tools stay peer-MCP and remain not-vouched-for-by-ctx
 

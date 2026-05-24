@@ -403,6 +403,14 @@ benefits compound. Skills like `/ctx-code-review`, `/ctx-explain`,
 and `/ctx-refactor` all become noticeably better with these tools
 connected.
 
+The two sections below name **canonical implementations** that ctx has
+tested against — Gemini Search for web-search-with-citations and
+GitNexus for the code knowledge graph. If your toolchain provides
+equivalent capabilities through different MCP servers (Firecrawl,
+Exa, Tavily for web search; sourcegraph-cody for code graph), use
+those instead. ctx skills describe capabilities, not specific tools —
+the agent self-routes based on what's connected.
+
 ### Gemini Search
 
 Provides grounded web search with citations. Used by skills and the

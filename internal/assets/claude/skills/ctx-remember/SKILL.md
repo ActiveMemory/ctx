@@ -132,29 +132,34 @@ Skip this section entirely if `companion_check: false` is set in
 the field value.
 
 **Companion tools** enhance ctx skills with web search and code
-intelligence. They are optional but recommended:
+intelligence. They are optional but recommended. ctx names canonical
+implementations below; if your MCP toolchain provides equivalent
+capabilities through different servers (e.g. Firecrawl / Exa /
+Tavily for web search; sourcegraph-cody for code graph), use
+whatever you have connected.
 
-| Tool          | Purpose                                                | Smoke test                                                           |
-|---------------|--------------------------------------------------------|----------------------------------------------------------------------|
-| Gemini Search | Grounded web search with citations                     | Call `mcp__gemini-search__search_with_grounding` with a simple query |
-| GitNexus      | Code knowledge graph (symbols, blast radius, clusters) | Call `mcp__gitnexus__list_repos`                                     |
+| Capability                | Canonical example | Smoke test for the canonical example                                 |
+|---------------------------|-------------------|----------------------------------------------------------------------|
+| Web search with citations | Gemini Search     | Call `mcp__gemini-search__search_with_grounding` with a simple query |
+| Code knowledge graph      | GitNexus          | Call `mcp__gitnexus__list_repos`                                     |
 
 **Check procedure:**
 
 1. Attempt each smoke test silently
 2. For tools that respond: note as available (no output needed)
-3. For tools that fail or are not connected: append a brief note
-   after the readback:
-   > "Companion tools: Gemini Search is not connected (web search
-   > will fall back to built-in). Install via MCP settings if
-   > needed."
+3. For tools that fail or are not connected: silently fall back
+   to built-in capabilities. Emit no output. ctx does not vouch
+   for companion-tool install paths (see DECISIONS.md,
+   2026-05-23 "MCP gateway not worth the coupling cost").
 4. For GitNexus specifically: if it responds but the current repo
    is not indexed or the index is stale, suggest:
    > "GitNexus index is stale: run `npx gitnexus analyze` to
    > rehydrate."
 
-Present companion status as a one-line note after the readback,
-not a separate section. If everything is healthy, say nothing.
+Present companion status as a one-line note after the readback
+only when there's something actionable (stale index). Absent
+tools produce no output; the agent uses its built-in capabilities
+transparently.
 
 ## Quality Checklist
 

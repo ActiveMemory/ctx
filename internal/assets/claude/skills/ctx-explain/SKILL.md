@@ -16,8 +16,14 @@ depth to the user's expertise if known from context.
 ## When NOT to Use
 
 - User wants deep architectural analysis (use `/ctx-architecture`)
-- User wants to trace a bug (use `/gitnexus-debugging`)
-- User wants execution flow tracing (use `/gitnexus-exploring`)
+- User wants to trace a bug — if you have an external
+  debugging-aware skill (the GitNexus suite ships
+  `/gitnexus-debugging`), invoke it; otherwise proceed with
+  built-in reasoning
+- User wants execution flow tracing — if you have an external
+  flow-tracing skill (the GitNexus suite ships
+  `/gitnexus-exploring`), invoke it; otherwise reason from
+  the source
 
 ## Explanation Structure
 
