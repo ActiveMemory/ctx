@@ -304,3 +304,43 @@ variants. Linters in `hack/` enforce the hard rules.
   file / preserve existing keys / skip when registered / reject malformed JSON
 
 - Substrate vs. artifact placement: cognitive substrate (consumed and mutated via ctx-mediated paths — `ctx agent`, `ctx decision add`, `/ctx-kb-ingest`, `/ctx-handover`, ceremonies) lives under `.context/`; project artifacts (read and edited directly by humans — `specs/`, `CLAUDE.md`, `GETTING_STARTED.md`, `docs/`) live at the project root; tool config and tool homes (`.ctxrc`, `.claude/`) live at root by dotfile/tool convention. The kb is substrate, not artifact: direct file edits remain possible per Invariant 1, but the skill-mediated path is the discipline. Rationale recorded in DECISIONS.md.
+
+## User-Facing Surface Completeness
+
+When a change adds or alters a user-facing surface — a new
+`ctx` subcommand, a new flag, an observable behavior change,
+a new exit shape, a new output line — the work is **not
+complete** until every one of the following has been updated
+in the same commit (or the same stacked PR, with the user's
+explicit OK):
+
+- `internal/assets/commands/commands.yaml` and
+  `examples.yaml` for the subcommand description and example
+- `internal/assets/claude/skills/ctx-<area>/SKILL.md` so the
+  agent knows the surface exists and when to trigger it
+- `internal/assets/integrations/copilot-cli/skills/<...>` if
+  a parallel skill exists for the integration
+- `docs/recipes/<related-recipe>.md` for any recipe that
+  already demonstrates the broader feature; consider a new
+  recipe if the surface is its own workflow shape
+- `docs/cli/<command>.md` if a per-command CLI doc page
+  exists for this surface
+
+Splitting these into a "Phase 2 / follow-up commit / future
+sweep" is **deferral** in the Constitution's sense, no matter
+how the phase is labeled. Docs are part of the deliverable,
+not a separable improvement. The "I can create a follow-up
+task" prohibition applies verbatim.
+
+Acceptable exceptions (state them in the commit body):
+
+- The surface is internal-only (no human user encounters it).
+- A recipe / skill genuinely does not exist for this feature
+  area and writing one is itself a larger separable piece of
+  work (then file the spec for that piece in the same commit,
+  do not just defer).
+
+The Self-check before declaring a feature commit complete is:
+*"If a user runs `ctx help` or asks `/ctx-<area>` to do this
+new thing today, will the help text / skill / recipe match
+what the code does?"* If no, the commit is not complete.
