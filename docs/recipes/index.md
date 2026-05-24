@@ -451,6 +451,19 @@ format.
 
 ---
 
+### [Out-of-Band Audit Channel](audit-channel.md)
+
+Run discipline audits from a **separate session** and surface
+their findings via **verbatim relay** — the one channel that
+survives agent tunnel vision. The auditor drops a structured
+report into `.context/audit/`; a hook relays it at the next
+prompt; you dismiss it once addressed.
+
+**Uses**: `/ctx-surface-audit`, `ctx audit list`,
+`ctx audit show`, `ctx audit dismiss`, `ctx system check-audit`
+
+---
+
 ### [Authoring Lifecycle Triggers](triggers.md)
 
 Run **executable shell scripts** at session-start,
