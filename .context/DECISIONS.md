@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-24 | Pad snapshot-on-mutate at the store.WriteEntries choke point |
 | 2026-05-23 | Skill body text uses capability-first language with canonical tools as examples; install-guide docs name canonical implementations; `allowed-tools` frontmatter stays MCP-specific |
 | 2026-05-23 | MCP gateway not worth the coupling cost; companion tools stay peer-MCP and remain not-vouched-for-by-ctx |
 | 2026-05-23 | Keep `i18n.Fold` strict; add `i18n.MatchKey` as the separate diacritic-insensitive primitive |
@@ -150,6 +151,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-24-092912] Pad snapshot-on-mutate at the store.WriteEntries choke point
+
+**Status**: Accepted
+
+**Context**: Adding a safety net for accidental `ctx pad rm` (and any other destructive pad mutation) required choosing where to insert the snapshot logic: per-subcommand (in each cmd/<op>/run.go), or at the persistence choke point (store.WriteEntriesWithIDs).
+
+**Decision**: Pad snapshot-on-mutate at the store.WriteEntries choke point
+
+**Rationale**: store.WriteEntriesWithIDs is invoked by every mutating pad subcommand (add/edit/mv/rm/merge/normalize/resolve/tag and undo itself); instrumenting it once gives universal coverage with one site of truth. Per-subcommand instrumentation would need maintenance every time a new pad mutation lands and is easy to forget. The snapshot itself is a byte-for-byte copy of the existing pad blob (no re-encryption), so plaintext and encrypted modes use identical logic; the existing ciphertext IS the snapshot.
+
+**Consequence**: All future pad mutations get the safety net automatically without per-command wiring. The op label for the snapshot filename is derived from cmd.Name() at the call site, so the cmd parameter that already flowed in for diagnostic output now carries semantic weight too. New constraint: any future code path that bypasses WriteEntriesWithIDs to mutate the pad will silently bypass the safety net — a guardrail test could enforce this if/when that risk materializes.
+
+---
 
 ## [2026-05-23-030000] Skill body text uses capability-first language with canonical tools as examples; install-guide docs name canonical implementations; `allowed-tools` frontmatter stays MCP-specific
 

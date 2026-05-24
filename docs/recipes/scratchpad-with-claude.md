@@ -46,6 +46,7 @@ Use the `/ctx-pad` skill to manage entries from inside your AI session.
 | `ctx pad tags`         | CLI command | List all tags with counts                      |
 | `ctx pad import`       | CLI command | Bulk-import lines from a file (*or stdin*)     |
 | `ctx pad export`       | CLI command | Export all blob entries to a directory         |
+| `ctx pad undo`         | CLI command | Restore the pad from the most recent snapshot  |
 | `/ctx-pad`             | Skill       | Natural language interface to all pad commands |
 
 ## The Workflow
@@ -332,6 +333,36 @@ Once the skill is active, it translates intent into commands:
   the encryption key (`~/.ctx/.ctx.key`) directly.
 * **Encryption is transparent**: You interact with plaintext; the
   encryption/decryption happens automatically on every read/write.
+
+## If You Delete the Wrong Thing
+
+Every destructive `ctx pad` operation (add, edit, mv, rm, merge,
+normalize, resolve, tag) writes a snapshot of the prior pad blob
+to `.context/scratchpad.history/` *before* overwriting. There is
+no confirmation prompt on the hot path — and you don't need one,
+because `ctx pad undo` restores the most recent snapshot:
+
+```bash
+ctx pad rm 3        # oh no, that was the one with the API token
+ctx pad undo        # → "Restored pad from snapshot 20260524..."
+```
+
+A few things to know:
+
+* **Undo is itself snapshotted.** Running `ctx pad undo` twice
+  in a row is a redo — the first undo saves the post-mutation
+  state, then promotes the pre-mutation state; the second undo
+  reverses that.
+* **Empty history is not an error.** On a brand-new project
+  with no mutations yet, `ctx pad undo` prints `No pad history
+  to restore.` and exits 0.
+* **Snapshots are encrypted with the same key as the live pad.**
+  Losing `~/.ctx/.ctx.key` makes both unreadable; the safety
+  net does not change the key-loss failure mode.
+* **Retention is bounded.** The 20 most recent snapshots
+  (capped also at 30 days) are kept; older ones are pruned
+  after each mutation. Off-host backups remain the recovery
+  path for anything beyond that window.
 
 ## Next Up
 

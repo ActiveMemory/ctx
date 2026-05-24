@@ -2715,12 +2715,13 @@ DR-kb session a5736210 closeouts under
   6-step ritual disproportionate to a single fat-finger.
   Spec: specs/pad-undo-snapshot.md #priority:high
   #added:2026-05-24
-    - [ ] **Phase 1**: snapshot-on-mutate + `ctx pad undo` (no flags) +
+    - [x] **Phase 1**: snapshot-on-mutate + `ctx pad undo` (no flags) +
       bounded retention (count cap + age cap, defaults hard-coded) +
       unit tests covering snapshot-before-write, first-write-no-snapshot,
       undo-restores-pre-mutation, undo-is-itself-snapshotted (redo),
       empty-history-exits-zero, prune-evicts-oldest. Plaintext and
-      encrypted pad modes both covered.
+      encrypted pad modes both covered. Shipped 2026-05-24 in commit
+      6bcaf889 (`feat/pad-undo-snapshot`).
     - [ ] **Phase 2**: `ctx pad undo --list` (with sidecar
       `<slot>.meta.json` for entry counts), `--to <slot>`, `--prune`,
       `--clear` (with confirmation prompt). `.ctxrc` `[pad.history]`

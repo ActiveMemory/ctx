@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-24 | Audit gates that bite when introducing new packages and helpers |
 | 2026-05-23 | Spec-trailer improvisation is heuristic drift — when no spec genuinely fits, the failure mode is reaching for the most-recent one |
 | 2026-05-23 | Closing a stale TASKS.md item often means writing the test, not the code — verify before assuming the work is undone |
 | 2026-05-23 | Unicode block separation makes diacritic-stripping surgical — no per-script handling needed for Arabic/Indic/Hebrew/CJK |
@@ -157,6 +158,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-24-092924] Audit gates that bite when introducing new packages and helpers
+
+**Context**: While landing the pad-undo Phase 1 work, the project audit suite (internal/audit) caught two violations on the new history.go file that aren't surfaced by golangci-lint or build errors: TestNoMixedVisibility and TestNoMagicStrings.
+
+**Lesson**: TestNoMixedVisibility flags ANY unexported func in a file that also contains exported funcs — even with full Parameters/Returns doc sections. The fix is to split unexported helpers into a sibling file like <name>_internal.go in the same package. TestNoMagicStrings flags warn-format string literals passed to logWarn.Warn — they must live as named constants in internal/config/warn/, not inline. TestDocCommentStructure additionally requires Parameters: and Returns: sections on every helper regardless of visibility.
+
+**Application**: When creating a new core/store-shaped file with both exported API and unexported helpers, split immediately into <name>.go (exported) + <name>_internal.go (unexported) — don't wait for the audit failure. When using logWarn.Warn for a new warning class, add the format constant to internal/config/warn/warn.go FIRST, then reference cfgWarn.<Name> at the call site. All new helpers (exported or not) get full godoc Parameters/Returns blocks.
 
 ---
 
