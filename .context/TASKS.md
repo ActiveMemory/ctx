@@ -390,49 +390,114 @@ TASK STATUS LABELS:
   Unavailable — an Unavailable would prove the walk cycled past auth
   into the unrouted second peer (the exact regression to catch).
 
-- [ ] Use crypto/subtle.ConstantTimeCompare for hub token validation instead of
+- [x] Use crypto/subtle.ConstantTimeCompare for hub token validation instead of
   string equality. Current Store.ValidateToken uses == which is vulnerable to
   timing attacks. Also replace O(n) linear scan with a map[string]*ClientInfo
-  for O(1) lookup. #priority:high #added:2026-04-08-194458
+  for O(1) lookup. #priority:high #added:2026-04-08-194458 #completed:2026-05-23
+  Both halves landed: `Store.ValidateToken` uses `subtle.ConstantTimeCompare`
+  (`internal/hub/store.go:174-189`) against the token fetched via the
+  `tokenIdx map[string]int` index (`store.go:162,178`) — no linear scan
+  remains. Pinning regression test:
+  `TestStoreValidateToken_RejectsNearMissTokens`
+  (`internal/hub/store_test.go:168`) seeds a valid token and asserts that
+  near-miss / longer / shorter / shared-prefix / case-variant tokens all
+  return nil, locking in the constant-time-compare contract.
 
-- [ ] Fix silent error suppression in hub: (1) ctx add --share silently ignores
-  publish failures — warn user on failure, (2) hubsync hook swallows all
-  errors — log to event system, (3) replication loop drops errors silently —
-  add structured logging for debug. #priority:high #added:2026-04-08-194443
-
-- [ ] Add input validation to hub Publish handler: reject empty ID, validate
+- [x] Add input validation to hub Publish handler: reject empty ID, validate
   Type against allowed set (decision/learning/convention/task), enforce Content
   length limit (1MB), require non-empty Origin. Prevents garbage data and DoS
-  via unbounded content. #priority:high #added:2026-04-08-194430
+  via unbounded content. #priority:high #added:2026-04-08-194430 #completed:2026-05-23
+  All four sub-items shipped in `internal/hub/validate_entry.go:28-53`,
+  invoked per-entry by `internal/hub/handler.go:86-90` before append:
+  empty-ID → `ErrEntryIDRequired`; Type checked against
+  `cfgEntry.AllowedTypes` (`internal/config/entry/entry.go:43-44`) →
+  `ErrInvalidEntryType`; non-empty Origin → `ErrEntryOriginRequired`;
+  `len(Content) > cfgHub.MaxContentLen` (1 << 20 = 1 MB,
+  `internal/config/hub/hub.go:212-213`) → `ErrEntryContentOversize`.
+  Bonus hardening beyond the ask: full Meta validation in
+  `validateEntryMeta` / `metaCharCheck` (`validate_entry.go:72-137`) —
+  per-field cap (`MaxMetaFieldLen=256`), total cap (`MaxMetaTotalLen=2048`),
+  and control-character rejection guarding against
+  audits.jsonl log-injection, `.context/hub/*.md` markdown-injection,
+  and frontmatter confusion. Regression tests in
+  `internal/hub/entry_validate_test.go`: `EmptyMetaAccepted`,
+  `MetaRoundTrip`, `MetaFieldOversize`, `MetaTotalOversize`,
+  `MetaControlCharRejected`, `MetaTabAllowed`.
 
-- [ ] Fix ctx connect listen: currently only does initial sync then blocks on
+- [x] Fix ctx connect listen: currently only does initial sync then blocks on
   ctx.Done() without ever calling the Listen RPC. Must stream entries in
   real-time via the server-streaming Listen RPC, writing to .context/shared/ as
-  entries arrive. #priority:high #added:2026-04-08-194415
+  entries arrive. #priority:high #added:2026-04-08-194415 #completed:2026-05-23
+  `internal/cli/connection/core/listen/listen.go:32-72` `Run` now invokes
+  the server-streaming `client.Listen(ctx, cfg.Types, 0, callback)` at
+  line 53-65. Each `hub.EntryMsg` is rendered via
+  `render.WriteEntries` (`internal/cli/connection/core/render/render.go:27`)
+  which appends to type-specific files under `.context/hub/`
+  (implementation chose `.context/hub/` over the task's original
+  `.context/shared/` wording — directory naming converged on `hub/`
+  during the hub-rename phase). Ctrl-C handled cleanly via
+  `signal.NotifyContext`; expected context cancellation returns nil
+  (lines 46-49, 67-71).
 
-
-- [ ] Deprecate and remove `ctx backup`: hub handles cross-machine persistence,
+- [x] Deprecate and remove `ctx backup`: hub handles cross-machine persistence,
   backup is environment-specific (SMB/GVFS/rsync), and it is the wrong layer
   for ctx to own. Replace with a backup-strategy runbook. About 60 files to
   remove across CLI, config, hooks, docs, skills. Implementation order: runbook
   first, then hook removal, then command removal, then docs cleanup.
   Spec: specs/deprecate-ctx-backup.md #priority:medium
-  #added:2026-04-04-010000 #updated:2026-04-16
+  #added:2026-04-04-010000 #updated:2026-04-16 #completed:2026-05-23
+  Spec archived to `specs/future-complete/deprecate-ctx-backup.md`.
+  Runbook published at `docs/operations/runbooks/backup-strategy.md`
+  ("`ctx backup` was removed. File-level backup is not `ctx`'s [job]").
+  Command gone: no `internal/cli/backup/`, no `cmd/backup.go`.
+  `internal/err/backup/doc.go:16` now references it as "The former
+  `ctx backup` command". Intentional survivors per spec line 155:
+  `internal/cli/initialize/core/backup` (init's config-backup
+  mechanism, explicitly kept) and `internal/err/backup` (historical
+  error types). Co-archived cleanups:
+  `specs/future-complete/cli-namespace-cleanup.md`,
+  `specs/future-complete/ai-typography-cleanup.md`.
 
 ### Architecture Docs
 
-- [ ] Publish architecture docs to docs/: copy ARCHITECTURE.md,
+- [-] Publish architecture docs to docs/: copy ARCHITECTURE.md,
   DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/.
   Sanitize intervention points into docs/contributing/.
   Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only).
   Spec: specs/publish-architecture-docs.md #priority:medium
-  #added:2026-04-03-150000
+  #added:2026-04-03-150000 #skipped:2026-05-23
+  Decided not to ship. Reasons: (1) audience is maintainer-focused —
+  anyone wanting DETAILED_DESIGN depth can read it on GitHub from the
+  canonical `.context/` source; (2) AI-generated content would require
+  a permanent human editorial pass before each publish; (3) every
+  architecture change forces a re-run + re-publish loop or accepts
+  known staleness in the public docs site; (4) the marginal
+  discoverability gain doesn't justify importing that maintenance
+  burden into the docs pipeline. If discoverability ever becomes a
+  real ask, cheap fallback is a one-page
+  `docs/contributing/architecture.md` that links to the GitHub-hosted
+  `.context/ARCHITECTURE.md` — pointer, not a copy. Replay note: do
+  not re-open without revisiting these four reasons.
 
-- [ ] Update ctx-architecture skill to append discovered terms to GLOSSARY.md
+- [x] Update ctx-architecture skill to append discovered terms to GLOSSARY.md
   during Phase 3. Additive only, max 10 terms per run, project-specific only,
   alphabetical insertion, skip if GLOSSARY.md empty. Print added terms in
   convergence report. Spec: specs/publish-architecture-docs.md #priority:low
-  #added:2026-04-03-153000
+  #added:2026-04-03-153000 #completed:2026-05-24
+  All seven sub-rules landed in
+  `internal/assets/claude/skills/ctx-architecture/SKILL.md`: Phase 3
+  GLOSSARY.md section at lines 370-388 (additive, max-10, project-
+  specific allowlist, alphabetical insertion, `**Term**: definition`
+  format, "Glossary additions" convergence-report line), with the
+  acceptance checklist pinning the contract at lines 945-948.
+  Intentional semantic refinement: the spec said "skip if empty"; the
+  skill ships "skip if file does not exist" — file-absence is the
+  unambiguous opt-out signal, file-present-and-empty is a deliberate
+  invitation to populate. `.context/GLOSSARY.md` exists in this
+  project, so the opt-in is active. Spec `specs/publish-architecture-
+  docs.md` stays in place (not moved to `future-complete/`) because
+  the sibling line-463 task is `[-]` skipped, not done — the spec is
+  half-done / half-wontdo.
 
 ### Code Cleanup Findings
 
@@ -475,45 +540,45 @@ TASK STATUS LABELS:
       Reference implementation: kubernetes-service enrichment pass
       2026-03-25. #added:2026-03-25-120000
 
-- [ ]: ctx-architecture-failure-analysis
-**Context**: Adversarial analysis skill that identifies where
-a codebase will silently betray you. Requires
-`ctx-architecture` artifacts as input (ARCHITECTURE.md,
-DETAILED_DESIGN*.md, map-tracking.json). Does its own
-targeted deep reads focusing on mutation points, shared
-mutable state, error swallowing, concurrency, implicit
-ordering, missing enforcement, and scaling cliffs. Uses
-available tooling (GitNexus, Gemini Search) to
-cross-reference patterns.
+- [x] ctx-architecture-failure-analysis #completed:2026-05-24
+  **Context**: Adversarial analysis skill that identifies where
+  a codebase will silently betray you. Requires
+  `ctx-architecture` artifacts as input (ARCHITECTURE.md,
+  DETAILED_DESIGN*.md, map-tracking.json). Does its own
+  targeted deep reads focusing on mutation points, shared
+  mutable state, error swallowing, concurrency, implicit
+  ordering, missing enforcement, and scaling cliffs. Uses
+  available tooling (GitNexus, Gemini Search) to
+  cross-reference patterns.
 
-Produces `DANGER-ZONES.md` — a ranked inventory of silent
-failure points with: location, failure mode, blast radius,
-detection gap, and suggested fix. Two tiers: "most likely to
-cause production incidents" and "less likely but equally
-dangerous."
+  Produces `DANGER-ZONES.md` — a ranked inventory of silent
+  failure points with: location, failure mode, blast radius,
+  detection gap, and suggested fix. Two tiers: "most likely to
+  cause production incidents" and "less likely but equally
+  dangerous."
 
-Distinct from a security threat model (which would be
-`ctx-threat-model` — a separate skill for auth bypass,
-injection, privilege escalation, supply chain). This skill
-focuses on correctness: race conditions, ordering
-assumptions, cache staleness, fan-out amplification,
-non-atomic ownership, inverted logic, force-delete orphans,
-global state mutation.
+  Distinct from a security threat model (which would be
+  `ctx-threat-model` — a separate skill for auth bypass,
+  injection, privilege escalation, supply chain). This skill
+  focuses on correctness: race conditions, ordering
+  assumptions, cache staleness, fan-out amplification,
+  non-atomic ownership, inverted logic, force-delete orphans,
+  global state mutation.
 
-- [x] Design SKILL.md for ctx-architecture-failure-analysis:
-  inputs (architecture artifacts), analysis phases, output
-  format (DANGER-ZONES.md), quality checklist
-  #added:2026-03-25-060000
-- [x] Define the adversarial analysis framework: categories
-  of silent failure (concurrency, ordering, cache,
-  amplification, ownership, error swallowing, global state)
-  with heuristics for each #added:2026-03-25-060000
-- [x] Implement skill with GitNexus integration: use impact
-  analysis for blast radius estimation, use context for
-  shared-state detection #added:2026-03-25-060000
-- [x] Add Gemini Search integration: cross-reference
-  discovered patterns against known failure modes in similar
-  systems. #added:2026-03-25-060000
+    - [x] Design SKILL.md for ctx-architecture-failure-analysis:
+      inputs (architecture artifacts), analysis phases, output
+      format (DANGER-ZONES.md), quality checklist
+      #added:2026-03-25-060000
+    - [x] Define the adversarial analysis framework: categories
+      of silent failure (concurrency, ordering, cache,
+      amplification, ownership, error swallowing, global state)
+      with heuristics for each #added:2026-03-25-060000
+    - [x] Implement skill with GitNexus integration: use impact
+      analysis for blast radius estimation, use context for
+      shared-state detection #added:2026-03-25-060000
+    - [x] Add Gemini Search integration: cross-reference
+      discovered patterns against known failure modes in similar
+      systems. #added:2026-03-25-060000
 
 - [ ] ctx-architecture-next — fourth step in the architecture
   pipeline (map → enrich → hunt → **prescribe**).
@@ -2639,3 +2704,25 @@ rather than a discipline problem is the long-term fix. Source pointer:
 DR-kb session a5736210 closeouts under
 `~/Desktop/WORKSPACE/things-wtf-disaster-recovery-next/.context/ingest/closeouts/`
 20260523T044000Z + 20260523T060000Z + 20260523T080000Z reference the issue.
+
+- [ ] Pad undo & snapshot safety net: every destructive `ctx pad`
+  operation writes an encrypted snapshot to
+  `.context/scratchpad.history/` before overwriting the pad, and a
+  new `ctx pad undo` subcommand restores the most recent snapshot.
+  Snapshot is the existing pad blob byte-for-byte (no re-encryption);
+  bounded ring buffer caps storage. Driver: user accidentally `rm`'d
+  a blob entry without reading it; recovery via off-host backup is a
+  6-step ritual disproportionate to a single fat-finger.
+  Spec: specs/pad-undo-snapshot.md #priority:high
+  #added:2026-05-24
+    - [ ] **Phase 1**: snapshot-on-mutate + `ctx pad undo` (no flags) +
+      bounded retention (count cap + age cap, defaults hard-coded) +
+      unit tests covering snapshot-before-write, first-write-no-snapshot,
+      undo-restores-pre-mutation, undo-is-itself-snapshotted (redo),
+      empty-history-exits-zero, prune-evicts-oldest. Plaintext and
+      encrypted pad modes both covered.
+    - [ ] **Phase 2**: `ctx pad undo --list` (with sidecar
+      `<slot>.meta.json` for entry counts), `--to <slot>`, `--prune`,
+      `--clear` (with confirmation prompt). `.ctxrc` `[pad.history]`
+      block for retention tuning. Skill `ctx-pad/SKILL.md` and recipe
+      `scratchpad-with-claude.md` updates.

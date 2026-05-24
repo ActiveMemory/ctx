@@ -89,6 +89,12 @@ const (
 	// DescKeyWritePadNormalized is the text key for write pad
 	// normalized messages.
 	DescKeyWritePadNormalized = "write.pad-normalized"
+	// DescKeyWritePadNoHistory is the text key for the
+	// "no pad history to restore" message.
+	DescKeyWritePadNoHistory = "write.pad-no-history"
+	// DescKeyWritePadRestored is the text key for the
+	// "restored pad from snapshot" message.
+	DescKeyWritePadRestored = "write.pad-restored"
 )
 
 // DescKeys for scratchpad export output.

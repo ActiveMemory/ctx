@@ -33,6 +33,7 @@
 //   - resolve: resolve merge conflicts in scratchpad
 //   - normalize: reassign entry IDs as 1..N
 //   - tag: list all tags with counts
+//   - undo: restore the pad from the most recent snapshot
 //
 // # Subpackages
 //
@@ -40,6 +41,7 @@
 //	cmd/show, cmd/export: entry display and extraction
 //	cmd/merge, cmd/resolve, cmd/normalize: maintenance
 //	cmd/tag: tag listing and filtering
+//	cmd/undo: restore the pad from a prior snapshot
 //	cmd/root: default list behavior
 //	core/store: encrypted file I/O
 //	core/blob: blob encoding and decoding

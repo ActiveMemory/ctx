@@ -3344,3 +3344,186 @@ func TestEdit_TagConflictsWithFile(t *testing.T) {
 
 // Verify unused import doesn't cause issues.
 var _ = base64.StdEncoding
+
+// --- pad undo / snapshot tests --------------------------------------------
+
+// historyDir returns the per-project snapshot directory for
+// tests. Mirrors store.HistoryDir but kept inline so tests
+// don't depend on internal helpers.
+func historyDir(projectRoot string) string {
+	return filepath.Join(
+		projectRoot, dir.Context, pad.HistoryDirName,
+	)
+}
+
+// readHistoryFilenames returns the snapshot filenames in the
+// history dir, sorted lexically (chronologically). Empty
+// slice if the directory does not exist.
+func readHistoryFilenames(t *testing.T, projectRoot string) []string {
+	t.Helper()
+	entries, err := os.ReadDir(historyDir(projectRoot))
+	if os.IsNotExist(err) {
+		return nil
+	}
+	if err != nil {
+		t.Fatalf("read history dir: %v", err)
+	}
+	var names []string
+	for _, e := range entries {
+		if e.IsDir() {
+			continue
+		}
+		names = append(names, e.Name())
+	}
+	return names
+}
+
+func TestUndo_FirstWriteWritesNoSnapshot_Encrypted(t *testing.T) {
+	tmp := setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "fresh")); err != nil {
+		t.Fatalf("add: %v", err)
+	}
+
+	if names := readHistoryFilenames(t, tmp); len(names) != 0 {
+		t.Errorf(
+			"first write should leave history empty, got %v",
+			names,
+		)
+	}
+}
+
+func TestUndo_SnapshotPreservesExactBytes_Encrypted(t *testing.T) {
+	tmp := setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "alpha")); err != nil {
+		t.Fatalf("add alpha: %v", err)
+	}
+
+	padPath := filepath.Join(tmp, dir.Context, pad.Enc)
+	before, readErr := os.ReadFile(padPath) //nolint:gosec // test path
+	if readErr != nil {
+		t.Fatalf("read pad before rm: %v", readErr)
+	}
+
+	if _, rmErr := runCmd(newPadCmd("rm", "1")); rmErr != nil {
+		t.Fatalf("rm 1: %v", rmErr)
+	}
+
+	names := readHistoryFilenames(t, tmp)
+	if len(names) != 1 {
+		t.Fatalf("expected 1 snapshot after rm, got %v", names)
+	}
+	snapPath := filepath.Join(historyDir(tmp), names[0])
+	snap, snapReadErr := os.ReadFile(snapPath) //nolint:gosec // test path
+	if snapReadErr != nil {
+		t.Fatalf("read snapshot: %v", snapReadErr)
+	}
+	if !bytes.Equal(before, snap) {
+		t.Errorf(
+			"snapshot bytes != pre-rm pad bytes (lens %d vs %d)",
+			len(snap), len(before),
+		)
+	}
+	if !strings.HasSuffix(names[0], "-rm"+filepath.Ext(pad.Enc)) {
+		t.Errorf(
+			"snapshot name = %q, want suffix -rm.enc", names[0],
+		)
+	}
+}
+
+func TestUndo_RestoresPreMutation_Encrypted(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "keep me")); err != nil {
+		t.Fatalf("add: %v", err)
+	}
+	if _, err := runCmd(newPadCmd("rm", "1")); err != nil {
+		t.Fatalf("rm: %v", err)
+	}
+
+	out, err := runCmd(newPadCmd("undo"))
+	if err != nil {
+		t.Fatalf("undo: %v", err)
+	}
+	if !strings.Contains(out, "Restored pad from snapshot") {
+		t.Errorf("undo output = %q, want restore confirmation", out)
+	}
+
+	listOut, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatalf("list: %v", err)
+	}
+	if !strings.Contains(listOut, "keep me") {
+		t.Errorf("list after undo = %q, want 'keep me' restored", listOut)
+	}
+}
+
+func TestUndo_IsItselfSnapshotted_Redo_Encrypted(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "original")); err != nil {
+		t.Fatalf("add: %v", err)
+	}
+	if _, err := runCmd(newPadCmd("rm", "1")); err != nil {
+		t.Fatalf("rm: %v", err)
+	}
+
+	// First undo: rm is reversed; pad has "original" again.
+	if _, err := runCmd(newPadCmd("undo")); err != nil {
+		t.Fatalf("first undo: %v", err)
+	}
+	// Second undo: redoes the rm; pad should be empty again.
+	if _, err := runCmd(newPadCmd("undo")); err != nil {
+		t.Fatalf("second undo: %v", err)
+	}
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatalf("list: %v", err)
+	}
+	if !strings.Contains(out, "Scratchpad is empty.") {
+		t.Errorf(
+			"after redo (two undos), pad should be empty; got %q",
+			out,
+		)
+	}
+}
+
+func TestUndo_EmptyHistoryExitsZero(t *testing.T) {
+	setupEncrypted(t)
+
+	out, err := runCmd(newPadCmd("undo"))
+	if err != nil {
+		t.Fatalf("undo on empty history: %v", err)
+	}
+	if !strings.Contains(out, "No pad history to restore") {
+		t.Errorf("output = %q, want no-history message", out)
+	}
+}
+
+func TestUndo_RestoresPreMutation_Plaintext(t *testing.T) {
+	setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "plaintext keeper")); err != nil {
+		t.Fatalf("add: %v", err)
+	}
+	if _, err := runCmd(newPadCmd("rm", "1")); err != nil {
+		t.Fatalf("rm: %v", err)
+	}
+
+	if _, err := runCmd(newPadCmd("undo")); err != nil {
+		t.Fatalf("undo: %v", err)
+	}
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatalf("list: %v", err)
+	}
+	if !strings.Contains(out, "plaintext keeper") {
+		t.Errorf(
+			"after undo plaintext list = %q, want restored entry",
+			out,
+		)
+	}
+}

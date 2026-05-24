@@ -543,6 +543,10 @@ write.pad-entry-updated:
   short: Updated entry %d.
 write.pad-normalized:
   short: Normalized %d entries (IDs reassigned as 1..N).
+write.pad-no-history:
+  short: No pad history to restore.
+write.pad-restored:
+  short: Restored pad from snapshot %s.
 write.pad-tags-item:
   short: "%s\t%d"
 write.pad-tags-none:
