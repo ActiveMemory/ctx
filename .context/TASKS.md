@@ -2727,3 +2727,28 @@ DR-kb session a5736210 closeouts under
       `--clear` (with confirmation prompt). `.ctxrc` `[pad.history]`
       block for retention tuning. Skill `ctx-pad/SKILL.md` and recipe
       `scratchpad-with-claude.md` updates.
+
+- [ ] Out-of-band audit channel: discipline enforcement via verbatim
+  relay (the one channel that survives agent tunnel vision). An
+  out-of-band auditor (separate Claude Code session) drops structured
+  reports into `.context/audit/<kind>.md`; the `ctx system check-audit`
+  UserPromptSubmit hook relays unread reports; `ctx audit list/show/
+  dismiss` manage the lifecycle. Driver: pad-undo Phase 1 shipped a
+  user-facing command without docs and the in-band CONVENTIONS rule
+  did not prevent it (agent that read the rule still skipped it).
+  Spec: specs/audit-channel.md #priority:high #added:2026-05-24
+    - [x] **Phase 1a**: `ctx audit` CLI (list/show/dismiss + --all),
+      `ctx system check-audit` hook, report format + parser,
+      digest-bound dismissal ledger at `.context/audit/.dismissed.json`,
+      full i18n plumbing, 17 tests. Shipped 2026-05-24 in commit
+      aefce517 (`feat/pad-undo-snapshot`).
+    - [x] **Phase 1b**: `/ctx-surface-audit` skill (refuse-on-dirty-tree
+      guard) + `docs/recipes/audit-channel.md` + index registration.
+      Shipped 2026-05-24 in commit 71c3dfa4.
+    - [ ] **Phase 2**: auto-dismissal on detected resolution (re-derive
+      surface state on hook fire, suppress when the gap is closed);
+      sibling audit skills `/ctx-spec-trailer-audit` and
+      `/ctx-capture-audit`; stale-report graceful escalation; wire the
+      hook into `.claude/settings.local.json` as a real UserPromptSubmit
+      handler. Open questions in spec: naming collision with
+      `internal/audit/` AST-tests package; shared skill-helpers library.
