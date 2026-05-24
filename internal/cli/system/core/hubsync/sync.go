@@ -18,7 +18,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/connection/core/render"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/hub"
+	"github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // Connected reports whether a hub connection config exists.
@@ -56,6 +58,13 @@ func Connected(ctxDir string) (bool, error) {
 // and a formatted status message, or empty string if no
 // new entries.
 //
+// Every error path emits a warning via [warn.Warn] and
+// returns an empty string so the calling hook never blocks
+// the session start. Sync errors and empty results are
+// deliberately distinct: an empty result is not a failure
+// and produces no warning, while a real sync RPC failure
+// is logged so operators can see why the hub is silent.
+//
 // Parameters:
 //   - sessionID: current session ID (unused, for future)
 //
@@ -64,6 +73,7 @@ func Connected(ctxDir string) (bool, error) {
 func Sync(_ string) string {
 	cfg, loadErr := connectCfg.Load()
 	if loadErr != nil {
+		warn.Warn(cfgWarn.HubsyncLoad, loadErr)
 		return ""
 	}
 
@@ -71,6 +81,7 @@ func Sync(_ string) string {
 		cfg.HubAddr, cfg.Token,
 	)
 	if dialErr != nil {
+		warn.Warn(cfgWarn.HubsyncDial, cfg.HubAddr, dialErr)
 		return ""
 	}
 	defer func() { _ = client.Close() }()
@@ -78,11 +89,16 @@ func Sync(_ string) string {
 	entries, syncErr := client.Sync(
 		context.Background(), cfg.Types, 0,
 	)
-	if syncErr != nil || len(entries) == 0 {
+	if syncErr != nil {
+		warn.Warn(cfgWarn.HubsyncSync, cfg.HubAddr, syncErr)
+		return ""
+	}
+	if len(entries) == 0 {
 		return ""
 	}
 
 	if writeErr := render.WriteEntries(entries); writeErr != nil {
+		warn.Warn(cfgWarn.HubsyncWrite, len(entries), writeErr)
 		return ""
 	}
 

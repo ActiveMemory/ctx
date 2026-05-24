@@ -35,3 +35,20 @@ func Warn(format string, args ...any) {
 	_, _ = fmt.Fprintf(
 		sink, cfgCtx.StderrPrefix+format+token.NewlineLF, args...)
 }
+
+// SetSinkForTesting swaps the warn sink for the duration of a
+// test and returns a restore function the caller must defer.
+// The package-level sink is otherwise unexported because there
+// is no production reason to redirect it; tests that assert
+// against captured warning output go through this helper.
+//
+// Parameters:
+//   - w: writer to receive warnings during the test
+//
+// Returns:
+//   - func(): restores the previous sink when called
+func SetSinkForTesting(w io.Writer) func() {
+	prev := sink
+	sink = w
+	return func() { sink = prev }
+}

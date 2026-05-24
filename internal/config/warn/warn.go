@@ -114,6 +114,51 @@ const (
 	// until the tombstone line is removed.
 	SteeringUnfilled = "skipping unfilled steering file %s " +
 		"(remove the tombstone line to activate)"
+
+	// HubsyncLoad is the stderr format for connection config
+	// load failures in the session-start hub sync hook. Takes
+	// (error).
+	HubsyncLoad = "hubsync: load connection config: %v"
+
+	// HubsyncDial is the stderr format for hub dial failures
+	// in the session-start hub sync hook. Takes (addr, error).
+	HubsyncDial = "hubsync: dial %s: %v"
+
+	// HubsyncSync is the stderr format for sync RPC failures
+	// in the session-start hub sync hook. Takes (addr, error).
+	HubsyncSync = "hubsync: sync from %s: %v"
+
+	// HubsyncWrite is the stderr format for failures writing
+	// fetched entries to .context/hub/. Takes (count, error).
+	HubsyncWrite = "hubsync: write %d entries: %v"
+
+	// ReplicateDial is the stderr format for replication
+	// gRPC dial failures. Takes (masterAddr, error).
+	ReplicateDial = "replication: dial %s: %v"
+
+	// ReplicateStream is the stderr format for replication
+	// stream open failures. Takes (masterAddr, error).
+	ReplicateStream = "replication: open stream %s: %v"
+
+	// ReplicateSend is the stderr format for replication
+	// SyncRequest send failures. Takes (masterAddr,
+	// sinceSequence, error).
+	ReplicateSend = "replication: send sync request to %s " +
+		"(since=%d): %v"
+
+	// ReplicateCloseSend is the stderr format for
+	// replication CloseSend failures. Takes (masterAddr,
+	// error).
+	ReplicateCloseSend = "replication: close send to %s: %v"
+
+	// ReplicateRecv is the stderr format for replication
+	// receive failures. Takes (masterAddr, error).
+	ReplicateRecv = "replication: recv from %s: %v"
+
+	// ReplicateAppend is the stderr format for replication
+	// append failures. Takes (entryID, sequence, error).
+	ReplicateAppend = "replication: append entry %s " +
+		"(seq=%d): %v"
 )
 
 // Warn context identifiers for index generation.

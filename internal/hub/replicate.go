@@ -11,6 +11,8 @@ import (
 	"time"
 
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
+	"github.com/ActiveMemory/ctx/internal/log/warn"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -58,6 +60,13 @@ func startReplication(
 // replicateOnce connects to the master, syncs all entries
 // since the local store's last sequence, and appends them.
 //
+// Every error path emits a warning via [warn.Warn] and
+// returns so the outer [startReplication] loop can retry on
+// the next tick. Append failures are the one exception: the
+// receive loop continues after warning so a single bad
+// write does not block subsequent entries from being
+// consumed.
+//
 // Parameters:
 //   - ctx: context for cancellation
 //   - masterAddr: gRPC address of the master hub
@@ -79,6 +88,7 @@ func replicateOnce(
 		),
 	)
 	if dialErr != nil {
+		warn.Warn(cfgWarn.ReplicateDial, masterAddr, dialErr)
 		return
 	}
 	defer func() { _ = conn.Close() }()
@@ -92,21 +102,32 @@ func replicateOnce(
 		cfgHub.PathSync,
 	)
 	if streamErr != nil {
+		warn.Warn(cfgWarn.ReplicateStream, masterAddr, streamErr)
 		return
 	}
 
 	if sendErr := stream.SendMsg(&SyncRequest{
 		SinceSequence: lastSeq,
 	}); sendErr != nil {
+		warn.Warn(
+			cfgWarn.ReplicateSend, masterAddr, lastSeq, sendErr,
+		)
 		return
 	}
 	if closeErr := stream.CloseSend(); closeErr != nil {
+		warn.Warn(
+			cfgWarn.ReplicateCloseSend, masterAddr, closeErr,
+		)
 		return
 	}
 
 	for {
 		msg := &EntryMsg{}
 		if recvErr := stream.RecvMsg(msg); recvErr != nil {
+			if eof(recvErr) {
+				return
+			}
+			warn.Warn(cfgWarn.ReplicateRecv, masterAddr, recvErr)
 			return
 		}
 		entry := Entry{
@@ -118,6 +139,16 @@ func replicateOnce(
 			Timestamp: time.Unix(msg.Timestamp, 0),
 			Sequence:  msg.Sequence,
 		}
-		_, _ = store.Append([]Entry{entry})
+		if _, appendErr := store.Append(
+			[]Entry{entry},
+		); appendErr != nil {
+			warn.Warn(
+				cfgWarn.ReplicateAppend,
+				entry.ID, entry.Sequence, appendErr,
+			)
+			// Keep consuming: the next entry may succeed,
+			// and aborting the loop on a single bad write
+			// would silently drop everything queued behind it.
+		}
 	}
 }

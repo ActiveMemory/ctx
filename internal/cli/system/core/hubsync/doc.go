@@ -23,8 +23,12 @@
 // writes them to disk via the connection render layer.
 // It returns a formatted status message with the count
 // of synced entries, or an empty string when nothing
-// was fetched. Every error is silently swallowed so the
-// hook never blocks the session start.
+// was fetched. Every error path emits a warning via
+// [warn.Warn] but returns an empty string so the hook
+// never blocks the session start: warn, do not block.
+// An empty result (zero entries returned) is not an
+// error and produces no warning, distinguishing "nothing
+// new to fetch" from "sync failed."
 //
 // The data flow is:
 //
