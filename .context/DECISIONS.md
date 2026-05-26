@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-24 | ctxctl lives at cmd/ctxctl in the same Go module, not a separate go.mod |
 | 2026-05-24 | Discipline enforcement belongs on the verbatim-relay channel, run out-of-band |
 | 2026-05-24 | Pad snapshot-on-mutate at the store.WriteEntries choke point |
 | 2026-05-23 | Skill body text uses capability-first language with canonical tools as examples; install-guide docs name canonical implementations; `allowed-tools` frontmatter stays MCP-specific |
@@ -152,6 +153,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-24-123908] ctxctl lives at cmd/ctxctl in the same Go module, not a separate go.mod
+
+**Status**: Accepted
+
+**Context**: Deciding where the planned ctxctl maintainer binary lives and how to house the audit channel (which should not ship in the ctx user binary). User initially proposed tools/ctx/ctxctl with its own go.mod for dependency isolation; the Phase BT saga (TASKS.md) specified cmd/ctxctl in the same module. The audit channel is already ~25 files under internal/ (internal/cli/audit, internal/config/audit, internal/err/audit, internal/write/audit, internal/cli/system/core/audit).
+
+**Decision**: ctxctl lives at cmd/ctxctl in the same Go module, not a separate go.mod
+
+**Rationale**: Go compiles a package into a binary only if that binary's main transitively imports it. So audit packages under internal/ imported ONLY by cmd/ctxctl/main are excluded from the ctx binary — binary-level isolation without a module split, and zero relocation of the existing internal/ audit files. A separate go.mod cannot cleanly import the parent module's internal/ (Go module + internal/ visibility friction), forcing relocation or duplication. The only real win of a separate go.mod is dependency isolation — keeping heavy build/release deps out of ctx's module graph — which the audit channel does not need (only yaml, already a ctx dep). Defer the module-split question until a future ctxctl subcommand actually pulls in heavy isolated deps.
+
+**Consequence**: ctxctl reuses internal/ packages verbatim. An import-graph guard test must enforce that cmd/ctx never transitively imports internal/cli/audit (so the channel stays out of the shipped binary). Refined companion rule: shipped product hooks call ctx; repo-local dev hooks (ctx's own gitignored .claude/settings.local.json) may call ctxctl. If a future ctxctl subcommand needs heavy isolated deps, revisit the module split then — not now.
+
+---
 
 ## [2026-05-24-112626] Discipline enforcement belongs on the verbatim-relay channel, run out-of-band
 
