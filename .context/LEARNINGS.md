@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-25 | Skill shipping location: _ctx- prefix is repo-internal, internal/assets/claude/skills/ctx-* is bundled and shipped |
 | 2026-05-24 | Audit gates that bite when introducing new packages and helpers |
 | 2026-05-23 | Spec-trailer improvisation is heuristic drift — when no spec genuinely fits, the failure mode is reaching for the most-recent one |
 | 2026-05-23 | Closing a stale TASKS.md item often means writing the test, not the code — verify before assuming the work is undone |
@@ -158,6 +159,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-25-221357] Skill shipping location: _ctx- prefix is repo-internal, internal/assets/claude/skills/ctx-* is bundled and shipped
+
+**Context**: Created /ctx-surface-audit under internal/assets/claude/skills/ (the shipped path), but it audits ctx's own internal/ source layout — useless in an end-user project that installs ctx. There is an established _ctx-* family (_ctx-command-audit, _ctx-audit, _ctx-release, _ctx-qa, etc.) in .claude/skills/ for repo-only dev skills; the user caught the misplacement.
+
+**Lesson**: A skill that references ctx's own source tree (internal/, docs/recipes/, cmd/) or dev workflow is repo-internal and must live in .claude/skills/_<name>/ (underscore prefix, committed to the repo but NOT bundled). Only genuinely user-facing skills belong in internal/assets/claude/skills/, which ctx init / ctx setup install into end-user projects. The same ship-vs-repo-internal question applies one layer up: user-facing CLI commands go in ctx, maintainer commands go in ctxctl; shipped hooks live in internal/assets/claude/hooks/hooks.json and call ctx, repo-local dev hooks live in the gitignored .claude/settings.local.json and may call ctxctl.
+
+**Application**: Before creating a skill, command, or hook, ask: does this serve a user working in their project, or a ctx maintainer working in this repo? Maintainer-facing → _-prefixed skill in .claude/skills/ + ctxctl command + repo-local hook. User-facing → internal/assets/claude/skills/ + ctx command + shipped hooks.json. Putting maintainer tooling in the shipped paths taxes every end user (e.g. a UserPromptSubmit hook firing on every prompt for a feature they never use).
 
 ---
 
