@@ -44,8 +44,6 @@ const (
 	CheckRecentEvents = "recent_events"
 	// CheckResourceMemory identifies the memory resource check.
 	CheckResourceMemory = "resource_memory"
-	// CheckResourceSwap identifies the swap resource check.
-	CheckResourceSwap = "resource_swap"
 	// CheckResourceDisk identifies the disk resource check.
 	CheckResourceDisk = "resource_disk"
 	// CheckResourceLoad identifies the load resource check.

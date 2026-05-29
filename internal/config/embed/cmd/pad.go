@@ -30,6 +30,8 @@ const (
 	UsePadShow = "show N"
 	// UsePadTag is the cobra Use string for the pad tag command.
 	UsePadTag = "tag"
+	// UsePadUndo is the cobra Use string for the pad undo command.
+	UsePadUndo = "undo"
 )
 
 // DescKeys for pad subcommands.
@@ -58,4 +60,6 @@ const (
 	DescKeyPadShow = "pad.show"
 	// DescKeyPadTag is the description key for the pad tag command.
 	DescKeyPadTag = "pad.tag"
+	// DescKeyPadUndo is the description key for the pad undo command.
+	DescKeyPadUndo = "pad.undo"
 )

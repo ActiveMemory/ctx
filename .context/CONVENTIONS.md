@@ -304,3 +304,76 @@ variants. Linters in `hack/` enforce the hard rules.
   file / preserve existing keys / skip when registered / reject malformed JSON
 
 - Substrate vs. artifact placement: cognitive substrate (consumed and mutated via ctx-mediated paths — `ctx agent`, `ctx decision add`, `/ctx-kb-ingest`, `/ctx-handover`, ceremonies) lives under `.context/`; project artifacts (read and edited directly by humans — `specs/`, `CLAUDE.md`, `GETTING_STARTED.md`, `docs/`) live at the project root; tool config and tool homes (`.ctxrc`, `.claude/`) live at root by dotfile/tool convention. The kb is substrate, not artifact: direct file edits remain possible per Invariant 1, but the skill-mediated path is the discipline. Rationale recorded in DECISIONS.md.
+
+## User-Facing Surface Completeness
+
+When a change adds or alters a user-facing surface — a new
+`ctx` subcommand, a new flag, an observable behavior change,
+a new exit shape, a new output line — the work is **not
+complete** until every one of the following has been updated
+in the same commit (or the same stacked PR, with the user's
+explicit OK):
+
+- `internal/assets/commands/commands.yaml` and
+  `examples.yaml` for the subcommand description and example
+- `internal/assets/claude/skills/ctx-<area>/SKILL.md` so the
+  agent knows the surface exists and when to trigger it
+- `internal/assets/integrations/copilot-cli/skills/<...>` if
+  a parallel skill exists for the integration
+- `docs/recipes/<related-recipe>.md` for any recipe that
+  already demonstrates the broader feature; consider a new
+  recipe if the surface is its own workflow shape
+- `docs/cli/<command>.md` if a per-command CLI doc page
+  exists for this surface
+
+Splitting these into a "Phase 2 / follow-up commit / future
+sweep" is **deferral** in the Constitution's sense, no matter
+how the phase is labeled. Docs are part of the deliverable,
+not a separable improvement. The "I can create a follow-up
+task" prohibition applies verbatim.
+
+Acceptable exceptions (state them in the commit body):
+
+- The surface is internal-only (no human user encounters it).
+- A recipe / skill genuinely does not exist for this feature
+  area and writing one is itself a larger separable piece of
+  work (then file the spec for that piece in the same commit,
+  do not just defer).
+
+The Self-check before declaring a feature commit complete is:
+*"If a user runs `ctx help` or asks `/ctx-<area>` to do this
+new thing today, will the help text / skill / recipe match
+what the code does?"* If no, the commit is not complete.
+
+## Maintainer-Only Binaries (Layout and Installation)
+
+Maintainer-only binaries — tooling that must never ship to end
+users — live in `tools/<name>/` as separate Go modules. The
+module path is lexically nested under the main ctx module
+(`github.com/ActiveMemory/ctx/tools/<name>`) so the new module
+CAN import the parent's `internal/` packages (Go's
+internal-import rule is path-lexical, not module-scoped — see
+LEARNINGS.md), reusing `rc`, `desc`, `nudge`, `config`
+primitives without duplication.
+
+Build and install:
+
+- Built to `dist/<name>` via `make <name>` (keeps the repo
+  root clean).
+- PATH-installed to `/usr/local/bin/<name>` via
+  `make install-<name>` / `make reinstall-<name>` —
+  mirroring ctx's `install` / `reinstall` targets so one
+  binary serves every worktree and repo copy.
+- The shipped `ctx` binary's `go.mod` must NOT `require` the
+  maintainer module, giving a **hard module-graph guarantee**
+  that the maintainer code can never leak into `ctx`.
+
+Repo-local hooks calling the maintainer binary live in the
+gitignored `.claude/settings.local.json`, **not** in the
+shipped `internal/assets/claude/hooks/hooks.json`. The hook
+command shape is `cd "$CLAUDE_PROJECT_DIR" && <name>
+<subcommand>` (PATH binary, project-root cwd so `.context/`
+resolves correctly under cwd-anchoring).
+
+`tools/ctxctl/` is the first inhabitant. Future maintainer
+binaries follow the same shape.

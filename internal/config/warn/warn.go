@@ -116,6 +116,19 @@ const (
 		"(remove the tombstone line to activate)"
 )
 
+// Pad history warning formats.
+const (
+	// PadHistoryPruneFile is the format for per-file prune
+	// failures in the scratchpad history directory.
+	// Takes (snapshot filename, error).
+	PadHistoryPruneFile = "pad history: prune %s: %v"
+
+	// PadHistoryPrune is the format for an overall prune
+	// failure when iterating the scratchpad history.
+	// Takes (error).
+	PadHistoryPrune = "pad history: prune: %v"
+)
+
 // Warn context identifiers for index generation.
 const (
 	// IndexHeader is the context label for index header write errors.

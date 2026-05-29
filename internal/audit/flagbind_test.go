@@ -57,6 +57,15 @@ func TestNoFlagBindOutsideFlagbind(t *testing.T) {
 		if strings.Contains(pkg.PkgPath, "flagbind") {
 			continue
 		}
+		// ctxctl registers flags with literal English
+		// descriptions; every flagbind helper resolves its
+		// description through ctx's desc/i18n engine
+		// (desc.Flag), which ctxctl deliberately does not use
+		// (DECISIONS.md 2026-05-27). So ctxctl's cli packages
+		// call cobra's flag registration directly.
+		if strings.Contains(pkg.PkgPath, "internal/ctxctl/cli/") {
+			continue
+		}
 
 		for _, file := range pkg.Syntax {
 			fpath := pkg.Fset.Position(file.Pos()).Filename

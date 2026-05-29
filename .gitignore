@@ -20,10 +20,6 @@ profile.cov
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-# Go workspace file
-go.work
-go.work.sum
-
 # env file
 .env
 
@@ -37,6 +33,8 @@ go.work.sum
 # Build artifacts
 dist/
 /ctx
+/ctxctl
+tools/ctxctl/ctxctl
 /amem
 
 # Active ctxrc (working copy — swap between .ctxrc.base and .ctxrc.dev)

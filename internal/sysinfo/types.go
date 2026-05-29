@@ -37,18 +37,30 @@ func (s Severity) String() string {
 
 // MemInfo holds memory and swap usage metrics.
 //
+// The occupancy fields (TotalBytes, UsedBytes, SwapTotalBytes,
+// SwapUsedBytes) feed the ctx stats display. The alert signal is
+// Pressure: the OS-native, derivative memory-pressure level
+// (macOS kern.memorystatus_vm_pressure_level, Linux PSI), which
+// reflects whether the kernel is actually struggling rather than
+// how full memory or swap happens to be.
+//
 // Fields:
 //   - TotalBytes: Total physical memory
 //   - UsedBytes: Used physical memory
 //   - SwapTotalBytes: Total swap space
 //   - SwapUsedBytes: Used swap space
+//   - Pressure: OS-native memory pressure severity
+//   - PressureSupported: Whether the pressure signal is available
+//     on this platform
 //   - Supported: Whether memory info is available on this platform
 type MemInfo struct {
-	TotalBytes     uint64
-	UsedBytes      uint64
-	SwapTotalBytes uint64
-	SwapUsedBytes  uint64
-	Supported      bool
+	TotalBytes        uint64
+	UsedBytes         uint64
+	SwapTotalBytes    uint64
+	SwapUsedBytes     uint64
+	Pressure          Severity
+	PressureSupported bool
+	Supported         bool
 }
 
 // DiskInfo holds filesystem usage for a given path.

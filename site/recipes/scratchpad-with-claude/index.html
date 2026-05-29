@@ -1277,6 +1277,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#if-you-delete-the-wrong-thing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If You Delete the Wrong Thing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-up" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2152,6 +2163,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#if-you-delete-the-wrong-thing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If You Delete the Wrong Thing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-up" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2349,6 +2371,11 @@ polluting your structured context files?</strong></p>
 <td><code>ctx pad export</code></td>
 <td>CLI command</td>
 <td>Export all blob entries to a directory</td>
+</tr>
+<tr>
+<td><code>ctx pad undo</code></td>
+<td>CLI command</td>
+<td>Restore the pad from the most recent snapshot</td>
 </tr>
 <tr>
 <td><code>/ctx-pad</code></td>
@@ -2665,6 +2692,32 @@ convention, a hard-won insight becomes a learning.</p>
   the encryption key (<code>~/.ctx/.ctx.key</code>) directly.</li>
 <li><strong>Encryption is transparent</strong>: You interact with plaintext; the
   encryption/decryption happens automatically on every read/write.</li>
+</ul>
+<h2 id="if-you-delete-the-wrong-thing">If You Delete the Wrong Thing<a class="headerlink" href="#if-you-delete-the-wrong-thing" title="Permanent link">&para;</a></h2>
+<p>Every destructive <code>ctx pad</code> operation (add, edit, mv, rm, merge,
+normalize, resolve, tag) writes a snapshot of the prior pad blob
+to <code>.context/scratchpad.history/</code> <em>before</em> overwriting. There is
+no confirmation prompt on the hot path — and you don't need one,
+because <code>ctx pad undo</code> restores the most recent snapshot:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span><span class="m">3</span><span class="w">        </span><span class="c1"># oh no, that was the one with the API token</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>undo<span class="w">        </span><span class="c1"># → &quot;Restored pad from snapshot 20260524...&quot;</span>
+</span></code></pre></div>
+<p>A few things to know:</p>
+<ul>
+<li><strong>Undo is itself snapshotted.</strong> Running <code>ctx pad undo</code> twice
+  in a row is a redo — the first undo saves the post-mutation
+  state, then promotes the pre-mutation state; the second undo
+  reverses that.</li>
+<li><strong>Empty history is not an error.</strong> On a brand-new project
+  with no mutations yet, <code>ctx pad undo</code> prints <code>No pad history
+  to restore.</code> and exits 0.</li>
+<li><strong>Snapshots are encrypted with the same key as the live pad.</strong>
+  Losing <code>~/.ctx/.ctx.key</code> makes both unreadable; the safety
+  net does not change the key-loss failure mode.</li>
+<li><strong>Retention is bounded.</strong> The 20 most recent snapshots
+  (capped also at 30 days) are kept; older ones are pruned
+  after each mutation. Off-host backups remain the recovery
+  path for anything beyond that window.</li>
 </ul>
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
 <p><strong><a href="../scratchpad-sync/">Syncing Scratchpad Notes Across Machines →</a></strong>: Distribute

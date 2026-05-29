@@ -526,10 +526,8 @@ resources.alert-disk:
   short: Disk %.0f%% used (%s / %s GB)
 resources.alert-load:
   short: Load %.2fx CPU count
-resources.alert-memory:
-  short: Memory %.0f%% used (%s / %s GB)
-resources.alert-swap:
-  short: Swap %.0f%% used (%s / %s GB)
+resources.alert-memory-pressure:
+  short: System under %s memory pressure - consider wrapping up and committing soon.
 resources.alert-warning:
   short: '  ⚠ %s'
 resources.alerts:

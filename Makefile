@@ -2,16 +2,23 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt fmt-context lint lint-style lint-drift lint-shellcheck lint-powershell \
+.PHONY: build ctxctl test vet fmt fmt-context lint lint-style lint-drift lint-shellcheck lint-powershell \
 clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall \
 sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills gemini-search \
-gitnexus-version gitnexus-update
+gitnexus-version gitnexus-update install-ctxctl reinstall-ctxctl
 
 # Default binary name and output
 BINARY := ctx
 OUTPUT := $(BINARY)
+
+# Maintainer-only binary (separate Go module at tools/ctxctl,
+# resolved via the repo-root go.work). Never shipped to users.
+# Built into dist/ and installed to PATH alongside ctx, so every
+# repo copy / worktree shares one binary and the root stays clean.
+CTXCTL_BINARY := ctxctl
+CTXCTL_OUTPUT := dist/$(CTXCTL_BINARY)
 
 # Default target
 all: build
@@ -26,6 +33,11 @@ sync-version:
 ## build: Build for current platform (syncs version + embedded docs + copilot skills first)
 build: sync-version sync-why sync-copilot-skills
 	CGO_ENABLED=0 go build -ldflags="-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$$(cat VERSION | tr -d '[:space:]')" -o $(OUTPUT) ./cmd/ctx
+
+## ctxctl: Build the maintainer-only ctxctl binary (audit channel) into dist/
+ctxctl:
+	@mkdir -p dist
+	CGO_ENABLED=0 go build -o $(CTXCTL_OUTPUT) ./tools/ctxctl
 
 ## test: Run tests with coverage summary
 test:
@@ -168,6 +180,8 @@ check: build audit
 ## clean: Remove build artifacts
 clean:
 	rm -f $(BINARY)
+	rm -f $(CTXCTL_BINARY)
+	rm -f tools/ctxctl/$(CTXCTL_BINARY)
 	rm -rf dist/
 
 ## release: Full release process (build, tag, push)
@@ -196,6 +210,17 @@ install:
 reinstall: build
 	install -m 0755 $(BINARY) /usr/local/bin/$(BINARY) 2>/dev/null || sudo install -m 0755 $(BINARY) /usr/local/bin/$(BINARY)
 	@echo "ctx reinstalled to /usr/local/bin/ctx"
+
+## install-ctxctl: Install the maintainer-only ctxctl binary to /usr/local/bin
+install-ctxctl:
+	@test -f $(CTXCTL_OUTPUT) || (echo "Binary not found. Run 'make ctxctl' first, then 'make install-ctxctl'" && exit 1)
+	install -m 0755 $(CTXCTL_OUTPUT) /usr/local/bin/$(CTXCTL_BINARY) 2>/dev/null || sudo install -m 0755 $(CTXCTL_OUTPUT) /usr/local/bin/$(CTXCTL_BINARY)
+	@echo "Installed ctxctl to /usr/local/bin/$(CTXCTL_BINARY)"
+
+## reinstall-ctxctl: Build and install ctxctl in one step (maintainer-only)
+reinstall-ctxctl: ctxctl
+	install -m 0755 $(CTXCTL_OUTPUT) /usr/local/bin/$(CTXCTL_BINARY) 2>/dev/null || sudo install -m 0755 $(CTXCTL_OUTPUT) /usr/local/bin/$(CTXCTL_BINARY)
+	@echo "ctxctl reinstalled to /usr/local/bin/$(CTXCTL_BINARY)"
 
 ## site-setup: Install zensical via pipx
 site-setup:

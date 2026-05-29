@@ -734,20 +734,16 @@ func AddResourceResults(
 		resource  string
 	}{
 		{
+			// The row displays memory occupancy, but its health
+			// status tracks the OS pressure signal (keyed under
+			// ResourceMemoryPressure by Evaluate), not occupancy:
+			// sticky swap/RAM occupancy is a poor pressure proxy.
 			snap.Memory.Supported,
 			snap.Memory.UsedBytes,
 			snap.Memory.TotalBytes,
 			text.DescKeyDoctorResourceMemoryFormat,
 			doctor.CheckResourceMemory,
-			cfgSysinfo.ResourceMemory,
-		},
-		{
-			snap.Memory.Supported,
-			snap.Memory.SwapUsedBytes,
-			snap.Memory.SwapTotalBytes,
-			text.DescKeyDoctorResourceSwapFormat,
-			doctor.CheckResourceSwap,
-			cfgSysinfo.ResourceSwap,
+			cfgSysinfo.ResourceMemoryPressure,
 		},
 		{
 			snap.Disk.Supported,

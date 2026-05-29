@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/show"
 	tagCmd "github.com/ActiveMemory/ctx/internal/cli/pad/cmd/tag"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/undo"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/blob"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/store"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/tag"
@@ -102,6 +103,7 @@ func Cmd() *cobra.Command {
 	c.AddCommand(merge.Cmd())
 	c.AddCommand(normalize.Cmd())
 	c.AddCommand(tagCmd.Cmd())
+	c.AddCommand(undo.Cmd())
 
 	return c
 }

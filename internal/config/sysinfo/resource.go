@@ -23,6 +23,10 @@ const (
 	// ResourceMemory is the resource name for physical
 	// memory.
 	ResourceMemory = "memory"
+	// ResourceMemoryPressure is the resource name for the
+	// OS-native memory pressure signal (distinct from the
+	// static memory-occupancy row shown by ctx stats).
+	ResourceMemoryPressure = "memory-pressure"
 	// ResourceSwap is the resource name for swap space.
 	ResourceSwap = "swap"
 	// ResourceDisk is the resource name for filesystem

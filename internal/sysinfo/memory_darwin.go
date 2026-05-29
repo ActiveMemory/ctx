@@ -63,12 +63,57 @@ func collectMemory() MemInfo {
 		swapTotal, swapUsed = parseSwapUsage(string(out))
 	}
 
+	// Memory pressure level via sysctl. The kernel maintains
+	// this as a derivative signal; occupancy is not consulted.
+	pressure := SeverityOK
+	pressureSupported := false
+	out, pressureErr := execSysinfo.Sysctl(
+		cfgSysinfo.FlagNoNewline, cfgSysinfo.KeyVMPressureLevel,
+	)
+	if pressureErr == nil {
+		pressure, pressureSupported = parsePressureLevel(string(out))
+	}
+
 	return MemInfo{
-		TotalBytes:     totalBytes,
-		UsedBytes:      usedBytes,
-		SwapTotalBytes: swapTotal,
-		SwapUsedBytes:  swapUsed,
-		Supported:      true,
+		TotalBytes:        totalBytes,
+		UsedBytes:         usedBytes,
+		SwapTotalBytes:    swapTotal,
+		SwapUsedBytes:     swapUsed,
+		Pressure:          pressure,
+		PressureSupported: pressureSupported,
+		Supported:         true,
+	}
+}
+
+// parsePressureLevel maps a kern.memorystatus_vm_pressure_level
+// value to a Severity.
+//
+// The kernel reports an integer: PressureLevelNormal maps to
+// SeverityOK, PressureLevelWarning to SeverityWarning, and
+// PressureLevelCritical to SeverityDanger. An unparseable or
+// unrecognized value yields supported=false (and SeverityOK),
+// so callers raise no alert.
+//
+// Parameters:
+//   - output: Raw output from `sysctl -n kern.memorystatus_vm_pressure_level`
+//
+// Returns:
+//   - Severity: Mapped pressure severity (SeverityOK when unsupported)
+//   - bool: Whether the value was recognized
+func parsePressureLevel(output string) (Severity, bool) {
+	level, parseErr := strconv.Atoi(strings.TrimSpace(output))
+	if parseErr != nil {
+		return SeverityOK, false
+	}
+	switch level {
+	case cfgSysinfo.PressureLevelNormal:
+		return SeverityOK, true
+	case cfgSysinfo.PressureLevelWarning:
+		return SeverityWarning, true
+	case cfgSysinfo.PressureLevelCritical:
+		return SeverityDanger, true
+	default:
+		return SeverityOK, false
 	}
 }
 

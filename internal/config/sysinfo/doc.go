@@ -23,14 +23,21 @@
 //     [FieldMemFree], [FieldBuffers], [FieldCached],
 //     [FieldSwapTotal], [FieldSwapFree]: keys for
 //     parsing /proc/meminfo lines.
+//   - [ProcPressureMemory], [PSILineSome],
+//     [PSILineFull], [PSIFieldAvg10]: path and tokens
+//     for parsing the /proc/pressure/memory PSI signal.
 //   - [BytesPerKB]: unit conversion factor.
 //
 // # macOS Constants
 //
 //   - [CmdSysctl], [CmdVMStat]: system commands.
 //   - [KeyLoadAvg], [KeyHWMemsize],
-//     [KeyVMSwapUsage]: sysctl keys for load,
-//     memory, and swap.
+//     [KeyVMSwapUsage], [KeyVMPressureLevel]: sysctl
+//     keys for load, memory, swap, and the memory
+//     pressure level.
+//   - [PressureLevelNormal], [PressureLevelWarning],
+//     [PressureLevelCritical]: kern.memorystatus_vm_pressure_level
+//     values.
 //   - [MarkerPageSize], [LabelPagesFree],
 //     [LabelPagesInactive]: vm_stat output parsing.
 //   - [SuffixMB], [LabelTotal], [LabelUsed]: swap
@@ -44,9 +51,9 @@
 //
 // # Resource Names
 //
-//   - [ResourceMemory], [ResourceSwap],
-//     [ResourceDisk], [ResourceLoad]: identifiers
-//     for threshold lookup.
+//   - [ResourceMemory], [ResourceMemoryPressure],
+//     [ResourceSwap], [ResourceDisk], [ResourceLoad]:
+//     identifiers for threshold lookup.
 //
 // # Concurrency
 //

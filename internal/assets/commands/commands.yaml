@@ -811,6 +811,23 @@ pad.resolve:
   short: Show both sides of a merge conflict
 pad.rm:
   short: Remove an entry by number
+pad.undo:
+  long: |-
+    Restore the scratchpad from the most recent on-disk snapshot.
+
+    Every destructive `ctx pad` operation (add, edit, mv, rm, merge,
+    normalize, resolve, tag) snapshots the pre-mutation pad blob to
+    .context/scratchpad.history/ before overwriting. `ctx pad undo`
+    promotes the most recent snapshot back to the live pad, after
+    itself snapshotting the current state so `ctx pad undo;
+    ctx pad undo` yields a redo.
+
+    Snapshots are stored encrypted (same key as the live pad). The
+    retention window is bounded: oldest snapshots are pruned once
+    either the count cap or the age cap is reached.
+
+    Exits 0 with a friendly message if there is no history yet.
+  short: Restore the pad from the most recent snapshot
 pad.show:
   long: |-
     Output the raw text of entry N with no numbering prefix.
@@ -1121,7 +1138,6 @@ system:
 
     Hook subcommands (Claude Code plugin - safe to run manually):
       context-load-gate           Context file read directive (PreToolUse)
-      check-anchor-drift          Stale-anchor sanity check
       check-context-size          Context size checkpoint
       check-ceremony              Session ceremony adoption nudge
       check-persistence           Context persistence nudge

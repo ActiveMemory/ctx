@@ -19,9 +19,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	errCrypto "github.com/ActiveMemory/ctx/internal/err/crypto"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writePad "github.com/ActiveMemory/ctx/internal/write/pad"
 )
@@ -157,6 +159,12 @@ func ReadEntriesWithIDs() ([]parse.Entry, error) {
 // WriteEntriesWithIDs writes ID-prefixed entries to the
 // scratchpad file.
 //
+// Before the live pad is overwritten the prior blob is copied
+// to `.context/scratchpad.history/` via [SnapshotBefore]; on
+// success the retention window is enforced via [Prune]. Both
+// run for plaintext and encrypted modes; both are no-ops on
+// first write (no prior blob to preserve).
+//
 // Parameters:
 //   - cmd: Cobra command for diagnostic output
 //   - entries: Entries with stable IDs to write
@@ -172,8 +180,20 @@ func WriteEntriesWithIDs(
 	}
 	plaintext := parse.FormatEntriesWithIDs(entries)
 
+	if snapErr := SnapshotBefore(cmd); snapErr != nil {
+		return snapErr
+	}
+
 	if !rc.ScratchpadEncrypt() {
-		return io.SafeWriteFile(path, plaintext, fs.PermFile)
+		if writeErr := io.SafeWriteFile(
+			path, plaintext, fs.PermFile,
+		); writeErr != nil {
+			return writeErr
+		}
+		if pruneErr := Prune(); pruneErr != nil {
+			logWarn.Warn(cfgWarn.PadHistoryPrune, pruneErr)
+		}
+		return nil
 	}
 
 	if ensureErr := EnsureKey(cmd); ensureErr != nil {
@@ -194,7 +214,15 @@ func WriteEntriesWithIDs(
 		return errCrypto.EncryptFailed(encErr)
 	}
 
-	return io.SafeWriteFile(path, ciphertext, fs.PermFile)
+	if writeErr := io.SafeWriteFile(
+		path, ciphertext, fs.PermFile,
+	); writeErr != nil {
+		return writeErr
+	}
+	if pruneErr := Prune(); pruneErr != nil {
+		logWarn.Warn(cfgWarn.PadHistoryPrune, pruneErr)
+	}
+	return nil
 }
 
 // ReadEntries reads the scratchpad and returns content

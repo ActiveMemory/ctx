@@ -77,8 +77,6 @@ doctor.resource-load.format:
   short: Load %.2fx (%.1f / %d CPUs)
 doctor.resource-memory.format:
   short: Memory %d%% (%s / %s GB)
-doctor.resource-swap.format:
-  short: Swap %d%% (%s / %s GB)
 doctor.task-completion.format:
   short: 'Tasks: %d/%d completed (%d%%)'
 doctor.task-completion.warning-suffix:

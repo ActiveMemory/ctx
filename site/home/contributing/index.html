@@ -904,6 +904,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#maintainer-tooling-ctxctl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintainer Tooling: ctxctl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Maintainer Tooling: ctxctl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-and-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build and Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#project-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1983,6 +2022,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#maintainer-tooling-ctxctl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintainer Tooling: ctxctl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Maintainer Tooling: ctxctl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-and-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build and Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#project-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2482,37 +2560,68 @@ your working tree: no reinstall needed after edits:</p>
 </span></code></pre></div>
 <p>You should see the <code>ctx</code> plugin listed, sourced from your local path.</p>
 <hr />
+<h2 id="maintainer-tooling-ctxctl">Maintainer Tooling: <code>ctxctl</code><a class="headerlink" href="#maintainer-tooling-ctxctl" title="Permanent link">&para;</a></h2>
+<p><code>ctxctl</code> is a maintainer-only binary that houses tooling kept out of
+the shipped <code>ctx</code> binary. It is a <strong>separate Go module</strong> at
+<code>tools/ctxctl/</code>: <code>ctx</code>'s <code>go.mod</code> never requires it, so <code>ctx</code> can
+never import it, while <code>ctxctl</code> reuses <code>ctx</code>'s <code>internal/</code> packages
+through the repo-root <code>go.work</code> workspace. End users never receive it,
+so it is <strong>not</strong> part of the <a href="#development-setup">Development Setup</a>
+above: skip this section unless you are working on maintainer tooling.</p>
+<p>Its first inhabitant is the out-of-band audit channel
+(<code>ctxctl audit list|show|dismiss</code> plus the <code>ctxctl audit-relay</code> hook).
+For what the channel does and how to run an audit, see
+<a href="../../recipes/audit-channel/">Out-of-Band Audit Channel</a>.</p>
+<h3 id="build-and-install">Build and Install<a class="headerlink" href="#build-and-install" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>make<span class="w"> </span>ctxctl<span class="w">            </span><span class="c1"># build into dist/ctxctl</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>make<span class="w"> </span>install-ctxctl<span class="w">    </span><span class="c1"># install dist/ctxctl to /usr/local/bin/ctxctl</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>make<span class="w"> </span>reinstall-ctxctl<span class="w">  </span><span class="c1"># build + install in one step (the usual case)</span>
+</span></code></pre></div>
+<p><code>ctxctl</code> installs to <code>/usr/local/bin/</code> alongside <code>ctx</code> (the install
+falls back to <code>sudo</code> when the directory is not writable). Installing
+to <code>PATH</code> is deliberate: the repo-local <code>UserPromptSubmit</code> hook
+invokes <code>ctxctl audit-relay</code> as a <code>PATH</code> binary, and a single install
+is shared across every clone and worktree, so the repo root stays
+clean.</p>
+<p>Run <code>make reinstall-ctxctl</code> once after first cloning, then again
+whenever you pull or edit anything under <code>tools/ctxctl/</code> or the
+relocated <code>internal/ctxctl/</code> packages.</p>
+<h3 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctxctl<span class="w"> </span>--help<span class="w">   </span><span class="c1"># command tree</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctxctl<span class="w"> </span>audit<span class="w">    </span><span class="c1"># list audit reports (run inside a ctx project)</span>
+</span></code></pre></div>
+<hr />
 <h2 id="project-layout">Project Layout<a class="headerlink" href="#project-layout" title="Permanent link">&para;</a></h2>
 <!-- drift-check: ls -d cmd/ internal/*/ .claude/ docs/ editors/ hack/ specs/ assets/ examples/ .context/ -->
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx/
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── cmd/ctx/            # CLI entry point
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── internal/
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│   ├── assets/claude/  # ← Claude Code plugin (skills, hooks)
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│   ├── bootstrap/      # Project initialization templates
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│   ├── claude/         # Claude Code integration helpers
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│   ├── cli/            # Command implementations
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│   ├── config/         # Configuration loading
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│   ├── context/        # Core context logic
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│   ├── crypto/         # Scratchpad encryption
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>│   ├── drift/          # Drift detection
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│   ├── index/          # Context file indexing
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│   ├── journal/        # Journal site generation
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│   ├── memory/         # Memory bridge (discover, mirror, import, publish)
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│   ├── notify/         # Webhook notifications
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│   ├── rc/             # .ctxrc parsing
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│   ├── journal/        # Session history, parsers, and state
-</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│   ├── sysinfo/        # System resource monitoring
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│   ├── task/           # Task management
-</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│   └── validation/     # Input validation
-</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>├── .claude/
-</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>│   └── skills/         # Dev-only skills (not distributed)
-</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>├── assets/             # Static assets (banners, logos)
-</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>├── docs/               # Documentation site source
-</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>├── editors/            # Editor extensions (VS Code)
-</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>├── examples/           # Example configurations
-</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>├── hack/               # Build scripts
-</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>├── specs/              # Feature specifications
-</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>└── .context/           # ctx&#39;s own context (dogfooding)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx/
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── cmd/ctx/            # CLI entry point
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>├── internal/
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│   ├── assets/claude/  # ← Claude Code plugin (skills, hooks)
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│   ├── bootstrap/      # Project initialization templates
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│   ├── claude/         # Claude Code integration helpers
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│   ├── cli/            # Command implementations
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│   ├── config/         # Configuration loading
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│   ├── context/        # Core context logic
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│   ├── crypto/         # Scratchpad encryption
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│   ├── drift/          # Drift detection
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│   ├── index/          # Context file indexing
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>│   ├── journal/        # Journal site generation
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>│   ├── memory/         # Memory bridge (discover, mirror, import, publish)
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>│   ├── notify/         # Webhook notifications
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>│   ├── rc/             # .ctxrc parsing
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>│   ├── journal/        # Session history, parsers, and state
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>│   ├── sysinfo/        # System resource monitoring
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>│   ├── task/           # Task management
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>│   └── validation/     # Input validation
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>├── .claude/
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>│   └── skills/         # Dev-only skills (not distributed)
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>├── assets/             # Static assets (banners, logos)
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>├── docs/               # Documentation site source
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>├── editors/            # Editor extensions (VS Code)
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>├── examples/           # Example configurations
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>├── hack/               # Build scripts
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>├── specs/              # Feature specifications
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>└── .context/           # ctx&#39;s own context (dogfooding)
 </span></code></pre></div>
 <h3 id="skills-two-directories-one-rule">Skills: Two Directories, One Rule<a class="headerlink" href="#skills-two-directories-one-rule" title="Permanent link">&para;</a></h3>
 <!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
@@ -2626,9 +2735,9 @@ under <code>internal/write/&lt;domain&gt;/</code>. Output functions accept
 <code>*cobra.Command</code> and call <code>cmd.Println(...)</code>, never <code>fmt.Print*</code>
 directly. All text strings are loaded from YAML via
 <code>desc.Text(text.DescKey*)</code>, never inline.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>internal/write/add/add.go       # output for ctx add
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>internal/write/stat/stat.go     # output for ctx usage
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>internal/write/resource/        # output for ctx sysinfo
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>internal/write/add/add.go       # output for ctx add
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>internal/write/stat/stat.go     # output for ctx usage
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>internal/write/resource/        # output for ctx sysinfo
 </span></code></pre></div>
 <p>Exception: <code>write/rc/</code> writes to <code>os.Stderr</code> because rc loads before
 cobra is initialized.</p>
@@ -2638,7 +2747,7 @@ Each package mirrors the write structure. Constructor functions return
 <code>error</code> and load messages from YAML via <code>desc.Text(text.DescKey*)</code>.</p>
 <p>Identity sentinels (matched at the call site with <code>errors.Is</code>) are
 declared as <code>entity.Sentinel</code> consts:</p>
-<div class="language-go highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">ErrMissingFoo</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">entity</span><span class="p">.</span><span class="nx">Sentinel</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">DescKeyErrPkgMissingFoo</span><span class="p">)</span>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">ErrMissingFoo</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">entity</span><span class="p">.</span><span class="nx">Sentinel</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">DescKeyErrPkgMissingFoo</span><span class="p">)</span>
 </span></code></pre></div>
 <p><code>entity.Sentinel</code> is a typed string whose <code>Error()</code> resolves the key
 through <code>desc.Text</code> at call time, so the user-facing text stays in
@@ -2651,9 +2760,9 @@ struct in <code>internal/err/&lt;domain&gt;/</code> instead. See
 <code>internal/err/context.NotFoundError</code> for the canonical pattern with
 <code>Error()</code>, <code>Is(target error) bool</code>, and an <code>errors.As</code> consumer
 contract.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>internal/err/add/add.go         # errors for ctx add
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>internal/err/config/config.go   # errors for configuration
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>internal/err/cli/cli.go         # errors for CLI argument validation
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>internal/err/add/add.go         # errors for ctx add
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>internal/err/config/config.go   # errors for configuration
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>internal/err/cli/cli.go         # errors for CLI argument validation
 </span></code></pre></div>
 <h4 id="config-constants-internalconfig">Config Constants: <code>internal/config/</code><a class="headerlink" href="#config-constants-internalconfig" title="Permanent link">&para;</a></h4>
 <p>Pure-constant leaf packages with zero internal dependencies (stdlib
@@ -2753,7 +2862,7 @@ need prefix-based header detection.</p>
 <h2 id="day-to-day-workflow">Day-to-Day Workflow<a class="headerlink" href="#day-to-day-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="go-code-changes">Go Code Changes<a class="headerlink" href="#go-code-changes" title="Permanent link">&para;</a></h3>
 <p>After modifying Go source files, rebuild and reinstall:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>make<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>make<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
 </span></code></pre></div>
 <p>The <code>ctx</code> binary is statically compiled. There is no hot reload.
 You must rebuild for Go changes to take effect.</p>
@@ -2762,8 +2871,8 @@ You must rebuild for Go changes to take effect.</p>
 <code>internal/assets/claude/hooks/</code>.</p>
 <p>Claude Code caches plugin files, so edits aren't picked up automatically.</p>
 <p><strong>Clear the cache and restart</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>make<span class="w"> </span>plugin-reload<span class="w">   </span><span class="c1"># nukes ~/.claude/plugins/cache/activememory-ctx/</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># then restart Claude Code</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>make<span class="w"> </span>plugin-reload<span class="w">   </span><span class="c1"># nukes ~/.claude/plugins/cache/activememory-ctx/</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># then restart Claude Code</span>
 </span></code></pre></div>
 <p>The plugin will be re-installed from your local marketplace on startup.
 No version bump is needed during development.</p>
@@ -2799,9 +2908,9 @@ is gitignored and swapped between them:</p>
 </tbody>
 </table>
 <p>Use <code>ctx</code> commands to switch:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>dev<span class="w">      </span><span class="c1"># switch to dev profile</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>base<span class="w">     </span><span class="c1"># switch to base profile</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ctx<span class="w"> </span>config<span class="w"> </span>status<span class="w">          </span><span class="c1"># show which profile is active</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>dev<span class="w">      </span><span class="c1"># switch to dev profile</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>base<span class="w">     </span><span class="c1"># switch to base profile</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ctx<span class="w"> </span>config<span class="w"> </span>status<span class="w">          </span><span class="c1"># show which profile is active</span>
 </span></code></pre></div>
 <p>After cloning, run <code>ctx config switch dev</code> to get started with full logging.</p>
 <p>See <a href="../configuration/">Configuration</a> for the full <code>.ctxrc</code> option reference.</p>
@@ -2813,13 +2922,13 @@ knowledge persistence that matters most. For everything else, see
 rsync, Time Machine, Borg, or whichever tool already handles the
 rest of your files.</p>
 <h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># fast: all tests</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>make<span class="w"> </span>audit<span class="w">  </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>make<span class="w"> </span>smoke<span class="w">  </span><span class="c1"># build + run basic commands end-to-end</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># fast: all tests</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>make<span class="w"> </span>audit<span class="w">  </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>make<span class="w"> </span>smoke<span class="w">  </span><span class="c1"># build + run basic commands end-to-end</span>
 </span></code></pre></div>
 <h3 id="running-the-docs-site-locally">Running the Docs Site Locally<a class="headerlink" href="#running-the-docs-site-locally" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>make<span class="w"> </span>site-setup<span class="w">  </span><span class="c1"># one-time: install zensical via pipx</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>make<span class="w"> </span>site-serve<span class="w">  </span><span class="c1"># serve at localhost</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>make<span class="w"> </span>site-setup<span class="w">  </span><span class="c1"># one-time: install zensical via pipx</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>make<span class="w"> </span>site-serve<span class="w">  </span><span class="c1"># serve at localhost</span>
 </span></code></pre></div>
 <hr />
 <h2 id="submitting-changes">Submitting Changes<a class="headerlink" href="#submitting-changes" title="Permanent link">&para;</a></h2>
@@ -2881,7 +2990,7 @@ doc consistency, and tests in one pass.</p>
 <p>By contributing, you agree to the
 <a href="https://github.com/ActiveMemory/ctx/blob/main/CONTRIBUTING_DCO.md">Developer Certificate of Origin</a>.</p>
 <p>All commits must be signed off:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
 </span></code></pre></div>
 <h3 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h3>
 <p>Contributions are licensed under the

@@ -17,6 +17,11 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-28 | Swap occupancy is not memory pressure — use the kernel's derivative |
+| 2026-05-28 | A non-root Go module nested under the main module's path CAN import its internal/ packages |
+| 2026-05-28 | cobra's legacyArgs lets unknown subcommands silently succeed on non-root groups |
+| 2026-05-25 | Skill shipping location: _ctx- prefix is repo-internal, internal/assets/claude/skills/ctx-* is bundled and shipped |
+| 2026-05-24 | Audit gates that bite when introducing new packages and helpers |
 | 2026-05-23 | Spec-trailer improvisation is heuristic drift — when no spec genuinely fits, the failure mode is reaching for the most-recent one |
 | 2026-05-23 | Closing a stale TASKS.md item often means writing the test, not the code — verify before assuming the work is undone |
 | 2026-05-23 | Unicode block separation makes diacritic-stripping surgical — no per-script handling needed for Arabic/Indic/Hebrew/CJK |
@@ -157,6 +162,56 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-28-201500] Swap occupancy is not memory pressure — use the kernel's derivative
+
+**Context**: ctx's `check-resource` UserPromptSubmit hook alerted DANGER at swap-used ≥ 75% / memory-used ≥ 90%, generating false "wrap up the session" warnings at session start after hibernation. On macOS, swap doesn't recede when pressure ends — it's a sticky high-water mark, so static occupancy carries zero current information about whether the system is actually struggling.
+
+**Lesson**: macOS and Windows swap proactively, and swap occupancy is STICKY — it doesn't recede when pressure ends. After hibernation, swap can be >75% full with zero current pressure. Any alert keyed on `SwapUsed/SwapTotal ≥ X%` will false-positive at session start. The signal isn't the *level*, it's the *derivative* — pages actively being pushed out, or the kernel's own pressure metric.
+
+**Application**: For host-pressure detection, key on OS-native pressure signals (macOS `kern.memorystatus_vm_pressure_level` 1/2/4 → OK/Warning/Danger; Linux PSI `/proc/pressure/memory` `some.avg10` and `full.avg10`). These are kernel-computed derivatives — no snapshot state needed and they collapse to zero when the pressure ends. If native is unavailable, fall back to swap-out RATE (snapshot delta) gated on low available memory; never to occupancy alone. (Decision recorded same date; Windows exploratory task filed under Phase CLI-FIX.)
+
+---
+
+## [2026-05-28-201400] A non-root Go module nested under the main module's path CAN import its internal/ packages
+
+**Context**: While designing the ctxctl module split, the initial spec (and a lot of online consensus) claimed a separate `go.mod` cannot import the parent module's `internal/` packages, which would have forced relocating or duplicating ~25 foundation packages (`rc`, `desc`, `nudge`, `config/*`, …). The "obvious" reading made same-module the only viable option.
+
+**Lesson**: Go's internal-import rule is **lexical on import paths, not module-scoped**. A separate module whose path is `github.com/<owner>/<main>/tools/<x>` CAN import `github.com/<owner>/<main>/internal/...` — verified by an empirical build experiment this session. An outsider path (`example.com/...`) is rejected with `use of internal package … not allowed`. The rule fires on the import-path prefix relative to the `internal/` directory's parent, not on module boundaries.
+
+**Application**: For monorepo splits (maintainer-only tooling, isolated experiments, ancillary CLIs), choose a module path nested under the main module so the new module reuses the parent's foundations via the lexical-internal allowance. Full self-containment of a maintainer module would be a DRY catastrophe; the lexical allowance is the correct shape. Prove it with a throwaway `go build` against a representative `internal/` import before designing around the *wrong* constraint.
+
+---
+
+## [2026-05-28-201300] cobra's legacyArgs lets unknown subcommands silently succeed on non-root groups
+
+**Context**: Every prompt of this session injected 52 lines of `ctx system` help text into agent context, labeled "hook success." Investigation traced it to the 0.8.1 plugin's `hooks.json` wiring `ctx system check-anchor-drift` as the first UserPromptSubmit hook — a command the 0.8.1 binary no longer has (the command was deleted by the cwd-anchored migration in `fc7db228`, but the plugin's hook config wasn't updated). The harness reported "hook success" because cobra exits 0 on the unknown subcommand.
+
+**Lesson**: cobra's `legacyArgs` only raises "unknown command" for the **root** command (`!cmd.HasParent()`); any non-root group (built with `parent.Cmd`) treats an unknown subcommand as non-error: it falls through to `Help()` and returns nil → exit 0. In a UserPromptSubmit hook this is **invisible** — the harness logs "hook success" and injects the whole help text into agent context every prompt. The 0.8.1 plugin's stale wiring of the retired `check-anchor-drift` caused exactly this for the entire session.
+
+**Application**: Non-root cobra groups must have an explicit unknown-subcommand guard. Two routes: (a) `Args: cobra.NoArgs` so unknown subcommands error loud (non-zero exit + "unknown command" stderr); (b) a `RunE` that emits a **verbatim relay** — which is what actually reaches the user in a UserPromptSubmit hook context where a non-zero exit alone is invisible. Tracked under Phase CLI-FIX as the verbatim-relay guard on `ctx system`.
+
+---
+
+## [2026-05-25-221357] Skill shipping location: _ctx- prefix is repo-internal, internal/assets/claude/skills/ctx-* is bundled and shipped
+
+**Context**: Created /ctx-surface-audit under internal/assets/claude/skills/ (the shipped path), but it audits ctx's own internal/ source layout — useless in an end-user project that installs ctx. There is an established _ctx-* family (_ctx-command-audit, _ctx-audit, _ctx-release, _ctx-qa, etc.) in .claude/skills/ for repo-only dev skills; the user caught the misplacement.
+
+**Lesson**: A skill that references ctx's own source tree (internal/, docs/recipes/, cmd/) or dev workflow is repo-internal and must live in .claude/skills/_<name>/ (underscore prefix, committed to the repo but NOT bundled). Only genuinely user-facing skills belong in internal/assets/claude/skills/, which ctx init / ctx setup install into end-user projects. The same ship-vs-repo-internal question applies one layer up: user-facing CLI commands go in ctx, maintainer commands go in ctxctl; shipped hooks live in internal/assets/claude/hooks/hooks.json and call ctx, repo-local dev hooks live in the gitignored .claude/settings.local.json and may call ctxctl.
+
+**Application**: Before creating a skill, command, or hook, ask: does this serve a user working in their project, or a ctx maintainer working in this repo? Maintainer-facing → _-prefixed skill in .claude/skills/ + ctxctl command + repo-local hook. User-facing → internal/assets/claude/skills/ + ctx command + shipped hooks.json. Putting maintainer tooling in the shipped paths taxes every end user (e.g. a UserPromptSubmit hook firing on every prompt for a feature they never use).
+
+---
+
+## [2026-05-24-092924] Audit gates that bite when introducing new packages and helpers
+
+**Context**: While landing the pad-undo Phase 1 work, the project audit suite (internal/audit) caught two violations on the new history.go file that aren't surfaced by golangci-lint or build errors: TestNoMixedVisibility and TestNoMagicStrings.
+
+**Lesson**: TestNoMixedVisibility flags ANY unexported func in a file that also contains exported funcs — even with full Parameters/Returns doc sections. The fix is to split unexported helpers into a sibling file like <name>_internal.go in the same package. TestNoMagicStrings flags warn-format string literals passed to logWarn.Warn — they must live as named constants in internal/config/warn/, not inline. TestDocCommentStructure additionally requires Parameters: and Returns: sections on every helper regardless of visibility. The fuller catalog (from landing the audit-channel feature, a whole new CLI command + hook): TestNoMagicValues flags bare integers like `24` (use a named const, e.g. HoursPerDay). TestNoCmdPrintOutsideWrite forbids cmd.Println outside internal/write/ — route all output through a write/<area> function. TestNoNakedErrors forbids errors.New outside internal/err/ — even sentinel `var Err... = errors.New(...)` must live in the err package and be re-exported if a core package needs `errors.Is` against it. TestTypeFileConvention wants struct type definitions in a types.go file, not scattered in logic files. TestCmdDirPurity forbids unexported helper funcs in cmd/ dirs — they belong in a core/ package (so a hook's render helpers go to internal/cli/system/core/<area>/, not the cmd/<hook>/ dir). TestNoLiteralMdExtension forbids literal ".md" — use file.ExtMarkdown. TestDocGoSubcommandDrift requires the PARENT package's doc.go to list every new subcommand (both the cli-area doc.go and, for hooks, internal/cli/system/doc.go). TestDescKeyYAMLLinkage requires every DescKey constant to have a matching yaml entry. TestNoLiteralWhitespace forbids "\r\n"/"\n" literals — use token.NewlineCRLF / token.NewlineLF. And the hook-message registry has a hardcoded count test (TestRegistryCount) that must be bumped when you add a registry.yaml entry. staticcheck QF1012 also fights the audit here: it wants fmt.Fprintf(&b, ...) but TestNoUncheckedFmtWrite forbids discarding Fprintf's return — resolve by building the string with fmt.Sprintf first, then b.WriteString(s).
+
+**Application**: When creating a new core/store-shaped file with both exported API and unexported helpers, split immediately into <name>.go (exported) + <name>_internal.go (unexported) — don't wait for the audit failure. When using logWarn.Warn for a new warning class, add the format constant to internal/config/warn/warn.go FIRST, then reference cfgWarn.<Name> at the call site. All new helpers (exported or not) get full godoc Parameters/Returns blocks. For a whole new CLI command, budget for the full gate set up front: types.go for structs, internal/err/<area>/ for ALL errors (including sentinels), internal/write/<area>/ for ALL output, a core/ package for any non-trivial helpers used by a cmd/ or hook dir, every format string and magic number as a named constant, every DescKey paired with a yaml entry, and the parent doc.go subcommand list updated. Run `go test ./internal/audit/ ./internal/compliance/` early and often — these gates are not surfaced by `go build` or `golangci-lint`.
 
 ---
 

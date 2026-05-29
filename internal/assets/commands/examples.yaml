@@ -291,6 +291,9 @@ pad.resolve:
 pad.rm:
   short: '  ctx pad rm 2'
 
+pad.undo:
+  short: '  ctx pad undo'
+
 pad.root:
   short: |2-
       ctx pad import notes.txt

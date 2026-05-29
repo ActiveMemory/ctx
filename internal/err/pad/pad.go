@@ -160,3 +160,42 @@ func FileTooLarge(size, max int) error {
 		desc.Text(text.DescKeyErrPadFileTooLarge), size, max,
 	)
 }
+
+// HistoryWrite wraps a pad-history snapshot write failure.
+//
+// Parameters:
+//   - cause: the underlying write error.
+//
+// Returns:
+//   - error: "write pad history snapshot: <cause>"
+func HistoryWrite(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrPadHistoryWrite), cause,
+	)
+}
+
+// HistoryRead wraps a pad-history read failure.
+//
+// Parameters:
+//   - cause: the underlying read error.
+//
+// Returns:
+//   - error: "read pad history: <cause>"
+func HistoryRead(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrPadHistoryRead), cause,
+	)
+}
+
+// HistoryRestore wraps a snapshot-restore failure.
+//
+// Parameters:
+//   - cause: the underlying restore error.
+//
+// Returns:
+//   - error: "restore pad from snapshot: <cause>"
+func HistoryRestore(cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrPadHistoryRestore), cause,
+	)
+}

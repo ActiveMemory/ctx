@@ -3,6 +3,12 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-28 | ctxctl PATH-installed alongside ctx for clean roots and one binary across worktrees |
+| 2026-05-28 | Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy |
+| 2026-05-27 | ctxctl is a separate Go module at tools/ctxctl (own go.mod), not cmd/ctxctl in the same module |
+| 2026-05-24 | ctxctl lives at cmd/ctxctl in the same Go module, not a separate go.mod |
+| 2026-05-24 | Discipline enforcement belongs on the verbatim-relay channel, run out-of-band |
+| 2026-05-24 | Pad snapshot-on-mutate at the store.WriteEntries choke point |
 | 2026-05-23 | Skill body text uses capability-first language with canonical tools as examples; install-guide docs name canonical implementations; `allowed-tools` frontmatter stays MCP-specific |
 | 2026-05-23 | MCP gateway not worth the coupling cost; companion tools stay peer-MCP and remain not-vouched-for-by-ctx |
 | 2026-05-23 | Keep `i18n.Fold` strict; add `i18n.MatchKey` as the separate diacritic-insensitive primitive |
@@ -150,6 +156,90 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-28-201000] ctxctl PATH-installed alongside ctx for clean roots and one binary across worktrees
+
+**Status**: Accepted
+
+**Context**: Initial ctxctl design wired the hook to `./ctxctl` at repo root, forcing a per-worktree build, dirtying the root, and contradicting the project's PATH-only convention (`block-non-path-ctx` enforces it for ctx).
+
+**Decision**: ctxctl PATH-installed alongside ctx for clean roots and one binary across worktrees
+
+**Rationale**: Mirror ctx's install pattern: build to `dist/`, install to `/usr/local/bin/ctxctl`. One binary serves all worktrees and repo copies; the local hook calls `ctxctl` from PATH so no repo-root binary is needed. Defensive `/ctxctl` + `tools/ctxctl/ctxctl` gitignores stay so stray binaries can never be committed.
+
+**Consequence**: New Makefile targets `install-ctxctl` and `reinstall-ctxctl` mirror `install`/`reinstall`. Hook in `.claude/settings.local.json`: `cd "$CLAUDE_PROJECT_DIR" && ctxctl audit-relay`. Sets the convention for future maintainer-only binaries (`tools/<name>/` separate module, `dist/` build, PATH install). `specs/ctxctl-bootstrap.md` Interface section updated to match.
+
+---
+
+## [2026-05-28-200500] Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy
+
+**Status**: Accepted
+
+**Context**: `check-resource` alerted DANGER at swap-used ≥ 75% / memory-used ≥ 90% — pure occupancy. macOS swap is sticky (never recedes); post-hibernation swap stays >75% with idle RAM, producing false "wrap up the session" DANGER at session start. Memory occupancy on macOS includes reclaimable cache — also a poor pressure proxy.
+
+**Decision**: Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy
+
+**Rationale**: Occupancy is a level; pressure is a derivative. Only the kernel's derivative reflects current struggle. macOS: `sysctl kern.memorystatus_vm_pressure_level` (1/2/4 → OK/Warning/Danger). Linux: `/proc/pressure/memory` (PSI) `some.avg10 ≥ 10.0` → warn, `full.avg10 ≥ 10.0` → danger. Windows: filed as an exploratory task; unsupported for now ("other" platform falls through to `PressureSupported=false`, no alert).
+
+**Consequence**: `MemInfo` gains `Pressure` + `PressureSupported`; `threshold.go` drops both occupancy `byteCheck`s and emits a single pressure alert. Doctor swap row removed (no longer a health signal); occupancy fields retained for `ctx stats` display. PSI 10.0 defaults named in `config/stats` — retunable in one place. `make lint` 0 issues, `make test` ok on the change.
+
+---
+
+## [2026-05-27-161302] ctxctl is a separate Go module at tools/ctxctl (own go.mod), not cmd/ctxctl in the same module
+
+**Status**: Accepted
+
+**Context**: Migrating the maintainer-only audit channel out of the ctx binary (specs/ctxctl-bootstrap.md). The prior decision (handover 2026-05-26) chose same-module cmd/ctxctl, on the belief that a separate go.mod could not import ctx's internal/ packages and would force relocating/duplicating ~25 files.
+
+**Decision**: ctxctl is a separate Go module at tools/ctxctl (own go.mod), not cmd/ctxctl in the same module
+
+**Rationale**: That blocker was empirically disproved this session: a nested module whose path is lexically under github.com/ActiveMemory/ctx CAN import the parent module's internal/ packages (verified by build test; a non-nested 'outsider' module path is rejected). Given that, a hard module boundary beats an in-module import-graph test for the asymmetric requirement that actually matters: ctx must never break because of ctxctl. ctx's go.mod will not require tools/ctxctl, so ctx literally cannot import ctxctl; the one-directional ctxctl->ctx coupling is acceptable because ctxctl is disposable maintainer tooling ('nobody whines if ctxctl breaks; everyone suffers if ctxctl leaks into ctx'). Full self-containment (duplicating the ~20 shared internal foundations: rc, desc, config, nudge, io...) was rejected as a DRY catastrophe and a worse broken window than the one being fixed.
+
+**Consequence**: New module tools/ctxctl (module path github.com/ActiveMemory/ctx/tools/ctxctl) reuses ctx's internal/ foundations in place; audit-channel-specific logic relocates to internal/ctxctl/; ctxctl owns its relay/CLI text as plain English Go constants under tools/ctxctl (no YAML localization, no desc/i18n engine for its own output -- no French ctxctl); a repo-root go.work (committed) wires the workspace; an import-graph guard test asserts cmd/ctx never imports internal/ctxctl. Supersedes the same-module cmd/ctxctl decision. specs/ctxctl-bootstrap.md is rewritten to match.
+
+---
+
+## [2026-05-24-123908] ctxctl lives at cmd/ctxctl in the same Go module, not a separate go.mod
+
+**Status**: Accepted
+
+**Context**: Deciding where the planned ctxctl maintainer binary lives and how to house the audit channel (which should not ship in the ctx user binary). User initially proposed tools/ctx/ctxctl with its own go.mod for dependency isolation; the Phase BT saga (TASKS.md) specified cmd/ctxctl in the same module. The audit channel is already ~25 files under internal/ (internal/cli/audit, internal/config/audit, internal/err/audit, internal/write/audit, internal/cli/system/core/audit).
+
+**Decision**: ctxctl lives at cmd/ctxctl in the same Go module, not a separate go.mod
+
+**Rationale**: Go compiles a package into a binary only if that binary's main transitively imports it. So audit packages under internal/ imported ONLY by cmd/ctxctl/main are excluded from the ctx binary — binary-level isolation without a module split, and zero relocation of the existing internal/ audit files. A separate go.mod cannot cleanly import the parent module's internal/ (Go module + internal/ visibility friction), forcing relocation or duplication. The only real win of a separate go.mod is dependency isolation — keeping heavy build/release deps out of ctx's module graph — which the audit channel does not need (only yaml, already a ctx dep). Defer the module-split question until a future ctxctl subcommand actually pulls in heavy isolated deps.
+
+**Consequence**: ctxctl reuses internal/ packages verbatim. An import-graph guard test must enforce that cmd/ctx never transitively imports internal/cli/audit (so the channel stays out of the shipped binary). Refined companion rule: shipped product hooks call ctx; repo-local dev hooks (ctx's own gitignored .claude/settings.local.json) may call ctxctl. If a future ctxctl subcommand needs heavy isolated deps, revisit the module split then — not now.
+
+---
+
+## [2026-05-24-112626] Discipline enforcement belongs on the verbatim-relay channel, run out-of-band
+
+**Status**: Accepted
+
+**Context**: pad-undo Phase 1 shipped a user-facing command (ctx pad undo) without matching SKILL.md/recipe updates. The agent had read CONVENTIONS.md at session start AND knew the Constitution forbids 'I can create a follow-up task', yet still labeled the docs work 'Phase 2'. The user asked: how do we prevent this for future agents, not just this session? In-band advisory prose demonstrably does not survive mid-task tunnel vision.
+
+**Decision**: Discipline enforcement belongs on the verbatim-relay channel, run out-of-band
+
+**Rationale**: Verbatim relay is the ONE discipline channel in this codebase that empirically survives tunnel vision: the bordered reminder boxes (ctx remind, journal/knowledge notices) get echoed by agents every turn without filtering because the relay bypasses agent judgment. So move discipline checks onto that proven channel rather than inventing a new mechanism. Run the auditor OUT OF BAND (separate Claude Code session) for two reasons: (1) fresh-context judgment — the implementer cannot grade its own homework; (2) cost — a per-commit in-band AI gate burns API tokens on every commit, whereas a manually-triggered separate session bills against the user's interactive plan and lets them choose when to spend cycles. Programmatic test gates (internal/audit, internal/compliance) stay for mechanical checks but cannot make judgment calls like 'which recipe should mention this flag'.
+
+**Consequence**: New generic channel: out-of-band-skill writes .context/audit/<kind>.md, ctx system check-audit hook relays unread reports verbatim, ctx audit list/show/dismiss manages lifecycle. Dismissal is digest-bound so fresh findings re-surface. The channel is kind-agnostic — the hook relays any report file, so sibling skills (/ctx-spec-trailer-audit, /ctx-capture-audit) plug in with zero hook changes. Trade-off: no automated trigger in Phase 1 (no cron/post-commit) — relies on user discipline to actually run the auditor; a user who never runs it gets no nags. Naming collision with the existing internal/audit/ AST-tests package is tolerated (different layers, no compile conflict) but flagged in the spec.
+
+---
+
+## [2026-05-24-092912] Pad snapshot-on-mutate at the store.WriteEntries choke point
+
+**Status**: Accepted
+
+**Context**: Adding a safety net for accidental `ctx pad rm` (and any other destructive pad mutation) required choosing where to insert the snapshot logic: per-subcommand (in each cmd/<op>/run.go), or at the persistence choke point (store.WriteEntriesWithIDs).
+
+**Decision**: Pad snapshot-on-mutate at the store.WriteEntries choke point
+
+**Rationale**: store.WriteEntriesWithIDs is invoked by every mutating pad subcommand (add/edit/mv/rm/merge/normalize/resolve/tag and undo itself); instrumenting it once gives universal coverage with one site of truth. Per-subcommand instrumentation would need maintenance every time a new pad mutation lands and is easy to forget. The snapshot itself is a byte-for-byte copy of the existing pad blob (no re-encryption), so plaintext and encrypted modes use identical logic; the existing ciphertext IS the snapshot.
+
+**Consequence**: All future pad mutations get the safety net automatically without per-command wiring. The op label for the snapshot filename is derived from cmd.Name() at the call site, so the cmd parameter that already flowed in for diagnostic output now carries semantic weight too. New constraint: any future code path that bypasses WriteEntriesWithIDs to mutate the pad will silently bypass the safety net — a guardrail test could enforce this if/when that risk materializes.
+
+---
 
 ## [2026-05-23-030000] Skill body text uses capability-first language with canonical tools as examples; install-guide docs name canonical implementations; `allowed-tools` frontmatter stays MCP-specific
 

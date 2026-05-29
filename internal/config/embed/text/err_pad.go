@@ -42,4 +42,13 @@ const (
 	// DescKeyErrPadResolveNotEncrypted is the text key for err pad resolve not
 	// encrypted messages.
 	DescKeyErrPadResolveNotEncrypted = "err.pad.resolve-not-encrypted"
+	// DescKeyErrPadHistoryWrite is the text key for err pad history write
+	// messages.
+	DescKeyErrPadHistoryWrite = "err.pad.history-write"
+	// DescKeyErrPadHistoryRead is the text key for err pad history read
+	// messages.
+	DescKeyErrPadHistoryRead = "err.pad.history-read"
+	// DescKeyErrPadHistoryRestore is the text key for err pad history restore
+	// messages.
+	DescKeyErrPadHistoryRestore = "err.pad.history-restore"
 )
