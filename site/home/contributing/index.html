@@ -2570,8 +2570,10 @@ so it is <strong>not</strong> part of the <a href="#development-setup">Developme
 above: skip this section unless you are working on maintainer tooling.</p>
 <p>Its first inhabitant is the out-of-band audit channel
 (<code>ctxctl audit list|show|dismiss</code> plus the <code>ctxctl audit-relay</code> hook).
-For what the channel does and how to run an audit, see
-<a href="../../recipes/audit-channel/">Out-of-Band Audit Channel</a>.</p>
+This page covers only building and installing the binary. The full
+workflow (running an auditor, relaying its findings into your working
+session, dismissing them) is its own runbook:
+<strong><a href="../../operations/runbooks/audit-channel/">Out-of-Band Audit Channel</a></strong>.</p>
 <h3 id="build-and-install">Build and Install<a class="headerlink" href="#build-and-install" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>make<span class="w"> </span>ctxctl<span class="w">            </span><span class="c1"># build into dist/ctxctl</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>make<span class="w"> </span>install-ctxctl<span class="w">    </span><span class="c1"># install dist/ctxctl to /usr/local/bin/ctxctl</span>

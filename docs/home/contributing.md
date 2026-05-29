@@ -91,8 +91,10 @@ above: skip this section unless you are working on maintainer tooling.
 
 Its first inhabitant is the out-of-band audit channel
 (`ctxctl audit list|show|dismiss` plus the `ctxctl audit-relay` hook).
-For what the channel does and how to run an audit, see
-[Out-of-Band Audit Channel](../recipes/audit-channel.md).
+This page covers only building and installing the binary. The full
+workflow (running an auditor, relaying its findings into your working
+session, dismissing them) is its own runbook:
+**[Out-of-Band Audit Channel](../operations/runbooks/audit-channel.md)**.
 
 ### Build and Install
 
