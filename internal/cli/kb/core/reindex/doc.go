@@ -10,8 +10,11 @@
 //
 // # Files
 //
-//   - topics.go: directory scan that returns topic slugs whose
-//     index.md exists.
+//   - topic.go: ListTopics, the recursive scan that returns topic
+//     slugs (slash-separated for grouped layouts) whose index.md
+//     exists.
+//   - scan.go: unexported walk + group-landing-exclusion helpers
+//     behind ListTopics.
 //   - block.go: rendering of the managed block contents.
 //
 // # Related packages

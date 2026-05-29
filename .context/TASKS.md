@@ -27,322 +27,46 @@ TASK STATUS LABELS:
 
 ## Phase 0 Grounding
 
-- [x] Add TypeScript type-check step (`tsc --noEmit`) for embedded
-  editor-plugin assets to CI; nothing currently
-  checks `.opencode/plugins/ctx/index.ts` before embedding
-  #priority:low #added:2026-04-26-152912 #completed:2026-05-11
-  Implementation: `tools/typecheck/opencode/` (package.json,
-  tsconfig.json, README, package-lock.json); CI job
-  `typecheck-opencode-plugin` in `.github/workflows/ci.yml`; embed
-  contract documented in `internal/assets/README.md` and decision
-  recorded 2026-05-11. Investigation also surfaced three
-  related-but-distinct gap tasks (shellcheck, PSScriptAnalyzer,
-  skill frontmatter validation) listed below.
-
-- [x] Create a typography.md somewhere so that we don't have to remind tha
-  Agent things like this: "❯"## What the editorial pipeline is NOT" our headings
-  are Title Case, it always has been; it always will be. Do a full sweep.
-  -- in addition (not checked, just to make sure); `ctx` is always in backticks
-  whenever possible; it's part of the branding."
-  Landed at `.context/typography.md` (contributor/agent surface, not
-  public docs); CONVENTIONS.md points at it. Codifies Title Case, monotype
-  `ctx`, no em-dashes/smart-quotes/quad-backticks, banner/icon header
-  shape, recipe Problem→TL;DR arc, admonition variants. Sweep across
-  existing docs deferred (linter already enforces the hard rules on every
-  edit).
-
-- [x] Bug: Fresh folder: git init; eval $(ctx activate); ctx init
-  will catch parent .context folder and raise a warning
-  expectation: ctx activate should bail if there is no .context
-  folder in the same level and ask user to run `ctx init` first.
-  discuss this with the Agent too.
-  Fixed by `specs/activate-strict-cwd.md`: dropped the upward walk
-  in `internal/cli/activate/core/resolve/`; `ctx activate` now
-  succeeds iff `$PWD/.context/` exists, otherwise returns
-  `errActivate.NoLocalContext` naming `$PWD` and pointing at
-  `ctx init`. Removed `writeActivate.AlsoVisible`,
-  `FormatAlsoVisibleAdvisory`, multi-candidate test. New test
-  `TestActivate_DeepSubdir_WithParentContext_Bails` guards the
-  regression.
-- [x] Bug: if context is active (eval ctx activate); `ctx init`
-  on a brand new project can (and probably will) fail.
-  Probably need to nudge user to ctx deactivate first.
-  Paired with the activate strict-CWD fix above. Strict activate
-  reduces how often this fires (no more silent parent-binds), but
-  the deliberate path (activated A, cd to B, ran `ctx init`) still
-  needs an init-side guard: refuse when `$CTX_DIR` is set and
-  `realpath($CTX_DIR) != realpath($PWD/.context)`; suggest
-  `ctx deactivate` or a `cd` back to A.
-  Fixed: env-vs-cwd mismatch guard added to
-  `internal/cli/initialize/cmd/root/run.go` via new
-  `internal/cli/initialize/core/envmatch/` package
-  (symlink-aware via `filepath.EvalSymlinks`, with parent-resolution
-  fallback for paths that do not yet exist). Skipped when
-  `--caller` is set (editors / scripted callers pre-set CTX_DIR by
-  contract). New typed error `errInit.ErrEnvCwdMismatch` with
-  multi-line message naming both paths and pointing at
-  `ctx deactivate`. Three tests guard the regression
-  (`EnvCwdMismatch_Refuses`, `EnvCwdMatch_Succeeds`,
-  `EnvCwdMismatch_CallerSkipsGuard`).
-
-- [x] Bug: `ctx handover write` emits literal `branch: --show-current`
-  in handover frontmatter instead of the resolved branch name. Spotted
-  during the 2026-05-20 wrap-up; the handover at
-  `.context/handovers/20260521T045353Z-...md` shows the issue. Looks
-  like `gitmeta`'s branch resolver is leaking a `git symbolic-ref`
-  flag literal. Read side parses it but downstream tooling that
-  expects `main` (or whatever) will get tripped. #priority:medium
-  #added:2026-05-20
-  Fixed: `internal/gitmeta/branch.go` was running
-  `git rev-parse --show-current`; `--show-current` is a
-  `git branch` flag, not a rev-parse flag, and rev-parse echoes
-  unknown args verbatim (exit 0), which is why the literal string
-  reached the frontmatter. Swapped `cfgGit.RevParse` for
-  `cfgGit.Branch`; moved `FlagShowCurrent` into a new
-  "Branch subcommand flags" group in `internal/config/git/git.go`
-  (its prior "Rev-parse flags" home was the misclassification that
-  let the bug land); fixed stale docs in `gitmeta/head.go` and
-  `config/git/doc.go`. New regression test
-  `TestResolveHead_RealRepoReturnsBranchName` initializes a real
-  git repo on `trunk` and asserts the resolved branch contains no
-  `--` flag literal.
-
-- [x] Implement `specs/cwd-anchored-context.md` — drop the `CTX_DIR`
-  env channel and `ctx activate`/`ctx deactivate` entirely; resolver
-  becomes a single `os.Stat($PWD/.context)`; `gitmeta` stops walking
-  too. Multi-step (rc + gitmeta simplification → init guard removal
-  → hook `cd` migration → activate/deactivate deletion → docs sweep).
-  Supersedes `specs/activate-strict-cwd.md` (marked superseded) and
-  large sections of `specs/single-source-context-anchor.md` (marked
-  superseded).
-  #priority:medium #added:2026-05-20
-  Done end-to-end on `feat/cwd-anchored-context` (uncommitted, jumbo
-  strategy). Steps 1+2 (rc + gitmeta + init guard) were landed in a
-  prior session; steps 3–5 (hook `cd` migration, activate/deactivate
-  deletion, docs sweep) landed this session. Net diff: ~1410
-  insertions, ~4560 deletions, 196 files. Deletions include four
-  package directories (`internal/cli/activate/`, `internal/cli/deactivate/`,
-  `internal/write/activate/`, `internal/err/activate/`), the
-  check-anchor-drift system subcommand and its core/anchor package,
-  the `internal/config/shell/` package, the `err_activate.go` and
-  `activate.go` flag/text files, two recipes (`activating-context.md`,
-  `external-context.md`), and YAML entries across
-  `commands.yaml`/`examples.yaml`/`flags.yaml`/`errors.yaml`/`hooks.yaml`/
-  `write.yaml`.
-  Hooks migrated: `internal/assets/claude/hooks/hooks.json` now uses
-  `cd "${CLAUDE_PROJECT_DIR:?...}" && ctx system <verb>` instead of
-  the `CTX_DIR=` prefix; check-anchor-drift hook line removed. Tests
-  cleaned of dead `t.Setenv("CTX_DIR", ...)` calls across init,
-  pad, remind, checkreminder, notify, change/core, mcp/server, and
-  drift suites; `mcp/cmd/root/cmd_test.go` rewritten to test the
-  cwd-anchored fail-closed behaviour. Lint clean (`golangci-lint run`),
-  full `go test ./...` green.
-
-- [x] Add TypeScript `tsc --noEmit` gate for the embedded OpenCode
-  plugin (`internal/assets/integrations/opencode/plugin/index.ts`).
-  Place tooling (`package.json`, `tsconfig.json`) in a sibling
-  directory outside `internal/assets/` so it does not pollute the
-  embed surface; wire a CI step that installs Bun, `bun install`,
-  then `bunx tsc --noEmit`. Spec: respawn from
-  `specs/internal-assets-readme.md` open work.
-  #priority:low #added:2026-05-11 #grounding-gap
-  #skipped:2026-05-11 reason: duplicate of original line-30 task
-  above, which has now been completed end-to-end. CI uses `npm ci`
-    + `npx tsc --noEmit` (matching the existing `editors/vscode/`
-      convention) rather than Bun; `tsc` is the same compiler either
-      way and `@types/bun` provides Bun globals to the type-checker.
-
-- [x] Add `shellcheck` gate for embedded shell scripts
-  (`internal/assets/integrations/copilot-cli/scripts/*.sh` and
-  `internal/assets/hooks/trace/*.sh`). Run in CI; fail on findings
-  at severity `warning` and above. #priority:low #added:2026-05-11
-  #grounding-gap
-  Done: `hack/lint-shellcheck.sh` (severity=warning, scoped to
-  embedded scripts), `make lint-shellcheck` target, `audit` target
-  invokes it when shellcheck is present, dedicated `shellcheck`
-  CI job (`.github/workflows/ci.yml`). 10 embedded scripts scan
-  clean at warning+.
-
-- [x] Add `PSScriptAnalyzer` gate for embedded PowerShell scripts
-  (`internal/assets/integrations/copilot-cli/scripts/*.ps1`). Run in
-  CI on a Windows or pwsh-enabled runner; fail on findings at
-  severity `Warning` and above. #priority:low #added:2026-05-11
-  #grounding-gap
-  Done: `hack/lint-powershell.sh` (severity=Warning, scoped to
-  embedded `*.ps1`), `make lint-powershell` target, `audit`
-  target invokes it when pwsh is present, dedicated
-  `powershell` CI job that `Install-Module`s PSScriptAnalyzer
-  on the ubuntu-latest runner (pwsh ships pre-installed on
-  GitHub Actions ubuntu images). Local verification deferred to
-  CI (no pwsh on dev box).
-
-- [x] Add skill frontmatter validity test covering every embedded
-  `SKILL.md` (Claude skills, OpenCode skills, Copilot CLI skills):
-  assert required keys present and values typed correctly. Extend
-  `internal/assets/embed_test.go` or add a dedicated test under
-  `internal/assets/read/skill/`. #priority:medium #added:2026-05-11
-  #grounding-gap
-  Done: `internal/assets/read/skill/frontmatter_test.go` walks all
-  3 skill trees (claude, opencode integrations, copilot-cli
-  integrations), parses YAML frontmatter on each `SKILL.md`, and
-  asserts `name` matches the containing directory's basename and
-  `description` is a non-empty string. Reports every violation in
-  a single pass (`t.Errorf`, not `t.Fatalf`). Validated 106 files
-  across the three trees; baseline was already clean so the test
-  freezes the convention as a ratchet. Per
-  `specs/test-skill-frontmatter.md`.
-
-- [x] Add CI guardrails for the VS Code extension at
-  `editors/vscode/` (separately-published deliverable, ships via
-  VS Code Marketplace under publisher `activememory`, not embedded
-  into the ctx binary). CI job `vscode-extension` runs `npm ci`,
-  `npm run build` (esbuild bundle), and `npx tsc --noEmit
-  -p tsconfig.ci.json` (production code only; test file excluded
-  pending separate fix). README docs added: `internal/assets/README.md`
-  gained an "Embedded vs. Separately-Published" comparison; the
-  extension's own README gained a "Release" section documenting
-  the manual `vsce publish` flow and the CI gates that protect it.
-  #priority:medium #added:2026-05-11 #completed:2026-05-11
-  #grounding-gap
-
-- [x] Close VS Code documentation parity gap: ctx had a dedicated
-  `docs/home/opencode.md` (185 lines) and `site/home/opencode/`
-  published page, but no equivalent for VS Code — the extension
-  was reduced to a 24-line install snippet inside
-  `docs/operations/integrations.md` plus the marketplace README.
-  A docs-site reader had no path to day-to-day usage. Created
-  `docs/home/vscode.md` mirroring the opencode page shape
-  (problem, setup, what gets created, automatic hooks,
-  status bar, slash commands by category, natural language,
-  auto-bootstrap, prerequisites, configuration, troubleshooting,
-  verification, what's next). Registered in `zensical.toml`'s
-  "Get Started" nav. Expanded the integrations.md VS Code
-  subsection to point at the new home page and added a
-  parallel "First-Class Citizen" block in
-  `docs/recipes/multi-tool-setup.md`. #priority:medium
-  #added:2026-05-11 #completed:2026-05-11 #grounding-gap
-
-- [x] Fix `editors/vscode/src/extension.test.ts` type errors and
-  re-enable test-file type-checking + vitest in CI. Two distinct
-  bugs: (1) tests import handlers (`handleComplete`, `handleTasks`,
-  `handleRemind`, `handlePad`, `handleNotify`, `handleSystem`,
-  `handleSpec`) that are no longer exported from `extension.ts`
-  (only `activate` and `deactivate` are exported now) — the test
-  suite is rotting against the actual extension surface; (2) the
-  `fakeToken` helper's `onCancellationRequested` mock signature
-  is `(cb: () => void) => …` but the VS Code API expects
-  `(e: any) => any` with at least one argument. Once fixed,
-  remove the `tsconfig.ci.json` carve-out and add `npm test` to
-  the `vscode-extension` CI job. Also worth adding `npm run lint`
-  (eslint) and a `vsce package` dry-run step.
-  #priority:medium #added:2026-05-11 #grounding-gap
-  Done: handler-name drift (`handleComplete`/`handleTasks` →
-  merged `handleTask` with subcommand dispatch) and fakeToken
-  signature both fixed. Surfaced a third latent bug once vitest
-  actually ran: 18 argv assertions across all handlers were
-  missing `"--no-color"` (every handler appends it). Fixed
-  inline. Dropped `**/*.test.ts` exclude from
-  `editors/vscode/tsconfig.ci.json` so CI typecheck now covers
-  tests. Added `npm test` + `npx vsce package --no-dependencies`
-  steps to the `vscode-extension` job in `.github/workflows/ci.yml`.
-  53/53 vitest pass; vsce dry-run produces a 9-file 26.65 KB vsix.
-  Per `specs/fix-vscode-extension-tests.md`. `npm run lint`
-  deferred — see follow-up below.
-
-- [x] Scaffold ESLint config for `editors/vscode/` and wire
-  `npm run lint` into the `vscode-extension` CI job. The
-  `lint` script (`eslint src --ext ts`) already exists in
-  `package.json` but no `.eslintrc*` is checked in, so the
-  script crashes today. Decision needed: which preset
-  (`@typescript-eslint/recommended` vs. `recommended-type-checked`),
-  whether to include style rules or stay correctness-only,
-  and whether `editors/vscode/` should share config with
-  `tools/typecheck/opencode/` (which also has no lint set
-  up). #priority:low #added:2026-05-22
-  Done: ESLint 9 flat config at `editors/vscode/eslint.config.js`,
-  composing `js.configs.recommended` +
-  `tseslint.configs.recommended`. Correctness-only ruleset:
-  `no-explicit-any: off` (VS Code API shim leans on `any`
-  deliberately), `no-unused-vars: error` with `^_` ignore
-  pattern. Per-package config (opencode-typecheck pkg left for
-  a separate task). Updated `lint` script to drop legacy
-  `--ext` flag (rejected by ESLint 9). One real violation
-  surfaced + fixed: `extension.ts:278 prefer-const` —
-  attempted a closure refactor first but vitest's mock fires
-  `execFile` callbacks synchronously (real Node defers to
-  `process.nextTick`), which hit a TDZ on `disposable`.
-  Reverted to `let` with eslint-disable-next-line + inline
-  rationale. Added `npm run lint` step to the CI
-  `vscode-extension` job between typecheck and test. Audit
-  clean. Per `specs/scaffold-vscode-eslint.md`.
-
 - [ ] The target project (to be given to the Agent) has a good "phasing"
   mechanism for tasks; implement that; maybe `ctx task add` can have a
   `--phase` flag too, and we can have a auditor/normalizer for the current
   task document; or a skill that does a semantic pass, or both too.
 
-- [x] Localize the placeholder set used by `RejectPlaceholder`
-  (decision add / learning add and any future body-flag validators).
-  Move the shipped defaults out of `internal/config/validate/placeholder.go`
-  Go constants into an embedded YAML asset, add a `.ctxrc placeholders:`
-  override with EXTEND semantics (user list is appended to defaults, not
-  replacing them — Tarzan Turkish is the dominant case), and replace the
-  current `strings.ToLower` with proper Unicode case folding via
-  `golang.org/x/text/cases` so İ/i, ß/SS, and similar fold correctly.
-  Ship `en` only in v1; ctx has no locale-specific assets yet, so the
-  structure is established but no `tr.yaml` lands in this work.
-  Spec: `specs/placeholder-i18n.md` #priority:high #added:2026-05-11
-  #prerequisite-for-locale-work #completed:2026-05-22
-  Done in four commits:
-  (1) `internal/i18n` package with `Fold` + AST ban on direct
-  `strings.ToLower` (see `specs/i18n-fold-helper-and-ban.md`,
-  commit 435d6670; 48 callsites swept).
-  (2) Default placeholder list moved to embedded
-  `internal/assets/i18n/placeholders/en.yaml` behind a
-  memoizing loader at `internal/assets/read/placeholders/`
-  (commit b78c853a; deleted the now-dead
-  `internal/config/validate/` package).
-  (3) `.ctxrc placeholders:` field added with EXTEND merge
-  semantics: `rc.Placeholders()` returns the union of
-  shipped defaults + user entries, normalized and deduped.
-  Schema updated in `ctxrc.schema.json`. Tests cover
-  defaults-only, extend, normalization of user entries,
-  trim+empty-skip, and dedupe-after-normalize.
-  (4) `i18n.MatchKey` added as the placeholder-matching
-  primitive: `Fold + NFKD + strip(U+0300..U+036F)`. Wired
-  into `placeholders.Load`, `rc.Placeholders`, and
-  `RejectPlaceholder` so vocabulary entries and user
-  input both normalize the same way. `İPTAL`/`İptal`/
-  `Straße`/`café` now reject against `iptal`/`strasse`/
-  `cafe` entries — a Turkish/German/French dev only
-  needs one spelling in `.ctxrc`. Script-essential marks
-  for Arabic, Indic, Hebrew, CJK are preserved (they
-  live outside the Latin combining-marks block).
-  Constants live in `internal/config/i18n/` per the
-  magic-value audit contract. Fold stays a strict
-  Unicode primitive; MatchKey is the casual-comparison
-  variant.
-
-- [x] Establish `internal/i18n` package + ban direct
-  `strings.ToLower` via AST test. Prerequisite for the
-  placeholder localization above and for any future i18n
-  work. New `internal/i18n.Fold(s)` backed by
-  `cases.Fold(HandleFinalSigma(true))`. Compliance test
-  `TestNoDirectStringsToLower` walks all .go files
-  (production + test) and fails on any `strings.ToLower`
-  call outside `internal/i18n/`. No allowlist — all 48
-  existing callsites across 33 files swapped in one
-  commit. ASCII paths are byte-identical to the prior
-  behavior (cases.Fold preserves ASCII); non-ASCII paths
-  (slug generation, search queries, filename
-  sanitization, classification, steering match) get
-  Unicode-correct folding for free. Per
-  `specs/i18n-fold-helper-and-ban.md`.
-  #priority:high #added:2026-05-22 #completed:2026-05-22
-
 ## Phase CLI-FIX: CLI Infrastructure Fixes
 
 These have priority because other knowledge ingestion projects depend on them.
+
+- [x] Make 'ctx kb reindex' nesting-aware: scan topics/** not topics/* (grouped
+  topic folders currently blank the CTX:
+  KB:TOPICS block) #priority:medium #session:c3d2dcb1 #branch:
+  feat/pad-undo-snapshot #commit:b9ce72e8 #added:
+  2026-05-27-182640 #completed:2026-05-28
+  Shipped: `ListTopics` now recurses (topic.go + scan.go),
+  enumerating `topics/<group>/<slug>` as slashed slugs and excluding
+  group-landing pages (a dir whose index.md sits above nested
+  topics). Flat / grouped / mixed / arbitrary-depth layouts all
+  enumerate; a non-existent dir still yields the placeholder, never
+  an error-blank. `RenderBlock` unchanged (the `topics/<slug>/`
+  template already renders nested links; sorted slashed slugs cluster
+  by group prefix). Tests: topic_test.go (7 cases + nonexistent),
+  block_test.go (nested-slug + empty). Per-group headings deferred
+  (managed-block format change). Spec: specs/kb-reindex-nesting.md.
+    - Problem: `ctx kb reindex` scans `topics/*/index.md` (one level). A
+      consumer kb (the DR project, things-wtf-dr)
+      reorganized 49 topics into grouped folders
+      `topics/<group>/<slug>/index.md`; reindex then finds 0 topics and
+      BLANKS the `CTX:KB:TOPICS` managed block in `index.md` (observed live: "
+      reindexed 0 topic(s)"). The same one-level
+      assumption likely affects the life-stage topic-count glob (
+      `topics/*/index.md`) and any other `topics/*/`
+      enumeration.
+    - Fix: scan `topics/**/index.md` recursively; exclude group-landing pages
+      `topics/<group>/index.md` from topic
+      enumeration (orientation, not topic pages); ideally emit the managed block
+      grouped by parent folder.
+      `ctx kb topic new "<group>/<slug>"` already preserves nested slugs, so
+      creation is unaffected — only
+      reindex/enumeration lags.
 
 - [ ] Add `--json <file>` to `ctx decision/learning/task add` (and `convention`
   if it gains structured fields) for
@@ -402,28 +126,6 @@ These have priority because other knowledge ingestion projects depend on them.
       swap-detection thread. #priority:medium #session:
       96765858 #branch:feat/pad-undo-snapshot #commit:b9ce72e8 #added:
       2026-05-27-183909
-
-- [ ] Make 'ctx kb reindex' nesting-aware: scan topics/** not topics/* (grouped
-  topic folders currently blank the CTX:
-  KB:TOPICS block) #priority:medium #session:c3d2dcb1 #branch:
-  feat/pad-undo-snapshot #commit:b9ce72e8 #added:
-  2026-05-27-182640
-    - Problem: `ctx kb reindex` scans `topics/*/index.md` (one level). A
-      consumer kb (the DR project, things-wtf-dr)
-      reorganized 49 topics into grouped folders
-      `topics/<group>/<slug>/index.md`; reindex then finds 0 topics and
-      BLANKS the `CTX:KB:TOPICS` managed block in `index.md` (observed live: "
-      reindexed 0 topic(s)"). The same one-level
-      assumption likely affects the life-stage topic-count glob (
-      `topics/*/index.md`) and any other `topics/*/`
-      enumeration.
-    - Fix: scan `topics/**/index.md` recursively; exclude group-landing pages
-      `topics/<group>/index.md` from topic
-      enumeration (orientation, not topic pages); ideally emit the managed block
-      grouped by parent folder.
-      `ctx kb topic new "<group>/<slug>"` already preserves nested slugs, so
-      creation is unaffected — only
-      reindex/enumeration lags.
 
 - [ ] Realign the installed plugin's hooks.json with the cwd-anchored binary —
   the LIVE fix for the every-prompt
@@ -531,147 +233,17 @@ Important things that agent (or human) yeeted to the future.
 
 ## Agents
 
-- [-] Add `ctx explore` command — scaffolds `.arch-explorer/` in a workspace
-  directory with manifest.json, PROMPT.md (from
-  `hack/agents/architecture-explorer.md`), run-log.md, and a README. Similar to
-  `ctx init` but for multi-repo architecture exploration. The prompt template
-  lives in `hack/agents/architecture-explorer.md` and ships embedded.
-  #priority:low #added:2026-04-13
-  **Skipped 2026-04-16**: Superseded by
-  `docs/operations/runbooks/architecture-exploration.md`. A runbook is the right
-  weight — a CLI scaffolding command was speculative abstraction for a
-  workflow
-  that's better served by a discoverable doc with an embedded prompt.
 
 ## Misc
 
-- [x] Improve hub failover client: distinguish auth errors
-  (Unauthenticated/PermissionDenied) from connection errors. Fail fast on auth
-  failures instead of cycling through all peers with the same invalid token.
-  #priority:low #added:2026-04-08-194612 #completed:2026-05-23
-  Implementation already landed (commit 8bcb6208, the original failover
-  feature): `internal/hub/failover.go:61-63` calls `authErr(callErr)` and
-  returns immediately on auth errors; `internal/hub/err_check.go:22-30`
-  `authErr()` checks both `codes.Unauthenticated` and
-  `codes.PermissionDenied`. The task was open because no test specifically
-  asserted the auth-fast-fail path — the three existing failover tests
-  cover happy-path, skip-bad-peer, and all-bad-peers but not the
-  "stop walking on auth failure" invariant. Added
-  `TestFailoverClient_FailsFastOnAuthError`: seeds a bogus token, lists
-  two peers (real server first, unrouted port second), asserts the
-  returned gRPC code is Unauthenticated/PermissionDenied rather than
-  Unavailable — an Unavailable would prove the walk cycled past auth
-  into the unrouted second peer (the exact regression to catch).
 
-- [x] Use crypto/subtle.ConstantTimeCompare for hub token validation instead of
-  string equality. Current Store.ValidateToken uses == which is vulnerable to
-  timing attacks. Also replace O(n) linear scan with a map[string]*ClientInfo
-  for O(1) lookup. #priority:high #added:2026-04-08-194458 #completed:2026-05-23
-  Both halves landed: `Store.ValidateToken` uses `subtle.ConstantTimeCompare`
-  (`internal/hub/store.go:174-189`) against the token fetched via the
-  `tokenIdx map[string]int` index (`store.go:162,178`) — no linear scan
-  remains. Pinning regression test:
-  `TestStoreValidateToken_RejectsNearMissTokens`
-  (`internal/hub/store_test.go:168`) seeds a valid token and asserts that
-  near-miss / longer / shorter / shared-prefix / case-variant tokens all
-  return nil, locking in the constant-time-compare contract.
 
-- [x] Add input validation to hub Publish handler: reject empty ID, validate
-  Type against allowed set (decision/learning/convention/task), enforce Content
-  length limit (1MB), require non-empty Origin. Prevents garbage data and DoS
-  via unbounded content. #priority:high #added:2026-04-08-194430 #completed:
-  2026-05-23
-  All four sub-items shipped in `internal/hub/validate_entry.go:28-53`,
-  invoked per-entry by `internal/hub/handler.go:86-90` before append:
-  empty-ID → `ErrEntryIDRequired`; Type checked against
-  `cfgEntry.AllowedTypes` (`internal/config/entry/entry.go:43-44`) →
-  `ErrInvalidEntryType`; non-empty Origin → `ErrEntryOriginRequired`;
-  `len(Content) > cfgHub.MaxContentLen` (1 << 20 = 1 MB,
-  `internal/config/hub/hub.go:212-213`) → `ErrEntryContentOversize`.
-  Bonus hardening beyond the ask: full Meta validation in
-  `validateEntryMeta` / `metaCharCheck` (`validate_entry.go:72-137`) —
-  per-field cap (`MaxMetaFieldLen=256`), total cap (`MaxMetaTotalLen=2048`),
-  and control-character rejection guarding against
-  audits.jsonl log-injection, `.context/hub/*.md` markdown-injection,
-  and frontmatter confusion. Regression tests in
-  `internal/hub/entry_validate_test.go`: `EmptyMetaAccepted`,
-  `MetaRoundTrip`, `MetaFieldOversize`, `MetaTotalOversize`,
-  `MetaControlCharRejected`, `MetaTabAllowed`.
 
-- [x] Fix ctx connect listen: currently only does initial sync then blocks on
-  ctx.Done() without ever calling the Listen RPC. Must stream entries in
-  real-time via the server-streaming Listen RPC, writing to .context/shared/ as
-  entries arrive. #priority:high #added:2026-04-08-194415 #completed:2026-05-23
-  `internal/cli/connection/core/listen/listen.go:32-72` `Run` now invokes
-  the server-streaming `client.Listen(ctx, cfg.Types, 0, callback)` at
-  line 53-65. Each `hub.EntryMsg` is rendered via
-  `render.WriteEntries` (`internal/cli/connection/core/render/render.go:27`)
-  which appends to type-specific files under `.context/hub/`
-  (implementation chose `.context/hub/` over the task's original
-  `.context/shared/` wording — directory naming converged on `hub/`
-  during the hub-rename phase). Ctrl-C handled cleanly via
-  `signal.NotifyContext`; expected context cancellation returns nil
-  (lines 46-49, 67-71).
 
-- [x] Deprecate and remove `ctx backup`: hub handles cross-machine persistence,
-  backup is environment-specific (SMB/GVFS/rsync), and it is the wrong layer
-  for ctx to own. Replace with a backup-strategy runbook. About 60 files to
-  remove across CLI, config, hooks, docs, skills. Implementation order: runbook
-  first, then hook removal, then command removal, then docs cleanup.
-  Spec: specs/deprecate-ctx-backup.md #priority:medium
-  #added:2026-04-04-010000 #updated:2026-04-16 #completed:2026-05-23
-  Spec archived to `specs/future-complete/deprecate-ctx-backup.md`.
-  Runbook published at `docs/operations/runbooks/backup-strategy.md`
-  ("`ctx backup` was removed. File-level backup is not `ctx`'s [job]").
-  Command gone: no `internal/cli/backup/`, no `cmd/backup.go`.
-  `internal/err/backup/doc.go:16` now references it as "The former
-  `ctx backup` command". Intentional survivors per spec line 155:
-  `internal/cli/initialize/core/backup` (init's config-backup
-  mechanism, explicitly kept) and `internal/err/backup` (historical
-  error types). Co-archived cleanups:
-  `specs/future-complete/cli-namespace-cleanup.md`,
-  `specs/future-complete/ai-typography-cleanup.md`.
 
 ### Architecture Docs
 
-- [-] Publish architecture docs to docs/: copy ARCHITECTURE.md,
-  DETAILED_DESIGN domain files, and CHEAT-SHEETS.md to docs/reference/.
-  Sanitize intervention points into docs/contributing/.
-  Exclude DANGER-ZONES.md and ARCHITECTURE-PRINCIPAL.md (internal only).
-  Spec: specs/publish-architecture-docs.md #priority:medium
-  #added:2026-04-03-150000 #skipped:2026-05-23
-  Decided not to ship. Reasons: (1) audience is maintainer-focused —
-  anyone wanting DETAILED_DESIGN depth can read it on GitHub from the
-  canonical `.context/` source; (2) AI-generated content would require
-  a permanent human editorial pass before each publish; (3) every
-  architecture change forces a re-run + re-publish loop or accepts
-  known staleness in the public docs site; (4) the marginal
-  discoverability gain doesn't justify importing that maintenance
-  burden into the docs pipeline. If discoverability ever becomes a
-  real ask, cheap fallback is a one-page
-  `docs/contributing/architecture.md` that links to the GitHub-hosted
-  `.context/ARCHITECTURE.md` — pointer, not a copy. Replay note: do
-  not re-open without revisiting these four reasons.
 
-- [x] Update ctx-architecture skill to append discovered terms to GLOSSARY.md
-  during Phase 3. Additive only, max 10 terms per run, project-specific only,
-  alphabetical insertion, skip if GLOSSARY.md empty. Print added terms in
-  convergence report. Spec: specs/publish-architecture-docs.md #priority:low
-  #added:2026-04-03-153000 #completed:2026-05-24
-  All seven sub-rules landed in
-  `internal/assets/claude/skills/ctx-architecture/SKILL.md`: Phase 3
-  GLOSSARY.md section at lines 370-388 (additive, max-10, project-
-  specific allowlist, alphabetical insertion, `**Term**: definition`
-  format, "Glossary additions" convergence-report line), with the
-  acceptance checklist pinning the contract at lines 945-948.
-  Intentional semantic refinement: the spec said "skip if empty"; the
-  skill ships "skip if file does not exist" — file-absence is the
-  unambiguous opt-out signal, file-present-and-empty is a deliberate
-  invitation to populate. `.context/GLOSSARY.md` exists in this
-  project, so the opt-in is active. Spec `specs/publish-architecture-
-  docs.md` stays in place (not moved to `future-complete/`) because
-  the sibling line-463 task is `[-]` skipped, not done — the spec is
-  half-done / half-wontdo.
 
 ### Code Cleanup Findings
 
@@ -679,11 +251,6 @@ Important things that agent (or human) yeeted to the future.
 
 ### Phase -3: DevEx
 
-- [-] Create ctx-docstrings skill: audit and fix docstrings
-  against CONVENTIONS.md Documentation section. Superseded by
-  TestDocCommentStructure compliance test (68 grandfathered).
-  #added:2026-03-20-163413
-  #added:2026-03-16-114445
 
 ### Phase -2: Task completion nudge:
 
@@ -711,45 +278,6 @@ Important things that agent (or human) yeeted to the future.
       Reference implementation: kubernetes-service enrichment pass
       2026-03-25. #added:2026-03-25-120000
 
-- [x] ctx-architecture-failure-analysis #completed:2026-05-24
-  **Context**: Adversarial analysis skill that identifies where
-  a codebase will silently betray you. Requires
-  `ctx-architecture` artifacts as input (ARCHITECTURE.md,
-  DETAILED_DESIGN*.md, map-tracking.json). Does its own
-  targeted deep reads focusing on mutation points, shared
-  mutable state, error swallowing, concurrency, implicit
-  ordering, missing enforcement, and scaling cliffs. Uses
-  available tooling (GitNexus, Gemini Search) to
-  cross-reference patterns.
-
-  Produces `DANGER-ZONES.md` — a ranked inventory of silent
-  failure points with: location, failure mode, blast radius,
-  detection gap, and suggested fix. Two tiers: "most likely to
-  cause production incidents" and "less likely but equally
-  dangerous."
-
-  Distinct from a security threat model (which would be
-  `ctx-threat-model` — a separate skill for auth bypass,
-  injection, privilege escalation, supply chain). This skill
-  focuses on correctness: race conditions, ordering
-  assumptions, cache staleness, fan-out amplification,
-  non-atomic ownership, inverted logic, force-delete orphans,
-  global state mutation.
-
-    - [x] Design SKILL.md for ctx-architecture-failure-analysis:
-      inputs (architecture artifacts), analysis phases, output
-      format (DANGER-ZONES.md), quality checklist
-      #added:2026-03-25-060000
-    - [x] Define the adversarial analysis framework: categories
-      of silent failure (concurrency, ordering, cache,
-      amplification, ownership, error swallowing, global state)
-      with heuristics for each #added:2026-03-25-060000
-    - [x] Implement skill with GitNexus integration: use impact
-      analysis for blast radius estimation, use context for
-      shared-state detection #added:2026-03-25-060000
-    - [x] Add Gemini Search integration: cross-reference
-      discovered patterns against known failure modes in similar
-      systems. #added:2026-03-25-060000
 
 - [ ] ctx-architecture-next — fourth step in the architecture
   pipeline (map → enrich → hunt → **prescribe**).
@@ -799,40 +327,6 @@ Important things that agent (or human) yeeted to the future.
       sequence; each step's output feeds the next".
       #priority:medium #added:2026-05-23
 
-- [-] ctx-architecture-extend
-  Skipped: extension point analysis is covered by /ctx-architecture
-  DETAILED_DESIGN (per-module) and /ctx-architecture-enrich
-  (registration sites). A fourth skill fragments the pipeline
-  without enough distinct value. Three is the right number:
-  map, enrich, hunt.
-  **Context**: Companion to `ctx-architecture` and
-  `ctx-failure-analysis`, completing a trilogy: how does it
-  work → where will it break → where does it grow. Reads
-  architecture artifacts → identifies registration patterns
-  (interfaces, factory functions, plugin systems, ordered
-  slices, scheme registrations) → traces recent additions via
-  git log to confirm which extension points are actually used
-  → produces `EXTENSION-POINTS.md` ranked by frequency, with
-  exact file locations, function signatures, and the typical
-  feature pattern (e.g., "most features require a variable +
-  a mutator + a machine-agent task").
-
-  Valuable for onboarding ("I need to add feature X, where do
-  I start?") and architecture review ("are we adding features
-  in the right places?").
-
-    - [-] Design SKILL.md for ctx-extension-map
-      Skipped: parent task skipped.
-      #added:2026-03-25-062000
-    - [-] Define extension point detection heuristics
-      Skipped: parent task skipped.
-      #added:2026-03-25-062000
-    - [-] Add git log frequency analysis
-      Skipped: parent task skipped.
-      #added:2026-03-25-062000
-    - [-] Integrate with GitNexus for registration sites
-      Skipped: parent task skipped.
-      #added:2026-03-25-062000
 
 ### Phase CT: Companion Tool Integration
 
@@ -896,11 +390,7 @@ any P0.9 task.
 
 **Phase 3 — Skill integration:**
 
-- [-] P0.9.2: Split cli-reference.md — moved to Future
-  #added:2026-02-24-204208
 
-- [-] P0.9.3: Investigate proactive content suggestions — moved to Future
-  #added:2026-02-24-185754
 
 ### Phase 0.8: RSS/Atom Feed Generation (`ctx site feed`)
 
@@ -939,9 +429,6 @@ P0.4.10 task.
 - [ ] Systematic audit: extract all magic flag name strings across CLI commands
   into config/flag constants #added:2026-03-20-175155
 
-- [-] Move generic string helpers from cli/add/core/strings.go to
-  internal/format — file no longer exists, helpers already moved or deleted
-  #added:2026-03-20-175046
 
 - [ ] Add missing flag name constants (priority, section, file) and priority
   level constants (high, medium, low) to config/flag #added:2026-03-20-170842
@@ -1006,9 +493,6 @@ Import entries from Claude Code's MEMORY.md into structured `.context/` files
 using heuristic classification. Builds on Phase MB foundation (discover,
 mirror, state).
 
-- [-] MI.future: `--interactive` mode for agent-assisted classification —
-  skipped: `--dry-run` covers review; agents can use `ctx add` directly for
-  overrides; interactive CLI prompts don't compose with agent workflows
 
 ### Phase S-3: Blog Post — "Agent Memory is Infrastructure"
 
@@ -1201,32 +685,14 @@ Taxonomy (from prefix analysis):
   user-provided YAML that overlays or replaces built-in text. This enables i18n
   without forking. #priority:low #added:2026-03-07-233756
 
-- [-] Cleanup internal/cli/system/core/persistence.go: move 10 (base for
-  ParseInt) to config constant — not actionable, 10 is stdlib decimal base
-  convention, not a magic number #priority:low #added:2026-03-07-220825
-
-- [-] Cleanup internal/cli/system/core/session_tokens.go: move SessionStats from
-  state.go to types.go — file and type no longer exist, refactored away
-  #priority:low #added:2026-03-07-220825
 
 
-- [-] SMB mount path support: add `CTX_BACKUP_MOUNT_PATH` env var so
-  `ctx backup` can use fstab/systemd automounts instead of requiring GVFS.
-  Spec: specs/smb-mount-path-support.md #priority:medium
-  #added:2026-04-04-010000
-  **Skipped 2026-04-16**: Duplicate of line 214. Superseded by
-  specs/deprecate-ctx-backup.md (full removal, not mount path fix).
+
 
 - [ ] Make AutoPruneStaleDays configurable via ctxrc. Currently hardcoded to 7
   days in config.AutoPruneStaleDays; add a ctxrc key (e.g., auto_prune_days) and
   fallback to the default. #priority:low #added:2026-03-07-220512
 
-- [-] Refactor check_backup_age/run.go: move consts (lines 23-24) to config,
-  magic directories (line 59) to config, symbolic constants for strings (line
-  72), messages to assets (lines 79, 90-91), extract non-Run functions to
-  system/core, fix docstrings #priority:medium #added:2026-03-07-180020
-  **Skipped 2026-04-16**: Superseded by specs/deprecate-ctx-backup.md
-  (check_backup_age will be removed entirely, not refactored).
 
 - [ ] Add ctxrc support for recall.list.limit to make the default --limit for
   recall list configurable. Currently hardcoded as config.DefaultRecallListLimit
@@ -1522,28 +988,11 @@ Eliminates `jq` build dependency. Testable, cross-platform.
 - [ ] Replace hack/lint-drift.sh with AST-based Go tests in internal/audit/.
   Spec: `specs/ast-audit-tests.md` #added:2026-03-23-210000
 
-- [ ] Rewrite lint-style scripts in Go as ctxctl subcommands —
-  blocked: prerequisite ctxctl does not exist yet. Deferred.
-  #added:2026-03-29-082958
+- [ ] Rewrite lint-style scripts in Go as ctxctl subcommands.
+  Unblocked 2026-05-28: ctxctl now exists (`tools/ctxctl`, PR #104),
+  so the prerequisite is met; would land as `ctxctl check` / lint
+  subcommands per the CLI-surface tasks below. #added:2026-03-29-082958
 
-- [ ] **Bootstrap `cmd/ctxctl` with the audit channel as its first
-  inhabitant.** Create the maintainer binary (same module, per this
-  section's dividing line — NOT a separate go.mod; rationale: keeps
-  the ~25 audit files in `internal/` reusable, and binary-level
-  import-graph isolation keeps them out of the `ctx` binary anyway).
-  Move the audit channel out of `ctx`: drop `audit.Cmd` from
-  bootstrap/group.go, drop `checkaudit.Cmd()` from system.go, remove
-  `check-audit` from the shipped hooks.json (resolves the
-  deliberately-dirty working-tree edit), and re-expose as `ctxctl
-  audit list/show/dismiss` + `ctxctl audit-relay`. Wire ctx's
-  repo-local (gitignored) `.claude/settings.local.json` to call
-  `ctxctl audit-relay`. Refines the Phase-BT rule "hooks must call
-  ctx" → shipped hooks call ctx, repo-local dev hooks may call ctxctl.
-  Driver: the audit channel (shipped in aefce517) is maintainer
-  tooling — its UserPromptSubmit hook would tax every end user's
-  every prompt for a feature they never use. Unblocks the
-  build/release subcommands below. Spec: specs/ctxctl-bootstrap.md
-  #priority:high #added:2026-05-24
 
 Dividing line: `ctx` is the user/agent tool, `ctxctl` is
 the maintainer/contributor
@@ -1597,21 +1046,6 @@ Not a fit (keep in `ctx`):
   graph/RAG MCP is configured in .ctxrc, verify connection status, recommend
   installation if missing #added:2026-03-25-120000
 
-- [-] Explore pluggable graph tool interface — replace hardcoded GitNexus
-  references in skill text with configurable .ctxrc graph_tool key. Skills use
-  template placeholder instead of literal tool names. Define minimum interface
-  contract (query, context, impact). Spec:
-  `ideas/spec-mcp-warm-up-ceremony.md` #added:2026-03-25-120000
-  **Skipped 2026-05-23**: contradicts the committed-to-GitNexus
-  direction recorded in DECISIONS.md "MCP gateway not worth the
-  coupling cost". Pluggable abstraction implies multiple
-  candidate graph tools, which in turn implies ctx vouches for
-  the interface contract across implementations — exactly the
-  ownership coupling we're avoiding. If a second viable graph
-  tool emerges that's worth the cost of pluggability, revisit
-  by un-skipping; the design sketch in
-  `ideas/spec-mcp-warm-up-ceremony.md` stays available as the
-  starting point.
 
 ### Phase: ctx Hub follow-ups (PR #60)
 
@@ -1861,12 +1295,6 @@ This framing is load-bearing: it communicates the
 design intent (nothing you don't opt into) without
 claiming a literal falsehood.
 
-- [-] `docs/thesis/index.md:412` (the primitive
-  comparison table saying "Document: Zero-dependency:
-  Yes"): left intact. The claim is about the document
-  primitive itself (markdown files have no runtime
-  deps), not about ctx as an implementation. Accurate.
-  #added:2026-04-11 #skipped:primitive-claim-is-correct
 - [ ] Add a design-invariants reference note: the
   blanket claim "dependency-free" MUST NOT be
   reintroduced in new docs. Any new framing should use
@@ -2212,8 +1640,6 @@ disambiguates.
   #session:4b37e2f6 #branch:feat/copilot-cli-skill-parity-rebased
   #commit:edaac81786c9379333b352dae0d55df0ae0f72bb #added:2026-04-14-010311
 
-- [-] PROMPT.md design — belongs in another project; skipped here.
-  #session:4b37e2f6 #added:2026-04-14-010311 #skipped:2026-04-14
 
 ### Phase CP: Ceremony Profiles `#priority:medium #added:2026-04-26`
 
@@ -2252,30 +1678,6 @@ Tightens existing capture skills to sibling-project rigor before the editorial
 pipeline (Phase KB) lifts that pattern
 wholesale. Independent of Phase RG; both can ship in parallel.
 
-- [x] Add `MarkFlagRequired` to `ctx decision add` for `--context`,
-  `--rationale`, `--consequence`; reject placeholder
-  values (`TBD`, `see chat`, whitespace-only) at CLI level
-- [x] Add `MarkFlagRequired` to `ctx learning add` for `--context`, `--lesson`,
-  `--application`; same placeholder
-  rejection
-- [x] Add `--brief <path>` flag to `/ctx-spec` skill: when present, read the
-  file as authoritative source per the
-  sibling's authority order (frozen contracts > recorded decisions > debrief >
-  agent inference labeled `TBD`); skip the
-  fresh template Q&A
-- [x] Update `/ctx-plan` skill to always offer to write the debated brief to
-  `.context/briefs/<TS>-<slug>.md` at the end
-  of an interview (creating `.context/briefs/` if absent)
-- [x] Add an `Authority boundary (vs other skills)` section to
-  `/ctx-decision-add`, `/ctx-learning-add`,
-  `/ctx-task-add`, `/ctx-convention-add` skill files (prevent silent promotion
-  handover→decision, learning→convention,
-  etc., without explicit user ask)
-- [x] Standardize "light compression for clarity is allowed; new facts are not"
-  wording across capture skills (decide /
-  learn primarily); same wording lands in `/ctx-handover` once Phase KB ships
-- [x] Document the `--brief` contract in `docs/skills.md` (landed in
-  `docs/reference/skills.md`; the actual location)
 
 ### Phase RG: Require Git as Architectural Precondition (Phase 0b; prerequisite for Phase KB)
 
@@ -2288,48 +1690,11 @@ repo present, and this phase makes that a runtime precondition rather than
 an assumption. Breaking change for any pre-existing git-less ctx project
 (N≈0 in practice). Independent of Phase SK; both can ship in parallel.
 
-- [x] Add `internal/gitmeta/require.go` with `RequireGitTree(projectRoot string)
-  error` and typed `MissingGitError`
-- [x] Wire `RequireGitTree` into root command PersistentPreRunE; opt-out list
-  (via the existing
-  `AnnotationSkipInit` mechanism that already covers `--help`, `--version`, `ctx
-  system bootstrap`, init,
-  activate, deactivate, guide, why, doctor, config switch/status, hub *)
-- [-] Update `ctx init` to call `RequireGitTree` first. N/A: `ctx init` is
-  `AnnotationSkipInit`; the precondition
-  check moved to the init command body in Phase KB Stage 5 alongside `--upgrade`
-- [-] Remove `commit:none` fallback from `internal/gitmeta/resolvehead.go`. N/A:
-  `resolvehead.go` is
-  net-new in this phase; no fallback to remove
-- [-] Remove `commit:none` advisory + counts from
-  `internal/cli/doctor/advisory.go`. Verified by grep:
-  no `commit:none` / `commit=\"none\"` literal exists in `internal/` already
-- [-] Audit `internal/cli/<various>/cmd.go` for any other `commit:none` fallback
-  handling; remove. Same:
-  audit by grep returned zero matches
-- [x] Add CONSTITUTION.md amendment ("Git is required") under Process Invariants
-- [x] Add DECISIONS.md entry: "Mandate git as architectural precondition"
-  (Accepted; context = LLM-safety + provenance
-  honesty + dead-code elimination; consequence = breaking change for
-  pre-existing git-less projects, N≈0).
-  Filed as DECISIONS.md "Phase KB lifts the current upstream editorial-pipeline
-  shape, superseding the 4-phase predecessor"
-  (2026-05-16) which folds the git-mandate context into Phase KB's parent
-  decision.
 - [ ] Update `docs/recipes/bootstrap-a-project.md`, `README.md`,
   `docs/cli/init.md` to show `git init` before `ctx init`
 - [ ] Tag as breaking change in `dist/RELEASE_NOTES.md` with one-command
   migration ("Run `git init` in any pre-existing
   git-less ctx projects before upgrading")
-- [x] Tests: `.git` dir → nil; `.git` file (worktree pointer) → nil; absent
-  → typed error
-- [-] Tests: root PreRunE refuses without git; opt-out list allowed. TBD:
-  deferred to Phase KB Stage 5 when
-  the kb command tree is in place (the existing bootstrap_test.go covers PreRunE
-  structure; the gitmeta
-  injection's behavioral test runs as part of the kb-ingest smoke)
-- [-] Compliance test: no remaining `commit:none` literal in `internal/`. N/A:
-  literal never existed
 
 ### Phase KB: Editorial Pipeline + Handover (depends on Phase SK + Phase RG)
 
@@ -2366,85 +1731,19 @@ historical for traceability; implementation follows the revised spec.
 
 Path constants and embedded templates:
 
-- [x] Constants landed at `internal/config/kb/kb.go` (filenames + subdir names +
-  state-machine constants + pass-mode + life-stage) and
-  `internal/cli/kb/core/path/path.go` (full-path resolvers: KBDir, KBTopicDir,
-  IngestDir, CloseoutsDir, SchemasDir, HandoversDir, ArchiveCloseoutsDir,
-  SiteDir, SiteKBDir). Per the per-subcommand convention; not `internal/path/`.
-- [x] Templates embedded under `internal/assets/kb/templates/ingest/`:
-  KB-RULES.md, 00-GROUND.md, 30-INGEST.md, 40-ASK.md, 50-SITE_REVIEW.md,
-  OPERATOR.md, PROMPT.md. INBOX.md and SESSION_LOG.md not pre-seeded; they
-  materialise on first skill run (per the contract that skills are the sole
-  writers of INBOX.md and SESSION_LOG.md only appears mid-flight).
-- [x] Schemas embedded under `internal/assets/kb/templates/ingest/schemas/`:
-  evidence-index.md, glossary.md, contradictions.md, outstanding-questions.md,
-  domain-decisions.md, timeline.md, source-map.md, source-coverage.md,
-  relationship-map.md, session-log.md (10 files; fields + one worked example
-  each)
-- [x] `internal/assets/embed.go` extended with `//go:embed` lines for the kb
-  tree
 
 Store layer (landed under `internal/write/` per the revised spec, not
 `internal/store/`):
 
-- [x] `internal/write/handover/` (WriteHandover, Latest, fold via
-  closeout.PostdatedBy, archive via closeout.Archive)
-- [x] `internal/write/closeout/` (Write, Read, List, PostdatedBy, Archive;
-  required frontmatter sha/branch/mode/pass-mode/life-stage/generated-at;
-  ErrMissingFrontmatter, ErrMissingFields)
-- [x] `internal/write/kb/` split across 9 subpackages, not a single kb.go:
-  evidence (no-renumber, ID allocation, ErrDuplicateID/ErrInvalidBand),
-  sourcecoverage (state-machine ledger with ValidTransition +
-  ErrIllegalTransition + ErrUnknownSource), glossary, contradiction, question,
-  decision, timeline, sourcemap, relationship
 
 CLI commands:
 
-- [x] `ctx handover write`: `MarkFlagRequired` on `--summary` and `--next`;
-  rejects placeholder values (TBD, see chat, n/a, none); calls
-  `internal/write/handover.Write` which folds postdated closeouts (`--no-fold`
-  skips fold); supports `--commit`, `--highlights`, `--open-questions`;
-  smoke-tested end-to-end
-- [x] `ctx kb` parent command + `topic new` (real scaffold writer), `note` (real
-  append to findings.md), `reindex` (real CTX:KB:TOPICS managed-block refresh in
-  kb/index.md), `ingest`/`ask`/`site-review`/`ground` (skill-driven;
-  refuse-on-empty for ingest/ask/ground); smoke-tested
-- [x] KB rendering: `.context/kb/` is a tree of Markdown that
-  `ctx serve` already serves once a `zensical.toml` is dropped in. Recipe
-  Step 5 documents the path. A thin `ctx kb site (build|serve|customize)`
-  wrapper that mirrors `internal/cli/journal/cmd/site/` and pre-seeds the
-  `zensical.toml` is a follow-up convenience, not a blocker.
-- [x] `ctx init` scaffolds `.context/kb/`, `.context/kb/topics/`,
-  `.context/ingest/` (with embedded templates copied),
-  `.context/ingest/closeouts/`, `.context/ingest/schemas/` (10 schemas copied),
-  `.context/handovers/`. Implemented in new `internal/cli/initialize/core/kb/`
-  package called from init's run.go. `--upgrade` flag: not added; init's
-  existing skip-existing-files behavior is idempotent on byte-identical content
-  (the divergence-refusal needs a separate `--upgrade` follow-up).
 
 Skills:
 
-- [x] 6 new SKILL.md files: ctx-handover (280L), ctx-kb-ingest (645L),
-  ctx-kb-ask (236L), ctx-kb-site-review (259L), ctx-kb-ground (279L),
-  ctx-kb-note (164L)
-- [x] Modified `ctx-wrap-up/SKILL.md`: branches on `.context/kb/` existence
-  (surfaces pending closeouts + outstanding-questions count); mandatorily drives
-  `/ctx-handover` as final step
-- [x] Modified `ctx-remember/SKILL.md`: reads latest handover + postdated
-  unfolded closeouts; folds KB state into readback when `.context/kb/` exists
 
 Doctor / status / .gitignore:
 
-- [-] Doctor advisories: NOT YET IMPLEMENTED. Spec lists duplicate-`EV-###`,
-  `dated:`-source-missing-`occurred:`, malformed-closeout-frontmatter,
-  source-coverage-ledger-mismatch (row Updated vs. file mtime),
-  closeout-missing-pass-mode-body-block, illegal-ledger-state-transition. Phase
-  7 follow-up.
-- [-] Mode-aware reads in ctx status / ctx agent / session-start hook: skills
-  updated (`/ctx-remember` + `/ctx-wrap-up`); CLI-side `ctx status`/`ctx agent`
-  mode-awareness deferred (the skill-side fold covers the user-facing recall;
-  CLI text surfaces are v1.1).
-- [x] `.gitignore` extended: `.context/site/`, `.context/site-config/`
 
 Tests:
 
@@ -2472,31 +1771,9 @@ Phase KB-2 (validation against live corpus):
 
 Phase KB-3 (documentation):
 
-- [x] Write `docs/recipes/build-a-knowledge-base.md` (mirrors sibling's recipe
-  shape)
-- [x] Write `docs/recipes/typical-kb-session.md`
-- [x] Write `docs/recipes/recover-aborted-session.md`
-- [x] Update CLI reference with new `ctx kb` and `ctx handover` commands (landed
-  as separate pages: `docs/cli/kb.md` for the editorial pipeline and
-  `docs/cli/handover.md` for the session-glue command; the two are unrelated
-  surfaces and now have distinct pages)
-- [x] Update `docs/reference/skills.md` with the 6 new skills (table row +
-  per-skill section + new "Knowledge Base (Phase KB)" section)
-- [x] Update root `README.md` with the Phase KB workflow snippet + git-required
-  note
-- [x] Update root `CLAUDE.md` and `internal/assets/claude/CLAUDE.md` (the
-  user-deployed copy) with the KB trigger table
-- [x] Update `dist/RELEASE_NOTES.md` with Phase RG + Phase KB sections
 - [ ] Document MemPalace-as-ground-source recipe in
   `docs/recipes/build-a-knowledge-base.md`; uses already-specced
   `mcp:<server>:<resource>` syntax in `grounding-sources.md`; zero new ctx code
-- [x] Replace the `ErrMsg`-string-sentinel anti-pattern across
-  `internal/config/{handover,closeout,gitmeta,kb/cli,kb/evidence,kb/sourcecoverage,rc,initialize,schema}/`.
-  Sentinels became `entity.Sentinel` typed-string consts whose `Error()`
-  resolves text from `commands/text/errors.yaml` via
-  `desc.Text(text.DescKey...)` at call time. Pre-existing convention
-  reference: `internal/err/context/NotFoundError` (commit `e524dd98`).
-  Captured as a learning to prevent recurrence.
 
 - [ ] Bug / gap: Phase KB scaffold has no retrofit path for projects
   that pre-date the kb subsystem. `coreKB.Scaffold(contextDir)` is
@@ -2541,10 +1818,6 @@ the source-coverage ledger has the row at `comprehensive` (or
 honestly at `topic-page-drafted` if the page is good but the
 ledger admits residue).
 
-- [x] `vllm` — landing page ingested 2026-05-21 in this branch's
-  scaffold pass. Page deferred (build-validation gap); follow-up
-  per-category deep dive tracked via the source-coverage ledger.
-  See `.context/kb/topics/vllm/index.md`.
 
 - [ ] `claude-code` — Anthropic's official CLI for Claude. Surface
   to study: hooks, slash commands, skills (`~/.claude/skills/`),
@@ -2899,6 +2172,14 @@ DR-kb session a5736210 closeouts under
       hook into `.claude/settings.local.json` as a real UserPromptSubmit
       handler. Open questions in spec: naming collision with
       `internal/audit/` AST-tests package; shared skill-helpers library.
+      Partially shipped via the ctxctl migration (PR #104): the
+      repo-local `.claude/settings.local.json` hook is wired as a real
+      UserPromptSubmit handler (`ctxctl audit-relay`); the
+      `internal/audit/` naming collision is resolved (audit logic moved
+      under `internal/ctxctl/`, AST checks made parallel-taxonomy-aware);
+      stale-report escalation shipped. Remaining: auto-dismissal on
+      detected resolution; sibling skills `/ctx-spec-trailer-audit` and
+      `/ctx-capture-audit`; shared skill-helpers.
 
 ## Future
 

@@ -9,43 +9,41 @@ package reindex
 import (
 	"errors"
 	"os"
-	"path/filepath"
 	"sort"
 
-	cfgKB "github.com/ActiveMemory/ctx/internal/config/kb"
 	errKbCli "github.com/ActiveMemory/ctx/internal/err/kb/cli"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
-// ListTopics returns every subdirectory of topicsDir that
-// contains an index.md file. Slugs are returned sorted.
+// ListTopics returns every topic slug under topicsDir: the
+// slash-separated path, relative to the topics root, of each
+// directory that holds a topic index.md. The scan is recursive, so
+// a grouped layout (topics/<group>/<slug>/index.md) enumerates as
+// "<group>/<slug>". A directory whose index.md sits above nested
+// topics is a group-landing (orientation) page, not a topic, and is
+// excluded. Slugs are returned sorted.
 //
 // Parameters:
 //   - topicsDir: absolute path to .context/kb/topics/.
 //
 // Returns:
-//   - []string: sorted topic slugs (slashes preserved for
+//   - []string: sorted topic slugs (slashes preserved for grouped /
 //     vendor-namespaced topology).
 //   - error: wrapped enumeration failure.
 func ListTopics(topicsDir string) ([]string, error) {
-	entries, readErr := os.ReadDir(topicsDir)
-	if readErr != nil {
-		if errors.Is(readErr, os.ErrNotExist) {
+	if _, statErr := io.SafeStat(topicsDir); statErr != nil {
+		if errors.Is(statErr, os.ErrNotExist) {
 			return nil, nil
 		}
-		return nil, errKbCli.ReadTopicsDir(readErr)
+		return nil, errKbCli.ReadTopicsDir(statErr)
 	}
-	var slugs []string
-	for _, e := range entries {
-		if !e.IsDir() {
-			continue
-		}
-		// Test if <topicsDir>/<name>/index.md exists.
-		idx := filepath.Join(topicsDir, e.Name(), cfgKB.TopicIndex)
-		if _, statErr := io.SafeStat(idx); statErr == nil {
-			slugs = append(slugs, e.Name())
-		}
+
+	indexed := make(map[string]bool)
+	if walkErr := collectTopicDirs(topicsDir, "", indexed); walkErr != nil {
+		return nil, errKbCli.ReadTopicsDir(walkErr)
 	}
+
+	slugs := topicLeaves(indexed)
 	sort.Strings(slugs)
 	return slugs, nil
 }
