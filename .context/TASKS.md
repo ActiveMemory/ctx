@@ -2042,6 +2042,14 @@ the zensical shell-out pattern (recommended).
 
 `#priority:medium #added:2026-05-23`
 
+**Hub relevance** (flagged 2026-05-28, hub workstream; not a re-file):
+cross-tenant ingestion (the `consumed` relation, D3) appends `EV-###`
+rows in the *consuming* tenant via the exact
+anchor-Edit-on-prior-tail-row + verify-with-awk dance this phase
+codifies away. A typed `ctx kb ev append` de-risks the hub's
+cross-tenant ingest path directly, not just single-tenant
+`/ctx-kb-ingest`.
+
 **Pain point**: agents performing `/ctx-kb-ingest` passes append `EV-###`
 rows to `.context/kb/evidence-index.md` via the Edit tool. The append-only
 invariant means new rows go at the bottom; never reordered, never
@@ -2210,3 +2218,7 @@ DR-kb session a5736210 closeouts under
   we need to sit down and spend as much time as needed. For two reasons:
   If we (humans) don't understand the codebase fully, how can we guide AI?
   And secondly, a human scan can detect things that AI cannot find by itself.
+
+### Phase CLI-FIX: CLI Infrastructure Fixes
+
+- [ ] Reindex grouped-emit (ctx-side): RenderBlock should emit the CTX:KB:TOPICS managed block grouped by parent folder (### <group> headings) instead of one flat sorted list, for grouped kbs like things-wtf-dr (49 topics). ListTopics already returns slashed group/slug slugs (PR #106, spec specs/kb-reindex-nesting.md) so only RenderBlock + the consumer-facing block-format contract change; must still handle ungrouped/flat top-level topics. Deferred from the kb-reindex fix (managed-block format change). #priority:high active dependent work in the hub/other workstream; natural owner is ctx-side (ListTopics already recursive). #session:cf14dd25 #branch:main #commit:aae42fe8 #added:2026-05-28-215308

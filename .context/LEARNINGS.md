@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-28 | ctx kb: single topic-enumeration site; life-stage count is consumer-side |
 | 2026-05-28 | Swap occupancy is not memory pressure — use the kernel's derivative |
 | 2026-05-28 | A non-root Go module nested under the main module's path CAN import its internal/ packages |
 | 2026-05-28 | cobra's legacyArgs lets unknown subcommands silently succeed on non-root groups |
@@ -162,6 +163,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-28-215214] ctx kb: single topic-enumeration site; life-stage count is consumer-side
+
+**Context**: kb reindex blanked the CTX:KB:TOPICS block for grouped kbs (things-wtf-dr regrouped 49 topics into folders); the task speculated a sibling life-stage topic-count glob was also affected.
+
+**Lesson**: reindex.ListTopics (internal/cli/kb/core/reindex/topic.go) is the ONLY topic enumeration/count in ctx, and CTX:KB:TOPICS is the only managed block. The life-stage concept in ctx is the ingest/closeout frontmatter field, unrelated to topics. Any per-life-stage topic count lives in the consumer kb, which ctx neither generates nor owns.
+
+**Application**: Localize nested-topic fixes to ListTopics; treat per-group/per-life-stage topic counts as consumer territory (same recurse + exclude-group-landing pattern, fixed in their repo).
 
 ---
 

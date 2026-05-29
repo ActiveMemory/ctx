@@ -52,8 +52,8 @@ variants. Linters in `hack/` enforce the hard rules.
 
 - **No Is/Has/Can prefixes**: `Completed()` not
   `IsCompleted()`, `Empty()` not `IsEmpty()`
-- Applies to exported methods that return bool
-- Private helpers may use prefixes when it reads more naturally
+- Applies to all bool-returning funcs and methods, exported or
+  not (`topicNested`, not `hasNestedTopic`)
 
 ## File Organization
 
@@ -377,3 +377,5 @@ resolves correctly under cwd-anchoring).
 
 `tools/ctxctl/` is the first inhabitant. Future maintainer
 binaries follow the same shape.
+
+- Maintainer-only docs (features that run through the ctxctl binary, never shipped to users) live under docs/operations/runbooks/, not docs/recipes/ (user-facing). contributing.md is the entry point that links to the runbook.
