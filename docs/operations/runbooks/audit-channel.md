@@ -3,7 +3,7 @@ title: Out-of-Band Audit Channel
 icon: lucide/scan-eye
 ---
 
-![ctx](../images/ctx-banner.png)
+![ctx](../../images/ctx-banner.png)
 
 ## The Problem
 
@@ -21,7 +21,7 @@ verbatim relay** — the same channel ctx already uses for
 warnings. Agents echo those without filtering, every turn,
 because the relay bypasses judgment.
 
-This recipe shows how to run discipline audits **out of
+This runbook shows how to run discipline audits **out of
 band** (from a separate Claude Code session, on your
 plan-billed subscription, not the working session's API) and
 drop their findings onto the verbatim-relay channel so the
@@ -228,6 +228,6 @@ without touching ctx.
   full design rationale + Open Questions
 - [CONVENTIONS → User-Facing Surface Completeness](https://github.com/ActiveMemory/ctx/blob/main/.context/CONVENTIONS.md):
   the canonical rule the surface audit enforces
-- [Detecting and Fixing Drift](context-health.md):
+- [Detecting and Fixing Drift](../../recipes/context-health.md):
   programmatic drift detection that complements
   judgment-based audits
