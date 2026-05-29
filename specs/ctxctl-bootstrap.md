@@ -252,9 +252,10 @@ Keep as-is:
   `config/*`, `io`, `cli/system/core/nudge`, …) — imported by
   both binaries.
 - `.claude/skills/_ctx-surface-audit/SKILL.md`.
-- `docs/recipes/audit-channel.md` — re-pass once ctxctl exists
-  (invoked via `ctxctl`; hook wired locally, not by `ctx
-  setup`).
+- `docs/operations/runbooks/audit-channel.md` (relocated from
+  `docs/recipes/` — maintainer-only, so it lives with the
+  contributor runbooks) — re-pass once ctxctl exists (invoked via
+  `ctxctl`; hook wired locally, not by `ctx setup`).
 
 ## Testing
 

@@ -39,14 +39,10 @@ TASK STATUS LABELS:
   related-but-distinct gap tasks (shellcheck, PSScriptAnalyzer,
   skill frontmatter validation) listed below.
 
-- [ ] Human: It's about time to go through the entire codebase check for
-  inconsistencies, and move useful functions that are utility and/or reusable
-  to relevant convenience packages.
-
 - [x] Create a typography.md somewhere so that we don't have to remind tha
-  Agent things like this: "❯"## What the editorial pipeline is NOT" our headings 
-  are Title Case, it always has been; it always will be. Do a full sweep. 
-  -- in addition (not checked, just to make sure); `ctx` is always in backticks 
+  Agent things like this: "❯"## What the editorial pipeline is NOT" our headings
+  are Title Case, it always has been; it always will be. Do a full sweep.
+  -- in addition (not checked, just to make sure); `ctx` is always in backticks
   whenever possible; it's part of the branding."
   Landed at `.context/typography.md` (contributor/agent surface, not
   public docs); CONVENTIONS.md points at it. Codifies Title Case, monotype
@@ -69,7 +65,7 @@ TASK STATUS LABELS:
   `TestActivate_DeepSubdir_WithParentContext_Bails` guards the
   regression.
 - [x] Bug: if context is active (eval ctx activate); `ctx init`
-  on a brand new project can (and probably will) fail. 
+  on a brand new project can (and probably will) fail.
   Probably need to nudge user to ctx deactivate first.
   Paired with the activate strict-CWD fix above. Strict activate
   reduces how often this fires (no more silent parent-binds), but
@@ -131,7 +127,8 @@ TASK STATUS LABELS:
   the `internal/config/shell/` package, the `err_activate.go` and
   `activate.go` flag/text files, two recipes (`activating-context.md`,
   `external-context.md`), and YAML entries across
-  `commands.yaml`/`examples.yaml`/`flags.yaml`/`errors.yaml`/`hooks.yaml`/`write.yaml`.
+  `commands.yaml`/`examples.yaml`/`flags.yaml`/`errors.yaml`/`hooks.yaml`/
+  `write.yaml`.
   Hooks migrated: `internal/assets/claude/hooks/hooks.json` now uses
   `cd "${CLAUDE_PROJECT_DIR:?...}" && ctx system <verb>` instead of
   the `CTX_DIR=` prefix; check-anchor-drift hook line removed. Tests
@@ -151,9 +148,9 @@ TASK STATUS LABELS:
   #priority:low #added:2026-05-11 #grounding-gap
   #skipped:2026-05-11 reason: duplicate of original line-30 task
   above, which has now been completed end-to-end. CI uses `npm ci`
-  + `npx tsc --noEmit` (matching the existing `editors/vscode/`
-  convention) rather than Bun; `tsc` is the same compiler either
-  way and `@types/bun` provides Bun globals to the type-checker.
+    + `npx tsc --noEmit` (matching the existing `editors/vscode/`
+      convention) rather than Bun; `tsc` is the same compiler either
+      way and `@types/bun` provides Bun globals to the type-checker.
 
 - [x] Add `shellcheck` gate for embedded shell scripts
   (`internal/assets/integrations/copilot-cli/scripts/*.sh` and
@@ -343,9 +340,196 @@ TASK STATUS LABELS:
   `specs/i18n-fold-helper-and-ban.md`.
   #priority:high #added:2026-05-22 #completed:2026-05-22
 
-### Misc
+## Phase CLI-FIX: CLI Infrastructure Fixes
 
-### Agents
+These have priority because other knowledge ingestion projects depend on them.
+
+- [ ] Add `--json <file>` to `ctx decision/learning/task add` (and `convention`
+  if it gains structured fields) for
+  ingesting a JSON payload that populates the typed fields directly.
+    - Driver: this session hit a class of denial we worked around but should fix
+      at the root. The project's canonical
+      `permissions.deny` set (`.claude/settings.local.json` lines 119-121)
+      matches on the literal Bash command string —
+      including the *content* of `--rationale`/`--context`/`--consequence` flag
+      values. A decision whose rationale
+      legitimately describes installing a binary into the system PATH (literal
+      substring " /usr/local/bin") gets caught
+      by `Bash(* /usr/local/bin*)` and denied, even though the command's intent
+      has nothing to do with that path. The
+      workaround was Edit-direct into DECISIONS.md/LEARNINGS.md, which bypasses
+      the ctx command's schema gates and
+      INDEX:START/END maintenance.
+    - Shape: `ctx decision add --json /path/to/payload.json` where the JSON is
+      `{"title":"…","context":"…","rationale":"…","consequence":"…"}`. The flag
+      supersedes individual content flags.
+      Provenance (--session-id/--branch/--commit) can stay on the command line
+      OR be folded into the JSON envelope ({"
+      provenance":{"session_id":"…","branch":"…","commit":"…"}}). Complements
+      the existing `--file` (which only replaces
+      the title/body positional).
+    - Phase 2 (optional): array form `[{...},{...}]` for batch persists — useful
+      for `/ctx-wrap-up` writing N
+      decisions+learnings in one call instead of N separate invocations.
+    - Mirror per command: same shape applies to `ctx learning add --json …` (
+      {title,context,lesson,application}) and
+      `ctx task add --json …` ({title,body,priority,section}).
+    - Surfaced by: this session's persist denials and post-mortem; reference
+      handover
+      `20260528T201500Z-ctxctl-and-native-pressure-shipped.md`. #priority:medium
+      #session:96765858 #branch:
+      feat/pad-undo-snapshot #commit:b9ce72e8 #added:2026-05-28-154725
+
+- [ ] Exploratory: Windows-native memory-pressure detection for the
+  `check-resource` hook. macOS (
+  `kern.memorystatus_vm_pressure_level`) + Linux (PSI `/proc/pressure/memory`)
+  native pressure detection landed on
+  feat/pad-undo-snapshot, replacing the broken occupancy-% triggers. Windows ("
+  other" platform) currently reports
+  `PressureSupported=false` → no memory alert.
+    - Explore the Windows-native signal: Memory Resource Notifications API (
+      `CreateMemoryResourceNotification`/
+      `QueryMemoryResourceNotification` → `LowMemoryResourceNotification`), perf
+      counters (`Memory\Available MBytes`,
+      `Committed Bytes`/`Commit Limit`), or `GlobalMemoryStatusEx.dwMemoryLoad`.
+    - Open question: Windows aggressively manages working-set/commit and
+      surfaces its own low-memory UI, so it likely
+      warns the user before ctx can — assess whether a ctx-side signal adds
+      value at all before building it.
+    - Wire into a build-tagged `internal/sysinfo/memory_windows.go` (currently
+      falls through to memory_other.go).
+      Provenance: session 96765858; design context in this session's
+      swap-detection thread. #priority:medium #session:
+      96765858 #branch:feat/pad-undo-snapshot #commit:b9ce72e8 #added:
+      2026-05-27-183909
+
+- [ ] Make 'ctx kb reindex' nesting-aware: scan topics/** not topics/* (grouped
+  topic folders currently blank the CTX:
+  KB:TOPICS block) #priority:medium #session:c3d2dcb1 #branch:
+  feat/pad-undo-snapshot #commit:b9ce72e8 #added:
+  2026-05-27-182640
+    - Problem: `ctx kb reindex` scans `topics/*/index.md` (one level). A
+      consumer kb (the DR project, things-wtf-dr)
+      reorganized 49 topics into grouped folders
+      `topics/<group>/<slug>/index.md`; reindex then finds 0 topics and
+      BLANKS the `CTX:KB:TOPICS` managed block in `index.md` (observed live: "
+      reindexed 0 topic(s)"). The same one-level
+      assumption likely affects the life-stage topic-count glob (
+      `topics/*/index.md`) and any other `topics/*/`
+      enumeration.
+    - Fix: scan `topics/**/index.md` recursively; exclude group-landing pages
+      `topics/<group>/index.md` from topic
+      enumeration (orientation, not topic pages); ideally emit the managed block
+      grouped by parent folder.
+      `ctx kb topic new "<group>/<slug>"` already preserves nested slugs, so
+      creation is unaffected — only
+      reindex/enumeration lags.
+
+- [ ] Realign the installed plugin's hooks.json with the cwd-anchored binary —
+  the LIVE fix for the every-prompt
+  help-dump pollution.
+    - Problem: the cwd-anchored migration (commit fc7db228, spec
+      specs/cwd-anchored-context.md) is UNRELEASED — not in
+      any 0.8.x tag (only v0.8.0 exists). The installed plugin (~
+      /.claude/plugins/cache/activememory-ctx/ctx/0.8.1/hooks/hooks.json) is
+      PRE-migration: it injects `CTX_DIR=` and
+      wires `ctx system check-anchor-drift` first under UserPromptSubmit. The
+      on-PATH binary (0.8.1) is POST-migration:
+      check-anchor-drift deleted, cwd-anchored. So the shipped hooks.json calls
+      a command the binary no longer has →
+      cobra prints the full `system` help and exits 0 → ~52 lines injected on
+      EVERY prompt, labelled "hook success".
+    - Fix: cut/republish the plugin so its bundled hooks.json comes from the
+      same post-fc7db228 commit as the binary (
+      cd-based invocation, no check-anchor-drift, includes check-audit).
+      Reinstall/update locally and for any users on
+      the skewed 0.8.1 plugin.
+    - Recurrence guard (acceptance): add a release-time check that every
+      `ctx system <verb>` wired in the shipped
+      hooks.json resolves to a registered subcommand on the shipped binary (test
+      or hack/release.sh step). A
+      half-migrated package must not ship again. Pairs with the verbatim-relay
+      guard task above — that one makes a
+      future skew fail LOUD; this one closes the current gap.
+    - Provenance: check-anchor-drift version-skew investigation. Design notes:
+      specs/experiments/acdl-session-start.md (
+      §Root Cause, follow-up #1). #priority:high #session:96765858 #branch:
+      feat/pad-undo-snapshot #commit:b9ce72e8
+      #added:2026-05-27-145715
+
+- [ ] `ctx system`: emit a VERBATIM RELAY on unknown subcommand (replace today's
+  silent help-dump + exit 0). Scope:
+  `ctx system` ONLY.
+    - Problem: `ctx system <unknown>` prints the full Long help and exits 0 (
+      cobra `legacyArgs` only raises "unknown
+      command" for the ROOT command, never a non-root group). In a
+      UserPromptSubmit hook a non-zero exit alone is
+      swallowed by the harness — "loud via exit code" is dead in the water; the
+      user never sees it.
+    - Fix: route unknown `ctx system` subcommands through the existing
+      nudge/verbatim-relay path (same mechanism the
+      check-* hooks use) so the message actually reaches the user/agent. Name
+      the unknown subcommand and hint at the
+      likely cause: a hook referencing a command this binary no longer ships (
+      version skew between installed plugin
+      hooks.json and the on-PATH binary). Then exit non-zero.
+    - Scope guard: `ctx system` only. Do NOT change the generic `parent.Cmd` (
+      internal/cli/parent/parent.go); other
+      groups (`ctx hub`, etc.) keep cobra's default behavior.
+    - Tests: `ctx system <bogus>` emits the verbatim relay (assert body content)
+      AND exits non-zero; valid subcommands
+      unaffected; bare `ctx system` still prints help.
+    - Provenance: surfaced by the check-anchor-drift version-skew investigation.
+      Design notes:
+      specs/experiments/acdl-session-start.md (Root Cause + follow-up #2). Needs
+      its own spec before implementation.
+      #priority:medium #session:96765858 #branch:feat/pad-undo-snapshot #commit:
+      b9ce72e8 #added:2026-05-27-130130
+
+## Important
+
+Important things that agent (or human) yeeted to the future.
+
+- [ ] Migrate Sprintf-based templates (tpl_*.go) to Go text/template or embedded
+  template files — ObsidianReadme, LoopScript, and other multi-line format
+  strings that can't move to YAML #added:2026-03-18-163629
+- [ ] P0.8.5: Enable webhook notifications in worktrees. Currently `ctx notify`
+  silently fails because `.context.key` is gitignored and absent in
+  worktrees. For autonomous runs with opaque worktree agents, notifications
+  are the one feature that would genuinely be useful. Possible approaches:
+  resolve the key via `git rev-parse --git-common-dir` to find the main
+  checkout, or copy the key into worktrees at creation time (ctx-worktree
+  skill). #priority:medium #added:2026-02-22
+- [ ] P0.9.2: Split cli-reference.md (1633 lines) into command group pages:
+  cli-overview, cli-init-status, cli-context, cli-recall, cli-tools,
+  cli-system —
+  each page covers a natural command group with its subcommands and flags
+  #added:2026-02-24-204208
+- [ ] PG.2: Add versioning/stability note to prompting guide — "these
+  principles are
+  stable; examples evolve" + doc date in frontmatter. Needed once the guide
+  becomes canonical and people start quoting it.
+  #priority:low #added:2026-02-25
+- [ ] P0.1: Brainstorm: Standardize drift-check comment format and
+  integrate with
+  `/ctx-drift` — formalize ad-hoc `<!-- drift-check: ... -->` markers, teach
+  drift skill to parse/execute them, publish pattern in docs/recipes. Benefits
+  tooling/CLI but AI handles ad-hoc fine for now.
+  #priority:medium #added:2026-02-28
+- [ ] Q.1: Docstring cross-reference audit — compliance test that
+  flags docstrings
+  mentioning domains that don't match their callers. Start with `write/**`,
+  extend to all `internal/`. Spec: `specs/docstring-cross-reference-audit.md`
+  #priority:medium #added:2026-03-17
+- [ ] Split internal/assets/embed_test.go — tests that call read/ packages
+  must
+  move to their respective read/ package to avoid import
+  cycles #added:2026-03-18-192914
+- [ ] Improve recall/core format tests — replace hardcoded string assertions
+  (e.g. Contains Tokens) with semantic checks that verify structure and values,
+  not label text #added:2026-03-19-194645
+
+## Agents
 
 - [-] Add `ctx explore` command — scaffolds `.arch-explorer/` in a workspace
   directory with manifest.json, PROMPT.md (from
@@ -359,18 +543,7 @@ TASK STATUS LABELS:
   workflow
   that's better served by a discoverable doc with an embedded prompt.
 
-### Runbooks
-
-### Misc
-
-- [ ] Human: Read the entire documentation page-by-page, line-by-line, with a
-  critical mind, including blog posts. Take notes for agent to rectify, or
-  directly update the docs whenever it makes sense.
-
-- [ ] Human: Do a documentation audit for AI-generated artifacts. #important
-  #not-urgent
-
-- [ ] Human: test `ctx init` on a fresh ubuntu install.
+## Misc
 
 - [x] Improve hub failover client: distinguish auth errors
   (Unauthenticated/PermissionDenied) from connection errors. Fail fast on auth
@@ -406,7 +579,8 @@ TASK STATUS LABELS:
 - [x] Add input validation to hub Publish handler: reject empty ID, validate
   Type against allowed set (decision/learning/convention/task), enforce Content
   length limit (1MB), require non-empty Origin. Prevents garbage data and DoS
-  via unbounded content. #priority:high #added:2026-04-08-194430 #completed:2026-05-23
+  via unbounded content. #priority:high #added:2026-04-08-194430 #completed:
+  2026-05-23
   All four sub-items shipped in `internal/hub/validate_entry.go:28-53`,
   invoked per-entry by `internal/hub/handler.go:86-90` before append:
   empty-ID → `ErrEntryIDRequired`; Type checked against
@@ -500,9 +674,6 @@ TASK STATUS LABELS:
   half-done / half-wontdo.
 
 ### Code Cleanup Findings
-
-- [ ] Implement journal compaction: Elastic-style tiered storage with tar.gz
-  backup. Spec: specs/journal-compact.md #added:2026-03-31-110005
 
 **PD.5 — Validate:**
 
@@ -626,7 +797,7 @@ TASK STATUS LABELS:
       `docs/recipes/architecture-mapping.md` (or wherever the
       existing 3-step recipe lives): "run all four in
       sequence; each step's output feeds the next".
-  #priority:medium #added:2026-05-23
+      #priority:medium #added:2026-05-23
 
 - [-] ctx-architecture-extend
   Skipped: extension point analysis is covered by /ctx-architecture
@@ -682,37 +853,6 @@ Session-start checks, suppressibility, and registry for companion MCP tools.
   search MCP, graph MCP) via .ctxrc fields, not just
   companion_check: false blanket toggle
   #priority:low #added:2026-03-25-234518
-
-### Phase CLI-FIX: CLI Infrastructure Fixes
-
-- [ ] Add `--json <file>` to `ctx decision/learning/task add` (and `convention` if it gains structured fields) for ingesting a JSON payload that populates the typed fields directly.
-  - Driver: this session hit a class of denial we worked around but should fix at the root. The project's canonical `permissions.deny` set (`.claude/settings.local.json` lines 119-121) matches on the literal Bash command string — including the *content* of `--rationale`/`--context`/`--consequence` flag values. A decision whose rationale legitimately describes installing a binary into the system PATH (literal substring " /usr/local/bin") gets caught by `Bash(* /usr/local/bin*)` and denied, even though the command's intent has nothing to do with that path. The workaround was Edit-direct into DECISIONS.md/LEARNINGS.md, which bypasses the ctx command's schema gates and INDEX:START/END maintenance.
-  - Shape: `ctx decision add --json /path/to/payload.json` where the JSON is `{"title":"…","context":"…","rationale":"…","consequence":"…"}`. The flag supersedes individual content flags. Provenance (--session-id/--branch/--commit) can stay on the command line OR be folded into the JSON envelope ({"provenance":{"session_id":"…","branch":"…","commit":"…"}}). Complements the existing `--file` (which only replaces the title/body positional).
-  - Phase 2 (optional): array form `[{...},{...}]` for batch persists — useful for `/ctx-wrap-up` writing N decisions+learnings in one call instead of N separate invocations.
-  - Mirror per command: same shape applies to `ctx learning add --json …` ({title,context,lesson,application}) and `ctx task add --json …` ({title,body,priority,section}).
-  - Surfaced by: this session's persist denials and post-mortem; reference handover `20260528T201500Z-ctxctl-and-native-pressure-shipped.md`. #priority:medium #session:96765858 #branch:feat/pad-undo-snapshot #commit:b9ce72e8 #added:2026-05-28-154725
-
-- [ ] Exploratory: Windows-native memory-pressure detection for the `check-resource` hook. macOS (`kern.memorystatus_vm_pressure_level`) + Linux (PSI `/proc/pressure/memory`) native pressure detection landed on feat/pad-undo-snapshot, replacing the broken occupancy-% triggers. Windows ("other" platform) currently reports `PressureSupported=false` → no memory alert.
-  - Explore the Windows-native signal: Memory Resource Notifications API (`CreateMemoryResourceNotification`/`QueryMemoryResourceNotification` → `LowMemoryResourceNotification`), perf counters (`Memory\Available MBytes`, `Committed Bytes`/`Commit Limit`), or `GlobalMemoryStatusEx.dwMemoryLoad`.
-  - Open question: Windows aggressively manages working-set/commit and surfaces its own low-memory UI, so it likely warns the user before ctx can — assess whether a ctx-side signal adds value at all before building it.
-  - Wire into a build-tagged `internal/sysinfo/memory_windows.go` (currently falls through to memory_other.go). Provenance: session 96765858; design context in this session's swap-detection thread. #priority:medium #session:96765858 #branch:feat/pad-undo-snapshot #commit:b9ce72e8 #added:2026-05-27-183909
-
-- [ ] Make 'ctx kb reindex' nesting-aware: scan topics/** not topics/* (grouped topic folders currently blank the CTX:KB:TOPICS block) #priority:medium #session:c3d2dcb1 #branch:feat/pad-undo-snapshot #commit:b9ce72e8 #added:2026-05-27-182640
-  - Problem: `ctx kb reindex` scans `topics/*/index.md` (one level). A consumer kb (the DR project, things-wtf-dr) reorganized 49 topics into grouped folders `topics/<group>/<slug>/index.md`; reindex then finds 0 topics and BLANKS the `CTX:KB:TOPICS` managed block in `index.md` (observed live: "reindexed 0 topic(s)"). The same one-level assumption likely affects the life-stage topic-count glob (`topics/*/index.md`) and any other `topics/*/` enumeration.
-  - Fix: scan `topics/**/index.md` recursively; exclude group-landing pages `topics/<group>/index.md` from topic enumeration (orientation, not topic pages); ideally emit the managed block grouped by parent folder. `ctx kb topic new "<group>/<slug>"` already preserves nested slugs, so creation is unaffected — only reindex/enumeration lags.
-
-- [ ] Realign the installed plugin's hooks.json with the cwd-anchored binary — the LIVE fix for the every-prompt help-dump pollution.
-  - Problem: the cwd-anchored migration (commit fc7db228, spec specs/cwd-anchored-context.md) is UNRELEASED — not in any 0.8.x tag (only v0.8.0 exists). The installed plugin (~/.claude/plugins/cache/activememory-ctx/ctx/0.8.1/hooks/hooks.json) is PRE-migration: it injects `CTX_DIR=` and wires `ctx system check-anchor-drift` first under UserPromptSubmit. The on-PATH binary (0.8.1) is POST-migration: check-anchor-drift deleted, cwd-anchored. So the shipped hooks.json calls a command the binary no longer has → cobra prints the full `system` help and exits 0 → ~52 lines injected on EVERY prompt, labelled "hook success".
-  - Fix: cut/republish the plugin so its bundled hooks.json comes from the same post-fc7db228 commit as the binary (cd-based invocation, no check-anchor-drift, includes check-audit). Reinstall/update locally and for any users on the skewed 0.8.1 plugin.
-  - Recurrence guard (acceptance): add a release-time check that every `ctx system <verb>` wired in the shipped hooks.json resolves to a registered subcommand on the shipped binary (test or hack/release.sh step). A half-migrated package must not ship again. Pairs with the verbatim-relay guard task above — that one makes a future skew fail LOUD; this one closes the current gap.
-  - Provenance: check-anchor-drift version-skew investigation. Design notes: specs/experiments/acdl-session-start.md (§Root Cause, follow-up #1). #priority:high #session:96765858 #branch:feat/pad-undo-snapshot #commit:b9ce72e8 #added:2026-05-27-145715
-
-- [ ] `ctx system`: emit a VERBATIM RELAY on unknown subcommand (replace today's silent help-dump + exit 0). Scope: `ctx system` ONLY.
-  - Problem: `ctx system <unknown>` prints the full Long help and exits 0 (cobra `legacyArgs` only raises "unknown command" for the ROOT command, never a non-root group). In a UserPromptSubmit hook a non-zero exit alone is swallowed by the harness — "loud via exit code" is dead in the water; the user never sees it.
-  - Fix: route unknown `ctx system` subcommands through the existing nudge/verbatim-relay path (same mechanism the check-* hooks use) so the message actually reaches the user/agent. Name the unknown subcommand and hint at the likely cause: a hook referencing a command this binary no longer ships (version skew between installed plugin hooks.json and the on-PATH binary). Then exit non-zero.
-  - Scope guard: `ctx system` only. Do NOT change the generic `parent.Cmd` (internal/cli/parent/parent.go); other groups (`ctx hub`, etc.) keep cobra's default behavior.
-  - Tests: `ctx system <bogus>` emits the verbatim relay (assert body content) AND exits non-zero; valid subcommands unaffected; bare `ctx system` still prints help.
-  - Provenance: surfaced by the check-anchor-drift version-skew investigation. Design notes: specs/experiments/acdl-session-start.md (Root Cause + follow-up #2). Needs its own spec before implementation. #priority:medium #session:96765858 #branch:feat/pad-undo-snapshot #commit:b9ce72e8 #added:2026-05-27-130130
 
 ### Phase BLOG: Blog Posts
 
@@ -789,14 +929,6 @@ Spec: `specs/context-window-usage.md`. Read the spec before starting any
 P0.4.10 task.
 
 ### Phase 0.5 Cleanup
-
-* Human: internal/recall/parser requires a serious refactoring; for example
-  the parser object and its private and public methods need to go to its own
-  package and other helper functions need to go to a different adjacent package.
-* Human: internal/notify/notify.go requires refactoring (all functions bagged in
-  one file; types need to go to types.go per convention etc etc)
-* Human: split err package into sub packages.
-
 
 - [ ] Refactor site/cmd/feed: extract helpers and types to core/, make Run
   public #added:2026-03-21-074859
@@ -1299,8 +1431,6 @@ block template.
 
 [ ] Assignee: @CoderMungan -- https://github.com/ActiveMemory/ctx/issues/50
 
-## Later
-
 ### Phase PR: State Pruning (`ctx system prune`)
 
 Clean stale per-session state files from `.context/state/`. Files with UUID
@@ -1357,18 +1487,6 @@ age-based — prune files older than N days (default 7).
 
 ## Future
 
-- [ ] P0.8.5: Enable webhook notifications in worktrees. Currently `ctx notify`
-  silently fails because `.context.key` is gitignored and absent in
-  worktrees. For autonomous runs with opaque worktree agents, notifications
-  are the one feature that would genuinely be useful. Possible approaches:
-  resolve the key via `git rev-parse --git-common-dir` to find the main
-  checkout, or copy the key into worktrees at creation time (ctx-worktree
-  skill). #priority:medium #added:2026-02-22
-- [ ] P0.9.2: Split cli-reference.md (1633 lines) into command group pages:
-  cli-overview, cli-init-status, cli-context, cli-recall, cli-tools,
-  cli-system —
-  each page covers a natural command group with its subcommands and flags
-  #added:2026-02-24-204208
 - [ ] P0.9.3: Investigate proactive content suggestions:
   docs/recipes/publishing.md claims
   agents suggest blog posts and journal rebuilds at natural moments, but no hook
@@ -1380,38 +1498,9 @@ age-based — prune files older than N days (default 7).
   patterns degrade gracefully when agents lack file access, CLI tools, or
   ctx integration. Treat as a "works best with / degrades to" table.
   #priority:medium #added:2026-02-25
-- [ ] PG.2: Add versioning/stability note to prompting guide — "these
-  principles are
-  stable; examples evolve" + doc date in frontmatter. Needed once the guide
-  becomes canonical and people start quoting it.
-  #priority:low #added:2026-02-25
-- [ ] P0.1: Brainstorm: Standardize drift-check comment format and
-  integrate with
-  `/ctx-drift` — formalize ad-hoc `<!-- drift-check: ... -->` markers, teach
-  drift skill to parse/execute them, publish pattern in docs/recipes. Benefits
-  tooling/CLI but AI handles ad-hoc fine for now.
-  #priority:medium #added:2026-02-28
 - [ ] F.1: MCP server integration: expose context as tools/resources via Model
   Context Protocol. Would enable deep integration with any
   MCP-compatible client. #priority:low #source:report-6
-- [ ] Q.1: Docstring cross-reference audit — compliance test that
-  flags docstrings
-  mentioning domains that don't match their callers. Start with `write/**`,
-  extend to all `internal/`. Spec: `specs/docstring-cross-reference-audit.md`
-  #priority:medium #added:2026-03-17
-
-- [ ] Migrate Sprintf-based templates (tpl_*.go) to Go text/template or embedded
-  template files — ObsidianReadme, LoopScript, and other multi-line format
-  strings that can't move to YAML #added:2026-03-18-163629
-
-- [ ] Split internal/assets/embed_test.go — tests that call read/ packages
-  must
-  move to their respective read/ package to avoid import
-  cycles #added:2026-03-18-192914
-
-- [ ] Improve recall/core format tests — replace hardcoded string assertions
-  (e.g. Contains Tokens) with semantic checks that verify structure and values,
-  not label text #added:2026-03-19-194645
 
 ### Phase BT: Build Tooling — `cmd/ctxctl`
 
@@ -2152,7 +2241,8 @@ Spec: `specs/ceremony-profiles.md`
 - [ ] Document in `docs/recipes/` with the editorial-project (`your-domain`
   knowledgebase) consumer as the worked example
 
-### Phase SK: Skill Surface Polish (Phase 0a; prerequisite for Phase KB) `#priority:high #added:2026-05-09`
+### Phase SK: Skill Surface Polish (Phase 0a; prerequisite for Phase KB)
+`#priority:high #added:2026-05-09`
 
 Spec: `specs/skill-surface-polish.md` (design ref:
 `ideas/002-editorial-pipeline-and-skill-rigor.md` §3 "Reframing the
@@ -2188,6 +2278,7 @@ wholesale. Independent of Phase RG; both can ship in parallel.
   `docs/reference/skills.md`; the actual location)
 
 ### Phase RG: Require Git as Architectural Precondition (Phase 0b; prerequisite for Phase KB)
+
 `#priority:high #added:2026-05-09`
 
 Spec: `specs/require-git.md`
@@ -2240,7 +2331,9 @@ an assumption. Breaking change for any pre-existing git-less ctx project
 - [-] Compliance test: no remaining `commit:none` literal in `internal/`. N/A:
   literal never existed
 
-### Phase KB: Editorial Pipeline + Handover (depends on Phase SK + Phase RG) `#priority:high #added:2026-05-09 #revised:2026-05-16`
+### Phase KB: Editorial Pipeline + Handover (depends on Phase SK + Phase RG)
+
+`#priority:high #added:2026-05-09 #revised:2026-05-16`
 
 Spec: `specs/kb-editorial-pipeline.md` (revised 2026-05-16 to current
 upstream editorial-pipeline shape: pass-mode contract, completion circuit
@@ -2560,28 +2653,28 @@ adjacent tool joins the list.
   (`/ctx-journal-enrich-all` or sibling) to scan
   `~/.claude/projects/*/*.jsonl` for `Skill` tool uses and write
   two artifacts:
-  - **Time-series** at `~/.ctx/state/skill-usage.jsonl`:
-    append-only, one row per invocation, fields
-    `{ts, project, session_id, skill_name, source: "claude-code"|"opencode"|...}`.
-  - **Aggregate** at `~/.ctx/state/skill-usage.json`: derived
-    rollup, `{skill_name → {count, first_used, last_used, projects[]}}`.
-  Stays in `~/.ctx/state/` (user-global), not per-project, so
-  patterns survive across projects.
+    - **Time-series** at `~/.ctx/state/skill-usage.jsonl`:
+      append-only, one row per invocation, fields
+      `{ts, project, session_id, skill_name, source: "claude-code"|"opencode"|...}`.
+    - **Aggregate** at `~/.ctx/state/skill-usage.json`: derived
+      rollup, `{skill_name → {count, first_used, last_used, projects[]}}`.
+      Stays in `~/.ctx/state/` (user-global), not per-project, so
+      patterns survive across projects.
 
   **Phase 2 — wire ceremony nudges (NOT auto-prompts).** Surface
   the tally inside two existing ceremonies, never as session-start
   noise:
-  - `/ctx-remember`: at the end of the recall readback, add a
-    *"unused-but-might-help"* line that names 1-3 skills with
-    `last_used > 30d ago` (or `never`) whose descriptions match
-    keywords from current TASKS.md focus / branch name / recent
-    commits.
-  - `/ctx-wrap-up`: in the candidate-proposal phase, include a
-    *"this session's skill mix"* line summarising which skills
-    fired this session, and surface 1-2 skills that would have
-    fit the work but weren't invoked.
-  - Explicitly NOT in `/ctx-handover` — that ceremony is for the
-    next agent, not introspection.
+    - `/ctx-remember`: at the end of the recall readback, add a
+      *"unused-but-might-help"* line that names 1-3 skills with
+      `last_used > 30d ago` (or `never`) whose descriptions match
+      keywords from current TASKS.md focus / branch name / recent
+      commits.
+    - `/ctx-wrap-up`: in the candidate-proposal phase, include a
+      *"this session's skill mix"* line summarising which skills
+      fired this session, and surface 1-2 skills that would have
+      fit the work but weren't invoked.
+    - Explicitly NOT in `/ctx-handover` — that ceremony is for the
+      next agent, not introspection.
 
   Hard anti-patterns: stale-skill-name pollution (when skills
   rename, the tally must reconcile by reading the current skill
@@ -2600,11 +2693,13 @@ adjacent tool joins the list.
   Go or in the skill prompt. Tackle these at spec time, not
   implementation time. #priority:medium #added:2026-05-21
 
-### Phase KB-followup: Adversarial design review of parallel skill trees `#priority:medium #added:2026-05-17`
+### Phase KB-followup: Adversarial design review of parallel skill trees
+`#priority:medium #added:2026-05-17`
 
 `ctx` ships skills to three host trees:
 `internal/assets/claude/skills/` (canonical, full Claude tool surface),
-`internal/assets/integrations/copilot-cli/skills/` (Copilot CLI; `tools: [bash]`),
+`internal/assets/integrations/copilot-cli/skills/` (Copilot CLI;
+`tools: [bash]`),
 and `internal/assets/integrations/opencode/skills/` (OpenCode; minimal
 subset, no `tools` block). Phase KB landed parity across all three trees
 by writing each new skill body three times (full content for Claude +
@@ -2646,7 +2741,8 @@ Context: filed after Phase KB shipped, when porting the 6 new KB
 skills + the 2 updated ceremony skills to copilot-cli and opencode
 revealed how brittle the three-tree pattern is.
 
-### Phase JR: Cold-Start Memory Recovery (semantic recall over journal history) `#priority:medium #added:2026-05-10`
+### Phase JR: Cold-Start Memory Recovery (semantic recall over journal history)
+`#priority:medium #added:2026-05-10`
 
 Idea: `ideas/004-cold-start-memory-recovery.md`
 
@@ -2668,7 +2764,10 @@ the zensical shell-out pattern (recommended).
   this phase is specifically about
   journal-corpus semantic recall (`ctx journal search "<query>"` shape).
 
-### Phase EVA: `ctx kb ev append` helper — eliminate Edit-anchor brittleness for append-only structured rows `#priority:medium #added:2026-05-23`
+### Phase EVA:
+`ctx kb ev append` helper — eliminate Edit-anchor brittleness for append-only structured rows
+
+`#priority:medium #added:2026-05-23`
 
 **Pain point**: agents performing `/ctx-kb-ingest` passes append `EV-###`
 rows to `.context/kb/evidence-index.md` via the Edit tool. The append-only
@@ -2750,7 +2849,7 @@ burned context and added rework. The pattern would compound across the
 kb's lifetime as more agents append rows; treating it as a tooling gap
 rather than a discipline problem is the long-term fix. Source pointer:
 DR-kb session a5736210 closeouts under
-`~/Desktop/WORKSPACE/things-wtf-disaster-recovery-next/.context/ingest/closeouts/`
+`~/Desktop/WORKSPACE/<domain>/.context/ingest/closeouts/`
 20260523T044000Z + 20260523T060000Z + 20260523T080000Z reference the issue.
 
 - [ ] Pad undo & snapshot safety net: every destructive `ctx pad`
@@ -2800,3 +2899,33 @@ DR-kb session a5736210 closeouts under
       hook into `.claude/settings.local.json` as a real UserPromptSubmit
       handler. Open questions in spec: naming collision with
       `internal/audit/` AST-tests package; shared skill-helpers library.
+
+## Future
+
+- [ ] Implement journal compaction: Elastic-style tiered storage with tar.gz
+  backup. Spec: specs/journal-compact.md #added:2026-03-31-110005
+
+## Human Review and Consolidation
+
+* [ ] Human: internal/recall/parser requires a serious refactoring; for example
+  the parser object and its private and public methods need to go to its own
+  package and other helper functions need to go to a different adjacent package.
+* [ ] Human: internal/notify/notify.go requires refactoring (all functions
+  bagged in
+  one file; types need to go to types.go per convention etc etc)
+* [ ] Human: split err package into sub packages.
+
+- [ ] Human: It's about time to go through the entire codebase check for
+  inconsistencies, and move useful functions that are utility and/or reusable
+  to relevant convenience packages.
+- [ ] Human: Read the entire documentation page-by-page, line-by-line, with a
+  critical mind, including blog posts. Take notes for agent to rectify, or
+  directly update the docs whenever it makes sense.
+- [ ] Human: Do a documentation audit for AI-generated artifacts. #important
+  #not-urgent
+- [ ] Human: test `ctx init` on a fresh ubuntu install.
+- [ ] Human: These shall be done before a release cut. Especially when the
+  amount of code generated is around hundreds of thousands of lines of code,
+  we need to sit down and spend as much time as needed. For two reasons:
+  If we (humans) don't understand the codebase fully, how can we guide AI?
+  And secondly, a human scan can detect things that AI cannot find by itself.
