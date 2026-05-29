@@ -52,9 +52,6 @@ const (
 	// UseSystemCheckSkillDiscovery is the cobra Use string for the system check
 	// skill discovery command.
 	UseSystemCheckSkillDiscovery = "check-skill-discovery"
-	// UseSystemCheckAudit is the cobra Use string for the system check
-	// audit command.
-	UseSystemCheckAudit = "check-audit"
 	// UseSystemCheckReminder is the cobra Use string for the system check
 	// reminder command.
 	UseSystemCheckReminder = "check-reminder"
@@ -136,9 +133,6 @@ const (
 	// DescKeySystemCheckSkillDiscovery is the description key for the system
 	// check skill discovery command.
 	DescKeySystemCheckSkillDiscovery = "system.checkskilldiscovery"
-	// DescKeySystemCheckAudit is the description key for the system check
-	// audit command.
-	DescKeySystemCheckAudit = "system.checkaudit"
 	// DescKeySystemCheckReminder is the description key for the system check
 	// reminder command.
 	DescKeySystemCheckReminder = "system.checkreminder"

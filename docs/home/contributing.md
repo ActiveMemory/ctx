@@ -79,6 +79,49 @@ You should see the `ctx` plugin listed, sourced from your local path.
 
 ----
 
+## Maintainer Tooling: `ctxctl`
+
+`ctxctl` is a maintainer-only binary that houses tooling kept out of
+the shipped `ctx` binary. It is a **separate Go module** at
+`tools/ctxctl/`: `ctx`'s `go.mod` never requires it, so `ctx` can
+never import it, while `ctxctl` reuses `ctx`'s `internal/` packages
+through the repo-root `go.work` workspace. End users never receive it,
+so it is **not** part of the [Development Setup](#development-setup)
+above: skip this section unless you are working on maintainer tooling.
+
+Its first inhabitant is the out-of-band audit channel
+(`ctxctl audit list|show|dismiss` plus the `ctxctl audit-relay` hook).
+For what the channel does and how to run an audit, see
+[Out-of-Band Audit Channel](../recipes/audit-channel.md).
+
+### Build and Install
+
+```bash
+make ctxctl            # build into dist/ctxctl
+make install-ctxctl    # install dist/ctxctl to /usr/local/bin/ctxctl
+make reinstall-ctxctl  # build + install in one step (the usual case)
+```
+
+`ctxctl` installs to `/usr/local/bin/` alongside `ctx` (the install
+falls back to `sudo` when the directory is not writable). Installing
+to `PATH` is deliberate: the repo-local `UserPromptSubmit` hook
+invokes `ctxctl audit-relay` as a `PATH` binary, and a single install
+is shared across every clone and worktree, so the repo root stays
+clean.
+
+Run `make reinstall-ctxctl` once after first cloning, then again
+whenever you pull or edit anything under `tools/ctxctl/` or the
+relocated `internal/ctxctl/` packages.
+
+### Verify
+
+```bash
+ctxctl --help   # command tree
+ctxctl audit    # list audit reports (run inside a ctx project)
+```
+
+----
+
 ## Project Layout
 
 <!-- drift-check: ls -d cmd/ internal/*/ .claude/ docs/ editors/ hack/ specs/ assets/ examples/ .context/ -->

@@ -17,6 +17,9 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-28 | Swap occupancy is not memory pressure — use the kernel's derivative |
+| 2026-05-28 | A non-root Go module nested under the main module's path CAN import its internal/ packages |
+| 2026-05-28 | cobra's legacyArgs lets unknown subcommands silently succeed on non-root groups |
 | 2026-05-25 | Skill shipping location: _ctx- prefix is repo-internal, internal/assets/claude/skills/ctx-* is bundled and shipped |
 | 2026-05-24 | Audit gates that bite when introducing new packages and helpers |
 | 2026-05-23 | Spec-trailer improvisation is heuristic drift — when no spec genuinely fits, the failure mode is reaching for the most-recent one |
@@ -159,6 +162,36 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-28-201500] Swap occupancy is not memory pressure — use the kernel's derivative
+
+**Context**: ctx's `check-resource` UserPromptSubmit hook alerted DANGER at swap-used ≥ 75% / memory-used ≥ 90%, generating false "wrap up the session" warnings at session start after hibernation. On macOS, swap doesn't recede when pressure ends — it's a sticky high-water mark, so static occupancy carries zero current information about whether the system is actually struggling.
+
+**Lesson**: macOS and Windows swap proactively, and swap occupancy is STICKY — it doesn't recede when pressure ends. After hibernation, swap can be >75% full with zero current pressure. Any alert keyed on `SwapUsed/SwapTotal ≥ X%` will false-positive at session start. The signal isn't the *level*, it's the *derivative* — pages actively being pushed out, or the kernel's own pressure metric.
+
+**Application**: For host-pressure detection, key on OS-native pressure signals (macOS `kern.memorystatus_vm_pressure_level` 1/2/4 → OK/Warning/Danger; Linux PSI `/proc/pressure/memory` `some.avg10` and `full.avg10`). These are kernel-computed derivatives — no snapshot state needed and they collapse to zero when the pressure ends. If native is unavailable, fall back to swap-out RATE (snapshot delta) gated on low available memory; never to occupancy alone. (Decision recorded same date; Windows exploratory task filed under Phase CLI-FIX.)
+
+---
+
+## [2026-05-28-201400] A non-root Go module nested under the main module's path CAN import its internal/ packages
+
+**Context**: While designing the ctxctl module split, the initial spec (and a lot of online consensus) claimed a separate `go.mod` cannot import the parent module's `internal/` packages, which would have forced relocating or duplicating ~25 foundation packages (`rc`, `desc`, `nudge`, `config/*`, …). The "obvious" reading made same-module the only viable option.
+
+**Lesson**: Go's internal-import rule is **lexical on import paths, not module-scoped**. A separate module whose path is `github.com/<owner>/<main>/tools/<x>` CAN import `github.com/<owner>/<main>/internal/...` — verified by an empirical build experiment this session. An outsider path (`example.com/...`) is rejected with `use of internal package … not allowed`. The rule fires on the import-path prefix relative to the `internal/` directory's parent, not on module boundaries.
+
+**Application**: For monorepo splits (maintainer-only tooling, isolated experiments, ancillary CLIs), choose a module path nested under the main module so the new module reuses the parent's foundations via the lexical-internal allowance. Full self-containment of a maintainer module would be a DRY catastrophe; the lexical allowance is the correct shape. Prove it with a throwaway `go build` against a representative `internal/` import before designing around the *wrong* constraint.
+
+---
+
+## [2026-05-28-201300] cobra's legacyArgs lets unknown subcommands silently succeed on non-root groups
+
+**Context**: Every prompt of this session injected 52 lines of `ctx system` help text into agent context, labeled "hook success." Investigation traced it to the 0.8.1 plugin's `hooks.json` wiring `ctx system check-anchor-drift` as the first UserPromptSubmit hook — a command the 0.8.1 binary no longer has (the command was deleted by the cwd-anchored migration in `fc7db228`, but the plugin's hook config wasn't updated). The harness reported "hook success" because cobra exits 0 on the unknown subcommand.
+
+**Lesson**: cobra's `legacyArgs` only raises "unknown command" for the **root** command (`!cmd.HasParent()`); any non-root group (built with `parent.Cmd`) treats an unknown subcommand as non-error: it falls through to `Help()` and returns nil → exit 0. In a UserPromptSubmit hook this is **invisible** — the harness logs "hook success" and injects the whole help text into agent context every prompt. The 0.8.1 plugin's stale wiring of the retired `check-anchor-drift` caused exactly this for the entire session.
+
+**Application**: Non-root cobra groups must have an explicit unknown-subcommand guard. Two routes: (a) `Args: cobra.NoArgs` so unknown subcommands error loud (non-zero exit + "unknown command" stderr); (b) a `RunE` that emits a **verbatim relay** — which is what actually reaches the user in a UserPromptSubmit hook context where a non-zero exit alone is invisible. Tracked under Phase CLI-FIX as the verbatim-relay guard on `ctx system`.
 
 ---
 

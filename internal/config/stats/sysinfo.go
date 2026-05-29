@@ -29,18 +29,17 @@ const (
 
 // Resource threshold constants for health evaluation.
 const (
-	// ThresholdMemoryWarnPct is the memory usage percentage
-	// that triggers a warning.
-	ThresholdMemoryWarnPct = 80
-	// ThresholdMemoryDangerPct is the memory usage percentage
-	// that triggers a danger alert.
-	ThresholdMemoryDangerPct = 90
-	// ThresholdSwapWarnPct is the swap usage percentage
-	// that triggers a warning.
-	ThresholdSwapWarnPct = 50
-	// ThresholdSwapDangerPct is the swap usage percentage
-	// that triggers a danger alert.
-	ThresholdSwapDangerPct = 75
+	// ThresholdMemPressureSomeWarnPct is the Linux PSI
+	// "some" avg10 percentage (share of the last 10s in
+	// which at least one task stalled on memory) that
+	// triggers a warning. PSI is a rate-of-stall pressure
+	// signal, not a static-occupancy ratio.
+	ThresholdMemPressureSomeWarnPct = 10.0
+	// ThresholdMemPressureFullDangerPct is the Linux PSI
+	// "full" avg10 percentage (share of the last 10s in
+	// which every runnable task stalled on memory) that
+	// triggers a danger alert.
+	ThresholdMemPressureFullDangerPct = 10.0
 	// ThresholdDiskWarnPct is the disk usage percentage
 	// that triggers a warning.
 	ThresholdDiskWarnPct = 85

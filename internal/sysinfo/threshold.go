@@ -18,9 +18,14 @@ import (
 // Evaluate checks a snapshot against resource thresholds and returns any
 // alerts. Unsupported or zero-total resources are silently skipped.
 //
+// Memory is alerted on the OS-native pressure signal (the kernel's
+// derivative measure of whether it is struggling), not on static
+// memory or swap occupancy: macOS and Windows swap proactively and
+// swap occupancy is sticky, so occupancy is a poor pressure proxy.
+//
 // Thresholds:
-//   - Memory: WARNING >= 80%, DANGER >= 90%
-//   - Swap:   WARNING >= 50%, DANGER >= 75%
+//   - Memory: WARNING/DANGER follow the OS pressure level
+//     (macOS kern.memorystatus_vm_pressure_level; Linux PSI avg10)
 //   - Disk:   WARNING >= 85%, DANGER >= 95%
 //   - Load:   WARNING >= 0.8x CPUs, DANGER >= 1.5x CPUs
 //
@@ -31,6 +36,21 @@ import (
 //   - []ResourceAlert: Alerts for any resources exceeding thresholds
 func Evaluate(snap Snapshot) []ResourceAlert {
 	var alerts []ResourceAlert
+
+	// Memory pressure: the OS reports its own severity, so this
+	// is mapped directly rather than derived from an occupancy
+	// percentage.
+	if snap.Memory.PressureSupported &&
+		snap.Memory.Pressure >= SeverityWarning {
+		alerts = append(alerts, ResourceAlert{
+			Severity: snap.Memory.Pressure,
+			Resource: cfgSysinfo.ResourceMemoryPressure,
+			Message: fmt.Sprintf(
+				desc.Text(text.DescKeyResourcesAlertMemoryPressure),
+				snap.Memory.Pressure.String(),
+			),
+		})
+	}
 
 	type byteCheck struct {
 		supported bool
@@ -43,24 +63,6 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 	}
 
 	checks := []byteCheck{
-		{
-			snap.Memory.Supported,
-			snap.Memory.UsedBytes,
-			snap.Memory.TotalBytes,
-			text.DescKeyResourcesAlertMemory,
-			cfgSysinfo.ResourceMemory,
-			stats.ThresholdMemoryDangerPct,
-			stats.ThresholdMemoryWarnPct,
-		},
-		{
-			snap.Memory.Supported,
-			snap.Memory.SwapUsedBytes,
-			snap.Memory.SwapTotalBytes,
-			text.DescKeyResourcesAlertSwap,
-			cfgSysinfo.ResourceSwap,
-			stats.ThresholdSwapDangerPct,
-			stats.ThresholdSwapWarnPct,
-		},
 		{
 			snap.Disk.Supported,
 			snap.Disk.UsedBytes,

@@ -78,30 +78,29 @@ Then stop.
 
 ### Phase 0.25: Companion Tool Check
 
-Check if **Gemini Search** MCP is available by attempting a
-simple query. Gemini is used for upstream documentation, design
-rationale, KEPs, peer-project patterns - anything outside the
-local codebase that helps understand *why* the code is shaped
-the way it is.
+Check if a **web-search-with-citations MCP** is available by
+attempting a simple query. The canonical implementation is
+Gemini Search (`mcp__gemini-search__search_with_grounding`);
+if your toolchain provides the same capability via a different
+server (Firecrawl, Exa, Tavily, etc.), use whatever is
+connected. This capability is for upstream documentation,
+design rationale, KEPs, peer-project patterns — anything
+outside the local codebase that helps understand *why* the
+code is shaped the way it is.
 
-**If available**: note it silently. Use Gemini throughout the
-analysis for upstream lookups. Prefer it over built-in web search.
+**If available**: note it silently. Use it throughout the
+analysis for upstream lookups. Prefer it over built-in web
+search.
 
-**If not available**: ask the user once:
+**If not available**: silently fall back to built-in web search
+for upstream lookups. Do not prompt the user to install
+anything — ctx does not vouch for companion-tool install
+paths (see DECISIONS.md, 2026-05-23).
 
-```
-Gemini Search is not connected. It helps me look up upstream
-design docs, KEPs, and peer-project patterns during analysis.
-
-Want to set it up now, or proceed without it?
-```
-
-Respect the answer and continue either way.
-
-**Important**: Gemini is for *upstream* and *external* context
-only. Do not use it to understand the local codebase - read the
-code directly. The depth of analysis comes from forced reading,
-not from search shortcuts.
+**Important**: this capability is for *upstream* and *external*
+context only. Do not use it to understand the local codebase —
+read the code directly. The depth of analysis comes from forced
+reading, not from search shortcuts.
 
 ### Phase 0.5: Quick Structure Scan + Focus Areas
 
@@ -552,14 +551,16 @@ you.
   second, ADRs third
 - Maximum ~10 phrases total; fewer sharp ones beat many vague ones
 - Default: do NOT run the searches yourself
-- Exception: if Gemini Search is available, you MAY run upstream
-  searches for KEPs, design docs, peer-project patterns, and ADRs
-  - but only for concepts the codebase shows clear dependency on.
-  Note what you searched and what you found. This applies in any
+- Exception: if a web-search-with-citations MCP is available
+  (Gemini Search is the canonical example; equivalents include
+  Firecrawl, Exa, Tavily), you MAY run upstream searches for
+  KEPs, design docs, peer-project patterns, and ADRs — but only
+  for concepts the codebase shows clear dependency on. Note
+  what you searched and what you found. This applies in any
   mode, not just principal mode.
-- If Gemini is not available and the user requested principal-mode
-  depth, you may fall back to built-in web search for the same
-  purpose
+- If no such MCP is available and the user requested
+  principal-mode depth, fall back to built-in web search for
+  the same purpose
 
 ---
 

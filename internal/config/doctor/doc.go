@@ -36,9 +36,8 @@
 //   - CheckContextSize, CheckContextFilePrefix: measure
 //     token usage against the configured budget
 //   - CheckRecentEvents: reviews recent event history
-//   - CheckResourceMemory, CheckResourceSwap,
-//     CheckResourceDisk, CheckResourceLoad: system
-//     resource health probes
+//   - CheckResourceMemory, CheckResourceDisk,
+//     CheckResourceLoad: system resource health probes
 //
 // # Categories
 //

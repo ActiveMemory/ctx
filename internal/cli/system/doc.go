@@ -47,7 +47,6 @@
 //   - check-map-staleness: architecture map nudge
 //   - check-memory-drift: memory bridge drift detection
 //   - check-reminder: session reminder surfacing
-//   - check-audit: out-of-band audit reports relay
 //   - check-freshness: constant staleness check
 //   - check-hub-sync: auto-sync Hub entries
 //   - check-skill-discovery: skill tip nudge

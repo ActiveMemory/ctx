@@ -43,8 +43,13 @@ func TestNoNakedErrors(t *testing.T) {
 	var violations []string
 
 	for _, pkg := range pkgs {
+		// internal/err/ is ctx's error home; internal/ctxctl/err/
+		// is ctxctl's parallel error home (its constructors own
+		// English text as Go constants rather than routing through
+		// ctx's YAML i18n — DECISIONS.md 2026-05-27).
 		if strings.Contains(pkg.PkgPath, "internal/err/") ||
-			strings.HasSuffix(pkg.PkgPath, "internal/err") {
+			strings.HasSuffix(pkg.PkgPath, "internal/err") ||
+			strings.Contains(pkg.PkgPath, "internal/ctxctl/err/") {
 			continue
 		}
 

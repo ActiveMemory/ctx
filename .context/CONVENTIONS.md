@@ -344,3 +344,36 @@ The Self-check before declaring a feature commit complete is:
 *"If a user runs `ctx help` or asks `/ctx-<area>` to do this
 new thing today, will the help text / skill / recipe match
 what the code does?"* If no, the commit is not complete.
+
+## Maintainer-Only Binaries (Layout and Installation)
+
+Maintainer-only binaries — tooling that must never ship to end
+users — live in `tools/<name>/` as separate Go modules. The
+module path is lexically nested under the main ctx module
+(`github.com/ActiveMemory/ctx/tools/<name>`) so the new module
+CAN import the parent's `internal/` packages (Go's
+internal-import rule is path-lexical, not module-scoped — see
+LEARNINGS.md), reusing `rc`, `desc`, `nudge`, `config`
+primitives without duplication.
+
+Build and install:
+
+- Built to `dist/<name>` via `make <name>` (keeps the repo
+  root clean).
+- PATH-installed to `/usr/local/bin/<name>` via
+  `make install-<name>` / `make reinstall-<name>` —
+  mirroring ctx's `install` / `reinstall` targets so one
+  binary serves every worktree and repo copy.
+- The shipped `ctx` binary's `go.mod` must NOT `require` the
+  maintainer module, giving a **hard module-graph guarantee**
+  that the maintainer code can never leak into `ctx`.
+
+Repo-local hooks calling the maintainer binary live in the
+gitignored `.claude/settings.local.json`, **not** in the
+shipped `internal/assets/claude/hooks/hooks.json`. The hook
+command shape is `cd "$CLAUDE_PROJECT_DIR" && <name>
+<subcommand>` (PATH binary, project-root cwd so `.context/`
+resolves correctly under cwd-anchoring).
+
+`tools/ctxctl/` is the first inhabitant. Future maintainer
+binaries follow the same shape.

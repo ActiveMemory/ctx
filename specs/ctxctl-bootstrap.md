@@ -1,10 +1,10 @@
 # ctxctl Bootstrap + Audit-Channel Migration
 
-Stand up the long-planned `cmd/ctxctl` maintainer binary
-(Phase BT, planned 2026-03, never built) with the out-of-band
-audit channel as its first real inhabitant — and move that
-channel out of the shipped `ctx` binary, where it does not
-belong.
+Stand up the long-planned `ctxctl` maintainer binary at
+`tools/ctxctl` — its own Go module (Phase BT, planned 2026-03,
+never built) — with the out-of-band audit channel as its first
+real inhabitant, and move that channel out of the shipped `ctx`
+binary, where it does not belong.
 
 ## Problem
 
@@ -64,66 +64,97 @@ The distinction is "does this hook reach end users?" Shipped:
 
 ## Approach
 
-### Module structure: same module, `cmd/ctxctl`
+### Module structure: separate module at `tools/ctxctl`
 
-`ctxctl` lives at `cmd/ctxctl` in the **same Go module** as
-`ctx` (per Phase BT), NOT as a separate module at
-`tools/ctx/ctxctl` with its own go.mod. Decided after
-weighing both:
+`ctxctl` is its **own Go module** at `tools/ctxctl` (module
+path `github.com/ActiveMemory/ctx/tools/ctxctl`), NOT
+`cmd/ctxctl` in the same module. This **reverses** the earlier
+same-module decision (handover 2026-05-26); see DECISIONS.md
+2026-05-27.
 
-- A **separate go.mod** cannot cleanly import the parent
-  module's `internal/` packages. The audit channel is ~25
-  files already living under `internal/` (`internal/cli/audit`,
-  `internal/config/audit`, `internal/err/audit`,
-  `internal/write/audit`, `internal/cli/system/core/audit`,
-  `internal/cli/audit/core/parse|store`). A module split
-  forces relocating or duplicating all of it.
-- **Same module still keeps audit out of the `ctx` binary.**
-  Go compiles a package into a binary only if that binary's
-  `main` transitively imports it. As long as
-  `cmd/ctxctl/main` imports the audit packages and
-  `cmd/ctx/main` does not, the `ctx` binary never carries
-  them. Binary-level isolation — the actual goal — without a
-  module split.
-- A separate go.mod's only real win is **dependency
-  isolation** (keeping heavy build/release deps out of
-  `ctx`'s module graph). The audit channel needs no heavy
-  deps (only `yaml`, already a ctx dependency). If a future
-  ctxctl subcommand pulls in heavy tooling deps, revisit the
-  module question *then* — do not pay the split tax now for
-  deps that do not exist.
+The earlier decision rested on a false premise — that a
+separate go.mod cannot import the parent module's `internal/`
+packages. **Empirically disproved** this session: a nested
+module whose path is lexically under
+`github.com/ActiveMemory/ctx` builds clean while importing
+`…/ctx/internal/…`; only a non-nested ("outsider") module path
+is rejected. Go's `internal` visibility is import-path-lexical,
+not module-scoped.
 
-### Move the audit entry points out of `ctx`
+With that blocker gone, the deciding axis is **blast radius**,
+not binary size:
 
-The internal logic packages STAY in `internal/` (reused via
-import). What moves is the **wiring** — the cobra
-registration and the hook entry point:
+- **Hard boundary, the right direction.** `ctx`'s `go.mod`
+  does not `require` `tools/ctxctl`, so `ctx` *literally
+  cannot* import ctxctl — enforced by the module graph, not a
+  test. ctxctl breaking can never break ctx. The
+  one-directional `ctxctl → ctx` coupling is fine: ctxctl is
+  disposable maintainer tooling.
+- **Reuse, don't duplicate.** ctxctl imports ctx's shared
+  `internal/` foundations (`rc`, `assets/read/desc`,
+  `config/*`, `io`, `cli/system/core/nudge`, …) in place via
+  the nested-module internal allowance. Full self-containment
+  (copying those ~20 foundation packages into ctxctl) is
+  rejected as a DRY catastrophe — a worse broken window than
+  the one this spec fixes.
+- **Local dev via `go.work`.** A repo-root `go.work` (`use .`
+  and `use ./tools/ctxctl`), committed, wires the workspace so
+  every maintainer gets cross-module build/nav/refactor with
+  zero setup. Safe for releases: `cmd/ctx` never imports
+  ctxctl, so workspace mode cannot pull ctxctl into the shipped
+  `ctx` binary.
+
+### Relocate the audit logic, strip the `ctx` wiring
+
+Two moves:
+
+**1. Relocate audit-specific packages → `internal/ctxctl/`.**
+The six audit-channel trees (33 files) move out of their
+current `internal/cli/...`, `internal/config/...`,
+`internal/err/...`, `internal/write/...` homes into an
+`internal/ctxctl/` subtree, physically signalling
+"ctxctl-only." Shared foundations (`rc`, `desc`, `config/*`
+primitives, `nudge`, `io`, …) stay put and are imported by both
+binaries. `git mv` + import-path rewrite; a guard test asserts
+`cmd/ctx` never imports `internal/ctxctl`.
+
+**2. Strip the `ctx`-side wiring:**
 
 - Remove `audit.Cmd` registration from
-  `internal/bootstrap/group.go` (the `ctx audit` top-level
-  command).
+  `internal/bootstrap/group.go` (the `ctx audit` command).
 - Remove `checkaudit.Cmd()` registration from
   `internal/cli/system/system.go` (the `ctx system
-  check-audit` hook subcommand).
+  check-audit` hook).
 - Remove the `check-audit` line from the shipped
-  `internal/assets/claude/hooks/hooks.json` — **this
-  resolves the deliberately-dirty edit currently in the
-  working tree.** (That edit was left dirty as a forcing
-  function; this spec is where the trail ends.)
-- Remove now-orphaned `ctx`-side constants/yaml that only
-  served the `ctx audit` / `ctx system check-audit` surface
-  (e.g. `commands.yaml` `audit.*` and `system.checkaudit`
-  entries, `UseAudit*`/`DescKeyAudit*` if not reused by
-  ctxctl). Re-add under ctxctl's own descriptor namespace.
+  `internal/assets/claude/hooks/hooks.json` — **this resolves
+  the deliberately-dirty edit in the working tree.** (Left
+  dirty as a forcing function; this spec is where the trail
+  ends.)
+- **Delete** the orphaned `ctx`-side audit descriptors
+  outright (not relocate): `commands.yaml` `audit.*` /
+  `system.checkaudit`, the `examples.yaml` / `flags.yaml`
+  counterparts, `internal/config/embed/text/check_audit.go`,
+  the `UseAudit*`/`UseSystemCheckAudit` constants in
+  `internal/config/embed/cmd`. ctxctl does **not** reuse these
+  — it owns its text as English Go constants (see below), so
+  the i18n keys leave the codebase entirely.
 
 ### Re-expose under ctxctl
 
-- `ctxctl audit list|show|dismiss` — same behavior, reusing
-  `internal/cli/audit/cmd/*` and `internal/cli/audit/core/*`.
-- `ctxctl audit-relay` — the hook entry, reusing the render
-  logic in `internal/cli/system/core/audit`. (Naming: a
-  single `audit-relay` verb rather than `system check-audit`,
-  since ctxctl has no `system` hook-plumbing namespace.)
+The `tools/ctxctl` module's `main` wires:
+
+- `ctxctl audit list|show|dismiss` — same behavior, importing
+  the relocated `internal/ctxctl/...` packages.
+- `ctxctl audit-relay` — the hook entry, reusing the relocated
+  render logic and ctx's `cli/system/core/nudge` box renderer.
+  Single `audit-relay` verb rather than `system check-audit`,
+  since ctxctl has no `system` hook-plumbing namespace.
+
+User-facing text (CLI output, relay-box copy) is supplied as
+plain English Go constants in `tools/ctxctl`, passed into the
+(text-free) `internal/ctxctl` logic. The relocated logic holds
+no hardcoded user copy and makes no `desc.Text` calls — that
+machinery stays in `ctx` for `ctx`'s own output.
 
 ### Wire the repo-local dev hook
 
@@ -157,9 +188,10 @@ writes.
 ## Interface
 
 ```
-# Maintainer binary, installed via:
-go install github.com/ActiveMemory/ctx/cmd/ctxctl@latest
-# or built locally by the Makefile.
+# Maintainer binary — built to dist/ and installed to PATH
+# (symmetric with ctx) so every repo copy / worktree shares
+# one binary and the repo root stays clean:
+make reinstall-ctxctl         # -> /usr/local/bin/ctxctl
 
 ctxctl audit                  # list (default)
 ctxctl audit list
@@ -173,55 +205,72 @@ ctxctl audit-relay            # hook entry (reads stdin hook JSON)
 
 Create:
 
-- `cmd/ctxctl/main.go` — binary entry, cobra root.
-- `cmd/ctxctl/<wiring>` — audit + audit-relay subcommand
-  registration importing the existing internal packages.
-- `internal/config/embed/cmd/ctxctl.go` (or reuse) —
-  ctxctl-namespaced Use/DescKey constants.
+- `tools/ctxctl/go.mod` — module
+  `github.com/ActiveMemory/ctx/tools/ctxctl`; `require` the
+  `ctx` module (resolved locally via `go.work`).
+- `tools/ctxctl/main.go` + wiring — cobra root registering
+  `audit list|show|dismiss` and `audit-relay`, importing the
+  relocated `internal/ctxctl/...` packages.
+- `tools/ctxctl/<text>.go` — English-string constants for all
+  ctxctl user-facing output (CLI + relay-box copy).
+- `go.work` (repo root, committed) — `use .` and
+  `use ./tools/ctxctl`; plus `go.work.sum`.
 
-Modify (move audit out of `ctx`):
+Move (relocate with `git mv` + import-path rewrite):
+
+- `internal/cli/audit/**`, `internal/cli/system/cmd/checkaudit/**`,
+  `internal/cli/system/core/audit/**`, `internal/config/audit/**`,
+  `internal/err/audit/**`, `internal/write/audit/**`
+  → under `internal/ctxctl/...`. Make the output functions
+  text-free (accept strings as parameters); strip their
+  `desc.Text` calls.
+
+Modify (strip audit out of `ctx`):
 
 - `internal/bootstrap/group.go` — drop `audit.Cmd`.
 - `internal/cli/system/system.go` — drop `checkaudit.Cmd()`.
 - `internal/assets/claude/hooks/hooks.json` — drop
   `check-audit` (resolves the dirty edit).
-- `internal/assets/commands/commands.yaml`,
-  `examples.yaml`, `flags.yaml`,
-  `internal/config/embed/cmd/{audit.go,system.go}` — relocate
-  the `audit.*` / `system.checkaudit` descriptors to ctxctl's
-  namespace; remove the `ctx`-side orphans.
-- `internal/assets/hooks/messages/registry.yaml` +
-  `registry_test.go` count — the `check-audit` message
-  variant: decide whether ctxctl reuses the same message
-  registry (likely yes — the nudge/message machinery is in
-  `internal/`, shared) or gets its own. If reused, the
-  registry entry stays and the count test is unaffected.
-- `Makefile` — add a `ctxctl` build target.
+- `Makefile` — add a `ctxctl` build target (`make ctxctl`).
 - `.claude/settings.local.json` (gitignored, local only) —
   wire `ctxctl audit-relay` as a UserPromptSubmit hook.
 
+Delete (orphaned `ctx`-side audit descriptors — ctxctl owns
+its own English text, so these leave the codebase):
+
+- `internal/config/embed/text/check_audit.go`; the
+  `UseAudit*` / `UseSystemCheckAudit` (+ `DescKey*`) constants
+  in `internal/config/embed/cmd`.
+- `internal/assets/commands/commands.yaml` `audit.*` /
+  `system.checkaudit`; matching `examples.yaml`, `flags.yaml`,
+  and `internal/assets/hooks/messages/registry.yaml` entries
+  (adjust the `registry_test.go` count).
+
 Keep as-is:
 
-- All `internal/.../audit` logic packages (reused by ctxctl).
+- Shared `internal/` foundations (`rc`, `assets/read/desc`,
+  `config/*`, `io`, `cli/system/core/nudge`, …) — imported by
+  both binaries.
 - `.claude/skills/_ctx-surface-audit/SKILL.md`.
-- `docs/recipes/audit-channel.md` — but re-pass once ctxctl
-  exists: the channel is invoked via `ctxctl`, and the hook
-  is wired locally, not by `ctx setup`.
+- `docs/recipes/audit-channel.md` — re-pass once ctxctl exists
+  (invoked via `ctxctl`; hook wired locally, not by `ctx
+  setup`).
 
 ## Testing
 
-- `cmd/ctxctl` builds; `ctxctl audit list/show/dismiss` pass
-  the same behavioral tests as the Phase 1a CLI (relocate or
-  re-point the existing tests).
-- **`ctx` binary excludes audit**: a guard test asserting
-  `cmd/ctx`'s transitive imports do NOT include
-  `internal/cli/audit` (parse the import graph, or a
-  `go list -deps ./cmd/ctx` assertion in
+- `tools/ctxctl` builds (workspace mode); `ctxctl audit
+  list/show/dismiss` pass the same behavioral tests as the
+  Phase 1a CLI (relocate the existing tests into the module).
+- **`ctx` cannot reach audit — two layers:** (a) the module
+  graph — `ctx`'s `go.mod` does not `require` `tools/ctxctl`;
+  (b) a guard test asserting `cmd/ctx`'s transitive imports
+  exclude `internal/ctxctl` (`go list -deps ./cmd/ctx` in
   `internal/compliance`).
 - Shipped `hooks.json` does NOT contain `check-audit`
   (compliance assertion).
-- `ctxctl audit-relay` renders the verbatim box from a
-  dropped report (relocate the Phase 1a hook tests).
+- `ctxctl audit-relay` renders the verbatim box from a dropped
+  report (relocate the Phase 1a hook tests), with the English
+  copy supplied by `tools/ctxctl`.
 
 ## Non-Goals
 
@@ -237,19 +286,20 @@ Keep as-is:
 
 ## Open Questions
 
-1. **Do the audit logic packages move from `internal/cli/...`
-   to an `internal/ctxctl/...` subtree** to physically signal
-   "ctxctl-only," or stay put with a doc-note? Leaning
-   stay-put + doc-note: a physical move is churn and the
-   import-graph guard test already enforces the boundary
-   mechanically. Decide during implementation.
-2. **Does the nudge/message registry stay shared** between
-   `ctx` and `ctxctl` (both in `internal/`), or does ctxctl
-   get its own? Leaning shared — the relay machinery is
-   generic and a second copy is waste.
+1. **Relocate audit logic to `internal/ctxctl/`?** —
+   **RESOLVED: yes, move it.** Physical relocation signals
+   "ctxctl-only" and pairs with the module boundary; stay-put
+   was the lazy option. (DECISIONS.md 2026-05-27.)
+2. **Shared message registry?** — **RESOLVED: no.** ctxctl
+   owns its user-facing text as plain English Go constants
+   under `tools/ctxctl`, outside the YAML localization and the
+   `desc`/i18n engine — no French ctxctl. The relay machinery
+   (`nudge` box renderer) is still reused; it receives
+   already-resolved strings.
 3. **Version stamping for ctxctl** — reuse `ctx`'s version
-   package now, or defer until the release subcommands land?
-   Leaning reuse-now (trivial, same module).
+   package (importable via the nested-module allowance) now,
+   or defer until the release subcommands land? Leaning
+   reuse-now (trivial).
 4. **`ctxctl` install ergonomics in the Makefile** — a
    `make ctxctl` target plus a dev-setup note; final shape
    deferred to the build-tooling phase.
@@ -267,3 +317,11 @@ is the forcing function to finally build the Phase-BT
 inhabitant. The deliberately-dirty `hooks.json` edit in the
 working tree is the burned bridge: the only way forward is
 the migration this spec describes.
+
+**Revised 2026-05-27 (session 96765858):** reversed from
+same-module `cmd/ctxctl` to a separate module at
+`tools/ctxctl`, after a build test disproved the "separate
+go.mod can't import `internal/`" premise. Driver: blast-radius
+isolation — a hard module boundary so ctxctl can never break
+ctx — plus ctxctl owning its English-string messages (no
+i18n). See DECISIONS.md, 2026-05-27.

@@ -73,6 +73,10 @@ var strconvFuncs = map[string]bool{
 // exemptPackagePaths lists package path substrings that are fully
 // exempt from magic value checks — config definitions, template
 // definitions, and error constructors.
+//
+// The internal/ctxctl/{config,err} entries mirror the
+// internal/{config,err} exemptions for ctxctl's parallel
+// package taxonomy (DECISIONS.md 2026-05-27).
 var exemptPackagePaths = []string{
 	"internal/config/",
 	"internal/config",
@@ -82,6 +86,8 @@ var exemptPackagePaths = []string{
 	"internal/cli/hub/core/server",
 	"internal/cli/initialize/core/claudecheck",
 	"internal/sysinfo",
+	"internal/ctxctl/config/",
+	"internal/ctxctl/err/",
 }
 
 // TestNoMagicValues flags magic numeric literals in non-test Go files

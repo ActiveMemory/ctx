@@ -107,3 +107,71 @@ func TestParseLoadavg_Empty(t *testing.T) {
 		t.Error("expected Supported = false for empty input")
 	}
 }
+
+func TestParsePressure(t *testing.T) {
+	tests := []struct {
+		name          string
+		input         string
+		wantSev       Severity
+		wantSupported bool
+	}{
+		{
+			name: "idle no pressure",
+			input: "some avg10=0.00 avg60=0.00 avg300=0.00 total=0\n" +
+				"full avg10=0.00 avg60=0.00 avg300=0.00 total=0\n",
+			wantSev:       SeverityOK,
+			wantSupported: true,
+		},
+		{
+			name: "some below warn threshold",
+			input: "some avg10=9.99 avg60=4.00 avg300=1.00 total=12345\n" +
+				"full avg10=0.00 avg60=0.00 avg300=0.00 total=0\n",
+			wantSev:       SeverityOK,
+			wantSupported: true,
+		},
+		{
+			name: "some at warn threshold",
+			input: "some avg10=10.00 avg60=4.00 avg300=1.00 total=12345\n" +
+				"full avg10=0.00 avg60=0.00 avg300=0.00 total=0\n",
+			wantSev:       SeverityWarning,
+			wantSupported: true,
+		},
+		{
+			name: "full at danger threshold takes precedence",
+			input: "some avg10=42.00 avg60=20.00 avg300=8.00 total=99999\n" +
+				"full avg10=10.00 avg60=5.00 avg300=2.00 total=54321\n",
+			wantSev:       SeverityDanger,
+			wantSupported: true,
+		},
+		{
+			name: "full below danger but some at warn",
+			input: "some avg10=15.00 avg60=8.00 avg300=3.00 total=99999\n" +
+				"full avg10=9.99 avg60=2.00 avg300=1.00 total=54321\n",
+			wantSev:       SeverityWarning,
+			wantSupported: true,
+		},
+		{
+			name:          "empty file no PSI",
+			input:         "",
+			wantSev:       SeverityOK,
+			wantSupported: false,
+		},
+		{
+			name:          "malformed no avg10 field",
+			input:         "some total=0\nfull total=0\n",
+			wantSev:       SeverityOK,
+			wantSupported: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sev, supported := parsePressure(strings.NewReader(tt.input))
+			if supported != tt.wantSupported {
+				t.Errorf("supported = %v, want %v", supported, tt.wantSupported)
+			}
+			if sev != tt.wantSev {
+				t.Errorf("severity = %v, want %v", sev, tt.wantSev)
+			}
+		})
+	}
+}

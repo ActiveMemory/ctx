@@ -459,8 +459,11 @@ survives agent tunnel vision. The auditor drops a structured
 report into `.context/audit/`; a hook relays it at the next
 prompt; you dismiss it once addressed.
 
-**Uses**: `/ctx-surface-audit`, `ctx audit list`,
-`ctx audit show`, `ctx audit dismiss`, `ctx system check-audit`
+**Uses**: `ctxctl audit list`, `ctxctl audit show`,
+`ctxctl audit dismiss`, `ctxctl audit-relay` (the maintainer-only
+`ctxctl` binary; the auditor that produces reports is
+project-specific — ctx's own `_ctx-surface-audit` is the
+reference example)
 
 ---
 

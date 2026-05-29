@@ -353,9 +353,9 @@ func TestAddResourceResults_AllHealthy(t *testing.T) {
 	report := &check.Report{}
 	check.AddResourceResults(report, snap)
 
-	if len(report.Results) != 4 {
+	if len(report.Results) != 3 {
 		t.Fatalf(
-			"expected 4 results (memory, swap, disk, load), got %d",
+			"expected 3 results (memory, disk, load), got %d",
 			len(report.Results),
 		)
 	}
@@ -373,11 +373,16 @@ func TestAddResourceResults_AllHealthy(t *testing.T) {
 }
 
 func TestAddResourceResults_MemoryWarning(t *testing.T) {
+	// The memory row's status tracks the OS pressure signal,
+	// not occupancy. Occupancy is set high to confirm it does
+	// not drive the status.
 	snap := sysinfo.Snapshot{
 		Memory: sysinfo.MemInfo{
-			TotalBytes: 1000,
-			UsedBytes:  820, // 82% -> WARNING
-			Supported:  true,
+			TotalBytes:        1000,
+			UsedBytes:         820,
+			Pressure:          sysinfo.SeverityWarning,
+			PressureSupported: true,
+			Supported:         true,
 		},
 		Disk: sysinfo.DiskInfo{Supported: false},
 		Load: sysinfo.LoadInfo{Supported: false},
@@ -393,18 +398,26 @@ func TestAddResourceResults_MemoryWarning(t *testing.T) {
 		t.Errorf("expected resource_memory, got %s", report.Results[0].Name)
 	}
 	if report.Results[0].Status != stats.StatusWarning {
-		t.Errorf("expected warning for 82%% memory, got %s", report.Results[0].Status)
+		t.Errorf(
+			"expected warning for warning memory pressure, got %s",
+			report.Results[0].Status,
+		)
 	}
 }
 
 func TestAddResourceResults_DangerMapsToError(t *testing.T) {
+	// Memory danger comes from the pressure signal; disk and
+	// load from occupancy/ratio. The swap row was dropped —
+	// sticky occupancy is not a health signal.
 	snap := sysinfo.Snapshot{
 		Memory: sysinfo.MemInfo{
-			TotalBytes:     1000,
-			UsedBytes:      920, // 92% -> DANGER
-			SwapTotalBytes: 1000,
-			SwapUsedBytes:  760, // 76% -> DANGER
-			Supported:      true,
+			TotalBytes:        1000,
+			UsedBytes:         920,
+			SwapTotalBytes:    1000,
+			SwapUsedBytes:     760,
+			Pressure:          sysinfo.SeverityDanger,
+			PressureSupported: true,
+			Supported:         true,
 		},
 		Disk: sysinfo.DiskInfo{
 			TotalBytes: 1000,
@@ -421,15 +434,19 @@ func TestAddResourceResults_DangerMapsToError(t *testing.T) {
 	report := &check.Report{}
 	check.AddResourceResults(report, snap)
 
-	if len(report.Results) != 4 {
-		t.Fatalf("expected 4 results, got %d", len(report.Results))
+	if len(report.Results) != 3 {
+		t.Fatalf("expected 3 results, got %d", len(report.Results))
 	}
+	statusByName := make(map[string]string, len(report.Results))
 	for _, r := range report.Results {
-		if r.Status != stats.StatusError {
-			t.Errorf(
-				"result %s: expected error for danger severity, got %s",
-				r.Name, r.Status,
-			)
+		statusByName[r.Name] = r.Status
+	}
+	for _, name := range []string{
+		"resource_memory", "resource_disk", "resource_load",
+	} {
+		if statusByName[name] != stats.StatusError {
+			t.Errorf("result %s: expected error, got %s",
+				name, statusByName[name])
 		}
 	}
 }
@@ -449,33 +466,6 @@ func TestAddResourceResults_UnsupportedSkipped(t *testing.T) {
 			"expected 0 results for unsupported metrics, got %d",
 			len(report.Results),
 		)
-	}
-}
-
-func TestAddResourceResults_NoSwapWhenZeroTotal(t *testing.T) {
-	snap := sysinfo.Snapshot{
-		Memory: sysinfo.MemInfo{
-			TotalBytes:     16 * 1 << 30,
-			UsedBytes:      4 * 1 << 30,
-			SwapTotalBytes: 0, // No swap configured
-			SwapUsedBytes:  0,
-			Supported:      true,
-		},
-		Disk: sysinfo.DiskInfo{Supported: false},
-		Load: sysinfo.LoadInfo{Supported: false},
-	}
-
-	report := &check.Report{}
-	check.AddResourceResults(report, snap)
-
-	if len(report.Results) != 1 {
-		t.Fatalf(
-			"expected 1 result (memory only, no swap), got %d",
-			len(report.Results),
-		)
-	}
-	if report.Results[0].Name != "resource_memory" {
-		t.Errorf("expected resource_memory, got %s", report.Results[0].Name)
 	}
 }
 

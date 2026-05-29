@@ -22,6 +22,11 @@ const (
 	KeyHWMemsize = "hw.memsize"
 	// KeyVMSwapUsage is the sysctl key for swap usage.
 	KeyVMSwapUsage = "vm.swapusage"
+	// KeyVMPressureLevel is the sysctl key for the kernel's
+	// memory pressure level (kern.memorystatus_vm_pressure_level).
+	// The value is a derivative pressure signal maintained by
+	// the kernel, not a static occupancy ratio.
+	KeyVMPressureLevel = "kern.memorystatus_vm_pressure_level"
 	// TrimBraces is the brace wrapper trimmed from sysctl
 	// vm.loadavg output (e.g. "{ 0.52 0.41 0.38 }").
 	TrimBraces = "{ }"
@@ -30,6 +35,21 @@ const (
 	// FmtLoadAvg is the Sscanf format for parsing three
 	// load average floats.
 	FmtLoadAvg = "%f %f %f"
+)
+
+// macOS memory pressure level values reported by
+// kern.memorystatus_vm_pressure_level. These mirror the
+// kernel's kVMPressure* dispatch constants.
+const (
+	// PressureLevelNormal is the kernel's normal memory
+	// pressure level (kVMPressureNormal).
+	PressureLevelNormal = 1
+	// PressureLevelWarning is the kernel's warning memory
+	// pressure level (kVMPressureWarning).
+	PressureLevelWarning = 2
+	// PressureLevelCritical is the kernel's critical memory
+	// pressure level (kVMPressureCritical).
+	PressureLevelCritical = 4
 )
 
 // vm_stat output parsing constants.

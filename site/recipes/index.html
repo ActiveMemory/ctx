@@ -1988,6 +1988,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#out-of-band-audit-channel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out-of-Band Audit Channel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#authoring-lifecycle-triggers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2438,6 +2449,18 @@ previewing matches, and syncing to each AI tool's native
 format.</p>
 <p><strong>Uses</strong>: <code>ctx steering add</code>, <code>ctx steering preview</code>,
 <code>ctx steering list</code>, <code>ctx steering sync</code></p>
+<hr />
+<h3 id="out-of-band-audit-channel"><a href="audit-channel/">Out-of-Band Audit Channel</a><a class="headerlink" href="#out-of-band-audit-channel" title="Permanent link">&para;</a></h3>
+<p>Run discipline audits from a <strong>separate session</strong> and surface
+their findings via <strong>verbatim relay</strong> — the one channel that
+survives agent tunnel vision. The auditor drops a structured
+report into <code>.context/audit/</code>; a hook relays it at the next
+prompt; you dismiss it once addressed.</p>
+<p><strong>Uses</strong>: <code>ctxctl audit list</code>, <code>ctxctl audit show</code>,
+<code>ctxctl audit dismiss</code>, <code>ctxctl audit-relay</code> (the maintainer-only
+<code>ctxctl</code> binary; the auditor that produces reports is
+project-specific — ctx's own <code>_ctx-surface-audit</code> is the
+reference example)</p>
 <hr />
 <h3 id="authoring-lifecycle-triggers"><a href="triggers/">Authoring Lifecycle Triggers</a><a class="headerlink" href="#authoring-lifecycle-triggers" title="Permanent link">&para;</a></h3>
 <p>Run <strong>executable shell scripts</strong> at session-start,

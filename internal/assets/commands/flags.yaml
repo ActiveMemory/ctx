@@ -195,8 +195,6 @@ remind.after:
   short: Don't surface until this date (YYYY-MM-DD)
 remind.dismiss.all:
   short: Dismiss all reminders
-audit.dismiss.all:
-  short: Dismiss every audit report in .context/audit/
 resume.session-id:
   short: Session ID (overrides stdin)
 site.feed.base-url:
