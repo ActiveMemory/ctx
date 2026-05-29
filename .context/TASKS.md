@@ -153,6 +153,20 @@ These have priority because other knowledge ingestion projects depend on them.
       half-migrated package must not ship again. Pairs with the verbatim-relay
       guard task above — that one makes a
       future skew fail LOUD; this one closes the current gap.
+    - #in-progress 2026-05-28 (branch feat/hooks-wiring-guard, session 0066d49b):
+      Recurrence guard SHIPPED — `TestShippedHooksResolveToRegisteredCommands`
+      in internal/compliance walks every `ctx <…>` invocation in the shipped
+      hooks.json against the assembled cobra tree; a wired-but-unregistered verb
+      fails `go test`. Proven both ways (passes clean, fails on a reintroduced
+      `check-anchor-drift`). Spec: specs/hooks-wiring-guard.md. Implemented as a
+      Go test, not a hack/release.sh step (cross-platform, no bash, runs in CI).
+      STILL OPEN: the live fix — cut/republish a release where plugin hooks.json
+      and binary share a post-fc7db228 commit, then reinstall for skewed users
+      (a tag+publish action, maintainer-owned).
+      CORRECTION to the Fix bullet above: shipped hooks must NOT "include
+      check-audit" — the existing `TestShippedHooksExcludeCheckAudit` guard
+      forbids it (audit channel is maintainer-only, per the ctxctl migration).
+      The current asset correctly omits it; the republished package must too.
     - Provenance: check-anchor-drift version-skew investigation. Design notes:
       specs/experiments/acdl-session-start.md (
       §Root Cause, follow-up #1). #priority:high #session:96765858 #branch:
