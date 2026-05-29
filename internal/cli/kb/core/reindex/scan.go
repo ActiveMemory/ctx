@@ -67,14 +67,14 @@ func collectTopicDirs(root, rel string, indexed map[string]bool) error {
 func topicLeaves(indexed map[string]bool) []string {
 	var leaves []string
 	for rel := range indexed {
-		if !hasNestedTopic(rel, indexed) {
+		if !topicNested(rel, indexed) {
 			leaves = append(leaves, rel)
 		}
 	}
 	return leaves
 }
 
-// hasNestedTopic reports whether any indexed directory is a strict
+// topicNested reports whether any indexed directory is a strict
 // descendant of rel (making rel a group-landing, not a topic).
 //
 // Parameters:
@@ -83,7 +83,7 @@ func topicLeaves(indexed map[string]bool) []string {
 //
 // Returns:
 //   - bool: true when rel has a nested topic beneath it.
-func hasNestedTopic(rel string, indexed map[string]bool) bool {
+func topicNested(rel string, indexed map[string]bool) bool {
 	prefix := rel + cfgToken.Slash
 	for other := range indexed {
 		if other != rel && strings.HasPrefix(other, prefix) {
