@@ -28,36 +28,56 @@ drop their findings onto the verbatim-relay channel so the
 next interactive session sees them at the top of its next
 turn.
 
+!!! note "Maintainer tooling: lives in `ctxctl`, not the shipped `ctx` binary"
+    `ctxctl audit` and the `ctxctl audit-relay` hook are the
+    **generic relay** half: a place for *any* out-of-band tool
+    to drop a report and have it relayed. They live in
+    `ctxctl` — ctx's separate maintainer/contributor binary —
+    **not** in the user-facing `ctx` binary, so end users
+    never carry an audit hook they have no producer for. The
+    **auditor** that produces the report is project-specific —
+    it must know *your* conventions and directory layout. ctx
+    dogfoods its own internal auditor (`_ctx-surface-audit`,
+    a repo-only skill that scans ctx's `internal/` tree); the
+    examples below use it as a concrete reference. To adopt
+    the pattern in your own project, build the same
+    out-of-band relay plus your own audit skill. ctx
+    maintainers build and install `ctxctl` once with `make
+    reinstall-ctxctl` (→ `/usr/local/bin/ctxctl`); every
+    worktree then shares the one binary.
+
 ## TL;DR
 
 ```bash
-# 1. From a separate Claude Code session in the same project:
-/ctx-surface-audit                # default: main..HEAD
+# 1. From a separate Claude Code session, run your project's
+#    audit skill (ctx's own internal example shown here):
+/_ctx-surface-audit               # default: main..HEAD
 
-# 2. The skill writes:
-.context/audit/surface.md         # structured report
+# 2. It writes a structured report:
+.context/audit/surface.md
 
 # 3. Back in the working session, the next prompt fires the
-#    UserPromptSubmit hook:
-ctx system check-audit            # invoked by the hook config
+#    repo-local UserPromptSubmit hook (wired in
+#    .claude/settings.local.json, not by `ctx setup`):
+ctxctl audit-relay
 
 # 4. The agent / human sees a verbatim-relay box on the next
-#    response, listing the specific files to fix.
+#    response, listing the specific findings.
 
 # 5. After addressing the findings:
-ctx audit dismiss surface         # stops the relay
+ctxctl audit dismiss surface      # stops the relay
 ```
 
 ## Commands and Skills Used
 
 | Tool                        | Type        | Purpose                                                |
 |-----------------------------|-------------|--------------------------------------------------------|
-| `/ctx-surface-audit`        | Skill       | Out-of-band auditor; scans diff for surface drift      |
-| `ctx audit list`            | CLI command | Show all reports with status and age                   |
-| `ctx audit show ID`         | CLI command | Print one report's body (pipe-friendly)                |
-| `ctx audit dismiss ID`      | CLI command | Mark a report dismissed against its current digest     |
-| `ctx audit dismiss --all`   | CLI command | Bulk dismissal                                         |
-| `ctx system check-audit`    | CLI command | UserPromptSubmit hook; verbatim-relays unread reports  |
+| `ctxctl audit list`         | CLI command | Show all reports with status and age                   |
+| `ctxctl audit show ID`      | CLI command | Print one report's body, pipe-friendly                 |
+| `ctxctl audit dismiss ID`   | CLI command | Mark a report dismissed against its current digest     |
+| `ctxctl audit dismiss --all`| CLI command | Bulk dismissal                                         |
+| `ctxctl audit-relay`        | CLI command | UserPromptSubmit hook; verbatim-relays reports         |
+| `_ctx-surface-audit`        | Skill       | ctx's **own internal** auditor — reference example, not bundled |
 
 ## Why a Separate Session
 
@@ -74,7 +94,7 @@ Two reasons, both load-bearing:
    lets you decide *when* to spend the cycles (typically
    right before a PR, not on every micro-commit).
 
-The `/ctx-surface-audit` skill enforces this with a hard
+The `/_ctx-surface-audit` skill enforces this with a hard
 dirty-tree refusal: invoking it in a working session with
 uncommitted changes returns
 
@@ -93,11 +113,11 @@ worktree. The audit runs against `main..HEAD` by default.
 ### Step 2: Invoke the Auditor
 
 ```text
-You (in session 2): "/ctx-surface-audit"
+You (in session 2): "/_ctx-surface-audit"
 
 Skill: "Scanned 4 commits, 3 surfaces detected.
         Wrote .context/audit/surface.md (status: findings).
-        Open a working session — the check-audit hook will
+        Open a working session — the audit-relay hook will
         relay the findings on the next prompt."
 ```
 
@@ -109,10 +129,11 @@ a structured report.
 ### Step 3: Return to the Working Session
 
 The next time you submit a prompt in your working session,
-the `ctx system check-audit` hook (a UserPromptSubmit hook
-in `.claude/settings.local.json`) reads `.context/audit/`
-and emits a verbatim-relay box at the top of the agent's
-response:
+the `ctxctl audit-relay` hook (a UserPromptSubmit hook wired
+in the repo-local `.claude/settings.local.json` — maintainer-
+only; `ctx setup` does not install it) reads
+`.context/audit/` and emits a verbatim-relay box at the top
+of the agent's response:
 
 ```text
 ┌─ Audit Reports ──────────────────────────────────────
@@ -128,8 +149,8 @@ response:
 │   - edit internal/assets/claude/skills/ctx-pad/SKILL.md
 │   - edit docs/recipes/scratchpad-with-claude.md
 │
-│ Dismiss: ctx audit dismiss <id>
-│ Dismiss all: ctx audit dismiss --all
+│ Dismiss: ctxctl audit dismiss <id>
+│ Dismiss all: ctxctl audit dismiss --all
 └──────────────────────────────────────────────────
 ```
 
@@ -142,7 +163,7 @@ Once you've addressed the findings (or accepted them as
 out-of-scope), dismiss the report:
 
 ```bash
-ctx audit dismiss surface
+ctxctl audit dismiss surface
 ```
 
 Dismissal is bound to the **report digest** at dismiss
@@ -154,7 +175,7 @@ the next prompt.
 ## Retention
 
 The audit channel keeps **one report per kind**. Re-running
-`/ctx-surface-audit` overwrites the prior `surface.md`.
+`/_ctx-surface-audit` overwrites the prior `surface.md`.
 Reports older than 30 days are still relayed but prefixed
 with a `STALE — main..HEAD (audited 32d ago)` marker so the
 recipient knows the assessment may not match current code.
@@ -182,19 +203,24 @@ the deferred list until the user-driven workflow proves out.
 
 ## Other Audit Skills
 
-`/ctx-surface-audit` is the first member of a family. The
-scaffolding (channel, ledger, hook, CLI) is generic. Future
+`_ctx-surface-audit` is the first of a family of ctx's own
+internal auditors (all `_`-prefixed, repo-only). The
+scaffolding they share — channel, ledger, hook, CLI — lives
+in the maintainer-only `ctxctl` binary; the auditors
+themselves are repo-only skills. Planned
 siblings under the same shape:
 
-- `/ctx-spec-trailer-audit` — does each commit's `Spec:`
+- `_ctx-spec-trailer-audit` — does each commit's `Spec:`
   trailer point at a spec that genuinely covers that
   commit's scope?
-- `/ctx-capture-audit` — was a Decision or Learning
+- `_ctx-capture-audit` — was a Decision or Learning
   persisted for non-trivial work that ended without one?
 
 Each lives in its own SKILL.md and writes its own report
 file (e.g. `.context/audit/spec-trailer.md`). The hook
-relays whatever it finds, with no per-kind plumbing.
+relays whatever it finds, with no per-kind plumbing — which
+is exactly what lets *your* project's auditors plug in
+without touching ctx.
 
 ## See Also
 

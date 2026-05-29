@@ -1,0 +1,10 @@
+go 1.26.3
+
+// ctx (the shipped user binary) and tools/ctxctl (maintainer-only)
+// are separate modules. ctx never requires tools/ctxctl, so it can
+// never import it; ctxctl reuses ctx's internal/ via this workspace.
+// See specs/ctxctl-bootstrap.md and DECISIONS.md (2026-05-27).
+use (
+	.
+	./tools/ctxctl
+)

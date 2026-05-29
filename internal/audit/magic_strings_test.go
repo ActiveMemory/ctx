@@ -44,10 +44,19 @@ var exemptStrings = map[string]bool{
 //
 // exemptStringPackages lists package paths fully exempt
 // from magic string checks.
+//
+// The internal/ctxctl/{config,err} entries mirror the
+// internal/{config,err} exemptions for ctxctl's parallel
+// package taxonomy: ctxctl owns its user-facing text as
+// plain English Go constants, outside ctx's YAML i18n
+// pipeline, so its config and error packages legitimately
+// hold string literals (DECISIONS.md 2026-05-27).
 var exemptStringPackages = []string{
 	"internal/config/",
 	"internal/config",
 	"internal/assets/tpl",
+	"internal/ctxctl/config/",
+	"internal/ctxctl/err/",
 }
 
 // TestNoMagicStrings flags magic string literals in non-test

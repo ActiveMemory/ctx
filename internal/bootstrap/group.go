@@ -8,7 +8,6 @@ package bootstrap
 
 import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
-	"github.com/ActiveMemory/ctx/internal/cli/audit"
 	"github.com/ActiveMemory/ctx/internal/cli/change"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
@@ -121,7 +120,6 @@ func sessions() []registration {
 		{journal.Cmd, embedCmd.GroupSessions},
 		{memory.Cmd, embedCmd.GroupSessions},
 		{remind.Cmd, embedCmd.GroupSessions},
-		{audit.Cmd, embedCmd.GroupSessions},
 		{pad.Cmd, embedCmd.GroupSessions},
 	}
 }

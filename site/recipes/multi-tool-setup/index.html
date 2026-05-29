@@ -2629,6 +2629,13 @@ agent behavior across sessions. The investment is small and the
 benefits compound. Skills like <code>/ctx-code-review</code>, <code>/ctx-explain</code>,
 and <code>/ctx-refactor</code> all become noticeably better with these tools
 connected.</p>
+<p>The two sections below name <strong>canonical implementations</strong> that ctx has
+tested against — Gemini Search for web-search-with-citations and
+GitNexus for the code knowledge graph. If your toolchain provides
+equivalent capabilities through different MCP servers (Firecrawl,
+Exa, Tavily for web search; sourcegraph-cody for code graph), use
+those instead. ctx skills describe capabilities, not specific tools —
+the agent self-routes based on what's connected.</p>
 <h3 id="gemini-search">Gemini Search<a class="headerlink" href="#gemini-search" title="Permanent link">&para;</a></h3>
 <p>Provides grounded web search with citations. Used by skills and the
 agent playbook as the preferred search backend (faster and more accurate

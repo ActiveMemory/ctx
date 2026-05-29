@@ -8,32 +8,67 @@ package sysinfo
 
 import "testing"
 
-func TestEvaluate_MemoryBoundaries(t *testing.T) {
+func TestEvaluate_MemoryPressure(t *testing.T) {
+	const resource = "memory-pressure"
 	tests := []struct {
-		name     string
-		used     uint64
-		total    uint64
-		wantSev  Severity
-		wantN    int
-		resource string
+		name      string
+		pressure  Severity
+		supported bool
+		// occupancy is set deliberately high to prove that
+		// static memory/swap occupancy no longer alerts.
+		usedBytes     uint64
+		totalBytes    uint64
+		swapUsedBytes uint64
+		swapTotal     uint64
+		wantSev       Severity
+		wantN         int
 	}{
-		{"79.9% no alert", 799, 1000, SeverityOK, 0, "memory"},
-		{"80% warning", 800, 1000, SeverityWarning, 1, "memory"},
-		{"89% warning", 890, 1000, SeverityWarning, 1, "memory"},
-		{"90% danger", 900, 1000, SeverityDanger, 1, "memory"},
-		{"100% danger", 1000, 1000, SeverityDanger, 1, "memory"},
+		{
+			name:      "ok pressure no alert",
+			pressure:  SeverityOK,
+			supported: true,
+			usedBytes: 1000, totalBytes: 1000,
+			swapUsedBytes: 1000, swapTotal: 1000,
+			wantSev: SeverityOK, wantN: 0,
+		},
+		{
+			name:      "warning pressure alerts",
+			pressure:  SeverityWarning,
+			supported: true,
+			usedBytes: 100, totalBytes: 1000,
+			wantSev: SeverityWarning, wantN: 1,
+		},
+		{
+			name:      "danger pressure alerts",
+			pressure:  SeverityDanger,
+			supported: true,
+			usedBytes: 100, totalBytes: 1000,
+			wantSev: SeverityDanger, wantN: 1,
+		},
+		{
+			name:      "unsupported pressure no alert despite full occupancy",
+			pressure:  SeverityDanger,
+			supported: false,
+			usedBytes: 1000, totalBytes: 1000,
+			swapUsedBytes: 1000, swapTotal: 1000,
+			wantSev: SeverityOK, wantN: 0,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			snap := Snapshot{
 				Memory: MemInfo{
-					TotalBytes: tt.total,
-					UsedBytes:  tt.used,
-					Supported:  true,
+					TotalBytes:        tt.totalBytes,
+					UsedBytes:         tt.usedBytes,
+					SwapTotalBytes:    tt.swapTotal,
+					SwapUsedBytes:     tt.swapUsedBytes,
+					Pressure:          tt.pressure,
+					PressureSupported: tt.supported,
+					Supported:         true,
 				},
 			}
 			alerts := Evaluate(snap)
-			memAlerts := filterByResource(alerts, tt.resource)
+			memAlerts := filterByResource(alerts, resource)
 			if len(memAlerts) != tt.wantN {
 				t.Fatalf("expected %d alerts, got %d: %v",
 					tt.wantN, len(memAlerts), memAlerts)
@@ -41,43 +76,13 @@ func TestEvaluate_MemoryBoundaries(t *testing.T) {
 			if tt.wantN > 0 && memAlerts[0].Severity != tt.wantSev {
 				t.Errorf("severity = %v, want %v", memAlerts[0].Severity, tt.wantSev)
 			}
-		})
-	}
-}
-
-func TestEvaluate_SwapBoundaries(t *testing.T) {
-	tests := []struct {
-		name    string
-		used    uint64
-		total   uint64
-		wantSev Severity
-		wantN   int
-	}{
-		{"49% no alert", 490, 1000, SeverityOK, 0},
-		{"50% warning", 500, 1000, SeverityWarning, 1},
-		{"74% warning", 740, 1000, SeverityWarning, 1},
-		{"75% danger", 750, 1000, SeverityDanger, 1},
-		{"100% danger", 1000, 1000, SeverityDanger, 1},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			snap := Snapshot{
-				Memory: MemInfo{
-					TotalBytes:     1000,
-					UsedBytes:      100, // below memory threshold
-					SwapTotalBytes: tt.total,
-					SwapUsedBytes:  tt.used,
-					Supported:      true,
-				},
+			// No occupancy-based memory or swap alert should
+			// ever be produced.
+			if n := len(filterByResource(alerts, "memory")); n != 0 {
+				t.Errorf("unexpected %d occupancy memory alerts", n)
 			}
-			alerts := Evaluate(snap)
-			swapAlerts := filterByResource(alerts, "swap")
-			if len(swapAlerts) != tt.wantN {
-				t.Fatalf("expected %d alerts, got %d: %v",
-					tt.wantN, len(swapAlerts), swapAlerts)
-			}
-			if tt.wantN > 0 && swapAlerts[0].Severity != tt.wantSev {
-				t.Errorf("severity = %v, want %v", swapAlerts[0].Severity, tt.wantSev)
+			if n := len(filterByResource(alerts, "swap")); n != 0 {
+				t.Errorf("unexpected %d swap alerts", n)
 			}
 		})
 	}
@@ -158,11 +163,13 @@ func TestEvaluate_LoadBoundaries(t *testing.T) {
 func TestEvaluate_AllDanger(t *testing.T) {
 	snap := Snapshot{
 		Memory: MemInfo{
-			TotalBytes:     16 * giB,
-			UsedBytes:      15 * giB,
-			SwapTotalBytes: 8 * giB,
-			SwapUsedBytes:  7 * giB,
-			Supported:      true,
+			TotalBytes:        16 * giB,
+			UsedBytes:         15 * giB,
+			SwapTotalBytes:    8 * giB,
+			SwapUsedBytes:     7 * giB,
+			Pressure:          SeverityDanger,
+			PressureSupported: true,
+			Supported:         true,
 		},
 		Disk: DiskInfo{
 			TotalBytes: 500 * giB,
@@ -177,8 +184,9 @@ func TestEvaluate_AllDanger(t *testing.T) {
 		},
 	}
 	alerts := Evaluate(snap)
-	if len(alerts) != 4 {
-		t.Fatalf("expected 4 alerts, got %d: %v", len(alerts), alerts)
+	// memory-pressure + disk + load (occupancy no longer alerts).
+	if len(alerts) != 3 {
+		t.Fatalf("expected 3 alerts, got %d: %v", len(alerts), alerts)
 	}
 	if MaxSeverity(alerts) != SeverityDanger {
 		t.Errorf("max severity = %v, want danger", MaxSeverity(alerts))

@@ -14,6 +14,10 @@ const (
 	ProcLoadavg = "/proc/loadavg"
 	// ProcMeminfo is the Linux procfs path for memory information.
 	ProcMeminfo = "/proc/meminfo"
+	// ProcPressureMemory is the Linux procfs path for the
+	// memory Pressure Stall Information (PSI) signal. Absent
+	// when PSI is disabled or the kernel predates 4.20.
+	ProcPressureMemory = "/proc/pressure/memory"
 	// LoadavgFmt is the scanf format for parsing /proc/loadavg fields.
 	LoadavgFmt = "%f %f %f"
 	// MemInfoSuffix is the unit suffix in /proc/meminfo values.
@@ -40,4 +44,24 @@ const (
 	FieldSwapTotal = "SwapTotal"
 	// FieldSwapFree is the free swap space field.
 	FieldSwapFree = "SwapFree"
+)
+
+// Pressure Stall Information (PSI) parsing tokens from
+// /proc/pressure/memory. Each line reads, for example:
+//
+//	some avg10=0.00 avg60=0.00 avg300=0.00 total=0
+//	full avg10=0.00 avg60=0.00 avg300=0.00 total=0
+//
+// These constants are consumed by Linux-specific source
+// files and are not visible on non-Linux builds.
+const (
+	// PSILineSome is the line prefix for the "some" pressure
+	// row: the share of time at least one task stalled.
+	PSILineSome = "some"
+	// PSILineFull is the line prefix for the "full" pressure
+	// row: the share of time every runnable task stalled.
+	PSILineFull = "full"
+	// PSIFieldAvg10 is the field name (with its "=" delimiter)
+	// for the 10-second pressure average within a PSI line.
+	PSIFieldAvg10 = "avg10="
 )

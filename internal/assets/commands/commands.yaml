@@ -1025,30 +1025,6 @@ reindex:
     Examples:
       ctx reindex
   short: Regenerate indices for DECISIONS.md and LEARNINGS.md
-audit:
-  long: |-
-    Surface out-of-band audit reports dropped under .context/audit/.
-
-    The audit channel decouples discipline enforcement from the in-band
-    commit cadence: a separate Claude Code session runs an audit skill
-    (e.g. /ctx-surface-audit) against the current branch, drops a
-    structured report into .context/audit/<kind>.md, and the
-    UserPromptSubmit hook `ctx system checkaudit` verbatim-relays it
-    on the next interactive turn.
-
-    `ctx audit` (no subcommand) lists every report with status, age,
-    and dismissed-state. Subcommands manage the lifecycle:
-
-      list     Show all reports (default action)
-      show     Print one report's body
-      dismiss  Mark one or more reports dismissed
-  short: Show and manage out-of-band audit reports
-audit.list:
-  short: List all audit reports with status and age
-audit.show:
-  short: Print the body of an audit report by id
-audit.dismiss:
-  short: Dismiss one or more audit reports (or --all)
 remind:
   long: |-
     Manage session-scoped reminders stored in .context/reminders.json.
@@ -1162,7 +1138,6 @@ system:
 
     Hook subcommands (Claude Code plugin - safe to run manually):
       context-load-gate           Context file read directive (PreToolUse)
-      check-anchor-drift          Stale-anchor sanity check
       check-context-size          Context size checkpoint
       check-ceremony              Session ceremony adoption nudge
       check-persistence           Context persistence nudge
@@ -1308,8 +1283,6 @@ system.checkskilldiscovery:
     Output: skill tip block (once), silent thereafter
     Silent when: guard file exists for this session
   short: Skill discovery nudge hook
-system.checkaudit:
-  short: Relay unread audit reports at the next prompt
 system.checkreminder:
   short: Surface pending reminders at session start
 system.checkresource:

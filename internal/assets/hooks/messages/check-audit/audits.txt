@@ -1,3 +1,0 @@
-{{.AuditList}}
-Dismiss: ctx audit dismiss <id>
-Dismiss all: ctx audit dismiss --all

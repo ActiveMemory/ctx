@@ -75,11 +75,13 @@ func TestFormatGiB(t *testing.T) {
 func TestEvaluate_AllClear(t *testing.T) {
 	snap := Snapshot{
 		Memory: MemInfo{
-			TotalBytes:     16 * giB,
-			UsedBytes:      4 * giB,
-			SwapTotalBytes: 8 * giB,
-			SwapUsedBytes:  0,
-			Supported:      true,
+			TotalBytes:        16 * giB,
+			UsedBytes:         4 * giB,
+			SwapTotalBytes:    8 * giB,
+			SwapUsedBytes:     0,
+			Pressure:          SeverityOK,
+			PressureSupported: true,
+			Supported:         true,
 		},
 		Disk: DiskInfo{
 			TotalBytes: 500 * giB,
@@ -125,19 +127,25 @@ func TestEvaluate_ZeroTotalSkipped(t *testing.T) {
 	}
 }
 
-func TestEvaluate_NoSwapNoAlert(t *testing.T) {
+// TestEvaluate_OccupancyNeverAlerts proves the regression fix:
+// even fully-occupied memory and swap raise no alert, because the
+// alert signal is OS pressure, not occupancy. Pressure is left
+// unsupported here (the common session-start case on a machine
+// with sticky swap occupancy but no actual pressure).
+func TestEvaluate_OccupancyNeverAlerts(t *testing.T) {
 	snap := Snapshot{
 		Memory: MemInfo{
 			TotalBytes:     16 * giB,
-			UsedBytes:      4 * giB,
-			SwapTotalBytes: 0,
-			Supported:      true,
+			UsedBytes:      16 * giB,
+			SwapTotalBytes: 8 * giB,
+			SwapUsedBytes:  8 * giB,
+			// PressureSupported defaults to false.
+			Supported: true,
 		},
 	}
 	alerts := Evaluate(snap)
-	for _, a := range alerts {
-		if a.Resource == "swap" {
-			t.Errorf("unexpected swap alert when swap total is 0")
-		}
+	if len(alerts) != 0 {
+		t.Errorf("expected no alerts for full occupancy "+
+			"without pressure, got %d: %v", len(alerts), alerts)
 	}
 }

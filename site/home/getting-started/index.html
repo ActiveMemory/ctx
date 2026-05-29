@@ -2231,30 +2231,34 @@ native format. Re-run after adding or changing steering files.</p>
 <p>It should cite specific context: current tasks, recent decisions,
 or previous session topics.</p>
 <h3 id="7-set-up-companion-tools-highly-recommended">7. Set Up Companion Tools (Highly Recommended)<a class="headerlink" href="#7-set-up-companion-tools-highly-recommended" title="Permanent link">&para;</a></h3>
-<p><code>ctx</code> works on its own, but two companion MCP servers unlock significantly
-better agent behavior. The investment is small and the benefits compound
-over sessions:</p>
+<p><code>ctx</code> works on its own, but two MCP capabilities unlock significantly
+better agent behavior. ctx names canonical implementations below as
+its tested defaults; if your toolchain provides the same capabilities
+through different MCP servers (Firecrawl / Exa / Tavily for web
+search; sourcegraph-cody for the code graph), use those instead.
+The investment is small and the benefits compound over sessions:</p>
 <ul>
 <li>
-<dl>
-<dt><strong><a href="https://github.com/nicobailon/gemini-code-search-mcp">Gemini Search</a></strong></dt>
-<dd>grounded web search with citations. Skills like <code>/ctx-code-review</code>
-  and <code>/ctx-explain</code> use it for up-to-date documentation lookups instead
-  of relying on training data.</dd>
-</dl>
+<p><strong>Web search with citations</strong> — canonical:
+  <strong><a href="https://github.com/nicobailon/gemini-code-search-mcp">Gemini Search</a></strong>.
+  Skills like <code>/ctx-code-review</code> and <code>/ctx-explain</code> use it for
+  up-to-date documentation lookups instead of relying on training data.</p>
 </li>
 <li>
-<p><strong><a href="https://github.com/nicobailon/gitnexus-mcp">GitNexus</a></strong>: code
-  knowledge graph with symbol resolution, blast radius analysis, and
-  domain clustering. Skills like <code>/ctx-refactor</code> and <code>/ctx-code-review</code>
+<p><strong>Code knowledge graph</strong> — canonical:
+  <strong><a href="https://github.com/nicobailon/gitnexus-mcp">GitNexus</a></strong>.
+  Provides symbol resolution, blast radius analysis, and domain
+  clustering. Skills like <code>/ctx-refactor</code> and <code>/ctx-code-review</code>
   use it for impact analysis and dependency awareness.</p>
 </li>
 </ul>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Index your project for GitNexus (run once, then after major changes)</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>npx<span class="w"> </span>gitnexus<span class="w"> </span>analyze
 </span></code></pre></div>
-<p>Both are optional MCP servers: if they are not connected, skills degrade
-gracefully to built-in capabilities. See
+<p>(For non-GitNexus code-intelligence MCPs, apply that tool's own
+indexing step instead.)</p>
+<p>Both capabilities are optional: if no compatible MCP is connected,
+skills degrade gracefully to built-in capabilities. See
 <a href="../../recipes/multi-tool-setup/#companion-tools-highly-recommended">Companion Tools</a>
 for setup details and verification.</p>
 <hr />

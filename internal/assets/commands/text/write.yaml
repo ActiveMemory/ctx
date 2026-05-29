@@ -547,14 +547,6 @@ write.pad-no-history:
   short: No pad history to restore.
 write.pad-restored:
   short: Restored pad from snapshot %s.
-write.audit-none:
-  short: No audit reports.
-write.audit-list-item:
-  short: '%s  %-10s  %s  generated %s'
-write.audit-dismissed:
-  short: Dismissed audit %s.
-write.audit-dismissed-all:
-  short: Dismissed %d audit report(s).
 write.pad-tags-item:
   short: "%s\t%d"
 write.pad-tags-none:

@@ -3314,8 +3314,10 @@ attempts to disprove each finding before it is accepted.</p>
 <p>Produces <code>.context/DANGER-ZONES.md</code> with ranked findings split
 into Critical (risk &gt;= 7, silent/cascading) and Elevated tiers.</p>
 <p><strong>Wraps</strong>: reads architecture artifacts, source code; writes
-<code>DANGER-ZONES.md</code>. Optionally uses GitNexus for blast radius
-and Gemini Search for cross-referencing known failure patterns.</p>
+<code>DANGER-ZONES.md</code>. Optionally uses a code-intelligence MCP
+(canonical: GitNexus) for blast radius and a
+web-search-with-citations MCP (canonical: Gemini Search) for
+cross-referencing known failure patterns.</p>
 <p><strong>Relationship</strong>:</p>
 <table>
 <thead>

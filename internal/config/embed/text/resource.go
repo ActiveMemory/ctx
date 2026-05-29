@@ -12,11 +12,9 @@ const (
 	DescKeyResourcesAlertDisk = "resources.alert-disk"
 	// DescKeyResourcesAlertLoad is the text key for resources alert load messages.
 	DescKeyResourcesAlertLoad = "resources.alert-load"
-	// DescKeyResourcesAlertMemory is the text key for resources alert memory
-	// messages.
-	DescKeyResourcesAlertMemory = "resources.alert-memory"
-	// DescKeyResourcesAlertSwap is the text key for resources alert swap messages.
-	DescKeyResourcesAlertSwap = "resources.alert-swap"
+	// DescKeyResourcesAlertMemoryPressure is the text key for resources alert
+	// memory-pressure messages.
+	DescKeyResourcesAlertMemoryPressure = "resources.alert-memory-pressure"
 	// DescKeyResourcesAlertDanger is the text key for resources alert danger
 	// messages.
 	DescKeyResourcesAlertDanger = "resources.alert-danger"

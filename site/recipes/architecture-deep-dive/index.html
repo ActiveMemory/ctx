@@ -1198,7 +1198,8 @@ dependencies).</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/ctx-architecture-enrich
 </span></code></pre></div>
 <p>Takes the Pass 1 artifacts as baseline and layers on verified,
-graph-backed data from GitNexus:</p>
+graph-backed data from a code-intelligence MCP (canonical:
+GitNexus; equivalents include sourcegraph-cody):</p>
 <ul>
 <li>Blast radius numbers for key functions</li>
 <li>Execution flow traces through hot paths</li>
@@ -1211,7 +1212,9 @@ says "module X has 47 callers in module Y, and changing function
 Z would affect 12 downstream consumers."</p>
 <p><strong>When to run</strong>: After Pass 1, when you need quantified
 confidence for refactoring decisions or risk assessment.</p>
-<p><strong>Requires</strong>: GitNexus MCP server connected.</p>
+<p><strong>Requires</strong>: a code-intelligence MCP connected (canonical:
+GitNexus; equivalents work if they expose symbol-index,
+blast-radius, and execution-flow queries).</p>
 <h3 id="pass-3-hunt-for-failure-modes">Pass 3: Hunt for Failure Modes<a class="headerlink" href="#pass-3-hunt-for-failure-modes" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/ctx-architecture-failure-analysis
 </span></code></pre></div>

@@ -102,9 +102,19 @@ func TestNoDeadExports(t *testing.T) {
 	// Also load cmd/ packages to catch cross-boundary
 	// usage (cmd/ctx/main.go calls internal/ exports).
 	cmdPkgs := loadCmdPackages(t)
-	allPkgs := make([]*packages.Package, 0, len(pkgs)+len(cmdPkgs))
+	// And the tools/ctxctl module: it is a separate module
+	// (its own go.mod) that imports internal/ctxctl/... via
+	// the repo-root go.work. Without loading it, exports in
+	// internal/ctxctl used only from tools/ctxctl would look
+	// dead (DECISIONS.md 2026-05-27).
+	ctxctlPkgs := loadCtxctlPackages(t)
+	allPkgs := make(
+		[]*packages.Package,
+		0, len(pkgs)+len(cmdPkgs)+len(ctxctlPkgs),
+	)
 	allPkgs = append(allPkgs, pkgs...)
 	allPkgs = append(allPkgs, cmdPkgs...)
+	allPkgs = append(allPkgs, ctxctlPkgs...)
 
 	// Phase 1: collect all exported definitions.
 	// Key: "pkgPath.Name" (stable across type-checker
@@ -178,6 +188,11 @@ func TestNoDeadExports(t *testing.T) {
 	// infrastructure — not dead. Same-package test
 	// usage does not count (those should be unexported).
 	testPkgs := loadTestPackages(t)
+	// The relocated audit behavioral tests live in the
+	// tools/ctxctl module and exercise internal/ctxctl
+	// exports (store, config) cross-package, so they too
+	// keep those symbols alive (DECISIONS.md 2026-05-27).
+	testPkgs = append(testPkgs, ctxctlPkgs...)
 	for _, pkg := range testPkgs {
 		for ident, obj := range pkg.TypesInfo.Uses {
 			if obj == nil || obj.Pkg() == nil {
@@ -265,6 +280,30 @@ func loadCmdPackages(t *testing.T) []*packages.Package {
 	)
 	if err != nil {
 		t.Fatalf("packages.Load cmd: %v", err)
+	}
+	return pkgs
+}
+
+// loadCtxctlPackages loads the tools/ctxctl module's
+// packages (with their test files) so the dead-export scan
+// sees cross-module usage of internal/ctxctl exports. The
+// repo-root go.work resolves the separate module path.
+func loadCtxctlPackages(t *testing.T) []*packages.Package {
+	t.Helper()
+	cfg := &packages.Config{
+		Mode: packages.NeedName |
+			packages.NeedFiles |
+			packages.NeedSyntax |
+			packages.NeedTypes |
+			packages.NeedTypesInfo,
+		Tests: true,
+	}
+	pkgs, err := packages.Load(
+		cfg,
+		"github.com/ActiveMemory/ctx/tools/ctxctl/...",
+	)
+	if err != nil {
+		t.Fatalf("packages.Load ctxctl: %v", err)
 	}
 	return pkgs
 }

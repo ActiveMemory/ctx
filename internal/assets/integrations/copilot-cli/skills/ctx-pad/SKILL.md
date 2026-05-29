@@ -43,6 +43,7 @@ command.
 | "show everything except #later"                            | `ctx pad --tag ~later`                   |
 | "what tags do I have" / "list my tags"                     | `ctx pad tags`                             |
 | "tag entry 5 as urgent"                                    | `ctx pad edit 5 --tag urgent`              |
+| "undo" / "I deleted the wrong thing" / "bring it back"     | `ctx pad undo`                             |
 
 ## Execution
 
@@ -133,6 +134,19 @@ ctx pad tags --json
 ctx pad edit 5 --tag urgent
 ctx pad edit 5 --append "checked" --tag done   # combine with other ops
 ```
+
+**Undo the last destructive change:**
+```bash
+ctx pad undo
+```
+
+Every destructive `ctx pad` op (add, edit, mv, rm, merge,
+normalize, resolve, tag) writes a snapshot of the prior pad
+to `.context/scratchpad.history/` before overwriting. `ctx
+pad undo` restores the most recent snapshot. Running `undo`
+twice in a row is a redo (the first undo itself snapshots
+before promoting the older state). Empty history is not an
+error: prints "No pad history to restore." and exits 0.
 
 ## Interpreting User Intent
 

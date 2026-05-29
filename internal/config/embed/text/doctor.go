@@ -123,9 +123,6 @@ const (
 	// DescKeyDoctorResourceMemoryFormat is the text key for doctor resource
 	// memory format messages.
 	DescKeyDoctorResourceMemoryFormat = "doctor.resource-memory.format"
-	// DescKeyDoctorResourceSwapFormat is the text key for doctor resource swap
-	// format messages.
-	DescKeyDoctorResourceSwapFormat = "doctor.resource-swap.format"
 	// DescKeyDoctorTaskCompletionFormat is the text key for doctor task
 	// completion format messages.
 	DescKeyDoctorTaskCompletionFormat = "doctor.task-completion.format"

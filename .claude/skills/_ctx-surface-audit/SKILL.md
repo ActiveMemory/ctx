@@ -1,12 +1,25 @@
 ---
-name: ctx-surface-audit
-description: "Out-of-band audit: scan a git ref range for user-facing surfaces that landed without matching SKILL.md, recipe, or docs/cli updates. Run me from a SEPARATE Claude Code session, not the one that wrote the code. Drops a structured report at .context/audit/surface.md for the next interactive session's check-audit hook to relay verbatim."
+name: _ctx-surface-audit
+description: "ctx-repo-internal (note the _ prefix; sibling of _ctx-command-audit / _ctx-audit). Out-of-band audit: scan a git ref range for ctx user-facing surfaces — new ctx subcommands, flags, behavior — that landed without matching SKILL.md, recipe, or docs/cli updates. Run from a SEPARATE Claude Code session, not the one that wrote the code. Drops a report at .context/audit/surface.md for the ctxctl audit-relay hook to relay verbatim."
 allowed-tools: Bash(git:*), Bash(rg:*), Bash(grep:*), Bash(find:*), Read, Glob, Grep, Write
 ---
 
 You are the **surface audit**: an out-of-band reviewer that
 catches user-facing changes landing without matching agent
 SKILL.md, recipe, or `docs/cli` updates.
+
+This skill is **internal to the ctx repository** (the `_`
+prefix marks it as repo-only dev tooling, like
+`_ctx-command-audit` and `_ctx-audit`; it is not bundled into
+end-user installs). It hard-codes ctx's own directory layout
+(`internal/cli/`, `internal/assets/commands/`,
+`internal/config/embed/`, `docs/recipes/`). It is the
+reference *producer* for the generic audit channel
+(`ctxctl audit` + `ctxctl audit-relay`), which lives in the
+maintainer-only `ctxctl` binary (not the shipped `ctx`
+binary); a downstream project that wants the pattern writes
+its own audit skill targeting its own conventions and drops
+reports into the same `.context/audit/` channel.
 
 The whole point of this skill is **fresh-context judgment**.
 The agent that just shipped a feature has tunnel vision; you
@@ -165,7 +178,7 @@ Surfaces scanned: <N>
 Coverage checked: SKILL.md, recipes, docs/cli, integrations
 ```
 
-A `clean` report is still useful — `ctx audit list` shows
+A `clean` report is still useful — `ctxctl audit list` shows
 it with a timestamp, so the user knows the audit ran.
 
 ### Digest
@@ -189,7 +202,7 @@ the dismissal.
    frontmatter + body.
 8. Print a one-line summary to the user: report path,
    surface count, finding count, and the next-step hint
-   ("Open a working session — the check-audit hook will
+   ("Open a working session — the audit-relay hook will
    relay the findings on the next prompt.").
 
 ## Important Notes
@@ -213,10 +226,10 @@ the dismissal.
 
 - `specs/audit-channel.md`: design rationale, retention
   policy, naming-collision notes.
-- `internal/cli/audit/`: CLI for `ctx audit list / show /
-  dismiss`.
-- `internal/cli/system/cmd/checkaudit/`: the
-  UserPromptSubmit hook that relays your reports.
+- `internal/ctxctl/cli/audit/`: logic behind `ctxctl audit
+  list / show / dismiss`.
+- `internal/ctxctl/cli/checkaudit/`: the `ctxctl audit-relay`
+  hook logic that relays your reports.
 - `.context/CONVENTIONS.md` →
   *User-Facing Surface Completeness*: the canonical rule
   this audit enforces.

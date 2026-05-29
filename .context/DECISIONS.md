@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-28 | ctxctl PATH-installed alongside ctx for clean roots and one binary across worktrees |
+| 2026-05-28 | Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy |
+| 2026-05-27 | ctxctl is a separate Go module at tools/ctxctl (own go.mod), not cmd/ctxctl in the same module |
 | 2026-05-24 | ctxctl lives at cmd/ctxctl in the same Go module, not a separate go.mod |
 | 2026-05-24 | Discipline enforcement belongs on the verbatim-relay channel, run out-of-band |
 | 2026-05-24 | Pad snapshot-on-mutate at the store.WriteEntries choke point |
@@ -153,6 +156,48 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-28-201000] ctxctl PATH-installed alongside ctx for clean roots and one binary across worktrees
+
+**Status**: Accepted
+
+**Context**: Initial ctxctl design wired the hook to `./ctxctl` at repo root, forcing a per-worktree build, dirtying the root, and contradicting the project's PATH-only convention (`block-non-path-ctx` enforces it for ctx).
+
+**Decision**: ctxctl PATH-installed alongside ctx for clean roots and one binary across worktrees
+
+**Rationale**: Mirror ctx's install pattern: build to `dist/`, install to `/usr/local/bin/ctxctl`. One binary serves all worktrees and repo copies; the local hook calls `ctxctl` from PATH so no repo-root binary is needed. Defensive `/ctxctl` + `tools/ctxctl/ctxctl` gitignores stay so stray binaries can never be committed.
+
+**Consequence**: New Makefile targets `install-ctxctl` and `reinstall-ctxctl` mirror `install`/`reinstall`. Hook in `.claude/settings.local.json`: `cd "$CLAUDE_PROJECT_DIR" && ctxctl audit-relay`. Sets the convention for future maintainer-only binaries (`tools/<name>/` separate module, `dist/` build, PATH install). `specs/ctxctl-bootstrap.md` Interface section updated to match.
+
+---
+
+## [2026-05-28-200500] Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy
+
+**Status**: Accepted
+
+**Context**: `check-resource` alerted DANGER at swap-used ≥ 75% / memory-used ≥ 90% — pure occupancy. macOS swap is sticky (never recedes); post-hibernation swap stays >75% with idle RAM, producing false "wrap up the session" DANGER at session start. Memory occupancy on macOS includes reclaimable cache — also a poor pressure proxy.
+
+**Decision**: Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy
+
+**Rationale**: Occupancy is a level; pressure is a derivative. Only the kernel's derivative reflects current struggle. macOS: `sysctl kern.memorystatus_vm_pressure_level` (1/2/4 → OK/Warning/Danger). Linux: `/proc/pressure/memory` (PSI) `some.avg10 ≥ 10.0` → warn, `full.avg10 ≥ 10.0` → danger. Windows: filed as an exploratory task; unsupported for now ("other" platform falls through to `PressureSupported=false`, no alert).
+
+**Consequence**: `MemInfo` gains `Pressure` + `PressureSupported`; `threshold.go` drops both occupancy `byteCheck`s and emits a single pressure alert. Doctor swap row removed (no longer a health signal); occupancy fields retained for `ctx stats` display. PSI 10.0 defaults named in `config/stats` — retunable in one place. `make lint` 0 issues, `make test` ok on the change.
+
+---
+
+## [2026-05-27-161302] ctxctl is a separate Go module at tools/ctxctl (own go.mod), not cmd/ctxctl in the same module
+
+**Status**: Accepted
+
+**Context**: Migrating the maintainer-only audit channel out of the ctx binary (specs/ctxctl-bootstrap.md). The prior decision (handover 2026-05-26) chose same-module cmd/ctxctl, on the belief that a separate go.mod could not import ctx's internal/ packages and would force relocating/duplicating ~25 files.
+
+**Decision**: ctxctl is a separate Go module at tools/ctxctl (own go.mod), not cmd/ctxctl in the same module
+
+**Rationale**: That blocker was empirically disproved this session: a nested module whose path is lexically under github.com/ActiveMemory/ctx CAN import the parent module's internal/ packages (verified by build test; a non-nested 'outsider' module path is rejected). Given that, a hard module boundary beats an in-module import-graph test for the asymmetric requirement that actually matters: ctx must never break because of ctxctl. ctx's go.mod will not require tools/ctxctl, so ctx literally cannot import ctxctl; the one-directional ctxctl->ctx coupling is acceptable because ctxctl is disposable maintainer tooling ('nobody whines if ctxctl breaks; everyone suffers if ctxctl leaks into ctx'). Full self-containment (duplicating the ~20 shared internal foundations: rc, desc, config, nudge, io...) was rejected as a DRY catastrophe and a worse broken window than the one being fixed.
+
+**Consequence**: New module tools/ctxctl (module path github.com/ActiveMemory/ctx/tools/ctxctl) reuses ctx's internal/ foundations in place; audit-channel-specific logic relocates to internal/ctxctl/; ctxctl owns its relay/CLI text as plain English Go constants under tools/ctxctl (no YAML localization, no desc/i18n engine for its own output -- no French ctxctl); a repo-root go.work (committed) wires the workspace; an import-graph guard test asserts cmd/ctx never imports internal/ctxctl. Supersedes the same-module cmd/ctxctl decision. specs/ctxctl-bootstrap.md is rewritten to match.
+
+---
 
 ## [2026-05-24-123908] ctxctl lives at cmd/ctxctl in the same Go module, not a separate go.mod
 

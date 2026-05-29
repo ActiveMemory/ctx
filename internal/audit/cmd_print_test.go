@@ -48,8 +48,11 @@ func TestNoCmdPrintOutsideWrite(t *testing.T) {
 
 	for _, pkg := range pkgs {
 		// Allow calls inside internal/write/ packages.
+		// internal/ctxctl/write/ is ctxctl's parallel write
+		// home (DECISIONS.md 2026-05-27).
 		if strings.Contains(pkg.PkgPath, "internal/write/") ||
-			strings.HasSuffix(pkg.PkgPath, "internal/write") {
+			strings.HasSuffix(pkg.PkgPath, "internal/write") ||
+			strings.Contains(pkg.PkgPath, "internal/ctxctl/write/") {
 			continue
 		}
 
