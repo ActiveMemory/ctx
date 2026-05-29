@@ -68,6 +68,8 @@ err.schema.drift:
   short: 'schema drift detected'
 err.cli.no-tool-specified:
   short: 'no tool specified: use --tool <tool> or set the tool field in .ctxrc'
+err.cli.unknown-subcommand:
+  short: 'unknown ctx system subcommand "%s"'
 err.config.golden-not-found:
   short: "no .claude/settings.golden.json found - run 'ctx permission snapshot' first"
 err.config.invalid-tool:

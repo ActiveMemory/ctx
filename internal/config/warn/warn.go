@@ -44,6 +44,12 @@ const (
 	// CopilotClose is the format for Copilot CLI file close failures.
 	CopilotClose = "copilot-cli: close %s: %v"
 
+	// RelayUnknownSubcommand is the format for a best-effort relay
+	// failure when `ctx system` reports an unknown subcommand. The
+	// stdout box already reached the agent; this only logs that the
+	// event-log/webhook leg could not be recorded.
+	RelayUnknownSubcommand = "relay unknown-subcommand event: %v"
+
 	// JSONEncode is the JSON-safe error for encoding failures.
 	JSONEncode = `{"error": "json encode: %v"}`
 

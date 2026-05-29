@@ -173,9 +173,16 @@ These have priority because other knowledge ingestion projects depend on them.
       feat/pad-undo-snapshot #commit:b9ce72e8
       #added:2026-05-27-145715
 
-- [ ] `ctx system`: emit a VERBATIM RELAY on unknown subcommand (replace today's
+- [x] `ctx system`: emit a VERBATIM RELAY on unknown subcommand (replace today's
   silent help-dump + exit 0). Scope:
-  `ctx system` ONLY.
+  `ctx system` ONLY. #completed:2026-05-28 #branch:feat/system-unknown-relay
+  Shipped: `ctx system <unknown>` now emits a verbatim NudgeBox (via the write
+  layer) naming the verb + version-skew hint, best-effort fires the event-log +
+  webhook relay (gated on a session ID read TTY-safely from stdin), suppresses
+  cobra's help dump, and exits non-zero. Bare `ctx system` and valid subcommands
+  unchanged. Handler in internal/cli/system/core/unknown (RunE on system.Cmd()
+  only; parent.Cmd untouched). Verified end-to-end against a real build (box +
+  EXIT=1). Spec: specs/system-unknown-subcommand-relay.md.
     - Problem: `ctx system <unknown>` prints the full Long help and exits 0 (
       cobra `legacyArgs` only raises "unknown
       command" for the ROOT command, never a non-root group). In a
@@ -201,10 +208,9 @@ These have priority because other knowledge ingestion projects depend on them.
       its own spec before implementation.
       #priority:medium #session:96765858 #branch:feat/pad-undo-snapshot #commit:
       b9ce72e8 #added:2026-05-27-130130
-    - #in-progress 2026-05-28 (branch feat/system-unknown-relay, session 0066d49b):
-      SPEC WRITTEN — specs/system-unknown-subcommand-relay.md. Spec precondition
-      ("needs its own spec") is now met; implementation NOT started.
-      Approach settled: add a RunE on system.Cmd() only (legacyArgs lets the
+    - DONE 2026-05-28 (branch feat/system-unknown-relay, session 0066d49b).
+      Spec: specs/system-unknown-subcommand-relay.md.
+      Approach used: add a RunE on system.Cmd() only (legacyArgs lets the
       leftover args reach the group's RunE for non-root); on unknown verb emit a
       message.NudgeBox to stdout, set SilenceUsage (else cobra re-dumps the help
       we're killing), exit non-zero. system is Hidden so RootCmd PersistentPreRunE
@@ -216,6 +222,15 @@ These have priority because other knowledge ingestion projects depend on them.
       Follow-up surfaced: ctx hook (and any parent.Cmd group) has the same latent
       exit-0-on-unknown behavior — not wired into hooks.json so out of scope here;
       capture as its own task if it ever gets hook-wired.
+
+- [ ] Generalize the unknown-subcommand guard beyond `ctx system` (deferred from
+  the #5 work above). `ctx hook` and any future `parent.Cmd` group still print
+  help + exit 0 on an unknown subcommand — the same latent pollution #5 fixed for
+  `ctx system`. Low priority while no other group is wired into hooks.json; the
+  build-time wiring guard (specs/hooks-wiring-guard.md) only checks `ctx system`
+  + `ctx agent` today. If a `ctx hook <verb>` ever gets hook-wired, either extend
+  the guard's coverage or fold a reusable opt-in into `parent.Cmd` (an optional
+  unknown-subcommand handler groups opt into). #priority:low #added:2026-05-28
 
 ## Important
 

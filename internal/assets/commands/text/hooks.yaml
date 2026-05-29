@@ -564,3 +564,14 @@ specs-nudge.nudge-message:
   short: plan-to-specs nudge emitted
 version-drift.relay-message:
   short: versions out of sync
+system-unknown.relay-prefix:
+  short: 'IMPORTANT: Relay this notice to the user VERBATIM before answering their question.'
+system-unknown.box-title:
+  short: Unknown System Subcommand
+system-unknown.body:
+  short: |-
+    ctx system: unknown subcommand "%s".
+
+    A Claude Code hook (hooks.json) is calling a ctx command this binary no longer ships — a version skew between the installed plugin and the on-PATH ctx binary. Align the plugin and binary to the same release, or fix the hook command.
+system-unknown.relay-message:
+  short: 'ctx system: unknown subcommand "%s" (likely plugin/binary version skew)'
