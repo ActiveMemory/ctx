@@ -201,6 +201,21 @@ These have priority because other knowledge ingestion projects depend on them.
       its own spec before implementation.
       #priority:medium #session:96765858 #branch:feat/pad-undo-snapshot #commit:
       b9ce72e8 #added:2026-05-27-130130
+    - #in-progress 2026-05-28 (branch feat/system-unknown-relay, session 0066d49b):
+      SPEC WRITTEN — specs/system-unknown-subcommand-relay.md. Spec precondition
+      ("needs its own spec") is now met; implementation NOT started.
+      Approach settled: add a RunE on system.Cmd() only (legacyArgs lets the
+      leftover args reach the group's RunE for non-root); on unknown verb emit a
+      message.NudgeBox to stdout, set SilenceUsage (else cobra re-dumps the help
+      we're killing), exit non-zero. system is Hidden so RootCmd PersistentPreRunE
+      early-returns — no context/git preconditions.
+      Decisions settled with user: (1) DO fire the event-log + webhook relay leg
+      (nudge.Relay), gated on a real session ID read best-effort from stdin via
+      session.ReadID (TTY-safe, timeout-guarded → IDUnknown means skip the leg);
+      (2) scoped to ctx system only, parent.Cmd untouched.
+      Follow-up surfaced: ctx hook (and any parent.Cmd group) has the same latent
+      exit-0-on-unknown behavior — not wired into hooks.json so out of scope here;
+      capture as its own task if it ever gets hook-wired.
 
 ## Important
 
