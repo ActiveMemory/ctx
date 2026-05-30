@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-30 | Name the add JSON-ingest flag --json-file, not --json |
 | 2026-05-28 | ctxctl PATH-installed alongside ctx for clean roots and one binary across worktrees |
 | 2026-05-28 | Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy |
 | 2026-05-27 | ctxctl is a separate Go module at tools/ctxctl (own go.mod), not cmd/ctxctl in the same module |
@@ -156,6 +157,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-30-114429] Name the add JSON-ingest flag --json-file, not --json
+
+**Status**: Accepted
+
+**Context**: The CLI-FIX spec specified the literal flag --json <file>, but --json is already a bool output-format flag across the CLI (ctx status/drift/doctor/bootstrap --json all mean 'emit machine-readable output').
+
+**Decision**: Name the add JSON-ingest flag --json-file, not --json
+
+**Rationale**: Overloading --json as a string input-path on the add commands would break that cross-command convention and confuse muscle memory. --json-file is unambiguous, parallels the existing --file/-f source flag, and leaves -j free. Pushed back on the spec's literal wording rather than satisfice.
+
+**Consequence**: The add commands intentionally diverge from the spec's literal --json; the spec was updated to reflect --json-file. Any future JSON-input flag elsewhere should follow the --json-file naming, reserving --json for bool output.
+
+---
 
 ## [2026-05-28-201000] ctxctl PATH-installed alongside ctx for clean roots and one binary across worktrees
 
