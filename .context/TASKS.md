@@ -267,7 +267,7 @@ Important things that agent (or human) yeeted to the future.
   mentioning domains that don't match their callers. Start with `write/**`,
   extend to all `internal/`. Spec: `specs/docstring-cross-reference-audit.md`
   #priority:medium #added:2026-03-17
-- [ ] Split internal/assets/embed_test.go — tests that call read/ packages
+- [x] Split internal/assets/embed_test.go — tests that call read/ packages
   must
   move to their respective read/ package to avoid import
   cycles #added:2026-03-18-192914
