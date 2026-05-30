@@ -72,6 +72,7 @@ const (
 	Full            = "full"
 	Hook            = "hook"
 	JSON            = "json"
+	JSONFile        = "json-file"
 	KeepFrontmatter = "keep-frontmatter"
 	Key             = "key"
 	Label           = "label"

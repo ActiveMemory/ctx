@@ -242,3 +242,60 @@ func TestLearningAddFromFile(t *testing.T) {
 		t.Error("content from file was not added to LEARNINGS.md")
 	}
 }
+
+// TestLearningAddFromJSONFile verifies --json-file populates the
+// learning's typed fields (context/lesson/application) and provenance.
+func TestLearningAddFromJSONFile(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-learning-add-json-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	payload := filepath.Join(tmpDir, "learning.json")
+	if err = os.WriteFile(payload, []byte(`{
+		"title": "Hooks run in a subprocess",
+		"context": "env vars set in a hook did not persist",
+		"lesson": "hook output is the only channel back to the session",
+		"application": "relay via stdout, not environment",
+		"provenance": {"session_id": "json1234", "branch": "main", "commit": "abc123"}
+	}`), 0o600); err != nil {
+		t.Fatalf("write payload: %v", err)
+	}
+
+	addCmd := Cmd()
+	addCmd.SetArgs([]string{"--json-file", payload})
+	if err = addCmd.Execute(); err != nil {
+		t.Fatalf("ctx learning add --json-file failed: %v", err)
+	}
+
+	content, err := os.ReadFile(".context/LEARNINGS.md")
+	if err != nil {
+		t.Fatalf("failed to read LEARNINGS.md: %v", err)
+	}
+	contentStr := string(content)
+	for _, want := range []string{
+		"Hooks run in a subprocess",
+		"env vars set in a hook did not persist",
+		"hook output is the only channel back to the session",
+		"relay via stdout, not environment",
+	} {
+		if !strings.Contains(contentStr, want) {
+			t.Errorf("expected %q in LEARNINGS.md", want)
+		}
+	}
+}

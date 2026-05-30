@@ -68,7 +68,7 @@ These have priority because other knowledge ingestion projects depend on them.
       creation is unaffected — only
       reindex/enumeration lags.
 
-- [ ] Add `--json <file>` to `ctx decision/learning/task add` (and `convention`
+- [x] Add `--json <file>` to `ctx decision/learning/task add` (and `convention`
   if it gains structured fields) for
   ingesting a JSON payload that populates the typed fields directly.
     - Driver: this session hit a class of denial we worked around but should fix

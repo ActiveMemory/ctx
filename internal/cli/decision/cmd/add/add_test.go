@@ -8,6 +8,7 @@ package add
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -66,6 +67,111 @@ func TestDecisionAdd(t *testing.T) {
 		if !strings.Contains(contentStr, want) {
 			t.Errorf("expected %q in DECISIONS.md", want)
 		}
+	}
+}
+
+// TestDecisionAddFromJSONFile verifies that --json-file populates the
+// typed fields and provenance from a JSON envelope, including a
+// rationale value whose content would trip a literal command-string
+// deny rule (the feature's driver).
+func TestDecisionAddFromJSONFile(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-decision-add-json-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	payload := filepath.Join(tmpDir, "decision.json")
+	if err = os.WriteFile(payload, []byte(`{
+		"title": "Install ctx into the system PATH",
+		"context": "agents invoke ctx by bare name",
+		"rationale": "the binary belongs at /usr/local/bin so it is on PATH",
+		"consequence": "ctx resolves from any working directory",
+		"provenance": {"session_id": "json1234", "branch": "main", "commit": "abc123"}
+	}`), 0o600); err != nil {
+		t.Fatalf("write payload: %v", err)
+	}
+
+	addCmd := Cmd()
+	addCmd.SetArgs([]string{"--json-file", payload})
+	if err = addCmd.Execute(); err != nil {
+		t.Fatalf("ctx decision add --json-file failed: %v", err)
+	}
+
+	content, err := os.ReadFile(".context/DECISIONS.md")
+	if err != nil {
+		t.Fatalf("failed to read DECISIONS.md: %v", err)
+	}
+	contentStr := string(content)
+	for _, want := range []string{
+		"Install ctx into the system PATH",
+		"agents invoke ctx by bare name",
+		"the binary belongs at /usr/local/bin so it is on PATH",
+		"ctx resolves from any working directory",
+	} {
+		if !strings.Contains(contentStr, want) {
+			t.Errorf("expected %q in DECISIONS.md", want)
+		}
+	}
+}
+
+// TestDecisionAddJSONFileRejectsPlaceholder verifies the placeholder
+// gate also fires on JSON-supplied values, so --json-file is not a
+// bypass for the schema checks.
+func TestDecisionAddJSONFileRejectsPlaceholder(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-decision-add-json-ph-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	payload := filepath.Join(tmpDir, "decision.json")
+	if err = os.WriteFile(payload, []byte(`{
+		"title": "Decision body",
+		"context": "real context",
+		"rationale": "TBD",
+		"consequence": "real consequence",
+		"provenance": {"session_id": "json1234", "branch": "main", "commit": "abc123"}
+	}`), 0o600); err != nil {
+		t.Fatalf("write payload: %v", err)
+	}
+
+	addCmd := Cmd()
+	addCmd.SetArgs([]string{"--json-file", payload})
+	err = addCmd.Execute()
+	if err == nil {
+		t.Fatal("expected placeholder rejection for JSON rationale=TBD")
+	}
+	if !strings.Contains(err.Error(), "rationale") {
+		t.Errorf("error should name --rationale: %v", err)
 	}
 }
 

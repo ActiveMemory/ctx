@@ -20,6 +20,8 @@ add.context:
   short: 'Context for decisions: what prompted this decision (required for decisions)'
 add.file:
   short: Read content from file instead of argument
+add.json-file:
+  short: 'Read a JSON payload that populates typed fields directly (supersedes content flags)'
 add.lesson:
   short: 'Lesson for learnings: the key insight (required for learnings)'
 add.priority:

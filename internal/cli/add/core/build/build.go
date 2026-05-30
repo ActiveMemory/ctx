@@ -35,6 +35,7 @@ func Cmd(noun, descKey, useStr string) *cobra.Command {
 		priority    string
 		section     string
 		fromFile    string
+		jsonFile    string
 		sessionID   string
 		branch      string
 		commit      string
@@ -59,6 +60,7 @@ func Cmd(noun, descKey, useStr string) *cobra.Command {
 				Priority:    priority,
 				Section:     section,
 				FromFile:    fromFile,
+				JSONFile:    jsonFile,
 				SessionID:   sessionID,
 				Branch:      branch,
 				Commit:      commit,
@@ -96,16 +98,17 @@ func Cmd(noun, descKey, useStr string) *cobra.Command {
 	)
 	flagbind.BindStringFlags(c,
 		[]*string{
-			&consequence, &sessionID, &branch, &commit,
+			&consequence, &sessionID, &branch, &commit, &jsonFile,
 		},
 		[]string{
 			cFlag.Consequence, cFlag.SessionID,
-			cFlag.Branch, cFlag.Commit,
+			cFlag.Branch, cFlag.Commit, cFlag.JSONFile,
 		},
 		[]string{
 			flag.DescKeyAddConsequence,
 			flag.DescKeyAddSessionID,
 			flag.DescKeyAddBranch, flag.DescKeyAddCommit,
+			flag.DescKeyAddJSONFile,
 		},
 	)
 	flagbind.BoolFlag(

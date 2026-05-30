@@ -5,6 +5,8 @@ err.add.file-not-found:
   short: "context file %s not found. Run 'ctx init' first"
 err.add.index-update:
   short: 'failed to update index in %s: %w'
+err.add.json-parse:
+  short: 'failed to parse JSON payload %s: %w'
 err.add.missing-fields:
   short: '%s missing required fields: %s'
 err.add.no-content:
