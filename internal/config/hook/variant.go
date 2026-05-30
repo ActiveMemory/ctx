@@ -51,4 +51,7 @@ const (
 	VariantStale = "stale"
 	// VariantWindow selects the context window variant.
 	VariantWindow = "window"
+	// VariantUnknownSubcommand tags the relay event emitted when
+	// `ctx system` is handed a subcommand it does not recognise.
+	VariantUnknownSubcommand = "unknown-subcommand"
 )

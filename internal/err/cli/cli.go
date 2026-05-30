@@ -111,3 +111,20 @@ func FlagPlaceholder(name, value string) error {
 		name, value,
 	)
 }
+
+// UnknownSubcommand returns the terse error for an unrecognised
+// `ctx system` subcommand. The rich, user-facing guidance (likely
+// plugin/binary version skew) is emitted separately as a stdout
+// relay box; this is the stderr companion that names the verb so
+// the cause is legible in logs without the help dump.
+//
+// Parameters:
+//   - verb: the unrecognised subcommand name
+//
+// Returns:
+//   - error: "unknown ctx system subcommand \"<verb>\""
+func UnknownSubcommand(verb string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrCliUnknownSubcommand), verb,
+	)
+}

@@ -49,6 +49,10 @@ const (
 	SpecsNudge = "specs-nudge"
 	// VersionDrift is the hook name for version drift nudges.
 	VersionDrift = "version-drift"
+	// System is the relay-event hook label for the `ctx system`
+	// group itself (used by the unknown-subcommand relay, which is
+	// not a check-* hook but still records a relay event).
+	System = "system"
 )
 
 // Supported integration tool names for ctx setup command.
