@@ -252,6 +252,7 @@ Important things that agent (or human) yeeted to the future.
 - [ ] Migrate Sprintf-based templates (tpl_*.go) to Go text/template or embedded
   template files — ObsidianReadme, LoopScript, and other multi-line format
   strings that can't move to YAML #added:2026-03-18-163629
+  Spec: specs/tpl-text-template-migration.md
 - [ ] P0.8.5: Enable webhook notifications in worktrees. Currently `ctx notify`
   silently fails because `.context.key` is gitignored and absent in
   worktrees. For autonomous runs with opaque worktree agents, notifications
