@@ -111,6 +111,30 @@ pub fn ctx_journal(dir: String, limit: u32) -> Result<String, String> {
     run_ctx(&dir, &["journal", "source", "--limit", l.as_str()])
 }
 
+/// Runs `ctx drift` (or `ctx drift --fix`) for `dir` and returns
+/// the report. With `fix`, auto-corrects supported issues
+/// (staleness, missing files).
+#[tauri::command]
+pub fn ctx_drift(dir: String, fix: bool) -> Result<String, String> {
+    if fix {
+        run_ctx(&dir, &["drift", "--fix"])
+    } else {
+        run_ctx(&dir, &["drift"])
+    }
+}
+
+/// Runs `ctx compact` (or `ctx compact --archive`) for `dir`.
+/// With `archive`, moves completed/old content into
+/// `.context/archive/`. Mutating — the UI confirms first.
+#[tauri::command]
+pub fn ctx_compact(dir: String, archive: bool) -> Result<String, String> {
+    if archive {
+        run_ctx(&dir, &["compact", "--archive"])
+    } else {
+        run_ctx(&dir, &["compact"])
+    }
+}
+
 /// Returns `ctx agent --format json --budget N` for `dir` — the
 /// structured context packet used by the budget-preview screen.
 #[tauri::command]

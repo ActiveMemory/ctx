@@ -130,6 +130,16 @@ export function ctxJournal(dir: string, limit: number): Promise<string> {
   return invoke<string>("ctx_journal", { dir, limit });
 }
 
+/** `ctx drift` report, or `ctx drift --fix` to auto-correct, for `dir`. */
+export function ctxDrift(dir: string, fix = false): Promise<string> {
+  return invoke<string>("ctx_drift", { dir, fix });
+}
+
+/** `ctx compact`, or `ctx compact --archive` (mutating), for `dir`. */
+export function ctxCompact(dir: string, archive = false): Promise<string> {
+  return invoke<string>("ctx_compact", { dir, archive });
+}
+
 /** `ctx task list --json` for the project at `dir`. */
 export async function ctxTasks(dir: string): Promise<Task[]> {
   const out = JSON.parse(await invoke<string>("ctx_task_list", { dir }));
