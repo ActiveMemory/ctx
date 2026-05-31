@@ -17,7 +17,7 @@ import (
 // couple it there and invite the import cycle the embed_test split
 // fought.
 //
-//go:embed templates/*.tmpl
+//go:embed templates/*.tmpl templates/*.toml
 var templatesFS embed.FS
 
 // parseErrs accumulates init-time template parse failures. It is empty
@@ -34,6 +34,8 @@ func init() {
 	TriggerScript = parseTemplate("templates/trigger-script.sh.tmpl")
 	Learning = parseTemplate("templates/learning.md.tmpl")
 	Decision = parseTemplate("templates/decision.md.tmpl")
+	ZensicalProject = loadStatic("templates/zensical-project.toml")
+	ZensicalTheme = loadStatic("templates/zensical-theme.toml")
 }
 
 // parseTemplate reads and parses one embedded template. On failure it
@@ -57,4 +59,21 @@ func parseTemplate(path string) *template.Template {
 		parseErrs = append(parseErrs, parseErr)
 	}
 	return t
+}
+
+// loadStatic reads an embedded static (non-interpolated) template body
+// as a string, recording any read failure in parseErrs.
+//
+// Parameters:
+//   - path: embedded file path under templatesFS
+//
+// Returns:
+//   - string: the file contents, or "" on read error
+func loadStatic(path string) string {
+	body, readErr := templatesFS.ReadFile(path)
+	if readErr != nil {
+		parseErrs = append(parseErrs, readErr)
+		return ""
+	}
+	return string(body)
 }

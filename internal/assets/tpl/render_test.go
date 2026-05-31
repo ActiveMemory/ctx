@@ -8,6 +8,7 @@ package tpl
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 	"text/template"
 )
@@ -169,4 +170,24 @@ func TestDecisionMatchesLegacy(t *testing.T) {
 			Rationale: rat, Consequence: cons,
 		},
 		fmt.Sprintf(oldDecision, ts, title, ctxt, title, rat, cons))
+}
+
+// TestZensicalStaticLoaded checks the static blocks loaded from their
+// embedded files (their bytes were extracted verbatim from the legacy
+// consts at migration; full output is covered end-to-end by the
+// generate package's ZensicalToml tests).
+func TestZensicalStaticLoaded(t *testing.T) {
+	if !strings.HasPrefix(ZensicalProject, "[project]") {
+		t.Errorf("ZensicalProject should start with [project]; got %.16q",
+			ZensicalProject)
+	}
+	if !strings.Contains(ZensicalProject, `site_name = "ctx: Session Journal"`) {
+		t.Error("ZensicalProject missing site_name")
+	}
+	if !strings.Contains(ZensicalTheme, "[project.theme]") {
+		t.Error("ZensicalTheme missing [project.theme]")
+	}
+	if !strings.Contains(ZensicalTheme, "combine_header_slug = true") {
+		t.Error("ZensicalTheme missing markdown_extensions tail")
+	}
 }
