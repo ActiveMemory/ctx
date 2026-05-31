@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Trigger: {{.Name}}
+# Type:    {{.Type}}
+# Created by: ctx trigger add
+#
+# Enable with: ctx trigger enable {{.Name}}
+# Test with:   ctx trigger test {{.Type}}
+
+set -euo pipefail
+
+# Read the JSON event payload from stdin.
+INPUT=$(cat)
+
+# Parse the fields you need from the payload.
+TRIGGER_TYPE=$(echo "$INPUT" | jq -r '.hookType // empty')
+TOOL=$(echo "$INPUT" | jq -r '.tool // empty')
+PATH_ARG=$(echo "$INPUT" | jq -r '.path // empty')
+
+# Your trigger logic here.
+
+# Return a JSON response on stdout. "cancel": true blocks
+# the tool call (pre-tool-use only); "context" injects
+# additional context; "message" is shown to the user.
+echo '{"cancel": false, "context": "", "message": ""}'

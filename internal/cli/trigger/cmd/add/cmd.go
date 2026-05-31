@@ -7,7 +7,6 @@
 package add
 
 import (
-	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -90,7 +89,12 @@ func Run(c *cobra.Command, hookType, name string) error {
 		return errTrigger.ScriptExists(filePath)
 	}
 
-	content := fmt.Sprintf(tpl.TriggerScript, name, hookType)
+	content, rErr := tpl.Render(
+		tpl.TriggerScript, tpl.TriggerData{Name: name, Type: hookType},
+	)
+	if rErr != nil {
+		return errTrigger.WriteScript(rErr)
+	}
 	writeErr := ctxIo.SafeWriteFile(
 		filePath, []byte(content), fs.PermExec,
 	)

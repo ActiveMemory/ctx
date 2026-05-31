@@ -89,15 +89,13 @@ func ToolOutputs(content string) string {
 			summary := fmt.Sprintf(
 				tpl.RecallDetailsSummary, nonBlank,
 			)
-			out = append(out, header, "")
-			out = append(out,
-				fmt.Sprintf(tpl.RecallDetailsOpen, summary),
+			body := strings.Join(
+				lines[bodyStart:bodyEnd], token.NewlineLF,
 			)
-			out = append(out, "")
-			for k := bodyStart; k < bodyEnd; k++ {
-				out = append(out, lines[k])
-			}
-			out = append(out, tpl.RecallDetailsClose, "")
+			rendered := tpl.RenderOr(tpl.Details, tpl.DetailsData{
+				Summary: summary, Body: body,
+			}, "")
+			out = append(out, header, "", rendered, "")
 		} else {
 			for k := i; k < bodyEnd; k++ {
 				out = append(out, lines[k])

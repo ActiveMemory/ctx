@@ -30,13 +30,17 @@ import (
 //
 // Returns:
 //   - string: Complete bash script content
+//   - error: non-nil if the prompt path or template rendering fails
 func Generate(
 	promptFile, tool string,
 	maxIterations int,
 	completionMsg string,
-) string {
+) (string, error) {
 	// Get the absolute path for the prompt file
-	absPrompt, _ := filepath.Abs(promptFile)
+	absPrompt, absErr := filepath.Abs(promptFile)
+	if absErr != nil {
+		return "", absErr
+	}
 
 	var aiCommand string
 	switch tool {
@@ -50,19 +54,11 @@ func Generate(
 		)
 	}
 
-	maxIterCheck := ""
-	if maxIterations > 0 {
-		maxIterCheck = fmt.Sprintf(
-			tpl.LoopMaxIter,
-			maxIterations, maxIterations, tpl.LoopNotify,
-		)
-	}
-
-	script := fmt.Sprintf(tpl.LoopScript,
-		absPrompt, completionMsg, maxIterCheck, aiCommand,
-		desc.Text(text.DescKeyLabelLoopComplete),
-		tpl.LoopNotify,
-	)
-
-	return script
+	return tpl.Render(tpl.LoopScript, tpl.LoopData{
+		PromptFile:       absPrompt,
+		CompletionSignal: completionMsg,
+		MaxIter:          maxIterations,
+		AICommand:        aiCommand,
+		LoopComplete:     desc.Text(text.DescKeyLabelLoopComplete),
+	})
 }
