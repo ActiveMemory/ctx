@@ -101,6 +101,16 @@ pub fn ctx_learning_list(dir: String) -> Result<String, String> {
     run_ctx(&dir, &["learning", "list", "--json"])
 }
 
+/// Returns `ctx journal source --limit N` for `dir`. The CLI has
+/// no JSON mode for the journal yet, so this is the raw table
+/// text; the UI renders it verbatim rather than risk a fragile
+/// column parse.
+#[tauri::command]
+pub fn ctx_journal(dir: String, limit: u32) -> Result<String, String> {
+    let l = limit.to_string();
+    run_ctx(&dir, &["journal", "source", "--limit", l.as_str()])
+}
+
 /// Returns `ctx agent --format json --budget N` for `dir` — the
 /// structured context packet used by the budget-preview screen.
 #[tauri::command]
