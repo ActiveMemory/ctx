@@ -54,11 +54,22 @@ export default function Tasks({ dir }: { dir: string }) {
     }
   }
 
+  // ctx completes "the Nth pending task in file order"; compute that
+  // number locally so duplicate task texts stay unambiguous.
+  function pendingNumber(t: Task): number {
+    const idx = tasks.indexOf(t);
+    let n = 0;
+    for (let i = 0; i <= idx; i++) {
+      if (tasks[i].status === "pending") n++;
+    }
+    return n;
+  }
+
   async function complete(t: Task) {
     setBusy(true);
     setError(null);
     try {
-      await ctxTaskComplete(dir, t.text);
+      await ctxTaskComplete(dir, String(pendingNumber(t)));
       await load(dir);
     } catch (e) {
       setError(String(e));
