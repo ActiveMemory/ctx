@@ -31,6 +31,9 @@ var Learning *template.Template
 // Decision renders a decision (ADR) entry section. Data: [DecisionData].
 var Decision *template.Template
 
+// LoopScript renders the Ralph-loop bash script. Data: [LoopData].
+var LoopScript *template.Template
+
 // Render executes a parsed template handle against data.
 //
 // The handle is always non-nil for a registered template (a parse

@@ -40,6 +40,22 @@ type LearningData struct {
 	Application string
 }
 
+// LoopData is the render data for [LoopScript].
+type LoopData struct {
+	// PromptFile is the absolute path to the loop's prompt file.
+	PromptFile string
+	// CompletionSignal is the string that, when seen in tool output,
+	// ends the loop.
+	CompletionSignal string
+	// MaxIter is the iteration cap; 0 means unlimited (the
+	// iteration-limit block is omitted).
+	MaxIter int
+	// AICommand is the shell command that runs the AI tool.
+	AICommand string
+	// LoopComplete is the completion banner line.
+	LoopComplete string
+}
+
 // DecisionData is the render data for [Decision].
 type DecisionData struct {
 	// Timestamp is the entry creation timestamp.

@@ -34,6 +34,7 @@ func init() {
 	TriggerScript = parseTemplate("templates/trigger-script.sh.tmpl")
 	Learning = parseTemplate("templates/learning.md.tmpl")
 	Decision = parseTemplate("templates/decision.md.tmpl")
+	LoopScript = parseTemplate("templates/loop-script.sh.tmpl")
 	ZensicalProject = loadStatic("templates/zensical-project.toml")
 	ZensicalTheme = loadStatic("templates/zensical-theme.toml")
 }
