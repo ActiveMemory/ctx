@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-05-31 | Journal screen renders ctx journal source verbatim instead of parsing it |
+| 2026-05-31 | ctx Desktop shells out via std::process::Command, not tauri-plugin-shell |
 | 2026-05-30 | Name the add JSON-ingest flag --json-file, not --json |
 | 2026-05-28 | ctxctl PATH-installed alongside ctx for clean roots and one binary across worktrees |
 | 2026-05-28 | Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy |
@@ -157,6 +159,34 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-05-31-094649] Journal screen renders ctx journal source verbatim instead of parsing it
+
+**Status**: Accepted
+
+**Context**: The Journal timeline needs session data, but ctx journal source emits a whitespace-aligned table with no --json mode, and columns (usage/turns) drop out on short sessions.
+
+**Decision**: Journal screen renders ctx journal source verbatim instead of parsing it
+
+**Rationale**: A column parser misaligns when fields are absent; rendering the text verbatim in a monospace panel is honest and robust for P0.
+
+**Consequence**: Journal is a styled text view, not structured cards; a proper timeline awaits a journal source --json mode upstream (same pattern as the artifact list --json commands).
+
+---
+
+## [2026-05-31-094649] ctx Desktop shells out via std::process::Command, not tauri-plugin-shell
+
+**Status**: Accepted
+
+**Context**: The GUI must run the ctx binary for every read and write. Tauri 2 offers tauri-plugin-shell with capability-scoped command allowlists.
+
+**Decision**: ctx Desktop shells out via std::process::Command, not tauri-plugin-shell
+
+**Rationale**: Running ctx inside our own #[tauri::command] via std::process::Command avoids all shell-plugin permission/capability wiring and keeps the adapter a single Rust module. ctx resolves its context from $PWD/.context, so each call sets current_dir to the selected project root.
+
+**Consequence**: No shell capability in capabilities/default.json; the adapter owns PATH augmentation and git provenance synthesis; a CLI/output change is a one-file fix in ctx_adapter.rs.
+
+---
 
 ## [2026-05-30-114429] Name the add JSON-ingest flag --json-file, not --json
 
