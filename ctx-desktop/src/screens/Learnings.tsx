@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ctxLearnings, ctxLearningAdd, type Learning } from "../adapter/ctx";
+import { useReloadOnCtxChange } from "../hooks/useReload";
 
 function Field({ label, value }: { label: string; value: string }) {
   if (!value) return null;
@@ -25,6 +26,7 @@ export default function Learnings({ dir }: { dir: string }) {
   const [lesson, setLesson] = useState("");
   const [application, setApplication] = useState("");
   const [busy, setBusy] = useState(false);
+  const reload = useReloadOnCtxChange();
 
   const load = useCallback(async (d: string) => {
     setError(null);
@@ -38,7 +40,7 @@ export default function Learnings({ dir }: { dir: string }) {
 
   useEffect(() => {
     void load(dir);
-  }, [dir, load]);
+  }, [dir, load, reload]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

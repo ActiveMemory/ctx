@@ -7,6 +7,7 @@ import {
   type CtxStatus,
   type Task,
 } from "../adapter/ctx";
+import { useReloadOnCtxChange } from "../hooks/useReload";
 
 interface Counts {
   tasksOpen: number;
@@ -29,6 +30,7 @@ export default function Overview({ dir }: { dir: string }) {
   const [counts, setCounts] = useState<Counts | null>(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const reload = useReloadOnCtxChange();
 
   const load = useCallback(async (projectDir: string) => {
     setLoading(true);
@@ -68,7 +70,7 @@ export default function Overview({ dir }: { dir: string }) {
 
   useEffect(() => {
     void load(dir);
-  }, [dir, load]);
+  }, [dir, load, reload]);
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-6">
