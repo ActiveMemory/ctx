@@ -13,6 +13,9 @@ const (
 	DescKeyErrAddFileNotFound = "err.add.file-not-found"
 	// DescKeyErrAddIndexUpdate is the text key for err add index update messages.
 	DescKeyErrAddIndexUpdate = "err.add.index-update"
+	// DescKeyErrAddJSONParse is the text key for err add json payload parse
+	// messages.
+	DescKeyErrAddJSONParse = "err.add.json-parse"
 	// DescKeyErrAddMissingFields is the text key for err add missing fields
 	// messages.
 	DescKeyErrAddMissingFields = "err.add.missing-fields"

@@ -60,11 +60,11 @@ func TestSystemBareStillPrintsHelp(t *testing.T) {
 	}
 }
 
-// TestParentCmdScopeUnchanged documents that the fix is scoped to the
-// system group only: the shared parent.Cmd still produces a group
-// with no RunE, so other groups keep cobra's default (help + exit 0)
-// on an unknown subcommand. If someone moves the fix into parent.Cmd,
-// this fails.
+// TestParentCmdScopeUnchanged documents that the unknown-subcommand
+// relay is an explicit per-group opt-in (system, hook), not a default:
+// the shared parent.Cmd still produces a group with no RunE, so groups
+// that do not opt in keep cobra's default (help + exit 0) on an unknown
+// subcommand. If someone moves the relay into parent.Cmd, this fails.
 func TestParentCmdScopeUnchanged(t *testing.T) {
 	if system.Cmd().RunE == nil {
 		t.Fatal("system.Cmd() must set a RunE (the unknown-subcommand fix)")

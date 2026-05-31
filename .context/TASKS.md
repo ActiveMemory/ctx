@@ -68,7 +68,7 @@ These have priority because other knowledge ingestion projects depend on them.
       creation is unaffected — only
       reindex/enumeration lags.
 
-- [ ] Add `--json <file>` to `ctx decision/learning/task add` (and `convention`
+- [x] Add `--json <file>` to `ctx decision/learning/task add` (and `convention`
   if it gains structured fields) for
   ingesting a JSON payload that populates the typed fields directly.
     - Driver: this session hit a class of denial we worked around but should fix
@@ -127,7 +127,7 @@ These have priority because other knowledge ingestion projects depend on them.
       96765858 #branch:feat/pad-undo-snapshot #commit:b9ce72e8 #added:
       2026-05-27-183909
 
-- [ ] Realign the installed plugin's hooks.json with the cwd-anchored binary —
+- [x] Realign the installed plugin's hooks.json with the cwd-anchored binary —
   the LIVE fix for the every-prompt
   help-dump pollution.
     - Problem: the cwd-anchored migration (commit fc7db228, spec
@@ -223,7 +223,7 @@ These have priority because other knowledge ingestion projects depend on them.
       exit-0-on-unknown behavior — not wired into hooks.json so out of scope here;
       capture as its own task if it ever gets hook-wired.
 
-- [ ] Generalize the unknown-subcommand guard beyond `ctx system` (deferred from
+- [x] Generalize the unknown-subcommand guard beyond `ctx system` (deferred from
   the #5 work above). `ctx hook` and any future `parent.Cmd` group still print
   help + exit 0 on an unknown subcommand — the same latent pollution #5 fixed for
   `ctx system`. Low priority while no other group is wired into hooks.json; the
@@ -231,6 +231,19 @@ These have priority because other knowledge ingestion projects depend on them.
   + `ctx agent` today. If a `ctx hook <verb>` ever gets hook-wired, either extend
   the guard's coverage or fold a reusable opt-in into `parent.Cmd` (an optional
   unknown-subcommand handler groups opt into). #priority:low #added:2026-05-28
+  DONE 2026-05-30 (branch feat/add-json-file-ingest, session 53db2521).
+  Rationale refined: the real justification is not the every-prompt amplification
+  (unique to hooks.json-wired groups) but making CLI drift LOUD — `ctx hook` is
+  consumed by name from skills/loops (`ctx hook notify|event|pause|...`), and a
+  drifted verb silently returns help+exit-0 (agent misreads; for `notify` the
+  human is never told). Lifted the handler from `system/core/unknown` into a
+  neutral, parameterized `internal/cli/unknown` (Config + HandlerFor); `system`
+  and `hook` both opt in via `c.RunE = unknown.HandlerFor(...)`. `ctx hook` is
+  user-facing (not Hidden) and previously rode the no-RunE PreRunE exemption, so
+  it needed AnnotationSkipInit to stay reachable without an initialized
+  context/git (bootstrap regression test added). Did NOT fold into `parent.Cmd`
+  (would widen every group's deps). Skill/loop `ctx hook <verb>` build-time guard
+  left out of scope. Spec: specs/unknown-subcommand-relay-generalization.md.
 
 ## Important
 
@@ -267,7 +280,7 @@ Important things that agent (or human) yeeted to the future.
   mentioning domains that don't match their callers. Start with `write/**`,
   extend to all `internal/`. Spec: `specs/docstring-cross-reference-audit.md`
   #priority:medium #added:2026-03-17
-- [ ] Split internal/assets/embed_test.go — tests that call read/ packages
+- [x] Split internal/assets/embed_test.go — tests that call read/ packages
   must
   move to their respective read/ package to avoid import
   cycles #added:2026-03-18-192914

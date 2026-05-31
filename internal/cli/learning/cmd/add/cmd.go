@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core/build"
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/jsonpayload"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -30,6 +31,9 @@ import (
 func Cmd() *cobra.Command {
 	c := build.Cmd(entry.Learning, cmd.DescKeyLearningAdd, cmd.UseLearningAdd)
 	c.PreRunE = func(cobraCmd *cobra.Command, _ []string) error {
+		if overlayErr := jsonpayload.OverlayFlags(cobraCmd); overlayErr != nil {
+			return overlayErr
+		}
 		flags := cobraCmd.Flags()
 		names := []string{
 			cFlag.Context,

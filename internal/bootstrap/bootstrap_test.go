@@ -360,6 +360,55 @@ func TestInitGuard_AllowsInitializedCommand(t *testing.T) {
 	}
 }
 
+// TestHookUnknownVerbReachesRelayWithoutContext is the regression guard
+// for the AnnotationSkipInit on the `ctx hook` group. The group now has
+// a RunE (the unknown-subcommand relay), which would otherwise make
+// RootCmd's PersistentPreRunE demand an initialized context + git tree.
+// In an uninitialized cwd, an unknown `ctx hook` verb must surface the
+// unknown-subcommand error (naming the verb), not the not-initialized
+// gate. Spec: specs/unknown-subcommand-relay-generalization.md.
+func TestHookUnknownVerbReachesRelayWithoutContext(t *testing.T) {
+	t.Chdir(t.TempDir()) // empty cwd: no .context, no .git
+	rc.Reset()
+	t.Cleanup(rc.Reset)
+
+	cmd := RootCmd()
+	Initialize(cmd)
+	cmd.SetOut(&discardWriter{})
+	cmd.SetErr(&discardWriter{})
+	cmd.SetArgs([]string{"hook", "no-such-verb"})
+
+	err := cmd.Execute()
+	if err == nil {
+		t.Fatal("want non-nil error for an unknown `ctx hook` verb")
+	}
+	if !strings.Contains(err.Error(), "no-such-verb") {
+		t.Errorf("want the unknown-subcommand error naming the verb, got: %v", err)
+	}
+	if strings.Contains(err.Error(), "not initialized") {
+		t.Errorf("the init gate must not fire for the hook group; got: %v", err)
+	}
+}
+
+// TestHookBareReachesHelpWithoutContext confirms a bare `ctx hook`
+// still prints help and exits 0 in an uninitialized cwd (the friendly
+// behavior the AnnotationSkipInit preserves).
+func TestHookBareReachesHelpWithoutContext(t *testing.T) {
+	t.Chdir(t.TempDir())
+	rc.Reset()
+	t.Cleanup(rc.Reset)
+
+	cmd := RootCmd()
+	Initialize(cmd)
+	cmd.SetOut(&discardWriter{})
+	cmd.SetErr(&discardWriter{})
+	cmd.SetArgs([]string{"hook"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("bare `ctx hook` without context: want nil error, got %v", err)
+	}
+}
+
 func TestRootCmdToolFlag(t *testing.T) {
 	cmd := RootCmd()
 

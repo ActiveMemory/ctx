@@ -44,6 +44,7 @@ type EntryParams struct {
 //   - Priority: Priority label flag
 //   - Section: Target section flag
 //   - FromFile: Path to read content from a file
+//   - JSONFile: Path to a JSON payload that populates typed fields
 //   - SessionID: AI session identifier for task provenance
 //   - Branch: Git branch name for task provenance
 //   - Commit: Git commit hash for task provenance
@@ -57,6 +58,7 @@ type AddConfig struct {
 	Priority    string
 	Section     string
 	FromFile    string
+	JSONFile    string
 	SessionID   string
 	Branch      string
 	Commit      string

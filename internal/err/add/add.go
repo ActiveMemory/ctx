@@ -39,6 +39,20 @@ func NoContentProvided(fType, examples string) error {
 	)
 }
 
+// JSONParse wraps a failure to decode a --json-file payload.
+//
+// Parameters:
+//   - path: Path to the JSON payload file
+//   - cause: Underlying decode error (malformed JSON or unknown field)
+//
+// Returns:
+//   - error: "failed to parse JSON payload <path>: <cause>"
+func JSONParse(path string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrAddJSONParse), path, cause,
+	)
+}
+
 // IndexUpdate wraps a failure to update the index in a context file.
 //
 // Parameters:

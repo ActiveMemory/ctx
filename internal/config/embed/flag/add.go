@@ -20,6 +20,8 @@ const (
 	DescKeyAddContext = "add.context"
 	// DescKeyAddFile is the description key for the add file flag.
 	DescKeyAddFile = "add.file"
+	// DescKeyAddJSONFile is the description key for the add json-file flag.
+	DescKeyAddJSONFile = "add.json-file"
 	// DescKeyAddLesson is the description key for the add lesson flag.
 	DescKeyAddLesson = "add.lesson"
 	// DescKeyAddPriority is the description key for the add priority flag.

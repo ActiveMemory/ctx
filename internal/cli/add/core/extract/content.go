@@ -11,6 +11,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/cli/add/core/jsonpayload"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
@@ -21,18 +22,30 @@ import (
 // Content retrieves content from various sources for adding entries.
 //
 // Content is extracted in priority order:
-//  1. From the file specified by --file flag
-//  2. From command line arguments (after the entry type)
-//  3. From stdin (if piped)
+//  1. From the JSON payload specified by --json-file flag
+//  2. From the file specified by --file flag
+//  3. From command line arguments (after the entry type)
+//  4. From stdin (if piped)
 //
 // Parameters:
 //   - args: Command arguments where args[1:] may contain inline content
-//   - flags: Configuration flags including FromFile path
+//   - flags: Configuration flags including JSONFile and FromFile paths
 //
 // Returns:
 //   - string: Extracted and trimmed content
 //   - error: Non-nil if no content source is available or reading fails
 func Content(args []string, flags entity.AddConfig) (string, error) {
+	if flags.JSONFile != "" {
+		payload, loadErr := jsonpayload.Load(flags.JSONFile)
+		if loadErr != nil {
+			return "", loadErr
+		}
+		if content := payload.Content(); content != "" {
+			return content, nil
+		}
+		// Empty title/body: fall through to the other sources.
+	}
+
 	if flags.FromFile != "" {
 		// Read from the file
 		fileContent, readErr := ctxIo.SafeReadUserFile(flags.FromFile)

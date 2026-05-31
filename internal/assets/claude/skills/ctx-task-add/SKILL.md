@@ -77,6 +77,15 @@ ctx task add "Add topic-based navigation to blog when post count reaches 15+" \
   --priority low
 ```
 
+**JSON payload (when content would trip a `permissions.deny` rule):** pass
+`--json-file <path>` instead of the positional content + flags. The
+`title` (plus an optional `body`, space-joined) becomes the task text;
+`priority`, `section`, and a `provenance` envelope map to the flags:
+
+```bash
+ctx task add --json-file /tmp/task.json   # {"title","body","priority","section","provenance"}
+```
+
 **Bad examples (too shallow):**
 ```bash
 ctx task add "Fix bug"              # What bug? Where?

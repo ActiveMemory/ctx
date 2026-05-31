@@ -95,3 +95,61 @@ func TestTaskAddRequiresProvenance(t *testing.T) {
 		t.Errorf("error should mention --session-id: %v", err)
 	}
 }
+
+// TestTaskAddFromJSONFile verifies --json-file overlays the task's
+// priority, section, and provenance, and that title+body become the
+// single-line content.
+func TestTaskAddFromJSONFile(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-task-add-json-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	testctx.Declare(t, tmpDir)
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	payload := filepath.Join(tmpDir, "task.json")
+	if err = os.WriteFile(payload, []byte(`{
+		"title": "Wire the relay",
+		"body": "into /usr/local/bin handoff",
+		"priority": "high",
+		"section": "Misc",
+		"provenance": {"session_id": "json1234", "branch": "main", "commit": "abc123"}
+	}`), 0o600); err != nil {
+		t.Fatalf("write payload: %v", err)
+	}
+
+	addCmd := Cmd()
+	addCmd.SetArgs([]string{"--json-file", payload})
+	if err = addCmd.Execute(); err != nil {
+		t.Fatalf("ctx task add --json-file failed: %v", err)
+	}
+
+	tasksPath := filepath.Join(tmpDir, ".context", "TASKS.md")
+	content, err := os.ReadFile(filepath.Clean(tasksPath))
+	if err != nil {
+		t.Fatalf("failed to read TASKS.md: %v", err)
+	}
+	contentStr := string(content)
+	for _, want := range []string{
+		"Wire the relay into /usr/local/bin handoff",
+		"#priority:high",
+		"#session:json1234",
+	} {
+		if !strings.Contains(contentStr, want) {
+			t.Errorf("expected %q in TASKS.md", want)
+		}
+	}
+}

@@ -46,6 +46,7 @@ required-flag rules surface as command errors):
 | `--lesson`                | `-l`  | Key insight (required for learnings)                        |
 | `--application`           | `-a`  | How to apply going forward (required for learnings)         |
 | `--file`                  | `-f`  | Read content from file instead of argument                  |
+| `--json-file <path>`      |       | Read a JSON payload that populates the typed fields directly (supersedes the content flags) |
 
 **Examples**:
 
@@ -72,6 +73,19 @@ ctx learning add "Vitest mocks must be hoisted" \
 
 # Add to specific section
 ctx convention add "Use kebab-case for filenames" --section "Naming"
+
+# Ingest a JSON payload (keeps flag-value content off the command line,
+# so a value containing a permissions-denied substring still persists)
+cat > /tmp/decision.json <<'EOF'
+{
+  "title": "Install ctx into the system PATH",
+  "context": "agents invoke ctx by bare name",
+  "rationale": "the binary belongs at /usr/local/bin so it is on PATH",
+  "consequence": "ctx resolves from any working directory",
+  "provenance": {"session_id": "abc12345", "branch": "main", "commit": "68fbc00a"}
+}
+EOF
+ctx decision add --json-file /tmp/decision.json
 ```
 
 ---

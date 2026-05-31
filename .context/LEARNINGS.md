@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-30 | New exported types must live in types.go or TestTypeFileConvention fails |
 | 2026-05-28 | ctx kb: single topic-enumeration site; life-stage count is consumer-side |
 | 2026-05-28 | Swap occupancy is not memory pressure — use the kernel's derivative |
 | 2026-05-28 | A non-root Go module nested under the main module's path CAN import its internal/ packages |
@@ -163,6 +164,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-30-114436] New exported types must live in types.go or TestTypeFileConvention fails
+
+**Context**: Defined Payload and Provenance structs alongside the Load/OverlayFlags funcs in a new payload.go; make test failed in internal/audit on TestTypeFileConvention with '2 NEW type definitions outside types.go'.
+
+**Lesson**: The audit permits type definitions outside types.go only when the file is a 'pure type impl file' (only type defs + their methods, no standalone funcs) or the package is on the exempt list. A file that mixes struct definitions with standalone functions is a violation.
+
+**Application**: When adding a new package that has both types and functions, put the type definitions in a dedicated types.go from the start; methods (with receivers) may live beside the behavior. Run 'go test ./internal/audit/ -run TestTypeFileConvention' to check.
 
 ---
 
