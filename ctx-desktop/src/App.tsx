@@ -65,7 +65,6 @@ function App() {
   const [dir, setDir] = useState(
     () => localStorage.getItem(DIR_KEY) || DEFAULT_DIR,
   );
-  const [draftDir, setDraftDir] = useState(dir);
   const [workspace, setWorkspace] = useState(
     () => localStorage.getItem(WORKSPACE_KEY) || "",
   );
@@ -78,7 +77,6 @@ function App() {
   function applyDir(d: string) {
     if (!d) return;
     setDir(d);
-    setDraftDir(d);
     localStorage.setItem(DIR_KEY, d);
   }
 
@@ -164,12 +162,12 @@ function App() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center gap-2 border-b border-border bg-panel px-4 py-2">
-          {/* Workspace project switcher (primary) */}
+          {/* Workspace project switcher */}
           <select
             value={dirInProjects ? dir : ""}
             onChange={(e) => e.target.value && applyDir(e.target.value)}
             title="Switch project"
-            className="min-w-44 max-w-64 rounded-md border border-border bg-bg px-2 py-1.5 text-xs text-ink outline-none focus:border-accent"
+            className="h-8 min-w-48 max-w-72 rounded-md border border-border bg-bg px-2 text-xs text-ink outline-none focus:border-accent"
           >
             <option value="">
               {scanning
@@ -188,28 +186,12 @@ function App() {
           <button
             onClick={() => void pickWorkspace()}
             title="Choose a workspace folder to scan for ctx projects"
-            className="shrink-0 rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-bg"
+            className="flex h-8 shrink-0 items-center rounded-md bg-accent px-3 text-xs font-medium text-bg"
           >
             Workspace…
           </button>
 
-          {/* Manual path (fallback) */}
-          <input
-            value={draftDir}
-            onChange={(e) => setDraftDir(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") applyDir(draftDir);
-            }}
-            spellCheck={false}
-            className="flex-1 rounded-md border border-border bg-bg px-3 py-1.5 font-mono text-xs text-ink outline-none focus:border-accent"
-            placeholder="…or type a project path (parent of .context)"
-          />
-          <button
-            onClick={() => applyDir(draftDir)}
-            className="shrink-0 rounded-md border border-border bg-bg px-3 py-1.5 text-xs text-ink hover:border-accent"
-          >
-            Open
-          </button>
+          <div className="flex-1" />
 
           {health && <HealthPill health={health} />}
           {info && (
