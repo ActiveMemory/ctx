@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ctxTasks,
   ctxTaskAdd,
@@ -17,6 +17,7 @@ export default function Tasks({ dir }: { dir: string }) {
   const [filter, setFilter] = useState<Filter>("open");
   const [text, setText] = useState("");
   const [priority, setPriority] = useState("");
+  const [section, setSection] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const reload = useReloadOnCtxChange();
@@ -40,9 +41,11 @@ export default function Tasks({ dir }: { dir: string }) {
     setBusy(true);
     setError(null);
     try {
-      await ctxTaskAdd(dir, text.trim(), priority);
+      // ctx requires a target section/phase; default to Misc.
+      await ctxTaskAdd(dir, text.trim(), priority, section.trim() || "Misc");
       setText("");
       setPriority("");
+      // keep section so several tasks can be added to the same phase
       await load(dir);
     } catch (e) {
       setError(String(e));
@@ -72,6 +75,12 @@ export default function Tasks({ dir }: { dir: string }) {
         : t.status === "done",
   );
 
+  const sections = useMemo(
+    () =>
+      Array.from(new Set(tasks.map((t) => t.section).filter(Boolean))).sort(),
+    [tasks],
+  );
+
   return (
     <div className="mx-auto max-w-3xl px-6 py-6">
       <h1 className="mb-4 text-lg font-semibold text-ink">Tasks</h1>
@@ -87,6 +96,19 @@ export default function Tasks({ dir }: { dir: string }) {
           placeholder="Add a task…"
           className="flex-1 rounded-md border border-border bg-panel px-3 py-2 text-sm text-ink outline-none focus:border-accent"
         />
+        <input
+          list="task-sections"
+          value={section}
+          onChange={(e) => setSection(e.target.value)}
+          placeholder="Section (Misc)"
+          title="Target phase/section in TASKS.md"
+          className="w-32 rounded-md border border-border bg-panel px-3 py-2 text-sm text-ink outline-none focus:border-accent"
+        />
+        <datalist id="task-sections">
+          {sections.map((s) => (
+            <option key={s} value={s} />
+          ))}
+        </datalist>
         <select
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
