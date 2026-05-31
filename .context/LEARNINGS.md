@@ -17,6 +17,8 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-31 | macOS GUI apps inherit a minimal PATH; augment it to find a user-installed CLI |
+| 2026-05-31 | Tauri 2 requires rustc >= 1.88; bump the toolchain before cargo check |
 | 2026-05-30 | Capture golden fixtures from the live legacy code path before deleting it |
 | 2026-05-30 | tpl package is magic-string-audit-exempt but its call sites are not |
 | 2026-05-30 | New exported types must live in types.go or TestTypeFileConvention fails |
@@ -166,6 +168,26 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-31-094649] macOS GUI apps inherit a minimal PATH; augment it to find a user-installed CLI
+
+**Context**: A bundled Tauri app launched via Finder/launchd gets a minimal PATH (/usr/bin:/bin:...), so /usr/local/bin/ctx is not found even though it resolves in a terminal-launched dev run.
+
+**Lesson**: Do not rely on inherited PATH when spawning user-installed CLIs from a desktop GUI.
+
+**Application**: ctx_adapter prepends /usr/local/bin:/opt/homebrew/bin to PATH on every std::process::Command invocation.
+
+---
+
+## [2026-05-31-094649] Tauri 2 requires rustc >= 1.88; bump the toolchain before cargo check
+
+**Context**: cargo check for the ctx-desktop Tauri app failed: darling, serde_with, time and plist transitive deps require rustc 1.88, but the local toolchain was 1.87.
+
+**Lesson**: Tauri 2's dependency tree tracks recent rustc releases; the pinned-stable assumption breaks builds.
+
+**Application**: Run rustup update stable before building a Tauri 2 app; this project moved 1.87 -> 1.96.
 
 ---
 
