@@ -5,6 +5,7 @@ import Decisions from "./screens/Decisions";
 import Learnings from "./screens/Learnings";
 import ContextPacket from "./screens/ContextPacket";
 import Journal from "./screens/Journal";
+import Health from "./screens/Health";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import {
@@ -29,7 +30,8 @@ type View =
   | "decisions"
   | "learnings"
   | "packet"
-  | "journal";
+  | "journal"
+  | "health";
 const NAV: { id: View; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "tasks", label: "Tasks" },
@@ -37,9 +39,16 @@ const NAV: { id: View; label: string }[] = [
   { id: "learnings", label: "Learnings" },
   { id: "packet", label: "Context Packet" },
   { id: "journal", label: "Journal" },
+  { id: "health", label: "Health" },
 ];
 
-function HealthPill({ health }: { health: DoctorReport }) {
+function HealthPill({
+  health,
+  onClick,
+}: {
+  health: DoctorReport;
+  onClick: () => void;
+}) {
   const level =
     health.errors > 0 ? "err" : health.warnings > 0 ? "warn" : "ok";
   const label =
@@ -60,12 +69,13 @@ function HealthPill({ health }: { health: DoctorReport }) {
       .map((r) => `• [${r.category}] ${r.message || r.name}`)
       .join("\n") || "All structural checks passed.";
   return (
-    <span
-      className={`shrink-0 cursor-help rounded-full px-3 py-1 text-xs ${cls}`}
-      title={detail}
+    <button
+      onClick={onClick}
+      className={`shrink-0 cursor-pointer rounded-full px-3 py-1 text-xs ${cls}`}
+      title={`${detail}\n\n(click for the Health screen)`}
     >
       doctor: {label}
-    </span>
+    </button>
   );
 }
 
@@ -201,7 +211,9 @@ function App() {
 
           <div className="flex-1" />
 
-          {health && <HealthPill health={health} />}
+          {health && (
+            <HealthPill health={health} onClick={() => setView("health")} />
+          )}
           {info && (
             <span
               className={`shrink-0 rounded-full px-3 py-1 font-mono text-xs ${
@@ -221,6 +233,7 @@ function App() {
           {view === "learnings" && <Learnings dir={dir} />}
           {view === "packet" && <ContextPacket dir={dir} />}
           {view === "journal" && <Journal dir={dir} />}
+          {view === "health" && <Health dir={dir} />}
         </main>
       </div>
     </div>
