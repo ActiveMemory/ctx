@@ -30,6 +30,10 @@ var parseErrs []error
 // init parses every embedded template into its exported handle.
 func init() {
 	ObsidianReadme = parseTemplate("templates/obsidian-readme.md.tmpl")
+	JournalSiteReadme = parseTemplate("templates/journal-site-readme.md.tmpl")
+	TriggerScript = parseTemplate("templates/trigger-script.sh.tmpl")
+	Learning = parseTemplate("templates/learning.md.tmpl")
+	Decision = parseTemplate("templates/decision.md.tmpl")
 }
 
 // parseTemplate reads and parses one embedded template. On failure it
