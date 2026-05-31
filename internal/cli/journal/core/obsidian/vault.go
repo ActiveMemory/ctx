@@ -7,7 +7,6 @@
 package obsidian
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -86,10 +85,14 @@ func BuildVault(cmd *cobra.Command, journalDir, output string) error {
 
 	// Write README
 	readmePath := filepath.Join(output, file.Readme)
+	readme, rErr := tpl.Render(
+		tpl.ObsidianReadme, tpl.ObsidianData{JournalDir: journalDir},
+	)
+	if rErr != nil {
+		return errFs.FileWrite(readmePath, rErr)
+	}
 	if wErr := io.SafeWriteFile(
-		readmePath,
-		[]byte(fmt.Sprintf(tpl.ObsidianReadme, journalDir)),
-		fs.PermFile,
+		readmePath, []byte(readme), fs.PermFile,
 	); wErr != nil {
 		return errFs.FileWrite(readmePath, wErr)
 	}
