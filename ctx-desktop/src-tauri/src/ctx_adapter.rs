@@ -101,6 +101,22 @@ pub fn ctx_learning_list(dir: String) -> Result<String, String> {
     run_ctx(&dir, &["learning", "list", "--json"])
 }
 
+/// Returns `ctx agent --format json --budget N` for `dir` — the
+/// structured context packet used by the budget-preview screen.
+#[tauri::command]
+pub fn ctx_agent_json(dir: String, budget: u32) -> Result<String, String> {
+    let b = budget.to_string();
+    run_ctx(&dir, &["agent", "--format", "json", "--budget", b.as_str()])
+}
+
+/// Returns `ctx agent --budget N` markdown for `dir` — the
+/// paste-ready packet for the "copy packet" action.
+#[tauri::command]
+pub fn ctx_agent_md(dir: String, budget: u32) -> Result<String, String> {
+    let b = budget.to_string();
+    run_ctx(&dir, &["agent", "--budget", b.as_str()])
+}
+
 /// Reads a single trimmed git value from the repo at `dir`, or "".
 fn git_field(dir: &str, args: &[&str]) -> String {
     Command::new("git")

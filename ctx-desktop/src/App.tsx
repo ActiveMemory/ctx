@@ -3,18 +3,20 @@ import Overview from "./screens/Overview";
 import Tasks from "./screens/Tasks";
 import Decisions from "./screens/Decisions";
 import Learnings from "./screens/Learnings";
+import ContextPacket from "./screens/ContextPacket";
 import { ctxInfo, type CtxInfo } from "./adapter/ctx";
 
 // Default project = the ctx repo itself, so the app shows real
 // data on first launch. Editable in the top bar.
 const DEFAULT_DIR = "/Users/hamzaerbay/Code/ctx";
 
-type View = "overview" | "tasks" | "decisions" | "learnings";
+type View = "overview" | "tasks" | "decisions" | "learnings" | "packet";
 const NAV: { id: View; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "tasks", label: "Tasks" },
   { id: "decisions", label: "Decisions" },
   { id: "learnings", label: "Learnings" },
+  { id: "packet", label: "Context Packet" },
 ];
 
 function App() {
@@ -86,6 +88,7 @@ function App() {
           {view === "tasks" && <Tasks dir={dir} />}
           {view === "decisions" && <Decisions dir={dir} />}
           {view === "learnings" && <Learnings dir={dir} />}
+          {view === "packet" && <ContextPacket dir={dir} />}
         </main>
       </div>
     </div>
