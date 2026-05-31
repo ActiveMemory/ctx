@@ -130,7 +130,8 @@ Two block templates replace six paired-tag constants
 (`MetaDetailsOpen/Close`, `MetaRow`, `RecallDetailsOpen/Close`,
 `RecallPlanOpen/Close`):
 
-- **`metaTable`** — input `{Summary string; Rows []struct{Label, Value string}}`.
+- **`metaTable`** — input `MetaTableData{Summary string; Rows []MetaRow}`
+  (`MetaRow{Label, Value string}`).
   Replaces `format.go:255-276` and `280-293`: build the rows slice
   (conditional rows like `GitBranch`/`Model`/`Parts` become
   conditional appends), render once. `MetaRow` becomes a `{{range}}`
@@ -144,8 +145,9 @@ Two block templates replace six paired-tag constants
 
 ### Happy Path
 
-1. At `tpl` init, each `*.tmpl` file is read from `assets.FS` and
-   parsed into its exported `*template.Template` handle.
+1. At `tpl` init, each `*.tmpl` file is read from the `tpl`-local
+   embedded FS and parsed into its exported `*template.Template`
+   handle.
 2. A call site builds a typed data struct and calls
    `tpl.Render(tpl.X, data)`.
 3. `Render` executes into a `bytes.Buffer` and returns the string —
@@ -164,7 +166,7 @@ Two block templates replace six paired-tag constants
 | `LoopScript` with `maxIterations == 0` | `{{if .MaxIter}}…{{end}}` renders nothing — replaces the "inject empty `maxIterCheck`" composition (`script.go:53-59`). Output identical. |
 | `LoopScript` tool selection | `aiCommand` is chosen in Go (small `LoopCmd*` consts stay) and passed as `{{.AICommand}}`; the template does not branch on tool. |
 | `metaTable` conditional rows | Absent `GitBranch`/`Model`/`Parts` append no row — matches the current `if s.X != ""` guards exactly. |
-| **Whitespace fidelity (the chief hazard)** | `MetaDetailsOpen` ends `<table>` with *no* newline; the first `<tr>` follows on the same line. The `{{range}}`/`{{define}}` blocks need explicit `{{-`/`-}}` trimming to reproduce exact bytes. Golden tests assert this. |
+| **Whitespace fidelity (the chief hazard)** | `MetaDetailsOpen` ends `<table>` with *no* newline; the first `<tr>` follows on the same line. The templates reproduce this with plain `{{range}}`/`{{if}}` plus deliberate literal newlines and no-trailing-newline files (callers add the surrounding newlines) — no `{{-`/`-}}` trimming was needed. Golden tests assert the exact bytes. |
 | Malformed embedded template ships | `init` records the parse error; `TestTemplatesParse` fails in CI. Cannot reach a release. |
 | Exec error (missing/renamed field) | Error-returning callers get it from `Render`; best-effort builders log it via `RenderOr` and fall back. Either way the golden test fails pre-merge. See Error Handling. |
 
@@ -205,8 +207,8 @@ every affected command is byte-identical.
 
 | File | Change |
 |------|--------|
-| `internal/assets/tpl/templates/*.tmpl`, `*.toml` | **New** — extracted Tier-1 bodies + `blocks.tmpl` holding the `metaTable` and `details` `{{define}}`s |
-| `internal/assets/tpl/render.go` | **New** — `tpl`-local `//go:embed templates/*`, `Render(t, data)`, init parse table (the only place filenames appear), parse-error collection, `ParseErrors()` for `TestTemplatesParse`, typed data structs |
+| `internal/assets/tpl/templates/*.tmpl`, `*.toml` | **New** — extracted Tier-1 bodies + separate `meta-table.html.tmpl` and `details.html.tmpl` block templates |
+| `internal/assets/tpl/render.go`, `load.go`, `static.go`, `types.go` | **New** — `Render`/`RenderOr` (render.go); `tpl`-local `//go:embed`, the init parse table (the only place filenames appear), and `parseErrs` (load.go); FS-loaded static strings (static.go); typed data structs (types.go). `TestTemplatesParse` is an in-package test reading `parseErrs` |
 | `internal/assets/embed.go` | **Untouched** — the embed is local to `tpl`, not the parent `assets.FS` (cycle avoidance) |
 | `internal/assets/tpl/tpl_*.go` | Retype migrated consts → handles / FS-loaded strings; delete migrated bodies + the six Tier-2 paired-tag consts; Tier-3 consts stay |
 | `internal/cli/journal/core/source/format/format.go` | Tier-2 refactor: build `metaTable` rows + `details` bodies, render via handles (replaces `255-293`, `357-359`, `394-400`) |
