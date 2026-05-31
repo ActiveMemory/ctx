@@ -5,7 +5,19 @@ import Decisions from "./screens/Decisions";
 import Learnings from "./screens/Learnings";
 import ContextPacket from "./screens/ContextPacket";
 import Journal from "./screens/Journal";
+import { open } from "@tauri-apps/plugin-dialog";
 import { ctxInfo, ctxDoctor, type CtxInfo, type DoctorReport } from "./adapter/ctx";
+
+const RECENTS_KEY = "ctx.recents";
+
+function loadRecents(): string[] {
+  try {
+    const v = JSON.parse(localStorage.getItem(RECENTS_KEY) ?? "[]");
+    return Array.isArray(v) ? v : [];
+  } catch {
+    return [];
+  }
+}
 
 // Default project = the ctx repo itself, so the app shows real
 // data on first launch. Editable in the top bar.
@@ -55,6 +67,23 @@ function App() {
   const [view, setView] = useState<View>("overview");
   const [info, setInfo] = useState<CtxInfo | null>(null);
   const [health, setHealth] = useState<DoctorReport | null>(null);
+  const [recents, setRecents] = useState<string[]>(loadRecents);
+
+  function applyDir(d: string) {
+    if (!d) return;
+    setDir(d);
+    setDraftDir(d);
+    setRecents((prev) => {
+      const next = [d, ...prev.filter((p) => p !== d)].slice(0, 8);
+      localStorage.setItem(RECENTS_KEY, JSON.stringify(next));
+      return next;
+    });
+  }
+
+  async function pickFolder() {
+    const selected = await open({ directory: true, title: "Open a ctx project" });
+    if (typeof selected === "string") applyDir(selected);
+  }
 
   useEffect(() => {
     void ctxInfo().then(setInfo);
@@ -96,18 +125,40 @@ function App() {
             value={draftDir}
             onChange={(e) => setDraftDir(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") setDir(draftDir);
+              if (e.key === "Enter") applyDir(draftDir);
             }}
             spellCheck={false}
             className="flex-1 rounded-md border border-border bg-bg px-3 py-1.5 font-mono text-xs text-ink outline-none focus:border-accent"
             placeholder="/path/to/project (parent of .context)"
           />
           <button
-            onClick={() => setDir(draftDir)}
+            onClick={() => applyDir(draftDir)}
             className="rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-bg"
           >
             Open
           </button>
+          <button
+            onClick={() => void pickFolder()}
+            title="Open a folder…"
+            className="rounded-md border border-border bg-bg px-3 py-1.5 text-xs text-ink hover:border-accent"
+          >
+            Folder…
+          </button>
+          {recents.length > 0 && (
+            <select
+              value=""
+              onChange={(e) => e.target.value && applyDir(e.target.value)}
+              title="Recent projects"
+              className="max-w-40 rounded-md border border-border bg-bg px-2 py-1.5 text-xs text-ink outline-none focus:border-accent"
+            >
+              <option value="">Recent…</option>
+              {recents.map((r) => (
+                <option key={r} value={r}>
+                  {r.split("/").pop() || r}
+                </option>
+              ))}
+            </select>
+          )}
           {health && <HealthPill health={health} />}
           {info && (
             <span
