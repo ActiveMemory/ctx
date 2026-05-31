@@ -7,21 +7,20 @@ import ContextPacket from "./screens/ContextPacket";
 import Journal from "./screens/Journal";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
-import { ctxInfo, ctxDoctor, type CtxInfo, type DoctorReport } from "./adapter/ctx";
+import {
+  ctxInfo,
+  ctxDoctor,
+  discoverProjects,
+  type CtxInfo,
+  type DoctorReport,
+  type Project,
+} from "./adapter/ctx";
 
-const RECENTS_KEY = "ctx.recents";
+const DIR_KEY = "ctx.dir";
+const WORKSPACE_KEY = "ctx.workspace";
 
-function loadRecents(): string[] {
-  try {
-    const v = JSON.parse(localStorage.getItem(RECENTS_KEY) ?? "[]");
-    return Array.isArray(v) ? v : [];
-  } catch {
-    return [];
-  }
-}
-
-// Default project = the ctx repo itself, so the app shows real
-// data on first launch. Editable in the top bar.
+// Fallback project = the ctx repo itself, so the app shows real
+// data on first launch before a workspace is chosen.
 const DEFAULT_DIR = "/Users/hamzaerbay/Code/ctx";
 
 type View =
@@ -63,31 +62,54 @@ function HealthPill({ health }: { health: DoctorReport }) {
 }
 
 function App() {
-  const [dir, setDir] = useState(DEFAULT_DIR);
-  const [draftDir, setDraftDir] = useState(DEFAULT_DIR);
+  const [dir, setDir] = useState(
+    () => localStorage.getItem(DIR_KEY) || DEFAULT_DIR,
+  );
+  const [draftDir, setDraftDir] = useState(dir);
+  const [workspace, setWorkspace] = useState(
+    () => localStorage.getItem(WORKSPACE_KEY) || "",
+  );
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [scanning, setScanning] = useState(false);
   const [view, setView] = useState<View>("overview");
   const [info, setInfo] = useState<CtxInfo | null>(null);
   const [health, setHealth] = useState<DoctorReport | null>(null);
-  const [recents, setRecents] = useState<string[]>(loadRecents);
 
   function applyDir(d: string) {
     if (!d) return;
     setDir(d);
     setDraftDir(d);
-    setRecents((prev) => {
-      const next = [d, ...prev.filter((p) => p !== d)].slice(0, 8);
-      localStorage.setItem(RECENTS_KEY, JSON.stringify(next));
-      return next;
-    });
+    localStorage.setItem(DIR_KEY, d);
   }
 
-  async function pickFolder() {
-    const selected = await open({ directory: true, title: "Open a ctx project" });
-    if (typeof selected === "string") applyDir(selected);
+  async function scan(root: string) {
+    if (!root) return;
+    setScanning(true);
+    try {
+      setProjects(await discoverProjects(root, 4));
+    } catch {
+      setProjects([]);
+    } finally {
+      setScanning(false);
+    }
+  }
+
+  async function pickWorkspace() {
+    const selected = await open({
+      directory: true,
+      title: "Choose a workspace folder",
+    });
+    if (typeof selected !== "string") return;
+    setWorkspace(selected);
+    localStorage.setItem(WORKSPACE_KEY, selected);
+    await scan(selected);
   }
 
   useEffect(() => {
     void ctxInfo().then(setInfo);
+    // Re-scan a previously chosen workspace so the dropdown is ready.
+    if (workspace) void scan(workspace);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -100,6 +122,8 @@ function App() {
   useEffect(() => {
     void invoke("watch_context", { dir }).catch(() => {});
   }, [dir]);
+
+  const dirInProjects = projects.some((p) => p.path === dir);
 
   return (
     <div className="flex min-h-screen bg-bg text-ink">
@@ -123,10 +147,53 @@ function App() {
             </button>
           ))}
         </nav>
+        {workspace && (
+          <div className="mt-auto border-t border-border px-4 py-3">
+            <div className="text-[11px] uppercase tracking-wide text-muted">
+              Workspace
+            </div>
+            <div
+              className="truncate font-mono text-[11px] text-ink"
+              title={workspace}
+            >
+              {workspace.split("/").pop() || workspace}
+            </div>
+          </div>
+        )}
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center gap-2 border-b border-border bg-panel px-4 py-2">
+          {/* Workspace project switcher (primary) */}
+          <select
+            value={dirInProjects ? dir : ""}
+            onChange={(e) => e.target.value && applyDir(e.target.value)}
+            title="Switch project"
+            className="min-w-44 max-w-64 rounded-md border border-border bg-bg px-2 py-1.5 text-xs text-ink outline-none focus:border-accent"
+          >
+            <option value="">
+              {scanning
+                ? "Scanning…"
+                : projects.length
+                  ? `${projects.length} project${projects.length > 1 ? "s" : ""}…`
+                  : "No workspace"}
+            </option>
+            {projects.map((p) => (
+              <option key={p.path} value={p.path}>
+                {p.name}
+                {p.has_git ? "" : " (no git)"}
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={() => void pickWorkspace()}
+            title="Choose a workspace folder to scan for ctx projects"
+            className="shrink-0 rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-bg"
+          >
+            Workspace…
+          </button>
+
+          {/* Manual path (fallback) */}
           <input
             value={draftDir}
             onChange={(e) => setDraftDir(e.target.value)}
@@ -135,36 +202,15 @@ function App() {
             }}
             spellCheck={false}
             className="flex-1 rounded-md border border-border bg-bg px-3 py-1.5 font-mono text-xs text-ink outline-none focus:border-accent"
-            placeholder="/path/to/project (parent of .context)"
+            placeholder="…or type a project path (parent of .context)"
           />
           <button
             onClick={() => applyDir(draftDir)}
-            className="rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-bg"
+            className="shrink-0 rounded-md border border-border bg-bg px-3 py-1.5 text-xs text-ink hover:border-accent"
           >
             Open
           </button>
-          <button
-            onClick={() => void pickFolder()}
-            title="Open a folder…"
-            className="rounded-md border border-border bg-bg px-3 py-1.5 text-xs text-ink hover:border-accent"
-          >
-            Folder…
-          </button>
-          {recents.length > 0 && (
-            <select
-              value=""
-              onChange={(e) => e.target.value && applyDir(e.target.value)}
-              title="Recent projects"
-              className="max-w-40 rounded-md border border-border bg-bg px-2 py-1.5 text-xs text-ink outline-none focus:border-accent"
-            >
-              <option value="">Recent…</option>
-              {recents.map((r) => (
-                <option key={r} value={r}>
-                  {r.split("/").pop() || r}
-                </option>
-              ))}
-            </select>
-          )}
+
           {health && <HealthPill health={health} />}
           {info && (
             <span

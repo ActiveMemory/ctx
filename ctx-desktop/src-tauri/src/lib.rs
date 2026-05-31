@@ -1,4 +1,5 @@
 mod ctx_adapter;
+mod discover;
 mod watcher;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -21,6 +22,7 @@ pub fn run() {
             ctx_adapter::ctx_agent_json,
             ctx_adapter::ctx_agent_md,
             ctx_adapter::ctx_journal,
+            discover::discover_projects,
             watcher::watch_context,
         ])
         .run(tauri::generate_context!())
