@@ -86,3 +86,21 @@ export async function ctxLearnings(dir: string): Promise<Learning[]> {
   const out = JSON.parse(await invoke<string>("ctx_learning_list", { dir }));
   return out.learnings ?? [];
 }
+
+/**
+ * `ctx task add` — provenance (session id, branch, commit) is
+ * synthesized in the Rust adapter. Empty priority/section omitted.
+ */
+export function ctxTaskAdd(
+  dir: string,
+  text: string,
+  priority = "",
+  section = "",
+): Promise<string> {
+  return invoke<string>("ctx_task_add", { dir, text, priority, section });
+}
+
+/** `ctx task complete <id-or-text>`. */
+export function ctxTaskComplete(dir: string, target: string): Promise<string> {
+  return invoke<string>("ctx_task_complete", { dir, target });
+}

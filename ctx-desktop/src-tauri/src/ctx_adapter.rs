@@ -100,3 +100,75 @@ pub fn ctx_decision_list(dir: String) -> Result<String, String> {
 pub fn ctx_learning_list(dir: String) -> Result<String, String> {
     run_ctx(&dir, &["learning", "list", "--json"])
 }
+
+/// Reads a single trimmed git value from the repo at `dir`, or "".
+fn git_field(dir: &str, args: &[&str]) -> String {
+    Command::new("git")
+        .arg("-C")
+        .arg(dir)
+        .args(args)
+        .output()
+        .ok()
+        .filter(|o| o.status.success())
+        .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
+        .unwrap_or_default()
+}
+
+/// Generates an 8-char session id for write provenance. The CLI
+/// truncates to 8 chars anyway; we derive from the wall clock so
+/// it varies per call without pulling in a rand dependency.
+fn session_id() -> String {
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_nanos())
+        .unwrap_or(0);
+    format!("{:08x}", (nanos as u64) & 0xffff_ffff)
+}
+
+/// Adds a task via `ctx task add`, synthesizing the required
+/// provenance flags (session id minted here, branch/commit read
+/// from git). Empty `priority`/`section` are omitted.
+#[tauri::command]
+pub fn ctx_task_add(
+    dir: String,
+    text: String,
+    priority: String,
+    section: String,
+) -> Result<String, String> {
+    if text.trim().is_empty() {
+        return Err("task text is empty".to_string());
+    }
+    let branch = git_field(&dir, &["rev-parse", "--abbrev-ref", "HEAD"]);
+    let commit = git_field(&dir, &["rev-parse", "--short", "HEAD"]);
+    let session = session_id();
+
+    let mut args: Vec<&str> = vec![
+        "task",
+        "add",
+        text.as_str(),
+        "--session-id",
+        session.as_str(),
+        "--branch",
+        branch.as_str(),
+        "--commit",
+        commit.as_str(),
+    ];
+    if !priority.is_empty() {
+        args.push("--priority");
+        args.push(priority.as_str());
+    }
+    if !section.is_empty() {
+        args.push("--section");
+        args.push(section.as_str());
+    }
+    run_ctx(&dir, &args)
+}
+
+/// Marks a task complete via `ctx task complete <id-or-text>`.
+#[tauri::command]
+pub fn ctx_task_complete(dir: String, target: String) -> Result<String, String> {
+    if target.trim().is_empty() {
+        return Err("task identifier is empty".to_string());
+    }
+    run_ctx(&dir, &["task", "complete", target.as_str()])
+}

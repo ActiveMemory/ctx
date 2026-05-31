@@ -1,18 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  ctxInfo,
   ctxStatus,
   ctxTasks,
   ctxDecisions,
   ctxLearnings,
-  type CtxInfo,
   type CtxStatus,
   type Task,
 } from "../adapter/ctx";
-
-// Default project = the ctx repo itself, so the shell shows real
-// data on first launch. Editable in the field below.
-const DEFAULT_DIR = "/Users/hamzaerbay/Code/ctx";
 
 interface Counts {
   tasksOpen: number;
@@ -30,9 +24,7 @@ function Stat({ label, value }: { label: string; value: string | number }) {
   );
 }
 
-export default function Overview() {
-  const [dir, setDir] = useState(DEFAULT_DIR);
-  const [info, setInfo] = useState<CtxInfo | null>(null);
+export default function Overview({ dir }: { dir: string }) {
   const [status, setStatus] = useState<CtxStatus | null>(null);
   const [counts, setCounts] = useState<Counts | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,10 +32,7 @@ export default function Overview() {
 
   const load = useCallback(async (projectDir: string) => {
     setLoading(true);
-    setErrors([]);
     const errs: string[] = [];
-
-    setInfo(await ctxInfo());
 
     try {
       setStatus(await ctxStatus(projectDir));
@@ -78,45 +67,14 @@ export default function Overview() {
   }, []);
 
   useEffect(() => {
-    void load(DEFAULT_DIR);
-  }, [load]);
+    void load(dir);
+  }, [dir, load]);
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
-      <header className="mb-6 flex items-baseline justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-ink">ctx Desktop</h1>
-          <p className="text-sm text-muted">do you remember?</p>
-        </div>
-        {info && (
-          <span
-            className={`rounded-full px-3 py-1 font-mono text-xs ${
-              info.found
-                ? "bg-ok/15 text-ok"
-                : "bg-err/15 text-err"
-            }`}
-            title={info.error ?? ""}
-          >
-            {info.found ? info.version : "ctx not found"}
-          </span>
-        )}
-      </header>
-
-      <div className="mb-6 flex gap-2">
-        <input
-          value={dir}
-          onChange={(e) => setDir(e.target.value)}
-          spellCheck={false}
-          className="flex-1 rounded-md border border-border bg-panel px-3 py-2 font-mono text-sm text-ink outline-none focus:border-accent"
-          placeholder="/path/to/project (parent of .context)"
-        />
-        <button
-          onClick={() => void load(dir)}
-          disabled={loading}
-          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-bg disabled:opacity-50"
-        >
-          {loading ? "Loading…" : "Load"}
-        </button>
+    <div className="mx-auto max-w-3xl px-6 py-6">
+      <div className="mb-4 flex items-baseline justify-between">
+        <h1 className="text-lg font-semibold text-ink">Overview</h1>
+        {loading && <span className="text-xs text-muted">loading…</span>}
       </div>
 
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -147,9 +105,9 @@ export default function Overview() {
             ))}
           </ul>
           <p className="mt-3 text-xs text-muted">
-            The list commands need the branch build of ctx. Run{" "}
+            The task/decision/learning counts need the branch build of ctx. Run{" "}
             <code className="text-ink">make build &amp;&amp; sudo make install</code>{" "}
-            from the ctx repo (feat/ctx-artifact-list-json), then Load again.
+            from the ctx repo (feat/ctx-artifact-list-json), then reopen.
           </p>
         </section>
       )}
