@@ -54,8 +54,16 @@ function HealthPill({ health }: { health: DoctorReport }) {
       : level === "warn"
         ? "bg-warn/15 text-warn"
         : "bg-ok/15 text-ok";
+  const detail =
+    health.results
+      .filter((r) => r.status === "warning" || r.status === "error")
+      .map((r) => `• [${r.category}] ${r.message || r.name}`)
+      .join("\n") || "All structural checks passed.";
   return (
-    <span className={`shrink-0 rounded-full px-3 py-1 text-xs ${cls}`}>
+    <span
+      className={`shrink-0 cursor-help rounded-full px-3 py-1 text-xs ${cls}`}
+      title={detail}
+    >
       doctor: {label}
     </span>
   );
