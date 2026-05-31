@@ -70,9 +70,24 @@ export interface AgentPacket {
   instruction: string;
 }
 
+// A ctx project discovered under a workspace root.
+export interface Project {
+  path: string;
+  name: string;
+  has_git: boolean;
+}
+
 /** Detect the ctx binary and read its version. */
 export function ctxInfo(): Promise<CtxInfo> {
   return invoke<CtxInfo>("ctx_info");
+}
+
+/** Scan a workspace `root` (up to `maxDepth` levels) for ctx projects. */
+export function discoverProjects(
+  root: string,
+  maxDepth = 4,
+): Promise<Project[]> {
+  return invoke<Project[]>("discover_projects", { root, maxDepth });
 }
 
 /** Structured context packet from `ctx agent --format json --budget N`. */
