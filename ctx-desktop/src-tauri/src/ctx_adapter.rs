@@ -172,3 +172,47 @@ pub fn ctx_task_complete(dir: String, target: String) -> Result<String, String> 
     }
     run_ctx(&dir, &["task", "complete", target.as_str()])
 }
+
+/// Adds an ADR-style decision via `ctx decision add`, synthesizing
+/// provenance. All three ADR fields are required by the CLI, so we
+/// reject empties up front with a clear message.
+#[tauri::command]
+pub fn ctx_decision_add(
+    dir: String,
+    title: String,
+    context: String,
+    rationale: String,
+    consequence: String,
+) -> Result<String, String> {
+    if title.trim().is_empty()
+        || context.trim().is_empty()
+        || rationale.trim().is_empty()
+        || consequence.trim().is_empty()
+    {
+        return Err("title, context, rationale and consequence are all required".to_string());
+    }
+    let branch = git_field(&dir, &["rev-parse", "--abbrev-ref", "HEAD"]);
+    let commit = git_field(&dir, &["rev-parse", "--short", "HEAD"]);
+    let session = session_id();
+
+    run_ctx(
+        &dir,
+        &[
+            "decision",
+            "add",
+            title.as_str(),
+            "--context",
+            context.as_str(),
+            "--rationale",
+            rationale.as_str(),
+            "--consequence",
+            consequence.as_str(),
+            "--session-id",
+            session.as_str(),
+            "--branch",
+            branch.as_str(),
+            "--commit",
+            commit.as_str(),
+        ],
+    )
+}

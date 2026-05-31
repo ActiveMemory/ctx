@@ -104,3 +104,23 @@ export function ctxTaskAdd(
 export function ctxTaskComplete(dir: string, target: string): Promise<string> {
   return invoke<string>("ctx_task_complete", { dir, target });
 }
+
+/**
+ * `ctx decision add` — all three ADR fields required; provenance
+ * (session id, branch, commit) synthesized in the Rust adapter.
+ */
+export function ctxDecisionAdd(
+  dir: string,
+  title: string,
+  context: string,
+  rationale: string,
+  consequence: string,
+): Promise<string> {
+  return invoke<string>("ctx_decision_add", {
+    dir,
+    title,
+    context,
+    rationale,
+    consequence,
+  });
+}

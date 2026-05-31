@@ -13,6 +13,7 @@ pub fn run() {
             ctx_adapter::ctx_learning_list,
             ctx_adapter::ctx_task_add,
             ctx_adapter::ctx_task_complete,
+            ctx_adapter::ctx_decision_add,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
