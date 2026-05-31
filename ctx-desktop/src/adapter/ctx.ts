@@ -93,9 +93,26 @@ export async function ctxStatus(dir: string): Promise<CtxStatus> {
   return JSON.parse(await invoke<string>("ctx_status", { dir }));
 }
 
-/** Raw `ctx doctor --json` for the project at `dir`. */
-export async function ctxDoctor(dir: string): Promise<unknown> {
+// Mirrors `ctx doctor --json`.
+export interface DoctorReport {
+  results: {
+    name: string;
+    category: string;
+    status: string;
+    message?: string;
+  }[];
+  warnings: number;
+  errors: number;
+}
+
+/** `ctx doctor --json` health report for the project at `dir`. */
+export async function ctxDoctor(dir: string): Promise<DoctorReport> {
   return JSON.parse(await invoke<string>("ctx_doctor", { dir }));
+}
+
+/** Raw `ctx journal source --limit N` table text for `dir`. */
+export function ctxJournal(dir: string, limit: number): Promise<string> {
+  return invoke<string>("ctx_journal", { dir, limit });
 }
 
 /** `ctx task list --json` for the project at `dir`. */

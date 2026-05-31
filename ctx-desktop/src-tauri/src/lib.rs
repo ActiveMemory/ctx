@@ -17,6 +17,7 @@ pub fn run() {
             ctx_adapter::ctx_learning_add,
             ctx_adapter::ctx_agent_json,
             ctx_adapter::ctx_agent_md,
+            ctx_adapter::ctx_journal,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

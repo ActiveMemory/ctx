@@ -4,30 +4,67 @@ import Tasks from "./screens/Tasks";
 import Decisions from "./screens/Decisions";
 import Learnings from "./screens/Learnings";
 import ContextPacket from "./screens/ContextPacket";
-import { ctxInfo, type CtxInfo } from "./adapter/ctx";
+import Journal from "./screens/Journal";
+import { ctxInfo, ctxDoctor, type CtxInfo, type DoctorReport } from "./adapter/ctx";
 
 // Default project = the ctx repo itself, so the app shows real
 // data on first launch. Editable in the top bar.
 const DEFAULT_DIR = "/Users/hamzaerbay/Code/ctx";
 
-type View = "overview" | "tasks" | "decisions" | "learnings" | "packet";
+type View =
+  | "overview"
+  | "tasks"
+  | "decisions"
+  | "learnings"
+  | "packet"
+  | "journal";
 const NAV: { id: View; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "tasks", label: "Tasks" },
   { id: "decisions", label: "Decisions" },
   { id: "learnings", label: "Learnings" },
   { id: "packet", label: "Context Packet" },
+  { id: "journal", label: "Journal" },
 ];
+
+function HealthPill({ health }: { health: DoctorReport }) {
+  const level =
+    health.errors > 0 ? "err" : health.warnings > 0 ? "warn" : "ok";
+  const label =
+    level === "err"
+      ? `${health.errors} error${health.errors > 1 ? "s" : ""}`
+      : level === "warn"
+        ? `${health.warnings} warning${health.warnings > 1 ? "s" : ""}`
+        : "healthy";
+  const cls =
+    level === "err"
+      ? "bg-err/15 text-err"
+      : level === "warn"
+        ? "bg-warn/15 text-warn"
+        : "bg-ok/15 text-ok";
+  return (
+    <span className={`shrink-0 rounded-full px-3 py-1 text-xs ${cls}`}>
+      doctor: {label}
+    </span>
+  );
+}
 
 function App() {
   const [dir, setDir] = useState(DEFAULT_DIR);
   const [draftDir, setDraftDir] = useState(DEFAULT_DIR);
   const [view, setView] = useState<View>("overview");
   const [info, setInfo] = useState<CtxInfo | null>(null);
+  const [health, setHealth] = useState<DoctorReport | null>(null);
 
   useEffect(() => {
     void ctxInfo().then(setInfo);
   }, []);
+
+  useEffect(() => {
+    ctxDoctor(dir)
+      .then(setHealth)
+      .catch(() => setHealth(null));
+  }, [dir]);
 
   return (
     <div className="flex min-h-screen bg-bg text-ink">
@@ -71,6 +108,7 @@ function App() {
           >
             Open
           </button>
+          {health && <HealthPill health={health} />}
           {info && (
             <span
               className={`shrink-0 rounded-full px-3 py-1 font-mono text-xs ${
@@ -89,6 +127,7 @@ function App() {
           {view === "decisions" && <Decisions dir={dir} />}
           {view === "learnings" && <Learnings dir={dir} />}
           {view === "packet" && <ContextPacket dir={dir} />}
+          {view === "journal" && <Journal dir={dir} />}
         </main>
       </div>
     </div>
