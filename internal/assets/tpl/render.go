@@ -17,6 +17,20 @@ import (
 // clean under audit/magic_strings.
 var ObsidianReadme *template.Template
 
+// JournalSiteReadme renders the README for the journal-site directory.
+// Data: [JournalSiteData].
+var JournalSiteReadme *template.Template
+
+// TriggerScript renders the scaffold bash script for `ctx trigger add`.
+// Data: [TriggerData].
+var TriggerScript *template.Template
+
+// Learning renders a learning entry section. Data: [LearningData].
+var Learning *template.Template
+
+// Decision renders a decision (ADR) entry section. Data: [DecisionData].
+var Decision *template.Template
+
 // Render executes a parsed template handle against data.
 //
 // The handle is always non-nil for a registered template (a parse
