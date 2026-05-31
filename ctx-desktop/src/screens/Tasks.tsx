@@ -1,0 +1,178 @@
+import { useCallback, useEffect, useState } from "react";
+import {
+  ctxTasks,
+  ctxTaskAdd,
+  ctxTaskComplete,
+  type Task,
+} from "../adapter/ctx";
+
+type Filter = "all" | "open" | "done";
+
+const FILTERS: Filter[] = ["open", "done", "all"];
+const PRIORITIES = ["", "high", "medium", "low"];
+
+export default function Tasks({ dir }: { dir: string }) {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [filter, setFilter] = useState<Filter>("open");
+  const [text, setText] = useState("");
+  const [priority, setPriority] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async (d: string) => {
+    setError(null);
+    try {
+      setTasks(await ctxTasks(d));
+    } catch (e) {
+      setError(String(e));
+      setTasks([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    void load(dir);
+  }, [dir, load]);
+
+  async function add() {
+    if (!text.trim()) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await ctxTaskAdd(dir, text.trim(), priority);
+      setText("");
+      setPriority("");
+      await load(dir);
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function complete(t: Task) {
+    setBusy(true);
+    setError(null);
+    try {
+      await ctxTaskComplete(dir, t.text);
+      await load(dir);
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const shown = tasks.filter((t) =>
+    filter === "all"
+      ? true
+      : filter === "open"
+        ? t.status === "pending"
+        : t.status === "done",
+  );
+
+  return (
+    <div className="mx-auto max-w-3xl px-6 py-6">
+      <h1 className="mb-4 text-lg font-semibold text-ink">Tasks</h1>
+
+      {/* inline add */}
+      <div className="mb-4 flex gap-2">
+        <input
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") void add();
+          }}
+          placeholder="Add a task…"
+          className="flex-1 rounded-md border border-border bg-panel px-3 py-2 text-sm text-ink outline-none focus:border-accent"
+        />
+        <select
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          className="rounded-md border border-border bg-panel px-2 py-2 text-sm text-ink outline-none focus:border-accent"
+        >
+          {PRIORITIES.map((p) => (
+            <option key={p || "none"} value={p}>
+              {p || "priority"}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={() => void add()}
+          disabled={busy || !text.trim()}
+          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-bg disabled:opacity-50"
+        >
+          Add
+        </button>
+      </div>
+
+      {/* filter tabs */}
+      <div className="mb-3 flex gap-1">
+        {FILTERS.map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`rounded-md px-3 py-1 text-xs capitalize ${
+              filter === f
+                ? "bg-accent/15 text-accent"
+                : "text-muted hover:text-ink"
+            }`}
+          >
+            {f}
+          </button>
+        ))}
+        <span className="ml-auto self-center font-mono text-xs text-muted">
+          {shown.length} shown
+        </span>
+      </div>
+
+      {error && (
+        <div className="mb-3 rounded-md border border-border bg-panel p-3 font-mono text-xs text-err">
+          {error}
+        </div>
+      )}
+
+      {/* list */}
+      <ul className="divide-y divide-border overflow-hidden rounded-lg border border-border">
+        {shown.length === 0 && (
+          <li className="px-4 py-6 text-center text-sm text-muted">
+            No tasks to show.
+          </li>
+        )}
+        {shown.map((t, i) => (
+          <li
+            key={i}
+            className="flex items-start gap-3 bg-panel px-4 py-2.5"
+          >
+            <button
+              onClick={() => void complete(t)}
+              disabled={busy || t.status === "done"}
+              title={t.status === "done" ? "Done" : "Mark complete"}
+              className={`mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded border ${
+                t.status === "done"
+                  ? "border-ok bg-ok/20 text-ok"
+                  : "border-border hover:border-accent"
+              }`}
+            >
+              {t.status === "done" ? "✓" : ""}
+            </button>
+            <div className="min-w-0 flex-1">
+              <div
+                className={`text-sm ${
+                  t.status === "done" ? "text-muted line-through" : "text-ink"
+                } ${t.is_sub ? "pl-3" : ""}`}
+              >
+                {t.text}
+              </div>
+              <div className="mt-0.5 flex flex-wrap gap-2 font-mono text-[11px] text-muted">
+                {t.section && <span>{t.section}</span>}
+                {t.priority && (
+                  <span className="text-warn">#{t.priority}</span>
+                )}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

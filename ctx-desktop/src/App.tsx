@@ -1,10 +1,88 @@
+import { useEffect, useState } from "react";
 import Overview from "./screens/Overview";
+import Tasks from "./screens/Tasks";
+import { ctxInfo, type CtxInfo } from "./adapter/ctx";
+
+// Default project = the ctx repo itself, so the app shows real
+// data on first launch. Editable in the top bar.
+const DEFAULT_DIR = "/Users/hamzaerbay/Code/ctx";
+
+type View = "overview" | "tasks";
+const NAV: { id: View; label: string }[] = [
+  { id: "overview", label: "Overview" },
+  { id: "tasks", label: "Tasks" },
+];
 
 function App() {
+  const [dir, setDir] = useState(DEFAULT_DIR);
+  const [draftDir, setDraftDir] = useState(DEFAULT_DIR);
+  const [view, setView] = useState<View>("overview");
+  const [info, setInfo] = useState<CtxInfo | null>(null);
+
+  useEffect(() => {
+    void ctxInfo().then(setInfo);
+  }, []);
+
   return (
-    <main className="min-h-screen bg-bg">
-      <Overview />
-    </main>
+    <div className="flex min-h-screen bg-bg text-ink">
+      <aside className="flex w-48 shrink-0 flex-col border-r border-border bg-panel">
+        <div className="px-4 py-4">
+          <div className="text-sm font-semibold">ctx Desktop</div>
+          <div className="text-xs text-muted">do you remember?</div>
+        </div>
+        <nav className="px-2">
+          {NAV.map((n) => (
+            <button
+              key={n.id}
+              onClick={() => setView(n.id)}
+              className={`mb-1 w-full rounded-md px-3 py-2 text-left text-sm ${
+                view === n.id
+                  ? "bg-accent/15 text-accent"
+                  : "text-muted hover:bg-border/40 hover:text-ink"
+              }`}
+            >
+              {n.label}
+            </button>
+          ))}
+        </nav>
+      </aside>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="flex items-center gap-2 border-b border-border bg-panel px-4 py-2">
+          <input
+            value={draftDir}
+            onChange={(e) => setDraftDir(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") setDir(draftDir);
+            }}
+            spellCheck={false}
+            className="flex-1 rounded-md border border-border bg-bg px-3 py-1.5 font-mono text-xs text-ink outline-none focus:border-accent"
+            placeholder="/path/to/project (parent of .context)"
+          />
+          <button
+            onClick={() => setDir(draftDir)}
+            className="rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-bg"
+          >
+            Open
+          </button>
+          {info && (
+            <span
+              className={`shrink-0 rounded-full px-3 py-1 font-mono text-xs ${
+                info.found ? "bg-ok/15 text-ok" : "bg-err/15 text-err"
+              }`}
+              title={info.error ?? ""}
+            >
+              {info.found ? info.version : "ctx not found"}
+            </span>
+          )}
+        </header>
+
+        <main className="min-h-0 flex-1 overflow-auto">
+          {view === "overview" && <Overview dir={dir} />}
+          {view === "tasks" && <Tasks dir={dir} />}
+        </main>
+      </div>
+    </div>
   );
 }
 
