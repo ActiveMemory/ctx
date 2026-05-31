@@ -54,9 +54,38 @@ export interface Learning {
   superseded: boolean;
 }
 
+// Mirrors `ctx agent --format json`. Section arrays render
+// generically; an empty array means that section was dropped.
+export interface AgentPacket {
+  generated: string;
+  budget: number;
+  tokens_used: number;
+  read_order: string[];
+  constitution: string[];
+  tasks: string[];
+  conventions: string[];
+  decisions: string[];
+  learnings: string[];
+  summaries: string[];
+  instruction: string;
+}
+
 /** Detect the ctx binary and read its version. */
 export function ctxInfo(): Promise<CtxInfo> {
   return invoke<CtxInfo>("ctx_info");
+}
+
+/** Structured context packet from `ctx agent --format json --budget N`. */
+export async function ctxAgentPacket(
+  dir: string,
+  budget: number,
+): Promise<AgentPacket> {
+  return JSON.parse(await invoke<string>("ctx_agent_json", { dir, budget }));
+}
+
+/** Paste-ready markdown packet from `ctx agent --budget N`. */
+export function ctxAgentMarkdown(dir: string, budget: number): Promise<string> {
+  return invoke<string>("ctx_agent_md", { dir, budget });
 }
 
 /** `ctx status --json` for the project at `dir`. */
