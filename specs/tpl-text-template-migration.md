@@ -53,6 +53,12 @@ Resolved during spec review (2026-05-30):
    avoids an import cycle. `tpl` is already in the magic-string audit's
    `exemptStringPackages`, so the parse-table path literals are
    sanctioned; call sites use typed data structs (no map-key literals).
+5. **`Render` + `RenderOr`, split by caller shape** (decided in impl).
+   Error-returning callers use `Render`. The recall formatters and the
+   `Import` counter are best-effort string builders by design, so they
+   use `RenderOr`, which logs `warn.TemplateRender` and falls back
+   instead of growing an `error` return for a parse-gated, unreachable
+   branch. Detailed under Error Handling.
 
 ## Approach
 
@@ -96,19 +102,27 @@ earlier `Render("obsidian-readme", …)` sketch was wrong.
 
 ### Rendering helper
 
-Generalize `message/render.go` into the `tpl` package:
+Generalize `message/render.go` into the `tpl` package, with two entry
+points for the two caller shapes in the codebase:
 
 ```go
-// Render executes a parsed template handle against data, returning
-// the rendered string. A non-nil error means a programmer bug (bad
-// field, malformed embedded template) — golden tests gate against it.
+// Render executes a parsed handle against data. A non-nil error means
+// a programmer bug (renamed field, malformed template). Error-
+// returning callers propagate it.
 func Render(t *template.Template, data any) (string, error)
+
+// RenderOr renders for best-effort string builders whose callers do
+// not return errors (the recall formatter; the Import counter that
+// drives it). On the error it logs warn.TemplateRender and returns
+// fallback instead of forcing those signatures to grow an error.
+func RenderOr(t *template.Template, data any, fallback string) string
 ```
 
-Templates are parsed at package init from the embedded FS into the
-exported handles. Parse failures are collected (not panicked) and
-asserted empty by `TestTemplatesParse`, so a malformed embedded
-template fails CI rather than reaching production.
+Templates are parsed at package init from the `tpl`-local embedded FS
+into the exported handles. Parse failures are collected (not panicked)
+and asserted empty by `TestTemplatesParse` (an in-package test reading
+the unexported `parseErrs`), so a malformed embedded template fails CI
+rather than reaching production.
 
 ### Tier-2 refactor detail
 
@@ -152,7 +166,7 @@ Two block templates replace six paired-tag constants
 | `metaTable` conditional rows | Absent `GitBranch`/`Model`/`Parts` append no row — matches the current `if s.X != ""` guards exactly. |
 | **Whitespace fidelity (the chief hazard)** | `MetaDetailsOpen` ends `<table>` with *no* newline; the first `<tr>` follows on the same line. The `{{range}}`/`{{define}}` blocks need explicit `{{-`/`-}}` trimming to reproduce exact bytes. Golden tests assert this. |
 | Malformed embedded template ships | `init` records the parse error; `TestTemplatesParse` fails in CI. Cannot reach a release. |
-| Exec error (missing/renamed field) | `Render` returns non-nil error; the call site's golden test fails pre-merge. |
+| Exec error (missing/renamed field) | Error-returning callers get it from `Render`; best-effort builders log it via `RenderOr` and fall back. Either way the golden test fails pre-merge. See Error Handling. |
 
 ### Validation Rules
 
@@ -162,10 +176,21 @@ inputs are already-validated values from existing call sites.
 
 ### Error Handling
 
-| Error condition | User-facing message | Recovery |
-|-----------------|---------------------|----------|
-| Init parse failure (malformed `.tmpl`) | None in prod (CI-gated); dev sees `TestTemplatesParse` failure naming the file | Fix the template file |
-| Exec error (bad field) | Propagated by `Render`; call sites that today return a bare `string` (`SiteReadme`, `script.Generate`) gain an `error` return or a test-guaranteed wrapper | Golden test catches pre-merge |
+Two render entry points, chosen by caller shape:
+
+| Error condition | Handling | Recovery |
+|-----------------|----------|----------|
+| Init parse failure (malformed `.tmpl`) | None in prod (CI-gated); `TestTemplatesParse` fails naming the file | Fix the template file |
+| Exec error, error-returning caller (`vault`, `generate.SiteReadme`, `format.Learning`/`Decision`, `script.Generate`) | `tpl.Render` returns `(string, error)`; the caller propagates | Golden test catches pre-merge |
+| Exec error, best-effort builder (`JournalEntryPart`, `collapse.ToolOutputs`, fed by the `Import` counter) | `tpl.RenderOr` logs `warn.TemplateRender` and returns the fallback — no signature change to these `string`-returning functions | Logged warning + golden test catches pre-merge |
+
+The split exists because the recall formatters and `Import` are
+best-effort string builders/counters by design; threading an error
+through them (plus their callers and ~15 existing tests) to satisfy a
+parse-gated, provably-unreachable branch would contort signatures with
+no real recovery path. `RenderOr` mirrors the pre-existing
+`message/render.go` fallback pattern, adding the warn log so the
+(impossible) failure is never silent.
 
 ## Interface
 
