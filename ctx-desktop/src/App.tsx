@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import Overview from "./screens/Overview";
 import Tasks from "./screens/Tasks";
+import Decisions from "./screens/Decisions";
 import { ctxInfo, type CtxInfo } from "./adapter/ctx";
 
 // Default project = the ctx repo itself, so the app shows real
 // data on first launch. Editable in the top bar.
 const DEFAULT_DIR = "/Users/hamzaerbay/Code/ctx";
 
-type View = "overview" | "tasks";
+type View = "overview" | "tasks" | "decisions";
 const NAV: { id: View; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "tasks", label: "Tasks" },
+  { id: "decisions", label: "Decisions" },
 ];
 
 function App() {
@@ -80,6 +82,7 @@ function App() {
         <main className="min-h-0 flex-1 overflow-auto">
           {view === "overview" && <Overview dir={dir} />}
           {view === "tasks" && <Tasks dir={dir} />}
+          {view === "decisions" && <Decisions dir={dir} />}
         </main>
       </div>
     </div>
