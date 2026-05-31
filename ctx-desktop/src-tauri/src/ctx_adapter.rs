@@ -216,3 +216,46 @@ pub fn ctx_decision_add(
         ],
     )
 }
+
+/// Adds a learning via `ctx learning add`, synthesizing provenance.
+/// Context, lesson, and application are all required by the CLI.
+#[tauri::command]
+pub fn ctx_learning_add(
+    dir: String,
+    title: String,
+    context: String,
+    lesson: String,
+    application: String,
+) -> Result<String, String> {
+    if title.trim().is_empty()
+        || context.trim().is_empty()
+        || lesson.trim().is_empty()
+        || application.trim().is_empty()
+    {
+        return Err("title, context, lesson and application are all required".to_string());
+    }
+    let branch = git_field(&dir, &["rev-parse", "--abbrev-ref", "HEAD"]);
+    let commit = git_field(&dir, &["rev-parse", "--short", "HEAD"]);
+    let session = session_id();
+
+    run_ctx(
+        &dir,
+        &[
+            "learning",
+            "add",
+            title.as_str(),
+            "--context",
+            context.as_str(),
+            "--lesson",
+            lesson.as_str(),
+            "--application",
+            application.as_str(),
+            "--session-id",
+            session.as_str(),
+            "--branch",
+            branch.as_str(),
+            "--commit",
+            commit.as_str(),
+        ],
+    )
+}

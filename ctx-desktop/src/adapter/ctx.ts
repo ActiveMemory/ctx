@@ -124,3 +124,23 @@ export function ctxDecisionAdd(
     consequence,
   });
 }
+
+/**
+ * `ctx learning add` — all three fields required; provenance
+ * synthesized in the Rust adapter.
+ */
+export function ctxLearningAdd(
+  dir: string,
+  title: string,
+  context: string,
+  lesson: string,
+  application: string,
+): Promise<string> {
+  return invoke<string>("ctx_learning_add", {
+    dir,
+    title,
+    context,
+    lesson,
+    application,
+  });
+}
