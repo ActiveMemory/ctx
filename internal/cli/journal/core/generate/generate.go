@@ -33,8 +33,12 @@ import (
 //
 // Returns:
 //   - string: Markdown README content with regeneration instructions
-func SiteReadme(journalDir string) string {
-	return fmt.Sprintf(tpl.JournalSiteReadme, journalDir)
+//   - error: non-nil if template rendering fails
+func SiteReadme(journalDir string) (string, error) {
+	return tpl.Render(
+		tpl.JournalSiteReadme,
+		tpl.JournalSiteData{JournalDir: journalDir},
+	)
 }
 
 // Index creates the index.md content for the journal site.

@@ -46,9 +46,12 @@ func Run(
 		return config.InvalidTool(tool)
 	}
 
-	s := script.Generate(
+	s, genErr := script.Generate(
 		promptFile, tool, maxIterations, completionMsg,
 	)
+	if genErr != nil {
+		return genErr
+	}
 
 	if writeErr := ctxIo.SafeWriteFile(
 		outputFile, []byte(s), fs.PermExec,

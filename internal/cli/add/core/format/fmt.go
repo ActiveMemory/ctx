@@ -60,11 +60,16 @@ func Task(content, priority, sessionID, branch, commit string) string {
 //
 // Returns:
 //   - string: Formatted learning section with all fields
-func Learning(title, context, lesson, application string) string {
+//   - error: non-nil if template rendering fails
+func Learning(title, context, lesson, application string) (string, error) {
 	timestamp := time.Now().Format(cfgTime.CompactTimestamp)
-	return fmt.Sprintf(
-		tpl.Learning, timestamp, title, context, lesson, application,
-	)
+	return tpl.Render(tpl.Learning, tpl.LearningData{
+		Timestamp:   timestamp,
+		Title:       title,
+		Context:     context,
+		Lesson:      lesson,
+		Application: application,
+	})
 }
 
 // Convention formats a convention entry as a simple Markdown list item.
@@ -93,10 +98,14 @@ func Convention(content string) string {
 //
 // Returns:
 //   - string: Formatted decision section with all ADR fields
-func Decision(title, context, rationale, consequence string) string {
+//   - error: non-nil if template rendering fails
+func Decision(title, context, rationale, consequence string) (string, error) {
 	timestamp := time.Now().Format(cfgTime.CompactTimestamp)
-	return fmt.Sprintf(
-		tpl.Decision,
-		timestamp, title, context, title, rationale, consequence,
-	)
+	return tpl.Render(tpl.Decision, tpl.DecisionData{
+		Timestamp:   timestamp,
+		Title:       title,
+		Context:     context,
+		Rationale:   rationale,
+		Consequence: consequence,
+	})
 }

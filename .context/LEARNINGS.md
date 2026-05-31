@@ -17,6 +17,8 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-05-30 | Capture golden fixtures from the live legacy code path before deleting it |
+| 2026-05-30 | tpl package is magic-string-audit-exempt but its call sites are not |
 | 2026-05-30 | New exported types must live in types.go or TestTypeFileConvention fails |
 | 2026-05-28 | ctx kb: single topic-enumeration site; life-stage count is consumer-side |
 | 2026-05-28 | Swap occupancy is not memory pressure — use the kernel's derivative |
@@ -164,6 +166,26 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-05-30-212109] Capture golden fixtures from the live legacy code path before deleting it
+
+**Context**: Behavior-preserving refactors of LoopScript composition and the recall <details>/<table> assembly had fragile whitespace where hand-transcribing the expected output risked silent drift from the original bytes.
+
+**Lesson**: A throwaway test that runs the current (pre-refactor) code and writes its output to testdata/*.golden gives a regression baseline derived from real behavior, not a re-transcription; delete the throwaway, then have the committed test assert the new code is byte-identical to the fixtures.
+
+**Application**: Use for any behavior-preserving refactor of formatting/rendering code: capture goldens from the legacy path before removing it, then assert byte-equality after.
+
+---
+
+## [2026-05-30-212102] tpl package is magic-string-audit-exempt but its call sites are not
+
+**Context**: Migrating tpl_*.go format-string consts to text/template handles; a Render("name",...) sketch and map[string]any{"Key":...} render data would both trip audit/magic_strings_test.go (TestNoMagicStrings).
+
+**Lesson**: internal/assets/tpl is in the magic-strings audit exemptStringPackages, so template-path literals are sanctioned there; but render data passed from non-exempt caller packages must be a typed struct (e.g. tpl.ObsidianData{...}), never a map[string]any with literal keys, which trips the audit at the call site.
+
+**Application**: When adding a template, define a typed data struct in tpl/types.go and pass it at the call site; never pass map literals from caller packages.
 
 ---
 

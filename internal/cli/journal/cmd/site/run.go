@@ -109,9 +109,12 @@ func Run(
 
 	// Write README
 	readmePath := filepath.Join(output, file.Readme)
+	readme, rErr := generate.SiteReadme(journalDir)
+	if rErr != nil {
+		return errFs.FileWrite(readmePath, rErr)
+	}
 	if writeErr := ctxIo.SafeWriteFile(
-		readmePath,
-		[]byte(generate.SiteReadme(journalDir)), fs.PermFile,
+		readmePath, []byte(readme), fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(readmePath, writeErr)
 	}

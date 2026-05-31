@@ -1,0 +1,43 @@
+---
+date: "2026-01-15"
+time: "10:30:00"
+project: myproject
+tokens_in: 10000
+tokens_out: 5000
+session_id: "abc12345-session-id"
+---
+
+# test-slug
+
+<details>
+<summary>2026-01-15 · 30m · </summary>
+<table><tr><td><strong>ID</strong></td><td>abc12345-session-id</td></tr>
+<tr><td><strong>Date</strong></td><td>2026-01-15</td></tr>
+<tr><td><strong>Time</strong></td><td>10:30:00</td></tr>
+<tr><td><strong>Duration</strong></td><td>30m</td></tr>
+<tr><td><strong>Tool</strong></td><td>claude-code</td></tr>
+<tr><td><strong>Project</strong></td><td>myproject</td></tr>
+</table>
+</details>
+
+<details>
+<summary>2</summary>
+<table><tr><td><strong>Turns</strong></td><td>2</td></tr>
+<tr><td><strong>Tokens</strong></td><td>15.0K (in: 10.0K, out: 5.0K)</td></tr>
+</table>
+</details>
+
+---
+
+## Conversation
+
+### 1. Assistant (10:31:00)
+
+<details>
+<summary>📋 Plan</summary>
+
+step one
+step two
+
+</details>
+

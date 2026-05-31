@@ -252,45 +252,50 @@ func JournalEntryPart(
 			desc.Text(text.DescKeyJournalSourceMetaSummary),
 			dateStr, durationStr, s.Model,
 		)
-		io.SafeFprintf(&sb, tpl.MetaDetailsOpen, summaryText)
-		io.SafeFprintf(&sb,
-			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaID), s.ID)
-		io.SafeFprintf(&sb,
-			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaDate), dateStr)
-		io.SafeFprintf(&sb,
-			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTime), timeStr)
-		io.SafeFprintf(&sb,
-			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaDuration), durationStr)
-		io.SafeFprintf(&sb,
-			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTool), s.Tool)
-		io.SafeFprintf(&sb,
-			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaProject), s.Project)
+		metaRows := []tpl.MetaRow{
+			{Label: desc.Text(text.DescKeyLabelMetaID), Value: s.ID},
+			{Label: desc.Text(text.DescKeyLabelMetaDate), Value: dateStr},
+			{Label: desc.Text(text.DescKeyLabelMetaTime), Value: timeStr},
+			{Label: desc.Text(text.DescKeyLabelMetaDuration), Value: durationStr},
+			{Label: desc.Text(text.DescKeyLabelMetaTool), Value: s.Tool},
+			{Label: desc.Text(text.DescKeyLabelMetaProject), Value: s.Project},
+		}
 		if s.GitBranch != "" {
-			io.SafeFprintf(&sb,
-				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaBranch), s.GitBranch)
+			metaRows = append(metaRows, tpl.MetaRow{
+				Label: desc.Text(text.DescKeyLabelMetaBranch), Value: s.GitBranch,
+			})
 		}
 		if s.Model != "" {
-			io.SafeFprintf(&sb,
-				tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaModel), s.Model)
+			metaRows = append(metaRows, tpl.MetaRow{
+				Label: desc.Text(text.DescKeyLabelMetaModel), Value: s.Model,
+			})
 		}
-		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
+		metaOut := tpl.RenderOr(tpl.MetaTable, tpl.MetaTableData{
+			Summary: summaryText, Rows: metaRows,
+		}, "")
+		sb.WriteString(metaOut + nl + nl)
 
 		// Token stats as collapsible HTML table
 		turnStr := strconv.Itoa(s.TurnCount)
-		io.SafeFprintf(&sb, tpl.MetaDetailsOpen, turnStr)
-		io.SafeFprintf(&sb,
-			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTurns), turnStr)
-		tokenSummary := fmt.Sprintf(desc.Text(text.DescKeyJournalSourceTokenSummary),
+		tokenSummary := fmt.Sprintf(
+			desc.Text(text.DescKeyJournalSourceTokenSummary),
 			sharedFmt.Tokens(s.TotalTokens),
 			sharedFmt.Tokens(s.TotalTokensIn),
 			sharedFmt.Tokens(s.TotalTokensOut))
-		io.SafeFprintf(&sb,
-			tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaTokens), tokenSummary)
-		if totalParts > 1 {
-			io.SafeFprintf(&sb, tpl.MetaRow+nl, desc.Text(text.DescKeyLabelMetaParts),
-				strconv.Itoa(totalParts))
+		statRows := []tpl.MetaRow{
+			{Label: desc.Text(text.DescKeyLabelMetaTurns), Value: turnStr},
+			{Label: desc.Text(text.DescKeyLabelMetaTokens), Value: tokenSummary},
 		}
-		sb.WriteString(tpl.MetaDetailsClose + nl + nl)
+		if totalParts > 1 {
+			statRows = append(statRows, tpl.MetaRow{
+				Label: desc.Text(text.DescKeyLabelMetaParts),
+				Value: strconv.Itoa(totalParts),
+			})
+		}
+		statOut := tpl.RenderOr(tpl.MetaTable, tpl.MetaTableData{
+			Summary: turnStr, Rows: statRows,
+		}, "")
+		sb.WriteString(statOut + nl + nl)
 
 		sb.WriteString(sep + nl + nl)
 
@@ -354,9 +359,10 @@ func JournalEntryPart(
 
 		// Render plan content as collapsible section.
 		if msg.PlanContent != "" {
-			sb.WriteString(tpl.RecallPlanOpen + nl)
-			sb.WriteString(msg.PlanContent + nl)
-			sb.WriteString(tpl.RecallPlanClose + nl + nl)
+			planOut := tpl.RenderOr(tpl.Details, tpl.DetailsData{
+				Summary: tpl.PlanSummary, Body: msg.PlanContent + nl,
+			}, "")
+			sb.WriteString(planOut + nl + nl)
 		}
 
 		// Render CC-level tool errors.
@@ -393,11 +399,13 @@ func JournalEntryPart(
 
 				if lines > journal.DetailsThreshold {
 					summary := fmt.Sprintf(tpl.RecallDetailsSummary, lines)
-					io.SafeFprintf(&sb, tpl.RecallDetailsOpen+nl+nl, summary)
-					sb.WriteString(marker.TagPre + nl)
-					sb.WriteString(html.EscapeString(content) + nl)
-					sb.WriteString(marker.TagPreClose + nl)
-					sb.WriteString(tpl.RecallDetailsClose + nl)
+					body := marker.TagPre + nl +
+						html.EscapeString(content) + nl +
+						marker.TagPreClose
+					detOut := tpl.RenderOr(tpl.Details, tpl.DetailsData{
+						Summary: summary, Body: body,
+					}, "")
+					sb.WriteString(detOut + nl)
 				} else {
 					io.SafeFprintf(&sb,
 						tpl.RecallFencedBlock+nl, fence, content, fence)

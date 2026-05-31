@@ -65,18 +65,26 @@ func Write(params entity.EntryParams) error {
 	var formatted string
 	switch fType {
 	case entry.Decision:
-		formatted = format.Decision(
+		out, fErr := format.Decision(
 			params.Content, params.Context, params.Rationale, params.Consequence,
 		)
+		if fErr != nil {
+			return fErr
+		}
+		formatted = out
 	case entry.Task:
 		formatted = format.Task(
 			params.Content, params.Priority,
 			params.SessionID, params.Branch, params.Commit,
 		)
 	case entry.Learning:
-		formatted = format.Learning(
+		out, fErr := format.Learning(
 			params.Content, params.Context, params.Lesson, params.Application,
 		)
+		if fErr != nil {
+			return fErr
+		}
+		formatted = out
 	case entry.Convention:
 		formatted = format.Convention(params.Content)
 	default:
