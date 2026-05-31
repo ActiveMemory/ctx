@@ -42,17 +42,6 @@ const (
 	// Args: line count.
 	RecallDetailsSummary = "%d lines"
 
-	// RecallDetailsOpen formats the opening HTML for collapsible content.
-	// Args: summary text. INVARIANT: the <summary> tag is always single-line
-	// (<summary>N lines</summary>). Multi-line <summary> blocks (standalone
-	// <summary> on its own line) are Claude Code context compaction artifacts
-	// and are stripped by stripSystemReminders. This distinction is the basis
-	// for safe disambiguation.
-	RecallDetailsOpen = "<details>\n<summary>%s</summary>"
-
-	// RecallDetailsClose is the closing HTML for collapsible content.
-	RecallDetailsClose = "</details>"
-
 	// RecallFencedBlock formats content inside code fences.
 	// Args: fence, content, fence.
 	RecallFencedBlock = "%s\n%s\n%s"
@@ -77,18 +66,6 @@ const (
 	// Args: slug, shortID, dateTime.
 	SessionMatch = "%s (%s) - %s"
 
-	// MetaDetailsOpen opens a collapsible details block with an HTML table.
-	// Markdown tables don't render inside <details> in Zensical, so we use HTML.
-	// Args: summary text.
-	MetaDetailsOpen = "<details>\n<summary>%s</summary>\n<table>"
-
-	// MetaDetailsClose closes a collapsible details block with HTML table.
-	MetaDetailsClose = "</table>\n</details>"
-
-	// MetaRow formats a single row in an HTML metadata table.
-	// Args: label, value.
-	MetaRow = "<tr><td><strong>%s</strong></td><td>%s</td></tr>"
-
 	// FmQuoted formats a YAML frontmatter quoted string field.
 	// Args: key, value.
 	FmQuoted = "%s: %q"
@@ -105,11 +82,9 @@ const (
 	// Args: tool name, parameter value.
 	ToolDisplay = "%s: %s"
 
-	// RecallPlanOpen opens a collapsible plan section.
-	RecallPlanOpen = "<details>\n<summary>📋 Plan</summary>\n"
-
-	// RecallPlanClose closes a collapsible plan section.
-	RecallPlanClose = "\n</details>"
+	// PlanSummary is the <summary> label for a collapsible plan
+	// section, rendered via the [Details] template.
+	PlanSummary = "📋 Plan"
 
 	// RecallApiError is a collapsed API error message.
 	RecallApiError = "> ⚠ API error response (message omitted)"

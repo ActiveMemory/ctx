@@ -35,6 +35,8 @@ func init() {
 	Learning = parseTemplate("templates/learning.md.tmpl")
 	Decision = parseTemplate("templates/decision.md.tmpl")
 	LoopScript = parseTemplate("templates/loop-script.sh.tmpl")
+	MetaTable = parseTemplate("templates/meta-table.html.tmpl")
+	Details = parseTemplate("templates/details.html.tmpl")
 	ZensicalProject = loadStatic("templates/zensical-project.toml")
 	ZensicalTheme = loadStatic("templates/zensical-theme.toml")
 }

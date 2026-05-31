@@ -249,10 +249,14 @@ These have priority because other knowledge ingestion projects depend on them.
 
 Important things that agent (or human) yeeted to the future.
 
-- [ ] Migrate Sprintf-based templates (tpl_*.go) to Go text/template or embedded
+- [x] Migrate Sprintf-based templates (tpl_*.go) to Go text/template or embedded
   template files — ObsidianReadme, LoopScript, and other multi-line format
   strings that can't move to YAML #added:2026-03-18-163629
   Spec: specs/tpl-text-template-migration.md
+  DONE 2026-05-30 (branch refactor/tpl-text-template-migration). Tier-1 blocks
+  + static Zensical + LoopScript + Tier-2 recall HTML (metaTable/details)
+  migrated to embedded templates behind handles; Tier-3 single-line format
+  strings, pure joins, and the RecallListRow meta-format kept as fmt.Sprintf.
 - [ ] P0.8.5: Enable webhook notifications in worktrees. Currently `ctx notify`
   silently fails because `.context.key` is gitignored and absent in
   worktrees. For autonomous runs with opaque worktree agents, notifications

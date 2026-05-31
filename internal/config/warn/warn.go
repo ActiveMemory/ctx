@@ -120,6 +120,13 @@ const (
 	// until the tombstone line is removed.
 	SteeringUnfilled = "skipping unfilled steering file %s " +
 		"(remove the tombstone line to activate)"
+
+	// TemplateRender is the stderr format for an embedded-template
+	// render failure. Parse is gated by TestTemplatesParse and the
+	// data is typed, so Execute cannot fail in a correct build; the
+	// warning catches a future regression loudly instead of letting
+	// [tpl.RenderOr]'s fallback silently blank a section.
+	TemplateRender = "render template: %v"
 )
 
 // Pad history warning formats.

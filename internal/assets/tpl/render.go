@@ -9,6 +9,9 @@ package tpl
 import (
 	"bytes"
 	"text/template"
+
+	"github.com/ActiveMemory/ctx/internal/config/warn"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // ObsidianReadme renders the README for a generated Obsidian vault.
@@ -34,6 +37,14 @@ var Decision *template.Template
 // LoopScript renders the Ralph-loop bash script. Data: [LoopData].
 var LoopScript *template.Template
 
+// MetaTable renders a collapsible session-metadata HTML table.
+// Data: [MetaTableData].
+var MetaTable *template.Template
+
+// Details renders a collapsible <details> block wrapping a body.
+// Data: [DetailsData].
+var Details *template.Template
+
 // Render executes a parsed template handle against data.
 //
 // The handle is always non-nil for a registered template (a parse
@@ -55,4 +66,27 @@ func Render(t *template.Template, data any) (string, error) {
 		return "", execErr
 	}
 	return buf.String(), nil
+}
+
+// RenderOr renders like [Render] but suits best-effort string builders
+// whose callers do not return errors (the recall formatter, the Import
+// counter). On the render error it logs a warning and returns fallback
+// rather than propagating: the template is parse-gated by
+// TestTemplatesParse and fed typed data, so Execute cannot fail in a
+// correct build — the fallback is unreachable defense.
+//
+// Parameters:
+//   - t: a parsed template handle
+//   - data: the template's typed data struct
+//   - fallback: returned on the unreachable error path
+//
+// Returns:
+//   - string: the rendered output, or fallback on error
+func RenderOr(t *template.Template, data any, fallback string) string {
+	out, err := Render(t, data)
+	if err != nil {
+		logWarn.Warn(warn.TemplateRender, err)
+		return fallback
+	}
+	return out
 }

@@ -69,3 +69,28 @@ type DecisionData struct {
 	// Consequence is what changes as a result.
 	Consequence string
 }
+
+// MetaTableData is the render data for [MetaTable].
+type MetaTableData struct {
+	// Summary is the <summary> text for the collapsible block.
+	Summary string
+	// Rows are the table's label/value rows, in order.
+	Rows []MetaRow
+}
+
+// MetaRow is one label/value row in a [MetaTable].
+type MetaRow struct {
+	// Label is the row's bold left-column text.
+	Label string
+	// Value is the row's right-column text.
+	Value string
+}
+
+// DetailsData is the render data for [Details].
+type DetailsData struct {
+	// Summary is the <summary> text for the collapsible block.
+	Summary string
+	// Body is the pre-rendered block body (already escaped/wrapped by
+	// the caller).
+	Body string
+}
