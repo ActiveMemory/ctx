@@ -48,16 +48,23 @@ Resolved during spec review (2026-05-30):
 3. **No `panic` on init parse.** Parse-at-init + a `TestTemplatesParse`
    CI guard + an error-returning `Render`. No `template.Must` (it
    panics, and has no precedent in this repo).
+4. **`tpl`-local embed, not `assets.FS`** (discovered in impl). `tpl`
+   is a leaf package; a local `//go:embed` keeps it that way and
+   avoids an import cycle. `tpl` is already in the magic-string audit's
+   `exemptStringPackages`, so the parse-table path literals are
+   sanctioned; call sites use typed data structs (no map-key literals).
 
 ## Approach
 
 Move multi-line template **text out of `.go` into embedded files**
 under `internal/assets/tpl/templates/`, parsed once via Go
 `text/template`, following the existing pattern in
-`internal/cli/system/core/message/render.go`. The embedded `assets.FS`
-(`internal/assets/embed.go`) is the delivery mechanism — it already
-embeds an `entry-templates/*.md` set, so a sibling `tpl/templates/`
-glob is idiomatic.
+`internal/cli/system/core/message/render.go`. Delivery is a
+**`tpl`-local `//go:embed templates/*`**, not the parent `assets.FS`:
+`tpl` is a leaf package (zero internal imports), and reaching into
+`assets.FS` would couple it to that package and invite the import
+cycle the recent `embed_test` split fought. A local embed keeps `tpl`
+self-contained (stdlib `embed`/`text/template` only).
 
 **No magic strings (hard constraint).** The exported identifier is
 preserved but retyped: `tpl.ObsidianReadme` changes from a
@@ -71,10 +78,13 @@ Call sites reference the **handle**, never a name literal:
 out, err := tpl.Render(tpl.ObsidianReadme, obsidianData{JournalDir: journalDir})
 ```
 
-The string filename (`"tpl/templates/obsidian-readme.md.tmpl"`) appears
-**exactly once**, in the parse table inside the `tpl` package — never
-at a call site. This satisfies `audit/magic_strings_test.go`, which
-would have rejected an earlier `Render("obsidian-readme", …)` sketch.
+The template-path literal appears only in the parse table inside the
+`tpl` package, which `audit/magic_strings_test.go` already lists in
+`exemptStringPackages` — so it is sanctioned there and never reaches a
+call site. Call-site data is a **typed struct** (`tpl.ObsidianData{…}`),
+never `map[string]any{"Key":…}`: a map-key literal in a non-exempt
+caller would itself trip the magic-string audit. This is why the
+earlier `Render("obsidian-readme", …)` sketch was wrong.
 
 ### Three tiers (full inventory below)
 
@@ -171,8 +181,8 @@ every affected command is byte-identical.
 | File | Change |
 |------|--------|
 | `internal/assets/tpl/templates/*.tmpl`, `*.toml` | **New** — extracted Tier-1 bodies + `blocks.tmpl` holding the `metaTable` and `details` `{{define}}`s |
-| `internal/assets/tpl/render.go` | **New** — `Render(t, data)`, init parse table (the only place filenames appear), parse-error collection, `TestTemplatesParse` target |
-| `internal/assets/embed.go` | Add `//go:embed tpl/templates/*` glob |
+| `internal/assets/tpl/render.go` | **New** — `tpl`-local `//go:embed templates/*`, `Render(t, data)`, init parse table (the only place filenames appear), parse-error collection, `ParseErrors()` for `TestTemplatesParse`, typed data structs |
+| `internal/assets/embed.go` | **Untouched** — the embed is local to `tpl`, not the parent `assets.FS` (cycle avoidance) |
 | `internal/assets/tpl/tpl_*.go` | Retype migrated consts → handles / FS-loaded strings; delete migrated bodies + the six Tier-2 paired-tag consts; Tier-3 consts stay |
 | `internal/cli/journal/core/source/format/format.go` | Tier-2 refactor: build `metaTable` rows + `details` bodies, render via handles (replaces `255-293`, `357-359`, `394-400`) |
 | `internal/cli/journal/core/collapse/collapse.go` | Tier-2: `92-100` → `details` render |
