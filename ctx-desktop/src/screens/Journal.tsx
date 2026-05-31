@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { ctxJournal } from "../adapter/ctx";
+import { useReloadOnCtxChange } from "../hooks/useReload";
 
 const LIMITS = [5, 10, 20, 50];
 
@@ -8,6 +9,7 @@ export default function Journal({ dir }: { dir: string }) {
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const reload = useReloadOnCtxChange();
 
   const load = useCallback(async (d: string, n: number) => {
     setLoading(true);
@@ -24,7 +26,7 @@ export default function Journal({ dir }: { dir: string }) {
 
   useEffect(() => {
     void load(dir, limit);
-  }, [dir, limit, load]);
+  }, [dir, limit, load, reload]);
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-6">

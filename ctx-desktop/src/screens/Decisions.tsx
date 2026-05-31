@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ctxDecisions, ctxDecisionAdd, type Decision } from "../adapter/ctx";
+import { useReloadOnCtxChange } from "../hooks/useReload";
 
 function Field({ label, value }: { label: string; value: string }) {
   if (!value) return null;
@@ -26,6 +27,7 @@ export default function Decisions({ dir }: { dir: string }) {
   const [rationale, setRationale] = useState("");
   const [consequence, setConsequence] = useState("");
   const [busy, setBusy] = useState(false);
+  const reload = useReloadOnCtxChange();
 
   const load = useCallback(async (d: string) => {
     setError(null);
@@ -39,7 +41,7 @@ export default function Decisions({ dir }: { dir: string }) {
 
   useEffect(() => {
     void load(dir);
-  }, [dir, load]);
+  }, [dir, load, reload]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

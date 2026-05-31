@@ -5,6 +5,7 @@ import {
   ctxTaskComplete,
   type Task,
 } from "../adapter/ctx";
+import { useReloadOnCtxChange } from "../hooks/useReload";
 
 type Filter = "all" | "open" | "done";
 
@@ -18,6 +19,7 @@ export default function Tasks({ dir }: { dir: string }) {
   const [priority, setPriority] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const reload = useReloadOnCtxChange();
 
   const load = useCallback(async (d: string) => {
     setError(null);
@@ -31,7 +33,7 @@ export default function Tasks({ dir }: { dir: string }) {
 
   useEffect(() => {
     void load(dir);
-  }, [dir, load]);
+  }, [dir, load, reload]);
 
   async function add() {
     if (!text.trim()) return;

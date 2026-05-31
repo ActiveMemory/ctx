@@ -4,6 +4,7 @@ import {
   ctxAgentMarkdown,
   type AgentPacket,
 } from "../adapter/ctx";
+import { useReloadOnCtxChange } from "../hooks/useReload";
 
 const MIN = 1000;
 const MAX = 16000;
@@ -25,6 +26,7 @@ export default function ContextPacket({ dir }: { dir: string }) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<"" | "packet" | "command">("");
+  const reload = useReloadOnCtxChange();
 
   const load = useCallback(async (d: string, b: number) => {
     setLoading(true);
@@ -43,7 +45,7 @@ export default function ContextPacket({ dir }: { dir: string }) {
   useEffect(() => {
     const t = setTimeout(() => void load(dir, budget), 250);
     return () => clearTimeout(t);
-  }, [dir, budget, load]);
+  }, [dir, budget, load, reload]);
 
   async function copyPacket() {
     try {

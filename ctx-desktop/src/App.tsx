@@ -6,6 +6,7 @@ import Learnings from "./screens/Learnings";
 import ContextPacket from "./screens/ContextPacket";
 import Journal from "./screens/Journal";
 import { open } from "@tauri-apps/plugin-dialog";
+import { invoke } from "@tauri-apps/api/core";
 import { ctxInfo, ctxDoctor, type CtxInfo, type DoctorReport } from "./adapter/ctx";
 
 const RECENTS_KEY = "ctx.recents";
@@ -93,6 +94,11 @@ function App() {
     ctxDoctor(dir)
       .then(setHealth)
       .catch(() => setHealth(null));
+  }, [dir]);
+
+  // Watch the active project's .context/ for external writes.
+  useEffect(() => {
+    void invoke("watch_context", { dir }).catch(() => {});
   }, [dir]);
 
   return (
