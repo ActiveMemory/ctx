@@ -53,6 +53,10 @@ const (
 	// group itself (used by the unknown-subcommand relay, which is
 	// not a check-* hook but still records a relay event).
 	System = "system"
+	// Hook is the relay-event hook label for the `ctx hook` group
+	// itself (used by the unknown-subcommand relay when a `ctx hook`
+	// verb drifts out of the binary; records a relay event).
+	Hook = "hook"
 )
 
 // Supported integration tool names for ctx setup command.
