@@ -51,7 +51,7 @@ func tempStdin(t *testing.T, content string) *os.File {
 	return f
 }
 
-func TestHandleUnknownEmitsBoxSilencesUsageAndErrors(t *testing.T) {
+func TestHandleSystemUnknownEmitsBoxSilencesUsageAndErrors(t *testing.T) {
 	cmd := &cobra.Command{Use: "system"}
 	var out bytes.Buffer
 	cmd.SetOut(&out)
@@ -63,7 +63,7 @@ func TestHandleUnknownEmitsBoxSilencesUsageAndErrors(t *testing.T) {
 	})()
 
 	// Empty stdin → no session → relay leg must be skipped.
-	err := handle(cmd, []string{"check-anchor-drift"}, tempStdin(t, ""))
+	err := handle(cmd, []string{"check-anchor-drift"}, tempStdin(t, ""), SystemConfig)
 	if err == nil {
 		t.Fatal("want non-nil error for an unknown subcommand")
 	}
@@ -87,7 +87,7 @@ func TestHandleUnknownEmitsBoxSilencesUsageAndErrors(t *testing.T) {
 	}
 }
 
-func TestHandleUnknownFiresRelayWithSession(t *testing.T) {
+func TestHandleSystemUnknownFiresRelayWithSession(t *testing.T) {
 	cmd := &cobra.Command{Use: "system"}
 	cmd.SetOut(&bytes.Buffer{})
 
@@ -102,7 +102,7 @@ func TestHandleUnknownFiresRelayWithSession(t *testing.T) {
 
 	err := handle(
 		cmd, []string{"check-anchor-drift"},
-		tempStdin(t, `{"session_id":"sess-9"}`),
+		tempStdin(t, `{"session_id":"sess-9"}`), SystemConfig,
 	)
 	if err == nil {
 		t.Fatal("want non-nil error")
@@ -128,14 +128,14 @@ func TestHandleRelayFailureDoesNotMaskError(t *testing.T) {
 		return errors.New("relay boom")
 	})()
 
-	err := handle(cmd, []string{"x"}, tempStdin(t, `{"session_id":"s"}`))
+	err := handle(cmd, []string{"x"}, tempStdin(t, `{"session_id":"s"}`), SystemConfig)
 	if err == nil || !strings.Contains(err.Error(), "x") {
 		t.Fatalf("want unknown-subcommand error naming x, got %v", err)
 	}
 }
 
 func TestHandleBareReturnsNilNoRelay(t *testing.T) {
-	cmd := &cobra.Command{Use: "system"}
+	cmd := &cobra.Command{Use: "hook"}
 	cmd.SetOut(&bytes.Buffer{})
 	cmd.SetErr(&bytes.Buffer{})
 
@@ -145,17 +145,69 @@ func TestHandleBareReturnsNilNoRelay(t *testing.T) {
 		return nil
 	})()
 
-	// Bare `ctx system` (no leftover args) prints help and exits 0;
-	// the help-output itself is covered by the system_test integration
-	// test against the real command. Here: no error, no relay, no
-	// SilenceUsage flip.
-	if err := handle(cmd, nil, tempStdin(t, `{"session_id":"s"}`)); err != nil {
-		t.Fatalf("bare `ctx system`: want nil error, got %v", err)
+	// Bare group invocation (no leftover args) prints help and exits 0;
+	// the help-output itself is covered by integration tests against the
+	// real command. Here: no error, no relay, no SilenceUsage flip.
+	if err := handle(cmd, nil, tempStdin(t, `{"session_id":"s"}`), HookConfig); err != nil {
+		t.Fatalf("bare group: want nil error, got %v", err)
 	}
 	if called {
-		t.Error("bare `ctx system` must not fire the relay")
+		t.Error("bare group must not fire the relay")
 	}
 	if cmd.SilenceUsage {
-		t.Error("bare `ctx system` must not set SilenceUsage")
+		t.Error("bare group must not set SilenceUsage")
+	}
+}
+
+func TestHandleHookUnknownEmitsHookCopy(t *testing.T) {
+	cmd := &cobra.Command{Use: "hook"}
+	var out bytes.Buffer
+	cmd.SetOut(&out)
+
+	defer stubRelay(func(string, string, *entity.TemplateRef) error {
+		return nil
+	})()
+
+	err := handle(cmd, []string{"notifyy"}, tempStdin(t, ""), HookConfig)
+	if err == nil || !strings.Contains(err.Error(), "notifyy") {
+		t.Fatalf("want unknown-subcommand error naming notifyy, got %v", err)
+	}
+
+	got := out.String()
+	for _, want := range []string{
+		"notifyy", "Unknown Hook Subcommand", "CLI drift", "VERBATIM",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("hook relay box missing %q\n---\n%s", want, got)
+		}
+	}
+	if !cmd.SilenceUsage {
+		t.Error("want SilenceUsage=true")
+	}
+}
+
+func TestHandleHookUnknownRelayRefUsesHookLabel(t *testing.T) {
+	cmd := &cobra.Command{Use: "hook"}
+	cmd.SetOut(&bytes.Buffer{})
+
+	var gotRef *entity.TemplateRef
+	defer stubRelay(
+		func(_, _ string, ref *entity.TemplateRef) error {
+			gotRef = ref
+			return nil
+		},
+	)()
+
+	if err := handle(
+		cmd, []string{"pausse"},
+		tempStdin(t, `{"session_id":"sess-7"}`), HookConfig,
+	); err == nil {
+		t.Fatal("want non-nil error")
+	}
+	if gotRef == nil ||
+		gotRef.Hook != hook.Hook ||
+		gotRef.Variant != hook.VariantUnknownSubcommand {
+		t.Errorf("relay ref = %+v, want hook=%q variant=%q",
+			gotRef, hook.Hook, hook.VariantUnknownSubcommand)
 	}
 }

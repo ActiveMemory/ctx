@@ -16,8 +16,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
-	"github.com/ActiveMemory/ctx/internal/config/hook"
 	cfgSession "github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -32,30 +30,34 @@ import (
 // [nudge.Relay].
 var relay = nudge.Relay
 
-// handle is [Handler] with the stdin source injected for testability.
-// Bare invocation prints help; an unknown verb emits the verbatim
-// relay box (through the write layer), best-effort records the relay
-// event when a session is present, suppresses cobra's help dump, and
-// returns the unknown-subcommand error.
+// handle is [HandlerFor]'s closure body with the stdin source and the
+// per-group [Config] injected for testability. Bare invocation prints
+// help; an unknown verb emits the verbatim relay box (through the write
+// layer), best-effort records the relay event when a session is
+// present, suppresses cobra's help dump, and returns the
+// unknown-subcommand error.
 //
 // Parameters:
-//   - cmd: the system command (for output and SilenceUsage)
+//   - cmd: the group command (for output and SilenceUsage)
 //   - args: leftover args; non-empty means an unknown subcommand
 //   - stdin: hook-input source; ReadID is TTY-safe and timeout-guarded
+//   - cfg: the group's text keys and relay ref
 //
 // Returns:
-//   - error: nil for a bare `ctx system` (help printed); otherwise the
-//     unknown-subcommand error from [errCli.UnknownSubcommand].
-func handle(cmd *cobra.Command, args []string, stdin *os.File) error {
+//   - error: nil for a bare group invocation (help printed); otherwise
+//     the unknown-subcommand error from [errCli.UnknownSubcommand].
+func handle(
+	cmd *cobra.Command, args []string, stdin *os.File, cfg Config,
+) error {
 	if len(args) == 0 {
-		// Bare `ctx system`: preserve help + exit 0.
+		// Bare group (e.g. `ctx hook`): preserve help + exit 0.
 		return cmd.Help()
 	}
 	verb := args[0]
 
-	prefix := desc.Text(text.DescKeySystemUnknownRelayPrefix)
-	title := desc.Text(text.DescKeySystemUnknownBoxTitle)
-	body := fmt.Sprintf(desc.Text(text.DescKeySystemUnknownBody), verb)
+	prefix := desc.Text(cfg.RelayPrefixKey)
+	title := desc.Text(cfg.BoxTitleKey)
+	body := fmt.Sprintf(desc.Text(cfg.BodyKey), verb)
 	writeSetup.Nudge(cmd, message.NudgeBox(prefix, title, body))
 
 	// Best-effort relay leg: only when a hook supplied a session on
@@ -64,12 +66,8 @@ func handle(cmd *cobra.Command, args []string, stdin *os.File) error {
 	// failure is logged, not returned: the stdout box already reached
 	// the agent, and the user's real problem is the unknown verb.
 	if sid := coreSession.ReadID(stdin); sid != cfgSession.IDUnknown {
-		msg := fmt.Sprintf(
-			desc.Text(text.DescKeySystemUnknownRelayMessage), verb,
-		)
-		ref := entity.NewTemplateRef(
-			hook.System, hook.VariantUnknownSubcommand, nil,
-		)
+		msg := fmt.Sprintf(desc.Text(cfg.RelayMessageKey), verb)
+		ref := entity.NewTemplateRef(cfg.HookName, cfg.Variant, nil)
 		if relayErr := relay(msg, sid, ref); relayErr != nil {
 			logWarn.Warn(warn.RelayUnknownSubcommand, relayErr)
 		}

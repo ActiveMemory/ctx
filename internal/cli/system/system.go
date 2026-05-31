@@ -36,7 +36,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resume"
 	sessEvent "github.com/ActiveMemory/ctx/internal/cli/system/cmd/sessionevent"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/specsnudge"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/unknown"
+	"github.com/ActiveMemory/ctx/internal/cli/unknown"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
 
@@ -86,8 +86,9 @@ func Cmd() *cobra.Command {
 	// An unknown `ctx system <verb>` must fail loud — emit a verbatim
 	// relay and exit non-zero — instead of dumping help at exit 0,
 	// which a UserPromptSubmit hook reads as success and injects every
-	// prompt. Scoped here only; the shared parent.Cmd stays untouched.
-	// See specs/system-unknown-subcommand-relay.md.
-	c.RunE = unknown.Handler
+	// prompt. system is Hidden, so RootCmd's PersistentPreRunE
+	// early-returns and this RunE is reachable without context/git
+	// preconditions. See specs/system-unknown-subcommand-relay.md.
+	c.RunE = unknown.HandlerFor(unknown.SystemConfig)
 	return c
 }
