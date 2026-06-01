@@ -36,6 +36,48 @@ TASK STATUS LABELS:
 
 These have priority because other knowledge ingestion projects depend on them.
 
+- [x] BUG (data loss): `ctx learning add` clobbers a dash-bullet-format
+  `LEARNINGS.md`. When the `INDEX:START/END` block uses the dash-bullet format
+  (what `ctx init` produces) rather than the pipe-table format, `ctx learning
+  add` (1) rewrites the index as a table, (2) **duplicates** the
+  `<!-- INDEX:START -->` marker, and (3) **drops every existing learning body** —
+  keeping only the newly added one. Observed live in `things-wtf-hub` (session
+  aa32f065): a `LEARNINGS.md` with 4 bodies collapsed to 1 (a -44-line commit,
+  2dc4d1a); recovered via `git show <good-sha>:.context/LEARNINGS.md`.
+  `ctx decision add` is UNAFFECTED because that repo's `DECISIONS.md` was already
+  table-format — so the bug is specifically the learning-add path's handling of
+  the dash-bullet index variant (likely it can't parse dash-bullet entries, so
+  it treats the file as empty and regenerates from only the new entry).
+    - Repro: `ctx init` a repo, confirm `LEARNINGS.md` index is dash-bullet
+      (`- entry`), add 2+ learnings by hand in that format, then run
+      `ctx learning add "x" --context … --lesson … --application …`. Expect: the
+      hand-authored bodies vanish + a duplicated INDEX:START marker.
+    - Likely fix: detect the existing index format (dash-bullet vs table) and
+      preserve it round-trip, OR parse dash-bullet entries before regenerating;
+      never emit a second INDEX:START; never drop bodies the parser didn't
+      recognize (fail loud instead of silently regenerating).
+    - Guard: a round-trip test for BOTH index formats (dash-bullet + table) that
+      asserts existing bodies survive an add and exactly one marker pair remains.
+    - Severity: HIGH — silent destruction of persisted memory, the one thing ctx
+      promises to protect; only git made it recoverable.
+    - Provenance: things-wtf-hub session aa32f065 wrap-up; full write-up in that
+      repo's LEARNINGS.md ("`ctx learning add` clobbers a dash-bullet-format
+      LEARNINGS.md"). #priority:high #added:2026-05-30
+      #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+      Shipped: new `index.Validate` precondition guard refuses to regenerate the
+      index when it would lose data — entry bodies (`## [ts]` headers) trapped
+      between the markers, or markers that are missing/duplicated/out-of-order.
+      Wired into the two read-before-mutate choke points (`entry.Write` and
+      `index.Reindex`), so add and all reindex commands fail loud and leave the
+      file byte-identical instead of clobbering it. `index.Update`'s signature is
+      untouched (kept the CRITICAL blast radius stable). New `internal/err/index`
+      package + i18n messages. Verified: the real repro now errors with the file
+      unchanged; well-formed adds still preserve all bodies and one marker pair.
+      Tests: `index.TestValidate` (7 shapes) + `entry` round-trip
+      (refused-untouched + well-formed-preserved). Chosen behavior is fail-loud +
+      manual fix; auto-repair (`reindex --repair`) considered and declined.
+      Spec: specs/fix-learning-add-index-data-loss.md.
+
 - [x] Make 'ctx kb reindex' nesting-aware: scan topics/** not topics/* (grouped
   topic folders currently blank the CTX:
   KB:TOPICS block) #priority:medium #session:c3d2dcb1 #branch:
