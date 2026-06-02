@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-06-01 | Guard managed blocks before regenerating; don't trust the span to be machine-owned |
 | 2026-05-30 | Capture golden fixtures from the live legacy code path before deleting it |
 | 2026-05-30 | tpl package is magic-string-audit-exempt but its call sites are not |
 | 2026-05-30 | New exported types must live in types.go or TestTypeFileConvention fails |
@@ -166,6 +167,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-06-01-174927] Guard managed blocks before regenerating; don't trust the span to be machine-owned
+
+**Context**: ctx learning add silently deleted entry bodies that lived between INDEX:START/END markers: index.Update replaced the whole marker span with a regenerated table, and ParseHeaders scanning the full file made the result look complete, hiding the loss.
+
+**Lesson**: Code that 'replaces the managed block' (index regen, KB managed blocks, moc.go) assumes the span between its markers is disposable and machine-owned. That assumption breaks the moment user content drifts inside the markers, and the regenerated output looks correct so the loss is invisible. The fix is a precondition guard that refuses to mutate when regeneration would lose data — not smarter parsing of the trapped content.
+
+**Application**: Before any 'replace between markers' write, validate the span: refuse on entry/content found where only generated output belongs, and on malformed/duplicated/out-of-order markers. Fail loud and leave the file byte-identical rather than regenerate. Run the guard at the read-before-mutate choke point so nothing is written on refusal.
 
 ---
 
