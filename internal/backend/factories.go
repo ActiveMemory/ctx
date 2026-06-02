@@ -10,7 +10,7 @@ import (
 	cfgBackend "github.com/ActiveMemory/ctx/internal/config/backend"
 )
 
-// RegisterAll registers all six built-in backend
+// RegisterAll registers all seven built-in backend
 // factories with the supplied Registry. Called by the
 // CLI before resolving any backend; keeps the per-vendor
 // factory functions unexported (so they cannot be reached
@@ -36,6 +36,7 @@ func RegisterAll(r *Registry) error {
 		{cfgBackend.NameAnthropic, anthropicFactory},
 		{cfgBackend.NameOllama, ollamaFactory},
 		{cfgBackend.NameLMStudio, lmStudioFactory},
+		{cfgBackend.NameLlamaCpp, llamacppFactory},
 	}
 	for _, p := range pairs {
 		if err := r.Register(p.name, p.factory); err != nil {

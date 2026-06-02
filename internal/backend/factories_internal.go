@@ -87,3 +87,16 @@ func ollamaFactory(cfg Config) (Backend, error) {
 func lmStudioFactory(cfg Config) (Backend, error) {
 	return newLMStudio(cfg)
 }
+
+// llamacppFactory adapts [newLlamaCpp] to the [Factory]
+// signature.
+//
+// Parameters:
+//   - cfg: per-project backend config.
+//
+// Returns:
+//   - Backend: the constructed backend on success.
+//   - error: typed err/backend sentinel on failure.
+func llamacppFactory(cfg Config) (Backend, error) {
+	return newLlamaCpp(cfg)
+}

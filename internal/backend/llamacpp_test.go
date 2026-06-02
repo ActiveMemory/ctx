@@ -23,7 +23,6 @@ func TestNewLlamaCpp_DefaultName(t *testing.T) {
 	b, err := newLlamaCpp(Config{Endpoint: srv.URL})
 	if err != nil {
 		t.Fatalf("ctor: %v", err)
-		return
 	}
 	if b.Name() != "llamacpp" {
 		t.Errorf("Name = %q, want llamacpp", b.Name())
