@@ -197,6 +197,10 @@ func SafeWriteFileAtomic(path string, data []byte, perm os.FileMode) error {
 		return createErr
 	}
 	tmpPath := tmp.Name()
+	// Best-effort cleanup. These discards sit on failure paths where
+	// the operation already errored and the temp file is thrown away,
+	// so a failed Close/Remove changes nothing the caller can act on.
+	// The meaningful close is checked on the success path below.
 	cleanup := func() { _ = os.Remove(tmpPath) }
 	if _, writeErr := tmp.Write(data); writeErr != nil {
 		_ = tmp.Close()

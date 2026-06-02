@@ -18,9 +18,11 @@ import (
 	cfgFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	errServe "github.com/ActiveMemory/ctx/internal/err/serve"
 	execDaemon "github.com/ActiveMemory/ctx/internal/exec/daemon"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	writeServe "github.com/ActiveMemory/ctx/internal/write/serve"
 )
 
@@ -117,7 +119,9 @@ func Stop(cmd *cobra.Command, dataDir string) error {
 		return errServe.Kill(pid, killErr)
 	}
 
-	_ = os.Remove(pidPath)
+	if rmErr := os.Remove(pidPath); rmErr != nil {
+		logWarn.Warn(cfgWarn.Remove, pidPath, rmErr)
+	}
 	writeServe.Stopped(cmd, pid)
 	return nil
 }
