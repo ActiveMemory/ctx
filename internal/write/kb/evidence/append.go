@@ -33,7 +33,7 @@ import (
 //   - Row: the appended row with ID populated.
 //   - error: [errKbEvidence.ErrDuplicateID],
 //     [errKbEvidence.ErrInvalidBand], or wrapped I/O errors.
-func Append(path string, row Row) (Row, error) {
+func Append(path string, row Row) (_ Row, err error) {
 	if bandErr := validateBand(row.Confidence); bandErr != nil {
 		return Row{}, bandErr
 	}
@@ -67,7 +67,11 @@ func Append(path string, row Row) (Row, error) {
 	if openErr != nil {
 		return Row{}, errKbEvidence.OpenIndex(openErr)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil && err == nil {
+			err = errKbEvidence.WriteRow(cerr)
+		}
+	}()
 
 	var sb strings.Builder
 	if needsHeader {

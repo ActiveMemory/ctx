@@ -112,6 +112,8 @@ func Run(cmd *cobra.Command, args []string, flags entity.AddConfig) error {
 	}
 
 	if fType == cfgEntry.Decision || fType == cfgEntry.Learning {
+		// Acceptable discard: trace provenance is best-effort and must
+		// never fail the add; a missed first-entry ref is tolerable.
 		_ = trace.Record(fType+cfgTrace.RefFirstEntry, stateDir)
 	}
 

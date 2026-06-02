@@ -47,6 +47,9 @@ func New(contextDir, version string) *Server {
 		resourceList: catalog.ToList(),
 	}
 	srv.poller = poll.NewPoller(contextDir, func(n proto.Notification) {
+		// Acceptable discard: best-effort notification push from the
+		// poller callback. There is no return path, and a failed write
+		// means the client has gone away.
 		_ = srv.out.WriteJSON(n)
 	})
 	return srv

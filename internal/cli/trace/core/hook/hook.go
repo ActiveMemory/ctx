@@ -17,9 +17,11 @@ import (
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgGit "github.com/ActiveMemory/ctx/internal/config/git"
 	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	errTrace "github.com/ActiveMemory/ctx/internal/err/trace"
 	"github.com/ActiveMemory/ctx/internal/exec/git"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	writeTrace "github.com/ActiveMemory/ctx/internal/write/trace"
 )
 
@@ -125,7 +127,9 @@ func Remove(path string) {
 		return
 	}
 	if strings.Contains(string(existing), cfgTrace.CtxTraceMarker) {
-		_ = os.Remove(path)
+		if rmErr := os.Remove(path); rmErr != nil {
+			logWarn.Warn(cfgWarn.Remove, path, rmErr)
+		}
 	}
 }
 

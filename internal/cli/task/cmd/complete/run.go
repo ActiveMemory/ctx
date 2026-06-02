@@ -42,6 +42,8 @@ func Run(cmd *cobra.Command, args []string) error {
 	if dirErr != nil {
 		return dirErr
 	}
+	// Acceptable discard: trace provenance is best-effort and must
+	// never fail task completion; a missed ref is tolerable.
 	_ = trace.Record(ref, stateDir)
 
 	return nil

@@ -16,8 +16,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
@@ -82,7 +84,11 @@ func resolveTask(
 	if err != nil {
 		return resolved
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil {
+			logWarn.Warn(cfgWarn.Close, path, cerr)
+		}
+	}()
 
 	count := 0
 	scanner := bufio.NewScanner(f)

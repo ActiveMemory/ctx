@@ -12,7 +12,9 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // copyDir recursively copies the contents of src into dst.
@@ -62,7 +64,7 @@ func copyDir(src, dst string) error {
 //
 // Returns:
 //   - error: stat, open, create, or copy failure
-func copyFile(src, dst string) error {
+func copyFile(src, dst string) (err error) {
 	info, statErr := ctxIo.SafeStat(src)
 	if statErr != nil {
 		return statErr
@@ -72,13 +74,21 @@ func copyFile(src, dst string) error {
 	if openErr != nil {
 		return openErr
 	}
-	defer func() { _ = in.Close() }()
+	defer func() {
+		if cerr := in.Close(); cerr != nil {
+			logWarn.Warn(cfgWarn.Close, src, cerr)
+		}
+	}()
 
 	out, createErr := ctxIo.SafeCreateFile(dst, info.Mode().Perm())
 	if createErr != nil {
 		return createErr
 	}
-	defer func() { _ = out.Close() }()
+	defer func() {
+		if cerr := out.Close(); cerr != nil && err == nil {
+			err = cerr
+		}
+	}()
 
 	_, copyErr := io.Copy(out, in)
 	return copyErr

@@ -13,7 +13,9 @@ import (
 
 	connectCfg "github.com/ActiveMemory/ctx/internal/cli/connection/core/config"
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/hub"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	writeHub "github.com/ActiveMemory/ctx/internal/write/hub"
 )
 
@@ -37,7 +39,11 @@ func Run(cmd *cobra.Command, _ []string) error {
 	if dialErr != nil {
 		return dialErr
 	}
-	defer func() { _ = client.Close() }()
+	defer func() {
+		if cerr := client.Close(); cerr != nil {
+			logWarn.Warn(cfgWarn.CloseHubClient, cerr)
+		}
+	}()
 
 	resp, statusErr := client.Status(
 		context.Background(),

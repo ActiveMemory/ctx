@@ -17,9 +17,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/env"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/session"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // Ensure Copilot implements Session.
@@ -67,7 +69,11 @@ func (p *Copilot) Matches(path string) bool {
 	if scanErr != nil {
 		return false
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil {
+			logWarn.Warn(cfgWarn.Close, path, cerr)
+		}
+	}()
 
 	if !scanner.Scan() {
 		return false
@@ -112,7 +118,11 @@ func (p *Copilot) ParseFile(path string) ([]*entity.Session, error) {
 	if scanErr != nil {
 		return nil, errParser.OpenFile(scanErr)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil {
+			logWarn.Warn(cfgWarn.Close, path, cerr)
+		}
+	}()
 
 	var sess *copilotRawSession
 

@@ -62,6 +62,14 @@ func Write(params entity.EntryParams) error {
 		return errFs.FileRead(filePath, readErr)
 	}
 
+	// Decisions and Learnings carry an auto-generated index. Refuse to mutate
+	// the file when regenerating that index would lose data, before any write.
+	if fType == entry.Decision || fType == entry.Learning {
+		if vErr := index.Validate(string(existing), fileName); vErr != nil {
+			return vErr
+		}
+	}
+
 	var formatted string
 	switch fType {
 	case entry.Decision:

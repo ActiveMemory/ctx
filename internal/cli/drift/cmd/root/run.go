@@ -13,10 +13,12 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/drift/core/fix"
 	"github.com/ActiveMemory/ctx/internal/cli/drift/core/out"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	writeDrift "github.com/ActiveMemory/ctx/internal/write/drift"
 )
@@ -72,7 +74,11 @@ func Run(
 		// Re-run detection to show the updated status
 		if result.Fixed > 0 {
 			writeDrift.FixRecheck(cmd)
-			ctx, _ = load.Do("")
+			if reloaded, reloadErr := load.Do(""); reloadErr != nil {
+				logWarn.Warn(cfgWarn.DriftReload, reloadErr)
+			} else {
+				ctx = reloaded
+			}
 			report = drift.Detect(ctx)
 		}
 	}
