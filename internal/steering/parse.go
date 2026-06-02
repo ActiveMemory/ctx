@@ -76,6 +76,8 @@ func Parse(data []byte, filePath string) (*SteeringFile, error) {
 func Print(sf *SteeringFile) []byte {
 	var buf bytes.Buffer
 
+	// Acceptable discard: yaml.Marshal cannot fail for this plain
+	// SteeringFile struct, and Print returns []byte by contract.
 	raw, _ := yaml.Marshal(sf)
 
 	buf.WriteString(token.FrontmatterDelimiter)

@@ -481,3 +481,80 @@ func TestUpdateLearnings_Idempotent(t *testing.T) {
 		)
 	}
 }
+
+func TestValidate(t *testing.T) {
+	tests := []struct {
+		name    string
+		content string
+		wantErr bool
+	}{
+		{
+			name:    "no markers is allowed (fresh creation)",
+			content: "# Learnings\n\n## [2026-01-01-090000] A\n\n**Lesson**: keep me.\n",
+			wantErr: false,
+		},
+		{
+			name: "empty index block",
+			content: "# Learnings\n\n<!-- INDEX:START -->\n<!-- INDEX:END -->\n\n" +
+				"## [2026-01-01-090000] A\n\n**Lesson**: keep me.\n",
+			wantErr: false,
+		},
+		{
+			name: "populated table between markers",
+			content: `# Learnings
+
+<!-- INDEX:START -->
+| Date | Learning |
+|----|--------|
+| 2026-01-01 | A |
+<!-- INDEX:END -->
+
+## [2026-01-01-090000] A
+
+**Lesson**: keep me.
+`,
+			wantErr: false,
+		},
+		{
+			name: "entry header trapped between markers",
+			content: `# Learnings
+
+<!-- INDEX:START -->
+
+## [2026-01-01-090000] A
+
+**Lesson**: would be deleted.
+
+<!-- INDEX:END -->
+`,
+			wantErr: true,
+		},
+		{
+			name: "duplicate INDEX:START",
+			content: "# Learnings\n\n<!-- INDEX:START -->\n<!-- INDEX:START -->\n" +
+				"<!-- INDEX:END -->\n\n## [2026-01-01-090000] A\n",
+			wantErr: true,
+		},
+		{
+			name: "missing INDEX:END",
+			content: "# Learnings\n\n<!-- INDEX:START -->\n\n" +
+				"## [2026-01-01-090000] A\n",
+			wantErr: true,
+		},
+		{
+			name: "INDEX:END before INDEX:START",
+			content: "# Learnings\n\n<!-- INDEX:END -->\n<!-- INDEX:START -->\n\n" +
+				"## [2026-01-01-090000] A\n",
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := Validate(tt.content, "LEARNINGS.md")
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Validate() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}

@@ -13,7 +13,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -49,7 +51,11 @@ func loadState() (state, func(), error) {
 		return s, nil, writeErr
 	}
 
-	release := func() { _ = os.Remove(lockPath) }
+	release := func() {
+		if rmErr := os.Remove(lockPath); rmErr != nil {
+			logWarn.Warn(cfgWarn.Remove, lockPath, rmErr)
+		}
+	}
 
 	path := filepath.Join(dir, cfgHub.FileSyncState)
 	data, readErr := io.SafeReadUserFile(path)

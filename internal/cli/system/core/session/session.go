@@ -88,6 +88,9 @@ func ReadInput(r io.Reader) entity.HookInput {
 	select {
 	case res := <-ch:
 		if res.err == nil {
+			// Acceptable discard: best-effort parse of hook stdin. On
+			// malformed or absent input the zero-value input is the
+			// intended graceful fallback (the caller tolerates it).
 			_ = json.Unmarshal(res.data, &input)
 		}
 	case <-time.After(hook.StdinReadTimeout * time.Second):

@@ -79,7 +79,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			Reason: reason + token.NewlineLF + token.NewlineLF +
 				desc.Text(text.DescKeyBlockConstitutionSuffix),
 		}
-		data, _ := json.Marshal(resp)
+		data, marshalErr := json.Marshal(resp)
+		if marshalErr != nil {
+			return marshalErr
+		}
 		writeSetup.BlockResponse(cmd, string(data))
 		blockRef := notify.NewTemplateRef(hook.BlockNonPathCtx, variant, nil)
 		return nudge.Relay(fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),

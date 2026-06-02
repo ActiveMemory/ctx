@@ -116,6 +116,8 @@ func Cmd(noun, descKey, useStr string) *cobra.Command {
 		cFlag.Share, flag.DescKeyAddShare,
 	)
 
+	// Acceptable discard: RegisterFlagCompletionFunc only errors on an
+	// unregistered flag name; the priority flag is bound above.
 	_ = c.RegisterFlagCompletionFunc(
 		cFlag.Priority, func(
 			_ *cobra.Command, _ []string, _ string,

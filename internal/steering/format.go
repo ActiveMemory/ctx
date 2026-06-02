@@ -144,6 +144,9 @@ func formatCursor(sf *SteeringFile) []byte {
 		AlwaysApply: sf.Inclusion == cfgSteering.InclusionAlways,
 	}
 
+	// Acceptable discard: yaml.Marshal cannot fail for this plain
+	// frontmatter struct (fixed string/bool/slice fields), and the
+	// formatter returns []byte by contract.
 	raw, _ := yaml.Marshal(fm)
 
 	var buf bytes.Buffer
@@ -192,6 +195,9 @@ func formatKiro(sf *SteeringFile) []byte {
 		Mode:        mapKiroMode(sf.Inclusion),
 	}
 
+	// Acceptable discard: yaml.Marshal cannot fail for this plain
+	// frontmatter struct (fixed string/bool/slice fields), and the
+	// formatter returns []byte by contract.
 	raw, _ := yaml.Marshal(fm)
 
 	var buf bytes.Buffer

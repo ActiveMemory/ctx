@@ -12,8 +12,10 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgSkill "github.com/ActiveMemory/ctx/internal/config/skill"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	errSkill "github.com/ActiveMemory/ctx/internal/err/skill"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // Install copies a skill from the source directory into skillsDir/<name>/.
@@ -53,7 +55,9 @@ func Install(source, skillsDir string) (*Skill, error) {
 
 	if copyErr := copyDir(source, destDir); copyErr != nil {
 		// Clean up partial copy on failure.
-		_ = os.RemoveAll(destDir)
+		if rmErr := os.RemoveAll(destDir); rmErr != nil {
+			logWarn.Warn(cfgWarn.Remove, destDir, rmErr)
+		}
 		return nil, errSkill.Install(sk.Name, copyErr)
 	}
 

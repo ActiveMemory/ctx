@@ -74,7 +74,11 @@ func (p *CopilotCLI) Matches(path string) bool {
 	if openErr != nil {
 		return false
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil {
+			warn.Warn(cfgWarn.Close, path, cerr)
+		}
+	}()
 
 	scanner := bufio.NewScanner(f)
 	buf := make([]byte, 0, cfgCopilot.ScanBufInit)

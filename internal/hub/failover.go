@@ -10,6 +10,9 @@ import (
 	"context"
 
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -54,7 +57,9 @@ func newFailoverClient(
 			resp,
 		)
 		if callErr != nil {
-			_ = conn.Close()
+			if closeErr := conn.Close(); closeErr != nil {
+				logWarn.Warn(cfgWarn.Close, addr, closeErr)
+			}
 
 			// Fail fast on auth errors; same token
 			// won't work on other peers either.

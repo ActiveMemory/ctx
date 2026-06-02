@@ -64,6 +64,8 @@ func Cmd() *cobra.Command {
 		c, &noFold, cFlag.NoFold, flag.DescKeyHandoverNoFold,
 	)
 
+	// Acceptable discard: MarkFlagRequired only errors on an
+	// unregistered flag name; both flags are bound above.
 	_ = c.MarkFlagRequired(cFlag.Summary)
 	_ = c.MarkFlagRequired(cFlag.Next)
 

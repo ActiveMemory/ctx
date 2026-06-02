@@ -18,7 +18,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/connection/core/render"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/hub"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // Connected reports whether a hub connection config exists.
@@ -73,7 +75,11 @@ func Sync(_ string) string {
 	if dialErr != nil {
 		return ""
 	}
-	defer func() { _ = client.Close() }()
+	defer func() {
+		if cerr := client.Close(); cerr != nil {
+			logWarn.Warn(cfgWarn.CloseHubClient, cerr)
+		}
+	}()
 
 	entries, syncErr := client.Sync(
 		context.Background(), cfg.Types, 0,
