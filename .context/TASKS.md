@@ -443,6 +443,8 @@ Important things that agent (or human) yeeted to the future.
 
 ### Phase CT: Companion Tool Integration
 
+- [ ] Add a 'make strip-gitnexus' target (backed by a hack/ script) that mechanically removes the GitNexus auto-injected block — delimited by <!-- gitnexus:start --> / <!-- gitnexus:end --> markers — from AGENTS.md and CLAUDE.md. Marker-bounded delete (sed range or awk between markers). Must: (1) leave AGENTS.md as the redirect stub and CLAUDE.md ending at its Companion Tools / GITNEXUS.md pointer; (2) NOT touch GITNEXUS.md (the intended managed home for that content); (3) be idempotent (no-op when markers absent). Run it after 'npx gitnexus analyze'. Upstream-preferred guard is 'analyze --skip-agents-md'; this script is the belt-and-suspenders cleanup when analyze runs without that flag. Manual removal was done in 8da165a3; this automates it. #priority:medium #session:74c94e3a #branch:fix/notify-resolution-hardening #commit:8da165a3 #added:2026-06-02-085625
+
 Session-start checks, suppressibility, and registry for companion MCP tools.
 
 - [ ] ctx-remember preflight: verify ctx binary in PATH,
