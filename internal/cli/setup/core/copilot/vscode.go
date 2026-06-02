@@ -54,7 +54,10 @@ func ensureVSCodeMCP(cmd *cobra.Command) error {
 			},
 		},
 	}
-	data, _ := json.MarshalIndent(mcpCfg, "", token.Indent2)
+	data, marshalErr := json.MarshalIndent(mcpCfg, "", token.Indent2)
+	if marshalErr != nil {
+		return marshalErr
+	}
 	data = append(data, token.NewlineLF...)
 
 	writeFileErr := ctxIo.SafeWriteFile(

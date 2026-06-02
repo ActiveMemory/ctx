@@ -39,6 +39,9 @@ func parse(raw string) []Row {
 		if cols[cfgKbSC.ColSource] == cfgKbSC.HeaderCellSource {
 			continue
 		}
+		// Acceptable discard: the Updated column is ctx-generated in
+		// DateOnly form; an unparseable value degrades to the zero
+		// time rather than dropping the row from the ledger.
 		updated, _ := time.Parse(
 			time.DateOnly, cols[cfgKbSC.ColUpdated],
 		)

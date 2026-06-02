@@ -12,7 +12,9 @@ import (
 	"sort"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // findSessionsWithFilter scans common locations and additional directories
@@ -46,7 +48,10 @@ func findSessionsWithFilter(
 		}
 		if info, statErr := os.Stat(resolved); statErr == nil && info.IsDir() {
 			scannedDirs[resolved] = true
-			sessions, _ := ScanDirectory(resolved)
+			sessions, scanErr := ScanDirectory(resolved)
+			if scanErr != nil {
+				logWarn.Warn(cfgWarn.JournalScanDir, resolved, scanErr)
+			}
 			allSessions = append(allSessions, sessions...)
 		}
 	}
