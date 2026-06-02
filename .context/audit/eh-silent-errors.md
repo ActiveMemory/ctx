@@ -52,21 +52,29 @@ Counts by category (184 sites total):
 | NIL-DEREF | 1 |
 | B-parse | 1 |
 
-### High-priority findings (data loss / crash)
+### High-priority findings (data loss)
 
-These are not style nits — they silently lose or corrupt data, or crash:
+These are not style nits — they silently lose or corrupt data:
 
-- `internal/memory/publish.go:170` — `MergePublished` error dropped, then the
-  (possibly empty) `merged` is written over the published memory file.
 - `internal/cli/pad/core/store/store.go:257` — `ReadEntriesWithIDs` error
-  dropped; existing pad IDs are lost when the store is rewritten (the same
-  data-loss shape as `specs/fix-learning-add-index-data-loss.md`).
-- `internal/hub/replicate.go:121` — `store.Append` error dropped; a replicated
-  hub entry is silently lost.
-- `internal/cli/memory/cmd/status/run.go:54` — `LoadState` error dropped, then
-  `state.LastSync` dereferenced: potential nil-pointer panic.
+  dropped; `(nil, nil)` is the legitimate no-pad case, so a non-nil error means
+  the prior blob exists but is unreadable/undecryptable — and the store is then
+  overwritten with reset IDs. Same data-loss shape as
+  `specs/fix-learning-add-index-data-loss.md`. **Fixed (EH.2):** surface the error.
+- `internal/hub/replicate.go:121` — `store.Append` error dropped in the follower
+  replication loop; a replicated hub entry is silently lost. **Fixed (EH.2):**
+  `logWarn.Warn` (best-effort loop, no return path).
 - 11 × `A-close-WRITE` — defer-close on `SafeAppendFile`/`SafeCreateFile`
   handles, where a failed final flush silently loses the appended row.
+
+> **Correction (verified at fix time):** two callouts in the first cut of this
+> catalogue were name-inferred and wrong. `internal/memory/publish.go:170`
+> (`MergePublished`) returns `(string, bool)` — the discarded value is a "markers
+> were missing" bool, not an error; reclassified `FALSE-POS`.
+> `internal/cli/memory/cmd/status/run.go:54` (`LoadState`) returns a `State`
+> **value** (not a pointer), so `state.LastSync` cannot nil-deref; reclassified
+> `besteffort` (display-only). Lesson: the auto/name-inferred categories below
+> are an inventory, not a verdict — every site is read before it is fixed.
 
 ## Full catalogue
 
@@ -74,8 +82,8 @@ These are not style nits — they silently lose or corrupt data, or crash:
 |----------|------|------------|--------------------|
 | B-data | `internal/cli/pad/core/store/store.go:257` | `existing, _ := ReadEntriesWithIDs()` | ReadEntriesWithIDs error dropped; existing IDs lost on rewrite — surface/return |
 | B-data | `internal/hub/replicate.go:121` | `_, _ = store.Append([]Entry{entry})` | store.Append error dropped; replicated entry silently lost — stderr/return |
-| B-data | `internal/memory/publish.go:170` | `merged, _ := MergePublished(string(existing), formatted)` | MergePublished error dropped; (possibly empty) merged then written — return the error |
-| NIL-DEREF | `internal/cli/memory/cmd/status/run.go:54` | `state, _ := mem.LoadState(contextDir)` | LoadState error dropped then state.LastSync deref — verify state non-nil; potential panic |
+| FALSE-POS | `internal/memory/publish.go:170` | `merged, _ := MergePublished(string(existing), formatted)` | 2nd return is a "markers missing" bool, not an error; merged is always valid (verified) |
+| besteffort | `internal/cli/memory/cmd/status/run.go:54` | `state, _ := mem.LoadState(contextDir)` | LoadState returns a State value (no nil-deref); display-only "never synced" on error — annotate |
 | B-marshal | `internal/cli/initialize/core/vscode/extension.go:59` | `data, _ := json.MarshalIndent(content, "", token.Indent2)` | surface: empty/partial data written on failure |
 | B-marshal | `internal/cli/initialize/core/vscode/mcp.go:50` | `data, _ := json.MarshalIndent(file, "", token.Indent2)` | surface: empty/partial data written on failure |
 | B-marshal | `internal/cli/initialize/core/vscode/tasks.go:59` | `data, _ := json.MarshalIndent(file, "", token.Indent2)` | surface: empty/partial data written on failure |

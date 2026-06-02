@@ -11,6 +11,8 @@ import (
 	"time"
 
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -118,6 +120,8 @@ func replicateOnce(
 			Timestamp: time.Unix(msg.Timestamp, 0),
 			Sequence:  msg.Sequence,
 		}
-		_, _ = store.Append([]Entry{entry})
+		if _, appendErr := store.Append([]Entry{entry}); appendErr != nil {
+			logWarn.Warn(cfgWarn.HubReplicateAppend, appendErr)
+		}
 	}
 }

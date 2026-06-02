@@ -97,6 +97,13 @@ const (
 	// broken .ctxrc or permissions regression.
 	HubConnectedProbe = "probe hub connection: %v"
 
+	// HubReplicateAppend is the stderr format for a failed
+	// [Store.Append] inside the follower replication stream. The
+	// loop is best-effort and has no return path, so a dropped
+	// append would silently lose a replicated entry; warning keeps
+	// the loss visible.
+	HubReplicateAppend = "hub replicate append: %v"
+
 	// StateInitializedProbe is the stderr format for failures
 	// inside [state.Initialized] beyond "no context dir declared."
 	// Hooks bail on false either way, but a visible warning shows

@@ -253,8 +253,15 @@ func ReadEntries() ([]string, error) {
 func WriteEntries(
 	cmd *cobra.Command, entries []string,
 ) error {
-	// Read existing IDs to preserve them.
-	existing, _ := ReadEntriesWithIDs()
+	// Read existing IDs to preserve them. A missing pad reads as
+	// (nil, nil); a non-nil error means the prior blob exists but
+	// could not be read or decrypted. Surfacing it prevents the
+	// overwrite below from silently resetting IDs against an
+	// unreadable pad.
+	existing, readErr := ReadEntriesWithIDs()
+	if readErr != nil {
+		return readErr
+	}
 
 	idEntries := make([]parse.Entry, len(entries))
 	nextID := parse.NextID(existing)
