@@ -57,6 +57,8 @@ func (s *Server) SetCluster(cluster *Cluster) {
 // GracefulStop stops the server gracefully.
 func (s *Server) GracefulStop() {
 	if s.cluster != nil {
+		// Acceptable discard: best-effort teardown; a Shutdown error on
+		// graceful stop is not actionable by the caller.
 		_ = s.cluster.Shutdown()
 	}
 	s.grpc.GracefulStop()

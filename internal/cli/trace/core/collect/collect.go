@@ -46,6 +46,8 @@ func RecordCommit(commitHash string) error {
 		// because they were accumulated for *this* commit window;
 		// keeping them would attach stale context to the next commit.
 		stateDir := filepath.Join(contextDir, dir.State)
+		// Acceptable discard: best-effort truncation of pending trace
+		// state; a failure leaves stale refs but must not fail the hook.
 		_ = trace.TruncatePending(stateDir)
 		return nil
 	}
@@ -66,6 +68,8 @@ func RecordCommit(commitHash string) error {
 	}
 
 	stateDir := filepath.Join(contextDir, dir.State)
+	// Acceptable discard: best-effort truncation of pending trace
+	// state; a failure leaves stale refs but must not fail the hook.
 	_ = trace.TruncatePending(stateDir)
 
 	return nil

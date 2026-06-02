@@ -34,6 +34,8 @@ func Cmd() *cobra.Command {
 		},
 	}
 	flagbind.StringFlag(c, &note, cFlag.Note, flag.DescKeyTraceTagNote)
+	// Acceptable discard: MarkFlagRequired only errors on an
+	// unregistered flag name; the flag is bound immediately above.
 	_ = c.MarkFlagRequired(cFlag.Note)
 	return c
 }

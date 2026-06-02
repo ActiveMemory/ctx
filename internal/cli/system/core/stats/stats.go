@@ -297,6 +297,9 @@ func Stream(w io.Writer, dir, sessionFilter string, jsonOut bool) error {
 	defer ticker.Stop()
 
 	for range ticker.C {
+		// Acceptable discard: filepath.Glob only errors on a malformed
+		// pattern; matches is nil on error and the range below is a
+		// no-op, so a bad tick is skipped rather than crashing the loop.
 		matches, _ = filepath.Glob(globPat)
 		for _, path := range matches {
 			sid := ExtractSessionID(filepath.Base(path))

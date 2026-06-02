@@ -45,6 +45,8 @@ func Cmd() *cobra.Command {
 		c, &adminToken,
 		cFlag.Token, flag.DescKeyConnectionToken,
 	)
+	// Acceptable discard: MarkFlagRequired only errors on an
+	// unregistered flag name; the flag is bound immediately above.
 	_ = c.MarkFlagRequired(cFlag.Token)
 
 	return c
