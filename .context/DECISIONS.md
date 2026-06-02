@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-06-02 | Remove the implicit project-local .ctx.key resolution tier |
 | 2026-05-30 | Name the add JSON-ingest flag --json-file, not --json |
 | 2026-05-28 | ctxctl PATH-installed alongside ctx for clean roots and one binary across worktrees |
 | 2026-05-28 | Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy |
@@ -157,6 +158,61 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-06-02-051330] Remove the implicit project-local .ctx.key resolution tier
+
+**Status**: Accepted
+
+**Context**: Picking up TASKS.md P0.8.5 ("notify fails in worktrees"), we
+found `crypto.ResolveKeyPath` still auto-detects a project-local
+`<contextDir>/.ctx.key` (a stat-gated tier) and prefers it over the global
+`~/.ctx/.ctx.key`. That file is gitignored, so it is absent in a fresh
+worktree checkout: resolution silently falls back to the (different) global
+key and webhook/pad decryption fails. The v0.8.0 global-encryption-key spec
+already collapsed per-project keys into one global key — calling project-local
+keys "a security antipattern [key next to ciphertext]" that "broke in
+worktrees" — but left the implicit auto-detect tier in place. Empirically
+(built binary + isolated repo + fake webhook sink): the default global key
+works in worktrees; only a project-local key reproduces the failure, and the
+fire path swallows it silently.
+
+**Alternatives Considered**:
+- Approach A — worktree-aware key fallback via `git rev-parse --git-common-dir`
+  to resolve the main checkout's key from inside a worktree: keeps project-local
+  keys working / but adds git-awareness to key resolution, contradicts the
+  CWD-anchored model, larger blast radius, and props up a deprecated mechanism.
+- Approach B — copy the key into the worktree at creation (ctx-worktree skill):
+  no resolver change / but agent-driven and unenforceable, widens skill
+  permissions, and is redundant under a global key.
+- Keep the tier, only fix the silent failure: smallest change / but leaves the
+  documented security antipattern and the worktree divergence in place.
+
+**Decision**: Remove the implicit project-local `.context/.ctx.key`
+auto-detection tier from `ResolveKeyPath`. Resolution becomes: (1) explicit
+`.ctxrc key_path` override, (2) global `~/.ctx/.ctx.key`, (3) project-local
+path only as a degenerate fallback when the home dir is unavailable. Genuine
+per-project isolation stays available via the explicit `key_path` override.
+Paired with surfacing the silent fire-path failure so any stranded-key decrypt
+failure is visible, not silent.
+
+**Rationale**: The project-local key is the only thing that makes a worktree
+behave differently from N side-by-side terminals in the same directory;
+removing it makes them indistinguishable (the desired model) and deletes a
+security antipattern the project already named. It is net deletion, consistent
+with the global-key and cwd-anchored simplifications. The explicit override
+covers the rare real isolation need without the ciphertext-adjacent footgun.
+
+**Consequence**: Projects on the default global key are unaffected. Projects
+with a project-local `.context/.ctx.key` resolve to the global key; their
+existing local-key-encrypted `.notify.enc` / pad will fail to decrypt — now
+visibly (a warning on the fire path, a surfaced error on pad/test paths)
+instead of silently. Documented remedy: back up the local key, then re-key to
+global or set an explicit `key_path`. No auto-migration (none exists in-tree).
+
+**Related**: Spec specs/notify-resolution-hardening.md | Supersedes the
+project-local auto-detection portion of
+specs/released/v0.8.0/global-encryption-key.md | Relates to
+specs/cwd-anchored-context.md and [2026-03-01] Global encryption key
 
 ## [2026-05-30-114429] Name the add JSON-ingest flag --json-file, not --json
 

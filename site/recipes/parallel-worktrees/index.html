@@ -2273,10 +2273,33 @@ prompts work:</p>
 <li><em>"Clean up all the worktrees, we're done."</em></li>
 </ul>
 <h2 id="what-works-differently-in-worktrees">What Works Differently in Worktrees<a class="headerlink" href="#what-works-differently-in-worktrees" title="Permanent link">&para;</a></h2>
-<p>The encryption key lives at <code>~/.ctx/.ctx.key</code> (user-level, outside
-the project). Because all worktrees on the same machine share this path,
-<strong><code>ctx pad</code> and <code>ctx hook notify</code> work in worktrees automatically</strong> - no
-special setup needed.</p>
+<p>The encryption key lives at <code>~/.ctx/.ctx.key</code> (user-level, outside the
+project). All worktrees on the same machine share this one key — there
+is no per-project key (an implicit <code>.context/.ctx.key</code> is never
+auto-detected), so <strong><code>ctx pad</code> and <code>ctx hook notify</code> decrypt correctly
+in worktrees automatically</strong>, with no special setup.</p>
+<p><strong>Whether <code>ctx hook notify</code> actually <em>fires</em> in a worktree is your
+call, made through one decision: do you git-track <code>.ctxrc</code>?</strong></p>
+<ul>
+<li><strong>Tracked <code>.ctxrc</code></strong> (committed) → its <code>notify.events</code> list rides
+  into every checkout, so notifications fire from worktrees too.
+  Committing <code>.ctxrc</code> is safe: it holds <code>notify.events</code>, <code>key_path</code>,
+  and rotation settings — never the webhook secret, which stays
+  encrypted in <code>.context/.notify.enc</code>.</li>
+<li><strong>Gitignored <code>.ctxrc</code></strong> (e.g. the profile workflow with tracked
+  <code>.ctxrc.base</code> / <code>.ctxrc.dev</code>) → a fresh worktree has no active
+  <code>.ctxrc</code>, so ctx applies built-in defaults and notifications stay
+  off there. <code>.ctxrc.base</code> is a <em>template</em>, not a fallback: ctx reads
+  only the active <code>.ctxrc</code>. To enable notifications in such a
+  worktree, copy a <code>.ctxrc</code> into it (or run <code>ctx config switch</code>).</li>
+</ul>
+<p>ctx deliberately does not special-case worktrees — it cannot tell a
+worktree from several terminals open in the same project — so the
+<code>.ctxrc</code>-tracking choice is the single, explicit control.</p>
+<p>If a configured webhook ever can't be delivered (a wrong or missing
+key, a decrypt failure, a network error), <code>ctx hook notify</code> prints a
+<code>ctx: notify: webhook configured but undeliverable: …</code> warning to
+stderr instead of silently dropping the notification.</p>
 <p>One thing to watch:</p>
 <ul>
 <li><strong>Journal enrichment</strong>: <code>ctx journal import</code> and <code>ctx journal enrich</code>

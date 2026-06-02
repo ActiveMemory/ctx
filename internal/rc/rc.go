@@ -271,9 +271,13 @@ func NotifyEvents() []string {
 // the absence of a project rather than rotating encryption
 // against a surprise key.
 //
-// Within ResolveKeyPath the existing priority still applies:
-// key_path in .ctxrc (explicit) > project-local
-// (.context/.ctx.key) > global (~/.ctx/.ctx.key).
+// Within ResolveKeyPath the priority is: key_path in .ctxrc
+// (explicit, tilde-expanded) > global (~/.ctx/.ctx.key). The
+// project-local path (.context/.ctx.key) is only a degenerate
+// fallback when the home directory is unavailable, and is never
+// auto-detected or preferred over the global key — see
+// internal/crypto/keypath.go and
+// specs/notify-resolution-hardening.md.
 //
 // Returns:
 //   - string: Resolved path to the encryption key file

@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-06-02 | os.IsNotExist doesn't unwrap; detect file absence with os.Stat + errors.Is(os.ErrNotExist) |
 | 2026-06-01 | An error-discard catalogue is an inventory, not a verdict — verify each site by reading before fixing |
 | 2026-06-01 | Guard managed blocks before regenerating; don't trust the span to be machine-owned |
 | 2026-05-30 | Capture golden fixtures from the live legacy code path before deleting it |
@@ -168,6 +169,16 @@ DO NOT UPDATE FOR:
 | 2026-04-25 | filepath.Join('', rel) returns rel as CWD-relative, not error |
 | 2026-04-25 | Parallel go test ./... packages can race on ~/.claude/settings.json |
 <!-- INDEX:END -->
+
+---
+
+## [2026-06-02-051330] os.IsNotExist doesn't unwrap — detect file absence with os.Stat + errors.Is
+
+**Context**: Hardening notify (P0.8.5), `LoadWebhook` needed to tell "encrypted file genuinely absent" (silent: not configured) from "present but broken" (surface it). `os.IsNotExist(loadErr)` on `crypto.LoadKey`'s error is always false: `LoadKey` wraps the os error via `errCrypto.ReadKey` → `fmt.Errorf(desc.Text(...), cause)`, and `os.IsNotExist` does not unwrap. The subtle part is `errors.Is(loadErr, os.ErrNotExist)`: it is **registry-dependent**. `errCrypto.ReadKey`'s format string comes from the externalized text registry (`'read key: %w'`); `fmt.Errorf` honors `%w` at runtime regardless of where the string came from, so in production (registry loaded) `errors.Is` correctly unwraps to `fs.ErrNotExist`. But in a unit-test binary that never initializes the text registry (verified: a probe in `internal/notify`), `desc.Text` returns a string with **no** `%w`, the cause is never wrapped, the error prints `%!(EXTRA *fs.PathError=...)`, and `errors.Is` also returns false. So the same call can behave differently in prod vs. a bare test binary.
+
+**Lesson**: `os.IsNotExist` is the legacy, non-unwrapping check — false on any `fmt.Errorf("…%w…", …)` error; always prefer `errors.Is`. But `errors.Is(err, os.ErrNotExist)` only holds if the wrap actually carries `%w` at runtime, and a wrap whose format string is fetched from a text/i18n registry only carries `%w` when that registry is initialized. `go vet`'s wrap check sees only literal format strings, so a registry-templated wrap is vet-invisible and its wrapping is environment-dependent.
+
+**Application**: To detect file absence reliably, stat the path directly: `os.Stat` returns an unwrapped `*fs.PathError`, so `errors.Is(statErr, os.ErrNotExist)` is dependable in every context. Branch on the stat (absent → not-configured; present → proceed to read/decrypt and surface any error). Reserve `errors.Is(…, os.ErrNotExist)` on a *returned library* error for chains you have confirmed wrap with `%w` independent of registry state.
 
 ---
 
