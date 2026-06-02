@@ -660,7 +660,7 @@ Many call sites use `_ =` or `_, _ =` to discard errors without
 any feedback. Some are legitimate (best-effort cleanup), most are
 lazy escapes that hide failures.
 
-- [ ] EH.1: Catalogue all silent error discards — recursive walk of
+- [x] EH.1: Catalogue all silent error discards — recursive walk of
   `internal/`
   for patterns: `_ = `, `_, _ = `, `//nolint:errcheck`, bare `return` after
   error-producing calls. Group by category:
@@ -675,6 +675,14 @@ lazy escapes that hide failures.
   DoD: every `_ =` in the codebase is categorised and has a
   recommended action
   #priority:high #added:2026-03-14
+  #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+  Done: `.context/audit/eh-silent-errors.md` catalogues all 184 non-test
+  discard sites with category + recommended action. Surfaced 4 high-priority
+  data-loss/crash findings (memory/publish MergePublished, pad/store
+  ReadEntriesWithIDs, hub/replicate Append, memory status nil-deref) plus 11
+  write-handle defer-closes. Real fix workload ≈52 sites (B/A/C/SURFACE/
+  NIL-DEREF); category (d) fmt.Fprint output is an accepted end-state per EH.5
+  DoD. Tests excluded from this pass.
 
 - [ ] EH.2: Address category (b) — file write/read discards. These risk silent
   data loss. Fix: return the error, or at minimum emit to stderr with
