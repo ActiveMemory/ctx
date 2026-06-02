@@ -106,6 +106,9 @@ func Run(c *cobra.Command, hookType, toolName, path string) error {
 
 	writeTrigger.TestingHeader(c, hookType)
 
+	// Acceptable discard: diagnostic echo of an already-valid input
+	// map; marshal cannot realistically fail and an empty echo would
+	// not affect the test run below.
 	inputJSON, _ := json.MarshalIndent(input, "", token.Indent2)
 	writeTrigger.TestInput(c, string(inputJSON))
 

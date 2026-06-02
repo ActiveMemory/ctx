@@ -97,6 +97,16 @@ const (
 	// broken .ctxrc or permissions regression.
 	HubConnectedProbe = "probe hub connection: %v"
 
+	// JournalScanDir is the stderr format for a failed session-
+	// directory scan during journal querying. One unreadable dir
+	// should not silently drop its sessions from the result.
+	JournalScanDir = "scan journal dir %s: %v"
+
+	// DriftReload is the stderr format for a failed context reload
+	// during the drift post-fix re-check. On failure the prior
+	// context is reused, so the re-displayed report may be stale.
+	DriftReload = "reload context for drift re-check: %v"
+
 	// CloseHubClient is the stderr format for a failed hub gRPC
 	// client/connection close. The close runs in a defer after the
 	// command's real work, so the error is not actionable but should
