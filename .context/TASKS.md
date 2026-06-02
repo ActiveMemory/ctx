@@ -684,33 +684,61 @@ lazy escapes that hide failures.
   NIL-DEREF); category (d) fmt.Fprint output is an accepted end-state per EH.5
   DoD. Tests excluded from this pass.
 
-- [ ] EH.2: Address category (b) — file write/read discards. These risk silent
+- [x] EH.2: Address category (b) — file write/read discards. These risk silent
   data loss. Fix: return the error, or at minimum emit to stderr with
   `fmt.Fprintf(os.Stderr, "ctx: ...: %v\n", err)` following the pattern
   established in `internal/log/event.go`.
   DoD: no write/read error is silently discarded
   #priority:high #added:2026-03-14
+  #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+  Done: pad ReadEntriesWithIDs + hub replicate Append (commit b66816cd);
+  marshal-error returns for the vscode/copilot/blocknonpathctx writers,
+  journal ScanDirectory + drift reload via logWarn (41e223f5). The
+  established sink turned out to be `internal/log/warn` (logWarn.Warn),
+  used throughout. Verified each site by reading before editing — two of
+  the catalogue's name-inferred B findings were false positives
+  (MergePublished bool, LoadState value type).
 
-- [ ] EH.3: Address category (a) — file close in defer. Most are `defer func()
+- [x] EH.3: Address category (a) — file close in defer. Most are `defer func()
       { _ = f.Close() }()`. For read-only files, close errors are rare but
   should still surface. For write/append files, close can fail if the
   final flush fails — these are data loss. Fix: `if err := f.Close();
       err != nil { fmt.Fprintf(os.Stderr, "ctx: close %s: %v\n", path, err) }`.
   DoD: all defer-close sites log failures to stderr
   #priority:medium #added:2026-03-14
+  #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+  Done: write/append-handle closes converted to a named-return merge so
+  a failed flush fails the op (6 kb appends, trace appendJSONL, skill
+  copy out, kb note Run — commit 9d07da57); read-handle and gRPC-client
+  closes surfaced via logWarn (commit 06109734). io/security
+  SafeWriteFileAtomic was already correct (meaningful close checked;
+  error-path closes annotated).
 
-- [ ] EH.4: Address category (c) — os.Remove/Rename discards. These are state
+- [x] EH.4: Address category (c) — os.Remove/Rename discards. These are state
   operations (rotation, pruning, temp file cleanup). Silent failure leaves
   stale state. Fix: stderr warning at minimum; for rotation/rename, consider
   returning the error.
   DoD: no Remove/Rename error is silently discarded
   #priority:medium #added:2026-03-14
+  #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+  Done (commit 06a88416): os.Remove/RemoveAll surfaced via logWarn where
+  failure leaves stale state with real consequences — partial skill
+  install, violations file (duplicate alerts), sync lock (blocks sync),
+  hub pid file, trace marker. io/security temp-file cleanup discards are
+  on already-failed paths and annotated as acceptable.
 
-- [ ] EH.5: Validate — `grep -rn '_ =' internal/` returns only category (d)
+- [x] EH.5: Validate — `grep -rn '_ =' internal/` returns only category (d)
   entries (fmt.Fprint to stderr) and entries explicitly annotated as
   acceptable. Run `make lint && make test` to confirm no regressions.
   DoD: grep output is clean or fully annotated; CI green
   #priority:high #added:2026-03-14
+  #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+  Done (commit f7bf7d8f): `grep -rn '_ = ' internal/` (non-test) = 68
+  sites — 47 category-(d) fmt.Fprint (accepted end-state) + 21 explicitly
+  annotated/handled. `:=`-form discards (x, _ := …) are outside this
+  grep's scope. make lint = 0 issues, make test = 0 failures.
+  Whole EH sweep: 7 commits (6ca1198a catalogue → f7bf7d8f), spec
+  specs/error-handling-audit.md.
 
 - [ ] Add AST-based lint test to detect exported functions with no external
   callers #added:2026-03-21-070357
