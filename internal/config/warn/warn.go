@@ -97,6 +97,12 @@ const (
 	// broken .ctxrc or permissions regression.
 	HubConnectedProbe = "probe hub connection: %v"
 
+	// CloseHubClient is the stderr format for a failed hub gRPC
+	// client/connection close. The close runs in a defer after the
+	// command's real work, so the error is not actionable but should
+	// not vanish.
+	CloseHubClient = "close hub client: %v"
+
 	// HubReplicateAppend is the stderr format for a failed
 	// [Store.Append] inside the follower replication stream. The
 	// loop is best-effort and has no return path, so a dropped

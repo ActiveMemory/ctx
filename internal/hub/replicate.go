@@ -83,7 +83,11 @@ func replicateOnce(
 	if dialErr != nil {
 		return
 	}
-	defer func() { _ = conn.Close() }()
+	defer func() {
+		if cerr := conn.Close(); cerr != nil {
+			logWarn.Warn(cfgWarn.Close, masterAddr, cerr)
+		}
+	}()
 
 	_, lastSeq := store.lastSequence()
 	authed := addBearerMD(ctx, clientToken)

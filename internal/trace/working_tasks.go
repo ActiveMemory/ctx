@@ -14,7 +14,9 @@ import (
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
@@ -35,7 +37,11 @@ func inProgressTaskRefs(contextDir string) []string {
 	if err != nil {
 		return nil
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil {
+			logWarn.Warn(cfgWarn.Close, path, cerr)
+		}
+	}()
 
 	var refs []string
 	count := 0
