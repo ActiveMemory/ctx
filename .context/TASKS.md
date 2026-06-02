@@ -299,13 +299,22 @@ Important things that agent (or human) yeeted to the future.
   + static Zensical + LoopScript + Tier-2 recall HTML (metaTable/details)
   migrated to embedded templates behind handles; Tier-3 single-line format
   strings, pure joins, and the RecallListRow meta-format kept as fmt.Sprintf.
-- [ ] P0.8.5: Enable webhook notifications in worktrees. Currently `ctx notify`
-  silently fails because `.context.key` is gitignored and absent in
-  worktrees. For autonomous runs with opaque worktree agents, notifications
-  are the one feature that would genuinely be useful. Possible approaches:
-  resolve the key via `git rev-parse --git-common-dir` to find the main
-  checkout, or copy the key into worktrees at creation time (ctx-worktree
-  skill). #priority:medium #added:2026-02-22
+- [x] P0.8.5: Harden notify resolution (reframed 2026-06-02). The original
+  premise ("`ctx notify` silently fails in worktrees because the key is
+  gitignored and absent") was investigated and largely disproven: with the
+  default global key, notify works in worktrees (verified against a built
+  binary + isolated repo + fake webhook sink). The failure only reproduces
+  with a deprecated project-local key. Real defects to fix: (1) remove the
+  implicit `.context/.ctx.key` resolution tier — the sole worktree-divergence
+  and a documented security antipattern; (2) surface the silent fire-path
+  failure when a CONFIGURED webhook can't be delivered (decrypt/read/POST),
+  while keeping legitimate silences (not-configured, event-not-subscribed).
+  Whether config reaches a worktree is the user's call via `.ctxrc`
+  git-tracking — ctx does not special-case worktrees (it cannot distinguish a
+  worktree from N side-by-side terminals). Approaches A (--git-common-dir key
+  fallback) and B (copy key at worktree creation) rejected; see DECISIONS.
+  Spec: specs/notify-resolution-hardening.md
+  #priority:medium #added:2026-02-22 #reframed:2026-06-02
 - [ ] P0.9.2: Split cli-reference.md (1633 lines) into command group pages:
   cli-overview, cli-init-status, cli-context, cli-recall, cli-tools,
   cli-system —
