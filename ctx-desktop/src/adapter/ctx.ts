@@ -166,6 +166,46 @@ export function ctxCompact(dir: string, archive = false): Promise<string> {
   return invoke<string>("ctx_compact", { dir, archive });
 }
 
+/** `ctx remind list` — raw text of pending reminders. */
+export function ctxRemindList(dir: string): Promise<string> {
+  return invoke<string>("ctx_remind_list", { dir });
+}
+
+/** `ctx remind add <text>`. */
+export function ctxRemindAdd(dir: string, text: string): Promise<string> {
+  return invoke<string>("ctx_remind_add", { dir, text });
+}
+
+/** `ctx remind dismiss <target>` — number or "all". */
+export function ctxRemindDismiss(dir: string, target: string): Promise<string> {
+  return invoke<string>("ctx_remind_dismiss", { dir, target });
+}
+
+/** `ctx pad` — raw text list of scratchpad entries. */
+export function ctxPadList(dir: string): Promise<string> {
+  return invoke<string>("ctx_pad_list", { dir });
+}
+
+/** `ctx pad add <text>`. */
+export function ctxPadAdd(dir: string, text: string): Promise<string> {
+  return invoke<string>("ctx_pad_add", { dir, text });
+}
+
+/** `ctx pad rm <n>`. */
+export function ctxPadRm(dir: string, n: string): Promise<string> {
+  return invoke<string>("ctx_pad_rm", { dir, n });
+}
+
+/** `ctx pad show <n>` — raw text of a single entry. */
+export function ctxPadShow(dir: string, n: string): Promise<string> {
+  return invoke<string>("ctx_pad_show", { dir, n });
+}
+
+/** `ctx connection status` — hub status (rejects when no hub configured). */
+export function ctxConnectionStatus(dir: string): Promise<string> {
+  return invoke<string>("ctx_connection_status", { dir });
+}
+
 /** `ctx task list --json` for the project at `dir`. */
 export async function ctxTasks(dir: string): Promise<Task[]> {
   const out = JSON.parse(await invoke<string>("ctx_task_list", { dir }));

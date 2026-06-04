@@ -281,6 +281,66 @@ pub fn ctx_agent_md(dir: String, budget: u32) -> Result<String, String> {
     run_ctx(&dir, &["agent", "--budget", b.as_str()])
 }
 
+/// `ctx remind list` — raw text list of pending reminders.
+#[tauri::command]
+pub fn ctx_remind_list(dir: String) -> Result<String, String> {
+    run_ctx(&dir, &["remind", "list"])
+}
+
+/// `ctx remind add <text>` — adds a session reminder.
+#[tauri::command]
+pub fn ctx_remind_add(dir: String, text: String) -> Result<String, String> {
+    if text.trim().is_empty() {
+        return Err("reminder text is empty".to_string());
+    }
+    run_ctx(&dir, &["remind", "add", text.as_str()])
+}
+
+/// `ctx remind dismiss <target>` — `target` is a number or "all".
+#[tauri::command]
+pub fn ctx_remind_dismiss(dir: String, target: String) -> Result<String, String> {
+    if target.trim().is_empty() {
+        return Err("dismiss target is empty".to_string());
+    }
+    run_ctx(&dir, &["remind", "dismiss", target.as_str()])
+}
+
+/// `ctx pad` — raw text list of encrypted scratchpad entries
+/// (decrypted for display by the CLI).
+#[tauri::command]
+pub fn ctx_pad_list(dir: String) -> Result<String, String> {
+    run_ctx(&dir, &["pad"])
+}
+
+/// `ctx pad add <text>` — appends a scratchpad entry.
+#[tauri::command]
+pub fn ctx_pad_add(dir: String, text: String) -> Result<String, String> {
+    if text.trim().is_empty() {
+        return Err("entry text is empty".to_string());
+    }
+    run_ctx(&dir, &["pad", "add", text.as_str()])
+}
+
+/// `ctx pad rm <n>` — removes the scratchpad entry numbered `n`.
+#[tauri::command]
+pub fn ctx_pad_rm(dir: String, n: String) -> Result<String, String> {
+    run_ctx(&dir, &["pad", "rm", n.as_str()])
+}
+
+/// `ctx pad show <n>` — raw text of a single scratchpad entry.
+#[tauri::command]
+pub fn ctx_pad_show(dir: String, n: String) -> Result<String, String> {
+    run_ctx(&dir, &["pad", "show", n.as_str()])
+}
+
+/// `ctx connection status` — hub connection status. Errors when the
+/// project has no hub configured; the UI surfaces that as a
+/// "not connected" state.
+#[tauri::command]
+pub fn ctx_connection_status(dir: String) -> Result<String, String> {
+    run_ctx(&dir, &["connection", "status"])
+}
+
 /// Reads a single trimmed git value from the repo at `dir`, or "".
 fn git_field(dir: &str, args: &[&str]) -> String {
     Command::new("git")
