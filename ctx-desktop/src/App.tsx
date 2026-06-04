@@ -6,6 +6,7 @@ import Learnings from "./screens/Learnings";
 import CanonicalDoc from "./screens/CanonicalDoc";
 import ContextPacket from "./screens/ContextPacket";
 import Journal from "./screens/Journal";
+import Drift from "./screens/Drift";
 import Health from "./screens/Health";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
@@ -34,6 +35,7 @@ type View =
   | "constitution"
   | "packet"
   | "journal"
+  | "drift"
   | "health";
 const NAV: { id: View; label: string }[] = [
   { id: "overview", label: "Overview" },
@@ -44,6 +46,7 @@ const NAV: { id: View; label: string }[] = [
   { id: "constitution", label: "Constitution" },
   { id: "packet", label: "Context Packet" },
   { id: "journal", label: "Journal" },
+  { id: "drift", label: "Drift" },
   { id: "health", label: "Health" },
 ];
 
@@ -248,6 +251,7 @@ function App() {
           )}
           {view === "packet" && <ContextPacket dir={dir} />}
           {view === "journal" && <Journal dir={dir} />}
+          {view === "drift" && <Drift dir={dir} />}
           {view === "health" && <Health dir={dir} />}
         </main>
       </div>
