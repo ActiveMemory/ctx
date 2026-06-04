@@ -108,6 +108,15 @@ export async function ctxStatus(dir: string): Promise<CtxStatus> {
   return JSON.parse(await invoke<string>("ctx_status", { dir }));
 }
 
+/**
+ * Raw content of a canonical `.context/<name>` file (allowlisted in
+ * the Rust adapter to CONSTITUTION.md / CONVENTIONS.md). Returns ""
+ * when the file is absent.
+ */
+export function ctxReadDoc(dir: string, name: string): Promise<string> {
+  return invoke<string>("ctx_read_doc", { dir, name });
+}
+
 // Mirrors `ctx doctor --json`.
 export interface DoctorReport {
   results: {

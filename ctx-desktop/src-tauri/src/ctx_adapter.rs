@@ -135,6 +135,36 @@ pub fn ctx_compact(dir: String, archive: bool) -> Result<String, String> {
     }
 }
 
+/// Canonical context files this app may read directly. The
+/// allowlist is the path-traversal guard: `name` must match one of
+/// these exactly, so no caller-supplied path ever reaches the
+/// filesystem.
+const READABLE_DOCS: &[&str] = &["CONSTITUTION.md", "CONVENTIONS.md"];
+
+/// Reads a canonical `.context/<name>.md` file verbatim for a
+/// read-only viewer.
+///
+/// This is the one read that does not funnel through `ctx`: there is
+/// no `ctx` command that returns a single file's full content (the
+/// agent packet is budget-trimmed and omits the constitution), and
+/// these files ARE the source of truth, so reading them directly is
+/// both accurate and safe. `name` is allowlisted (see
+/// [`READABLE_DOCS`]). A missing file returns an empty string so the
+/// screen can show a friendly "not present" state instead of an
+/// error.
+#[tauri::command]
+pub fn ctx_read_doc(dir: String, name: String) -> Result<String, String> {
+    if !READABLE_DOCS.contains(&name.as_str()) {
+        return Err(format!("`{name}` is not a readable context document"));
+    }
+    let path = std::path::Path::new(&dir).join(".context").join(&name);
+    match std::fs::read_to_string(&path) {
+        Ok(content) => Ok(content),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(String::new()),
+        Err(e) => Err(format!("could not read {}: {e}", path.display())),
+    }
+}
+
 /// Returns `ctx agent --format json --budget N` for `dir` — the
 /// structured context packet used by the budget-preview screen.
 #[tauri::command]

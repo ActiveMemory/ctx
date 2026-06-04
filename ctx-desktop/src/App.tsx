@@ -3,6 +3,7 @@ import Overview from "./screens/Overview";
 import Tasks from "./screens/Tasks";
 import Decisions from "./screens/Decisions";
 import Learnings from "./screens/Learnings";
+import CanonicalDoc from "./screens/CanonicalDoc";
 import ContextPacket from "./screens/ContextPacket";
 import Journal from "./screens/Journal";
 import Health from "./screens/Health";
@@ -29,6 +30,8 @@ type View =
   | "tasks"
   | "decisions"
   | "learnings"
+  | "conventions"
+  | "constitution"
   | "packet"
   | "journal"
   | "health";
@@ -37,6 +40,8 @@ const NAV: { id: View; label: string }[] = [
   { id: "tasks", label: "Tasks" },
   { id: "decisions", label: "Decisions" },
   { id: "learnings", label: "Learnings" },
+  { id: "conventions", label: "Conventions" },
+  { id: "constitution", label: "Constitution" },
   { id: "packet", label: "Context Packet" },
   { id: "journal", label: "Journal" },
   { id: "health", label: "Health" },
@@ -231,6 +236,16 @@ function App() {
           {view === "tasks" && <Tasks dir={dir} />}
           {view === "decisions" && <Decisions dir={dir} />}
           {view === "learnings" && <Learnings dir={dir} />}
+          {view === "conventions" && (
+            <CanonicalDoc dir={dir} title="Conventions" file="CONVENTIONS.md" />
+          )}
+          {view === "constitution" && (
+            <CanonicalDoc
+              dir={dir}
+              title="Constitution"
+              file="CONSTITUTION.md"
+            />
+          )}
           {view === "packet" && <ContextPacket dir={dir} />}
           {view === "journal" && <Journal dir={dir} />}
           {view === "health" && <Health dir={dir} />}
