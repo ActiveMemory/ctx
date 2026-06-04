@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import Overview from "./screens/Overview";
 import Search from "./screens/Search";
 import Tasks from "./screens/Tasks";
+import Reminders from "./screens/Reminders";
 import Decisions from "./screens/Decisions";
 import Learnings from "./screens/Learnings";
 import CanonicalDoc from "./screens/CanonicalDoc";
 import ContextPacket from "./screens/ContextPacket";
 import KnowledgeBase from "./screens/KnowledgeBase";
+import Pad from "./screens/Pad";
 import Journal from "./screens/Journal";
 import Drift from "./screens/Drift";
 import Health from "./screens/Health";
+import Hub from "./screens/Hub";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import {
@@ -32,28 +35,34 @@ type View =
   | "overview"
   | "search"
   | "tasks"
+  | "reminders"
   | "decisions"
   | "learnings"
   | "conventions"
   | "constitution"
   | "packet"
   | "kb"
+  | "pad"
   | "journal"
   | "drift"
-  | "health";
+  | "health"
+  | "hub";
 const NAV: { id: View; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "search", label: "Search" },
   { id: "tasks", label: "Tasks" },
+  { id: "reminders", label: "Reminders" },
   { id: "decisions", label: "Decisions" },
   { id: "learnings", label: "Learnings" },
   { id: "conventions", label: "Conventions" },
   { id: "constitution", label: "Constitution" },
   { id: "packet", label: "Context Packet" },
   { id: "kb", label: "Knowledge Base" },
+  { id: "pad", label: "Scratchpad" },
   { id: "journal", label: "Journal" },
   { id: "drift", label: "Drift" },
   { id: "health", label: "Health" },
+  { id: "hub", label: "Hub" },
 ];
 
 function HealthPill({
@@ -244,6 +253,7 @@ function App() {
           {view === "overview" && <Overview dir={dir} />}
           {view === "search" && <Search dir={dir} onOpen={setView} />}
           {view === "tasks" && <Tasks dir={dir} />}
+          {view === "reminders" && <Reminders dir={dir} />}
           {view === "decisions" && <Decisions dir={dir} />}
           {view === "learnings" && <Learnings dir={dir} />}
           {view === "conventions" && (
@@ -258,9 +268,11 @@ function App() {
           )}
           {view === "packet" && <ContextPacket dir={dir} />}
           {view === "kb" && <KnowledgeBase dir={dir} />}
+          {view === "pad" && <Pad dir={dir} />}
           {view === "journal" && <Journal dir={dir} />}
           {view === "drift" && <Drift dir={dir} />}
           {view === "health" && <Health dir={dir} />}
+          {view === "hub" && <Hub dir={dir} />}
         </main>
       </div>
     </div>
