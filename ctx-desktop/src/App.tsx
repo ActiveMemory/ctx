@@ -6,6 +6,7 @@ import Decisions from "./screens/Decisions";
 import Learnings from "./screens/Learnings";
 import CanonicalDoc from "./screens/CanonicalDoc";
 import ContextPacket from "./screens/ContextPacket";
+import KnowledgeBase from "./screens/KnowledgeBase";
 import Journal from "./screens/Journal";
 import Drift from "./screens/Drift";
 import Health from "./screens/Health";
@@ -36,6 +37,7 @@ type View =
   | "conventions"
   | "constitution"
   | "packet"
+  | "kb"
   | "journal"
   | "drift"
   | "health";
@@ -48,6 +50,7 @@ const NAV: { id: View; label: string }[] = [
   { id: "conventions", label: "Conventions" },
   { id: "constitution", label: "Constitution" },
   { id: "packet", label: "Context Packet" },
+  { id: "kb", label: "Knowledge Base" },
   { id: "journal", label: "Journal" },
   { id: "drift", label: "Drift" },
   { id: "health", label: "Health" },
@@ -254,6 +257,7 @@ function App() {
             />
           )}
           {view === "packet" && <ContextPacket dir={dir} />}
+          {view === "kb" && <KnowledgeBase dir={dir} />}
           {view === "journal" && <Journal dir={dir} />}
           {view === "drift" && <Drift dir={dir} />}
           {view === "health" && <Health dir={dir} />}

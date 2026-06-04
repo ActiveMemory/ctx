@@ -165,6 +165,106 @@ pub fn ctx_read_doc(dir: String, name: String) -> Result<String, String> {
     }
 }
 
+/// What the KB browser needs to render its left rail: whether a kb
+/// exists, which top-level docs are present, and the topic slugs.
+#[derive(Serialize)]
+pub struct KbInfo {
+    pub exists: bool,
+    pub docs: Vec<String>,
+    pub topics: Vec<String>,
+}
+
+/// Top-level `.context/kb/*.md` files the browser surfaces, in
+/// display order. Only those that exist are returned.
+const KB_DOCS: &[&str] = &[
+    "index.md",
+    "evidence-index.md",
+    "source-map.md",
+    "source-coverage.md",
+    "grounding-sources.md",
+    "outstanding-questions.md",
+];
+
+/// Recursively collects every directory under `root` that contains
+/// an `index.md`, as a slash-joined slug relative to `root`.
+fn collect_topics(root: &std::path::Path, cur: &std::path::Path, out: &mut Vec<String>) {
+    let entries = match std::fs::read_dir(cur) {
+        Ok(e) => e,
+        Err(_) => return,
+    };
+    let mut has_index = false;
+    let mut subdirs = Vec::new();
+    for entry in entries.flatten() {
+        let p = entry.path();
+        if p.is_dir() {
+            subdirs.push(p);
+        } else if p.file_name().is_some_and(|n| n == "index.md") {
+            has_index = true;
+        }
+    }
+    if has_index && cur != root {
+        if let Ok(rel) = cur.strip_prefix(root) {
+            out.push(rel.to_string_lossy().replace('\\', "/"));
+        }
+    }
+    for sub in subdirs {
+        collect_topics(root, &sub, out);
+    }
+}
+
+/// Inventories the `.context/kb/` of the project at `dir`.
+#[tauri::command]
+pub fn kb_info(dir: String) -> KbInfo {
+    let kb = std::path::Path::new(&dir).join(".context").join("kb");
+    if !kb.is_dir() {
+        return KbInfo {
+            exists: false,
+            docs: vec![],
+            topics: vec![],
+        };
+    }
+    let docs = KB_DOCS
+        .iter()
+        .filter(|f| kb.join(f).is_file())
+        .map(|s| s.to_string())
+        .collect();
+    let mut topics = Vec::new();
+    let topics_root = kb.join("topics");
+    collect_topics(&topics_root, &topics_root, &mut topics);
+    topics.sort();
+    KbInfo {
+        exists: true,
+        docs,
+        topics,
+    }
+}
+
+/// Reads a file under `.context/kb/` by its kb-relative path.
+///
+/// `rel` is validated segment-by-segment: no empty, `.`, `..`, or
+/// backslash segments are allowed, which prevents both absolute
+/// paths and traversal out of the kb. A missing file returns "".
+#[tauri::command]
+pub fn kb_read(dir: String, rel: String) -> Result<String, String> {
+    if rel.is_empty() {
+        return Err("empty kb path".to_string());
+    }
+    for seg in rel.split('/') {
+        if seg.is_empty() || seg == "." || seg == ".." || seg.contains('\\') {
+            return Err(format!("invalid kb path: {rel}"));
+        }
+    }
+    let path = std::path::Path::new(&dir)
+        .join(".context")
+        .join("kb")
+        .join(&rel);
+    match std::fs::read_to_string(&path) {
+        Ok(content) => Ok(content),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(String::new()),
+        Err(e) => Err(format!("could not read {}: {e}", path.display())),
+    }
+}
+
 /// Returns `ctx agent --format json --budget N` for `dir` — the
 /// structured context packet used by the budget-preview screen.
 #[tauri::command]
