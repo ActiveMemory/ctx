@@ -117,6 +117,23 @@ export function ctxReadDoc(dir: string, name: string): Promise<string> {
   return invoke<string>("ctx_read_doc", { dir, name });
 }
 
+// Inventory of a project's `.context/kb/` for the KB browser.
+export interface KbInfo {
+  exists: boolean;
+  docs: string[]; // present top-level kb files, in display order
+  topics: string[]; // slash-joined topic slugs, sorted
+}
+
+/** `.context/kb/` inventory (existence, top-level docs, topics). */
+export function kbInfo(dir: string): Promise<KbInfo> {
+  return invoke<KbInfo>("kb_info", { dir });
+}
+
+/** Raw content of a kb-relative file under `.context/kb/` ("" if absent). */
+export function kbRead(dir: string, rel: string): Promise<string> {
+  return invoke<string>("kb_read", { dir, rel });
+}
+
 // Mirrors `ctx doctor --json`.
 export interface DoctorReport {
   results: {

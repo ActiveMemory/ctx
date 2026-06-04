@@ -22,6 +22,8 @@ pub fn run() {
             ctx_adapter::ctx_agent_json,
             ctx_adapter::ctx_agent_md,
             ctx_adapter::ctx_read_doc,
+            ctx_adapter::kb_info,
+            ctx_adapter::kb_read,
             ctx_adapter::ctx_journal,
             ctx_adapter::ctx_drift,
             ctx_adapter::ctx_compact,
