@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Overview from "./screens/Overview";
+import Search from "./screens/Search";
 import Tasks from "./screens/Tasks";
 import Decisions from "./screens/Decisions";
 import Learnings from "./screens/Learnings";
@@ -28,6 +29,7 @@ const DEFAULT_DIR = "/Users/hamzaerbay/Code/ctx";
 
 type View =
   | "overview"
+  | "search"
   | "tasks"
   | "decisions"
   | "learnings"
@@ -39,6 +41,7 @@ type View =
   | "health";
 const NAV: { id: View; label: string }[] = [
   { id: "overview", label: "Overview" },
+  { id: "search", label: "Search" },
   { id: "tasks", label: "Tasks" },
   { id: "decisions", label: "Decisions" },
   { id: "learnings", label: "Learnings" },
@@ -236,6 +239,7 @@ function App() {
 
         <main className="min-h-0 flex-1 overflow-auto">
           {view === "overview" && <Overview dir={dir} />}
+          {view === "search" && <Search dir={dir} onOpen={setView} />}
           {view === "tasks" && <Tasks dir={dir} />}
           {view === "decisions" && <Decisions dir={dir} />}
           {view === "learnings" && <Learnings dir={dir} />}
