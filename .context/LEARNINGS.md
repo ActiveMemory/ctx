@@ -17,6 +17,8 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-06-07 | Pin an on-disk contract before splitting work across parallel agents |
+| 2026-06-07 | site/ is tracked build output — rebuild and bundle it with doc commits |
 | 2026-06-07 | ctx-dream is headless-first; invoking /ctx-dream interactively is debugging, not the UX |
 | 2026-06-07 | ctx-dream design principles (consolidated) |
 | 2026-06-07 | internal/audit & compliance gates for new code (consolidated) |
@@ -100,6 +102,26 @@ DO NOT UPDATE FOR:
 | 2026-04-26 | ctx system help can list project-local hooks not in the Go binary |
 | 2026-04-25 | Confident code comments can pull an LLM away from first-principles knowledge |
 <!-- INDEX:END -->
+
+---
+
+## [2026-06-07-162840] Pin an on-disk contract before splitting work across parallel agents
+
+**Context**: The ctx-dream skill (proposal writer) and the ctx dream CLI (proposal reader) were built by parallel tracks; each independently invented the proposals layout — one per-file proposals/<id>.json, the other a single proposals.json array — requiring reconciliation at integration.
+
+**Lesson**: When parallel agents share a serialized artifact (a file path + schema), the exact on-disk shape must be fixed in BOTH prompts up front. 'Each track invents it' guarantees a mismatch that only surfaces at integration.
+
+**Application**: Before fanning out producer/consumer work to parallel agents, write the precise file path + JSON schema into both agents' specs as a fixed contract, and reconcile/verify it first thing at integration.
+
+---
+
+## [2026-06-07-162840] site/ is tracked build output — rebuild and bundle it with doc commits
+
+**Context**: A docs change (docs/cli/dream.md, etc.) produced a surprise 189-file site/ drift mid-session; site/ is tracked (zensical build via 'make site'), not gitignored.
+
+**Lesson**: Any change under docs/ requires regenerating site/ with 'make site' and committing the rebuilt site/ in the SAME commit (cf. f0f100a0, which bundled its site rebuild). Otherwise the built output silently drifts and shows up as a large untracked/modified set later.
+
+**Application**: After editing anything under docs/, run 'make site' and 'git add site/' and include it in the doc commit. Don't treat site/ as ephemeral — it's versioned.
 
 ---
 
