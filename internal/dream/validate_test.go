@@ -54,6 +54,26 @@ func TestProposalValid(t *testing.T) {
 				Action: cfgDream.ActionMerge, Confidence: "certain",
 			},
 		},
+		{
+			name: "missing targets",
+			p: dream.Proposal{
+				ID: "p5", Targets: nil,
+				Status:     cfgDream.StatusMeritorious,
+				Action:     cfgDream.ActionKeep,
+				Evidence:   "spec",
+				Confidence: cfgDream.ConfidenceHigh,
+			},
+		},
+		{
+			name: "missing evidence (stripped provenance)",
+			p: dream.Proposal{
+				ID: "p6", Targets: []string{"ideas/a.md"},
+				Status:     cfgDream.StatusMeritorious,
+				Action:     cfgDream.ActionKeep,
+				Evidence:   "",
+				Confidence: cfgDream.ConfidenceHigh,
+			},
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

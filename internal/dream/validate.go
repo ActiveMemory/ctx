@@ -49,17 +49,21 @@ func DecisionKnown(d cfgDream.Decision) bool {
 	return false
 }
 
-// ProposalValid validates that a proposal's Status, Action, and
-// Confidence are all recognized enum values. It is the schema gate the
-// review and ledger build on: an unrecognized field is rejected before
-// the proposal is surfaced or applied.
+// ProposalValid validates that a proposal carries known enum values AND
+// the provenance a gated proposal requires: a non-empty target and
+// non-empty evidence. It is the schema gate the review and ledger build
+// on — an unrecognized field or stripped provenance is rejected before
+// the proposal is surfaced or applied. Rejecting evidence-less proposals
+// is the spec's "no evidence is not surfaced" rule and the front line
+// against corrupted artifacts whose citations have been lost.
 //
 // Parameters:
 //   - p: the proposal to validate
 //
 // Returns:
-//   - error: nil when every field is a known value; otherwise an
-//     err/dream.InvalidProposal naming the first offending field
+//   - error: nil when every field is a known value and provenance is
+//     present; otherwise an err/dream.InvalidProposal naming the first
+//     offending field
 func ProposalValid(p Proposal) error {
 	if !statusKnown(p.Status) {
 		return errDream.InvalidProposal(p.ID, fmt.Sprintf(
@@ -77,6 +81,16 @@ func ProposalValid(p Proposal) error {
 		return errDream.InvalidProposal(p.ID, fmt.Sprintf(
 			cfgDream.ReasonUnknownValue,
 			cfgDream.FieldConfidence, p.Confidence,
+		))
+	}
+	if len(p.Targets) == 0 {
+		return errDream.InvalidProposal(p.ID, fmt.Sprintf(
+			cfgDream.ReasonMissing, cfgDream.FieldTargets,
+		))
+	}
+	if p.Evidence == "" {
+		return errDream.InvalidProposal(p.ID, fmt.Sprintf(
+			cfgDream.ReasonMissing, cfgDream.FieldEvidence,
 		))
 	}
 	return nil

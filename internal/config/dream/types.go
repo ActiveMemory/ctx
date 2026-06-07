@@ -118,12 +118,21 @@ const (
 	// FieldConfidence labels the Confidence field in a validation
 	// reason.
 	FieldConfidence = "confidence"
+	// FieldEvidence labels the Evidence field in a validation reason.
+	FieldEvidence = "evidence"
+	// FieldTargets labels the Targets field in a validation reason.
+	FieldTargets = "targets"
 )
 
 // ReasonUnknownValue is the format for an invalid-proposal reason:
 // "<field> has unknown value %q". The field label and the offending
 // value are filled by the validator.
 const ReasonUnknownValue = "%s has unknown value %q"
+
+// ReasonMissing is the format for an invalid-proposal reason when a
+// required, provenance-bearing field is absent: "<field> is required".
+// The field label is filled by the validator.
+const ReasonMissing = "%s is required"
 
 // JSONIndent is the indent unit used when encoding the state file as
 // human-readable JSON (the notebook is meant to be inspectable).

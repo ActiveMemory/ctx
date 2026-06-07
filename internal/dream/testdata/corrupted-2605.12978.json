@@ -1,0 +1,38 @@
+[
+  {
+    "id": "clean-1",
+    "targets": ["ideas/raft-lite.md"],
+    "status": "meritorious",
+    "action": "keep",
+    "evidence": "internal/hub/fsm.go:leaderFSM (still live, not implemented)",
+    "confidence": "high",
+    "rationale": "the one well-formed, provenance-bearing proposal"
+  },
+  {
+    "id": "corrupt-status",
+    "targets": ["ideas/x.md"],
+    "status": "hallucinated",
+    "action": "keep",
+    "evidence": "n/a",
+    "confidence": "high",
+    "rationale": "schema corrupted by a faulty update — unknown status enum"
+  },
+  {
+    "id": "stripped-evidence",
+    "targets": ["ideas/y.md"],
+    "status": "implemented",
+    "action": "archive",
+    "evidence": "",
+    "confidence": "high",
+    "rationale": "provenance lost — would archive a live idea on no evidence"
+  },
+  {
+    "id": "dropped-target",
+    "targets": [],
+    "status": "duplicate",
+    "action": "merge",
+    "evidence": "ideas/z.md",
+    "confidence": "med",
+    "rationale": "target list dropped by corruption — merge into nothing"
+  }
+]
