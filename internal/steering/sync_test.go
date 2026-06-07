@@ -52,6 +52,56 @@ priority: 50
 Manual body.
 `
 
+func TestSyncableTools(t *testing.T) {
+	got := SyncableTools()
+	want := map[string]bool{"cursor": true, "cline": true, "kiro": true}
+	if len(got) != len(want) {
+		t.Fatalf("SyncableTools() = %v; want 3 tools", got)
+	}
+	for _, tool := range got {
+		if !want[tool] {
+			t.Errorf("unexpected tool %q in SyncableTools()", tool)
+		}
+	}
+	// Mutating the returned slice must not affect internal state.
+	got[0] = "mutated"
+	if SyncableTools()[0] == "mutated" {
+		t.Error("SyncableTools() leaked its internal slice")
+	}
+}
+
+func TestSynced(t *testing.T) {
+	root := t.TempDir()
+	steeringDir := filepath.Join(root, ".context", "steering")
+	writeSteering(t, steeringDir, "api-rules", steeringAlways)
+
+	// Before any sync, no syncable tool is "in play".
+	for _, tool := range SyncableTools() {
+		if Synced(steeringDir, root, tool) {
+			t.Errorf("Synced(%q) = true before any sync; want false", tool)
+		}
+	}
+
+	// Non-syncable tools are never in play.
+	if Synced(steeringDir, root, "claude") {
+		t.Error("Synced(claude) = true; claude is not syncable")
+	}
+
+	// Syncing only cursor puts cursor — and only cursor — in play.
+	if _, err := SyncTool(steeringDir, root, "cursor"); err != nil {
+		t.Fatalf("SyncTool cursor: %v", err)
+	}
+	if !Synced(steeringDir, root, "cursor") {
+		t.Error("Synced(cursor) = false after syncing cursor; want true")
+	}
+	if Synced(steeringDir, root, "cline") {
+		t.Error("Synced(cline) = true without syncing cline; want false")
+	}
+	if Synced(steeringDir, root, "kiro") {
+		t.Error("Synced(kiro) = true without syncing kiro; want false")
+	}
+}
+
 func TestSyncTool_CursorFormat(t *testing.T) {
 	root := t.TempDir()
 	steeringDir := filepath.Join(root, ".context", "steering")

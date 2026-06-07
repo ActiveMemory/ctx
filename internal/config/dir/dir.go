@@ -14,6 +14,11 @@ const (
 	Claude = ".claude"
 	// Context is the default context directory name.
 	Context = ".context"
+	// Done is the archive subdirectory for triaged ideas (ideas/done/).
+	Done = "done"
+	// Dreams is the project-root notebook the dream writes about ideas/
+	// (gitignored: derived summaries, per-source state, ledger, backups).
+	Dreams = "dreams"
 	// Hooks is the subdirectory for lifecycle hook scripts within .context/.
 	Hooks = "hooks"
 	// HooksMessages is the subdirectory path for hook message

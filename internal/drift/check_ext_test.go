@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
+	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/steering"
 	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
@@ -260,6 +261,46 @@ func TestCheckSyncStaleness(t *testing.T) {
 			},
 			// All 3 syncable tools (cursor, cline, kiro) will report stale.
 			wantWarnings: 3,
+			wantPassed:   false,
+		},
+		{
+			// The headline fix: steering source exists but was never
+			// synced to any tool (e.g. a Claude-only project). With no
+			// native outputs on disk, no tool is "in play", so the
+			// check stays silent instead of nagging for cursor/cline/
+			// kiro outputs the project never wanted.
+			name: "unsynced tools are not checked (presence-based)",
+			setup: func(t *testing.T, _, steeringDir string) {
+				t.Helper()
+				mustMkdir(t, steeringDir)
+				mustWriteFile(t, filepath.Join(steeringDir, "api.md"),
+					"---\nname: api\ndescription: API rules\ninclusion: always\npriority: 50\n---\nAPI body\n", 0o644)
+			},
+			wantWarnings: 0,
+			wantPassed:   true,
+		},
+		{
+			// Only tools with an existing output are checked. Cursor is
+			// synced (present) then staled; cline/kiro were never synced
+			// (absent) so they are not reported — exactly one warning.
+			name: "only synced tools are checked",
+			setup: func(t *testing.T, tmpDir, steeringDir string) {
+				t.Helper()
+				mustMkdir(t, steeringDir)
+				mustWriteFile(t, filepath.Join(steeringDir, "api.md"),
+					"---\nname: api\ndescription: API rules\ninclusion: always\npriority: 50\n---\nAPI body\n", 0o644)
+
+				if _, err := steering.SyncTool(
+					steeringDir, tmpDir, cfgHook.ToolCursor,
+				); err != nil {
+					t.Fatal(err)
+				}
+
+				// Stale the source — only cursor (present) reports.
+				mustWriteFile(t, filepath.Join(steeringDir, "api.md"),
+					"---\nname: api\ndescription: Updated API rules\ninclusion: always\npriority: 50\n---\nUpdated body\n", 0o644)
+			},
+			wantWarnings: 1,
 			wantPassed:   false,
 		},
 	}

@@ -6,7 +6,7 @@
 clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall \
-sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills gemini-search \
+sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills sync-steering check-steering gemini-search \
 gitnexus-version gitnexus-update install-ctxctl reinstall-ctxctl
 
 # Default binary name and output
@@ -168,6 +168,8 @@ audit:
 	@$(MAKE) --no-print-directory check-why
 	@echo "==> Checking Copilot skills freshness..."
 	@$(MAKE) --no-print-directory check-copilot-skills
+	@echo "==> Checking steering outputs freshness..."
+	@$(MAKE) --no-print-directory check-steering
 	@echo "==> Running tests..."
 	@CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./...
 	@echo ""
@@ -329,6 +331,20 @@ check-version-sync:
 ## sync-copilot-skills: Sync Copilot CLI skills from canonical ctx skills
 sync-copilot-skills:
 	@./hack/sync-copilot-skills.sh
+
+## sync-steering: Regenerate tool-native steering outputs from .context/steering
+sync-steering:
+	@CGO_ENABLED=0 go run ./cmd/ctx steering sync --all
+
+## check-steering: Verify tracked steering outputs match .context/steering source
+check-steering:
+	@CGO_ENABLED=0 go run ./cmd/ctx steering sync --all > /dev/null
+	@if ! git diff --quiet -- .cursor .clinerules .kiro/steering; then \
+		echo "FAIL: steering outputs are stale — run 'make sync-steering' and commit"; \
+		git --no-pager diff --stat -- .cursor .clinerules .kiro/steering; \
+		exit 1; \
+	fi
+	@echo "Steering outputs are in sync."
 
 ## check-copilot-skills: Verify Copilot CLI skills match ctx source skills
 check-copilot-skills:

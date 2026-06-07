@@ -7,6 +7,7 @@
 package git
 
 import (
+	"errors"
 	"os/exec"
 	"strings"
 	"time"
@@ -30,6 +31,42 @@ func Run(args ...string) ([]byte, error) {
 	}
 	//nolint:gosec // G204: args are validated by callers
 	return exec.Command(cfgGit.Binary, args...).Output()
+}
+
+// CheckIgnore reports whether path is ignored by git, running
+// `git check-ignore -q -- <path>` from within dir. git check-ignore
+// signals its answer through the exit code: 0 means the path is
+// ignored, 1 means it is not, and 128+ means a real failure. This
+// helper maps exit 0/1 to a clean bool and surfaces only genuine
+// failures (git missing, not a repo) as errors.
+//
+// Parameters:
+//   - dir: directory to run the check from (the repo working tree)
+//   - path: path to test for ignore status (absolute or relative)
+//
+// Returns:
+//   - bool: true when git reports the path as ignored
+//   - error: non-nil only on a real exec failure (not on exit 1)
+func CheckIgnore(dir, path string) (bool, error) {
+	if _, lookErr := exec.LookPath(cfgGit.Binary); lookErr != nil {
+		return false, errGit.NotFound()
+	}
+	//nolint:gosec // G204: binary is fixed; dir/path validated by callers
+	cmd := exec.Command(
+		cfgGit.Binary, cfgGit.FlagChangeDir, dir,
+		cfgGit.CheckIgnore, cfgGit.FlagQuiet,
+		cfgGit.FlagPathSep, path,
+	)
+	runErr := cmd.Run()
+	if runErr == nil {
+		return true, nil
+	}
+	if exitErr, ok := errors.AsType[*exec.ExitError](
+		runErr,
+	); ok && exitErr.ExitCode() == cfgGit.CheckIgnoreNotIgnored {
+		return false, nil
+	}
+	return false, runErr
 }
 
 // Root returns the repository root directory for the current

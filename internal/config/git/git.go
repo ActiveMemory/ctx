@@ -15,13 +15,19 @@ const DotDir = ".git"
 
 // Subcommand names passed as the first argument to git.
 const (
-	Branch   = "branch"
-	Diff     = "diff"
-	DiffTree = "diff-tree"
-	Log      = "log"
-	Remote   = "remote"
-	RevParse = "rev-parse"
+	Branch      = "branch"
+	CheckIgnore = "check-ignore"
+	Diff        = "diff"
+	DiffTree    = "diff-tree"
+	Log         = "log"
+	Remote      = "remote"
+	RevParse    = "rev-parse"
 )
+
+// CheckIgnoreNotIgnored is git check-ignore's exit code meaning the
+// path is not ignored (a normal answer, not an error). Exit 128 and
+// above indicate a real failure.
+const CheckIgnoreNotIgnored = 1
 
 // Hook names used in .git/hooks/.
 const (
@@ -41,6 +47,10 @@ const (
 const (
 	FlagShowCurrent = "--show-current"
 )
+
+// FlagQuiet suppresses output (e.g. git check-ignore -q reports its
+// answer via exit code only).
+const FlagQuiet = "-q"
 
 // Common flags and format strings for git commands.
 const (

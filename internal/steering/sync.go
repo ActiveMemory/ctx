@@ -7,11 +7,13 @@
 package steering
 
 import (
+	"slices"
 	"strings"
 
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errSteering "github.com/ActiveMemory/ctx/internal/err/steering"
+	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 )
 
 // syncableTools lists the tool identifiers that support
@@ -21,6 +23,16 @@ var syncableTools = []string{
 	cfgHook.ToolCursor,
 	cfgHook.ToolCline,
 	cfgHook.ToolKiro,
+}
+
+// SyncableTools returns the tool identifiers that support
+// native-format steering sync (cursor, cline, kiro). Claude and
+// Codex consume steering via ctx agent directly and are excluded.
+//
+// Returns:
+//   - []string: a copy of the syncable tool identifiers
+func SyncableTools() []string {
+	return slices.Clone(syncableTools)
 }
 
 // SyncTool writes steering files to the tool-native format directory.
@@ -170,4 +182,44 @@ func StaleFiles(steeringDir, projectRoot, tool string) []string {
 		}
 	}
 	return stale
+}
+
+// Synced reports whether the given tool has at least one
+// native-format steering output present on disk. A tool is "in
+// play" for drift only once it has been synced (its output
+// exists); this lets sync-staleness checks ignore tools a project
+// never targets. Tombstoned and tool-excluded steering files do
+// not count.
+//
+// Parameters:
+//   - steeringDir: directory containing steering .md files.
+//   - projectRoot: project root for output path resolution.
+//   - tool: target tool identifier to test for presence.
+//
+// Returns:
+//   - bool: true when at least one expected native output exists.
+func Synced(steeringDir, projectRoot, tool string) bool {
+	if !syncableTool(tool) {
+		return false
+	}
+
+	files, err := LoadAll(steeringDir)
+	if err != nil {
+		return false
+	}
+
+	for _, sf := range files {
+		if !matchTool(sf, tool) {
+			continue
+		}
+		if HasTombstone(sf.Body) {
+			continue
+		}
+		if _, statErr := ctxIo.SafeStat(
+			nativePath(projectRoot, tool, sf.Name),
+		); statErr == nil {
+			return true
+		}
+	}
+	return false
 }
