@@ -27,9 +27,10 @@ import {
 const DIR_KEY = "ctx.dir";
 const WORKSPACE_KEY = "ctx.workspace";
 
-// Fallback project = the ctx repo itself, so the app shows real
-// data on first launch before a workspace is chosen.
-const DEFAULT_DIR = "/Users/hamzaerbay/Code/ctx";
+// No baked-in project: until the user picks a workspace (persisted in
+// localStorage), `dir` is empty and the main area shows a chooser.
+// A hardcoded path only ever pointed at one machine's checkout.
+const DEFAULT_DIR = "";
 
 type View =
   | "overview"
@@ -152,6 +153,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!dir) {
+      setHealth(null);
+      return;
+    }
     ctxDoctor(dir)
       .then(setHealth)
       .catch(() => setHealth(null));
@@ -159,6 +164,7 @@ function App() {
 
   // Watch the active project's .context/ for external writes.
   useEffect(() => {
+    if (!dir) return;
     void invoke("watch_context", { dir }).catch(() => {});
   }, [dir]);
 
@@ -250,29 +256,54 @@ function App() {
         </header>
 
         <main className="min-h-0 flex-1 overflow-auto">
-          {view === "overview" && <Overview dir={dir} />}
-          {view === "search" && <Search dir={dir} onOpen={setView} />}
-          {view === "tasks" && <Tasks dir={dir} />}
-          {view === "reminders" && <Reminders dir={dir} />}
-          {view === "decisions" && <Decisions dir={dir} />}
-          {view === "learnings" && <Learnings dir={dir} />}
-          {view === "conventions" && (
-            <CanonicalDoc dir={dir} title="Conventions" file="CONVENTIONS.md" />
+          {!dir && (
+            <div className="mx-auto max-w-md px-6 py-20 text-center">
+              <div className="text-lg font-semibold text-ink">
+                No project selected
+              </div>
+              <p className="mt-2 text-sm text-muted">
+                Choose a workspace folder and ctx Desktop will scan it for
+                projects (any directory with a <code>.context/</code>).
+              </p>
+              <button
+                onClick={() => void pickWorkspace()}
+                className="mt-5 inline-flex h-9 items-center rounded-md bg-accent px-4 text-sm font-medium text-bg"
+              >
+                Choose workspace…
+              </button>
+            </div>
           )}
-          {view === "constitution" && (
-            <CanonicalDoc
-              dir={dir}
-              title="Constitution"
-              file="CONSTITUTION.md"
-            />
+          {dir && (
+            <>
+              {view === "overview" && <Overview dir={dir} />}
+              {view === "search" && <Search dir={dir} onOpen={setView} />}
+              {view === "tasks" && <Tasks dir={dir} />}
+              {view === "reminders" && <Reminders dir={dir} />}
+              {view === "decisions" && <Decisions dir={dir} />}
+              {view === "learnings" && <Learnings dir={dir} />}
+              {view === "conventions" && (
+                <CanonicalDoc
+                  dir={dir}
+                  title="Conventions"
+                  file="CONVENTIONS.md"
+                />
+              )}
+              {view === "constitution" && (
+                <CanonicalDoc
+                  dir={dir}
+                  title="Constitution"
+                  file="CONSTITUTION.md"
+                />
+              )}
+              {view === "packet" && <ContextPacket dir={dir} />}
+              {view === "kb" && <KnowledgeBase dir={dir} />}
+              {view === "pad" && <Pad dir={dir} />}
+              {view === "journal" && <Journal dir={dir} />}
+              {view === "drift" && <Drift dir={dir} />}
+              {view === "health" && <Health dir={dir} />}
+              {view === "hub" && <Hub dir={dir} />}
+            </>
           )}
-          {view === "packet" && <ContextPacket dir={dir} />}
-          {view === "kb" && <KnowledgeBase dir={dir} />}
-          {view === "pad" && <Pad dir={dir} />}
-          {view === "journal" && <Journal dir={dir} />}
-          {view === "drift" && <Drift dir={dir} />}
-          {view === "health" && <Health dir={dir} />}
-          {view === "hub" && <Hub dir={dir} />}
         </main>
       </div>
     </div>

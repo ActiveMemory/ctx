@@ -18,7 +18,9 @@ export default function Learnings({ dir }: { dir: string }) {
   const [learnings, setLearnings] = useState<Learning[]>([]);
   const [query, setQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  // Keyed by learning timestamp (stable) — NOT array index, which
+  // would point at the wrong row once the list is filtered/reordered.
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   const [formOpen, setFormOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -75,11 +77,11 @@ export default function Learnings({ dir }: { dir: string }) {
     }
   }
 
-  function toggle(i: number) {
+  function toggle(id: string) {
     setExpanded((prev) => {
       const next = new Set(prev);
-      if (next.has(i)) next.delete(i);
-      else next.add(i);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   }
@@ -154,10 +156,13 @@ export default function Learnings({ dir }: { dir: string }) {
             No learnings to show.
           </div>
         )}
-        {filtered.map((l, i) => (
-          <div key={i} className="rounded-lg border border-border bg-panel">
+        {filtered.map((l) => (
+          <div
+            key={l.timestamp}
+            className="rounded-lg border border-border bg-panel"
+          >
             <button
-              onClick={() => toggle(i)}
+              onClick={() => toggle(l.timestamp)}
               className="flex w-full items-center gap-3 px-4 py-3 text-left"
             >
               <div className="min-w-0 flex-1">
@@ -173,10 +178,10 @@ export default function Learnings({ dir }: { dir: string }) {
                 </div>
               </div>
               <span className="shrink-0 text-muted">
-                {expanded.has(i) ? "−" : "+"}
+                {expanded.has(l.timestamp) ? "−" : "+"}
               </span>
             </button>
-            {expanded.has(i) && (
+            {expanded.has(l.timestamp) && (
               <div className="border-t border-border px-4 py-3">
                 <Field label="Context" value={l.context} />
                 <Field label="Lesson" value={l.lesson} />
