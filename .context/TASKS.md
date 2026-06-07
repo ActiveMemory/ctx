@@ -2376,6 +2376,10 @@ DR-kb session a5736210 closeouts under
 
 ### ctx-dream v1
 
+- [ ] Close the end-user dream UX loop: invoking /ctx-dream interactively is a debug-crawl, not a dream. (1) Reconsider de-listing /ctx-dream as a user-invocable slash-command — it's the headless executor's instruction set, not a user command; the user surfaces are 'ctx dream' (on-demand) + cron + /ctx-serendipity. (2) Make 'ctx dream' a clean run->digest experience for the terminal user. (3) Wire the 'ctx remind' nag ('a serendipity round is waiting') so dream->nag->review closes without the user watching a pass. #priority:high #session:2263caef #branch:main #commit:a1624af5 #added:2026-06-07-142015
+
+- [ ] Replace skills/ctx-dream/guard.sh with a 'ctx system dream-guard' subcommand (convention: hook scripts are ctx system subcommands — cf. block-non-path-ctx). It reads the PreToolUse tool-call JSON on stdin and applies internal/dream.WriteScope + Leak as the SINGLE source of truth (eliminating the current Go-vs-shell guard duplication/drift), emitting the hook block decision. Then rewire the PreToolUse settings in docs/recipes/run-the-dream.md and docs/reference/dream-executor-contract.md to call 'ctx system dream-guard', and delete guard.sh. #priority:medium #session:2263caef #branch:main #commit:a1624af5 #added:2026-06-07-140456
+
 - [x] Docs: executor-contract reference for non-Claude-Code harnesses — bounded pass, structural guard enforcement, fail-loud, proposals-only-into-dreams/ #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
 
 - [x] Docs: Claude Code dream enablement guide — opt-in (.ctxrc dream.enabled), cron entry, guard hook wiring, ctx remind cadence #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
