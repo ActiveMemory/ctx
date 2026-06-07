@@ -2376,18 +2376,18 @@ DR-kb session a5736210 closeouts under
 
 ### ctx-dream v1
 
-- [ ] Docs: executor-contract reference for non-Claude-Code harnesses — bounded pass, structural guard enforcement, fail-loud, proposals-only-into-dreams/ #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
+- [x] Docs: executor-contract reference for non-Claude-Code harnesses — bounded pass, structural guard enforcement, fail-loud, proposals-only-into-dreams/ #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
 
-- [ ] Docs: Claude Code dream enablement guide — opt-in (.ctxrc dream.enabled), cron entry, guard hook wiring, ctx remind cadence #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
+- [x] Docs: Claude Code dream enablement guide — opt-in (.ctxrc dream.enabled), cron entry, guard hook wiring, ctx remind cadence #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
 
 - [ ] Tests: git check-ignore guard refuses tracked path; ledger dedup-against-seen; crash-resume; 2605.12978 corrupted-artifact regression fixture #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
 
-- [ ] Build ctx dream review CLI (accept/reject/amend) plus serendipity skill; mechanical applies instantly, generative drops to agent; backup-before-mutate; ctx remind cadence #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Build ctx dream review CLI (accept/reject/amend) plus serendipity skill; mechanical applies instantly, generative drops to agent; backup-before-mutate; ctx remind cadence #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
 
-- [ ] Implement disciplined ideas triage: classify, ground against code and specs, semantic dedup; emit atomic provenanced proposals #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Implement disciplined ideas triage: classify, ground against code and specs, semantic dedup; emit atomic provenanced proposals #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
 
-- [ ] Build proposal/ledger/state machinery: per-source state record, append-only ledger recording rejections, two-clocks read model #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Build proposal/ledger/state machinery: per-source state record, append-only ledger recording rejections, two-clocks read model #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
 
-- [ ] Build the three structural guards: write-scope, sources-as-data, dont-leak (git check-ignore refuses tracked paths) #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Build the three structural guards: write-scope, sources-as-data, dont-leak (git check-ignore refuses tracked paths) #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
 
-- [ ] Settle executor: cron claude -p bounded scheduled pass; safety invariants structural not prompt-level #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Settle executor: cron claude -p bounded scheduled pass; safety invariants structural not prompt-level #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
