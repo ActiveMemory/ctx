@@ -105,9 +105,22 @@ Trigger phrases: "serendipity round", "review my dreams", "walk the garden", "wh
 |------|--------|
 | `skills/ctx-dream/` (tracked) | The dream skill — adapt from the gitignored draft at `ideas/ctx-dreams/skill/` (`SKILL.md`, `dream.sh`, `should-dream.sh`, `guard.sh`, `grep_claims.sh`) |
 | `.gitignore` | Add `dreams/` (root-level dream notebook must be hidden) |
-| CLI command(s) for `ctx dream [review|accept|reject|amend]` | TBD — exact Go package/paths (likely `cmd/ctx/` + `internal/dream/`) |
-| Guard hook (`git check-ignore` don't-leak + write-scope) | Adapt `guard.sh`; wire as PreToolUse in the dream's settings |
+| `internal/cli/dream/` | Cobra: `ctx dream` root + `review`/`accept`/`reject`/`amend` subcommands |
+| `internal/dream/` | Engine: delta selection, proposal generation, state/ledger, the three guards as callable logic, disposition appliers |
+| `internal/config/dream/`, `internal/write/dream/`, `internal/err/dream/` | Constants, output, errors (per convention) |
+| Guard logic (`git check-ignore` don't-leak + write-scope + sources-as-data) | In `internal/dream/`; reference executor wires it as a PreToolUse hook (adapt `guard.sh`); other executors call the same logic |
 | State/ledger handling (`dreams/state.json`, `dreams/ledger.md`) | New |
+| `internal/rc` | `dream:` `.ctxrc` section (enabled/mode/max/cadence/quiet_minutes/model/budget) |
+
+### Documentation
+
+Dream is **opt-in (not enabled by default)**, so it ships with two
+user-facing docs:
+
+| Doc | Audience | Content |
+|-----|----------|---------|
+| Enable guide (e.g. `docs/.../dream-setup.md`) | Claude Code users | How to turn dream on: `.ctxrc` `dream.enabled`, the cron entry, the guard hook wiring, the `ctx remind` cadence. |
+| Executor-contract reference | Other-harness implementers | The contract from "Executor contract": bounded pass, structural guard enforcement, fail-loud, proposals-only-into-`dreams/`. So a non-Claude-Code harness can run the dream correctly. |
 
 ### Key Functions
 
@@ -142,7 +155,7 @@ Per-source record in gitignored `dreams/` (`state.json` or per-file): `path`, co
 - **`.gitignore`** must include `dreams/` (hard requirement; the don't-leak guard double-checks at write time).
 - **Cron** entry runs `ctx dream` nightly (example: `30 2 * * *`); configurable cadence.
 - **Quiet-window gate** *(proposed; from the Hermes sibling)*: `quiet_minutes` (default ~60) — `should-dream` defers the pass if the user was active within the window, complementing the existing dirty-tree / empty-delta defers.
-- **`.ctxrc` keys** *(proposed; finalize in impl)*: default mode, `max` files/pass, budget, summary model, cron cadence, `quiet_minutes`, `ctx remind` wording.
+- **Opt-in:** dream is **not enabled by default**. A `dream:` `.ctxrc` section gates it — `enabled` (default `false`), `mode` (`discipline`), `max` (50), `cadence` (cron), `quiet_minutes` (60), `model` (null = session default), `budget`. Nothing runs until the user sets `enabled: true` and installs the cron entry (see Documentation → Enable guide).
 
 ## Testing
 
@@ -157,6 +170,7 @@ Per-source record in gitignored `dreams/` (`state.json` or per-file): `path`, co
 - **No creative/garden mode behavior** — the `--mode` flag exists, but only `discipline` is built; `creative` is sketched, post-v1.
 - **No v2 pipeline** — journals/harness/kb consolidation, the enriched-journal contract, canonical supersession with stable IDs are out of scope.
 - **No web UI** — the CLI is the UI.
+- **Not enabled by default** — dream is strictly opt-in (`dream.enabled: false` until the user turns it on); ctx never starts gardening unbidden.
 
 ## v2 (sketched, not contracted)
 
@@ -236,11 +250,47 @@ no-memory baseline) that the human serendipity gate exists to prevent.
 diary, quiet-hours gate); never adopt the autonomous-promotion or
 statistics-without-grounding parts.
 
-## Open Questions
+## Executor contract
 
-- **Executor:** cron `claude -p` (leaning) vs raw Anthropic-API scheduled loop. Whichever — the three safety invariants must be **structural in the executor, not prompt-level** (the API path loses the hook-enforced guard, so they move into the loop's tool executor). Lean: cron does the gardening; session-start only *surfaces* + nags, with a small bounded session-start pass as a fallback when cron is stale.
-- **Split or fold:** ship `/ctx-serendipity` as its own `specs/ctx-serendipity.md`, or keep it here?
-- **Merit signal:** how is `merit` initialized and updated? (Matters for v1.1 creative resurfacing; v1 can default it.) A candidate starting point lifted from the Hermes sibling — adopt it as a **ranking/attention** score that feeds ruthless self-rejection (surface top-N to the human), **never** as an autonomous promote threshold:
+**The executor is a documented contract, not a hardcoded assumption.**
+cron `claude -p` is the **reference executor** ctx ships guidance for,
+but ctx must not assume it is the only way to run a dream pass — other
+harnesses (a different AI CLI, a raw Anthropic-API loop, a CI runner)
+must be able to implement the same contract.
+
+ctx owns the **executor-agnostic core** in Go: the `dreams/` notebook
+layout, the per-source state record, the append-only ledger, the
+proposal schema, and the three guards *as callable logic* (write-scope,
+sources-as-data, don't-leak / `git check-ignore`). An executor must:
+
+1. Run one bounded pass (honor `max` files + step/token budget) that
+   reads `ideas/`, classifies + grounds, and writes provenance-bearing
+   proposals into `dreams/<ts>/` — never touching canonical.
+2. **Enforce the three guards structurally** — not via prompt text. The
+   reference executor (Claude Code) wires them as PreToolUse hooks; a
+   raw-API executor must call the same guard logic in its tool executor
+   before any write. This is the load-bearing portability requirement.
+3. Fail **loud** (failmark) on auth/PATH/env problems; never silent
+   no-op (see Error Handling).
+
+Because dream is **opt-in and not enabled by default**, ctx ships two
+docs (see Implementation → Documentation): a Claude-Code enablement
+guide, and an executor-contract reference for other harnesses.
+
+## Resolved Decisions (v1)
+
+Settled from the prior Open Questions (session 2263caef, 2026-06-07):
+
+- **Executor:** cron `claude -p` is the reference; the executor is a
+  documented contract (above). cron does the gardening; session-start
+  only *surfaces* + nags, with a small bounded session-start pass as a
+  staleness fallback.
+- **Serendipity:** shipped as its **own spec**, `specs/ctx-serendipity.md`
+  (the human review / garden-walk skill), not folded here.
+- **Merit signal:** v1 defaults `merit` via the attention-scoring rubric
+  below — used **only** for ranking / ruthless self-rejection (surface
+  top-N), **never** as an autonomous promote threshold. v1.1 creative
+  mode reads it for resurfacing.
 
   | Component | Weight | Signal |
   |-----------|--------|--------|
@@ -251,7 +301,26 @@ statistics-without-grounding parts.
   | Consolidation | 10% | penalize if already captured (dedup) |
   | Conceptual richness | 6% | longer / more detailed = richer |
 
-  Caveat (from the eval cluster): a statistical score ranks *attention*, it does not establish *truth* — grounding-against-code/specs still gates what is surfaced. The score decides ordering; evidence decides eligibility.
-- **Summary generation:** which model, and the per-pass cost/budget ceiling? (TBD)
-- **Exact `.ctxrc` key names and Go package layout.** (TBD — finalize at implementation.)
-- **Stable IDs for canonical entries** for v2 supersession — v1 must not foreclose this in the ledger/proposal shapes.
+  Caveat (eval cluster): a statistical score ranks *attention*, not
+  *truth* — grounding-against-code/specs decides eligibility; the score
+  only decides ordering.
+- **Summary generation:** reuse the session model (the `claude -p`
+  model); per-pass cost ceiling = `max` files + a step budget. A
+  dedicated cheap-summary model is deferred until there is real cost
+  data.
+- **Go package layout:** follow established convention —
+  `internal/cli/dream/` (cobra: root + `review`/`accept`/`reject`/
+  `amend`), `internal/dream/` (engine: state, ledger, proposal, guards),
+  `internal/config/dream/` (constants), `internal/write/dream/`
+  (output), `internal/err/dream/` (errors).
+- **`.ctxrc`:** a `dream:` section — `enabled` (default `false`, opt-in),
+  `mode` (`discipline`), `max` (50), `cadence` (cron, e.g.
+  `30 2 * * *`), `quiet_minutes` (60), `model` (null = session default),
+  `budget` (TBD numeric ceiling).
+- **Stable IDs:** proposals and ledger entries carry stable IDs in v1,
+  so v2 canonical supersession is not foreclosed.
+
+### Still TBD (at implementation)
+
+- Exact numeric `budget` ceiling (depends on first real-pass cost data).
+- Presence/format details of the per-source state record file(s).

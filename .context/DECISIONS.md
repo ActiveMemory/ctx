@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-06-07 | ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption |
 | 2026-06-07 | Output belongs in write/ — taxonomy and emission style (consolidated) |
 | 2026-06-07 | Package taxonomy and shared-code placement (consolidated) |
 | 2026-06-07 | Error handling: centralized in internal/err, domain-file taxonomy (consolidated) |
@@ -105,6 +106,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-06-07-112203] ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption
+
+**Status**: Accepted
+
+**Context**: Settling ctx-dream v1 open questions. The executor runs the out-of-band dream pass (read ideas/, classify+ground, write proposals). Question was cron 'claude -p' vs a raw Anthropic-API scheduled loop.
+
+**Decision**: ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption
+
+**Rationale**: cron 'claude -p' is the reference executor (reuses Claude Code auth, tool-calling, and PreToolUse hooks so the three guards are structural for free; matches the existing skill draft and the cheap-validation goal). But we must NOT assume it is the only executor: other harnesses (different AI CLI, raw API loop, CI runner) must be able to run the same dream. So ctx owns an executor-agnostic Go core (dreams/ layout, state record, ledger, proposal schema, the three guards as callable logic) and the executor is a documented contract: run one bounded pass, enforce the three guards STRUCTURALLY (Claude Code via PreToolUse hooks; API loop via in-loop tool executor), fail loud, write proposals-only into dreams/. Dream is opt-in, not enabled by default.
+
+**Consequence**: Guards live as reusable Go logic in internal/dream/, not only as a hook script. Two user-facing docs are required: a Claude Code enablement guide and an executor-contract reference for other harnesses. The serendipity review skill is split into its own spec (specs/ctx-serendipity.md). v1 ships the cron/claude-p reference path but the data contract + guards stay executor-portable.
+
+---
 
 ## [2026-06-07-180001] Output belongs in write/ — taxonomy and emission style (consolidated)
 
