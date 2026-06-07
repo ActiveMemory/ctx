@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/convention"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
+	"github.com/ActiveMemory/ctx/internal/cli/dream"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	ctxFmt "github.com/ActiveMemory/ctx/internal/cli/fmt"
 	"github.com/ActiveMemory/ctx/internal/cli/guide"
@@ -118,6 +119,7 @@ func artifacts() []registration {
 func sessions() []registration {
 	return []registration{
 		{journal.Cmd, embedCmd.GroupSessions},
+		{dream.Cmd, embedCmd.GroupSessions},
 		{memory.Cmd, embedCmd.GroupSessions},
 		{remind.Cmd, embedCmd.GroupSessions},
 		{pad.Cmd, embedCmd.GroupSessions},

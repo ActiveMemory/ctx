@@ -46,6 +46,7 @@ const (
 
 // Shared flag names used across commands.
 const (
+	Action      = "action"
 	After       = "after"
 	All         = "all"
 	AllProjects = "all-projects"
@@ -79,8 +80,10 @@ const (
 	Last            = "last"
 	Latest          = "latest"
 	Limit           = "limit"
+	Max             = "max"
 	MaxIterations   = "max-iterations"
 	Merge           = "merge"
+	Mode            = "mode"
 	Note            = "note"
 	Message         = "message"
 	Minimal         = "minimal"

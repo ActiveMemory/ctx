@@ -150,6 +150,29 @@ initialize:
       ctx init --ralph
       ctx init --minimal
 
+dream:
+  short: |2-
+      ctx dream
+      ctx dream --max 20 --force
+
+dream.review:
+  short: |2-
+      ctx dream review
+
+dream.accept:
+  short: |2-
+      ctx dream accept a1b2c3
+      ctx dream accept a1b2c3 --note "good catch"
+
+dream.reject:
+  short: |2-
+      ctx dream reject a1b2c3
+
+dream.amend:
+  short: |2-
+      ctx dream amend a1b2c3 --action keep
+      ctx dream amend a1b2c3 --action archive --note "superseded"
+
 journal:
   short: |2-
       ctx journal source

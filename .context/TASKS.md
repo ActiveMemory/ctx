@@ -299,13 +299,22 @@ Important things that agent (or human) yeeted to the future.
   + static Zensical + LoopScript + Tier-2 recall HTML (metaTable/details)
   migrated to embedded templates behind handles; Tier-3 single-line format
   strings, pure joins, and the RecallListRow meta-format kept as fmt.Sprintf.
-- [ ] P0.8.5: Enable webhook notifications in worktrees. Currently `ctx notify`
-  silently fails because `.context.key` is gitignored and absent in
-  worktrees. For autonomous runs with opaque worktree agents, notifications
-  are the one feature that would genuinely be useful. Possible approaches:
-  resolve the key via `git rev-parse --git-common-dir` to find the main
-  checkout, or copy the key into worktrees at creation time (ctx-worktree
-  skill). #priority:medium #added:2026-02-22
+- [x] P0.8.5: Harden notify resolution (reframed 2026-06-02). The original
+  premise ("`ctx notify` silently fails in worktrees because the key is
+  gitignored and absent") was investigated and largely disproven: with the
+  default global key, notify works in worktrees (verified against a built
+  binary + isolated repo + fake webhook sink). The failure only reproduces
+  with a deprecated project-local key. Real defects to fix: (1) remove the
+  implicit `.context/.ctx.key` resolution tier — the sole worktree-divergence
+  and a documented security antipattern; (2) surface the silent fire-path
+  failure when a CONFIGURED webhook can't be delivered (decrypt/read/POST),
+  while keeping legitimate silences (not-configured, event-not-subscribed).
+  Whether config reaches a worktree is the user's call via `.ctxrc`
+  git-tracking — ctx does not special-case worktrees (it cannot distinguish a
+  worktree from N side-by-side terminals). Approaches A (--git-common-dir key
+  fallback) and B (copy key at worktree creation) rejected; see DECISIONS.
+  Spec: specs/notify-resolution-hardening.md
+  #priority:medium #added:2026-02-22 #reframed:2026-06-02
 - [ ] P0.9.2: Split cli-reference.md (1633 lines) into command group pages:
   cli-overview, cli-init-status, cli-context, cli-recall, cli-tools,
   cli-system —
@@ -433,6 +442,8 @@ Important things that agent (or human) yeeted to the future.
 
 
 ### Phase CT: Companion Tool Integration
+
+- [ ] Add a 'make strip-gitnexus' target (backed by a hack/ script) that mechanically removes the GitNexus auto-injected block — delimited by <!-- gitnexus:start --> / <!-- gitnexus:end --> markers — from AGENTS.md and CLAUDE.md. Marker-bounded delete (sed range or awk between markers). Must: (1) leave AGENTS.md as the redirect stub and CLAUDE.md ending at its Companion Tools / GITNEXUS.md pointer; (2) NOT touch GITNEXUS.md (the intended managed home for that content); (3) be idempotent (no-op when markers absent). Run it after 'npx gitnexus analyze'. Upstream-preferred guard is 'analyze --skip-agents-md'; this script is the belt-and-suspenders cleanup when analyze runs without that flag. Manual removal was done in 8da165a3; this automates it. #priority:medium #session:74c94e3a #branch:fix/notify-resolution-hardening #commit:8da165a3 #added:2026-06-02-085625
 
 Session-start checks, suppressibility, and registry for companion MCP tools.
 
@@ -2362,3 +2373,21 @@ DR-kb session a5736210 closeouts under
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
 - [ ] Reindex grouped-emit (ctx-side): RenderBlock should emit the CTX:KB:TOPICS managed block grouped by parent folder (### <group> headings) instead of one flat sorted list, for grouped kbs like things-wtf-dr (49 topics). ListTopics already returns slashed group/slug slugs (PR #106, spec specs/kb-reindex-nesting.md) so only RenderBlock + the consumer-facing block-format contract change; must still handle ungrouped/flat top-level topics. Deferred from the kb-reindex fix (managed-block format change). #priority:high active dependent work in the hub/other workstream; natural owner is ctx-side (ListTopics already recursive). #session:cf14dd25 #branch:main #commit:aae42fe8 #added:2026-05-28-215308
+
+### ctx-dream v1
+
+- [x] Docs: executor-contract reference for non-Claude-Code harnesses — bounded pass, structural guard enforcement, fail-loud, proposals-only-into-dreams/ #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
+
+- [x] Docs: Claude Code dream enablement guide — opt-in (.ctxrc dream.enabled), cron entry, guard hook wiring, ctx remind cadence #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
+
+- [x] Tests: git check-ignore guard refuses tracked path; ledger dedup-against-seen; crash-resume; 2605.12978 corrupted-artifact regression fixture #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [x] Build ctx dream review CLI (accept/reject/amend) plus serendipity skill; mechanical applies instantly, generative drops to agent; backup-before-mutate; ctx remind cadence #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [x] Implement disciplined ideas triage: classify, ground against code and specs, semantic dedup; emit atomic provenanced proposals #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [x] Build proposal/ledger/state machinery: per-source state record, append-only ledger recording rejections, two-clocks read model #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [x] Build the three structural guards: write-scope, sources-as-data, dont-leak (git check-ignore refuses tracked paths) #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [x] Settle executor: cron claude -p bounded scheduled pass; safety invariants structural not prompt-level #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238

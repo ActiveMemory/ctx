@@ -8,6 +8,7 @@ package notify
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -27,22 +28,20 @@ import (
 
 // LoadWebhook reads and decrypts the webhook URL from .context/.notify.enc.
 //
-// Returns ("", nil) when:
-//   - the key file is missing (key was never generated),
-//   - the encrypted file is missing (webhook never configured).
-//
-// Any resolver or I/O failure is propagated (including
-// [errCtx.ErrNoCtxHere]) so callers can distinguish
-// "no context dir" from "no webhook configured" rather than
-// being forced to treat them identically. [Send] treats any error
-// as "no webhook, silently skip"; interactive callers (e.g.
-// `ctx notify test`) can use [errors.Is] to surface a clearer
-// message when the project is not set up yet.
+// The webhook is "configured" exactly when .context/.notify.enc exists.
+// Its absence is the one silent "not configured" signal: LoadWebhook
+// returns ("", nil). Once the encrypted file exists, anything that then
+// prevents decryption is a real problem and is propagated: a missing,
+// unreadable, or invalid key (e.g. a project-local key absent in a git
+// worktree), an unreadable .notify.enc, a decryption failure (wrong
+// key), or a resolver error such as [errCtx.ErrNoCtxHere]. This lets
+// callers distinguish "not configured" (silent) from "configured but
+// broken" (surface it). [Send] warns on the latter; interactive callers
+// (e.g. `ctx hook notify test`) report it directly.
 //
 // Returns:
 //   - string: the decrypted webhook URL, or "" if not configured
-//   - error: non-nil on any resolver failure or decryption failure;
-//     missing key / encrypted file are silent
+//   - error: non-nil when a configured webhook cannot be decrypted
 func LoadWebhook() (string, error) {
 	kp, kpErr := rc.KeyPath()
 	if kpErr != nil {
@@ -54,22 +53,29 @@ func LoadWebhook() (string, error) {
 	}
 	encPath := filepath.Join(ctxDir, cfgCrypto.NotifyEnc)
 
+	// A missing .notify.enc is the only silent "not configured" case.
+	// os.Stat returns an unwrapped *fs.PathError, so this not-exist
+	// check is reliable regardless of how downstream library errors are
+	// wrapped (crypto.LoadKey wraps through the text registry, on which
+	// neither os.IsNotExist nor errors.Is is dependable). Once the
+	// encrypted file exists the webhook IS configured, so a missing,
+	// unreadable, or invalid key — and any decrypt failure — is surfaced
+	// rather than mistaken for "no webhook".
+	if _, statErr := os.Stat(encPath); statErr != nil {
+		if errors.Is(statErr, os.ErrNotExist) {
+			return "", nil // webhook never configured
+		}
+		return "", statErr
+	}
+
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
-		if os.IsNotExist(loadErr) {
-			return "", nil
-		}
-		return "", nil
+		return "", loadErr // configured, but key missing/unreadable/invalid
 	}
-
 	ciphertext, readErr := io.SafeReadUserFile(encPath)
 	if readErr != nil {
-		if os.IsNotExist(readErr) {
-			return "", nil
-		}
-		return "", nil
+		return "", readErr // enc present but unreadable
 	}
-
 	plaintext, decryptErr := crypto.Decrypt(key, ciphertext)
 	if decryptErr != nil {
 		return "", decryptErr
@@ -146,10 +152,18 @@ func EventAllowed(event string, allowed []string) bool {
 	return false
 }
 
-// Send fires a webhook notification. It is a silent noop when:
-//   - no webhook URL is configured
-//   - the event is not in the allowed list
-//   - the HTTP request fails (fire-and-forget)
+// Send fires a webhook notification. It is a silent noop only when
+// delivery is not expected:
+//   - the event is not in the allowed list (not subscribed), or
+//   - no webhook URL is configured.
+//
+// When a webhook IS configured but cannot be delivered — an
+// unreadable or wrong key, a decrypt failure (e.g. a project-local
+// key absent in a git worktree), a marshal error, or an HTTP failure
+// — Send emits a non-fatal warning to stderr and returns nil. It
+// never returns a delivery error (fire-and-forget), but it is never
+// silent about a real failure: a webhook the user set up that drops
+// without a trace reads as "working" when it is not.
 //
 // Parameters:
 //   - event: notification category (e.g. "relay", "nudge")
@@ -158,15 +172,22 @@ func EventAllowed(event string, allowed []string) bool {
 //   - detail: structured template reference (nil omits the field)
 //
 // Returns:
-//   - error: Delivery error, or nil if sent successfully or silently skipped
+//   - error: always nil; failures are warned, not returned
 func Send(event, message, sessionID string, detail *entity.TemplateRef) error {
 	if !EventAllowed(event, rc.NotifyEvents()) {
 		return nil
 	}
 
 	url, webhookErr := LoadWebhook()
-	if webhookErr != nil || url == "" {
+	if webhookErr != nil {
+		// Configured but undeliverable (wrong/absent key in a
+		// worktree, unreadable key, or decrypt failure). Surface it,
+		// but stay non-fatal (fire-and-forget).
+		logWarn.Warn(cfgWarn.NotifyWebhookLoad, webhookErr)
 		return nil
+	}
+	if url == "" {
+		return nil // not configured: legitimate silent no-op
 	}
 
 	projectName := project.FallbackName
@@ -182,12 +203,15 @@ func Send(event, message, sessionID string, detail *entity.TemplateRef) error {
 
 	body, marshalErr := json.Marshal(payload)
 	if marshalErr != nil {
+		logWarn.Warn(cfgWarn.NotifyWebhookMarshal, marshalErr)
 		return nil
 	}
 
 	resp, postErr := PostJSON(url, body)
 	if postErr != nil {
-		return nil // fire-and-forget
+		// Delivery failed: fire-and-forget, but no longer silent.
+		logWarn.Warn(cfgWarn.NotifyWebhookPost, postErr)
+		return nil
 	}
 	if closeErr := resp.Body.Close(); closeErr != nil {
 		logWarn.Warn(cfgWarn.CloseResponse, closeErr)

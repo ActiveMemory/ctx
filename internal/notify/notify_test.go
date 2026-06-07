@@ -7,15 +7,18 @@
 package notify
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
@@ -52,9 +55,16 @@ func TestLoadWebhook_NoFile(t *testing.T) {
 	tempDir, cleanup := setupTestDir(t)
 	defer cleanup()
 
-	// Create key but no encrypted file
-	keyPath := filepath.Join(tempDir, ".context", crypto.ContextKey)
-	_ = os.WriteFile(keyPath, make([]byte, 32), 0o600)
+	// Create the (global) key but no encrypted file. The key resolves
+	// to ~/.ctx/.ctx.key — HOME is redirected to tempDir in tests.
+	globalDir := filepath.Join(tempDir, ".ctx")
+	if err := os.MkdirAll(globalDir, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	keyPath := filepath.Join(globalDir, crypto.ContextKey)
+	if err := os.WriteFile(keyPath, make([]byte, 32), 0o600); err != nil {
+		t.Fatal(err)
+	}
 
 	url, err := LoadWebhook()
 	if err != nil {
@@ -62,6 +72,51 @@ func TestLoadWebhook_NoFile(t *testing.T) {
 	}
 	if url != "" {
 		t.Errorf("LoadWebhook() = %q, want empty", url)
+	}
+}
+
+func TestLoadWebhook_InvalidKeyPropagated(t *testing.T) {
+	tempDir, cleanup := setupTestDir(t)
+	defer cleanup()
+
+	// Key present (wrong size) AND the encrypted file present: the
+	// webhook IS configured, so an invalid key is a real
+	// misconfiguration LoadWebhook must surface, not a silent "no
+	// webhook". (Before the swallow was narrowed it returned ("", nil)
+	// and the failure vanished.)
+	globalDir := filepath.Join(tempDir, ".ctx")
+	if err := os.MkdirAll(globalDir, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	keyPath := filepath.Join(globalDir, crypto.ContextKey)
+	if err := os.WriteFile(keyPath, []byte("too-short"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	encPath := filepath.Join(tempDir, ".context", crypto.NotifyEnc)
+	if err := os.WriteFile(encPath, []byte("ciphertext"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := LoadWebhook(); err == nil {
+		t.Fatal("LoadWebhook() with an invalid-size key: expected error, got nil")
+	}
+}
+
+func TestLoadWebhook_ConfiguredKeyAbsentSurfaces(t *testing.T) {
+	tempDir, cleanup := setupTestDir(t)
+	defer cleanup()
+
+	// .notify.enc present (webhook IS configured) but no key anywhere.
+	// This is "configured but broken", not "not configured", so
+	// LoadWebhook must surface an error rather than silently report no
+	// webhook (the absent-key-in-worktree / fresh-machine case).
+	encPath := filepath.Join(tempDir, ".context", crypto.NotifyEnc)
+	if err := os.WriteFile(encPath, []byte("ciphertext"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := LoadWebhook(); err == nil {
+		t.Fatal("LoadWebhook() with enc present but key absent: expected error, got nil")
 	}
 }
 
@@ -109,13 +164,29 @@ func TestEventAllowed_NoMatch(t *testing.T) {
 }
 
 func TestSend_NoWebhook(t *testing.T) {
-	_, cleanup := setupTestDir(t)
+	tempDir, cleanup := setupTestDir(t)
 	defer cleanup()
 
-	// No webhook configured: should noop without error
-	err := Send("test", "hello", "session-1", nil)
-	if err != nil {
+	// Subscribe the event so Send passes the event filter and actually
+	// reaches the webhook-absence check, rather than short-circuiting
+	// at the filter. No .notify.enc exists, so this is the legitimate
+	// "not configured" path: noop with no error and no warning.
+	rcContent := "notify:\n  events:\n    - test\n"
+	if err := os.WriteFile(
+		filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0o600,
+	); err != nil {
+		t.Fatal(err)
+	}
+	rc.Reset()
+
+	var buf bytes.Buffer
+	defer logWarn.SetSink(&buf)()
+
+	if err := Send("test", "hello", "session-1", nil); err != nil {
 		t.Fatalf("Send() error = %v", err)
+	}
+	if buf.Len() != 0 {
+		t.Errorf("unconfigured webhook should not warn, got %q", buf.String())
 	}
 }
 
@@ -280,10 +351,97 @@ func TestSend_HTTPErrorIgnored(t *testing.T) {
 	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0o600)
 	rc.Reset()
 
-	// Should not return error even on HTTP 500
+	// An HTTP 500 is a received response, not a transport error, so
+	// this exercises the success/Body.Close path. The transport-error
+	// (postErr) warn branch is covered by TestSend_PostFailureWarns.
 	err := Send("test", "hello", "session-1", nil)
 	if err != nil {
 		t.Fatalf("Send() error = %v, want nil (fire-and-forget)", err)
+	}
+}
+
+func TestSend_ConfiguredButUndeliverableWarns(t *testing.T) {
+	tempDir, cleanup := setupTestDir(t)
+	defer cleanup()
+
+	called := false
+	ts := httptest.NewServer(
+		http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {
+			called = true
+		}),
+	)
+	defer ts.Close()
+
+	// Configure a webhook, then make it undeliverable by replacing the
+	// key with a different valid key so .notify.enc no longer decrypts
+	// — the worktree / wrong-key footgun. Send must warn (not silently
+	// drop) and must not POST.
+	if err := SaveWebhook(ts.URL); err != nil {
+		t.Fatalf("SaveWebhook() error = %v", err)
+	}
+	keyPath := filepath.Join(tempDir, ".ctx", crypto.ContextKey)
+	if err := os.WriteFile(
+		keyPath, bytes.Repeat([]byte{7}, 32), 0o600,
+	); err != nil {
+		t.Fatal(err)
+	}
+	rcContent := "notify:\n  events:\n    - stop\n"
+	if err := os.WriteFile(
+		filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0o600,
+	); err != nil {
+		t.Fatal(err)
+	}
+	rc.Reset()
+
+	var buf bytes.Buffer
+	defer logWarn.SetSink(&buf)()
+
+	if err := Send("stop", "hello", "s1", nil); err != nil {
+		t.Fatalf("Send() error = %v, want nil (fire-and-forget)", err)
+	}
+	if called {
+		t.Error("webhook was POSTed despite a decrypt failure")
+	}
+	if n := strings.Count(
+		buf.String(), "webhook configured but undeliverable",
+	); n != 1 {
+		t.Errorf("undeliverable warning count = %d, want 1; sink=%q",
+			n, buf.String())
+	}
+}
+
+func TestSend_PostFailureWarns(t *testing.T) {
+	tempDir, cleanup := setupTestDir(t)
+	defer cleanup()
+
+	// Stand up a server, capture its URL, then close it so the POST
+	// gets connection-refused (a transport error, unlike an HTTP 500).
+	ts := httptest.NewServer(
+		http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {}),
+	)
+	url := ts.URL
+	ts.Close()
+
+	if err := SaveWebhook(url); err != nil {
+		t.Fatalf("SaveWebhook() error = %v", err)
+	}
+	rcContent := "notify:\n  events:\n    - stop\n"
+	if err := os.WriteFile(
+		filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0o600,
+	); err != nil {
+		t.Fatal(err)
+	}
+	rc.Reset()
+
+	var buf bytes.Buffer
+	defer logWarn.SetSink(&buf)()
+
+	if err := Send("stop", "hello", "s1", nil); err != nil {
+		t.Fatalf("Send() error = %v, want nil (fire-and-forget)", err)
+	}
+	if n := strings.Count(buf.String(), "webhook POST failed"); n != 1 {
+		t.Errorf("POST-failure warning count = %d, want 1; sink=%q",
+			n, buf.String())
 	}
 }
 

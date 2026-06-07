@@ -132,6 +132,57 @@ func SafeCreateFile(path string, perm os.FileMode) (*os.File, error) {
 	return os.OpenFile(clean, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, perm)
 }
 
+// SafeTryLock attempts to acquire an exclusive lock by atomically
+// creating the lock file with O_CREATE|O_EXCL. It returns acquired=true
+// when this process created the file (now holds the lock), and
+// acquired=false with a nil error when the file already exists (another
+// holder). The handle is closed before returning; the lock is held by
+// the file's existence until SafeUnlock removes it.
+//
+// Parameters:
+//   - path: lock file path
+//   - perm: file permission bits
+//
+// Returns:
+//   - bool: true when this call acquired the lock
+//   - error: non-nil on validation or a non-exist open failure
+func SafeTryLock(path string, perm os.FileMode) (bool, error) {
+	clean, validateErr := cleanAndValidate(path)
+	if validateErr != nil {
+		return false, validateErr
+	}
+	//nolint:gosec // validated by cleanAndValidate
+	f, openErr := os.OpenFile(
+		clean, os.O_CREATE|os.O_EXCL|os.O_WRONLY, perm,
+	)
+	if openErr != nil {
+		if os.IsExist(openErr) {
+			return false, nil
+		}
+		return false, openErr
+	}
+	return true, f.Close()
+}
+
+// SafeUnlock releases a lock acquired by SafeTryLock by removing the
+// lock file. A missing lock file is not an error.
+//
+// Parameters:
+//   - path: lock file path
+//
+// Returns:
+//   - error: non-nil on validation or a non-exist remove failure
+func SafeUnlock(path string) error {
+	clean, validateErr := cleanAndValidate(path)
+	if validateErr != nil {
+		return validateErr
+	}
+	if rmErr := os.Remove(clean); rmErr != nil && !os.IsNotExist(rmErr) {
+		return rmErr
+	}
+	return nil
+}
+
 // SafeMkdirAll creates a directory tree after cleaning the path and
 // rejecting system directory prefixes.
 //

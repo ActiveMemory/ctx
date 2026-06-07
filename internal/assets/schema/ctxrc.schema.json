@@ -246,6 +246,49 @@
           "description": "Whether hook execution is enabled. Default: true."
         }
       }
+    },
+    "dream": {
+      "type": "object",
+      "description": "ctx-dream memory-consolidation settings. Opt-in: nothing runs until enabled is true and a cron entry is installed.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Master switch for the dream. Default: false (opt-in)."
+        },
+        "mode": {
+          "type": "string",
+          "description": "Execution mode. Default: discipline. creative is deferred.",
+          "enum": ["discipline", "creative"]
+        },
+        "max": {
+          "type": "integer",
+          "description": "Ceiling on ideas/ files processed per pass. Default: 50.",
+          "minimum": 1
+        },
+        "cadence": {
+          "type": "string",
+          "description": "Cron schedule for the nightly pass (e.g. '30 2 * * *')."
+        },
+        "quiet_minutes": {
+          "type": "integer",
+          "description": "Activity quiet window the trigger gate honors. Default: 60.",
+          "minimum": 0
+        },
+        "model": {
+          "type": "string",
+          "description": "Executor model override. Empty uses the session default."
+        },
+        "budget": {
+          "type": "integer",
+          "description": "Step/token budget for a pass.",
+          "minimum": 1
+        },
+        "executor": {
+          "type": "string",
+          "description": "Executor command template. Empty uses the reference claude -p invocation."
+        }
+      }
     }
   }
 }

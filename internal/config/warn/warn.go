@@ -165,6 +165,28 @@ const (
 	PadHistoryPrune = "pad history: prune: %v"
 )
 
+// Notify webhook delivery warning formats. These fire only when a
+// webhook IS configured but cannot be delivered — never when notify
+// is simply unconfigured or the event is unsubscribed. Surfacing
+// them keeps `ctx hook notify` honest: a webhook the user set up
+// that silently drops (e.g. a project-local key absent in a git
+// worktree, so decryption fails) reads as "working" when it is not.
+const (
+	// NotifyWebhookLoad is the format for a configured webhook that
+	// could not be loaded or decrypted: an unreadable/wrong key, a
+	// decrypt failure, or a resolver error. Takes (error).
+	NotifyWebhookLoad = "notify: webhook configured but undeliverable: %v"
+
+	// NotifyWebhookMarshal is the format for a payload marshal
+	// failure on the notify fire path. Takes (error).
+	NotifyWebhookMarshal = "notify: marshal payload: %v"
+
+	// NotifyWebhookPost is the format for an HTTP POST failure when
+	// delivering a notification (fire-and-forget, but visible).
+	// Takes (error).
+	NotifyWebhookPost = "notify: webhook POST failed: %v"
+)
+
 // Warn context identifiers for index generation.
 const (
 	// IndexHeader is the context label for index header write errors.

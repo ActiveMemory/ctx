@@ -35,3 +35,19 @@ func Warn(format string, args ...any) {
 	_, _ = fmt.Fprintf(
 		sink, cfgCtx.StderrPrefix+format+token.NewlineLF, args...)
 }
+
+// SetSink redirects warning output to w and returns a function that
+// restores the sink in effect before the call. It exists so tests can
+// capture or discard warnings; production code never calls it. Callers
+// must not invoke it from parallel tests — sink is process-global.
+//
+// Parameters:
+//   - w: writer to receive subsequent warnings
+//
+// Returns:
+//   - func(): restores the previous sink
+func SetSink(w io.Writer) func() {
+	prev := sink
+	sink = w
+	return func() { sink = prev }
+}
