@@ -101,6 +101,34 @@ err.config.unknown-update-type:
   short: 'unknown update type: %s'
 err.config.unsupported-tool:
   short: 'unsupported tool: %s'
+err.dream.append-ledger:
+  short: 'dream: append ledger %s: %w'
+err.dream.check-ignore:
+  short: 'dream: git check-ignore %s: %w'
+err.dream.invalid-proposal:
+  short: 'dream: invalid proposal %s: %s'
+err.dream.leak:
+  short: 'ctx-dream guard: write to tracked path refused: %s'
+err.dream.marshal-entry:
+  short: 'dream: marshal ledger entry: %w'
+err.dream.marshal-state:
+  short: 'dream: marshal state: %w'
+err.dream.mkdir:
+  short: 'dream: create notebook directory %s: %w'
+err.dream.read-ledger:
+  short: 'dream: read ledger %s: %w'
+err.dream.read-state:
+  short: 'dream: read state %s: %w'
+err.dream.rel-path:
+  short: 'dream: compute relative path: %w'
+err.dream.resolve-root:
+  short: 'dream: resolve project root: %w'
+err.dream.unmarshal-state:
+  short: 'dream: unmarshal state %s: %w'
+err.dream.write-scope:
+  short: 'ctx-dream guard: write outside dream scope refused: %s'
+err.dream.write-state:
+  short: 'dream: write state %s: %w'
 err.crypto.ciphertext-too-short:
   short: ciphertext too short
 err.crypto.create-cipher:
