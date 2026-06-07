@@ -103,10 +103,32 @@ err.config.unsupported-tool:
   short: 'unsupported tool: %s'
 err.dream.append-ledger:
   short: 'dream: append ledger %s: %w'
+err.dream.backup-failed:
+  short: 'dream: backup failed for %s: %w'
 err.dream.check-ignore:
   short: 'dream: git check-ignore %s: %w'
+err.dream.executor-not-found:
+  short: '[dream] FAIL: executor %q not on PATH: %w'
+err.dream.executor-run:
+  short: '[dream] FAIL: executor %q failed: %w'
+err.dream.guard-refused:
+  short: '%s'
 err.dream.invalid-proposal:
   short: 'dream: invalid proposal %s: %s'
+err.dream.lock-acquire:
+  short: 'dream: acquire lock %s: %w'
+err.dream.move-source:
+  short: 'dream: move source %s: %w'
+err.dream.proposal-not-found:
+  short: 'dream: proposal %q not found in %s'
+err.dream.read-proposals:
+  short: 'dream: read proposals %s: %w'
+err.dream.read-source:
+  short: 'dream: read source %s: %w'
+err.dream.scan-ideas:
+  short: 'dream: scan ideas %s: %w'
+err.dream.unknown-action:
+  short: 'dream: unknown action %q for proposal %s'
 err.dream.leak:
   short: 'ctx-dream guard: write to tracked path refused: %s'
 err.dream.marshal-entry:

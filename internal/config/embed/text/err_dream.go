@@ -50,4 +50,37 @@ const (
 	// DescKeyErrDreamInvalidProposal is the text key for err dream
 	// invalid-proposal validation messages.
 	DescKeyErrDreamInvalidProposal = "err.dream.invalid-proposal"
+	// DescKeyErrDreamBackupFailed is the text key for err dream
+	// backup-before-mutate failure messages.
+	DescKeyErrDreamBackupFailed = "err.dream.backup-failed"
+	// DescKeyErrDreamExecutorNotFound is the text key for err dream
+	// executor-not-on-PATH fail-loud messages.
+	DescKeyErrDreamExecutorNotFound = "err.dream.executor-not-found"
+	// DescKeyErrDreamExecutorRun is the text key for err dream
+	// executor-run-failure fail-loud messages.
+	DescKeyErrDreamExecutorRun = "err.dream.executor-run"
+	// DescKeyErrDreamGuardRefused is the text key for err dream
+	// guard-refusal messages (the registry-sourced reason verbatim).
+	DescKeyErrDreamGuardRefused = "err.dream.guard-refused"
+	// DescKeyErrDreamLockAcquire is the text key for err dream lock
+	// acquisition failure messages.
+	DescKeyErrDreamLockAcquire = "err.dream.lock-acquire"
+	// DescKeyErrDreamMoveSource is the text key for err dream
+	// source-relocation failure messages.
+	DescKeyErrDreamMoveSource = "err.dream.move-source"
+	// DescKeyErrDreamProposalNotFound is the text key for err dream
+	// proposal-not-found messages.
+	DescKeyErrDreamProposalNotFound = "err.dream.proposal-not-found"
+	// DescKeyErrDreamReadProposals is the text key for err dream
+	// proposals read failure messages.
+	DescKeyErrDreamReadProposals = "err.dream.read-proposals"
+	// DescKeyErrDreamReadSource is the text key for err dream source
+	// read failure messages.
+	DescKeyErrDreamReadSource = "err.dream.read-source"
+	// DescKeyErrDreamScanIdeas is the text key for err dream
+	// ideas-scan failure messages.
+	DescKeyErrDreamScanIdeas = "err.dream.scan-ideas"
+	// DescKeyErrDreamUnknownAction is the text key for err dream
+	// unknown-action messages.
+	DescKeyErrDreamUnknownAction = "err.dream.unknown-action"
 )

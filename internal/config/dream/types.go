@@ -6,6 +6,10 @@
 
 package dream
 
+// Mode is an execution mode for a dream pass. v1 builds only
+// discipline; creative is sketched and deferred.
+type Mode = string
+
 // ProposalStatus is the observed classification the dream assigns to
 // an idea during triage.
 type ProposalStatus = string

@@ -76,6 +76,23 @@ type GuardDecision struct {
 	Reason string
 }
 
+// ApplyResult reports the outcome of applying a decision to a
+// proposal: whether the disposition was completed mechanically here,
+// or recorded as accepted intent that the agent must complete from the
+// full source (generative promote/merge).
+type ApplyResult struct {
+	// Performed is true when the action was a mechanical disposition
+	// fully applied by the CLI (archive, mark-blog, keep, reject).
+	Performed bool
+	// Generative is true when the accepted action needs the agent to
+	// read the full source (promote, merge); the CLI records intent
+	// and defers the mutation.
+	Generative bool
+	// Action is the action actually recorded (the amended action when
+	// the decision amended, otherwise the proposal's action).
+	Action cfgDream.ProposalAction
+}
+
 // LedgerEntry is one disposition recorded in the append-only ledger
 // (dreams/ledger.md). Rejections are recorded too, so dedup-against-seen
 // keeps decided proposals from re-surfacing unless the source changes.

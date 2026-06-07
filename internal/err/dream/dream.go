@@ -207,3 +207,162 @@ func InvalidProposal(id, reason string) error {
 		desc.Text(text.DescKeyErrDreamInvalidProposal), id, reason,
 	)
 }
+
+// BackupFailed wraps a failure to back up a source file before a
+// destructive mutation. The mutation must abort when this fires.
+//
+// Parameters:
+//   - path: the source file that could not be backed up
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "dream: backup failed for <path>: <cause>"
+func BackupFailed(path string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamBackupFailed), path, cause,
+	)
+}
+
+// ExecutorNotFound returns a fail-loud error when the configured
+// executor binary is not on PATH.
+//
+// Parameters:
+//   - name: the executor binary name
+//   - cause: the underlying lookup error
+//
+// Returns:
+//   - error: "[dream] FAIL: executor <name> not on PATH: <cause>"
+func ExecutorNotFound(name string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamExecutorNotFound), name, cause,
+	)
+}
+
+// ExecutorRun returns a fail-loud error when the executor ran but
+// exited non-zero.
+//
+// Parameters:
+//   - name: the executor binary name
+//   - cause: the underlying run error
+//
+// Returns:
+//   - error: "[dream] FAIL: executor <name> failed: <cause>"
+func ExecutorRun(name string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamExecutorRun), name, cause,
+	)
+}
+
+// GuardRefused wraps a guard refusal reason as an error so a
+// disposition applier can abort a refused write.
+//
+// Parameters:
+//   - reason: the registry-sourced refusal reason from a GuardDecision
+//
+// Returns:
+//   - error: the reason verbatim
+func GuardRefused(reason string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamGuardRefused), reason,
+	)
+}
+
+// LockAcquire wraps a failure to acquire the dream pass lock.
+//
+// Parameters:
+//   - path: the lock file path
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "dream: acquire lock <path>: <cause>"
+func LockAcquire(path string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamLockAcquire), path, cause,
+	)
+}
+
+// MoveSource wraps a failure to relocate a source file (archive).
+//
+// Parameters:
+//   - path: the source file path
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "dream: move source <path>: <cause>"
+func MoveSource(path string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamMoveSource), path, cause,
+	)
+}
+
+// ProposalNotFound returns an error when no proposal with the given
+// id exists in the scanned run directory.
+//
+// Parameters:
+//   - id: the requested proposal ID
+//   - dir: the run directory searched
+//
+// Returns:
+//   - error: "dream: proposal <id> not found in <dir>"
+func ProposalNotFound(id, dir string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamProposalNotFound), id, dir,
+	)
+}
+
+// ReadProposals wraps a failure to read a proposals file.
+//
+// Parameters:
+//   - path: the proposals file path
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "dream: read proposals <path>: <cause>"
+func ReadProposals(path string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamReadProposals), path, cause,
+	)
+}
+
+// ReadSource wraps a failure to read a source idea file.
+//
+// Parameters:
+//   - path: the source file path
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "dream: read source <path>: <cause>"
+func ReadSource(path string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamReadSource), path, cause,
+	)
+}
+
+// ScanIdeas wraps a failure to walk the ideas/ directory.
+//
+// Parameters:
+//   - path: the ideas directory path
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "dream: scan ideas <path>: <cause>"
+func ScanIdeas(path string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamScanIdeas), path, cause,
+	)
+}
+
+// UnknownAction returns an error when a disposition names an action
+// the applier does not recognize.
+//
+// Parameters:
+//   - action: the unrecognized action
+//   - id: the proposal ID
+//
+// Returns:
+//   - error: "dream: unknown action <action> for proposal <id>"
+func UnknownAction(action, id string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDreamUnknownAction), action, id,
+	)
+}

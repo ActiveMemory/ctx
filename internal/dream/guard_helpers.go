@@ -7,6 +7,7 @@
 package dream
 
 import (
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -38,6 +39,19 @@ func relUnderRoot(projectRoot, target string) (string, error) {
 		return "", errDream.RelPath(relErr)
 	}
 	return rel, nil
+}
+
+// pathMissing reports whether err is (or wraps) a not-exist error,
+// used so a scan of an absent directory yields an empty result rather
+// than a failure.
+//
+// Parameters:
+//   - err: the error to classify
+//
+// Returns:
+//   - bool: true when err indicates a missing path
+func pathMissing(err error) bool {
+	return os.IsNotExist(err)
 }
 
 // underDir reports whether rel (a cleaned relative path) resolves at or
