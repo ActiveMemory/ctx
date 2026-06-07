@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-06-07 | ctx-dream is headless-first; invoking /ctx-dream interactively is debugging, not the UX |
 | 2026-06-07 | ctx-dream design principles (consolidated) |
 | 2026-06-07 | internal/audit & compliance gates for new code (consolidated) |
 | 2026-06-07 | Error handling: sentinels, unwrapping, and silent discards (consolidated) |
@@ -99,6 +100,16 @@ DO NOT UPDATE FOR:
 | 2026-04-26 | ctx system help can list project-local hooks not in the Go binary |
 | 2026-04-25 | Confident code comments can pull an LLM away from first-principles knowledge |
 <!-- INDEX:END -->
+
+---
+
+## [2026-06-07-142015] ctx-dream is headless-first; invoking /ctx-dream interactively is debugging, not the UX
+
+**Context**: An end user ran /ctx-dream in their foreground terminal session and watched the agent hand-execute the pass (grep/cat/hash/write JSON). Their words: 'I'm not dreaming but viewing a dream being debugged.'
+
+**Lesson**: The dream is a sleep-time/headless product: cron 'claude -p' runs the pass out-of-band, then the human is nagged and reviews via /ctx-serendipity. The /ctx-dream SKILL is the executor's instruction set, not a user command — driving it interactively makes the agent perform the executor's mechanical work visibly, which is a debugging affordance, not the end-user experience. Exposing /ctx-dream as a user slash-command invites exactly this confusion.
+
+**Application**: End-user entry points are 'ctx dream' (on-demand pass that prints a digest) and cron (scheduled); review is /ctx-serendipity. Do NOT have users invoke /ctx-dream directly. Reconsider de-listing /ctx-dream from the user-invocable skill set, ensure 'ctx dream' gives a clean run->digest experience, and wire the 'serendipity round waiting' nag so the dream->review loop closes without the user watching a pass.
 
 ---
 
