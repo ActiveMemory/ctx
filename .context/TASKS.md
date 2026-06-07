@@ -2373,3 +2373,17 @@ DR-kb session a5736210 closeouts under
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
 - [ ] Reindex grouped-emit (ctx-side): RenderBlock should emit the CTX:KB:TOPICS managed block grouped by parent folder (### <group> headings) instead of one flat sorted list, for grouped kbs like things-wtf-dr (49 topics). ListTopics already returns slashed group/slug slugs (PR #106, spec specs/kb-reindex-nesting.md) so only RenderBlock + the consumer-facing block-format contract change; must still handle ungrouped/flat top-level topics. Deferred from the kb-reindex fix (managed-block format change). #priority:high active dependent work in the hub/other workstream; natural owner is ctx-side (ListTopics already recursive). #session:cf14dd25 #branch:main #commit:aae42fe8 #added:2026-05-28-215308
+
+### ctx-dream v1
+
+- [ ] Tests: git check-ignore guard refuses tracked path; ledger dedup-against-seen; crash-resume; 2605.12978 corrupted-artifact regression fixture #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [ ] Build ctx dream review CLI (accept/reject/amend) plus serendipity skill; mechanical applies instantly, generative drops to agent; backup-before-mutate; ctx remind cadence #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [ ] Implement disciplined ideas triage: classify, ground against code and specs, semantic dedup; emit atomic provenanced proposals #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [ ] Build proposal/ledger/state machinery: per-source state record, append-only ledger recording rejections, two-clocks read model #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [ ] Build the three structural guards: write-scope, sources-as-data, dont-leak (git check-ignore refuses tracked paths) #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [ ] Settle executor: cron claude -p bounded scheduled pass; safety invariants structural not prompt-level #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
