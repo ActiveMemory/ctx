@@ -18,7 +18,9 @@ export default function Decisions({ dir }: { dir: string }) {
   const [decisions, setDecisions] = useState<Decision[]>([]);
   const [query, setQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  // Keyed by decision timestamp (stable) — NOT array index, which
+  // would point at the wrong row once the list is filtered/reordered.
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   // authoring form
   const [formOpen, setFormOpen] = useState(false);
@@ -76,10 +78,10 @@ export default function Decisions({ dir }: { dir: string }) {
     }
   }
 
-  function toggle(i: number) {
+  function toggle(id: string) {
     setExpanded((prev) => {
       const next = new Set(prev);
-      next.has(i) ? next.delete(i) : next.add(i);
+      next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
   }
@@ -154,10 +156,13 @@ export default function Decisions({ dir }: { dir: string }) {
             No decisions to show.
           </div>
         )}
-        {filtered.map((d, i) => (
-          <div key={i} className="rounded-lg border border-border bg-panel">
+        {filtered.map((d) => (
+          <div
+            key={d.timestamp}
+            className="rounded-lg border border-border bg-panel"
+          >
             <button
-              onClick={() => toggle(i)}
+              onClick={() => toggle(d.timestamp)}
               className="flex w-full items-center gap-3 px-4 py-3 text-left"
             >
               <div className="min-w-0 flex-1">
@@ -178,10 +183,10 @@ export default function Decisions({ dir }: { dir: string }) {
                 </span>
               )}
               <span className="shrink-0 text-muted">
-                {expanded.has(i) ? "−" : "+"}
+                {expanded.has(d.timestamp) ? "−" : "+"}
               </span>
             </button>
-            {expanded.has(i) && (
+            {expanded.has(d.timestamp) && (
               <div className="border-t border-border px-4 py-3">
                 <Field label="Context" value={d.context} />
                 <Field label="Rationale" value={d.rationale} />
