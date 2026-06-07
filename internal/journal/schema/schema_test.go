@@ -81,6 +81,9 @@ func TestKnownField_PostV1FieldDrift(t *testing.T) {
 		"interruptedMessageId",
 		"attributionPlugin",
 		"attributionSkill",
+		"attributionMcpServer",
+		"attributionMcpTool",
+		"promptSource",
 		"apiErrorStatus",
 		"errorDetails",
 	} {

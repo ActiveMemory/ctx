@@ -28,8 +28,11 @@ var OptionalFields = []string{
 	"interruptedMessageId", // CC ≥ 2.1.~100: tracks parent of an interrupt
 	"agentId", "teamName", "agentName", "agentColor",
 	"promptId", "entrypoint", "agentSetting",
+	"promptSource", // CC ≥ 2.1.~161: prompt provenance
 	// CC ≥ 2.1.~110: skill/plugin invocation provenance.
 	"attributionPlugin", "attributionSkill",
+	// CC ≥ 2.1.~158: MCP invocation provenance (attribution family).
+	"attributionMcpServer", "attributionMcpTool",
 	"sourceToolAssistantUUID", "toolUseResult",
 	"sourceToolUseID", "origin", "planContent",
 	"isApiErrorMessage", "error", "apiError",
