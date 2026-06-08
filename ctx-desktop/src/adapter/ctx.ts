@@ -88,6 +88,21 @@ export function ctxInfo(): Promise<CtxInfo> {
   return invoke<CtxInfo>("ctx_info");
 }
 
+/** Override the ctx binary path (empty string clears it → PATH lookup). */
+export function setCtxPath(path: string): Promise<void> {
+  return invoke<void>("set_ctx_path", { path });
+}
+
+/** True when `<dir>/.context` exists — validates a restored project. */
+export function dirIsCtxProject(dir: string): Promise<boolean> {
+  return invoke<boolean>("dir_is_ctx_project", { dir });
+}
+
+/** Watch every project's `.context/` so the dashboard sees external writes. */
+export function watchProjects(dirs: string[]): Promise<void> {
+  return invoke<void>("watch_projects", { dirs });
+}
+
 /** Scan a workspace `root` (up to `maxDepth` levels) for ctx projects. */
 export function discoverProjects(
   root: string,

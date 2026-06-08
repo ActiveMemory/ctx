@@ -14,6 +14,12 @@ import {
   type ProjectSummary,
   type Task,
 } from "../adapter/ctx";
+import { useReloadOnCtxChange } from "../hooks/useReload";
+
+// Above this many projects, summaries (2 ctx spawns each) aren't
+// auto-loaded — the user opts in with "Load all" to avoid a process
+// storm on a large workspace.
+const AUTO_CAP = 60;
 
 // Run `fn` over `items` at most `limit` at a time, so a big workspace
 // doesn't spawn one `ctx` process per project all at once.
@@ -135,6 +141,7 @@ function TaskRow({ dir, task }: { dir: string; task: Task }) {
 
 export default function Projects({
   workspaces,
+  deadRoots,
   projects,
   scanning,
   onOpen,
@@ -142,6 +149,7 @@ export default function Projects({
   onRemoveWorkspace,
 }: {
   workspaces: string[];
+  deadRoots: string[];
   projects: Project[];
   scanning: boolean;
   onOpen: (dir: string) => void;
@@ -152,8 +160,17 @@ export default function Projects({
     {},
   );
   const [loading, setLoading] = useState(false);
+  const [loadAll, setLoadAll] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [details, setDetails] = useState<Record<string, Detail>>({});
+  const reload = useReloadOnCtxChange();
+
+  // The set of projects we actually survey: capped unless the user opts
+  // into loading every one (see AUTO_CAP).
+  const surveyed =
+    loadAll || projects.length <= AUTO_CAP
+      ? projects
+      : projects.slice(0, AUTO_CAP);
 
   // Only the latest scan applies — a fast add→remove of workspaces can
   // otherwise let an older summary scan land last and show stale cards.
@@ -173,9 +190,14 @@ export default function Projects({
   }, []);
 
   useEffect(() => {
-    if (projects.length) void loadSummaries(projects);
+    const list =
+      loadAll || projects.length <= AUTO_CAP
+        ? projects
+        : projects.slice(0, AUTO_CAP);
+    if (list.length) void loadSummaries(list);
     else setSummaries({});
-  }, [projects, loadSummaries]);
+    // `reload` re-scans when any watched project's .context changes.
+  }, [projects, loadAll, loadSummaries, reload]);
 
   async function expand(dir: string) {
     if (expanded === dir) {
@@ -204,7 +226,7 @@ export default function Projects({
   }
 
   // Attention-first: errors, then warnings/drift, float to the top.
-  const ordered = [...projects].sort((a, b) => {
+  const ordered = [...surveyed].sort((a, b) => {
     const sa = summaries[a.path];
     const sb = summaries[b.path];
     const score = (s?: ProjectSummary) =>
@@ -254,7 +276,7 @@ export default function Projects({
           </p>
         </div>
         <button
-          onClick={() => void loadSummaries(projects)}
+          onClick={() => void loadSummaries(surveyed)}
           disabled={loading}
           className="rounded-md border border-border bg-panel px-3 py-1.5 text-xs text-ink hover:border-accent disabled:opacity-50"
         >
@@ -264,24 +286,32 @@ export default function Projects({
 
       {/* Workspace roots: add / remove the folders that get scanned. */}
       <div className="mb-4 flex flex-wrap items-center gap-1.5">
-        {workspaces.map((w) => (
-          <span
-            key={w}
-            title={w}
-            className="group inline-flex items-center gap-1 rounded-full border border-border bg-panel py-1 pl-3 pr-1.5 text-xs text-ink"
-          >
-            <span className="max-w-44 truncate font-mono">
-              {w.split("/").pop() || w}
-            </span>
-            <button
-              onClick={() => onRemoveWorkspace(w)}
-              title="Remove this workspace"
-              className="grid h-4 w-4 place-items-center rounded-full text-muted hover:bg-err/15 hover:text-err"
+        {workspaces.map((w) => {
+          const dead = deadRoots.includes(w);
+          return (
+            <span
+              key={w}
+              title={dead ? `${w} (not found)` : w}
+              className={`group inline-flex items-center gap-1 rounded-full border py-1 pl-3 pr-1.5 text-xs ${
+                dead
+                  ? "border-err/40 bg-err/10 text-err"
+                  : "border-border bg-panel text-ink"
+              }`}
             >
-              ✕
-            </button>
-          </span>
-        ))}
+              <span className="max-w-44 truncate font-mono">
+                {w.split("/").pop() || w}
+              </span>
+              {dead && <span className="text-[10px]">missing</span>}
+              <button
+                onClick={() => onRemoveWorkspace(w)}
+                title="Remove this workspace"
+                className="grid h-4 w-4 place-items-center rounded-full text-muted hover:bg-err/15 hover:text-err"
+              >
+                ✕
+              </button>
+            </span>
+          );
+        })}
         <button
           onClick={onAddWorkspace}
           className="rounded-full border border-dashed border-border px-3 py-1 text-xs text-muted hover:border-accent hover:text-accent"
@@ -289,6 +319,21 @@ export default function Projects({
           + Add workspace
         </button>
       </div>
+
+      {!loadAll && projects.length > AUTO_CAP && (
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-warn/40 bg-warn/10 px-4 py-3 text-xs">
+          <span className="text-ink">
+            Showing the first {AUTO_CAP} of {projects.length} projects to avoid
+            a slow scan.
+          </span>
+          <button
+            onClick={() => setLoadAll(true)}
+            className="ml-auto rounded-md border border-border bg-panel px-3 py-1 text-ink hover:border-accent"
+          >
+            Load all {projects.length}
+          </button>
+        </div>
+      )}
 
       {projects.length > 0 && (
         <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-border bg-panel px-4 py-3 text-xs">
