@@ -150,34 +150,38 @@ export function renderMarkdown(md: string): ReactNode[] {
         i++;
       }
       out.push(
-        <table key={key++} className="mb-3 w-full border-collapse text-sm">
-          <thead>
-            <tr>
-              {header.map((h, ci) => (
-                <th
-                  key={ci}
-                  className={`border border-border px-2 py-1 font-semibold text-ink ${aligns[ci] ?? "text-left"}`}
-                >
-                  {inline(h)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, ri) => (
-              <tr key={ri}>
-                {row.map((cell, ci) => (
-                  <td
+        // Scroll a too-wide table inside its own box instead of letting
+        // it blow out the surrounding doc width.
+        <div key={key++} className="mb-3 overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr>
+                {header.map((h, ci) => (
+                  <th
                     key={ci}
-                    className={`border border-border px-2 py-1 text-ink ${aligns[ci] ?? "text-left"}`}
+                    className={`break-words border border-border px-2 py-1 align-top font-semibold text-ink ${aligns[ci] ?? "text-left"}`}
                   >
-                    {inline(cell)}
-                  </td>
+                    {inline(h)}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>,
+            </thead>
+            <tbody>
+              {rows.map((row, ri) => (
+                <tr key={ri}>
+                  {row.map((cell, ci) => (
+                    <td
+                      key={ci}
+                      className={`break-words border border-border px-2 py-1 align-top text-ink ${aligns[ci] ?? "text-left"}`}
+                    >
+                      {inline(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
       );
       continue;
     }
