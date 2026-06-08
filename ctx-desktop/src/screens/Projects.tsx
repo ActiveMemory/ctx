@@ -163,7 +163,9 @@ export default function Projects({
   const [loadAll, setLoadAll] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [details, setDetails] = useState<Record<string, Detail>>({});
-  const reload = useReloadOnCtxChange();
+  // Listen on the all-projects channel so any project's change refreshes
+  // the grid — without making per-project screens refetch on foreign writes.
+  const reload = useReloadOnCtxChange("ctx-projects-changed");
 
   // The set of projects we actually survey: capped unless the user opts
   // into loading every one (see AUTO_CAP).

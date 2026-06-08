@@ -53,8 +53,10 @@ pub fn watch_context(
 
 /// (Re)starts watching the `.context/` of every project in `dirs`,
 /// replacing any previous set. Any filesystem event in any of them
-/// emits "ctx-changed", so the dashboard refetches while it is open.
-/// Projects without a `.context/` are skipped, not errors.
+/// emits "ctx-projects-changed" — a SEPARATE channel from the active
+/// project's "ctx-changed", so the dashboard refetches on any project's
+/// change without making every per-project screen refetch on a foreign
+/// project's write. Projects without a `.context/` are skipped.
 #[tauri::command]
 pub fn watch_projects(
     app: AppHandle,
@@ -71,7 +73,7 @@ pub fn watch_projects(
         let mut watcher =
             match notify::recommended_watcher(move |res: notify::Result<notify::Event>| {
                 if res.is_ok() {
-                    let _ = handle.emit("ctx-changed", ());
+                    let _ = handle.emit("ctx-projects-changed", ());
                 }
             }) {
                 Ok(w) => w,
