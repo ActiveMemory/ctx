@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 
-// Returns a counter that increments (debounced) whenever the active
-// project's .context/ changes. Add it to a load effect's deps to
-// refetch when the CLI or an AI agent writes externally.
-export function useReloadOnCtxChange(): number {
+// Returns a counter that increments (debounced) whenever `event` fires.
+// Add it to a load effect's deps to refetch on external writes. Defaults
+// to "ctx-changed" (the active project); the dashboard passes
+// "ctx-projects-changed" to react to writes in ANY project.
+export function useReloadOnCtxChange(event = "ctx-changed"): number {
   const [n, setN] = useState(0);
   useEffect(() => {
     let unlisten: (() => void) | undefined;
     let timer: ReturnType<typeof setTimeout> | undefined;
-    void listen("ctx-changed", () => {
+    void listen(event, () => {
       clearTimeout(timer);
       timer = setTimeout(() => setN((x) => x + 1), 300);
     }).then((u) => {
@@ -19,6 +20,6 @@ export function useReloadOnCtxChange(): number {
       unlisten?.();
       clearTimeout(timer);
     };
-  }, []);
+  }, [event]);
   return n;
 }
