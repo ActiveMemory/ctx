@@ -27,6 +27,7 @@ import {
   type DoctorReport,
   type Project,
 } from "./adapter/ctx";
+import { useReloadOnCtxChange } from "./hooks/useReload";
 
 const DIR_KEY = "ctx.dir";
 const WORKSPACES_KEY = "ctx.workspaces";
@@ -139,6 +140,9 @@ function App() {
   const [view, setView] = useState<View>("overview");
   const [info, setInfo] = useState<CtxInfo | null>(null);
   const [health, setHealth] = useState<DoctorReport | null>(null);
+  // Active-project change channel, so the top-bar doctor pill refreshes
+  // live (like the screens) instead of only on a project switch.
+  const healthReload = useReloadOnCtxChange();
 
   function applyDir(d: string) {
     if (!d) return;
@@ -244,7 +248,7 @@ function App() {
     ctxDoctor(dir)
       .then(setHealth)
       .catch(() => setHealth(null));
-  }, [dir]);
+  }, [dir, healthReload]);
 
   // Watch the active project's .context/ for external writes.
   useEffect(() => {
