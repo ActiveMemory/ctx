@@ -15,7 +15,12 @@ export interface CtxStatus {
   total_files: number;
   total_tokens: number;
   total_size: number;
-  files: { name: string; tokens: number; is_empty: boolean }[];
+  files: {
+    name: string;
+    tokens: number;
+    is_empty: boolean;
+    summary?: string;
+  }[];
 }
 
 // Mirrors `ctx task list --json`.
@@ -75,6 +80,7 @@ export interface Project {
   path: string;
   name: string;
   has_git: boolean;
+  branch: string; // current git branch, "" when absent/detached
 }
 
 /** Detect the ctx binary and read its version. */
@@ -154,6 +160,94 @@ export async function ctxDoctor(dir: string): Promise<DoctorReport> {
 /** Raw `ctx journal source --limit N` table text for `dir`. */
 export function ctxJournal(dir: string, limit: number): Promise<string> {
   return invoke<string>("ctx_journal", { dir, limit });
+}
+
+/** Raw `ctx journal source --show <session>` text for one session. */
+export function ctxJournalShow(dir: string, session: string): Promise<string> {
+  return invoke<string>("ctx_journal_show", { dir, session });
+}
+
+// One project's at-a-glance health for the multi-project dashboard.
+// Derived entirely from `status --json` + `doctor --json`, so it works
+// on stock ctx 0.8.1 (no `task list --json` needed). Any failed source
+// is recorded in `errors` and leaves its fields null rather than
+// throwing — one broken project must not blank the whole grid.
+export interface ProjectSummary {
+  tasksOpen: number | null;
+  tasksDone: number | null;
+  decisions: number | null;
+  totalFiles: number | null;
+  totalTokens: number | null;
+  warnings: number | null;
+  errors: number | null;
+  hasDrift: boolean;
+  problems: string[];
+}
+
+// Parses a TASKS.md status summary like "237 active, 11 completed".
+function parseTaskSummary(s: string): { open: number; done: number } | null {
+  const open = /(\d+)\s+active/.exec(s);
+  const done = /(\d+)\s+completed/.exec(s);
+  if (!open && !done) return null;
+  return { open: open ? +open[1] : 0, done: done ? +done[1] : 0 };
+}
+
+// Parses a DECISIONS.md summary like "112 decisions".
+function parseCount(s: string): number | null {
+  const m = /(\d+)/.exec(s);
+  return m ? +m[1] : null;
+}
+
+/**
+ * At-a-glance summary for one project, aggregating `status --json` and
+ * `doctor --json`. Never rejects: per-source failures land in
+ * `problems` so the dashboard can render a degraded card.
+ */
+export async function projectSummary(dir: string): Promise<ProjectSummary> {
+  const out: ProjectSummary = {
+    tasksOpen: null,
+    tasksDone: null,
+    decisions: null,
+    totalFiles: null,
+    totalTokens: null,
+    warnings: null,
+    errors: null,
+    hasDrift: false,
+    problems: [],
+  };
+
+  try {
+    const st = await ctxStatus(dir);
+    out.totalFiles = st.total_files;
+    out.totalTokens = st.total_tokens;
+    for (const f of st.files) {
+      const summary = f.summary ?? "";
+      if (f.name === "TASKS.md") {
+        const t = parseTaskSummary(summary);
+        if (t) {
+          out.tasksOpen = t.open;
+          out.tasksDone = t.done;
+        }
+      } else if (f.name === "DECISIONS.md") {
+        out.decisions = parseCount(summary);
+      }
+    }
+  } catch (e) {
+    out.problems.push(`status: ${String(e)}`);
+  }
+
+  try {
+    const doc = await ctxDoctor(dir);
+    out.warnings = doc.warnings;
+    out.errors = doc.errors;
+    out.hasDrift = doc.results.some(
+      (r) => r.name === "drift" && (r.status === "warning" || r.status === "error"),
+    );
+  } catch (e) {
+    out.problems.push(`doctor: ${String(e)}`);
+  }
+
+  return out;
 }
 
 /** `ctx drift` report, or `ctx drift --fix` to auto-correct, for `dir`. */

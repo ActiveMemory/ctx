@@ -25,6 +25,7 @@ pub fn run() {
             ctx_adapter::kb_info,
             ctx_adapter::kb_read,
             ctx_adapter::ctx_journal,
+            ctx_adapter::ctx_journal_show,
             ctx_adapter::ctx_drift,
             ctx_adapter::ctx_compact,
             ctx_adapter::ctx_remind_list,

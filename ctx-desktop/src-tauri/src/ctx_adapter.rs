@@ -27,31 +27,54 @@ pub struct CtxInfo {
     pub error: Option<String>,
 }
 
+/// Hard ceiling on a single `ctx` invocation. The CLI is local and
+/// fast; anything past this is a hang, so we surface a timeout error
+/// rather than block the UI command forever.
+const CTX_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(30);
+
 /// Runs `ctx <args>` in `dir` (empty dir = inherit cwd) and returns
 /// stdout on success, or a trimmed stderr/error string on failure.
+///
+/// The child runs on a worker thread so a wedged `ctx` cannot block the
+/// caller indefinitely: after [`CTX_TIMEOUT`] we abandon the wait and
+/// return a timeout error (the orphaned process exits on its own).
 fn run_ctx(dir: &str, args: &[&str]) -> Result<String, String> {
-    let mut cmd = Command::new(CTX_BIN);
-    cmd.args(args);
-    if !dir.is_empty() {
-        cmd.current_dir(dir);
-    }
-    let path = match std::env::var("PATH") {
-        Ok(existing) => format!("{EXTRA_PATH}:{existing}"),
-        Err(_) => EXTRA_PATH.to_string(),
-    };
-    cmd.env("PATH", path);
+    let dir = dir.to_string();
+    let owned_args: Vec<String> = args.iter().map(|s| s.to_string()).collect();
+    let (tx, rx) = std::sync::mpsc::channel();
 
-    let output = cmd
-        .output()
-        .map_err(|e| format!("could not run `{CTX_BIN}`: {e}"))?;
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
-        if stderr.is_empty() {
-            return Err(format!("`ctx {}` exited with an error", args.join(" ")));
+    std::thread::spawn(move || {
+        let mut cmd = Command::new(CTX_BIN);
+        cmd.args(&owned_args);
+        if !dir.is_empty() {
+            cmd.current_dir(&dir);
         }
-        return Err(stderr);
+        let path = match std::env::var("PATH") {
+            Ok(existing) => format!("{EXTRA_PATH}:{existing}"),
+            Err(_) => EXTRA_PATH.to_string(),
+        };
+        cmd.env("PATH", path);
+        let _ = tx.send(cmd.output());
+    });
+
+    match rx.recv_timeout(CTX_TIMEOUT) {
+        Ok(Ok(output)) => {
+            if !output.status.success() {
+                let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+                if stderr.is_empty() {
+                    return Err(format!("`ctx {}` exited with an error", args.join(" ")));
+                }
+                return Err(stderr);
+            }
+            Ok(String::from_utf8_lossy(&output.stdout).to_string())
+        }
+        Ok(Err(e)) => Err(format!("could not run `{CTX_BIN}`: {e}")),
+        Err(_) => Err(format!(
+            "`ctx {}` timed out after {}s",
+            args.join(" "),
+            CTX_TIMEOUT.as_secs()
+        )),
     }
-    Ok(String::from_utf8_lossy(&output.stdout).to_string())
 }
 
 /// Detects the ctx binary and returns its version string.
@@ -109,6 +132,18 @@ pub fn ctx_learning_list(dir: String) -> Result<String, String> {
 pub fn ctx_journal(dir: String, limit: u32) -> Result<String, String> {
     let l = limit.to_string();
     run_ctx(&dir, &["journal", "source", "--limit", l.as_str()])
+}
+
+/// Returns `ctx journal source --show <session>` for `dir` — the raw
+/// text of a single session, used by the multi-project dashboard's
+/// per-task drill-down to show the journal entry a task's `session`
+/// id points at. Rendered verbatim (no JSON mode for the journal yet).
+#[tauri::command]
+pub fn ctx_journal_show(dir: String, session: String) -> Result<String, String> {
+    if session.trim().is_empty() {
+        return Err("session id is empty".to_string());
+    }
+    run_ctx(&dir, &["journal", "source", "--show", session.as_str()])
 }
 
 /// Runs `ctx drift` (or `ctx drift --fix`) for `dir` and returns

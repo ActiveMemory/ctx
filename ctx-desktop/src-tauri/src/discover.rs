@@ -31,6 +31,23 @@ pub struct Project {
     pub path: String,
     pub name: String,
     pub has_git: bool,
+    /// Current git branch, or "" when not a repo / detached / git absent.
+    pub branch: String,
+}
+
+/// Reads the current branch of the repo at `dir`, or "" on any failure
+/// or a detached HEAD (where `--abbrev-ref` yields the literal "HEAD").
+fn git_branch(dir: &Path) -> String {
+    std::process::Command::new("git")
+        .arg("-C")
+        .arg(dir)
+        .args(["rev-parse", "--abbrev-ref", "HEAD"])
+        .output()
+        .ok()
+        .filter(|o| o.status.success())
+        .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
+        .filter(|b| b.as_str() != "HEAD")
+        .unwrap_or_default()
 }
 
 /// Scans `root` (and up to `max_depth` levels below it) for ctx
@@ -59,10 +76,16 @@ fn walk(dir: &Path, depth_left: u32, out: &mut Vec<Project>) {
             .file_name()
             .map(|s| s.to_string_lossy().to_string())
             .unwrap_or_default();
+        let has_git = dir.join(".git").exists();
         out.push(Project {
             path: dir.to_string_lossy().to_string(),
             name,
-            has_git: dir.join(".git").exists(),
+            has_git,
+            branch: if has_git {
+                git_branch(dir)
+            } else {
+                String::new()
+            },
         });
     }
     if depth_left == 0 {

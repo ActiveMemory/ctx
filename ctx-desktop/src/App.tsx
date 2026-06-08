@@ -13,6 +13,7 @@ import Journal from "./screens/Journal";
 import Drift from "./screens/Drift";
 import Health from "./screens/Health";
 import Hub from "./screens/Hub";
+import Projects from "./screens/Projects";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import {
@@ -25,14 +26,33 @@ import {
 } from "./adapter/ctx";
 
 const DIR_KEY = "ctx.dir";
-const WORKSPACE_KEY = "ctx.workspace";
+const WORKSPACES_KEY = "ctx.workspaces";
+const LEGACY_WORKSPACE_KEY = "ctx.workspace";
 
-// No baked-in project: until the user picks a workspace (persisted in
+// No baked-in project: until the user adds a workspace (persisted in
 // localStorage), `dir` is empty and the main area shows a chooser.
 // A hardcoded path only ever pointed at one machine's checkout.
 const DEFAULT_DIR = "";
 
+// Reads the persisted workspace roots, migrating the old single-value
+// `ctx.workspace` key into the array form on first run.
+function loadWorkspaces(): string[] {
+  try {
+    const raw = localStorage.getItem(WORKSPACES_KEY);
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr))
+        return arr.filter((x): x is string => typeof x === "string");
+    }
+  } catch {
+    // malformed value — fall through to legacy / empty
+  }
+  const legacy = localStorage.getItem(LEGACY_WORKSPACE_KEY);
+  return legacy ? [legacy] : [];
+}
+
 type View =
+  | "projects"
   | "overview"
   | "search"
   | "tasks"
@@ -49,6 +69,7 @@ type View =
   | "health"
   | "hub";
 const NAV: { id: View; label: string }[] = [
+  { id: "projects", label: "Projects" },
   { id: "overview", label: "Overview" },
   { id: "search", label: "Search" },
   { id: "tasks", label: "Tasks" },
@@ -107,9 +128,7 @@ function App() {
   const [dir, setDir] = useState(
     () => localStorage.getItem(DIR_KEY) || DEFAULT_DIR,
   );
-  const [workspace, setWorkspace] = useState(
-    () => localStorage.getItem(WORKSPACE_KEY) || "",
-  );
+  const [workspaces, setWorkspaces] = useState<string[]>(loadWorkspaces);
   const [projects, setProjects] = useState<Project[]>([]);
   const [scanning, setScanning] = useState(false);
   const [view, setView] = useState<View>("overview");
@@ -122,33 +141,56 @@ function App() {
     localStorage.setItem(DIR_KEY, d);
   }
 
-  async function scan(root: string) {
-    if (!root) return;
+  // Scans every workspace root, merging results and de-duping by path
+  // (overlapping roots can surface the same project).
+  async function scanAll(roots: string[]) {
+    if (!roots.length) {
+      setProjects([]);
+      return;
+    }
     setScanning(true);
     try {
-      setProjects(await discoverProjects(root, 4));
-    } catch {
-      setProjects([]);
+      const lists = await Promise.all(
+        roots.map((r) => discoverProjects(r, 4).catch(() => [] as Project[])),
+      );
+      const byPath = new Map<string, Project>();
+      for (const list of lists) for (const p of list) byPath.set(p.path, p);
+      setProjects(
+        [...byPath.values()].sort((a, b) =>
+          a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+        ),
+      );
     } finally {
       setScanning(false);
     }
   }
 
-  async function pickWorkspace() {
+  function saveWorkspaces(list: string[]) {
+    setWorkspaces(list);
+    localStorage.setItem(WORKSPACES_KEY, JSON.stringify(list));
+  }
+
+  async function addWorkspace() {
     const selected = await open({
       directory: true,
-      title: "Choose a workspace folder",
+      title: "Add a workspace folder",
     });
-    if (typeof selected !== "string") return;
-    setWorkspace(selected);
-    localStorage.setItem(WORKSPACE_KEY, selected);
-    await scan(selected);
+    if (typeof selected !== "string" || workspaces.includes(selected)) return;
+    const next = [...workspaces, selected];
+    saveWorkspaces(next);
+    await scanAll(next);
+  }
+
+  function removeWorkspace(path: string) {
+    const next = workspaces.filter((w) => w !== path);
+    saveWorkspaces(next);
+    void scanAll(next);
   }
 
   useEffect(() => {
     void ctxInfo().then(setInfo);
-    // Re-scan a previously chosen workspace so the dropdown is ready.
-    if (workspace) void scan(workspace);
+    // Re-scan previously added workspaces so the dropdown/grid are ready.
+    if (workspaces.length) void scanAll(workspaces);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -192,17 +234,31 @@ function App() {
             </button>
           ))}
         </nav>
-        {workspace && (
+        {workspaces.length > 0 && (
           <div className="mt-auto border-t border-border px-4 py-3">
-            <div className="text-[11px] uppercase tracking-wide text-muted">
-              Workspace
+            <div className="mb-1 text-[11px] uppercase tracking-wide text-muted">
+              Workspaces ({workspaces.length})
             </div>
-            <div
-              className="truncate font-mono text-[11px] text-ink"
-              title={workspace}
-            >
-              {workspace.split("/").pop() || workspace}
-            </div>
+            <ul className="space-y-0.5">
+              {workspaces.map((w) => (
+                <li
+                  key={w}
+                  className="group flex items-center gap-1"
+                  title={w}
+                >
+                  <span className="truncate font-mono text-[11px] text-ink">
+                    {w.split("/").pop() || w}
+                  </span>
+                  <button
+                    onClick={() => removeWorkspace(w)}
+                    title="Remove this workspace"
+                    className="ml-auto shrink-0 text-muted opacity-0 hover:text-err group-hover:opacity-100"
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </aside>
@@ -221,7 +277,7 @@ function App() {
                 ? "Scanning…"
                 : projects.length
                   ? `${projects.length} project${projects.length > 1 ? "s" : ""}…`
-                  : "No workspace"}
+                  : "No workspaces"}
             </option>
             {projects.map((p) => (
               <option key={p.path} value={p.path}>
@@ -231,11 +287,11 @@ function App() {
             ))}
           </select>
           <button
-            onClick={() => void pickWorkspace()}
-            title="Choose a workspace folder to scan for ctx projects"
+            onClick={() => void addWorkspace()}
+            title="Add a workspace folder to scan for ctx projects"
             className="flex h-8 shrink-0 items-center rounded-md bg-accent px-3 text-xs font-medium text-bg"
           >
-            Workspace…
+            Add workspace…
           </button>
 
           <div className="flex-1" />
@@ -256,24 +312,41 @@ function App() {
         </header>
 
         <main className="min-h-0 flex-1 overflow-auto">
-          {!dir && (
+          {/* Projects is workspace-level: it surveys every discovered
+              project, so it renders regardless of the active `dir`. */}
+          {view === "projects" && (
+            <Projects
+              workspaces={workspaces}
+              projects={projects}
+              scanning={scanning}
+              onOpen={(d) => {
+                applyDir(d);
+                setView("overview");
+              }}
+              onAddWorkspace={() => void addWorkspace()}
+              onRemoveWorkspace={removeWorkspace}
+            />
+          )}
+          {view !== "projects" && !dir && (
             <div className="mx-auto max-w-md px-6 py-20 text-center">
               <div className="text-lg font-semibold text-ink">
                 No project selected
               </div>
               <p className="mt-2 text-sm text-muted">
-                Choose a workspace folder and ctx Desktop will scan it for
-                projects (any directory with a <code>.context/</code>).
+                Add one or more workspace folders and ctx Desktop will scan them
+                for projects (any directory with a <code>.context/</code>), then
+                pick one from the <strong>Projects</strong> screen or the top-bar
+                dropdown.
               </p>
               <button
-                onClick={() => void pickWorkspace()}
+                onClick={() => void addWorkspace()}
                 className="mt-5 inline-flex h-9 items-center rounded-md bg-accent px-4 text-sm font-medium text-bg"
               >
-                Choose workspace…
+                Add workspace…
               </button>
             </div>
           )}
-          {dir && (
+          {view !== "projects" && dir && (
             <>
               {view === "overview" && <Overview dir={dir} />}
               {view === "search" && <Search dir={dir} onOpen={setView} />}
