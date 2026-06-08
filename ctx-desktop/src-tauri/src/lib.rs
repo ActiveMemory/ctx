@@ -8,6 +8,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .manage(watcher::WatchState::default())
+        .manage(watcher::WorkspaceWatchState::default())
         .invoke_handler(tauri::generate_handler![
             ctx_adapter::ctx_info,
             ctx_adapter::ctx_status,
@@ -36,8 +37,11 @@ pub fn run() {
             ctx_adapter::ctx_pad_rm,
             ctx_adapter::ctx_pad_show,
             ctx_adapter::ctx_connection_status,
+            ctx_adapter::set_ctx_path,
+            ctx_adapter::dir_is_ctx_project,
             discover::discover_projects,
             watcher::watch_context,
+            watcher::watch_projects,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

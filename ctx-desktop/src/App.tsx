@@ -20,6 +20,9 @@ import {
   ctxInfo,
   ctxDoctor,
   discoverProjects,
+  dirIsCtxProject,
+  setCtxPath,
+  watchProjects,
   type CtxInfo,
   type DoctorReport,
   type Project,
@@ -28,6 +31,7 @@ import {
 const DIR_KEY = "ctx.dir";
 const WORKSPACES_KEY = "ctx.workspaces";
 const LEGACY_WORKSPACE_KEY = "ctx.workspace";
+const CTX_BIN_KEY = "ctx.bin";
 
 // No baked-in project: until the user adds a workspace (persisted in
 // localStorage), `dir` is empty and the main area shows a chooser.
@@ -130,6 +134,7 @@ function App() {
   );
   const [workspaces, setWorkspaces] = useState<string[]>(loadWorkspaces);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [deadRoots, setDeadRoots] = useState<string[]>([]);
   const [scanning, setScanning] = useState(false);
   const [view, setView] = useState<View>("overview");
   const [info, setInfo] = useState<CtxInfo | null>(null);
@@ -142,24 +147,35 @@ function App() {
   }
 
   // Scans every workspace root, merging results and de-duping by path
-  // (overlapping roots can surface the same project).
+  // (overlapping roots can surface the same project). Roots that fail to
+  // scan (deleted/unmounted) are tracked so the UI can flag them.
   async function scanAll(roots: string[]) {
     if (!roots.length) {
       setProjects([]);
+      setDeadRoots([]);
+      void watchProjects([]);
       return;
     }
     setScanning(true);
     try {
-      const lists = await Promise.all(
-        roots.map((r) => discoverProjects(r, 4).catch(() => [] as Project[])),
-      );
-      const byPath = new Map<string, Project>();
-      for (const list of lists) for (const p of list) byPath.set(p.path, p);
-      setProjects(
-        [...byPath.values()].sort((a, b) =>
-          a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+      const results = await Promise.all(
+        roots.map((r) =>
+          discoverProjects(r, 4).then(
+            (ps) => ({ root: r, ps, ok: true }),
+            () => ({ root: r, ps: [] as Project[], ok: false }),
+          ),
         ),
       );
+      const byPath = new Map<string, Project>();
+      for (const res of results) for (const p of res.ps) byPath.set(p.path, p);
+      const merged = [...byPath.values()].sort((a, b) =>
+        a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+      );
+      setProjects(merged);
+      setDeadRoots(results.filter((r) => !r.ok).map((r) => r.root));
+      // Watch every project's .context/ so the dashboard reflects
+      // external writes to any project, not just the active one.
+      void watchProjects(merged.map((p) => p.path)).catch(() => {});
     } finally {
       setScanning(false);
     }
@@ -187,10 +203,36 @@ function App() {
     void scanAll(next);
   }
 
+  // Let the user point at a ctx binary the app can't find on PATH.
+  async function pickCtxBinary() {
+    const selected = await open({
+      title: "Locate the ctx binary",
+      directory: false,
+    });
+    if (typeof selected !== "string") return;
+    localStorage.setItem(CTX_BIN_KEY, selected);
+    await setCtxPath(selected).catch(() => {});
+    setInfo(await ctxInfo());
+  }
+
   useEffect(() => {
-    void ctxInfo().then(setInfo);
-    // Re-scan previously added workspaces so the dropdown/grid are ready.
-    if (workspaces.length) void scanAll(workspaces);
+    void (async () => {
+      // Apply a saved ctx path BEFORE detecting the binary.
+      const savedBin = localStorage.getItem(CTX_BIN_KEY);
+      if (savedBin) await setCtxPath(savedBin).catch(() => {});
+      void ctxInfo().then(setInfo);
+      // Drop a restored active project that no longer exists, so the app
+      // shows the chooser instead of erroring on every screen.
+      if (dir) {
+        const ok = await dirIsCtxProject(dir).catch(() => false);
+        if (!ok) {
+          setDir("");
+          localStorage.removeItem(DIR_KEY);
+        }
+      }
+      // Re-scan previously added workspaces so the dropdown/grid are ready.
+      if (workspaces.length) void scanAll(workspaces);
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -240,24 +282,36 @@ function App() {
               Workspaces ({workspaces.length})
             </div>
             <ul className="space-y-0.5">
-              {workspaces.map((w) => (
-                <li
-                  key={w}
-                  className="group flex items-center gap-1"
-                  title={w}
-                >
-                  <span className="truncate font-mono text-[11px] text-ink">
-                    {w.split("/").pop() || w}
-                  </span>
-                  <button
-                    onClick={() => removeWorkspace(w)}
-                    title="Remove this workspace"
-                    className="ml-auto shrink-0 text-muted opacity-0 hover:text-err group-hover:opacity-100"
+              {workspaces.map((w) => {
+                const dead = deadRoots.includes(w);
+                return (
+                  <li
+                    key={w}
+                    className="group flex items-center gap-1"
+                    title={dead ? `${w} (not found)` : w}
                   >
-                    ✕
-                  </button>
-                </li>
-              ))}
+                    <span
+                      className={`truncate font-mono text-[11px] ${
+                        dead ? "text-err line-through" : "text-ink"
+                      }`}
+                    >
+                      {w.split("/").pop() || w}
+                    </span>
+                    {dead && (
+                      <span className="shrink-0 text-[10px] text-err">
+                        missing
+                      </span>
+                    )}
+                    <button
+                      onClick={() => removeWorkspace(w)}
+                      title="Remove this workspace"
+                      className="ml-auto shrink-0 text-muted opacity-0 hover:text-err group-hover:opacity-100"
+                    >
+                      ✕
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}
@@ -309,6 +363,15 @@ function App() {
               {info.found ? info.version : "ctx not found"}
             </span>
           )}
+          {info && !info.found && (
+            <button
+              onClick={() => void pickCtxBinary()}
+              title="Locate the ctx binary if it isn't on PATH"
+              className="shrink-0 rounded-md border border-border bg-panel px-3 py-1 text-xs text-ink hover:border-accent"
+            >
+              Set ctx path…
+            </button>
+          )}
         </header>
 
         <main className="min-h-0 flex-1 overflow-auto">
@@ -317,6 +380,7 @@ function App() {
           {view === "projects" && (
             <Projects
               workspaces={workspaces}
+              deadRoots={deadRoots}
               projects={projects}
               scanning={scanning}
               onOpen={(d) => {

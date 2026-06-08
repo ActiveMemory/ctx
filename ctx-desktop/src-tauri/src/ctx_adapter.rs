@@ -9,15 +9,72 @@
 //! no shell capability/permission wiring is required.
 
 use std::process::Command;
+use std::sync::{Mutex, OnceLock};
 
 use serde::Serialize;
 
-/// Name of the ctx binary; resolved from PATH.
+/// Name of the ctx binary; resolved from PATH unless overridden via
+/// [`set_ctx_path`].
 const CTX_BIN: &str = "ctx";
 
-/// Directories prepended to PATH so a GUI launch (which inherits a
-/// minimal launchd PATH on macOS) can still find a user-installed ctx.
-const EXTRA_PATH: &str = "/usr/local/bin:/opt/homebrew/bin";
+/// User-set absolute path to the ctx binary (for non-standard installs).
+/// `None` means "resolve `ctx` from PATH".
+fn ctx_bin_cell() -> &'static Mutex<Option<String>> {
+    static CELL: OnceLock<Mutex<Option<String>>> = OnceLock::new();
+    CELL.get_or_init(|| Mutex::new(None))
+}
+
+/// The ctx executable to spawn: the user override if set, else `ctx`.
+fn ctx_bin() -> String {
+    ctx_bin_cell()
+        .lock()
+        .ok()
+        .and_then(|g| g.clone())
+        .unwrap_or_else(|| CTX_BIN.to_string())
+}
+
+/// PATH prepended with the dirs a GUI launch (minimal launchd PATH on
+/// macOS) needs to find a user-installed ctx — Homebrew, MacPorts, and
+/// common Go / local-bin install locations.
+fn search_path() -> String {
+    let mut extra = vec![
+        "/usr/local/bin".to_string(),
+        "/opt/homebrew/bin".to_string(),
+        "/opt/local/bin".to_string(),
+    ];
+    if let Ok(home) = std::env::var("HOME") {
+        if !home.is_empty() {
+            extra.push(format!("{home}/go/bin"));
+            extra.push(format!("{home}/.local/bin"));
+        }
+    }
+    let prefix = extra.join(":");
+    match std::env::var("PATH") {
+        Ok(existing) => format!("{prefix}:{existing}"),
+        Err(_) => prefix,
+    }
+}
+
+/// Overrides the ctx binary path (persisted by the frontend). An empty
+/// string clears the override, returning to PATH resolution.
+#[tauri::command]
+pub fn set_ctx_path(path: String) {
+    if let Ok(mut cell) = ctx_bin_cell().lock() {
+        *cell = if path.trim().is_empty() {
+            None
+        } else {
+            Some(path)
+        };
+    }
+}
+
+/// True when `<dir>/.context` exists — lets the UI validate a restored
+/// active project before trusting it (a moved/deleted project should
+/// fall back to the chooser, not error on every screen).
+#[tauri::command]
+pub fn dir_is_ctx_project(dir: String) -> bool {
+    !dir.is_empty() && std::path::Path::new(&dir).join(".context").is_dir()
+}
 
 /// Reports whether the ctx binary is available and its version.
 #[derive(Serialize)]
@@ -41,19 +98,16 @@ const CTX_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(30);
 fn run_ctx(dir: &str, args: &[&str]) -> Result<String, String> {
     let dir = dir.to_string();
     let owned_args: Vec<String> = args.iter().map(|s| s.to_string()).collect();
+    let bin = ctx_bin();
     let (tx, rx) = std::sync::mpsc::channel();
 
     std::thread::spawn(move || {
-        let mut cmd = Command::new(CTX_BIN);
+        let mut cmd = Command::new(&bin);
         cmd.args(&owned_args);
         if !dir.is_empty() {
             cmd.current_dir(&dir);
         }
-        let path = match std::env::var("PATH") {
-            Ok(existing) => format!("{EXTRA_PATH}:{existing}"),
-            Err(_) => EXTRA_PATH.to_string(),
-        };
-        cmd.env("PATH", path);
+        cmd.env("PATH", search_path());
         let _ = tx.send(cmd.output());
     });
 
@@ -389,15 +443,21 @@ fn git_field(dir: &str, args: &[&str]) -> String {
         .unwrap_or_default()
 }
 
-/// Generates an 8-char session id for write provenance. The CLI
-/// truncates to 8 chars anyway; we derive from the wall clock so
-/// it varies per call without pulling in a rand dependency.
+/// One 8-char session id per app launch, for write provenance. Minted
+/// once (not per call) so every write from this desktop session shares
+/// a coherent id in the journal, and rapid writes can't collide. The
+/// CLI truncates to 8 chars anyway; derived from the wall clock to
+/// avoid a rand dependency.
 fn session_id() -> String {
-    let nanos = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map(|d| d.as_nanos())
-        .unwrap_or(0);
-    format!("{:08x}", (nanos as u64) & 0xffff_ffff)
+    static SID: OnceLock<String> = OnceLock::new();
+    SID.get_or_init(|| {
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_nanos())
+            .unwrap_or(0);
+        format!("{:08x}", (nanos as u64) & 0xffff_ffff)
+    })
+    .clone()
 }
 
 /// Adds a task via `ctx task add`, synthesizing the required
