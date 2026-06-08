@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ctxStatus,
   ctxTasks,
@@ -31,15 +31,19 @@ export default function Overview({ dir }: { dir: string }) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const reload = useReloadOnCtxChange();
+  // Monotonic request id: only the latest load applies its results, so a
+  // fast project switch can't let a slow earlier load overwrite state.
+  const reqId = useRef(0);
 
   const load = useCallback(async (projectDir: string) => {
+    const id = ++reqId.current;
     setLoading(true);
     const errs: string[] = [];
 
+    let status: CtxStatus | null = null;
     try {
-      setStatus(await ctxStatus(projectDir));
+      status = await ctxStatus(projectDir);
     } catch (e) {
-      setStatus(null);
       errs.push(`status: ${String(e)}`);
     }
 
@@ -58,6 +62,8 @@ export default function Overview({ dir }: { dir: string }) {
       }),
     ]);
 
+    if (id !== reqId.current) return; // a newer load superseded this one
+    setStatus(status);
     setCounts({
       tasksOpen: tasks.filter((t) => t.status === "pending").length,
       tasksDone: tasks.filter((t) => t.status === "done").length,

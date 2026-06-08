@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ctxAgentPacket,
   ctxAgentMarkdown,
@@ -27,17 +27,24 @@ export default function ContextPacket({ dir }: { dir: string }) {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<"" | "packet" | "command">("");
   const reload = useReloadOnCtxChange();
+  // Only the latest load applies — guards against an earlier budget/dir
+  // load landing after a newer one (slider drags fire rapidly).
+  const reqId = useRef(0);
 
   const load = useCallback(async (d: string, b: number) => {
+    const id = ++reqId.current;
     setLoading(true);
     setError(null);
     try {
-      setPacket(await ctxAgentPacket(d, b));
+      const next = await ctxAgentPacket(d, b);
+      if (id === reqId.current) setPacket(next);
     } catch (e) {
-      setError(String(e));
-      setPacket(null);
+      if (id === reqId.current) {
+        setError(String(e));
+        setPacket(null);
+      }
     } finally {
-      setLoading(false);
+      if (id === reqId.current) setLoading(false);
     }
   }, []);
 

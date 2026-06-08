@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ctxDoctor,
   ctxDrift,
@@ -39,14 +39,21 @@ export default function Health({ dir }: { dir: string }) {
   const [confirm, setConfirm] = useState<"" | "drift" | "compact">("");
   const [error, setError] = useState<string | null>(null);
   const reload = useReloadOnCtxChange();
+  // Only the latest load applies — guards against stale data on a fast
+  // project switch or overlapping reload after a fix.
+  const reqId = useRef(0);
 
   const load = useCallback(async (d: string) => {
+    const id = ++reqId.current;
     setError(null);
     try {
-      setReport(await ctxDoctor(d));
+      const next = await ctxDoctor(d);
+      if (id === reqId.current) setReport(next);
     } catch (e) {
-      setError(String(e));
-      setReport(null);
+      if (id === reqId.current) {
+        setError(String(e));
+        setReport(null);
+      }
     }
   }, []);
 
