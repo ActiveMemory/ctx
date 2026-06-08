@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ctxTasks,
   ctxTaskAdd,
@@ -21,14 +21,21 @@ export default function Tasks({ dir }: { dir: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const reload = useReloadOnCtxChange();
+  // Only the latest load applies — guards against stale data on a fast
+  // project switch or overlapping reload after an add/complete.
+  const reqId = useRef(0);
 
   const load = useCallback(async (d: string) => {
+    const id = ++reqId.current;
     setError(null);
     try {
-      setTasks(await ctxTasks(d));
+      const next = await ctxTasks(d);
+      if (id === reqId.current) setTasks(next);
     } catch (e) {
-      setError(String(e));
-      setTasks([]);
+      if (id === reqId.current) {
+        setError(String(e));
+        setTasks([]);
+      }
     }
   }, []);
 
@@ -173,9 +180,9 @@ export default function Tasks({ dir }: { dir: string }) {
             No tasks to show.
           </li>
         )}
-        {shown.map((t, i) => (
+        {shown.map((t) => (
           <li
-            key={i}
+            key={`${t.section}|${t.added}|${t.text}`}
             className="flex items-start gap-3 bg-panel px-4 py-2.5"
           >
             <button

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ctxDecisions, ctxDecisionAdd, type Decision } from "../adapter/ctx";
 import { useReloadOnCtxChange } from "../hooks/useReload";
 
@@ -30,14 +30,21 @@ export default function Decisions({ dir }: { dir: string }) {
   const [consequence, setConsequence] = useState("");
   const [busy, setBusy] = useState(false);
   const reload = useReloadOnCtxChange();
+  // Only the latest load applies — guards against stale data on a fast
+  // project switch or overlapping reload after a save.
+  const reqId = useRef(0);
 
   const load = useCallback(async (d: string) => {
+    const id = ++reqId.current;
     setError(null);
     try {
-      setDecisions(await ctxDecisions(d));
+      const next = await ctxDecisions(d);
+      if (id === reqId.current) setDecisions(next);
     } catch (e) {
-      setError(String(e));
-      setDecisions([]);
+      if (id === reqId.current) {
+        setError(String(e));
+        setDecisions([]);
+      }
     }
   }, []);
 
