@@ -51,6 +51,18 @@ export function inline(text: string): ReactNode[] {
   return nodes;
 }
 
+// Strips HTML comments to a fixpoint: a single pass can splice a new
+// `<!--` together from the surrounding text (CodeQL
+// js/incomplete-multi-character-sanitization), so repeat until stable.
+export function stripHtmlComments(md: string): string {
+  let prev: string;
+  do {
+    prev = md;
+    md = md.replace(/<!--[\s\S]*?-->/g, "");
+  } while (md !== prev);
+  return md;
+}
+
 // Splits a table row into trimmed cells, dropping the outer pipes.
 function tableCells(line: string): string[] {
   let s = line.trim();
@@ -85,7 +97,7 @@ function alignClass(sep: string): string {
 // HTML comments (editorial notes) are stripped. Good enough for the
 // context/kb docs.
 export function renderMarkdown(md: string): ReactNode[] {
-  const clean = md.replace(/<!--[\s\S]*?-->/g, "");
+  const clean = stripHtmlComments(md);
   const lines = clean.split("\n");
   const out: ReactNode[] = [];
   let key = 0;
