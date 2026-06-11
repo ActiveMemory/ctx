@@ -36,6 +36,8 @@ DO NOT UPDATE FOR:
 | 2026-06-07 | Host-pressure alerting: use derivatives, not levels (consolidated) |
 | 2026-06-07 | Go test isolation & patterns (consolidated) |
 | 2026-06-01 | Guard managed blocks before regenerating; don't trust the span to be machine-owned |
+| 2026-05-31 | macOS GUI apps inherit a minimal PATH; augment it to find a user-installed CLI |
+| 2026-05-31 | Tauri 2 requires rustc >= 1.88; bump the toolchain before cargo check |
 | 2026-05-28 | ctx kb: single topic-enumeration site; life-stage count is consumer-side |
 | 2026-05-28 | A non-root Go module nested under the main module's path CAN import its internal/ packages |
 | 2026-05-28 | cobra's legacyArgs lets unknown subcommands silently succeed on non-root groups |
@@ -320,6 +322,26 @@ DO NOT UPDATE FOR:
 **Lesson**: Code that 'replaces the managed block' (index regen, KB managed blocks, moc.go) assumes the span between its markers is disposable and machine-owned. That assumption breaks the moment user content drifts inside the markers, and the regenerated output looks correct so the loss is invisible. The fix is a precondition guard that refuses to mutate when regeneration would lose data — not smarter parsing of the trapped content.
 
 **Application**: Before any 'replace between markers' write, validate the span: refuse on entry/content found where only generated output belongs, and on malformed/duplicated/out-of-order markers. Fail loud and leave the file byte-identical rather than regenerate. Run the guard at the read-before-mutate choke point so nothing is written on refusal.
+
+---
+
+## [2026-05-31-094649] macOS GUI apps inherit a minimal PATH; augment it to find a user-installed CLI
+
+**Context**: A bundled Tauri app launched via Finder/launchd gets a minimal PATH (/usr/bin:/bin:...), so /usr/local/bin/ctx is not found even though it resolves in a terminal-launched dev run.
+
+**Lesson**: Do not rely on inherited PATH when spawning user-installed CLIs from a desktop GUI.
+
+**Application**: ctx_adapter prepends /usr/local/bin:/opt/homebrew/bin to PATH on every std::process::Command invocation.
+
+---
+
+## [2026-05-31-094649] Tauri 2 requires rustc >= 1.88; bump the toolchain before cargo check
+
+**Context**: cargo check for the ctx-desktop Tauri app failed: darling, serde_with, time and plist transitive deps require rustc 1.88, but the local toolchain was 1.87.
+
+**Lesson**: Tauri 2's dependency tree tracks recent rustc releases; the pinned-stable assumption breaks builds.
+
+**Application**: Run rustup update stable before building a Tauri 2 app; this project moved 1.87 -> 1.96.
 
 ---
 

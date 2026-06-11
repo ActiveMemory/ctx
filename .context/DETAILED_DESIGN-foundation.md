@@ -291,7 +291,14 @@ filename (lowercase, hyphenated, max 50 chars).
 
 **Purpose**: Path validation and symlink detection.
 
-**Dependencies**: config/fs, rc
+**Call graph** (enriched 2026-06-09 via GitNexus): `Symlinks()`
+(`internal/validate/path.go:23`) has exactly one non-test caller —
+`context/load.Do()` — and participates in 9 execution flows. It is
+the M-2 symlink defense on the context-load path: every context
+read passes through it, but nothing else uses it. Errors route
+through `err/context.DirSymlink` / `err/context.FileSymlink`.
+
+**Dependencies**: config/fs, rc, err/context, err/journal
 
 ---
 

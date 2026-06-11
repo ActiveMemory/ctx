@@ -50,10 +50,11 @@
     },
     "internal/validate": {
       "last_analyzed": "2026-04-03T12:00:00Z",
-      "confidence": 0.70,
+      "confidence": 0.75,
       "domain_file": "DETAILED_DESIGN-foundation.md",
-      "files_seen": ["validate.go"],
-      "notes": "Path validation and symlink detection. Boundary checking."
+      "files_seen": ["validate.go", "path.go"],
+      "notes": "Path validation and symlink detection. Boundary checking. Enriched via GitNexus: Symlinks() (path.go:23) has exactly one non-test caller (context/load.Do), 9 flows — it is the M-2 symlink defense on the context-load path only. Bumped from 0.70.",
+      "enriched_at": "2026-06-09T00:00:00Z"
     },
     "internal/inspect": {
       "last_analyzed": "2026-04-03T12:00:00Z",
@@ -242,10 +243,11 @@
     },
     "internal/compliance": {
       "last_analyzed": "2026-04-03T12:00:00Z",
-      "confidence": 0.70,
+      "confidence": 0.75,
       "domain_file": "DETAILED_DESIGN-cli.md",
-      "files_seen": ["doc.go"],
-      "notes": "File-level convention adherence tests. Mirrors lint scripts in Go test form."
+      "files_seen": ["doc.go", "compliance_test.go", "ctxctl_isolation_test.go", "hooks_wiring_test.go", "no_strings_tolower_test.go"],
+      "notes": "File-level convention adherence tests. Enriched 2026-06-09: 4 files, 29 test functions (toolchain wrappers, repo hygiene, convention scans, ctxctl isolation, hooks wiring). Distinct from audit/ (AST-based): compliance runs tools and scans text. Section added to DETAILED_DESIGN-cli.md. Bumped from 0.70.",
+      "enriched_at": "2026-06-09T00:00:00Z"
     }
   }
 }
