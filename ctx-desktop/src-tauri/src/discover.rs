@@ -52,9 +52,10 @@ fn git_branch(dir: &Path) -> String {
 
 /// Scans `root` (and up to `max_depth` levels below it) for ctx
 /// projects, returning them sorted by name. A `.context/` dir marks
-/// a project. Stops at MAX_RESULTS.
-#[tauri::command]
-pub fn discover_projects(root: String, max_depth: u32) -> Result<Vec<Project>, String> {
+/// a project. Stops at MAX_RESULTS. Sync core — exercised directly
+/// by the tests and wrapped by the async [`discover_projects`]
+/// command.
+pub fn discover_projects_sync(root: String, max_depth: u32) -> Result<Vec<Project>, String> {
     let base = Path::new(&root);
     if !base.is_dir() {
         return Err(format!("not a directory: {root}"));
@@ -63,6 +64,16 @@ pub fn discover_projects(root: String, max_depth: u32) -> Result<Vec<Project>, S
     walk(base, max_depth, &mut out);
     out.sort_by_key(|p| p.name.to_lowercase());
     Ok(out)
+}
+
+/// Async command wrapper: the walk (a potentially large fs traversal,
+/// plus one `git` spawn per repo) runs on the blocking pool so it
+/// never stalls the UI thread.
+#[tauri::command]
+pub async fn discover_projects(root: String, max_depth: u32) -> Result<Vec<Project>, String> {
+    tauri::async_runtime::spawn_blocking(move || discover_projects_sync(root, max_depth))
+        .await
+        .map_err(|e| format!("background task failed: {e}"))?
 }
 
 /// Depth-first walk collecting projects, descending `depth_left`
@@ -121,7 +132,7 @@ mod tests {
         fs::create_dir_all(tmp.join("nested/proj-b/.context")).unwrap();
         fs::create_dir_all(tmp.join("node_modules/dep/.context")).unwrap();
 
-        let got = discover_projects(tmp.to_string_lossy().to_string(), 4).unwrap();
+        let got = discover_projects_sync(tmp.to_string_lossy().to_string(), 4).unwrap();
         let names: Vec<&str> = got.iter().map(|p| p.name.as_str()).collect();
 
         assert!(
@@ -139,6 +150,6 @@ mod tests {
 
     #[test]
     fn rejects_non_directory_root() {
-        assert!(discover_projects("/definitely/not/here".to_string(), 2).is_err());
+        assert!(discover_projects_sync("/definitely/not/here".to_string(), 2).is_err());
     }
 }

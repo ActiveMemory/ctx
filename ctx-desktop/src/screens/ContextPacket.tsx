@@ -26,7 +26,7 @@ export default function ContextPacket({ dir }: { dir: string }) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<"" | "packet" | "command">("");
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
   // Only the latest load applies — guards against an earlier budget/dir
   // load landing after a newer one (slider drags fire rapidly).
   const reqId = useRef(0);

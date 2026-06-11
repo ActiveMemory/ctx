@@ -10,7 +10,7 @@ export default function Drift({ dir }: { dir: string }) {
   const [running, setRunning] = useState<"" | "inspect" | "fix">("");
   const [confirm, setConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
 
   const inspect = useCallback(async (d: string) => {
     setRunning("inspect");

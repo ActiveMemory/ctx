@@ -6,7 +6,7 @@ export default function Hub({ dir }: { dir: string }) {
   const [status, setStatus] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
 
   const load = useCallback(async (d: string) => {
     setLoading(true);

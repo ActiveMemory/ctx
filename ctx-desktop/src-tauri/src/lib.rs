@@ -11,6 +11,7 @@ pub fn run() {
         .manage(watcher::WorkspaceWatchState::default())
         .invoke_handler(tauri::generate_handler![
             ctx_adapter::ctx_info,
+            ctx_adapter::ctx_capabilities,
             ctx_adapter::ctx_status,
             ctx_adapter::ctx_doctor,
             ctx_adapter::ctx_task_list,

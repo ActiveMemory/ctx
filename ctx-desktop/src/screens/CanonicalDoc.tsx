@@ -16,7 +16,7 @@ export default function CanonicalDoc({
 }) {
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
 
   useEffect(() => {
     setError(null);

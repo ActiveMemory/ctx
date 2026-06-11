@@ -20,7 +20,7 @@ export default function Tasks({ dir }: { dir: string }) {
   const [section, setSection] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
   // Only the latest load applies — guards against stale data on a fast
   // project switch or overlapping reload after an add/complete.
   const reqId = useRef(0);
@@ -61,22 +61,17 @@ export default function Tasks({ dir }: { dir: string }) {
     }
   }
 
-  // ctx completes "the Nth pending task in file order"; compute that
-  // number locally so duplicate task texts stay unambiguous.
-  function pendingNumber(t: Task): number {
-    const idx = tasks.indexOf(t);
-    let n = 0;
-    for (let i = 0; i <= idx; i++) {
-      if (tasks[i].status === "pending") n++;
-    }
-    return n;
-  }
-
+  // Complete by the task's exact text, not a locally computed pending
+  // number: the CLI's numbering reflects ITS current file order, which
+  // can drift from this list (external writes between load and click),
+  // silently completing the wrong task. With the exact text, the CLI
+  // matches the right task or fails loudly; an ambiguity error
+  // (duplicate texts) surfaces through the normal error panel.
   async function complete(t: Task) {
     setBusy(true);
     setError(null);
     try {
-      await ctxTaskComplete(dir, String(pendingNumber(t)));
+      await ctxTaskComplete(dir, t.text);
       await load(dir);
     } catch (e) {
       setError(String(e));

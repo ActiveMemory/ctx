@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Overview from "./screens/Overview";
 import Search from "./screens/Search";
 import Tasks from "./screens/Tasks";
@@ -17,12 +17,14 @@ import Projects from "./screens/Projects";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import {
+  ctxCapabilities,
   ctxInfo,
   ctxDoctor,
   discoverProjects,
   dirIsCtxProject,
   setCtxPath,
   watchProjects,
+  type CtxCapabilities,
   type CtxInfo,
   type DoctorReport,
   type Project,
@@ -140,9 +142,11 @@ function App() {
   const [view, setView] = useState<View>("overview");
   const [info, setInfo] = useState<CtxInfo | null>(null);
   const [health, setHealth] = useState<DoctorReport | null>(null);
+  // null = probe pending/failed (fail-open: screens render normally).
+  const [caps, setCaps] = useState<CtxCapabilities | null>(null);
   // Active-project change channel, so the top-bar doctor pill refreshes
   // live (like the screens) instead of only on a project switch.
-  const healthReload = useReloadOnCtxChange();
+  const healthReload = useReloadOnCtxChange(dir);
 
   function applyDir(d: string) {
     if (!d) return;
@@ -150,10 +154,17 @@ function App() {
     localStorage.setItem(DIR_KEY, d);
   }
 
+  // Monotonic scan id: only the latest scanAll applies its results. A
+  // rapid add→remove of workspaces fires overlapping scans, and without
+  // this guard an older (larger) scan can land last — showing removed
+  // projects and re-watching their dirs.
+  const scanReq = useRef(0);
+
   // Scans every workspace root, merging results and de-duping by path
   // (overlapping roots can surface the same project). Roots that fail to
   // scan (deleted/unmounted) are tracked so the UI can flag them.
   async function scanAll(roots: string[]) {
+    const id = ++scanReq.current;
     if (!roots.length) {
       setProjects([]);
       setDeadRoots([]);
@@ -170,6 +181,7 @@ function App() {
           ),
         ),
       );
+      if (id !== scanReq.current) return; // superseded by a newer scan
       const byPath = new Map<string, Project>();
       for (const res of results) for (const p of res.ps) byPath.set(p.path, p);
       const merged = [...byPath.values()].sort((a, b) =>
@@ -181,7 +193,8 @@ function App() {
       // external writes to any project, not just the active one.
       void watchProjects(merged.map((p) => p.path)).catch(() => {});
     } finally {
-      setScanning(false);
+      // A superseded scan must not clear the newer scan's spinner.
+      if (id === scanReq.current) setScanning(false);
     }
   }
 
@@ -208,22 +221,38 @@ function App() {
   }
 
   // Let the user point at a ctx binary the app can't find on PATH.
+  // The backend validates the pick (file exists, --version mentions
+  // ctx); only a validated path is persisted, so a bad pick can never
+  // become the saved spawn target.
   async function pickCtxBinary() {
     const selected = await open({
       title: "Locate the ctx binary",
       directory: false,
     });
     if (typeof selected !== "string") return;
-    localStorage.setItem(CTX_BIN_KEY, selected);
-    await setCtxPath(selected).catch(() => {});
+    try {
+      await setCtxPath(selected);
+      localStorage.setItem(CTX_BIN_KEY, selected);
+    } catch (e) {
+      setInfo({ found: false, version: "", error: String(e) });
+      return;
+    }
     setInfo(await ctxInfo());
   }
 
   useEffect(() => {
     void (async () => {
-      // Apply a saved ctx path BEFORE detecting the binary.
+      // Apply a saved ctx path BEFORE detecting the binary. A saved
+      // path that no longer validates (moved/replaced binary) is
+      // dropped so the app falls back to PATH resolution.
       const savedBin = localStorage.getItem(CTX_BIN_KEY);
-      if (savedBin) await setCtxPath(savedBin).catch(() => {});
+      if (savedBin) {
+        try {
+          await setCtxPath(savedBin);
+        } catch {
+          localStorage.removeItem(CTX_BIN_KEY);
+        }
+      }
       void ctxInfo().then(setInfo);
       // Drop a restored active project that no longer exists, so the app
       // shows the chooser instead of erroring on every screen.
@@ -250,6 +279,24 @@ function App() {
       .catch(() => setHealth(null));
   }, [dir, healthReload]);
 
+  // Probe the installed ctx once per active project for the optional
+  // `list --json` contract; the Tasks/Decisions/Learnings/Search
+  // screens are gated on it. A failed probe stays null (fail-open).
+  useEffect(() => {
+    if (!dir) {
+      setCaps(null);
+      return;
+    }
+    let alive = true;
+    setCaps(null);
+    ctxCapabilities(dir)
+      .then((c) => alive && setCaps(c))
+      .catch(() => alive && setCaps(null));
+    return () => {
+      alive = false;
+    };
+  }, [dir]);
+
   // Watch the active project's .context/ for external writes.
   useEffect(() => {
     if (!dir) return;
@@ -257,6 +304,17 @@ function App() {
   }, [dir]);
 
   const dirInProjects = projects.some((p) => p.path === dir);
+
+  // Screens that depend on the structured `list --json` CLI contract.
+  // While the probe is pending (caps === null) we render normally —
+  // only a confirmed-unsupported ctx swaps in the notice.
+  const needsListJson =
+    view === "search" ||
+    view === "tasks" ||
+    view === "decisions" ||
+    view === "learnings";
+  const listJsonUnsupported =
+    needsListJson && caps !== null && !caps.list_json;
 
   return (
     <div className="flex min-h-screen bg-bg text-ink">
@@ -414,7 +472,21 @@ function App() {
               </button>
             </div>
           )}
-          {view !== "projects" && dir && (
+          {view !== "projects" && dir && listJsonUnsupported && (
+            <div className="mx-auto max-w-md px-6 py-20 text-center">
+              <div className="text-lg font-semibold text-ink">
+                This screen needs a newer ctx
+              </div>
+              <p className="mt-2 text-sm text-muted">
+                The installed ctx{info?.found ? ` (${info.version})` : ""} does
+                not support <code>list --json</code>, which the Tasks,
+                Decisions, Learnings and Search screens rely on. Upgrade ctx
+                (or point the app at a newer binary) to use them — every other
+                screen works as-is.
+              </p>
+            </div>
+          )}
+          {view !== "projects" && dir && !listJsonUnsupported && (
             <>
               {view === "overview" && <Overview dir={dir} />}
               {view === "search" && <Search dir={dir} onOpen={setView} />}
