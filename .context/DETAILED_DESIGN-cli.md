@@ -187,3 +187,29 @@ core/ taxonomy per Decision 2026-03-06. Key structural changes:
 
 **Dependencies per command**: each imports its own write/* and err/*
 packages, plus domain packages as needed.
+
+---
+
+## internal/compliance (enriched 2026-06-09 via GitNexus + source)
+
+**Purpose**: Test-only package running file-level convention
+checks — the Go-test mirror of the Makefile lint targets.
+
+**Shape** (verified 2026-06-09): 4 files, 29 test functions.
+- `compliance_test.go` — 25 checks: toolchain wrappers (TestGofmt,
+  TestGoVet, TestGolangciLint, TestBuildWithoutCGO), repo hygiene
+  (TestLicenseHeader, TestDocGoExists, TestVersionFile, TestGoMod,
+  TestMakefileTargets), convention scans (TestNoLiteralNewline,
+  TestNoLiteralMdExtension, TestNoCmdPrintf,
+  TestNoMagicDirectoryStrings, TestNoDirectFmtPrintInCobraHandlers,
+  TestNoSecretsInTemplates, TestRequiredContextFilesInTemplate)
+- `ctxctl_isolation_test.go` — 2 checks: ctx binary excludes
+  ctxctl; shipped hooks exclude check-audit
+- `hooks_wiring_test.go` — shipped hooks resolve to registered
+  commands
+- `no_strings_tolower_test.go` — bans direct strings.ToLower
+
+**Relationship to internal/audit**: audit/ is AST-based (40+
+go/ast checks on code structure); compliance/ is file/process
+based (runs tools, scans text). No call-graph participation —
+both are leaves invoked only by `go test`.
