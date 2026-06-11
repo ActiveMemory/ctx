@@ -97,6 +97,29 @@ const (
 	// broken .ctxrc or permissions regression.
 	HubConnectedProbe = "probe hub connection: %v"
 
+	// JournalScanDir is the stderr format for a failed session-
+	// directory scan during journal querying. One unreadable dir
+	// should not silently drop its sessions from the result.
+	JournalScanDir = "scan journal dir %s: %v"
+
+	// DriftReload is the stderr format for a failed context reload
+	// during the drift post-fix re-check. On failure the prior
+	// context is reused, so the re-displayed report may be stale.
+	DriftReload = "reload context for drift re-check: %v"
+
+	// CloseHubClient is the stderr format for a failed hub gRPC
+	// client/connection close. The close runs in a defer after the
+	// command's real work, so the error is not actionable but should
+	// not vanish.
+	CloseHubClient = "close hub client: %v"
+
+	// HubReplicateAppend is the stderr format for a failed
+	// [Store.Append] inside the follower replication stream. The
+	// loop is best-effort and has no return path, so a dropped
+	// append would silently lose a replicated entry; warning keeps
+	// the loss visible.
+	HubReplicateAppend = "hub replicate append: %v"
+
 	// StateInitializedProbe is the stderr format for failures
 	// inside [state.Initialized] beyond "no context dir declared."
 	// Hooks bail on false either way, but a visible warning shows
@@ -140,6 +163,28 @@ const (
 	// failure when iterating the scratchpad history.
 	// Takes (error).
 	PadHistoryPrune = "pad history: prune: %v"
+)
+
+// Notify webhook delivery warning formats. These fire only when a
+// webhook IS configured but cannot be delivered — never when notify
+// is simply unconfigured or the event is unsubscribed. Surfacing
+// them keeps `ctx hook notify` honest: a webhook the user set up
+// that silently drops (e.g. a project-local key absent in a git
+// worktree, so decryption fails) reads as "working" when it is not.
+const (
+	// NotifyWebhookLoad is the format for a configured webhook that
+	// could not be loaded or decrypted: an unreadable/wrong key, a
+	// decrypt failure, or a resolver error. Takes (error).
+	NotifyWebhookLoad = "notify: webhook configured but undeliverable: %v"
+
+	// NotifyWebhookMarshal is the format for a payload marshal
+	// failure on the notify fire path. Takes (error).
+	NotifyWebhookMarshal = "notify: marshal payload: %v"
+
+	// NotifyWebhookPost is the format for an HTTP POST failure when
+	// delivering a notification (fire-and-forget, but visible).
+	// Takes (error).
+	NotifyWebhookPost = "notify: webhook POST failed: %v"
 )
 
 // Warn context identifiers for index generation.

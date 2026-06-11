@@ -75,6 +75,7 @@ func TestSchemaCoversCtxRC(t *testing.T) {
 		Steering            *int   `yaml:"steering"`
 		Hooks               *int   `yaml:"hooks"`
 		ProvenanceRequired  *int   `yaml:"provenance_required"`
+		Dream               *int   `yaml:"dream"`
 	}
 	yamlBytes, marshalErr := yaml.Marshal(ctxRC{})
 	if marshalErr != nil {

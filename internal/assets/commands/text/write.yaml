@@ -37,6 +37,34 @@ write.config-profile-none:
   short: 'active: none (%s does not exist)'
 write.dry-run:
   short: Dry run - no files will be written.
+write.dream-nothing:
+  short: nothing to dream
+write.dream-locked:
+  short: '[dream] another dream holds the lock; exiting'
+write.dream-digest:
+  short: '[dream] pass complete: %d sources processed, %d proposals'
+write.dream-failmark:
+  short: '[dream] failmark written: %s'
+write.dream-review-none:
+  short: No pending proposals to review.
+write.dream-review-header:
+  short: 'Pending proposals (%d):'
+write.dream-review-id:
+  short: '  [%s] %s -> %s (%s)'
+write.dream-review-targets:
+  short: '    targets: %s'
+write.dream-review-evidence:
+  short: '    evidence: %s'
+write.dream-review-rationale:
+  short: '    why: %s'
+write.dream-accepted:
+  short: 'accepted %s: %s applied'
+write.dream-rejected:
+  short: 'rejected %s'
+write.dream-amended:
+  short: 'amended %s: %s applied'
+write.dream-generative:
+  short: 'accepted %s: %s recorded; run /ctx-serendipity to complete it from the full source'
 write.exists-writing-as-alternative:
   short: '  ! %s exists, writing as %s'
 write.journal-import-nothing:

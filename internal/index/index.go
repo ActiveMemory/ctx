@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	errIndex "github.com/ActiveMemory/ctx/internal/err/index"
 	errJournal "github.com/ActiveMemory/ctx/internal/err/journal"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
@@ -54,6 +55,61 @@ func ParseHeaders(content string) []entity.IndexEntry {
 	}
 
 	return entries
+}
+
+// Validate reports whether the index in content can be safely regenerated.
+//
+// Update replaces the entire span between INDEX:START and INDEX:END with a
+// freshly generated table. That is only safe when the span holds nothing but
+// a prior index and the markers form exactly one well-ordered pair. Validate
+// is the precondition that callers run before any write, so a malformed file
+// fails loud and untouched instead of losing data.
+//
+// It refuses two shapes:
+//   - entry bodies (## [timestamp] headers) between the markers, which a
+//     regenerate would delete (errIndex.EntriesInBlock)
+//   - markers that are duplicated, missing one side, or out of order, which a
+//     regenerate would answer with a second marker (errIndex.MalformedMarkers)
+//
+// A file with no markers at all is permitted: Update's insert path creates a
+// fresh index without disturbing existing content.
+//
+// Parameters:
+//   - content: The full content of a context file
+//   - fileName: Display name for the error message (e.g., "LEARNINGS.md")
+//
+// Returns:
+//   - error: Non-nil when regenerating the index would lose data or duplicate
+//     a marker; nil when regeneration is safe
+func Validate(content, fileName string) error {
+	startCount := strings.Count(content, marker.IndexStart)
+	endCount := strings.Count(content, marker.IndexEnd)
+
+	// No markers: legitimate fresh-index creation. Update's insert path adds
+	// a block without disturbing existing content.
+	if startCount == 0 && endCount == 0 {
+		return nil
+	}
+
+	// Exactly one well-ordered pair is the only other safe shape. Any other
+	// count is a duplicate or a missing side; either would have Update emit a
+	// second marker.
+	if startCount != 1 || endCount != 1 {
+		return errIndex.MalformedMarkers(fileName)
+	}
+
+	startIdx := strings.Index(content, marker.IndexStart)
+	endIdx := strings.Index(content, marker.IndexEnd)
+	if endIdx <= startIdx {
+		return errIndex.MalformedMarkers(fileName)
+	}
+
+	span := content[startIdx+len(marker.IndexStart) : endIdx]
+	if regex.EntryHeading.MatchString(span) {
+		return errIndex.EntriesInBlock(fileName)
+	}
+
+	return nil
 }
 
 // GenerateTable creates a Markdown table index from entries.
@@ -225,6 +281,10 @@ func Reindex(
 	content, readErr := internalIo.SafeReadUserFile(filePath)
 	if readErr != nil {
 		return errJournal.ReindexFileRead(filePath, readErr)
+	}
+
+	if vErr := Validate(string(content), fileName); vErr != nil {
+		return vErr
 	}
 
 	updated := updateFunc(string(content))

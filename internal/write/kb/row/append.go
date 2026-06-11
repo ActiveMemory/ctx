@@ -26,7 +26,7 @@ import (
 // Returns:
 //   - string: the allocated ID for this row.
 //   - error: wrapped via the matching Err* constructor in h.
-func Append(path string, h entity.KBRowHooks) (string, error) {
+func Append(path string, h entity.KBRowHooks) (_ string, err error) {
 	if mkErr := ctxIo.SafeMkdirAll(
 		filepath.Dir(path), cfgFs.PermExec,
 	); mkErr != nil {
@@ -50,7 +50,11 @@ func Append(path string, h entity.KBRowHooks) (string, error) {
 	if openErr != nil {
 		return "", h.ErrOpen(openErr)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil && err == nil {
+			err = h.ErrWrite(cerr)
+		}
+	}()
 
 	if needsHeader {
 		if _, wErr := f.WriteString(h.Header); wErr != nil {

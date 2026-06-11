@@ -62,34 +62,43 @@ func TestResolveKeyPath_OverrideTakesPrecedence(t *testing.T) {
 	}
 }
 
-func TestResolveKeyPath_ProjectLocalBeforeGlobal(t *testing.T) {
+func TestResolveKeyPath_ProjectLocalIgnored(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
 
-	// Create both project-local and global keys.
+	// A project-local key exists, but it must NOT be auto-detected:
+	// the global key wins. The implicit project-local tier was removed
+	// (it broke worktrees and was a security antipattern) — see
+	// specs/notify-resolution-hardening.md.
 	contextDir := filepath.Join(dir, "project", ".context")
-	if err := os.MkdirAll(contextDir, 0750); err != nil {
+	if err := os.MkdirAll(contextDir, fs.PermKeyDir); err != nil {
 		t.Fatal(err)
 	}
 	localKey := filepath.Join(contextDir, cfgCrypto.ContextKey)
-	localData := []byte("local-key")
-	if err := os.WriteFile(localKey, localData, fs.PermSecret); err != nil {
-		t.Fatal(err)
-	}
-
-	globalDir := filepath.Join(dir, ".ctx")
-	if err := os.MkdirAll(globalDir, fs.PermKeyDir); err != nil {
-		t.Fatal(err)
-	}
-	globalKey := filepath.Join(globalDir, cfgCrypto.ContextKey)
-	globalData := []byte("global-key")
-	if err := os.WriteFile(globalKey, globalData, fs.PermSecret); err != nil {
+	if err := os.WriteFile(localKey, []byte("local-key"), fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
 
 	got := ResolveKeyPath(contextDir, "")
-	if got != localKey {
-		t.Errorf("ResolveKeyPath() = %q, want project-local %q", got, localKey)
+	want := GlobalKeyPath()
+	if got != want {
+		t.Errorf("ResolveKeyPath() = %q, want global %q (project-local must be ignored)", got, want)
+	}
+	if got == localKey {
+		t.Errorf("ResolveKeyPath() returned the project-local key %q; it must not be auto-detected", localKey)
+	}
+}
+
+func TestResolveKeyPath_HomeUnavailableFallsBackToLocal(t *testing.T) {
+	// With no home dir, GlobalKeyPath() returns "" and resolution
+	// falls back to the project-local path as a last resort.
+	t.Setenv("HOME", "")
+
+	contextDir := filepath.Join("project", ".context")
+	got := ResolveKeyPath(contextDir, "")
+	want := filepath.Join(contextDir, cfgCrypto.ContextKey)
+	if got != want {
+		t.Errorf("ResolveKeyPath() = %q, want local fallback %q", got, want)
 	}
 }
 

@@ -36,6 +36,15 @@ err.fmt.no-files:
   short: 'no context files found in %s'
 err.fmt.needs-formatting:
   short: files need formatting
+err.index.entries-in-block:
+  short: |-
+    %s has entry content between its INDEX:START and INDEX:END markers.
+    Refusing to regenerate the index because that would delete those entries.
+    Move the INDEX:END marker above your entries, then retry.
+err.index.malformed-markers:
+  short: |-
+    %s has missing, duplicated, or out-of-order INDEX:START/INDEX:END markers.
+    Refusing to regenerate the index. Restore a single well-formed marker pair, then retry.
 err.backup.context-dir-not-found:
   short: "context directory not found: %s - run 'ctx init'"
 err.backup.create-archive-dir:
@@ -92,6 +101,56 @@ err.config.unknown-update-type:
   short: 'unknown update type: %s'
 err.config.unsupported-tool:
   short: 'unsupported tool: %s'
+err.dream.append-ledger:
+  short: 'dream: append ledger %s: %w'
+err.dream.backup-failed:
+  short: 'dream: backup failed for %s: %w'
+err.dream.check-ignore:
+  short: 'dream: git check-ignore %s: %w'
+err.dream.executor-not-found:
+  short: '[dream] FAIL: executor %q not on PATH: %w'
+err.dream.executor-run:
+  short: '[dream] FAIL: executor %q failed: %w'
+err.dream.guard-refused:
+  short: '%s'
+err.dream.invalid-proposal:
+  short: 'dream: invalid proposal %s: %s'
+err.dream.lock-acquire:
+  short: 'dream: acquire lock %s: %w'
+err.dream.move-source:
+  short: 'dream: move source %s: %w'
+err.dream.proposal-not-found:
+  short: 'dream: proposal %q not found in %s'
+err.dream.read-proposals:
+  short: 'dream: read proposals %s: %w'
+err.dream.read-source:
+  short: 'dream: read source %s: %w'
+err.dream.scan-ideas:
+  short: 'dream: scan ideas %s: %w'
+err.dream.unknown-action:
+  short: 'dream: unknown action %q for proposal %s'
+err.dream.leak:
+  short: 'ctx-dream guard: write to tracked path refused: %s'
+err.dream.marshal-entry:
+  short: 'dream: marshal ledger entry: %w'
+err.dream.marshal-state:
+  short: 'dream: marshal state: %w'
+err.dream.mkdir:
+  short: 'dream: create notebook directory %s: %w'
+err.dream.read-ledger:
+  short: 'dream: read ledger %s: %w'
+err.dream.read-state:
+  short: 'dream: read state %s: %w'
+err.dream.rel-path:
+  short: 'dream: compute relative path: %w'
+err.dream.resolve-root:
+  short: 'dream: resolve project root: %w'
+err.dream.unmarshal-state:
+  short: 'dream: unmarshal state %s: %w'
+err.dream.write-scope:
+  short: 'ctx-dream guard: write outside dream scope refused: %s'
+err.dream.write-state:
+  short: 'dream: write state %s: %w'
 err.crypto.ciphertext-too-short:
   short: ciphertext too short
 err.crypto.create-cipher:

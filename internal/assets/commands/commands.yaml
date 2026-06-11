@@ -267,6 +267,66 @@ decision.reindex:
       ctx decision reindex
   short: Regenerate the quick-reference index
 
+dream:
+  long: |-
+    Run a gated, proposing memory-consolidation pass over ideas/.
+
+    The dream is an executor-agnostic, opt-in process that only ever
+    proposes. It scans ideas/**.md by the discipline clock (content
+    hash change), invokes the configured executor to classify and
+    ground each idea, and writes provenance-bearing proposals into the
+    gitignored dreams/ notebook. It never autonomously mutates
+    canonical memory.
+
+    Subcommands:
+      review  List pending proposals for a serendipity round
+      accept  Accept a proposal's recommended disposition
+      reject  Reject a proposal (recorded; not re-surfaced)
+      amend   Accept a proposal with a different action
+
+    Mechanical dispositions (archive, mark-blog, keep, reject) apply
+    instantly; generative ones (promote, merge) are recorded as intent
+    and completed by /ctx-serendipity from the full source.
+
+    Examples:
+      ctx dream                     # Run one pass
+      ctx dream --max 20            # Bound the pass to 20 files
+      ctx dream review              # Walk the pending proposals
+      ctx dream accept d-001        # Accept a proposal
+  short: Run a gated memory-consolidation pass over ideas
+dream.review:
+  long: |-
+    List pending proposals from the latest dream run.
+
+    Renders each proposal substance-forward (id, targets, status,
+    action, evidence, confidence, rationale) for a ~15-minute
+    serendipity review. Only proposals not yet recorded in the ledger
+    are shown.
+  short: List pending dream proposals for review
+dream.accept:
+  long: |-
+    Accept a proposal's recommended disposition by id.
+
+    Mechanical actions (archive, mark-blog, keep) apply immediately
+    and pass both structural guards before any write. Generative
+    actions (promote, merge) are recorded as accepted intent and
+    completed by /ctx-serendipity from the full source.
+  short: Accept a dream proposal by id
+dream.reject:
+  long: |-
+    Reject a proposal by id.
+
+    Records a rejection in the ledger with no mutation. A rejected
+    proposal is not re-surfaced unless its source content changes.
+  short: Reject a dream proposal by id
+dream.amend:
+  long: |-
+    Accept a proposal by id with a different action.
+
+    Records the decision as amended and applies the chosen action,
+    passing both structural guards before any write.
+  short: Accept a dream proposal with a different action
+
 doctor:
   long: |-
     Run mechanical health checks across context, hooks, and configuration.

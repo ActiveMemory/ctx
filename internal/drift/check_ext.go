@@ -146,12 +146,13 @@ func checkSyncStaleness(report *Report) {
 	projectRoot := filepath.Dir(ctxDir)
 
 	found := false
-	// Check each syncable tool.
-	syncTools := []string{
-		cfgHook.ToolCursor, cfgHook.ToolCline,
-		cfgHook.ToolKiro,
-	}
-	for _, tool := range syncTools {
+	// Check only tools "in play": those with an existing synced
+	// output. A project that never synced a tool (e.g. Claude-only)
+	// is not nagged to generate outputs for editors it does not use.
+	for _, tool := range steering.SyncableTools() {
+		if !steering.Synced(steeringDir, projectRoot, tool) {
+			continue
+		}
 		stale := steering.StaleFiles(steeringDir, projectRoot, tool)
 		for _, name := range stale {
 			report.Warnings = append(report.Warnings, Issue{

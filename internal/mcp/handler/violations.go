@@ -13,7 +13,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	ctxio "github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // readAndClearViolations reads violations from
@@ -35,8 +37,13 @@ func readAndClearViolations(contextDir string) []violation {
 	if readErr != nil {
 		return nil
 	}
-	// Remove the file immediately to prevent duplicate alerts.
-	_ = os.Remove(filepath.Join(stateDir, file.Violations))
+	// Remove the file immediately to prevent duplicate alerts. A
+	// failed remove means the next read re-reports these violations,
+	// so surface it rather than swallowing.
+	violationsPath := filepath.Join(stateDir, file.Violations)
+	if rmErr := os.Remove(violationsPath); rmErr != nil {
+		logWarn.Warn(cfgWarn.Remove, violationsPath, rmErr)
+	}
 
 	var vd violationsData
 	if unmarshalErr := json.Unmarshal(data, &vd); unmarshalErr != nil {

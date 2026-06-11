@@ -28,7 +28,7 @@ import (
 //
 // Returns:
 //   - error: wrapped I/O failures.
-func Append(path string, row Row) error {
+func Append(path string, row Row) (err error) {
 	if mkErr := ctxIo.SafeMkdirAll(
 		filepath.Dir(path), cfgFs.PermExec,
 	); mkErr != nil {
@@ -46,7 +46,11 @@ func Append(path string, row Row) error {
 	if openErr != nil {
 		return errKbSM.OpenFile(openErr)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil && err == nil {
+			err = errKbSM.WriteRow(cerr)
+		}
+	}()
 
 	if needsHeader {
 		if _, writeErr := f.WriteString(

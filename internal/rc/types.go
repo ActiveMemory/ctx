@@ -96,6 +96,34 @@ type CtxRC struct {
 	Steering            *SteeringRC              `yaml:"steering"`
 	Hooks               *HooksRC                 `yaml:"hooks"`
 	ProvenanceRequired  *ProvenanceConfig        `yaml:"provenance_required"`
+	Dream               *DreamRC                 `yaml:"dream"`
+}
+
+// DreamRC holds the ctx-dream configuration from .ctxrc. The dream is
+// opt-in: nothing runs until Enabled is set true and the cron entry is
+// installed. An empty Executor selects the reference claude -p
+// invocation.
+//
+// Fields:
+//   - Enabled: master switch (default false; dream is opt-in)
+//   - Mode: execution mode (default "discipline"; "creative" deferred)
+//   - Max: ceiling on ideas/ files processed per pass (default 50)
+//   - Cadence: cron schedule string (e.g. "30 2 * * *")
+//   - QuietMinutes: activity quiet window the trigger gate honors
+//     (default 60)
+//   - Model: executor model override (empty = session default)
+//   - Budget: step/token budget for a pass (default from config/dream)
+//   - Executor: executor command template (empty = the claude -p
+//     reference invocation)
+type DreamRC struct {
+	Enabled      bool   `yaml:"enabled"`
+	Mode         string `yaml:"mode"`
+	Max          int    `yaml:"max"`
+	Cadence      string `yaml:"cadence"`
+	QuietMinutes int    `yaml:"quiet_minutes"`
+	Model        string `yaml:"model"`
+	Budget       int    `yaml:"budget"`
+	Executor     string `yaml:"executor"`
 }
 
 // ProvenanceConfig controls which provenance flags are

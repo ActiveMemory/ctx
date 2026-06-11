@@ -56,11 +56,18 @@ func ExpandHome(path string) string {
 // ResolveKeyPath determines the effective key file path.
 //
 // Resolution order:
-//  1. overridePath if non-empty (explicit .ctxrc key_path,
-//     with tilde expansion)
-//  2. Project-local path if it exists (<contextDir>/.ctx.key)
-//  3. Global default (~/.ctx/.ctx.key)
-//  4. Project-local path as fallback (when home dir unavailable)
+//  1. overridePath if non-empty (explicit .ctxrc key_path, with
+//     tilde expansion) — the supported per-project isolation knob
+//  2. Global default (~/.ctx/.ctx.key)
+//  3. Project-local path (<contextDir>/.ctx.key) as a degenerate
+//     fallback ONLY when the home directory is unavailable
+//
+// A project-local <contextDir>/.ctx.key is never auto-detected or
+// preferred over the global key. That implicit tier was removed: it
+// stored the key next to the ciphertext (a security antipattern) and
+// was the sole cause of key divergence in git worktrees, where the
+// gitignored key is absent from the checkout. Per
+// specs/notify-resolution-hardening.md.
 //
 // Parameters:
 //   - contextDir: The .context/ directory path
@@ -74,18 +81,14 @@ func ResolveKeyPath(contextDir, overridePath string) string {
 		return ExpandHome(overridePath)
 	}
 
-	// Tier 2: project-local key.
-	local := filepath.Join(contextDir, cfgCrypto.ContextKey)
-	if _, statErr := os.Stat(local); statErr == nil {
-		return local
-	}
-
-	// Tier 3: global default.
-	global := GlobalKeyPath()
-	if global != "" {
+	// Tier 2: global default.
+	if global := GlobalKeyPath(); global != "" {
 		return global
 	}
 
-	// Fallback: project-local (home dir unavailable).
-	return local
+	// Degenerate fallback: the project-local path, used only when the
+	// home directory is unavailable so no global location can be
+	// computed. This is NOT project-local key auto-detection — a stray
+	// <contextDir>/.ctx.key is never preferred over the global key.
+	return filepath.Join(contextDir, cfgCrypto.ContextKey)
 }

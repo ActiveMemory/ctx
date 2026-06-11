@@ -36,6 +36,48 @@ TASK STATUS LABELS:
 
 These have priority because other knowledge ingestion projects depend on them.
 
+- [x] BUG (data loss): `ctx learning add` clobbers a dash-bullet-format
+  `LEARNINGS.md`. When the `INDEX:START/END` block uses the dash-bullet format
+  (what `ctx init` produces) rather than the pipe-table format, `ctx learning
+  add` (1) rewrites the index as a table, (2) **duplicates** the
+  `<!-- INDEX:START -->` marker, and (3) **drops every existing learning body** —
+  keeping only the newly added one. Observed live in `things-wtf-hub` (session
+  aa32f065): a `LEARNINGS.md` with 4 bodies collapsed to 1 (a -44-line commit,
+  2dc4d1a); recovered via `git show <good-sha>:.context/LEARNINGS.md`.
+  `ctx decision add` is UNAFFECTED because that repo's `DECISIONS.md` was already
+  table-format — so the bug is specifically the learning-add path's handling of
+  the dash-bullet index variant (likely it can't parse dash-bullet entries, so
+  it treats the file as empty and regenerates from only the new entry).
+    - Repro: `ctx init` a repo, confirm `LEARNINGS.md` index is dash-bullet
+      (`- entry`), add 2+ learnings by hand in that format, then run
+      `ctx learning add "x" --context … --lesson … --application …`. Expect: the
+      hand-authored bodies vanish + a duplicated INDEX:START marker.
+    - Likely fix: detect the existing index format (dash-bullet vs table) and
+      preserve it round-trip, OR parse dash-bullet entries before regenerating;
+      never emit a second INDEX:START; never drop bodies the parser didn't
+      recognize (fail loud instead of silently regenerating).
+    - Guard: a round-trip test for BOTH index formats (dash-bullet + table) that
+      asserts existing bodies survive an add and exactly one marker pair remains.
+    - Severity: HIGH — silent destruction of persisted memory, the one thing ctx
+      promises to protect; only git made it recoverable.
+    - Provenance: things-wtf-hub session aa32f065 wrap-up; full write-up in that
+      repo's LEARNINGS.md ("`ctx learning add` clobbers a dash-bullet-format
+      LEARNINGS.md"). #priority:high #added:2026-05-30
+      #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+      Shipped: new `index.Validate` precondition guard refuses to regenerate the
+      index when it would lose data — entry bodies (`## [ts]` headers) trapped
+      between the markers, or markers that are missing/duplicated/out-of-order.
+      Wired into the two read-before-mutate choke points (`entry.Write` and
+      `index.Reindex`), so add and all reindex commands fail loud and leave the
+      file byte-identical instead of clobbering it. `index.Update`'s signature is
+      untouched (kept the CRITICAL blast radius stable). New `internal/err/index`
+      package + i18n messages. Verified: the real repro now errors with the file
+      unchanged; well-formed adds still preserve all bodies and one marker pair.
+      Tests: `index.TestValidate` (7 shapes) + `entry` round-trip
+      (refused-untouched + well-formed-preserved). Chosen behavior is fail-loud +
+      manual fix; auto-repair (`reindex --repair`) considered and declined.
+      Spec: specs/fix-learning-add-index-data-loss.md.
+
 - [x] Make 'ctx kb reindex' nesting-aware: scan topics/** not topics/* (grouped
   topic folders currently blank the CTX:
   KB:TOPICS block) #priority:medium #session:c3d2dcb1 #branch:
@@ -257,13 +299,22 @@ Important things that agent (or human) yeeted to the future.
   + static Zensical + LoopScript + Tier-2 recall HTML (metaTable/details)
   migrated to embedded templates behind handles; Tier-3 single-line format
   strings, pure joins, and the RecallListRow meta-format kept as fmt.Sprintf.
-- [ ] P0.8.5: Enable webhook notifications in worktrees. Currently `ctx notify`
-  silently fails because `.context.key` is gitignored and absent in
-  worktrees. For autonomous runs with opaque worktree agents, notifications
-  are the one feature that would genuinely be useful. Possible approaches:
-  resolve the key via `git rev-parse --git-common-dir` to find the main
-  checkout, or copy the key into worktrees at creation time (ctx-worktree
-  skill). #priority:medium #added:2026-02-22
+- [x] P0.8.5: Harden notify resolution (reframed 2026-06-02). The original
+  premise ("`ctx notify` silently fails in worktrees because the key is
+  gitignored and absent") was investigated and largely disproven: with the
+  default global key, notify works in worktrees (verified against a built
+  binary + isolated repo + fake webhook sink). The failure only reproduces
+  with a deprecated project-local key. Real defects to fix: (1) remove the
+  implicit `.context/.ctx.key` resolution tier — the sole worktree-divergence
+  and a documented security antipattern; (2) surface the silent fire-path
+  failure when a CONFIGURED webhook can't be delivered (decrypt/read/POST),
+  while keeping legitimate silences (not-configured, event-not-subscribed).
+  Whether config reaches a worktree is the user's call via `.ctxrc`
+  git-tracking — ctx does not special-case worktrees (it cannot distinguish a
+  worktree from N side-by-side terminals). Approaches A (--git-common-dir key
+  fallback) and B (copy key at worktree creation) rejected; see DECISIONS.
+  Spec: specs/notify-resolution-hardening.md
+  #priority:medium #added:2026-02-22 #reframed:2026-06-02
 - [ ] P0.9.2: Split cli-reference.md (1633 lines) into command group pages:
   cli-overview, cli-init-status, cli-context, cli-recall, cli-tools,
   cli-system —
@@ -391,6 +442,8 @@ Important things that agent (or human) yeeted to the future.
 
 
 ### Phase CT: Companion Tool Integration
+
+- [ ] Add a 'make strip-gitnexus' target (backed by a hack/ script) that mechanically removes the GitNexus auto-injected block — delimited by <!-- gitnexus:start --> / <!-- gitnexus:end --> markers — from AGENTS.md and CLAUDE.md. Marker-bounded delete (sed range or awk between markers). Must: (1) leave AGENTS.md as the redirect stub and CLAUDE.md ending at its Companion Tools / GITNEXUS.md pointer; (2) NOT touch GITNEXUS.md (the intended managed home for that content); (3) be idempotent (no-op when markers absent). Run it after 'npx gitnexus analyze'. Upstream-preferred guard is 'analyze --skip-agents-md'; this script is the belt-and-suspenders cleanup when analyze runs without that flag. Manual removal was done in 8da165a3; this automates it. #priority:medium #session:74c94e3a #branch:fix/notify-resolution-hardening #commit:8da165a3 #added:2026-06-02-085625
 
 Session-start checks, suppressibility, and registry for companion MCP tools.
 
@@ -618,7 +671,7 @@ Many call sites use `_ =` or `_, _ =` to discard errors without
 any feedback. Some are legitimate (best-effort cleanup), most are
 lazy escapes that hide failures.
 
-- [ ] EH.1: Catalogue all silent error discards — recursive walk of
+- [x] EH.1: Catalogue all silent error discards — recursive walk of
   `internal/`
   for patterns: `_ = `, `_, _ = `, `//nolint:errcheck`, bare `return` after
   error-producing calls. Group by category:
@@ -633,34 +686,70 @@ lazy escapes that hide failures.
   DoD: every `_ =` in the codebase is categorised and has a
   recommended action
   #priority:high #added:2026-03-14
+  #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+  Done: `.context/audit/eh-silent-errors.md` catalogues all 184 non-test
+  discard sites with category + recommended action. Surfaced 4 high-priority
+  data-loss/crash findings (memory/publish MergePublished, pad/store
+  ReadEntriesWithIDs, hub/replicate Append, memory status nil-deref) plus 11
+  write-handle defer-closes. Real fix workload ≈52 sites (B/A/C/SURFACE/
+  NIL-DEREF); category (d) fmt.Fprint output is an accepted end-state per EH.5
+  DoD. Tests excluded from this pass.
 
-- [ ] EH.2: Address category (b) — file write/read discards. These risk silent
+- [x] EH.2: Address category (b) — file write/read discards. These risk silent
   data loss. Fix: return the error, or at minimum emit to stderr with
   `fmt.Fprintf(os.Stderr, "ctx: ...: %v\n", err)` following the pattern
   established in `internal/log/event.go`.
   DoD: no write/read error is silently discarded
   #priority:high #added:2026-03-14
+  #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+  Done: pad ReadEntriesWithIDs + hub replicate Append (commit b66816cd);
+  marshal-error returns for the vscode/copilot/blocknonpathctx writers,
+  journal ScanDirectory + drift reload via logWarn (41e223f5). The
+  established sink turned out to be `internal/log/warn` (logWarn.Warn),
+  used throughout. Verified each site by reading before editing — two of
+  the catalogue's name-inferred B findings were false positives
+  (MergePublished bool, LoadState value type).
 
-- [ ] EH.3: Address category (a) — file close in defer. Most are `defer func()
+- [x] EH.3: Address category (a) — file close in defer. Most are `defer func()
       { _ = f.Close() }()`. For read-only files, close errors are rare but
   should still surface. For write/append files, close can fail if the
   final flush fails — these are data loss. Fix: `if err := f.Close();
       err != nil { fmt.Fprintf(os.Stderr, "ctx: close %s: %v\n", path, err) }`.
   DoD: all defer-close sites log failures to stderr
   #priority:medium #added:2026-03-14
+  #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+  Done: write/append-handle closes converted to a named-return merge so
+  a failed flush fails the op (6 kb appends, trace appendJSONL, skill
+  copy out, kb note Run — commit 9d07da57); read-handle and gRPC-client
+  closes surfaced via logWarn (commit 06109734). io/security
+  SafeWriteFileAtomic was already correct (meaningful close checked;
+  error-path closes annotated).
 
-- [ ] EH.4: Address category (c) — os.Remove/Rename discards. These are state
+- [x] EH.4: Address category (c) — os.Remove/Rename discards. These are state
   operations (rotation, pruning, temp file cleanup). Silent failure leaves
   stale state. Fix: stderr warning at minimum; for rotation/rename, consider
   returning the error.
   DoD: no Remove/Rename error is silently discarded
   #priority:medium #added:2026-03-14
+  #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+  Done (commit 06a88416): os.Remove/RemoveAll surfaced via logWarn where
+  failure leaves stale state with real consequences — partial skill
+  install, violations file (duplicate alerts), sync lock (blocks sync),
+  hub pid file, trace marker. io/security temp-file cleanup discards are
+  on already-failed paths and annotated as acceptable.
 
-- [ ] EH.5: Validate — `grep -rn '_ =' internal/` returns only category (d)
+- [x] EH.5: Validate — `grep -rn '_ =' internal/` returns only category (d)
   entries (fmt.Fprint to stderr) and entries explicitly annotated as
   acceptable. Run `make lint && make test` to confirm no regressions.
   DoD: grep output is clean or fully annotated; CI green
   #priority:high #added:2026-03-14
+  #completed:2026-06-01 #branch:fix/learning-add-index-data-loss
+  Done (commit f7bf7d8f): `grep -rn '_ = ' internal/` (non-test) = 68
+  sites — 47 category-(d) fmt.Fprint (accepted end-state) + 21 explicitly
+  annotated/handled. `:=`-form discards (x, _ := …) are outside this
+  grep's scope. make lint = 0 issues, make test = 0 failures.
+  Whole EH sweep: 7 commits (6ca1198a catalogue → f7bf7d8f), spec
+  specs/error-handling-audit.md.
 
 - [ ] Add AST-based lint test to detect exported functions with no external
   callers #added:2026-03-21-070357
@@ -2284,3 +2373,21 @@ DR-kb session a5736210 closeouts under
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
 - [ ] Reindex grouped-emit (ctx-side): RenderBlock should emit the CTX:KB:TOPICS managed block grouped by parent folder (### <group> headings) instead of one flat sorted list, for grouped kbs like things-wtf-dr (49 topics). ListTopics already returns slashed group/slug slugs (PR #106, spec specs/kb-reindex-nesting.md) so only RenderBlock + the consumer-facing block-format contract change; must still handle ungrouped/flat top-level topics. Deferred from the kb-reindex fix (managed-block format change). #priority:high active dependent work in the hub/other workstream; natural owner is ctx-side (ListTopics already recursive). #session:cf14dd25 #branch:main #commit:aae42fe8 #added:2026-05-28-215308
+
+### ctx-dream v1
+
+- [x] Docs: executor-contract reference for non-Claude-Code harnesses — bounded pass, structural guard enforcement, fail-loud, proposals-only-into-dreams/ #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
+
+- [x] Docs: Claude Code dream enablement guide — opt-in (.ctxrc dream.enabled), cron entry, guard hook wiring, ctx remind cadence #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
+
+- [x] Tests: git check-ignore guard refuses tracked path; ledger dedup-against-seen; crash-resume; 2605.12978 corrupted-artifact regression fixture #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [x] Build ctx dream review CLI (accept/reject/amend) plus serendipity skill; mechanical applies instantly, generative drops to agent; backup-before-mutate; ctx remind cadence #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [x] Implement disciplined ideas triage: classify, ground against code and specs, semantic dedup; emit atomic provenanced proposals #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [x] Build proposal/ledger/state machinery: per-source state record, append-only ledger recording rejections, two-clocks read model #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [x] Build the three structural guards: write-scope, sources-as-data, dont-leak (git check-ignore refuses tracked paths) #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+- [x] Settle executor: cron claude -p bounded scheduled pass; safety invariants structural not prompt-level #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238

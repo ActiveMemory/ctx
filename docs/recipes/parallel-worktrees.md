@@ -159,10 +159,35 @@ prompts work:
 
 ## What Works Differently in Worktrees
 
-The encryption key lives at `~/.ctx/.ctx.key` (user-level, outside
-the project). Because all worktrees on the same machine share this path,
-**`ctx pad` and `ctx hook notify` work in worktrees automatically** - no
-special setup needed.
+The encryption key lives at `~/.ctx/.ctx.key` (user-level, outside the
+project). All worktrees on the same machine share this one key — there
+is no per-project key (an implicit `.context/.ctx.key` is never
+auto-detected), so **`ctx pad` and `ctx hook notify` decrypt correctly
+in worktrees automatically**, with no special setup.
+
+**Whether `ctx hook notify` actually *fires* in a worktree is your
+call, made through one decision: do you git-track `.ctxrc`?**
+
+* **Tracked `.ctxrc`** (committed) → its `notify.events` list rides
+  into every checkout, so notifications fire from worktrees too.
+  Committing `.ctxrc` is safe: it holds `notify.events`, `key_path`,
+  and rotation settings — never the webhook secret, which stays
+  encrypted in `.context/.notify.enc`.
+* **Gitignored `.ctxrc`** (e.g. the profile workflow with tracked
+  `.ctxrc.base` / `.ctxrc.dev`) → a fresh worktree has no active
+  `.ctxrc`, so ctx applies built-in defaults and notifications stay
+  off there. `.ctxrc.base` is a *template*, not a fallback: ctx reads
+  only the active `.ctxrc`. To enable notifications in such a
+  worktree, copy a `.ctxrc` into it (or run `ctx config switch`).
+
+ctx deliberately does not special-case worktrees — it cannot tell a
+worktree from several terminals open in the same project — so the
+`.ctxrc`-tracking choice is the single, explicit control.
+
+If a configured webhook ever can't be delivered (a wrong or missing
+key, a decrypt failure, a network error), `ctx hook notify` prints a
+`ctx: notify: webhook configured but undeliverable: …` warning to
+stderr instead of silently dropping the notification.
 
 One thing to watch:
 

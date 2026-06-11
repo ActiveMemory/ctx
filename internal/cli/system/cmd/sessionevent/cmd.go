@@ -43,6 +43,8 @@ func Cmd() *cobra.Command {
 	flagbind.StringFlag(c, &caller,
 		cFlag.Caller, embFlag.DescKeySystemSessionEventCaller,
 	)
+	// Acceptable discard: MarkFlagRequired only errors on an
+	// unregistered flag name; both flags are bound above.
 	_ = c.MarkFlagRequired(cFlag.Type)
 	_ = c.MarkFlagRequired(cFlag.Caller)
 
