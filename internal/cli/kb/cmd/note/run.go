@@ -31,7 +31,7 @@ import (
 //
 // Returns:
 //   - error: refusal on empty input, or wrapped I/O failure.
-func Run(cobraCmd *cobra.Command, noteText string) error {
+func Run(cobraCmd *cobra.Command, noteText string) (err error) {
 	if noteText == "" {
 		cobraCmd.SilenceUsage = true
 		return errKbCli.ErrNoteNoText
@@ -49,7 +49,11 @@ func Run(cobraCmd *cobra.Command, noteText string) error {
 	if openErr != nil {
 		return errKbCli.OpenFindings(openErr)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil && err == nil {
+			err = errKbCli.WriteFinding(cerr)
+		}
+	}()
 
 	stamp := time.Now().UTC().Format(time.RFC3339)
 	line := fmt.Sprintf(

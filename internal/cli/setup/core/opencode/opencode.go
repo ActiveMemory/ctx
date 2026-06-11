@@ -41,6 +41,8 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	if mcpErr := ensureMCPConfig(cmd); mcpErr != nil {
+		// Acceptable discard: the error is handled by the empty-path
+		// fallback immediately below (used only for the warning text).
 		mcpPath, _ := globalConfigPath()
 		if mcpPath == "" {
 			mcpPath = cfgSetup.MCPConfigPathOpenCode

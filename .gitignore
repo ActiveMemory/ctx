@@ -89,6 +89,11 @@ tools/typecheck/opencode/node_modules/
 
 # Some ideas are best kept hidden.
 ideas
+# The dream's notebook about ideas/ — derived summaries, per-source
+# state, ledger, per-run digests, and pre-mutation backups. Inherits
+# ideas/'s privacy class; the don't-leak guard double-checks at write
+# time. Must stay gitignored (see specs/ctx-dream.md).
+dreams
 .context/.ctx.key
 .context/.scratchpad.key
 .context/scratchpad.enc

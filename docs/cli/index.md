@@ -77,6 +77,7 @@ have been initialized by `ctx init` (otherwise commands return
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
 | [`ctx journal`](journal.md#ctx-journal)       | Browse, import, enrich, and lock session history         |
+| [`ctx dream`](dream.md#ctx-dream)             | Triage `ideas/` into gated proposals for review (opt-in) |
 | [`ctx pad`](pad.md#ctx-pad)                   | Encrypted scratchpad for sensitive one-liners            |
 | [`ctx remind`](remind.md#ctx-remind)          | Session-scoped reminders that surface at session start   |
 | [`ctx hook pause`](pause.md)                  | Pause context hooks for the current session              |
@@ -188,6 +189,15 @@ hooks:                       # Hook system configuration
   dir: .context/hooks        # Hook scripts directory
   timeout: 10                # Per-hook execution timeout in seconds
   enabled: true              # Whether hook execution is enabled
+dream:                       # ctx-dream config (opt-in; off by default)
+  enabled: false             # Master switch — nothing runs until true
+  mode: discipline           # Pass mode (v1: discipline)
+  max: 50                    # Max ideas/ files processed per pass
+  cadence: "30 2 * * *"      # Cron schedule for the nightly pass
+  quiet_minutes: 60          # Skip a pass if active within this window
+  budget: 40                 # Step/token ceiling per pass
+  model: ""                  # Executor model ("" = session default)
+  executor: ""               # Executor command ("" = claude -p reference)
 ```
 
 | Field                   | Type       | Default        | Description                                                                                                    |

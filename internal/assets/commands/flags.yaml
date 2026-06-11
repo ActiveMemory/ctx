@@ -55,6 +55,18 @@ initialize.caller:
 
 doctor.json:
   short: Machine-readable JSON output
+dream.mode:
+  short: 'Execution mode: discipline (default) or creative (deferred)'
+dream.max:
+  short: Maximum ideas files processed per pass
+dream.budget:
+  short: Step/token budget for the pass
+dream.action:
+  short: 'Action to apply when amending: archive, merge, promote, mark-blog, or keep'
+dream.note:
+  short: Optional human note recorded with the disposition
+dream.force:
+  short: Bypass the opt-in and cadence trigger gate for a manual pass
 fmt.width:
   short: Target line width
 fmt.check:

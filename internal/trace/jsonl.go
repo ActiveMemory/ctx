@@ -15,7 +15,9 @@ import (
 
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/io"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // readJSONL is a generic helper that opens the file at path and
@@ -37,7 +39,11 @@ func readJSONL[T any](path string) ([]T, error) {
 		}
 		return nil, openErr
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil {
+			logWarn.Warn(cfgWarn.Close, path, cerr)
+		}
+	}()
 
 	var entries []T
 	scanner := bufio.NewScanner(f)
@@ -70,7 +76,7 @@ func readJSONL[T any](path string) ([]T, error) {
 //
 // Returns:
 //   - error: marshal, directory creation, or write failure
-func appendJSONL[T any](dir, filename string, entry T) error {
+func appendJSONL[T any](dir, filename string, entry T) (err error) {
 	if mkErr := io.SafeMkdirAll(dir, cfgFs.PermRestrictedDir); mkErr != nil {
 		return mkErr
 	}
@@ -86,7 +92,11 @@ func appendJSONL[T any](dir, filename string, entry T) error {
 	if openErr != nil {
 		return openErr
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil && err == nil {
+			err = cerr
+		}
+	}()
 
 	_, writeErr := f.Write(line)
 	return writeErr
