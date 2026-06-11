@@ -36,7 +36,11 @@ drift_grep() {
   for ex in "$@"; do
     exclude_args+=(--exclude="$ex")
   done
-  grep -rn --include='*.go' --exclude='*_test.go' "${exclude_args[@]}" \
+  # ${arr[@]+...} guards the empty-array expansion: bash 3.2
+  # (stock macOS) treats "${arr[@]}" on an empty array as unbound
+  # under `set -u` and aborts the script.
+  grep -rn --include='*.go' --exclude='*_test.go' \
+    ${exclude_args[@]+"${exclude_args[@]}"} \
     -E "$pattern" internal/ 2>/dev/null || true
 }
 

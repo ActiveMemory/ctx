@@ -41,18 +41,20 @@ func loadState() (state, func(), error) {
 		return s, nil, mkErr
 	}
 
-	// Acquire lock: fail if another sync is running.
-	if _, statErr := os.Stat(lockPath); statErr == nil {
-		return s, nil, os.ErrExist
+	// Acquire lock: fail if another sync is running. The
+	// O_CREATE|O_EXCL create-or-fail is a single syscall, so
+	// there is no check-to-write window for a concurrent sync
+	// to slip through.
+	acquired, lockErr := io.SafeTryLock(lockPath, fs.PermFile)
+	if lockErr != nil {
+		return s, nil, lockErr
 	}
-	if writeErr := io.SafeWriteFile(
-		lockPath, []byte(cfgHub.LockSentinel), fs.PermFile,
-	); writeErr != nil {
-		return s, nil, writeErr
+	if !acquired {
+		return s, nil, os.ErrExist
 	}
 
 	release := func() {
-		if rmErr := os.Remove(lockPath); rmErr != nil {
+		if rmErr := io.SafeUnlock(lockPath); rmErr != nil {
 			logWarn.Warn(cfgWarn.Remove, lockPath, rmErr)
 		}
 	}
