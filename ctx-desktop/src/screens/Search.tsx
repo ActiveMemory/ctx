@@ -6,6 +6,7 @@ import {
   ctxReadDoc,
 } from "../adapter/ctx";
 import { useReloadOnCtxChange } from "../hooks/useReload";
+import { stripHtmlComments } from "../lib/markdown";
 
 // A target screen id the result links to (matches App's View ids).
 type View =
@@ -54,8 +55,7 @@ const EMPTY: Corpus = {
 
 // Non-empty, non-comment markdown lines, for line-level doc search.
 function docLines(md: string): string[] {
-  return md
-    .replace(/<!--[\s\S]*?-->/g, "")
+  return stripHtmlComments(md)
     .split("\n")
     .map((l) => l.trim())
     .filter((l) => l && !/^#{1,4}\s/.test(l) && !/^-{3,}$/.test(l));
