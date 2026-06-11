@@ -38,7 +38,7 @@ export default function Health({ dir }: { dir: string }) {
   const [running, setRunning] = useState("");
   const [confirm, setConfirm] = useState<"" | "drift" | "compact">("");
   const [error, setError] = useState<string | null>(null);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
   // Only the latest load applies — guards against stale data on a fast
   // project switch or overlapping reload after a fix.
   const reqId = useRef(0);

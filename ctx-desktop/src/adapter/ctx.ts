@@ -88,9 +88,26 @@ export function ctxInfo(): Promise<CtxInfo> {
   return invoke<CtxInfo>("ctx_info");
 }
 
-/** Override the ctx binary path (empty string clears it → PATH lookup). */
+/**
+ * Override the ctx binary path (empty string clears it → PATH lookup).
+ * The backend validates a non-empty path (must be a file whose
+ * `--version` mentions ctx) and rejects otherwise — persist the path
+ * only after this resolves.
+ */
 export function setCtxPath(path: string): Promise<void> {
   return invoke<void>("set_ctx_path", { path });
+}
+
+// Which optional CLI contracts the installed ctx supports.
+export interface CtxCapabilities {
+  // True when `ctx task list --json` exists — required by the
+  // Tasks/Decisions/Learnings/Search screens.
+  list_json: boolean;
+}
+
+/** Probe the installed ctx (run once per project) for optional contracts. */
+export function ctxCapabilities(dir: string): Promise<CtxCapabilities> {
+  return invoke<CtxCapabilities>("ctx_capabilities", { dir });
 }
 
 /** True when `<dir>/.context` exists — validates a restored project. */
@@ -346,7 +363,12 @@ export function ctxTaskAdd(
   return invoke<string>("ctx_task_add", { dir, text, priority, section });
 }
 
-/** `ctx task complete <id-or-text>`. */
+/**
+ * `ctx task complete <id-or-text>`. Prefer the task's exact text over
+ * a pending number — the CLI's numbering reflects its own file order,
+ * which can drift from any list the UI rendered earlier. An ambiguous
+ * text (duplicates) rejects with the CLI's multiple-matches error.
+ */
 export function ctxTaskComplete(dir: string, target: string): Promise<string> {
   return invoke<string>("ctx_task_complete", { dir, target });
 }

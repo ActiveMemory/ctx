@@ -9,7 +9,7 @@ export default function Journal({ dir }: { dir: string }) {
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
 
   const load = useCallback(async (d: string, n: number) => {
     setLoading(true);

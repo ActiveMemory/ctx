@@ -78,7 +78,7 @@ export default function Search({
   const [corpus, setCorpus] = useState<Corpus>(EMPTY);
   const [query, setQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
 
   useEffect(() => {
     let alive = true;

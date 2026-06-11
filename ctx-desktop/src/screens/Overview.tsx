@@ -30,7 +30,7 @@ export default function Overview({ dir }: { dir: string }) {
   const [counts, setCounts] = useState<Counts | null>(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
   // Monotonic request id: only the latest load applies its results, so a
   // fast project switch can't let a slow earlier load overwrite state.
   const reqId = useRef(0);

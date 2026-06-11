@@ -29,7 +29,7 @@ export default function Decisions({ dir }: { dir: string }) {
   const [rationale, setRationale] = useState("");
   const [consequence, setConsequence] = useState("");
   const [busy, setBusy] = useState(false);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
   // Only the latest load applies — guards against stale data on a fast
   // project switch or overlapping reload after a save.
   const reqId = useRef(0);

@@ -28,7 +28,7 @@ export default function Learnings({ dir }: { dir: string }) {
   const [lesson, setLesson] = useState("");
   const [application, setApplication] = useState("");
   const [busy, setBusy] = useState(false);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
   // Only the latest load applies — guards against stale data on a fast
   // project switch or overlapping reload after a save.
   const reqId = useRef(0);

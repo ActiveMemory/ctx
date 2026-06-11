@@ -14,7 +14,7 @@ import {
   type ProjectSummary,
   type Task,
 } from "../adapter/ctx";
-import { useReloadOnCtxChange } from "../hooks/useReload";
+import { useProjectsChanged } from "../hooks/useReload";
 
 // Above this many projects, summaries (2 ctx spawns each) aren't
 // auto-loaded — the user opts in with "Load all" to avoid a process
@@ -163,9 +163,6 @@ export default function Projects({
   const [loadAll, setLoadAll] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [details, setDetails] = useState<Record<string, Detail>>({});
-  // Listen on the all-projects channel so any project's change refreshes
-  // the grid — without making per-project screens refetch on foreign writes.
-  const reload = useReloadOnCtxChange("ctx-projects-changed");
 
   // The set of projects we actually survey: capped unless the user opts
   // into loading every one (see AUTO_CAP).
@@ -181,14 +178,24 @@ export default function Projects({
   const loadSummaries = useCallback(async (ps: Project[]) => {
     const id = ++reqId.current;
     setLoading(true);
-    setSummaries({});
+    // Merge over the existing cards rather than blanking them — a
+    // refresh should never flash every card back to "loading…".
     const results = await mapLimit(ps, 4, async (p) => ({
       path: p.path,
       summary: await projectSummary(p.path),
     }));
     if (id !== reqId.current) return; // superseded by a newer scan
-    setSummaries(Object.fromEntries(results.map((r) => [r.path, r.summary])));
+    setSummaries((prev) => ({
+      ...prev,
+      ...Object.fromEntries(results.map((r) => [r.path, r.summary])),
+    }));
     setLoading(false);
+  }, []);
+
+  // Refreshes a single project's card in place.
+  const refreshOne = useCallback(async (dir: string) => {
+    const summary = await projectSummary(dir);
+    setSummaries((s) => ({ ...s, [dir]: summary }));
   }, []);
 
   useEffect(() => {
@@ -198,16 +205,10 @@ export default function Projects({
         : projects.slice(0, AUTO_CAP);
     if (list.length) void loadSummaries(list);
     else setSummaries({});
-    // `reload` re-scans when any watched project's .context changes.
-  }, [projects, loadAll, loadSummaries, reload]);
+  }, [projects, loadAll, loadSummaries]);
 
-  async function expand(dir: string) {
-    if (expanded === dir) {
-      setExpanded(null);
-      return;
-    }
-    setExpanded(dir);
-    if (details[dir]) return;
+  // Loads (or re-loads) one project's drill-down detail.
+  const loadDetail = useCallback(async (dir: string) => {
     setDetails((d) => ({ ...d, [dir]: { state: "loading" } }));
     try {
       // Prefer real task rows; fall back to the journal feed when the
@@ -225,6 +226,38 @@ export default function Projects({
         }));
       }
     }
+  }, []);
+
+  // A changed project (payload = its root) refreshes only ITS card;
+  // its cached drill-down is re-fetched if open, dropped otherwise. A
+  // payload-less event (older backend) refreshes the whole survey.
+  useProjectsChanged((dir) => {
+    if (!dir) {
+      void loadSummaries(surveyed);
+      return;
+    }
+    if (!projects.some((p) => p.path === dir)) return;
+    void refreshOne(dir);
+    if (expanded === dir) {
+      void loadDetail(dir);
+    } else {
+      setDetails((d) => {
+        if (!(dir in d)) return d;
+        const next = { ...d };
+        delete next[dir];
+        return next;
+      });
+    }
+  });
+
+  async function expand(dir: string) {
+    if (expanded === dir) {
+      setExpanded(null);
+      return;
+    }
+    setExpanded(dir);
+    if (details[dir]) return;
+    void loadDetail(dir);
   }
 
   // Attention-first: errors, then warnings/drift, float to the top.

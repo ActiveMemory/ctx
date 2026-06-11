@@ -12,7 +12,7 @@ export default function Reminders({ dir }: { dir: string }) {
   const [target, setTarget] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const reload = useReloadOnCtxChange();
+  const reload = useReloadOnCtxChange(dir);
 
   const load = useCallback(async (d: string) => {
     setError(null);
