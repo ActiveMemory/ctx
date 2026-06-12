@@ -66,6 +66,7 @@ func Connected(ctxDir string) (bool, error) {
 func Sync(_ string) string {
 	cfg, loadErr := connectCfg.Load()
 	if loadErr != nil {
+		logWarn.Warn(cfgWarn.HubSyncLoadConfig, loadErr)
 		return ""
 	}
 
@@ -73,6 +74,7 @@ func Sync(_ string) string {
 		cfg.HubAddr, cfg.Token,
 	)
 	if dialErr != nil {
+		logWarn.Warn(cfgWarn.HubSyncDial, cfg.HubAddr, dialErr)
 		return ""
 	}
 	defer func() {
@@ -84,11 +86,17 @@ func Sync(_ string) string {
 	entries, syncErr := client.Sync(
 		context.Background(), cfg.Types, 0,
 	)
-	if syncErr != nil || len(entries) == 0 {
+	if syncErr != nil {
+		logWarn.Warn(cfgWarn.HubSyncPull, cfg.HubAddr, syncErr)
+		return ""
+	}
+	if len(entries) == 0 {
+		// Genuine empty result: not an error, no warning.
 		return ""
 	}
 
 	if writeErr := render.WriteEntries(entries); writeErr != nil {
+		logWarn.Warn(cfgWarn.HubSyncWrite, len(entries), writeErr)
 		return ""
 	}
 

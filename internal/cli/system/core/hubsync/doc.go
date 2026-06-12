@@ -23,8 +23,10 @@
 // writes them to disk via the connection render layer.
 // It returns a formatted status message with the count
 // of synced entries, or an empty string when nothing
-// was fetched. Every error is silently swallowed so the
-// hook never blocks the session start.
+// was fetched. Every error is surfaced as a stderr
+// warning via the warn sink, but never propagates: the
+// hook must not block the session start. Only a genuine
+// zero-entry result stays silent.
 //
 // The data flow is:
 //
