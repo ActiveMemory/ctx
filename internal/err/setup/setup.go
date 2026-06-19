@@ -11,6 +11,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	cfgSetup "github.com/ActiveMemory/ctx/internal/config/setup"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // CreateDir wraps a failure to create a setup directory.
@@ -81,4 +83,15 @@ func MissingEmbeddedAsset(name string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrSetupMissingEmbeddedAsset), name,
 	)
+}
+
+// UnsupportedBackend reports an unrecognized backend setup name.
+//
+// Parameters:
+//   - name: backend name passed to --backend
+//
+// Returns:
+//   - error: unsupported backend message
+func UnsupportedBackend(name string) error {
+	return fmt.Errorf(cfgSetup.BackendUnsupported+token.FormatString, name)
 }

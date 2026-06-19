@@ -42,6 +42,17 @@ agent:
       ctx agent
       ctx agent --budget 4000
       ctx agent --format json
+ai:
+  short: |2-
+      ctx ai ping
+      ctx ai propose transcript.md --emit decisions,learnings
+ai.ping:
+  short: |2-
+      ctx ai ping
+      ctx ai ping --backend vllm
+ai.propose:
+  short: |2-
+      ctx ai propose transcript.md --emit decisions,learnings,tasks
 
 change:
   short: |2-

@@ -6,6 +6,23 @@
 
 package setup
 
+import "github.com/ActiveMemory/ctx/internal/config/token"
+
+// Root setup file paths.
+const (
+	// FileCtxRC is the project rc file name.
+	FileCtxRC = ".ctxrc"
+)
+
+// Backend setup output strings.
+const (
+	BackendDryRunPrefix = "Add this backend configuration to .ctxrc:\n"
+	BackendUnsupported  = "unsupported backend: "
+	BackendWriteDone    = "Updated .ctxrc backend configuration\n"
+	BackendEnvWarn      = "warning: environment variable already set: "
+	BackendEnvWarnEnd   = token.NewlineLF
+)
+
 // Display names for supported integration tools.
 const (
 	// DisplayKiro is the display name for Kiro.

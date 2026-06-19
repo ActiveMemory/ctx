@@ -32,6 +32,181 @@ TASK STATUS LABELS:
   `--phase` flag too, and we can have a auditor/normalizer for the current
   task document; or a skill that does a semantic pass, or both too.
 
+## Phase AI-A: `ctx ai` Backend Foundation
+
+Spec: `specs/ctx-ai-backend.md`. Read the spec before starting any AI-A task.
+Tracks GitHub issue #92.
+
+- [x] Decide the AI command CLI namespace: `ctx ai <verb>` (new top-level)
+  vs. flags on existing commands (`--use-ai`, `--emit`, etc.). Record the
+  call as a `.context/DECISIONS.md` entry naming the chosen shape and the
+  rejected alternative with rationale. Blocks every other task in this group.
+  Spec: `specs/ctx-ai-backend.md` Open Question #1. #priority:medium
+  #added:2026-06-19 #completed:2026-06-19
+
+- [x] Implement the backend contract and registry: new `internal/backend/`
+  package with `Backend` interface (`Name`, `Ping`, `Complete`),
+  `Request`/`Response` types, and a `Registry` (`Register`, `Resolve`,
+  `Default`). No per-backend implementations yet; this is the abstraction
+  surface that later tasks plug into. Unit tests cover single, multiple,
+  default, and missing backend resolution. Spec: `specs/ctx-ai-backend.md`
+  §Implementation. #priority:medium #added:2026-06-19
+  #completed:2026-06-19
+  Shipped: added `internal/backend/` with zero-value-safe registry, public
+  `SetDefault`, `Register`, `Resolve`, and `Default`; `Config`, `Request`,
+  `Response`, `Backend`, and `Factory` types; typed errors under
+  `internal/err/backend`; and structural error text constants under
+  `internal/config/backend`. Tests cover single default resolution, ambiguous
+  multiple-backend default, explicit default, missing default, empty registry,
+  missing backend, duplicate registration, and factory-error wrapping. Verified:
+  `go test ./internal/backend ./internal/err/backend ./internal/config/backend`,
+  `go test ./internal/audit`, and `git diff --check`.
+
+- [x] Extend `internal/rc/` to parse and validate the `.ctxrc` `backends:`
+  YAML mapping per the spec's Configuration section: per-backend `endpoint`,
+  `api_key_env`, `timeout`, `default_model`, plus optional
+  `backends.default`. Refuse malformed mappings with a clear parse error
+  naming the offending key. Add fixtures and round-trip tests. Spec:
+  `specs/ctx-ai-backend.md` §Configuration. #priority:medium
+  #added:2026-06-19
+  #completed:2026-06-19
+  Shipped: added `BackendsRC` / `BackendRC` parsing for mixed YAML mapping shape
+  (`backends.default` plus named backend definitions), strict backend-field
+  decoding, semantic validation for missing endpoint and default references,
+  and config constants for backend rc keys/messages. Multiple backends without a
+  default intentionally parse successfully because dispatch owns that error.
+  Tests cover well-formed config, missing endpoint, malformed shape, missing
+  default target, multiple without default, unknown nested fields, and empty
+  backends. Verified: `go test ./internal/rc ./internal/audit`,
+  `go test ./internal/backend ./internal/err/backend ./internal/config/backend`,
+  and `git diff --check`.
+
+- [x] Implement the minimum viable backend set: `vllm` (canonical local) and
+  generic `openai-compatible` (the contract floor) in
+  `internal/backend/vllm.go` and `internal/backend/openaicompat.go`. Both must
+  implement `Ping` (HTTP GET on `/v1/models`) and `Complete` (POST
+  `/v1/chat/completions`). Fail closed on unreachable, 4xx, 5xx, and timeout;
+  never retry with a different model and never fall back to deterministic
+  behavior. Spec: `specs/ctx-ai-backend.md` §Approach and §Edge Cases.
+  #priority:medium #added:2026-06-19
+  #completed:2026-06-19
+  Shipped: added generic OpenAI-compatible HTTP backend and vLLM wrapper over the
+  same contract. `Ping` calls `/v1/models`; `Complete` posts to
+  `/v1/chat/completions`, applies default model fallback / request model
+  override, optionally reads `api_key_env` for a bearer token, validates HTTP(S)
+  endpoints, uses configured timeout with a safe default, and fails closed on
+  transport, timeout, 4xx, 5xx, decode, and request errors. Tests cover ping,
+  completion, upstream body propagation, unreachable server, timeout, invalid
+  endpoint scheme, model fallback/override, auth header, and vLLM naming. Factory
+  functions remain private until a real cross-package caller lands, per the dead
+  export audit. Verified: `go test ./internal/backend ./internal/err/backend
+  ./internal/config/backend ./internal/rc ./internal/audit` and
+  `git diff --check`.
+
+- [x] Add the named-backend implementations: `openai`, `anthropic`, `ollama`,
+  `lmstudio` in `internal/backend/`. Each is a thin wrapper over
+  `openaicompat` with backend-specific defaults (endpoint, auth header shape,
+  env-var name). Anthropic uses the Messages API endpoint where supported but
+  inherits the OpenAI-compatible floor for `/v1/chat/completions`. Spec:
+  `specs/ctx-ai-backend.md` §Approach. #priority:medium #added:2026-06-19
+  #completed:2026-06-19
+  Shipped: added unexported named factories for `openai`, `anthropic`, `ollama`,
+  `lmstudio`, plus vLLM default endpoint handling. Each factory returns the
+  OpenAI-compatible implementation with backend-specific name, default endpoint,
+  and default API key env var where applicable. Anthropic is explicitly a floor
+  implementation for now; Messages API specialization waits for capability
+  detection. Factories remain private until real registry wiring lands to avoid
+  dead exports. Tests cover each factory's name/default behavior and preservation
+  of configured endpoint/env overrides. Verified: `go test ./internal/backend
+  ./internal/config/backend ./internal/err/backend ./internal/audit`,
+  `go test ./internal/rc`, and `git diff --check`.
+
+- [x] Extend the `ctx setup` family with `--backend <name>` as a distinct setup
+  mode that can run without the existing `<tool>` positional argument:
+  templates endpoint + auth wiring into `.ctxrc` and, where applicable,
+  downstream AI-tool configs (`ANTHROPIC_BASE_URL`, `OPENAI_BASE_URL`). Honour
+  existing env-var values: warn but do not overwrite. Lives in new
+  `internal/cli/setup/core/backend/` subpackage. Spec:
+  `specs/ctx-ai-backend.md` §Implementation. #priority:medium
+  #added:2026-06-19
+  #completed:2026-06-19
+  Shipped: `ctx setup --backend <name>` now runs without a positional tool,
+  supports dry-run YAML output, and writes/merges `.ctxrc` with `--write` while
+  preserving unrelated YAML fields. Added `--endpoint`, `--api-key-env`,
+  `--model`, and `--timeout` setup flags; backend name validation; backend mode
+  precedence when a positional tool is also present; default endpoint/env values;
+  and env-var conflict warnings. Tests cover no-arg backend mode, missing backend
+  rejection, existing tool compatibility, backend-mode precedence, unsupported
+  backend rejection, dry-run output, `.ctxrc` creation, unrelated-field
+  preservation, and env warning. Verified: `go test ./internal/cli/setup/...
+  ./internal/rc ./internal/backend ./internal/audit` and `git diff --check`.
+
+- [x] Build the `ctx ai` command surface. Minimum verbs: `ping` (reachability +
+  first model listed) plus `propose` as the Block A validation-only generic
+  proposer. All AI commands honour `--backend` flag (falling back to
+  `backends.default`), fail closed when no backend is configured, fail closed
+  when no backend is reachable, require explicit selection when multiple
+  backends are configured without a default, and surface upstream errors
+  verbatim. Spec: `specs/ctx-ai-backend.md` §Interface. #priority:medium
+  #added:2026-06-19
+  #completed:2026-06-19
+  Shipped: added the `ctx ai` command group with `ping` and `propose`, backend
+  dispatch through `.ctxrc` `backends:`, `--backend` selection, fail-closed empty
+  and ambiguous backend handling, built-in backend registration, and command / flag
+  assets. `ctx ai ping` reports the resolved backend, defaulted endpoint, and
+  first listed model from `/v1/models`. Verified: `go test ./internal/cli/ai/...
+  ./internal/backend ./internal/rc ./internal/audit ./internal/compliance` and
+  `git diff --check`.
+
+- [x] Add the deterministic-core boundary guard: a unit test or lint check that
+  fails if `internal/cli/agent/`, `internal/cli/status/`, or any
+  deterministic-ceremony hook imports or invokes `internal/backend/` or `ctx ai`.
+  This structurally enforces that `ctx status`, `ctx agent`, ceremonies, and
+  hooks remain additive-only and keep working with no backend configured. Spec:
+  `specs/ctx-ai-backend.md` §Validation Rules and §Testing. #priority:medium
+  #added:2026-06-19
+  #completed:2026-06-19
+  Shipped: added `internal/compliance/ai_boundary_test.go`, which scans
+  non-test Go files under `internal/cli/agent/`, `internal/cli/status/`, and
+  `internal/cli/hook/` and fails on `internal/backend` imports or `ctx ai`
+  invocation/documentation. Verified: `go test ./internal/compliance
+  ./internal/audit`.
+
+- [x] Ship the Block A validation consumer: `ctx ai propose <input> --emit
+  decisions,learnings,tasks,open-questions`. This is a validation-only generic
+  proposer and must not foreclose later `ctx ai compact` or `ctx ai ingest`
+  command taxonomy. It performs schema-constrained dispatch through the backend,
+  validates JSON, and writes one proposed-patch JSON artifact to
+  `.context/proposals/ai/` with backend, model, input reference, emit kinds,
+  proposed rows, source spans/citations when available, and status metadata.
+  It must never directly mutate `.context/*.md`. Integration test confirms the
+  round-trip against a fake OpenAI-compatible `httptest` server and confirms
+  `.context/*.md` files are unchanged. Spec: `specs/ctx-ai-backend.md` §Testing
+  and Open Question #5. #priority:medium #added:2026-06-19
+  #completed:2026-06-19
+  Shipped: `ctx ai propose` reads a user input file, sends a schema-constrained
+  JSON request through the selected backend, validates the response as JSON, and
+  writes one proposed-patch artifact under `.context/proposals/ai/` with backend,
+  model, input reference, emit kinds, status, and decoded response payload. Tests
+  confirm the fake OpenAI-compatible round-trip and that `.context/*.md` remains
+  unchanged. Verified with the Phase 6 command-surface test set above.
+
+- [x] Write the documentation deliverables: one new recipe
+  (`docs/recipes/local-inference-with-vllm.md` or
+  `docs/recipes/ai-backend-setup.md`) covering the
+  `ctx setup --backend vllm` flow end-to-end, plus a CLI reference page under
+  `docs/cli/` for `ctx ai`. Also update command assets/examples and the agent
+  playbook note listed in the spec. The recipe is one file, not a recipe-surface
+  rework. Spec: `specs/ctx-ai-backend.md` §Non-Goals. #priority:medium
+  #added:2026-06-19
+  #completed:2026-06-19
+  Shipped: added `docs/cli/ai.md`, updated `docs/cli/setup.md`, added `ctx ai`
+  and `backends:` coverage to `docs/cli/index.md`, added
+  `docs/recipes/local-inference-with-vllm.md` and linked it from the recipes
+  index, and documented optional/fail-closed AI backend usage in
+  `.context/AGENT_PLAYBOOK.md`. Verified: `go test ./internal/audit
+  ./internal/compliance`.
+
 ## Phase CLI-FIX: CLI Infrastructure Fixes
 
 These have priority because other knowledge ingestion projects depend on them.

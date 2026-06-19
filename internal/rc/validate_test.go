@@ -110,3 +110,107 @@ notify:
 		t.Errorf("expected no warnings for full valid config, got %v", warnings)
 	}
 }
+
+func TestValidate_BackendsWellFormed(t *testing.T) {
+	data := []byte(`backends:
+  default: vllm
+  vllm:
+    type: openai-compatible
+    endpoint: http://localhost:8000
+    api_key_env: ""
+    timeout: 30s
+    default_model: openai/gpt-oss-120b
+`)
+	warnings, err := Validate(data)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(warnings) != 0 {
+		t.Errorf("expected no warnings, got %v", warnings)
+	}
+}
+
+func TestValidate_BackendsMissingEndpoint(t *testing.T) {
+	data := []byte(`backends:
+  vllm:
+    timeout: 30s
+`)
+	_, err := Validate(data)
+	if err == nil {
+		t.Fatal("expected error for missing endpoint")
+	}
+	if !strings.Contains(err.Error(), "vllm") {
+		t.Errorf("error should mention backend name, got: %v", err)
+	}
+}
+
+func TestValidate_BackendsMalformedShape(t *testing.T) {
+	data := []byte(`backends:
+  - vllm
+`)
+	_, err := Validate(data)
+	if err == nil {
+		t.Fatal("expected error for malformed backends shape")
+	}
+}
+
+func TestValidate_BackendsDefaultMissing(t *testing.T) {
+	data := []byte(`backends:
+  default: openai
+  vllm:
+    endpoint: http://localhost:8000
+`)
+	_, err := Validate(data)
+	if err == nil {
+		t.Fatal("expected error for missing default backend")
+	}
+	if !strings.Contains(err.Error(), "openai") {
+		t.Errorf("error should mention missing default, got: %v", err)
+	}
+}
+
+func TestValidate_BackendsMultipleWithoutDefault(t *testing.T) {
+	data := []byte(`backends:
+  vllm:
+    endpoint: http://localhost:8000
+  openai:
+    endpoint: https://api.openai.com
+    api_key_env: OPENAI_API_KEY
+`)
+	warnings, err := Validate(data)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(warnings) != 0 {
+		t.Errorf("expected no warnings, got %v", warnings)
+	}
+}
+
+func TestValidate_BackendsUnknownNestedField(t *testing.T) {
+	data := []byte(`backends:
+  vllm:
+    endpoint: http://localhost:8000
+    api_token: nope
+`)
+	warnings, err := Validate(data)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(warnings) == 0 {
+		t.Fatal("expected warning for unknown backend field")
+	}
+	if !strings.Contains(warnings[0], "api_token") {
+		t.Errorf("warning should mention field name, got: %s", warnings[0])
+	}
+}
+
+func TestValidate_BackendsEmptyOK(t *testing.T) {
+	data := []byte("backends: {}\n")
+	warnings, err := Validate(data)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(warnings) != 0 {
+		t.Errorf("expected no warnings, got %v", warnings)
+	}
+}

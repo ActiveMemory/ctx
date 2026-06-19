@@ -85,6 +85,20 @@ trigger.test.tool:
   short: Tool name for mock input
 setup.write:
   short: Write the configuration file instead of printing
+ai.backend:
+  short: Backend name to use
+ai.emit:
+  short: Comma-separated proposal kinds to emit
+setup.backend:
+  short: Configure an AI backend in .ctxrc
+setup.endpoint:
+  short: Backend HTTP endpoint URL
+setup.api-key-env:
+  short: Environment variable containing the backend API key
+setup.model:
+  short: Default model for the backend
+setup.timeout:
+  short: Backend request timeout duration
 initialize.reset:
   short: Reset an existing context (interactive only; backs up existing files to .context/.backup-init-<ISO>/ before overwriting)
 initialize.merge:

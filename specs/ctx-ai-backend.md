@@ -64,10 +64,11 @@ Block A delivers four things:
 
 ### Happy Path
 
-1. User runs `ctx setup --backend vllm --endpoint http://localhost:8000`
-   (exact flag shape TBD). ctx writes the backend definition to
-   `.ctxrc` under a new `[backends.vllm]` table (or equivalent —
-   exact key TBD).
+1. User runs `ctx setup --backend vllm --endpoint http://localhost:8000`.
+   This is a backend setup mode on the existing `ctx setup <tool>` family:
+   implementation must relax the current exactly-one-positional tool shape so
+   `--backend` can run without a tool argument. ctx writes the backend
+   definition to `.ctxrc` under the YAML `backends:` mapping.
 2. User runs `ctx ai ping` (or equivalent). ctx reads the backend
    definition, performs a reachability check against the endpoint
    (HTTP GET on `/v1/models` for OpenAI-compatible servers), and
@@ -88,10 +89,10 @@ Block A delivers four things:
 |------|-------------------|
 | Backend unreachable | Fail closed with a clear error naming the configured endpoint and suggesting `ctx setup --backend <name> --endpoint <url>`. No fallback. |
 | Backend reachable but model unavailable | Surface upstream 4xx verbatim; do not retry with a different model. |
-| Multiple backends configured (e.g., `vllm` + `openai`) | User must specify `--backend <name>` on the AI command, or set a default via `.ctxrc` `[backends].default`. No implicit selection. |
+| Multiple backends configured (e.g., `vllm` + `openai`) | User must specify `--backend <name>` on the AI command, or set a default via `.ctxrc` `backends.default`. No implicit selection. |
 | No backend configured | AI commands print: "no backend configured; run `ctx setup --backend <name>`" and exit non-zero. Non-AI commands are unaffected. |
 | API key missing or invalid | Surface upstream auth error verbatim; do not retry. Suggest the env-var or `.ctxrc` key the backend reads. |
-| Slow backend | Respect timeout from `.ctxrc` `[backends.<name>].timeout` (default TBD). No infinite waits. |
+| Slow backend | Respect timeout from `.ctxrc` `backends.<name>.timeout` (default TBD). No infinite waits. |
 | AI command invoked from inside a deterministic ceremony hook | Fail closed. Coupling deterministic-core hooks to AI availability would violate Invariant 2 ("zero runtime deps for core functionality"). |
 | Existing `ANTHROPIC_BASE_URL` already set in user env | Honour it; do not overwrite. `ctx setup --backend` prints a warning if the env vars it would template conflict with what's already set. |
 | `.ctxrc` malformed (e.g., missing required key) | Refuse with a clear parse error naming the offending key; do not silently default. |
@@ -103,7 +104,7 @@ Block A delivers four things:
 | Backend name | Alphanumeric + hyphen; must match a registered backend type | At setup time and at AI-command dispatch |
 | Endpoint URL | Must parse as `http://` or `https://`; localhost recommended (not required) for `vllm`-canonical backend | At setup time |
 | API key (if any) | Read from env-var (preferred) or `.ctxrc`; **never** allowed in a committed `.ctxrc` if the project's git config marks it as such | Setup-time warning; commit hook (out of scope here, but flagged in Non-Goals) |
-| Default backend | If `[backends].default` is set, must reference a configured backend | At AI-command dispatch |
+| Default backend | If `backends.default` is set, must reference a configured backend | At AI-command dispatch |
 | Determinism boundary | `ctx ai` commands must not be invoked by `ctx agent`, `ctx status`, or any hook that fires during deterministic ceremony paths | Unit test guard (see Testing) |
 
 ### Error Handling
@@ -114,8 +115,8 @@ Block A delivers four things:
 | Backend unreachable | `backend \`<name>\` unreachable at <endpoint>: <underlying error>` | Check endpoint; verify vllm/ollama/etc. is running |
 | Model not found | (relay upstream 4xx body verbatim) + `backend \`<name>\` rejected the model selection; check \`/v1/models\` on the endpoint` | Pick a listed model |
 | Auth failed | (relay upstream 401/403 verbatim) + `backend \`<name>\` rejected the credential; check <env-var or .ctxrc key>` | Update credential |
-| Timeout | `backend \`<name>\` timed out after <duration>; tune \`[backends.<name>].timeout\` in .ctxrc` | Increase timeout or use a faster model |
-| Multiple backends, none specified | `multiple backends configured; pass \`--backend <name>\` or set \`[backends].default\` in .ctxrc` | Pass flag or set default |
+| Timeout | `backend \`<name>\` timed out after <duration>; tune \`backends.<name>.timeout\` in .ctxrc` | Increase timeout or use a faster model |
+| Multiple backends, none specified | `multiple backends configured; pass \`--backend <name>\` or set \`backends.default\` in .ctxrc` | Pass flag or set default |
 | AI command called from deterministic hook | (developer-only) `ctx ai called from deterministic context; this would violate Invariant 2` | Restructure hook |
 
 ## Interface
@@ -143,18 +144,17 @@ ctx ingest <input> --extract <kinds> [--backend <name>]
 
 | Flag | Type | Default | Description |
 |------|------|---------|-------------|
-| `--backend` | string | (resolved from `.ctxrc` `[backends].default`) | Selects which configured backend to dispatch through |
+| `--backend` | string | (resolved from `.ctxrc` `backends.default`) | Selects which configured backend to dispatch through |
 | `--endpoint` (setup only) | URL | (per-backend) | Endpoint override at setup time |
 | `--api-key-env` (setup only) | string | (per-backend) | Name of the env-var the backend reads for auth |
 | (additional flags TBD with interface decision) | | | |
 
 ### Skill (if applicable)
 
-TBD. Likely a `/ctx-ai-setup` companion skill that wraps
-`ctx setup --backend`, but the brief is silent and the
-existing `ctx setup` family already has skills (`/ctx-setup`,
-per-tool variants) that could absorb this. Decide during
-implementation.
+No new companion skill ships in Block A. The user-facing surface is covered by
+the `ctx setup` docs, the `ctx ai` CLI reference, the vLLM recipe, command
+assets/examples, and the agent playbook note listed below. A future `/ctx-ai-*`
+skill can be specified after Block A proves the backend contract.
 
 ## Implementation
 
@@ -166,8 +166,8 @@ implementation.
 | `internal/cli/ai/` | **New package** (if Option 1). Command surface for the `ai` namespace |
 | `internal/cli/setup/cmd/root/` | Extend with `--backend` handling; templating into `.ctxrc` |
 | `internal/cli/setup/core/backend/` | **New subpackage.** Setup-time wiring per backend type (env-var templates, downstream-tool config writes) |
-| `internal/rc/` | Add `[backends]` table parsing and validation |
-| `.ctxrc` (project-init template) | Add commented-out `[backends]` skeleton |
+| `internal/rc/` | Add `backends:` YAML mapping parsing and validation |
+| `.ctxrc` (project-init template) | Add commented-out `backends:` skeleton |
 | `internal/assets/context/AGENT_PLAYBOOK.md` | (TBD) note that `ctx ai <verb>` exists and when agents should call it vs. hand-rolling against the AI tool |
 | `docs/recipes/` | New recipe `local-inference-with-vllm.md` (or `ai-backend-setup.md`); the user explicitly carved out recipe-restructuring work, so this is *one* recipe added, not a recipe-surface rework |
 | `docs/cli/` | New page documenting `ctx ai` (or the chosen flag surface) |
@@ -197,7 +197,7 @@ type Registry interface {
   OpenCode, Cursor, etc.). The `--backend` extension follows the
   same templating-into-config-files pattern.
 - `internal/rc/` — `.ctxrc` parsing and validation. Adding a
-  `[backends]` table follows the existing TOML pattern.
+  `backends:` mapping follows the existing YAML pattern.
 - `internal/err/` — typed-string sentinels for backend errors
   (per the recent `entity.Sentinel` convention).
 - `internal/assets/commands/text/errors.yaml` — externalised
@@ -205,23 +205,21 @@ type Registry interface {
 
 ## Configuration
 
-`.ctxrc` additions (proposed shape — final key names TBD):
+`.ctxrc` additions use the repo's existing YAML shape:
 
-```toml
-[backends]
-default = "vllm"   # optional; required only if more than one backend is configured
-
-[backends.vllm]
-endpoint = "http://localhost:8000"
-api_key_env = ""   # vllm typically runs without auth; empty means none
-timeout = "30s"
-default_model = "openai/gpt-oss-120b"
-
-[backends.openai]
-endpoint = "https://api.openai.com"
-api_key_env = "OPENAI_API_KEY"
-timeout = "60s"
-default_model = "gpt-4o"
+```yaml
+backends:
+  default: vllm # optional; required only if more than one backend is configured
+  vllm:
+    endpoint: http://localhost:8000
+    api_key_env: "" # vllm typically runs without auth; empty means none
+    timeout: 30s
+    default_model: openai/gpt-oss-120b
+  openai:
+    endpoint: https://api.openai.com
+    api_key_env: OPENAI_API_KEY
+    timeout: 60s
+    default_model: gpt-4o
 ```
 
 Environment variables: only **read** from env-vars named in
@@ -287,18 +285,20 @@ implementation:
 
 1. **CLI namespace shape:** `ctx ai <verb>` (Option 1) vs. flags
    on existing commands (Option 2). Expensive to unwind. Pick once.
-2. **Proposal queue location:** `.context/proposals/`? Kb-closeout-style
-   under `.context/ingest/`? Belongs to B+C supplementary, but A's
-   validation consumer must write *somewhere* — pick a provisional
-   location that B+C can confirm or relocate.
+2. **Proposal queue location:** Block A uses `.context/proposals/ai/` as the
+   provisional queue. The directory is tracked as substrate metadata; each
+   validation run writes one JSON proposed-patch artifact containing backend,
+   model, input reference, emit kinds, proposed rows, source spans/citations
+   when available, and status metadata. B+C may confirm or relocate this queue
+   after Block A ships.
 3. **Default extraction model:** A-spec leaves model choice to the
    user; recommended models per task type can be a recipe.
-4. **Companion skill:** `/ctx-ai-setup` or absorb into existing
-   `/ctx-setup`?
-5. **Validation consumer:** `ctx compact` is the cheapest validator
-   per the brief, but the exact command/flag shape lands in the
-   B+C supplementary spec. A's implementation needs to pick *one*
-   B-block consumer to ship alongside A; the others wait.
+4. **Companion skill:** No new Block A skill; docs/assets/playbook updates cover
+   the surface until a dedicated skill is specified.
+5. **Validation consumer:** `ctx ai propose <input> --emit ...` is the Block A
+   validation-only generic proposer. It proves backend dispatch and proposed
+   patch writing without claiming the final B command taxonomy or foreclosing
+   later `ctx ai compact` / `ctx ai ingest` commands.
 
 ## Task Breakdown
 
@@ -324,9 +324,9 @@ later rows. The `Spec:` reference points at this file.
   #priority:medium #added:2026-05-21
 
 - [ ] Extend `internal/rc/` to parse and validate the `.ctxrc`
-  `[backends]` table per the spec's Configuration section:
+  `backends:` mapping per the spec's Configuration section:
   per-backend `endpoint`, `api_key_env`, `timeout`, `default_model`,
-  plus optional `[backends].default`. Refuse malformed tables with
+  plus optional `backends.default`. Refuse malformed tables with
   a clear parse error naming the offending key. Add fixtures and
   round-trip tests. Spec: `specs/ctx-ai-backend.md` §Configuration.
   #priority:medium #added:2026-05-21
@@ -359,9 +359,10 @@ later rows. The `Spec:` reference points at this file.
 
 - [ ] Build the AI command surface per the namespace decision from
   the first task. Minimum verbs: `ping` (reachability + first model
-  listed) plus the validation consumer chosen below. All AI
+  listed) plus `propose` as the Block A validation-only generic
+  proposer. All AI
   commands honour `--backend` flag (falls back to
-  `[backends].default`), fail closed when no backend configured,
+  `backends.default`), fail closed when no backend configured,
   and surface upstream errors verbatim. Spec:
   `specs/ctx-ai-backend.md` §Interface. #priority:medium
   #added:2026-05-21
@@ -374,14 +375,15 @@ later rows. The `Spec:` reference points at this file.
   is honour-system only. Spec: `specs/ctx-ai-backend.md` §Validation
   Rules and §Testing. #priority:medium #added:2026-05-21
 
-- [ ] Ship the validation consumer from block B: pick *one*
-  extraction command (the spec recommends `ctx compact <input>
-  --emit decisions,learnings,tasks,open-questions` as the cheapest
-  per the brief). Implements the full pattern end-to-end:
+- [ ] Ship the Block A validation consumer: `ctx ai propose <input>
+  --emit decisions,learnings,tasks,open-questions`. This is a
+  validation-only generic proposer, not the final B command taxonomy.
+  Implements the full pattern end-to-end:
   schema-constrained dispatch through the backend, JSON validation,
-  proposal artifact written to the provisional proposal queue
-  location (settled later by the B+C spec). `.context/*.md` files
-  must remain unchanged. Integration test confirms the round-trip
+  one proposed-patch JSON artifact written to `.context/proposals/ai/`
+  with backend, model, input reference, emit kinds, proposed rows,
+  source spans/citations when available, and status metadata.
+  `.context/*.md` files must remain unchanged. Integration test confirms the round-trip
   against a fake OpenAI-compatible httptest server. Spec:
   `specs/ctx-ai-backend.md` §Testing and Open Question #5.
   #priority:medium #added:2026-05-21

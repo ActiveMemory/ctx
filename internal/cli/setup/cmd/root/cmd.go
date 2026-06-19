@@ -30,6 +30,11 @@ import (
 //     accepts a tool name argument
 func Cmd() *cobra.Command {
 	var write bool
+	var backend string
+	var endpoint string
+	var apiKeyEnv string
+	var model string
+	var timeout string
 
 	short, long := desc.Command(cmd.DescKeySetup)
 	c := &cobra.Command{
@@ -38,15 +43,49 @@ func Cmd() *cobra.Command {
 		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
 		Example:     desc.Example(cmd.DescKeySetup),
-		Args:        cobra.ExactArgs(1),
+		Args: func(cmd *cobra.Command, args []string) error {
+			if backend != "" && len(args) == 0 {
+				return nil
+			}
+			return cobra.ExactArgs(1)(cmd, args)
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return Run(cmd, args, write)
+			return Run(
+				cmd,
+				args,
+				write,
+				backend,
+				endpoint,
+				apiKeyEnv,
+				model,
+				timeout,
+			)
 		},
 	}
 
 	flagbind.BoolFlagP(c, &write,
 		cFlag.Write, cFlag.ShortWrite,
 		flag.DescKeySetupWrite,
+	)
+	flagbind.StringFlag(c, &backend,
+		cFlag.Backend,
+		flag.DescKeySetupBackend,
+	)
+	flagbind.StringFlag(c, &endpoint,
+		cFlag.Endpoint,
+		flag.DescKeySetupEndpoint,
+	)
+	flagbind.StringFlag(c, &apiKeyEnv,
+		cFlag.APIKeyEnv,
+		flag.DescKeySetupAPIKeyEnv,
+	)
+	flagbind.StringFlag(c, &model,
+		cFlag.Model,
+		flag.DescKeySetupModel,
+	)
+	flagbind.StringFlag(c, &timeout,
+		cFlag.Timeout,
+		flag.DescKeySetupTimeout,
 	)
 
 	return c

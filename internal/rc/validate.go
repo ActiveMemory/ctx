@@ -38,11 +38,18 @@ func Validate(data []byte) (warnings []string, err error) {
 
 		// yaml.v3 returns *yaml.TypeError for unknown fields.
 		if te, ok := errors.AsType[*yaml.TypeError](decErr); ok {
+			if backendsShapeError(te.Errors) {
+				return nil, decErr
+			}
 			return te.Errors, nil
 		}
 
 		// Genuinely broken YAML.
 		return nil, decErr
+	}
+
+	if cfgErr := cfg.validateBackends(); cfgErr != nil {
+		return nil, cfgErr
 	}
 
 	return nil, nil

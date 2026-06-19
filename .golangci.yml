@@ -38,6 +38,22 @@ linters:
       - linters: [gosec]
         text: "G101"
         path: "internal/config/embed/text/"
+      # FlagDescKey constants are CLI flag description keys, not credentials
+      - linters: [gosec]
+        text: "G101"
+        path: "internal/config/embed/flag/"
+      # Flag name constants are CLI flag identifiers, not credentials
+      - linters: [gosec]
+        text: "G101"
+        path: "internal/config/flag/"
+      # RC key constants are YAML config key names, not credentials
+      - linters: [gosec]
+        text: "G101"
+        path: "internal/config/rc/"
+      # Default env var name constants are identifiers, not credentials
+      - linters: [gosec]
+        text: "G101"
+        path: "internal/config/backend/"
 
 run:
   timeout: 5m

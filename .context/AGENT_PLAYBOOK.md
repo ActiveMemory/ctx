@@ -74,6 +74,15 @@ go run ./cmd/ctx  # ✗ avoid unless developing ctx itself
 ```
 Check with `which ctx` if unsure whether it's installed.
 
+### Optional AI Backends
+
+`ctx ai` is optional and fail-closed. Use `ctx setup --backend <name>` to
+configure a backend, `ctx ai ping` to verify it, and `ctx ai propose <input>
+--emit ...` only to write reviewable artifacts under `.context/proposals/ai/`.
+Do not wire deterministic commands, ceremonies, or hooks to backend
+availability; `ctx status`, `ctx agent`, and hooks must keep working with no
+backend configured.
+
 ### When ctx Returns an Error
 
 Triage the error before reacting:
