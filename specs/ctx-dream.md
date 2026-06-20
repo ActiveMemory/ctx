@@ -230,6 +230,14 @@ adversarial gate."
    ledger/proposal `status`/`action` enums should stay open enough not to
    foreclose either.
 
+**A v2 use case to fold in (from a serendipity round, 2026-06-07):** a
+*dream over journals* could export a portable **personal-context
+document** — preferences, context, key decisions, ongoing work —
+distilled from journal history (the idea in `ideas/ctx-journal-summarize.md`).
+This is not a standalone feature: it is the same v2 dream-over-journals
+pipeline pointed at a human-portable output instead of (or alongside) the
+canonical files. v1 dreams only inside `ideas/`; this is explicitly v2.
+
 ### Prior art: a cautionary sibling (Hermes "Dreaming")
 
 An independently-designed feature (Hermes "Dreaming", itself after
