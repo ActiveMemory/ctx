@@ -508,7 +508,7 @@ ratified.
       discovery, or adversarial scrutiny. Ironically, your spec here
       needs to be *crisper*, not looser: the model will attack it,
       find gaps, and fix them if it decides that is the right call. Be
-      very clear about why you need what you need.
+      **very clear** about why you need what you need.
 
 ## What `/plan` Must Prove
 
