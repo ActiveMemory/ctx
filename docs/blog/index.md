@@ -25,6 +25,20 @@ auto-memory to `.context/`.
 
 ## Field Notes
 
+### [The Cheapest Patch Was the Most Expensive: What Seven AI Coding Runs Taught Me About Cost](2026-06-21-the-cheapest-patch-was-the-most-expensive.md)
+
+*June 21, 2026*: One boring CLI bug, seven runs, three model tiers,
+and compression on versus off. The cheapest run missed the contract;
+the most expensive run quietly rewrote it; the best run simply **found
+the parser that already existed** before the task shape hardened. The
+expensive part of AI coding is not the diff: it is missing the smaller
+job. Make implementation inventory a hard gate before the spec expands.
+
+**Topics**: spec-driven development, model selection, context
+compression, agentic coding cost, field notes
+
+---
+
 ### [The Watermelon-Rind Anti-Pattern: Why Smarter Tools Make Shallower Agents](2026-04-06-the-watermelon-rind-anti-pattern.md)
 
 *April 6, 2026*: Give an agent a graph query tool, and it produces output
