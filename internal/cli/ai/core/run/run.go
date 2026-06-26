@@ -13,6 +13,7 @@ import (
 	backendPkg "github.com/ActiveMemory/ctx/internal/backend"
 	cfgAI "github.com/ActiveMemory/ctx/internal/config/ai"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	errAI "github.com/ActiveMemory/ctx/internal/err/ai"
 	errBackend "github.com/ActiveMemory/ctx/internal/err/backend"
 	ctxio "github.com/ActiveMemory/ctx/internal/io"
 )
@@ -68,32 +69,49 @@ func Propose(
 		return "", readErr
 	}
 	kinds := splitEmit(emit)
+	if len(kinds) == 0 {
+		return "", errAI.EmitRequired()
+	}
 	response, completeErr := resolved.backend.Complete(
 		ctx,
 		backendPkg.Request{
 			Prompt: cfgAI.PromptPrefix + emit + token.NewlineLF + string(data),
-			Schema: cfgAI.SchemaMinimal,
+			Schema: backendPkg.Schema{
+				Name:   cfgAI.SchemaProposalName,
+				Schema: json.RawMessage(cfgAI.SchemaMinimal),
+			},
 		},
 	)
 	if completeErr != nil {
 		return "", completeErr
 	}
-	decoded := map[string]any{}
+	decoded := ProposalResponse{}
 	decodeErr := json.Unmarshal([]byte(response.Text), &decoded)
-	if decodeErr != nil {
+	if decodeErr != nil || len(decoded.Rows) == 0 {
 		return "", errBackend.BadRequest{
 			Name:  resolved.name,
-			Cause: decodeErr,
+			Cause: errAI.InvalidArtifactResponse(),
 		}
 	}
 	artifact := ProposalArtifact{
-		Kind:     cfgAI.KindProposedPatch,
-		Backend:  resolved.name,
-		Model:    response.Model,
-		Input:    input,
-		Emit:     kinds,
-		Status:   cfgAI.StatusProposed,
-		Response: decoded,
+		Kind:    cfgAI.KindProposedPatch,
+		Backend: resolved.name,
+		Model:   response.Model,
+		Input:   input,
+		Emit:    kinds,
+		Status:  cfgAI.StatusProposed,
+		Response: ProposalResponse{
+			Rows: decoded.Rows,
+			Metadata: ProposalMeta{
+				Backend: resolved.name,
+				Model:   response.Model,
+				Input:   input,
+				Status:  cfgAI.StatusProposed,
+			},
+		},
+	}
+	if validateErr := validateProposalArtifact(artifact); validateErr != nil {
+		return "", validateErr
 	}
 	return writeArtifact(artifact)
 }

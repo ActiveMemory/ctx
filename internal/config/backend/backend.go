@@ -38,6 +38,8 @@ const (
 	AuthorizationBearerPrefix = "Bearer "
 	ChatCompletionsPath       = "/v1/chat/completions"
 	ContentTypeJSON           = "application/json"
+	MaxResponseBytes          = 1 << 20
+	ResponseFormatJSONSchema  = "json_schema"
 	HeaderAuthorization       = "Authorization"
 	HeaderContentType         = "Content-Type"
 	HTTPMethodGet             = "GET"
@@ -55,10 +57,12 @@ const (
 	ErrDuplicateRegistration = "backend already registered: "
 	ErrFactory               = "backend factory failed: "
 	ErrInvalidEndpoint       = "backend endpoint invalid: "
+	ErrInvalidResponseShape  = "invalid structured response shape"
 	ErrMissingBackend        = "backend not registered: "
 	ErrMultipleBackends      = "multiple backends configured; pass --backend " +
 		"or set backends.default"
 	ErrNoBackendConfigured = "no backend configured; run ctx setup --backend"
+	FmtUpstreamStatusBody  = "%d: %s"
 	ErrUnreachable         = "backend unreachable: "
 	ErrUpstream            = "backend upstream returned: "
 )

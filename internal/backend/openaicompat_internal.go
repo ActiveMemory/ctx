@@ -14,6 +14,8 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	pathpkg "path"
+	"strings"
 	"time"
 
 	cfgBackend "github.com/ActiveMemory/ctx/internal/config/backend"
@@ -122,7 +124,9 @@ func (backend openAICompatible) do(
 			logWarn.Warn(cfgWarn.CloseResponse, closeErr)
 		}
 	}()
-	raw, readErr := io.ReadAll(response.Body)
+	raw, readErr := io.ReadAll(
+		io.LimitReader(response.Body, cfgBackend.MaxResponseBytes),
+	)
 	if readErr != nil {
 		return nil, errBackend.BadRequest{Name: backend.name, Cause: readErr}
 	}
@@ -188,12 +192,12 @@ func (backend openAICompatible) endpoint() string {
 // url combines the configured endpoint with an API path.
 //
 // Parameters:
-//   - path: endpoint path constant
+//   - apiPath: endpoint path constant
 //
 // Returns:
 //   - string: absolute request URL
 //   - error: invalid endpoint error
-func (backend openAICompatible) url(path string) (string, error) {
+func (backend openAICompatible) url(apiPath string) (string, error) {
 	parsed, parseErr := url.Parse(backend.config.Endpoint)
 	if parseErr != nil {
 		return "", errBackend.InvalidEndpoint{
@@ -207,6 +211,7 @@ func (backend openAICompatible) url(path string) (string, error) {
 			Endpoint: backend.config.Endpoint,
 		}
 	}
-	parsed.Path = path
+	basePath := strings.TrimSuffix(parsed.Path, cfgHTTP.PathSepStr)
+	parsed.Path = pathpkg.Join(basePath, apiPath)
 	return parsed.String(), nil
 }

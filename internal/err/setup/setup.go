@@ -95,3 +95,33 @@ func MissingEmbeddedAsset(name string) error {
 func UnsupportedBackend(name string) error {
 	return fmt.Errorf(cfgSetup.BackendUnsupported+token.FormatString, name)
 }
+
+// BackendRCMapping reports that .ctxrc must decode to a root mapping.
+//
+// Returns:
+//   - error: ".ctxrc must be a mapping"
+func BackendRCMapping() error {
+	return fmt.Errorf(cfgSetup.BackendRCMapping)
+}
+
+// BackendEndpointRequired reports that setup needs an explicit endpoint.
+//
+// Parameters:
+//   - name: backend name passed to --backend
+//
+// Returns:
+//   - error: missing endpoint message for that backend
+func BackendEndpointRequired(name string) error {
+	return fmt.Errorf(cfgSetup.BackendEndpointRequired, name)
+}
+
+// BackendEndpointScheme reports that setup received a non-http(s) endpoint.
+//
+// Parameters:
+//   - name: backend name passed to --backend
+//
+// Returns:
+//   - error: invalid endpoint scheme message for that backend
+func BackendEndpointScheme(name string) error {
+	return fmt.Errorf(cfgSetup.BackendEndpointScheme, name)
+}

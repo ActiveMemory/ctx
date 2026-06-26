@@ -6,6 +6,8 @@
 
 package backend
 
+import "fmt"
+
 import cfgBackend "github.com/ActiveMemory/ctx/internal/config/backend"
 
 // DuplicateRegistration reports a duplicate backend registration.
@@ -159,7 +161,11 @@ type Upstream struct {
 // Returns:
 //   - string: formatted upstream response message
 func (err Upstream) Error() string {
-	return cfgBackend.ErrUpstream + err.Body
+	return cfgBackend.ErrUpstream + fmt.Sprintf(
+		cfgBackend.FmtUpstreamStatusBody,
+		err.StatusCode,
+		err.Body,
+	)
 }
 
 // BadRequest wraps a local request encoding or decode failure.
@@ -186,4 +192,12 @@ func (err BadRequest) Error() string {
 //   - error: underlying request failure
 func (err BadRequest) Unwrap() error {
 	return err.Cause
+}
+
+// InvalidResponseShape reports a structurally incomplete provider response.
+//
+// Returns:
+//   - error: "invalid structured response shape"
+func InvalidResponseShape() error {
+	return fmt.Errorf(cfgBackend.ErrInvalidResponseShape)
 }

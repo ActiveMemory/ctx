@@ -20,7 +20,7 @@ import (
 // Cmd returns the "ctx setup" command for generating AI tool integrations.
 //
 // The command outputs configuration snippets and instructions for integrating
-// Context with various AI coding tools like Claude Code, Cursor, Aider, etc.
+// Context with various AI coding tools or backend setup flows.
 //
 // Flags:
 //   - --write, -w: Write the configuration file instead of printing

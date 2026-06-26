@@ -6,7 +6,10 @@
 
 package backend
 
-import "context"
+import (
+	"context"
+	"encoding/json"
+)
 
 // Backend is the AI completion backend contract.
 type Backend interface {
@@ -45,7 +48,13 @@ type Config struct {
 type Request struct {
 	Model  string
 	Prompt string
-	Schema string
+	Schema Schema
+}
+
+// Schema carries a structured-output schema definition.
+type Schema struct {
+	Name   string
+	Schema json.RawMessage
 }
 
 // Response describes a backend completion response.
@@ -86,8 +95,22 @@ type modelInfo struct {
 
 // chatRequest is the OpenAI-compatible chat completion request.
 type chatRequest struct {
-	Model    string        `json:"model"`
-	Messages []chatMessage `json:"messages"`
+	Model          string          `json:"model"`
+	Messages       []chatMessage   `json:"messages"`
+	ResponseFormat *responseFormat `json:"response_format,omitempty"`
+}
+
+// responseFormat encodes an OpenAI-compatible structured output schema.
+type responseFormat struct {
+	Type       string                `json:"type"`
+	JSONSchema *responseFormatSchema `json:"json_schema,omitempty"`
+}
+
+// responseFormatSchema is the structured output schema wrapper.
+type responseFormatSchema struct {
+	Name   string          `json:"name"`
+	Strict bool            `json:"strict"`
+	Schema json.RawMessage `json:"schema"`
 }
 
 // chatMessage is a chat message in an OpenAI-compatible payload.

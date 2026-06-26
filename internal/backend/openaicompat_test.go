@@ -71,9 +71,16 @@ func TestOpenAICompatibleCompleteSuccess(t *testing.T) {
 		if request.Model != "configured-model" {
 			t.Fatalf("model = %q", request.Model)
 		}
-		_, writeErr := w.Write([]byte(
-			`{"model":"configured-model","choices":[{"message":{"content":"ok"}}]}`,
-		))
+		if request.ResponseFormat == nil || request.ResponseFormat.JSONSchema == nil {
+			t.Fatalf("response_format missing")
+		}
+		if request.ResponseFormat.Type != cfgBackend.ResponseFormatJSONSchema {
+			t.Fatalf("response_format type = %q", request.ResponseFormat.Type)
+		}
+		if len(request.ResponseFormat.JSONSchema.Schema) == 0 {
+			t.Fatalf("schema missing")
+		}
+		_, writeErr := w.Write([]byte(`{"model":"configured-model","choices":[{"message":{"content":"ok"}}]}`))
 		if writeErr != nil {
 			t.Fatalf("Write() error = %v", writeErr)
 		}
@@ -87,7 +94,7 @@ func TestOpenAICompatibleCompleteSuccess(t *testing.T) {
 
 	response, completeErr := backend.Complete(
 		context.Background(),
-		Request{Prompt: "hello"},
+		Request{Prompt: "hello", Schema: Schema{Name: "proposal", Schema: json.RawMessage(`{"type":"object"}`)}},
 	)
 	if completeErr != nil {
 		t.Fatalf("Complete() error = %v", completeErr)
@@ -162,6 +169,69 @@ func TestOpenAICompatibleTimeout(t *testing.T) {
 	var unreachable errBackend.Unreachable
 	if !errors.As(pingErr, &unreachable) {
 		t.Fatalf("Ping() error = %T, want Unreachable", pingErr)
+	}
+}
+
+func TestOpenAICompatiblePingJoinsEndpointBasePath(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(
+		w http.ResponseWriter,
+		r *http.Request,
+	) {
+		if r.URL.Path != "/proxy/openai"+cfgBackend.ModelsPath {
+			t.Fatalf(
+				"path = %s, want %s",
+				r.URL.Path,
+				"/proxy/openai"+cfgBackend.ModelsPath,
+			)
+		}
+		_, writeErr := w.Write([]byte(`{"data":[{"id":"first"}]}`))
+		if writeErr != nil {
+			t.Fatalf("Write() error = %v", writeErr)
+		}
+	}))
+	defer server.Close()
+	backend := testOpenAIBackend(t, Config{Endpoint: server.URL + "/proxy/openai"})
+
+	pingErr := backend.Ping(context.Background())
+	if pingErr != nil {
+		t.Fatalf("Ping() error = %v", pingErr)
+	}
+}
+
+func TestOpenAICompatibleCompleteJoinsEndpointBasePath(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(
+		w http.ResponseWriter,
+		r *http.Request,
+	) {
+		if r.URL.Path != "/proxy/openai"+cfgBackend.ChatCompletionsPath {
+			t.Fatalf(
+				"path = %s, want %s",
+				r.URL.Path,
+				"/proxy/openai"+cfgBackend.ChatCompletionsPath,
+			)
+		}
+		_, writeErr := w.Write([]byte(
+			`{"model":"configured-model","choices":[{"message":{"content":"ok"}}]}`,
+		))
+		if writeErr != nil {
+			t.Fatalf("Write() error = %v", writeErr)
+		}
+	}))
+	defer server.Close()
+	backend := testOpenAIBackend(t, Config{
+		Endpoint:     server.URL + "/proxy/openai/",
+		DefaultModel: "configured-model",
+	})
+
+	response, completeErr := backend.Complete(
+		context.Background(),
+		Request{Prompt: "hello"},
+	)
+	if completeErr != nil {
+		t.Fatalf("Complete() error = %v", completeErr)
+	}
+	if response.Text != "ok" {
+		t.Fatalf("Text = %q", response.Text)
 	}
 }
 

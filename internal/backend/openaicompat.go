@@ -58,6 +58,16 @@ func (backend openAICompatible) Complete(
 			Content: req.Prompt,
 		}},
 	}
+	if req.Schema.Name != "" || req.Schema.Schema != nil {
+		payload.ResponseFormat = &responseFormat{
+			Type: cfgBackend.ResponseFormatJSONSchema,
+			JSONSchema: &responseFormatSchema{
+				Name:   req.Schema.Name,
+				Strict: true,
+				Schema: req.Schema.Schema,
+			},
+		}
+	}
 	body, marshalErr := json.Marshal(payload)
 	if marshalErr != nil {
 		return Response{}, errBackend.BadRequest{
@@ -79,6 +89,14 @@ func (backend openAICompatible) Complete(
 		return Response{}, errBackend.BadRequest{
 			Name:  backend.name,
 			Cause: decodeErr,
+		}
+	}
+	if decoded.Model == "" ||
+		len(decoded.Choices) == 0 ||
+		decoded.Choices[0].Message.Content == "" {
+		return Response{}, errBackend.BadRequest{
+			Name:  backend.name,
+			Cause: errBackend.InvalidResponseShape(),
 		}
 	}
 	text := ""

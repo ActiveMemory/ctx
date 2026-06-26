@@ -8,8 +8,10 @@ package run
 
 import (
 	"encoding/json"
+	"fmt"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	backendPkg "github.com/ActiveMemory/ctx/internal/backend"
@@ -17,10 +19,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	cfgFS "github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
+	errAI "github.com/ActiveMemory/ctx/internal/err/ai"
 	errBackend "github.com/ActiveMemory/ctx/internal/err/backend"
 	ctxio "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
+
+// proposalNonce breaks same-timestamp artifact filename ties.
+var proposalNonce uint64
 
 // resolve returns the selected configured backend.
 //
@@ -31,6 +37,10 @@ import (
 //   - resolvedBackend: selected backend and metadata
 //   - error: rc or registry resolution error
 func resolve(backendName string) (resolvedBackend, error) {
+	if validateErr := rc.ValidateCurrent(); validateErr != nil {
+		return resolvedBackend{}, validateErr
+	}
+
 	registry := &backendPkg.Registry{}
 	configs := rc.RC().Backends.Configs
 	if len(configs) == 0 {
@@ -134,6 +144,10 @@ func writeArtifact(artifact ProposalArtifact) (string, error) {
 	}
 	name := cfgAI.ArtifactPrefix +
 		time.Now().UTC().Format(cfgAI.TimestampLayout) +
+		fmt.Sprintf(
+			cfgAI.ArtifactNonceFormat,
+			atomic.AddUint64(&proposalNonce, 1),
+		) +
 		cfgAI.ArtifactExtJSON
 	path := filepath.Join(proposalDir, name)
 	writeErr := ctxio.SafeWriteFile(path, data, cfgFS.PermFile)
@@ -141,6 +155,25 @@ func writeArtifact(artifact ProposalArtifact) (string, error) {
 		return "", writeErr
 	}
 	return path, nil
+}
+
+// validateProposalArtifact checks required proposal artifact fields.
+//
+// Parameters:
+//   - artifact: proposal artifact to validate before persisting
+//
+// Returns:
+//   - error: invalid artifact error, invalid response error, or nil when valid
+func validateProposalArtifact(artifact ProposalArtifact) error {
+	if artifact.Kind != cfgAI.KindProposedPatch || artifact.Backend == "" ||
+		artifact.Model == "" || artifact.Input == "" || len(artifact.Emit) == 0 {
+		return errAI.InvalidArtifact()
+	}
+	if artifact.Status != cfgAI.StatusProposed ||
+		len(artifact.Response.Rows) == 0 {
+		return errAI.InvalidArtifactResponse()
+	}
+	return nil
 }
 
 // splitEmit splits comma-separated emit kinds.

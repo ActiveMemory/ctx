@@ -192,15 +192,23 @@ func TestValidate_BackendsUnknownNestedField(t *testing.T) {
     endpoint: http://localhost:8000
     api_token: nope
 `)
-	warnings, err := Validate(data)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	_, err := Validate(data)
+	if err == nil {
+		t.Fatal("expected error for unknown backend field")
 	}
-	if len(warnings) == 0 {
-		t.Fatal("expected warning for unknown backend field")
+	if !strings.Contains(err.Error(), "backends.vllm.api_token") {
+		t.Errorf("error should mention full backend field path, got: %v", err)
 	}
-	if !strings.Contains(warnings[0], "api_token") {
-		t.Errorf("warning should mention field name, got: %s", warnings[0])
+}
+
+func TestValidate_BackendsInvalidEndpointScheme(t *testing.T) {
+	data := []byte(`backends:
+  vllm:
+    endpoint: file:///tmp/socket
+`)
+	_, err := Validate(data)
+	if err == nil {
+		t.Fatal("expected error for invalid endpoint scheme")
 	}
 }
 

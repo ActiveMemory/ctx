@@ -7,6 +7,8 @@
 package rc
 
 import (
+	"fmt"
+
 	"gopkg.in/yaml.v3"
 
 	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
@@ -161,7 +163,9 @@ func (backends *BackendsRC) UnmarshalYAML(value *yaml.Node) error {
 			case cfgRC.BackendDefaultModelKey:
 				backend.DefaultModel = backendVal
 			default:
-				return &yaml.TypeError{Errors: []string{backendKey}}
+				return &yaml.TypeError{Errors: []string{
+					fmt.Sprintf(cfgRC.ErrBackendsUnknownField, key.Value, backendKey),
+				}}
 			}
 		}
 		backends.Configs[key.Value] = backend

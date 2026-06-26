@@ -8,11 +8,15 @@ package rc
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 
 	"gopkg.in/yaml.v3"
 
+	cfgHTTP "github.com/ActiveMemory/ctx/internal/config/http"
 	cfgRC "github.com/ActiveMemory/ctx/internal/config/rc"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	errRC "github.com/ActiveMemory/ctx/internal/err/rc"
 )
 
 // validateBackends checks semantic requirements for .ctxrc backends.
@@ -39,6 +43,12 @@ func (cfg CtxRC) validateBackends() error {
 				fmt.Sprintf(cfgRC.ErrBackendsEndpointRequired, name),
 			}}
 		}
+		parsed, parseErr := url.Parse(backend.Endpoint)
+		if parseErr != nil ||
+			(parsed.Scheme != cfgHTTP.SchemeHTTP &&
+				parsed.Scheme != cfgHTTP.SchemeHTTPS) {
+			return errRC.InvalidBackendEndpointScheme(name)
+		}
 	}
 
 	return nil
@@ -54,7 +64,8 @@ func (cfg CtxRC) validateBackends() error {
 func backendsShapeError(errs []string) bool {
 	for _, msg := range errs {
 		if strings.Contains(msg, cfgRC.ErrBackendsMapping) ||
-			strings.Contains(msg, cfgRC.ErrBackendsDefaultScalar) {
+			strings.Contains(msg, cfgRC.ErrBackendsDefaultScalar) ||
+			strings.HasPrefix(msg, cfgRC.BackendsKey+token.Dot) {
 			return true
 		}
 	}

@@ -7,15 +7,19 @@
 package backend
 
 import (
+	"fmt"
+	"net/url"
 	"os"
 
 	"gopkg.in/yaml.v3"
 
 	cfgBackend "github.com/ActiveMemory/ctx/internal/config/backend"
+	cfgHTTP "github.com/ActiveMemory/ctx/internal/config/http"
 	cfgRC "github.com/ActiveMemory/ctx/internal/config/rc"
 	cfgSetup "github.com/ActiveMemory/ctx/internal/config/setup"
 	setupErr "github.com/ActiveMemory/ctx/internal/err/setup"
 	ctxio "github.com/ActiveMemory/ctx/internal/io"
+	rcPkg "github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // content returns merged .ctxrc YAML for backend setup.
@@ -58,6 +62,9 @@ func readRoot() (*yaml.Node, error) {
 	if len(data) == 0 {
 		return root, nil
 	}
+	if _, validateErr := rcPkg.Validate(data); validateErr != nil {
+		return nil, validateErr
+	}
 	var doc yaml.Node
 	if decodeErr := yaml.Unmarshal(data, &doc); decodeErr != nil {
 		return nil, decodeErr
@@ -66,7 +73,7 @@ func readRoot() (*yaml.Node, error) {
 		return root, nil
 	}
 	if doc.Content[0].Kind != yaml.MappingNode {
-		return root, nil
+		return nil, setupErr.BackendRCMapping()
 	}
 	return doc.Content[0], nil
 }
@@ -99,6 +106,17 @@ func validate(options Options) error {
 	if defaultEndpoint(options.Name) == "" &&
 		options.Name != cfgBackend.NameOpenAICompatible {
 		return setupErr.UnsupportedBackend(options.Name)
+	}
+	if options.Name == cfgBackend.NameOpenAICompatible && options.Endpoint == "" {
+		return setupErr.BackendEndpointRequired(options.Name)
+	}
+	if options.Endpoint != "" {
+		parsed, parseErr := url.Parse(options.Endpoint)
+		if parseErr != nil ||
+			(parsed.Scheme != cfgHTTP.SchemeHTTP &&
+				parsed.Scheme != cfgHTTP.SchemeHTTPS) {
+			return setupErr.BackendEndpointScheme(options.Name)
+		}
 	}
 	return nil
 }
@@ -143,4 +161,28 @@ func defaultAPIKeyEnv(name string) string {
 	default:
 		return ""
 	}
+}
+
+// downstreamEnv returns optional shell export hints for downstream tools.
+//
+// Parameters:
+//   - name: backend name
+//   - endpoint: configured backend endpoint
+//
+// Returns:
+//   - string: shell export line, or empty when no hint applies
+func downstreamEnv(name, endpoint string) string {
+	if endpoint == "" {
+		return ""
+	}
+	var envName string
+	switch name {
+	case cfgBackend.NameOpenAI:
+		envName = cfgSetup.BackendEnvOpenAIBaseURL
+	case cfgBackend.NameAnthropic:
+		envName = cfgSetup.BackendEnvAnthropicBaseURL
+	default:
+		return ""
+	}
+	return fmt.Sprintf(cfgSetup.BackendShellExportLine, envName, endpoint)
 }

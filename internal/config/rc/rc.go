@@ -23,6 +23,10 @@ const (
 	ErrBackendsDefaultMissing = "backends.default references missing backend: "
 	// ErrBackendsEndpointRequired reports a backend missing its endpoint.
 	ErrBackendsEndpointRequired = "backends.%s.endpoint is required"
+	// ErrBackendsEndpointScheme reports a backend endpoint with invalid scheme.
+	ErrBackendsEndpointScheme = "backends.%s.endpoint must be http or https"
+	// ErrBackendsUnknownField reports an unknown key under a named backend.
+	ErrBackendsUnknownField = "backends.%s.%s"
 
 	// BackendDefaultKey is the reserved key for default backend selection.
 	BackendDefaultKey = "default"

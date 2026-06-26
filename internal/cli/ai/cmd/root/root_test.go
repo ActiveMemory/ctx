@@ -8,6 +8,7 @@ package root
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -94,6 +95,32 @@ func TestProposeWritesArtifactOnly(t *testing.T) {
 	}
 	if len(entries) != 1 {
 		t.Fatalf("artifact count = %d", len(entries))
+	}
+	data, readErr := os.ReadFile(filepath.Join(project, ".context", "proposals", "ai", entries[0].Name()))
+	if readErr != nil {
+		t.Fatalf("ReadFile() error = %v", readErr)
+	}
+	var artifact map[string]any
+	if err := json.Unmarshal(data, &artifact); err != nil {
+		t.Fatalf("artifact json invalid: %v", err)
+	}
+	if artifact["response"] == nil {
+		t.Fatalf("artifact missing response")
+	}
+}
+
+func TestProposeRejectsEmptyEmit(t *testing.T) {
+	project := chdirProject(t)
+	server := completionServer(t)
+	t.Cleanup(server.Close)
+	writeCtxRC(t, project, singleBackendYAML(server.URL))
+	input := filepath.Join(project, "input.txt")
+	if writeErr := os.WriteFile(input, []byte("source"), 0o644); writeErr != nil {
+		t.Fatalf("WriteFile() error = %v", writeErr)
+	}
+	_, runErr := executeAI(t, "propose", input, "--emit", "")
+	if runErr == nil {
+		t.Fatalf("empty emit should fail")
 	}
 }
 
@@ -199,5 +226,5 @@ func multipleBackendsYAML() string {
 }
 
 func completionResponseJSON() string {
-	return `{"model":"m","choices":[{"message":{"content":"{\"decisions\":[]}"}}]}`
+	return `{"model":"m","choices":[{"message":{"content":"{\"rows\":[{\"emit\":\"decisions\",\"text\":\"ok\"}],\"metadata\":{\"backend\":\"vllm\",\"model\":\"m\",\"input\":\"` + "input.txt" + `\",\"status\":\"proposed\"}}"}}]}`
 }

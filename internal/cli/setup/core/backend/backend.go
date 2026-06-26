@@ -38,6 +38,12 @@ func Run(out io.Writer, options Options) error {
 			return setupErr.WriteFile(cfgSetup.FileCtxRC, warnErr)
 		}
 	}
+	downstream := downstreamEnv(resolved.Name, resolved.Endpoint)
+	if downstream != "" {
+		if _, warnErr := io.WriteString(out, downstream); warnErr != nil {
+			return setupErr.WriteFile(cfgSetup.FileCtxRC, warnErr)
+		}
+	}
 	content, contentErr := content(resolved)
 	if contentErr != nil {
 		return contentErr

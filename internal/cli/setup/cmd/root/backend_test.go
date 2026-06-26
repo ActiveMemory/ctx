@@ -62,6 +62,13 @@ func TestSetupBackendUnsupportedRejected(t *testing.T) {
 	}
 }
 
+func TestSetupBackendMissingEndpointRejected(t *testing.T) {
+	_, runErr := executeSetup(t, "--backend", "openai-compatible")
+	if runErr == nil {
+		t.Fatalf("missing endpoint should fail")
+	}
+}
+
 func TestSetupBackendDryRunPrintsYaml(t *testing.T) {
 	out, runErr := executeSetup(t,
 		"--backend", "vllm",
@@ -134,6 +141,52 @@ func TestSetupBackendEnvConflictWarning(t *testing.T) {
 	}
 	if !strings.Contains(out, "warning:") {
 		t.Fatalf("output = %q", out)
+	}
+}
+
+func TestSetupBackendOpenAIEmitsBaseURL(t *testing.T) {
+	out, runErr := executeSetup(t,
+		"--backend", "openai",
+		"--endpoint", "https://example.com/v1",
+	)
+	if runErr != nil {
+		t.Fatalf("setup --backend failed: %v", runErr)
+	}
+	if !strings.Contains(out, "OPENAI_BASE_URL") {
+		t.Fatalf("output = %q", out)
+	}
+}
+
+func TestSetupBackendAnthropicEmitsBaseURL(t *testing.T) {
+	out, runErr := executeSetup(t,
+		"--backend", "anthropic",
+		"--endpoint", "https://anthropic.example",
+	)
+	if runErr != nil {
+		t.Fatalf("setup --backend failed: %v", runErr)
+	}
+	if !strings.Contains(out, "ANTHROPIC_BASE_URL") {
+		t.Fatalf("output = %q", out)
+	}
+}
+
+func TestSetupBackendMalformedCtxRCRejectedAndUntouched(t *testing.T) {
+	tmpDir := chdirTemp(t)
+	path := filepath.Join(tmpDir, ".ctxrc")
+	original := []byte("backends: [broken\n")
+	if err := os.WriteFile(path, original, 0o644); err != nil {
+		t.Fatalf("WriteFile() error = %v", err)
+	}
+	_, runErr := executeSetup(t, "--backend", "vllm", "--endpoint", "http://localhost:8000", "--write")
+	if runErr == nil {
+		t.Fatalf("malformed .ctxrc should fail")
+	}
+	after, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("ReadFile() error = %v", err)
+	}
+	if string(after) != string(original) {
+		t.Fatalf(".ctxrc changed: %q", string(after))
 	}
 }
 
