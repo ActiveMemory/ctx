@@ -451,47 +451,66 @@ but shape the architecture significantly:
    are skills and others are prompts, and when to use which, is
    tribal knowledge.
 
-## Domain Clustering Comparison (enriched 2026-04-03 via GitNexus)
+## Domain Clustering Comparison (enriched 2026-06-09 via GitNexus)
 
-GitNexus auto-detected 94 functional clusters from the call graph.
+GitNexus auto-detected 100 functional clusters from the call graph
+(index @ 60d8e823; was 94 at the 2026-04-03 enrichment).
 Comparing against the 5 manual DETAILED_DESIGN domain splits:
 
-| Manual Domain | GitNexus Clusters | Match | Notes |
-|---------------|-------------------|-------|-------|
-| Foundation | Format (97%), Sysinfo (82%), Rc (57%), Io (53%) | Partial | Format is extremely cohesive; Rc and Io are looser than expected |
-| Domain | Drift (263 sym, 84%), Session (110, 88%), Memory (91, 61%), Parser (89, 70%), Journal (74, 47%), Trace (59, 68%) | Partial | Drift is the largest cluster — pulls in cli/drift + write/drift. Journal is low cohesion (47%) |
-| MCP | Server (49, 90%) | Yes | Tight, well-bounded cluster |
-| CLI | Root (85, 83%), Initialize (72, 50%), Bootstrap (41, 67%) | Partial | Initialize is low cohesion — it touches too many domains during deployment |
-| Output | Lock (42, 76%), Notify (46, 65%), Watch (39, 57%) | No | GitNexus doesn't group write/* as a cluster; it groups by behavioral coupling instead |
+| Manual Domain | GitNexus Clusters (top) | Match | Notes |
+|---------------|-------------------------|-------|-------|
+| Foundation | Flagbind (170, 93%), Git (111, 93%), Rc (146, 53%), Format (106, 26%), Store (65, 47%) | Partial | Flagbind and Git are extremely cohesive. Format collapsed from 97% to 26% cohesion — its symbols are now dispersed across consumers |
+| Domain | Memory (91, 60%), Trace (80, 68%), Journal (97, 52%), Parser (64, 75%), Add (67, 62%) | Partial | Journal still low cohesion (52%) — site and import pipelines remain two subsystems sharing a name |
+| MCP | Server (103, 78%), Extract (61, 67%) | Yes | Server cluster doubled in size (49 -> 103 symbols) but stays well-bounded |
+| CLI | Pad (243, 74%), Skill (237, 77%), Initialize (89, 47%), Nudge (72, 79%), Audit (149, 68%) | Partial | Pad and Skill are now the two largest clusters in the codebase. Initialize remains the structural low-cohesion deployment orchestrator |
+| Output | (no matching clusters) | No | Unchanged: write/* and err/* are leaves, not communities |
+
+### Coverage Gaps (clusters with no manual domain)
+
+These clusters exist in the call graph but have no section in any
+DETAILED_DESIGN domain file — the codebase outgrew the 2026-04
+architecture map:
+
+- **Hub (118 symbols, 73%)** — `internal/hub` + `cli/hub` server,
+  persistence, admin setup. Entirely new subsystem.
+- **Steering (95, 61%)** — steering files + drift checks + CLI.
+- **Trigger (72, 63%)** — trigger add/list lifecycle.
+- Also absent: kb (editorial pipeline), connection, handover,
+  message, loop, fmt, permission — visible in the bootstrap
+  registration inventory (42 commands vs 34 documented).
+
+⚠ Recommend a `/ctx-architecture` refresh pass before the next
+enrichment: ~8 command families have no manual baseline to enrich.
 
 ### Hidden Coupling (GitNexus groups, manual splits)
 
-- **Drift cluster (263 symbols)** includes symbols from drift/,
-  cli/drift/, write/drift/, and context/load — all tightly coupled
-  through the Detect() -> load.Do() -> report chain. Manual split
-  puts these in 3 different domains.
-- **Pad cluster (200 symbols)** is self-contained — pad, crypto,
-  and store form a tight unit. Manual split disperses these across
-  Foundation (crypto) and Domain (pad).
+- **Pad cluster (243 symbols, 74%)** — still self-contained (pad,
+  crypto, store history) and still dispersed across Foundation
+  (crypto) and Domain in the manual split.
+- **Rc cluster (146 symbols, 53%)** — now pulls in config profile
+  detection and token/window logic; the manual split keeps rc as
+  a small Foundation leaf, but the graph sees it as a mid-size
+  shared service (rc.RC d=1: 34 across 8 modules).
 
 ### Artificial Grouping (GitNexus splits, manual groups)
 
-- **Journal (47% cohesion)** — lowest cohesion cluster. The site
-  pipeline (zensical, CSS, nav links) and the import pipeline
-  (parser, state, execute) have minimal internal coupling. These
-  are effectively two separate subsystems sharing a command name.
-- **Initialize (50% cohesion)** — touches every domain during
-  deployment (templates, hooks, skills, settings, vscode, makefile,
-  gitignore). Low cohesion is structural, not a bug — it's a
-  deployment orchestrator, not a domain.
+- **Journal (52% cohesion)** — unchanged finding: site pipeline
+  and import pipeline have minimal internal coupling.
+- **Initialize (47% cohesion)** — unchanged: deployment
+  orchestrator, low cohesion is structural, not a bug.
+- **Format (26% cohesion)** — new: the format helpers no longer
+  form a community at all; each helper is coupled to its caller,
+  not to sibling helpers. The manual Foundation grouping is an
+  organizational convenience here.
 
 ### Key Insight
 
-The write/* and err/* layers don't form clusters because they have
-no internal coupling — each write package is called by exactly one
-CLI command. GitNexus correctly identifies them as leaves, not
-communities. The manual "Output" domain is an organizational
-convenience, not an architectural boundary.
+Unchanged from 2026-04: write/* and err/* don't form clusters
+because each package is called by exactly one CLI command — they
+are leaves. The new top-level fact is growth-driven: the two
+largest clusters (Pad 243, Skill 237) and the new Hub/Steering/
+Trigger/KB subsystems all post-date the manual architecture pass,
+so the map's blind spots are now bigger than its mismatches.
 
 ## Questions That Would Sharpen This Analysis
 

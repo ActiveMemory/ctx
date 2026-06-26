@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+/* ctx Desktop — calm, terminal-adjacent dark theme.
+   Tailwind v4 theme tokens via @theme. */
+@theme {
+  --color-bg: #0e1116;
+  --color-panel: #161b22;
+  --color-border: #232a33;
+  --color-ink: #e6edf3;
+  --color-muted: #8b949e;
+  --color-accent: #4493f8;
+  --color-ok: #3fb950;
+  --color-warn: #d29922;
+  --color-err: #f85149;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family:
+    Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}

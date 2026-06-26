@@ -1,0 +1,84 @@
+name: ctx Desktop
+
+# Scoped to ctx-desktop/ so the heavy Tauri/Rust compile only runs when the
+# desktop client actually changes — the rest of CI lives in ci.yml. Compiles
+# and clippy-lints the security-critical adapter (kb_read traversal,
+# flag/positional separation, child reaping) and runs the discover.rs unit
+# tests, so the hardening can't silently regress.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ctx-desktop/**'
+      - '.github/workflows/ctx-desktop.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'ctx-desktop/**'
+      - '.github/workflows/ctx-desktop.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build + lint + test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ctx-desktop
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      # Formatting needs neither system deps nor a compile, so check it first:
+      # a formatting-only failure fails in seconds without paying for the apt
+      # install, npm ci, and the frontend/Rust builds below.
+      - name: Rust format check
+        working-directory: ctx-desktop/src-tauri
+        run: cargo fmt --all --check
+
+      - name: Install Tauri system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl wget file \
+            libxdo-dev \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ctx-desktop/src-tauri
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ctx-desktop/package-lock.json
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      # tsc && vite build — also produces ../dist, which tauri's
+      # generate_context! embeds at compile time (cargo steps need it).
+      - name: Build frontend
+        run: npm run build
+
+      - name: Rust clippy
+        working-directory: ctx-desktop/src-tauri
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Rust tests
+        working-directory: ctx-desktop/src-tauri
+        run: cargo test

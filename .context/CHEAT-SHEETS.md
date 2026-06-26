@@ -208,36 +208,52 @@ Common failure modes:
 
 ---
 
-## Execution Flow Index (enriched 2026-04-03 via GitNexus)
+## Execution Flow Index (enriched 2026-06-09 via GitNexus)
 
-_Auto-detected from the call graph. Complements the manually
-written cheat sheets above._
+_Auto-detected from the call graph (203 flows in index @ 60d8e823).
+Complements the manually written cheat sheets above._
 
-Top cross-community flows (spanning multiple domains):
+Top cross-community flows (spanning multiple domains). Nearly all
+deep flows terminate at desc.Text — text lookup is the universal
+last step of every command:
 
-| Flow | Steps | Entry Point | Key Symbols |
-|------|-------|-------------|-------------|
-| Deploy -> ContextDir | 10 | initialize | DeployTemplates, Do, ContextDir |
-| Deploy -> Symlinks | 10 | initialize | DeployTemplates, Do, Symlinks |
-| Write -> Init | 10 | MCP server | Serve, Init, SafeWriteFile |
-| Write -> Server | 10 | MCP server | Serve, New, Do |
-| Write -> TokenBudget | 10 | MCP server | Serve, TokenBudget, Do |
-| Run -> Init | 10 | CLI commands | Run, Do, Init |
-| Sync -> ContextDir | 10 | sync cmd | Run, Do, ContextDir |
-| Run -> Text | 9 | CLI commands | Run, Do, desc.Text |
-| Run -> URI | 9 | CLI commands | Run, catalog, URI |
-| Run -> NotFoundError | 8 | CLI commands | Run, Do, NotFound |
+| Flow | Steps | Entry Point |
+|------|-------|-------------|
+| RunShow -> Text | 10 | internal/cli/journal/core/source/show.go |
+| Run -> Text (journal import) | 9 | internal/cli/journal/cmd/importer/run.go |
+| Run -> Text (checkversion hook) | 9 | internal/cli/system/cmd/checkversion/run.go |
+| Run -> Text (journal site) | 8 | internal/cli/journal/cmd/site/run.go |
+| Run -> Text (checkcontextsize hook) | 8 | internal/cli/system/cmd/checkcontextsize/run.go |
+| Run -> Text (pad merge) | 8 | internal/cli/pad/cmd/merge/run.go |
+| BuildVault -> Text (obsidian export) | 8 | internal/cli/journal/core/obsidian/vault.go |
+| Run -> Text (pad tag) | 8 | internal/cli/pad/cmd/tag/run.go |
+| Run -> Text (context load gate hook) | 7 | internal/cli/system/cmd/contextloadgate/run.go |
+| Run -> Text (setup) | 7 | internal/cli/setup/cmd/root/run.go |
+| Run -> Text (add) | 7 | internal/cli/add/core/run/run.go |
 
 ### Multi-Flow Hotspots
 
-Symbols participating in 3+ flows (high-impact modification points):
+Symbols participating in 3+ flows (high-impact modification
+points), counted via STEP_IN_PROCESS edges:
 
 | Symbol | Flows | Location |
 |--------|-------|----------|
-| desc.Text | 53 | internal/assets/read/desc/desc.go:75 |
-| load.Do | 100+ | internal/context/load/loader.go:34 |
-| SafeWriteFile | 69 callers | internal/io/security.go |
-| rc.ContextDir | 20+ | internal/rc/rc.go |
-| validate.Symlinks | 10+ | internal/validate/path.go |
-| err/context.NotFound | 30+ | internal/err/context/context.go |
-| rc.RC | 15+ | internal/rc/rc.go |
+| desc.Text | 58 | internal/assets/read/desc/desc.go |
+| check.FullPreamble | 40 | internal/cli/system/core/check/full_preamble.go |
+| check.Preamble | 39 | internal/cli/system/core/check/input.go |
+| load.Do | 28 | internal/context/load/loader.go:34 |
+| session.ReadInput | 26 | internal/cli/system/core/session/session.go |
+| err/context.StatFailed | 25 | internal/err/context/context.go |
+| rc.ContextDir | 25 | internal/rc/rc.go |
+| nudge.Paused | 21 | internal/cli/system/core/nudge/pause.go |
+| hub.Unmarshal | 20 | internal/hub/types.go |
+| rc.RC | 20 | internal/rc/rc.go |
+| io.cleanAndValidate | 15 | internal/io/validate.go |
+| io.SafeReadUserFile | 14 | internal/io/security.go |
+| nudge.PauseMarkerPath | 14 | internal/cli/system/core/nudge/pause.go |
+
+New since 2026-04-03: the system-hook preamble pair
+(FullPreamble/Preamble at 40/39 flows) and nudge pause gating
+(21/14 flows) are now top-tier integration points — every hook
+subcommand routes through them. hub.Unmarshal/Name (20/18) mark
+the hub subsystem as a new flow participant.

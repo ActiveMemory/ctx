@@ -18,6 +18,8 @@
 | 2026-06-07 | Embedded assets and editor-integration harnesses (consolidated) |
 | 2026-06-07 | Context injection, hooks, and session-state architecture (consolidated) |
 | 2026-06-06 | ctx-dream: standalone proposing memory consolidator (Option B), human-gated via serendipity |
+| 2026-05-31 | Journal screen renders ctx journal source verbatim instead of parsing it |
+| 2026-05-31 | ctx Desktop shells out via std::process::Command, not tauri-plugin-shell |
 | 2026-05-30 | Name the add JSON-ingest flag --json-file, not --json |
 | 2026-05-28 | Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy |
 | 2026-05-24 | Pad snapshot-on-mutate at the store.WriteEntries choke point |
@@ -284,6 +286,34 @@ For significant decisions:
 **Rationale**: Chose a NEW, standalone, PROPOSING consolidator (Option B): it writes only to its own sidecar + proposals queue + ledger + per-dream archive, never autonomously to the five canonical files; a human 'serendipity' review session is the sole bridge (accept/reject/amend) into canonical. One skill, two modes: discipline (default; grounded, structured, provenanced proposals) and creative/exploration (a safe relaxation: resurface + chance, reader-only). Principle: decouple the cognition, reuse the plumbing (own the consolidation logic; reuse import/enrich/kb-ingest via the enriched-journal data contract). Standalone so mechanics evolve independently and changes to existing curation skills can't break it, and for creative freedom (don't assume existing verbs suffice). Discipline-first because it is the hard load-bearing substrate and creative is a strict, safer relaxation of it. Grounded in ideas/ctx-dreams/research: Auto-Dreamer (2605.20616) for the architecture, 'Useful Memories Become Faulty When Continuously Updated by LLMs' (2605.12978) for the threat model, and the deep-research eval cluster for the finding that a single agreeable LLM is not an adversarial gate (it silently repairs the missing justification), which is why the gate must be human. Rejected: Option A (dream owns a parallel canonical store, which does not fix bloat and creates two divergent substrates); autonomous mutation / auto-approve (violates 'each memory entry needs dedicated human attention'); pure-garden-only (under-serves engineering's need for grounding and actionability); coupling to existing skills' internals; garden-first build order.
 
 **Consequence**: Positive: nothing autonomous touches canonical, so the system is reversible by construction; the dream's mechanics can evolve freely; v1 (disciplined ideas/ triage, validated via a ctx-remind-nagged ~15-minute review round) is low-stakes and validates the mechanism and author engagement cheaply. Negative / trade-off: no human serendipity session = no consolidation, so the dream's entire value is gated behind human review cadence, and the author historically under-runs curation; mitigated only by ctx-remind nags + targeting felt pain (ideas/) + a pleasure-not-chore framing. Validation of the full product thesis (disciplined consolidation of canonical memory for engineering teams) is deferred to a later test on a project where bloat actually bites. Spec work proceeds via /ctx-spec --brief on the brief above; key mechanics remain open (executor, proposal schema, ledger schema, .context/ layout).
+
+---
+
+## [2026-05-31-094649] Journal screen renders ctx journal source verbatim instead of parsing it
+
+**Status**: Accepted
+
+**Context**: The Journal timeline needs session data, but ctx journal source emits a whitespace-aligned table with no --json mode, and columns (usage/turns) drop out on short sessions.
+
+**Decision**: Journal screen renders ctx journal source verbatim instead of parsing it
+
+**Rationale**: A column parser misaligns when fields are absent; rendering the text verbatim in a monospace panel is honest and robust for P0.
+
+**Consequence**: Journal is a styled text view, not structured cards; a proper timeline awaits a journal source --json mode upstream (same pattern as the artifact list --json commands).
+
+---
+
+## [2026-05-31-094649] ctx Desktop shells out via std::process::Command, not tauri-plugin-shell
+
+**Status**: Accepted
+
+**Context**: The GUI must run the ctx binary for every read and write. Tauri 2 offers tauri-plugin-shell with capability-scoped command allowlists.
+
+**Decision**: ctx Desktop shells out via std::process::Command, not tauri-plugin-shell
+
+**Rationale**: Running ctx inside our own #[tauri::command] via std::process::Command avoids all shell-plugin permission/capability wiring and keeps the adapter a single Rust module. ctx resolves its context from $PWD/.context, so each call sets current_dir to the selected project root.
+
+**Consequence**: No shell capability in capabilities/default.json; the adapter owns PATH augmentation and git provenance synthesis; a CLI/output change is a one-file fix in ctx_adapter.rs.
 
 ---
 
