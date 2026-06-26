@@ -16,17 +16,14 @@ const (
 
 // Backend setup output strings.
 const (
-	BackendDryRunPrefix        = "Add this backend configuration to .ctxrc:\n"
-	BackendEndpointRequired    = "%s endpoint is required"
-	BackendEndpointScheme      = "%s endpoint must be http or https"
-	BackendEnvAnthropicBaseURL = "ANTHROPIC_BASE_URL"
-	BackendEnvOpenAIBaseURL    = "OPENAI_BASE_URL"
-	BackendEnvWarn             = "warning: environment variable already set: "
-	BackendEnvWarnEnd          = token.NewlineLF
-	BackendRCMapping           = ".ctxrc must be a mapping"
-	BackendShellExportLine     = "export %s=%q\n"
-	BackendUnsupported         = "unsupported backend: "
-	BackendWriteDone           = "Updated .ctxrc backend configuration\n"
+	BackendDryRunPrefix     = "Add this backend configuration to .ctxrc:\n"
+	BackendEndpointRequired = "%s endpoint is required"
+	BackendEndpointScheme   = "%s endpoint must be http or https"
+	BackendEnvWarn          = "warning: environment variable already set: "
+	BackendEnvWarnEnd       = token.NewlineLF
+	BackendRCMapping        = ".ctxrc must be a mapping"
+	BackendUnsupported      = "unsupported backend: "
+	BackendWriteDone        = "Updated .ctxrc backend configuration\n"
 )
 
 // Display names for supported integration tools.

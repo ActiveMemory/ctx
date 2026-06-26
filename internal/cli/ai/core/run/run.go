@@ -78,7 +78,7 @@ func Propose(
 			Prompt: cfgAI.PromptPrefix + emit + token.NewlineLF + string(data),
 			Schema: backendPkg.Schema{
 				Name:   cfgAI.SchemaProposalName,
-				Schema: json.RawMessage(cfgAI.SchemaMinimal),
+				Schema: json.RawMessage(cfgAI.ProposalSchema),
 			},
 		},
 	)

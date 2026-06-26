@@ -7,7 +7,6 @@
 package backend
 
 import (
-	"fmt"
 	"net/url"
 	"os"
 
@@ -171,18 +170,3 @@ func defaultAPIKeyEnv(name string) string {
 //
 // Returns:
 //   - string: shell export line, or empty when no hint applies
-func downstreamEnv(name, endpoint string) string {
-	if endpoint == "" {
-		return ""
-	}
-	var envName string
-	switch name {
-	case cfgBackend.NameOpenAI:
-		envName = cfgSetup.BackendEnvOpenAIBaseURL
-	case cfgBackend.NameAnthropic:
-		envName = cfgSetup.BackendEnvAnthropicBaseURL
-	default:
-		return ""
-	}
-	return fmt.Sprintf(cfgSetup.BackendShellExportLine, envName, endpoint)
-}

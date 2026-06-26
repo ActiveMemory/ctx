@@ -51,14 +51,32 @@ func Run(
 	timeout string,
 ) error {
 	if backend != "" {
-		return coreBackend.Run(cmd.OutOrStdout(), coreBackend.Options{
-			Name:      i18n.Fold(backend),
+		backendName := i18n.Fold(backend)
+		if runErr := coreBackend.Run(cmd.OutOrStdout(), coreBackend.Options{
+			Name:      backendName,
 			Endpoint:  endpoint,
 			APIKeyEnv: apiKeyEnv,
 			Model:     model,
 			Timeout:   timeout,
 			Write:     writeFile,
-		})
+		}); runErr != nil {
+			return runErr
+		}
+		if len(args) == 1 && i18n.Fold(args[0]) == cfgHook.ToolOpenCode {
+			if writeFile {
+				providerErr := coreOpenCode.EnsureProviderConfig(
+					cmd,
+					backendName,
+					coreBackend.ResolveEndpoint(backendName, endpoint),
+				)
+				if providerErr != nil {
+					return providerErr
+				}
+			}
+		}
+		if len(args) == 0 {
+			return nil
+		}
 	}
 	tool := i18n.Fold(args[0])
 

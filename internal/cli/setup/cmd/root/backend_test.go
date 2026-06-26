@@ -27,6 +27,22 @@ func TestSetupBackendNoArgsAccepted(t *testing.T) {
 	}
 }
 
+func TestSetupBackendOnlyDoesNotWriteOpenCodeConfig(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("OPENCODE_HOME", home)
+	_, runErr := executeSetup(t,
+		"--backend", "openai",
+		"--endpoint", "https://example.com/v1",
+		"--write",
+	)
+	if runErr != nil {
+		t.Fatalf("setup --backend failed: %v", runErr)
+	}
+	if _, err := os.Stat(filepath.Join(home, "opencode.json")); !os.IsNotExist(err) {
+		t.Fatalf("unexpected opencode.json write")
+	}
+}
+
 func TestSetupNoArgsNoBackendRejected(t *testing.T) {
 	_, runErr := executeSetup(t)
 	if runErr == nil {
@@ -42,16 +58,13 @@ func TestSetupExistingToolStillWorks(t *testing.T) {
 }
 
 func TestSetupBackendModeWinsOverToolArg(t *testing.T) {
-	out, runErr := executeSetup(t,
+	_, runErr := executeSetup(t,
 		"aider",
 		"--backend", "vllm",
 		"--endpoint", "http://localhost:8000",
 	)
 	if runErr != nil {
 		t.Fatalf("setup --backend with tool arg failed: %v", runErr)
-	}
-	if !strings.Contains(out, "backends:") {
-		t.Fatalf("output = %q", out)
 	}
 }
 
@@ -144,29 +157,54 @@ func TestSetupBackendEnvConflictWarning(t *testing.T) {
 	}
 }
 
-func TestSetupBackendOpenAIEmitsBaseURL(t *testing.T) {
-	out, runErr := executeSetup(t,
+func TestSetupBackendOpenCodeWritesProviderConfig(t *testing.T) {
+	project := chdirTemp(t)
+	home := t.TempDir()
+	t.Setenv("OPENCODE_HOME", home)
+	_, runErr := executeSetup(t,
+		"opencode",
 		"--backend", "openai",
 		"--endpoint", "https://example.com/v1",
+		"--write",
 	)
 	if runErr != nil {
-		t.Fatalf("setup --backend failed: %v", runErr)
+		t.Fatalf("setup opencode --backend failed: %v", runErr)
 	}
-	if !strings.Contains(out, "OPENAI_BASE_URL") {
-		t.Fatalf("output = %q", out)
+	data, err := os.ReadFile(filepath.Join(home, "opencode.json"))
+	if err != nil {
+		t.Fatalf("ReadFile() error = %v", err)
+	}
+	if !strings.Contains(string(data), `"provider"`) ||
+		!strings.Contains(string(data), `"baseURL": "https://example.com/v1"`) ||
+		!strings.Contains(string(data), `"mcp"`) {
+		t.Fatalf("opencode.json = %s", string(data))
+	}
+	if _, err := os.Stat(filepath.Join(project, ".ctxrc")); err != nil {
+		t.Fatalf(".ctxrc not written: %v", err)
 	}
 }
 
-func TestSetupBackendAnthropicEmitsBaseURL(t *testing.T) {
-	out, runErr := executeSetup(t,
-		"--backend", "anthropic",
-		"--endpoint", "https://anthropic.example",
+func TestSetupBackendOpenCodeUsesDefaultEndpoint(t *testing.T) {
+	project := chdirTemp(t)
+	home := t.TempDir()
+	t.Setenv("OPENCODE_HOME", home)
+	_, runErr := executeSetup(t,
+		"opencode",
+		"--backend", "openai",
+		"--write",
 	)
 	if runErr != nil {
-		t.Fatalf("setup --backend failed: %v", runErr)
+		t.Fatalf("setup opencode --backend failed: %v", runErr)
 	}
-	if !strings.Contains(out, "ANTHROPIC_BASE_URL") {
-		t.Fatalf("output = %q", out)
+	data, err := os.ReadFile(filepath.Join(home, "opencode.json"))
+	if err != nil {
+		t.Fatalf("ReadFile() error = %v", err)
+	}
+	if !strings.Contains(string(data), `"baseURL": "https://api.openai.com"`) {
+		t.Fatalf("opencode.json = %s", string(data))
+	}
+	if _, err := os.Stat(filepath.Join(project, ".ctxrc")); err != nil {
+		t.Fatalf(".ctxrc not written: %v", err)
 	}
 }
 

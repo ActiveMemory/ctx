@@ -12,9 +12,11 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 
+	cfgAI "github.com/ActiveMemory/ctx/internal/config/ai"
 	cfgBackend "github.com/ActiveMemory/ctx/internal/config/backend"
 	errBackend "github.com/ActiveMemory/ctx/internal/err/backend"
 )
@@ -77,8 +79,9 @@ func TestOpenAICompatibleCompleteSuccess(t *testing.T) {
 		if request.ResponseFormat.Type != cfgBackend.ResponseFormatJSONSchema {
 			t.Fatalf("response_format type = %q", request.ResponseFormat.Type)
 		}
-		if len(request.ResponseFormat.JSONSchema.Schema) == 0 {
-			t.Fatalf("schema missing")
+		if !strings.Contains(string(request.ResponseFormat.JSONSchema.Schema), `"rows"`) ||
+			!strings.Contains(string(request.ResponseFormat.JSONSchema.Schema), `"metadata"`) {
+			t.Fatalf("schema = %s", string(request.ResponseFormat.JSONSchema.Schema))
 		}
 		_, writeErr := w.Write([]byte(`{"model":"configured-model","choices":[{"message":{"content":"ok"}}]}`))
 		if writeErr != nil {
@@ -94,7 +97,7 @@ func TestOpenAICompatibleCompleteSuccess(t *testing.T) {
 
 	response, completeErr := backend.Complete(
 		context.Background(),
-		Request{Prompt: "hello", Schema: Schema{Name: "proposal", Schema: json.RawMessage(`{"type":"object"}`)}},
+		Request{Prompt: "hello", Schema: Schema{Name: "proposal", Schema: json.RawMessage(cfgAI.ProposalSchema)}},
 	)
 	if completeErr != nil {
 		t.Fatalf("Complete() error = %v", completeErr)

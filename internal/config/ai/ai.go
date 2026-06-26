@@ -20,8 +20,22 @@ const (
 	KindProposedPatch          = "proposed-patch"
 	PromptPrefix               = "Return JSON for requested emit kinds: "
 	SchemaProposalName         = "proposal"
-	SchemaMinimal              = `{"type":"object"}`
 	StatusProposed             = "proposed"
 	TimestampLayout            = "20060102T150405.000000000Z07:00"
 	WritePingFormat            = "backend: %s\nendpoint: %s\nfirst_model: %s\n"
 )
+
+// ProposalSchema is the structured response schema for `ctx ai propose`.
+const ProposalSchema = `{"type":"object","required":["rows","metadata"],` +
+	`"properties":{"rows":{"type":"array","minItems":1,` +
+	`"items":{"type":"object","required":["emit","text"],` +
+	`"properties":{"emit":{"type":"string"},` +
+	`"text":{"type":"string"},` +
+	`"start":{"type":"integer"},"end":{"type":"integer"}},` +
+	`"additionalProperties":false}},` +
+	`"metadata":{"type":"object",` +
+	`"required":["backend","model","input","status"],` +
+	`"properties":{"backend":{"type":"string"},` +
+	`"model":{"type":"string"},"input":{"type":"string"},` +
+	`"status":{"type":"string"}},"additionalProperties":false}},` +
+	`"additionalProperties":false}`

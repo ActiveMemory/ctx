@@ -44,7 +44,7 @@ func Cmd() *cobra.Command {
 		Long:        long,
 		Example:     desc.Example(cmd.DescKeySetup),
 		Args: func(cmd *cobra.Command, args []string) error {
-			if backend != "" && len(args) == 0 {
+			if backend != "" && len(args) <= 1 {
 				return nil
 			}
 			return cobra.ExactArgs(1)(cmd, args)
