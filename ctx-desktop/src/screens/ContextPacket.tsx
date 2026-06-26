@@ -65,8 +65,12 @@ export default function ContextPacket({ dir }: { dir: string }) {
   }
 
   async function copyCommand() {
-    await navigator.clipboard.writeText(`ctx agent --budget ${budget}`);
-    flash("command");
+    try {
+      await navigator.clipboard.writeText(`ctx agent --budget ${budget}`);
+      flash("command");
+    } catch (e) {
+      setError(String(e));
+    }
   }
 
   function flash(which: "packet" | "command") {

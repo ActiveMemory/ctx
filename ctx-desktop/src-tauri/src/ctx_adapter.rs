@@ -110,11 +110,9 @@ pub async fn set_ctx_path(path: String) -> Result<(), String> {
 /// fall back to the chooser, not error on every screen).
 #[tauri::command]
 pub async fn dir_is_ctx_project(dir: String) -> bool {
-    blocking(move || {
-        Ok(!dir.is_empty() && std::path::Path::new(&dir).join(".context").is_dir())
-    })
-    .await
-    .unwrap_or(false)
+    blocking(move || Ok(!dir.is_empty() && std::path::Path::new(&dir).join(".context").is_dir()))
+        .await
+        .unwrap_or(false)
 }
 
 /// Reports whether the ctx binary is available and its version.
@@ -628,17 +626,32 @@ pub async fn ctx_connection_status(dir: String) -> Result<String, String> {
     blocking(move || run_ctx(&dir, &["connection", "status"])).await
 }
 
-/// Reads a single trimmed git value from the repo at `dir`, or "".
+/// Reads a single trimmed git value from the repo at `dir`, or "" on any
+/// failure. Routed through [`run_bin`] so the git spawn inherits the same
+/// timeout + kill/reap contract as `ctx` (a stalled filesystem can't park
+/// a blocking-pool thread forever) and the PATH augmentation that lets a
+/// Finder-launched app find git.
 fn git_field(dir: &str, args: &[&str]) -> String {
-    Command::new("git")
-        .arg("-C")
-        .arg(dir)
-        .args(args)
-        .output()
-        .ok()
-        .filter(|o| o.status.success())
-        .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
+    let mut full: Vec<&str> = vec!["-C", dir];
+    full.extend_from_slice(args);
+    run_bin("git", "", &full)
+        .map(|s| s.trim().to_string())
         .unwrap_or_default()
+}
+
+/// The current branch of the repo at `dir`, or "" when not a repo, git is
+/// absent, or HEAD is detached (where `rev-parse --abbrev-ref` yields the
+/// literal "HEAD"). The single source of truth for branch resolution so
+/// `provenance_args` and `discover::git_branch` treat detached HEAD
+/// identically — a write made mid-rebase/bisect must omit `--branch`, not
+/// record it as a branch literally named "HEAD".
+pub(crate) fn git_current_branch(dir: &str) -> String {
+    let branch = git_field(dir, &["rev-parse", "--abbrev-ref", "HEAD"]);
+    if branch == "HEAD" {
+        String::new()
+    } else {
+        branch
+    }
 }
 
 /// One 8-char session id per app launch, for write provenance. Minted
@@ -664,7 +677,7 @@ fn session_id() -> String {
 /// entirely rather than send empty values the CLI rejects.
 fn provenance_args(dir: &str) -> Vec<String> {
     let mut args = vec!["--session-id".to_string(), session_id()];
-    let branch = git_field(dir, &["rev-parse", "--abbrev-ref", "HEAD"]);
+    let branch = git_current_branch(dir);
     if !branch.is_empty() {
         args.push("--branch".to_string());
         args.push(branch);

@@ -8,19 +8,11 @@ use std::path::Path;
 
 use serde::Serialize;
 
-/// Directories we never descend into during a scan.
-const SKIP_DIRS: &[&str] = &[
-    "node_modules",
-    "target",
-    "dist",
-    "build",
-    "vendor",
-    ".git",
-    ".context",
-    ".cache",
-    ".venv",
-    "venv",
-];
+/// Non-dotted directories we never descend into during a scan. Dotted
+/// dirs (`.git`, `.context`, `.cache`, `.venv`, …) are already skipped by
+/// the `starts_with('.')` check in [`walk`], so listing them here would
+/// be dead weight.
+const SKIP_DIRS: &[&str] = &["node_modules", "target", "dist", "build", "vendor", "venv"];
 
 /// Hard cap on results so a huge tree can't hang the UI.
 const MAX_RESULTS: usize = 200;
@@ -35,19 +27,14 @@ pub struct Project {
     pub branch: String,
 }
 
-/// Reads the current branch of the repo at `dir`, or "" on any failure
-/// or a detached HEAD (where `--abbrev-ref` yields the literal "HEAD").
+/// Reads the current branch of the repo at `dir`, or "" on any failure or
+/// a detached HEAD. Delegates to [`crate::ctx_adapter::git_current_branch`]
+/// — the single source of truth — so the scan and the write/provenance path
+/// resolve branches (and the detached-HEAD case) identically, and the git
+/// spawn inherits the same timeout so a wedged repo can't park the scan's
+/// blocking-pool thread.
 fn git_branch(dir: &Path) -> String {
-    std::process::Command::new("git")
-        .arg("-C")
-        .arg(dir)
-        .args(["rev-parse", "--abbrev-ref", "HEAD"])
-        .output()
-        .ok()
-        .filter(|o| o.status.success())
-        .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
-        .filter(|b| b.as_str() != "HEAD")
-        .unwrap_or_default()
+    crate::ctx_adapter::git_current_branch(&dir.to_string_lossy())
 }
 
 /// Scans `root` (and up to `max_depth` levels below it) for ctx

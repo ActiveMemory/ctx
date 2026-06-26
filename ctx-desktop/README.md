@@ -35,8 +35,8 @@ npm run tauri dev                  # build + launch the app (hot-reloads)
 ```
 
 The first `tauri dev` compiles the Rust backend (a few minutes); later runs are
-fast. A native **ctx Desktop** window opens. Click **Workspace…**, pick a folder
-that contains your ctx projects, and switch between them from the dropdown.
+fast. A native **ctx Desktop** window opens. Click **Add workspace…**, pick a
+folder that contains your ctx projects, and switch between them from the dropdown.
 
 ## Production build
 
@@ -76,8 +76,11 @@ ctx-desktop/
 ├── src/                      React + TS + Tailwind frontend
 │   ├── adapter/ctx.ts        typed invoke() wrappers + CLI JSON types (one file)
 │   ├── hooks/useReload.ts    debounced "ctx-changed" → reload key
-│   ├── screens/              Overview, Tasks, Decisions, Learnings,
-│   │                         ContextPacket, Journal, Health
+│   ├── lib/markdown.tsx      minimal Markdown → React renderer (no innerHTML)
+│   ├── screens/              Projects, Overview, Search, Tasks, Reminders,
+│   │                         Decisions, Learnings, Conventions, Constitution
+│   │                         (CanonicalDoc), ContextPacket, KnowledgeBase,
+│   │                         Scratchpad (Pad), Journal, Drift, Health, Hub
 │   └── App.tsx               nav shell, workspace switcher, top bar
 └── src-tauri/                Rust host
     └── src/

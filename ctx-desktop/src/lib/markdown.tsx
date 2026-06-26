@@ -1,6 +1,13 @@
 import { type ReactNode } from "react";
 import { openUrl } from "@tauri-apps/plugin-opener";
 
+// Link schemes we are willing to hand to the OS via openUrl(). Markdown
+// here comes from .context/ and kb files (human/agent-authored, so only
+// semi-trusted): a file:// / smb:// / vscode:// link could read a local
+// file, leak NTLM creds, or trigger a deep link on click. Anything not
+// matching this allowlist renders as plain text instead of a link.
+const SAFE_URL = /^(https?:|mailto:)/i;
+
 // Inline formatting: **bold**, `code`, and [text](url) links. Links open
 // in the system browser (not the webview) via the opener plugin, so an
 // external URL can't navigate the app or trip the CSP. Everything else
@@ -29,21 +36,29 @@ export function inline(text: string): ReactNode[] {
         </code>,
       );
     } else if (m[3] !== undefined && m[4] !== undefined) {
-      const label = m[3];
-      const url = m[4];
-      nodes.push(
-        <a
-          key={k++}
-          href={url}
-          onClick={(e) => {
-            e.preventDefault();
-            void openUrl(url).catch(() => {});
-          }}
-          className="cursor-pointer text-accent underline hover:opacity-80"
-        >
-          {label}
-        </a>,
-      );
+      // A markdown link target is `url "optional title"`; the URL is the
+      // first whitespace-delimited token (a bare URL can't contain spaces),
+      // so the title never leaks into href/openUrl. Labels are re-inlined
+      // so `[**bold**](url)` still renders bold.
+      const url = m[4].trim().split(/\s+/)[0];
+      if (SAFE_URL.test(url)) {
+        nodes.push(
+          <a
+            key={k++}
+            href={url}
+            onClick={(e) => {
+              e.preventDefault();
+              void openUrl(url).catch(() => {});
+            }}
+            className="cursor-pointer text-accent underline hover:opacity-80"
+          >
+            {inline(m[3])}
+          </a>,
+        );
+      } else {
+        // Unsafe/relative scheme — drop the link, keep the visible label.
+        nodes.push(<span key={k++}>{inline(m[3])}</span>);
+      }
     }
     last = m.index + m[0].length;
   }
