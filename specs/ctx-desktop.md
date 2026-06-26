@@ -66,6 +66,19 @@ Wired Rust commands: `ctx_info`, `ctx_status`, `ctx_doctor`,
 - fs-watch on the active `.context/` so external CLI/agent
   writes refresh the UI.
 
+### Shipped surface (as of the ctx-desktop PR)
+
+The client outgrew the P0 list above. The nav now ships, in
+order: Projects, Overview, Search, Tasks, Reminders, Decisions,
+Learnings, Conventions, Constitution (the last two via a shared
+read-only `CanonicalDoc` viewer), Context Packet, Knowledge Base,
+Scratchpad, Journal, Drift, Health, and Hub. The
+Tasks/Decisions/Learnings/Search screens are gated behind a
+capability probe for `ctx <artifact> list --json` (Sub-project A)
+and show a "needs a newer ctx" notice when it is absent rather
+than failing. Multi-workspace discovery (depth-bounded Rust scan)
+and a top-bar `ctx doctor` health pill round out the shell.
+
 ## Constraints
 
 - Local-only; no network except an explicit, user-triggered

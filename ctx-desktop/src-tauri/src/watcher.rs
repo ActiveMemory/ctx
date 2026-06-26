@@ -63,11 +63,10 @@ pub async fn watch_context(
     state: State<'_, WatchState>,
     dir: String,
 ) -> Result<(), String> {
-    let watcher = tauri::async_runtime::spawn_blocking(move || {
-        build_watcher(&app, &dir, "ctx-changed")
-    })
-    .await
-    .map_err(|e| format!("background task failed: {e}"))??;
+    let watcher =
+        tauri::async_runtime::spawn_blocking(move || build_watcher(&app, &dir, "ctx-changed"))
+            .await
+            .map_err(|e| format!("background task failed: {e}"))??;
     *state.0.lock().map_err(|e| e.to_string())? = watcher;
     Ok(())
 }

@@ -1,8 +1,10 @@
 [package]
 name = "ctx-desktop"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "Desktop GUI client for ctx — a local-first window into a project's persistent AI context."
+authors = ["Context contributors"]
+license = "Apache-2.0"
+repository = "https://github.com/ActiveMemory/ctx"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
