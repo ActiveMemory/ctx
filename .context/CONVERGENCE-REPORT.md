@@ -12,7 +12,7 @@ _Generated 2026-04-03 by /ctx-architecture principal_
 | internal/format | 0.80 | 🟡 Solid | All functions cataloged |
 | internal/parse | 0.80 | 🟡 Solid | Small package, fully understood |
 | internal/sanitize | 0.80 | 🟡 Solid | Small package, fully understood |
-| internal/validate | 0.70 | 🟡 Solid | API inferred; source not directly read this run |
+| internal/validate | 0.75 | 🟡 Solid | Enriched 2026-06-09: Symlinks() is a single-caller chokepoint on the context-load path (9 flows) |
 | internal/inspect | 0.75 | 🟡 Solid | API cataloged from survey |
 | internal/flagbind | 0.85 | 🟡 Solid | Pattern and all variants documented |
 | internal/exec/* | 0.80 | 🟡 Solid | All 5 wrappers surveyed |
@@ -39,7 +39,7 @@ _Generated 2026-04-03 by /ctx-architecture principal_
 | internal/write/* | 0.80 | 🟡 Solid | Pattern understood; not all 46 packages individually read |
 | internal/err/* | 0.80 | 🟡 Solid | Pattern understood; not all 35 packages individually read |
 | internal/audit | 0.75 | 🟡 Solid | Purpose understood; individual test files not read |
-| internal/compliance | 0.70 | 🟡 Solid | Purpose understood; tests not read |
+| internal/compliance | 0.75 | 🟡 Solid | Enriched 2026-06-09: 29 checks cataloged across 4 test files; section added to DETAILED_DESIGN-cli.md |
 
 ## By Domain
 
@@ -50,7 +50,7 @@ _Generated 2026-04-03 by /ctx-architecture principal_
 | MCP | 1 (15 sub-pkgs) | 1/1 | 0.90 |
 | CLI | 2 (34 commands) | 0/2 | 0.78 |
 | Output (write, err) | 2 | 0/2 | 0.80 |
-| Quality (audit, compliance) | 2 | 0/2 | 0.73 |
+| Quality (audit, compliance) | 2 | 0/2 | 0.75 |
 
 ## Overall
 
@@ -142,12 +142,17 @@ which sources to trust.
 
 ## Enrichment Summary
 
-_Last enrichment: 2026-04-03 via GitNexus (index: bf42b1f6)_
+_Last enrichment: 2026-06-09 via GitNexus (index @ 60d8e823,
+27,927 symbols, 203 flows; prior enrichment 2026-04-03 @ bf42b1f6)_
 
 | Phase | Items Processed | Key Findings |
 |-------|----------------|--------------|
-| Danger zones | 25 entries | 4 upgraded to CRITICAL (desc.Text, SafeWriteFile, DescKey-YAML, DiscoverPath); 1 new (load.Do) |
-| Extension points | 14 patterns | Session parser (4 registrations), CLI commands (34), MCP tools (11), MCP prompts (5), agent setup (5) |
-| Execution flows | 257 total, 10 indexed | 7 multi-flow hotspots identified (desc.Text at 53 flows is #1) |
-| Clustering | 94 clusters vs 5 manual domains | Journal (47%) and Initialize (50%) are low-cohesion; write/err are leaves, not communities |
-| Shallow modules | 0 enriched | All modules already >= 0.70; no confidence bumps warranted |
+| Danger zones | 26 entries, 9 symbols re-verified | desc.Text d=1 now 940 (was "30+"); SafeWriteFile 95 (was 69); rc.RC new CRITICAL (d=1: 34, 8 modules); DiscoverPath downgraded CRITICAL->HIGH (d=1: 4, single domain); 3 undercount flags (load.Do, Serve, ValidateAndWrite) |
+| Extension points | 14 patterns | CLI commands 34->42, MCP tools 11->15, drift checks 7->12, setup deployers 5->8 (cline, cursor, kiro, opencode); parsers/prompts unchanged (4/5) |
+| Execution flows | 203 total, 11 indexed | 13 multi-flow hotspots; new top-tier: check.FullPreamble (40) and check.Preamble (39) — every hook routes through them |
+| Clustering | 100 clusters vs 5 manual domains | Coverage gaps now dominate mismatches: Hub, Steering, Trigger, kb + ~8 command families have no manual baseline; Format cohesion collapsed 97%->26% |
+| Shallow modules | 2 enriched | validate 0.70->0.75 (single-caller chokepoint), compliance 0.70->0.75 (29 checks cataloged) |
+
+⚠ The codebase has outgrown the 2026-04 architecture baseline
+(19.3k -> 27.9k symbols). Recommend `/ctx-architecture` refresh
+before the next enrichment pass.
