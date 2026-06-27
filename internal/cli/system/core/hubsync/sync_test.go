@@ -12,7 +12,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
+	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 	connectCfg "github.com/ActiveMemory/ctx/internal/cli/connection/core/config"
@@ -187,5 +189,66 @@ func TestSync_NoWarnOnEmptyResult(t *testing.T) {
 		t.Errorf(
 			"empty result must not warn, got: %q", buf.String(),
 		)
+	}
+}
+
+// blackHoleListener accepts TCP connections but never speaks
+// gRPC, so a dial succeeds while every RPC blocks until its
+// deadline. It models a hung-but-reachable hub. Accepted
+// connections and the listener are closed at test cleanup.
+func blackHoleListener(t *testing.T) string {
+	t.Helper()
+	lis, lisErr := net.Listen("tcp", "127.0.0.1:0")
+	if lisErr != nil {
+		t.Fatal(lisErr)
+	}
+	var mu sync.Mutex
+	var conns []net.Conn
+	t.Cleanup(func() {
+		_ = lis.Close()
+		mu.Lock()
+		for _, c := range conns {
+			_ = c.Close()
+		}
+		mu.Unlock()
+	})
+	go func() {
+		for {
+			conn, acceptErr := lis.Accept()
+			if acceptErr != nil {
+				return
+			}
+			mu.Lock()
+			conns = append(conns, conn)
+			mu.Unlock()
+		}
+	}()
+	return lis.Addr().String()
+}
+
+func TestSync_WarnsOnHungHub(t *testing.T) {
+	declareContext(t)
+	// A hub that accepts the connection but never responds. The
+	// RPC has no inherent deadline, so without HubSyncTimeout this
+	// would hang the session-start hook indefinitely. Shrink the
+	// bound so the test exercises the deadline in milliseconds.
+	saveConnectConfig(t, blackHoleListener(t), "tok")
+	restore := hubsync.SetSyncTimeoutForTest(200 * time.Millisecond)
+	t.Cleanup(restore)
+	buf := captureWarnings(t)
+
+	done := make(chan string, 1)
+	go func() { done <- hubsync.Sync("") }()
+
+	select {
+	case got := <-done:
+		if got != "" {
+			t.Errorf("Sync = %q, want empty on deadline", got)
+		}
+	case <-time.After(5 * time.Second):
+		t.Fatal("Sync did not return: the deadline was not enforced")
+	}
+	if !strings.Contains(buf.String(), "hubsync: sync from") {
+		t.Errorf("missing pull warning, got: %q", buf.String())
 	}
 }

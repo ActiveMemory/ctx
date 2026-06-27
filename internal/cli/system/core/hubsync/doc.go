@@ -25,8 +25,11 @@
 // of synced entries, or an empty string when nothing
 // was fetched. Every error is surfaced as a stderr
 // warning via the warn sink, but never propagates: the
-// hook must not block the session start. Only a genuine
-// zero-entry result stays silent.
+// hook must not block the session start. The pull is
+// bounded by [github.com/ActiveMemory/ctx/internal/config/hub.HubSyncTimeout]
+// so a hub that accepts the connection but never responds
+// degrades to a warning rather than stalling the hook.
+// Only a genuine zero-entry result stays silent.
 //
 // The data flow is:
 //

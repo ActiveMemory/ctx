@@ -111,6 +111,36 @@ them.
     two `hub replicate append` warnings, loop reaches EOF
     (pins continue-on-append-failure).
 
+## Review Follow-ups (PR #114)
+
+Code review surfaced that the re-documented "must not block the
+session start" contract was not actually guaranteed, plus two
+smaller hardening points. Addressed here:
+
+1. **Bounded pull deadline.** `Sync` called the RPC with
+   `context.Background()` and no deadline. `grpc.NewClient` is
+   lazy and fail-fast (not `WaitForReady`), but a hub that
+   accepts the TCP connection and then never responds (hung
+   server, black-hole proxy) makes the underlying `RecvMsg`
+   block indefinitely — so the hook could hang despite the
+   contract. The pull now runs under
+   `context.WithTimeout(..., HubSyncTimeout)` (new constant in
+   `internal/config/hub`, 10s). An exceeded deadline surfaces
+   through the existing `HubSyncPull` warning and the hook
+   returns `""` like any other failure; the daily throttle plus
+   next-session retry covers a cut-off pull. The timeout is a
+   package var (`syncTimeout`) so tests can shrink it; a new
+   `TestSync_WarnsOnHungHub` drives a black-hole listener and
+   asserts `Sync` returns (rather than hanging) with the pull
+   warning.
+2. **`eof()` uses `errors.Is`.** `internal/hub/eof.go` compared
+   with `==`. gRPC delivers an unwrapped `io.EOF` today (the
+   clean-replication test confirms it), but `errors.Is` keeps
+   the EOF suppression correct should any layer ever wrap it,
+   rather than leaking a wrapped EOF as a per-cycle transport
+   warning. Pre-existing helper; this PR newly relies on it for
+   the receive-suppression branch.
+
 ## Out of Scope
 
 - Structured (JSON) event-log emission; stderr via
@@ -122,3 +152,9 @@ them.
   territory) and the hubsync hook's hardcoded
   `sinceSequence=0` full-refetch (a separate latent issue,
   noted during review of #93).
+- Dedup/backoff for the replication receive warning. Once
+  `startReplication` is wired, a persistently-down-but-reachable
+  master would emit `HubReplicateRecv` every `ReplicateInterval`
+  with no rate-limiting. `replicateOnce` is dead code today, so
+  this is deferred to the wiring work (tracked as a task) rather
+  than guessed at now.
