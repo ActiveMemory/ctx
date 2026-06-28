@@ -649,6 +649,8 @@ err.hub.duplicate-project:
   short: 'project already registered: %q'
 err.hub.invalid-peer-action:
   short: "action must be 'add' or 'remove', got %q"
+err.hub.connect-sync-locked:
+  short: 'connect sync already in progress; if no sync is running, remove the stale lock %s: %w'
 err.serve.no-running-hub:
   short: 'no running hub: %w'
 err.serve.invalid-pid:

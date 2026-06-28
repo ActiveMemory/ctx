@@ -20,4 +20,8 @@ const (
 	// DescKeyErrHubInvalidPeerAction is the text key for
 	// unrecognized peer action errors.
 	DescKeyErrHubInvalidPeerAction = "err.hub.invalid-peer-action"
+	// DescKeyErrHubConnectSyncLocked is the text key for a
+	// connect-sync lock-contention failure; names the lock path
+	// so a wedged stale lock is self-documenting.
+	DescKeyErrHubConnectSyncLocked = "err.hub.connect-sync-locked"
 )

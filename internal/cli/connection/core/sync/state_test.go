@@ -10,6 +10,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/fs"
@@ -133,6 +134,40 @@ func TestLoadState_ReleasesLockOnCorruptState(t *testing.T) {
 	if _, statErr := os.Stat(lockPath); !os.IsNotExist(statErr) {
 		t.Errorf(
 			"lock must not leak after a failed load: %v", statErr,
+		)
+	}
+}
+
+func TestLoadState_LockedErrorIsActionable(t *testing.T) {
+	ctxDir := declareContext(t)
+	lockPath := filepath.Join(
+		ctxDir, cfgHub.DirHub, cfgHub.FileSyncLock,
+	)
+
+	_, release, lockErr := loadState()
+	if lockErr != nil {
+		t.Fatalf("first loadState: %v", lockErr)
+	}
+	defer release()
+
+	_, _, contendErr := loadState()
+	if contendErr == nil {
+		t.Fatal("second loadState should fail while lock is held")
+	}
+	// Contract preserved: still matches the pre-existing sentinel
+	// so any errors.Is(err, os.ErrExist) caller keeps working.
+	if !errors.Is(contendErr, os.ErrExist) {
+		t.Errorf(
+			"contended error must wrap os.ErrExist, got: %v",
+			contendErr,
+		)
+	}
+	// Actionable: names the lock path so a wedged stale lock is
+	// self-documenting instead of an opaque "file already exists".
+	if !strings.Contains(contendErr.Error(), lockPath) {
+		t.Errorf(
+			"error should name the lock path %q, got: %v",
+			lockPath, contendErr,
 		)
 	}
 }

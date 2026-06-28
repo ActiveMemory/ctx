@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
+	errHub "github.com/ActiveMemory/ctx/internal/err/hub"
 	"github.com/ActiveMemory/ctx/internal/io"
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -50,7 +51,10 @@ func loadState() (state, func(), error) {
 		return s, nil, lockErr
 	}
 	if !acquired {
-		return s, nil, os.ErrExist
+		// Another sync holds the lock — or a crashed sync left it
+		// stale. Name the path so the wedge is self-documenting;
+		// the error still wraps os.ErrExist for errors.Is callers.
+		return s, nil, errHub.ConnectSyncLocked(lockPath)
 	}
 
 	release := func() {

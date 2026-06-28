@@ -8,6 +8,7 @@ package hub
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -65,5 +66,24 @@ func InvalidPeerAction(action string) error {
 	return fmt.Errorf(
 		desc.Text(text.DescKeyErrHubInvalidPeerAction),
 		action,
+	)
+}
+
+// ConnectSyncLocked returns the error surfaced when connect
+// sync cannot acquire its lock because another sync holds it.
+// It names the lock path so a wedged stale lock (e.g. left by
+// a crashed sync) is self-documenting, and wraps os.ErrExist
+// so callers matching the pre-existing contract via
+// errors.Is(err, os.ErrExist) still match.
+//
+// Parameters:
+//   - lockPath: absolute path to the contended lock file
+//
+// Returns:
+//   - error: lock-contention error wrapping os.ErrExist
+func ConnectSyncLocked(lockPath string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHubConnectSyncLocked),
+		lockPath, os.ErrExist,
 	)
 }
