@@ -59,7 +59,7 @@
 //     connection config files
 //   - FilePID ("hub.pid"), FileAdminToken,
 //     DirHubData: daemon management files
-//   - JSONIndent, LockSentinel, SuffixPluralMD:
+//   - JSONIndent, SuffixPluralMD:
 //     formatting and naming helpers
 //
 // # Raft Cluster Configuration

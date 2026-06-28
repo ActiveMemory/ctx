@@ -139,6 +139,13 @@ func SafeCreateFile(path string, perm os.FileMode) (*os.File, error) {
 // holder). The handle is closed before returning; the lock is held by
 // the file's existence until SafeUnlock removes it.
 //
+// If the create succeeds but closing the handle fails, the freshly
+// created lock file is removed and (false, err) is returned: callers
+// treat a non-nil error as "not acquired" and get no release func, so
+// leaving the file behind would wedge every future caller with a lock
+// nobody owns. Removing it keeps the on-disk state consistent with the
+// reported outcome.
+//
 // Parameters:
 //   - path: lock file path
 //   - perm: file permission bits
@@ -161,7 +168,12 @@ func SafeTryLock(path string, perm os.FileMode) (bool, error) {
 		}
 		return false, openErr
 	}
-	return true, f.Close()
+	if closeErr := f.Close(); closeErr != nil {
+		// Best-effort cleanup so a half-acquired lock cannot leak.
+		_ = os.Remove(clean)
+		return false, closeErr
+	}
+	return true, nil
 }
 
 // SafeUnlock releases a lock acquired by SafeTryLock by removing the
