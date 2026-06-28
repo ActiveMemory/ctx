@@ -81,6 +81,7 @@ func replicateOnce(
 		),
 	)
 	if dialErr != nil {
+		logWarn.Warn(cfgWarn.HubReplicateDial, masterAddr, dialErr)
 		return
 	}
 	defer func() {
@@ -98,21 +99,34 @@ func replicateOnce(
 		cfgHub.PathSync,
 	)
 	if streamErr != nil {
+		logWarn.Warn(cfgWarn.HubReplicateStream, masterAddr, streamErr)
 		return
 	}
 
 	if sendErr := stream.SendMsg(&SyncRequest{
 		SinceSequence: lastSeq,
 	}); sendErr != nil {
+		logWarn.Warn(cfgWarn.HubReplicateSend, masterAddr, sendErr)
 		return
 	}
 	if closeErr := stream.CloseSend(); closeErr != nil {
+		logWarn.Warn(cfgWarn.HubReplicateCloseSend, masterAddr, closeErr)
 		return
 	}
 
 	for {
 		msg := &EntryMsg{}
 		if recvErr := stream.RecvMsg(msg); recvErr != nil {
+			// io.EOF is the normal end of every sync stream
+			// and a done caller context is routine shutdown;
+			// warning on either would spam stderr once per
+			// replication cycle. Anything else is a transport
+			// failure worth surfacing.
+			if !eof(recvErr) && ctx.Err() == nil {
+				logWarn.Warn(
+					cfgWarn.HubReplicateRecv, masterAddr, recvErr,
+				)
+			}
 			return
 		}
 		entry := Entry{

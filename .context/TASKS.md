@@ -2403,3 +2403,7 @@ DR-kb session a5736210 closeouts under
 - [x] Build the three structural guards: write-scope, sources-as-data, dont-leak (git check-ignore refuses tracked paths) #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
 
 - [x] Settle executor: cron claude -p bounded scheduled pass; safety invariants structural not prompt-level #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+
+### Future
+
+- [ ] When startReplication is wired into Server.Start (#96), add dedup/backoff for the HubReplicateRecv warning: a persistently-down-but-reachable master would warn every ReplicateInterval (5s) with no rate-limiting. Consider warn-once-per-state-transition. Surfaced in PR #114 review (josealekhine); replicateOnce is dead code until then. #priority:medium #session:26bfc43c #branch:fix/100-hub-silent-error-suppression #commit:504278fe #added:2026-06-27-181840

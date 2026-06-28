@@ -76,6 +76,19 @@ const (
 	ReplicateInterval = 5 // seconds
 )
 
+// Session-start sync timing.
+const (
+	// HubSyncTimeout bounds the session-start hubsync pull RPC.
+	// The hook must never block session start, but the Sync RPC
+	// has no inherent deadline, so a hub that accepts the
+	// connection yet never responds would hang the hook
+	// indefinitely. The bound is generous enough for a healthy
+	// pull over a slow link and short enough that a hung hub
+	// degrades to a warning instead of a stall; the daily
+	// throttle plus next-session retry covers a cut-off pull.
+	HubSyncTimeout = 10 // seconds
+)
+
 // Token generation.
 const (
 	// TokenBytes is the number of random bytes in a
