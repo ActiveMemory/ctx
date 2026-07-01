@@ -109,31 +109,57 @@ DO NOT UPDATE FOR:
 
 ## [2026-06-07-162840] Pin an on-disk contract before splitting work across parallel agents
 
-**Context**: The ctx-dream skill (proposal writer) and the ctx dream CLI (proposal reader) were built by parallel tracks; each independently invented the proposals layout — one per-file proposals/<id>.json, the other a single proposals.json array — requiring reconciliation at integration.
+**Context**: The ctx-dream skill (proposal writer) and the ctx dream CLI
+(proposal reader) were built by parallel tracks; each independently invented the
+proposals layout — one per-file proposals/<id>.json, the other a single
+proposals.json array — requiring reconciliation at integration.
 
-**Lesson**: When parallel agents share a serialized artifact (a file path + schema), the exact on-disk shape must be fixed in BOTH prompts up front. 'Each track invents it' guarantees a mismatch that only surfaces at integration.
+**Lesson**: When parallel agents share a serialized artifact (a file path +
+schema), the exact on-disk shape must be fixed in BOTH prompts up front. 'Each
+track invents it' guarantees a mismatch that only surfaces at integration.
 
-**Application**: Before fanning out producer/consumer work to parallel agents, write the precise file path + JSON schema into both agents' specs as a fixed contract, and reconcile/verify it first thing at integration.
+**Application**: Before fanning out producer/consumer work to parallel agents,
+write the precise file path + JSON schema into both agents' specs as a fixed
+contract, and reconcile/verify it first thing at integration.
 
 ---
 
 ## [2026-06-07-162840] site/ is tracked build output — rebuild and bundle it with doc commits
 
-**Context**: A docs change (docs/cli/dream.md, etc.) produced a surprise 189-file site/ drift mid-session; site/ is tracked (zensical build via 'make site'), not gitignored.
+**Context**: A docs change (docs/cli/dream.md, etc.) produced a surprise
+189-file site/ drift mid-session; site/ is tracked (zensical build via 'make
+site'), not gitignored.
 
-**Lesson**: Any change under docs/ requires regenerating site/ with 'make site' and committing the rebuilt site/ in the SAME commit (cf. f0f100a0, which bundled its site rebuild). Otherwise the built output silently drifts and shows up as a large untracked/modified set later.
+**Lesson**: Any change under docs/ requires regenerating site/ with 'make site'
+and committing the rebuilt site/ in the SAME commit (cf. f0f100a0, which bundled
+its site rebuild). Otherwise the built output silently drifts and shows up as a
+large untracked/modified set later.
 
-**Application**: After editing anything under docs/, run 'make site' and 'git add site/' and include it in the doc commit. Don't treat site/ as ephemeral — it's versioned.
+**Application**: After editing anything under docs/, run 'make site' and 'git
+add site/' and include it in the doc commit. Don't treat site/ as ephemeral —
+it's versioned.
 
 ---
 
 ## [2026-06-07-142015] ctx-dream is headless-first; invoking /ctx-dream interactively is debugging, not the UX
 
-**Context**: An end user ran /ctx-dream in their foreground terminal session and watched the agent hand-execute the pass (grep/cat/hash/write JSON). Their words: 'I'm not dreaming but viewing a dream being debugged.'
+**Context**: An end user ran /ctx-dream in their foreground terminal session and
+watched the agent hand-execute the pass (grep/cat/hash/write JSON). Their words:
+'I'm not dreaming but viewing a dream being debugged.'
 
-**Lesson**: The dream is a sleep-time/headless product: cron 'claude -p' runs the pass out-of-band, then the human is nagged and reviews via /ctx-serendipity. The /ctx-dream SKILL is the executor's instruction set, not a user command — driving it interactively makes the agent perform the executor's mechanical work visibly, which is a debugging affordance, not the end-user experience. Exposing /ctx-dream as a user slash-command invites exactly this confusion.
+**Lesson**: The dream is a sleep-time/headless product: cron 'claude -p' runs
+the pass out-of-band, then the human is nagged and reviews via /ctx-serendipity.
+The /ctx-dream SKILL is the executor's instruction set, not a user command —
+driving it interactively makes the agent perform the executor's mechanical work
+visibly, which is a debugging affordance, not the end-user experience. Exposing
+/ctx-dream as a user slash-command invites exactly this confusion.
 
-**Application**: End-user entry points are 'ctx dream' (on-demand pass that prints a digest) and cron (scheduled); review is /ctx-serendipity. Do NOT have users invoke /ctx-dream directly. Reconsider de-listing /ctx-dream from the user-invocable skill set, ensure 'ctx dream' gives a clean run->digest experience, and wire the 'serendipity round waiting' nag so the dream->review loop closes without the user watching a pass.
+**Application**: End-user entry points are 'ctx dream' (on-demand pass that
+prints a digest) and cron (scheduled); review is /ctx-serendipity. Do NOT have
+users invoke /ctx-dream directly. Reconsider de-listing /ctx-dream from the
+user-invocable skill set, ensure 'ctx dream' gives a clean run->digest
+experience, and wire the 'serendipity round waiting' nag so the dream->review
+loop closes without the user watching a pass.
 
 ---
 
@@ -141,12 +167,40 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 6 entries (2026-06-06 to 2026-06-07)
 
-- Merit/scoring rubric (relevance/frequency/recency/diversity/consolidation/richness, à la Hermes "Dreaming") measures ATTENTION (what to surface first), never TRUTH; use it only as a ranking signal feeding ruthless self-rejection, never as an autonomous promotion threshold — pair any statistical ranking with an evidence/grounding gate that decides eligibility.
-- Load-bearing invariant (Option B): dream consolidation emits PROPOSALS only; a human accept/reject gate sits between the dream pass and any write to the five canonical files / MEMORY.md. Autonomous canonical writes are the documented rot failure mode (arXiv 2605.12978); independent designs (Hermes, OpenClaw, Auto-Dreamer) re-derive the sleep-phase shape but omit the gate. When evaluating any external memory-consolidation design, first check: does it autonomously write canonical, or only propose? Autonomous-write is a reject.
-- A single LLM asked to critique a proposal silently repairs the missing justification and approves it (ReportLogic finding) — a single agreeable LLM is not an adversarial gate. Robust gating needs human or independent multi-critic consensus + swap-consistency. (This says a gate must EXIST; the proposes-only entry says one must sit before canonical writes; together they define WHO and WHETHER.)
-- Same proposals, two consumers, two interfaces: render a terse/dispositional accept-reject worklist for the agent reviewer and a substance-rich, semantically-generated summary for the human (no file-hunting). Same data, presentation per consumer.
-- Split agent/human work by comparative advantage: the agent is the reliable gardener for mechanical/verifiable hygiene (never skips the 47th file); the human owns taste/serendipity — which is WHY the human is the gate, not merely a safety nicety. Design the human's surface for pleasure (substance to wander), not a queue to drain.
-- Don't-leak is a third safety axis alongside don't-corrupt and don't-obey-injected-instructions: a summary/backup/ledger-line of a gitignored source inherits its privacy class. Keep every byproduct in gitignored locations; enforce structurally with `git check-ignore` on each write target (refuse tracked paths), never via prompt. A deliberate human `promote` is the only sanctioned boundary crossing.
+- Merit/scoring rubric
+  (relevance/frequency/recency/diversity/consolidation/richness, à la Hermes
+  "Dreaming") measures ATTENTION (what to surface first), never TRUTH; use it
+  only as a ranking signal feeding ruthless self-rejection, never as an
+  autonomous promotion threshold — pair any statistical ranking with an
+  evidence/grounding gate that decides eligibility.
+- Load-bearing invariant (Option B): dream consolidation emits PROPOSALS only; a
+  human accept/reject gate sits between the dream pass and any write to the five
+  canonical files / MEMORY.md. Autonomous canonical writes are the documented
+  rot failure mode (arXiv 2605.12978); independent designs (Hermes, OpenClaw,
+  Auto-Dreamer) re-derive the sleep-phase shape but omit the gate. When
+  evaluating any external memory-consolidation design, first check: does it
+  autonomously write canonical, or only propose? Autonomous-write is a reject.
+- A single LLM asked to critique a proposal silently repairs the missing
+  justification and approves it (ReportLogic finding) — a single agreeable LLM
+  is not an adversarial gate. Robust gating needs human or independent
+  multi-critic consensus + swap-consistency. (This says a gate must EXIST; the
+  proposes-only entry says one must sit before canonical writes; together they
+  define WHO and WHETHER.)
+- Same proposals, two consumers, two interfaces: render a terse/dispositional
+  accept-reject worklist for the agent reviewer and a substance-rich,
+  semantically-generated summary for the human (no file-hunting). Same data,
+  presentation per consumer.
+- Split agent/human work by comparative advantage: the agent is the reliable
+  gardener for mechanical/verifiable hygiene (never skips the 47th file); the
+  human owns taste/serendipity — which is WHY the human is the gate, not
+  merely a safety nicety. Design the human's surface for pleasure (substance to
+  wander), not a queue to drain.
+- Don't-leak is a third safety axis alongside don't-corrupt and
+  don't-obey-injected-instructions: a summary/backup/ledger-line of a gitignored
+  source inherits its privacy class. Keep every byproduct in gitignored
+  locations; enforce structurally with `git check-ignore` on each write target
+  (refuse tracked paths), never via prompt. A deliberate human `promote` is the
+  only sanctioned boundary crossing.
 
 ---
 
@@ -154,12 +208,45 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 6 entries (2026-03-15 to 2026-05-30)
 
-- New exported types must live in types.go: TestTypeFileConvention permits types outside types.go only in pure-type files (defs+methods, no standalone funcs) or exempt packages; a file mixing structs with standalone funcs fails. Put type defs in a dedicated types.go from the start.
-- internal/assets/tpl is on the magic-strings exempt list, so template-path literals are sanctioned THERE — but render data passed from non-exempt callers must be a typed struct (tpl.ObsidianData{...}), never map[string]any with literal keys, which trips the audit at the call site.
-- Full gate catalog for a new package/CLI command (none surfaced by `go build`/`golangci-lint` — run `go test ./internal/audit/ ./internal/compliance/`): TestNoMixedVisibility (split unexported helpers into <name>_internal.go), TestNoMagicStrings/Values (named consts in internal/config/warn/ for warn formats; named const for bare ints), TestDocCommentStructure (Parameters/Returns on every helper, exported or not), TestNoCmdPrintOutsideWrite (route output through internal/write/<area>/), TestNoNakedErrors, TestTypeFileConvention, TestCmdDirPurity (no helpers in cmd/ — use core/<area>/), TestNoLiteralMdExtension (file.ExtMarkdown), TestDocGoSubcommandDrift (parent doc.go lists every subcommand), TestDescKeyYAMLLinkage, TestNoLiteralWhitespace (token.NewlineCRLF/LF), TestRegistryCount (bump on registry.yaml additions). staticcheck QF1012 vs TestNoUncheckedFmtWrite: build with fmt.Sprintf then b.WriteString.
-- naked_errors audit flags every fmt.Errorf/errors.New outside internal/err/** — call-site wrapping does NOT satisfy it. Error constructors live in domain-scoped internal/err/<area>/ pulling format strings from internal/config/<area>/ or desc.Text. Pattern: `var ErrX = errors.New(cfgArea.ErrMsgX)` (sentinel); `func X(args, cause) error { return fmt.Errorf(cfgArea.FormatX, …) }` (wrapper). Budget ~3 files/area for any new error surface.
-- Pre-emptive constants are dead exports: TestNoDeadExports is symbol-graph-strict — any exported const/var/func without an internal reader fails. Land constants in the same commit (or strict precursor) as their caller; never scaffold config ahead of consumers. Genuine future-use goes in a TASKS.md line, not a config file.
-- Dead-code detection: packages can build+test green while unreachable — check bootstrap registration, not build success (e.g. internal/cli/recall/ had tests, never wired). Files created by `ctx init` with no agent/hook/skill reader are dead on arrival. When touching legacy compat code, first ask if the legacy path has real users; if not, delete rather than improve (MigrateKeyFile had 5 callers, zero users).
+- New exported types must live in types.go: TestTypeFileConvention permits types
+  outside types.go only in pure-type files (defs+methods, no standalone funcs)
+  or exempt packages; a file mixing structs with standalone funcs fails. Put
+  type defs in a dedicated types.go from the start.
+- internal/assets/tpl is on the magic-strings exempt list, so template-path
+  literals are sanctioned THERE — but render data passed from non-exempt
+  callers must be a typed struct (tpl.ObsidianData{...}), never map[string]any
+  with literal keys, which trips the audit at the call site.
+- Full gate catalog for a new package/CLI command (none surfaced by `go
+  build`/`golangci-lint` — run `go test ./internal/audit/
+  ./internal/compliance/`): TestNoMixedVisibility (split unexported helpers into
+  <name>_internal.go), TestNoMagicStrings/Values (named consts in
+  internal/config/warn/ for warn formats; named const for bare ints),
+  TestDocCommentStructure (Parameters/Returns on every helper, exported or not),
+  TestNoCmdPrintOutsideWrite (route output through internal/write/<area>/),
+  TestNoNakedErrors, TestTypeFileConvention, TestCmdDirPurity (no helpers in
+  cmd/ — use core/<area>/), TestNoLiteralMdExtension (file.ExtMarkdown),
+  TestDocGoSubcommandDrift (parent doc.go lists every subcommand),
+  TestDescKeyYAMLLinkage, TestNoLiteralWhitespace (token.NewlineCRLF/LF),
+  TestRegistryCount (bump on registry.yaml additions). staticcheck QF1012 vs
+  TestNoUncheckedFmtWrite: build with fmt.Sprintf then b.WriteString.
+- naked_errors audit flags every fmt.Errorf/errors.New outside internal/err/**
+  — call-site wrapping does NOT satisfy it. Error constructors live in
+  domain-scoped internal/err/<area>/ pulling format strings from
+  internal/config/<area>/ or desc.Text. Pattern: `var ErrX =
+  errors.New(cfgArea.ErrMsgX)` (sentinel); `func X(args, cause) error { return
+  fmt.Errorf(cfgArea.FormatX, …) }` (wrapper). Budget ~3 files/area for any
+  new error surface.
+- Pre-emptive constants are dead exports: TestNoDeadExports is
+  symbol-graph-strict — any exported const/var/func without an internal reader
+  fails. Land constants in the same commit (or strict precursor) as their
+  caller; never scaffold config ahead of consumers. Genuine future-use goes in a
+  TASKS.md line, not a config file.
+- Dead-code detection: packages can build+test green while unreachable — check
+  bootstrap registration, not build success (e.g. internal/cli/recall/ had
+  tests, never wired). Files created by `ctx init` with no agent/hook/skill
+  reader are dead on arrival. When touching legacy compat code, first ask if the
+  legacy path has real users; if not, delete rather than improve (MigrateKeyFile
+  had 5 callers, zero users).
 
 ---
 
@@ -167,12 +254,35 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 6 entries (2026-03-06 to 2026-06-02)
 
-- os.IsNotExist does NOT unwrap — it is false on any fmt.Errorf("…%w…") error; prefer errors.Is(err, os.ErrNotExist). But errors.Is only holds if the wrap carries %w at runtime, and a wrap whose format string comes from the text/i18n registry only carries %w when that registry is initialized (so it behaves differently in prod vs a bare test binary; go vet can't see it). To detect file absence reliably, stat directly: os.Stat returns an unwrapped *fs.PathError so errors.Is(statErr, os.ErrNotExist) is dependable everywhere.
-- An error-discard catalogue (grep + name/regex classification) is an inventory of candidates, not findings. Name-inference produces false positives (a discarded bool mistaken for an error; a value type that can't nil-deref; an already-failed cleanup-close path). Read the callee signature and enclosing control flow before assigning return-error vs logWarn vs annotate.
-- Canonical sentinel shape: a typed zero-data struct (or fielded struct for parameterised errors) whose Error() resolves text via desc.Text(text.DescKey…) lazily at call time — never `var ErrX = errors.New("english")` and never an ErrMsg* string-const layer. Empty-struct values are comparable and errors.Is finds them through %w wraps. Reference: internal/err/context/context.go.
-- fmt.Fprintf to strings.Builder silently discards errors (Write never fails) so errcheck allows it, but project convention forbids any silent discard — TestNoUncheckedFmtWrite enforces `if _, err := fmt.Fprintf(...)`.
-- A path-returning (string, error) function must never return ('', nil): filepath.Join('', rel) yields rel as a CWD-relative path, causing orphan writes at project root. Sentinel errors force callers to gate. Audit any path-returner with a historic ('', nil) shortcut (fixed: state.Dir, rc.ContextDir).
-- Package-local err.go files in CLI packages invite agents to duplicate error constructors (errFileWrite, errMkdir repeated). Centralize in internal/err; no err.go files in CLI packages.
+- os.IsNotExist does NOT unwrap — it is false on any fmt.Errorf("…%w…")
+  error; prefer errors.Is(err, os.ErrNotExist). But errors.Is only holds if the
+  wrap carries %w at runtime, and a wrap whose format string comes from the
+  text/i18n registry only carries %w when that registry is initialized (so it
+  behaves differently in prod vs a bare test binary; go vet can't see it). To
+  detect file absence reliably, stat directly: os.Stat returns an unwrapped
+  *fs.PathError so errors.Is(statErr, os.ErrNotExist) is dependable everywhere.
+- An error-discard catalogue (grep + name/regex classification) is an inventory
+  of candidates, not findings. Name-inference produces false positives (a
+  discarded bool mistaken for an error; a value type that can't nil-deref; an
+  already-failed cleanup-close path). Read the callee signature and enclosing
+  control flow before assigning return-error vs logWarn vs annotate.
+- Canonical sentinel shape: a typed zero-data struct (or fielded struct for
+  parameterised errors) whose Error() resolves text via
+  desc.Text(text.DescKey…) lazily at call time — never `var ErrX =
+  errors.New("english")` and never an ErrMsg* string-const layer. Empty-struct
+  values are comparable and errors.Is finds them through %w wraps. Reference:
+  internal/err/context/context.go.
+- fmt.Fprintf to strings.Builder silently discards errors (Write never fails) so
+  errcheck allows it, but project convention forbids any silent discard —
+  TestNoUncheckedFmtWrite enforces `if _, err := fmt.Fprintf(...)`.
+- A path-returning (string, error) function must never return ('', nil):
+  filepath.Join('', rel) yields rel as a CWD-relative path, causing orphan
+  writes at project root. Sentinel errors force callers to gate. Audit any
+  path-returner with a historic ('', nil) shortcut (fixed: state.Dir,
+  rc.ContextDir).
+- Package-local err.go files in CLI packages invite agents to duplicate error
+  constructors (errFileWrite, errMkdir repeated). Centralize in internal/err; no
+  err.go files in CLI packages.
 
 ---
 
@@ -180,10 +290,25 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 4 entries (2026-03-24 to 2026-05-22)
 
-- `git rev-parse` exits 0 on an unknown long-flag and echoes the literal arg back as its only stdout line (treats it as a candidate revision name). A non-zero-exit guard never trips, so `--show-current` shipped verbatim into handover frontmatter. Validate the OUTPUT shape (length, no `--` prefix, hex-ness for SHAs) when wrapping rev-parse, not just the exit code. (`--show-current` is a `git branch` flag, not rev-parse.)
-- Group git flag constants by the subcommand whose argv they're valid in (// Branch subcommand flags, // Rev-parse flags), not by "loose CLI flags" — the group comment is informal type info; mis-grouping enables wrong-subcommand bugs. Genuinely-spanning flags (-C, --) go under an explicit Cross-subcommand group.
-- `git describe --tags --abbrev=0` follows reachability from HEAD, not the global tag list (diffed against v0.3.0 instead of v0.6.0 on a diverged release branch). For "latest release globally" use `git tag --sort=-v:refname | head -1`.
-- A trailing regex word boundary \b does NOT exclude hyphenated continuations (\bgit commit\b matches `git commit-tree`). For porcelain with hyphenated cousins (commit-tree, commit-graph, for-each-ref) append a (?!-) negative lookahead.
+- `git rev-parse` exits 0 on an unknown long-flag and echoes the literal arg
+  back as its only stdout line (treats it as a candidate revision name). A
+  non-zero-exit guard never trips, so `--show-current` shipped verbatim into
+  handover frontmatter. Validate the OUTPUT shape (length, no `--` prefix,
+  hex-ness for SHAs) when wrapping rev-parse, not just the exit code.
+  (`--show-current` is a `git branch` flag, not rev-parse.)
+- Group git flag constants by the subcommand whose argv they're valid in (//
+  Branch subcommand flags, // Rev-parse flags), not by "loose CLI flags" — the
+  group comment is informal type info; mis-grouping enables wrong-subcommand
+  bugs. Genuinely-spanning flags (-C, --) go under an explicit Cross-subcommand
+  group.
+- `git describe --tags --abbrev=0` follows reachability from HEAD, not the
+  global tag list (diffed against v0.3.0 instead of v0.6.0 on a diverged release
+  branch). For "latest release globally" use `git tag --sort=-v:refname | head
+  -1`.
+- A trailing regex word boundary \b does NOT exclude hyphenated continuations
+  (\bgit commit\b matches `git commit-tree`). For porcelain with hyphenated
+  cousins (commit-tree, commit-graph, for-each-ref) append a (?!-) negative
+  lookahead.
 
 ---
 
@@ -191,10 +316,30 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 4 entries (2026-05-11 to 2026-05-22)
 
-- Removing/renaming any cross-language contract (env channel, feature flag) is a FOUR-surface cleanup, not three: (1) Go build+lint+test, (2) audit/compliance tests, (3) asset templates (CLAUDE.md, AGENT_PLAYBOOK, hooks.json), (4) TypeScript-typed integrations (opencode plugin, vscode extension). The TS surface is invisible to `go test ./...` by design; tsc --noEmit only runs in CI unless invoked from tools/typecheck/opencode/ or editors/vscode/. Want: a `make typecheck` target wrapping both, in pre-commit + release checklist.
-- tsc resolves node_modules by walking up from each SOURCE file's location, not the tsconfig's location. For a cross-tree setup (tsconfig in dir A, include points at dir B), add explicit baseUrl + paths (+ typeRoots) to the tsconfig so node_modules can live with the tooling.
-- vitest's vi.mock() does NOT preserve Node's async-deferral guarantees: a mocked execFile (or fs.readFile, dns.lookup, http.request) can fire its callback synchronously, TDZ-trapping a closure that's provably safe by Node's contract. When a linter suggests tightening let→const on a var captured through an async callback, verify under the test runner; the safe form is `let` + an eslint-disable naming the mock constraint.
-- A test suite excluded from BOTH typecheck and execution rots compounding: re-enable cost = sum of ALL drift since last green (named 2 breakages, found 18 more on first run), not just the named bug. expect.anything()/expect.any() pass typecheck so only execution catches the drift. When adding any tooling exclude (tsconfig glob, vitest ignore, pytest --ignore), file an immediate follow-up whose acceptance criterion is removal; budget 5–20× the named scope on re-enable.
+- Removing/renaming any cross-language contract (env channel, feature flag) is a
+  FOUR-surface cleanup, not three: (1) Go build+lint+test, (2) audit/compliance
+  tests, (3) asset templates (CLAUDE.md, AGENT_PLAYBOOK, hooks.json), (4)
+  TypeScript-typed integrations (opencode plugin, vscode extension). The TS
+  surface is invisible to `go test ./...` by design; tsc --noEmit only runs in
+  CI unless invoked from tools/typecheck/opencode/ or editors/vscode/. Want: a
+  `make typecheck` target wrapping both, in pre-commit + release checklist.
+- tsc resolves node_modules by walking up from each SOURCE file's location, not
+  the tsconfig's location. For a cross-tree setup (tsconfig in dir A, include
+  points at dir B), add explicit baseUrl + paths (+ typeRoots) to the tsconfig
+  so node_modules can live with the tooling.
+- vitest's vi.mock() does NOT preserve Node's async-deferral guarantees: a
+  mocked execFile (or fs.readFile, dns.lookup, http.request) can fire its
+  callback synchronously, TDZ-trapping a closure that's provably safe by Node's
+  contract. When a linter suggests tightening let→const on a var captured
+  through an async callback, verify under the test runner; the safe form is
+  `let` + an eslint-disable naming the mock constraint.
+- A test suite excluded from BOTH typecheck and execution rots compounding:
+  re-enable cost = sum of ALL drift since last green (named 2 breakages, found
+  18 more on first run), not just the named bug. expect.anything()/expect.any()
+  pass typecheck so only execution catches the drift. When adding any tooling
+  exclude (tsconfig glob, vitest ignore, pytest --ignore), file an immediate
+  follow-up whose acceptance criterion is removal; budget 5–20× the named
+  scope on re-enable.
 
 ---
 
@@ -202,11 +347,30 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 5 entries (all 2026-05-10)
 
-- An ongoing user paying concrete workaround tax (disabled skills, hand-typed closeouts, colliding root constitution files) is the strongest validation evidence — beats user research, N=2 discussion, "seems useful." Use the workaround details as the inverse-spec; ship the shape they hand-rolled and use their project as the regression corpus.
-- When lifting from a battle-tested external design, lift the renames and disambiguation moves alongside the features: intentional renames encode resolved conflicts (KB-RULES.md not CONSTITUTION.md; domain-decisions.md not DECISIONS.md). Treating them as cosmetic re-litigates the underlying fight.
-- KB epistemology: a knowledge base has no "decide" moment — only evidence-capture events with confidence bands (>0.9 = decided by contract). Even NL assertions ("anchor on this") are evidence-capture, not decision-capture. So a parallel /ctx-kb-decide skill is the wrong shape; the pipeline-only-writer model is ontologically correct. General check: "I chose between alternatives" vs "I learned about the world."
-- Recursive composability eliminates feature classes: a KB of KBs is a KB (source-map kind: kb + the standard ingest pipeline covers federation; no v1 schema lockout). Ask whether the standard pipeline pointed at its own output covers a "thing-of-things" before designing a new mechanism.
-- The LLM is the migration tool: every category of being-wrong about a schema (ID renumbering, taxonomy reshuffle, band remapping, path renames) is cheap because LLM cleanup absorbs the migration. Commit to the readable, opinionated v1 schema instead of hedging with abstract types; surface dirty state via doctor advisories so the agent has a work surface.
+- An ongoing user paying concrete workaround tax (disabled skills, hand-typed
+  closeouts, colliding root constitution files) is the strongest validation
+  evidence — beats user research, N=2 discussion, "seems useful." Use the
+  workaround details as the inverse-spec; ship the shape they hand-rolled and
+  use their project as the regression corpus.
+- When lifting from a battle-tested external design, lift the renames and
+  disambiguation moves alongside the features: intentional renames encode
+  resolved conflicts (KB-RULES.md not CONSTITUTION.md; domain-decisions.md not
+  DECISIONS.md). Treating them as cosmetic re-litigates the underlying fight.
+- KB epistemology: a knowledge base has no "decide" moment — only
+  evidence-capture events with confidence bands (>0.9 = decided by contract).
+  Even NL assertions ("anchor on this") are evidence-capture, not
+  decision-capture. So a parallel /ctx-kb-decide skill is the wrong shape; the
+  pipeline-only-writer model is ontologically correct. General check: "I chose
+  between alternatives" vs "I learned about the world."
+- Recursive composability eliminates feature classes: a KB of KBs is a KB
+  (source-map kind: kb + the standard ingest pipeline covers federation; no v1
+  schema lockout). Ask whether the standard pipeline pointed at its own output
+  covers a "thing-of-things" before designing a new mechanism.
+- The LLM is the migration tool: every category of being-wrong about a schema
+  (ID renumbering, taxonomy reshuffle, band remapping, path renames) is cheap
+  because LLM cleanup absorbs the migration. Commit to the readable, opinionated
+  v1 schema instead of hedging with abstract types; surface dirty state via
+  doctor advisories so the agent has a work surface.
 
 ---
 
@@ -214,11 +378,29 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 6 entries (2026-02-24 to 2026-04-01)
 
-- Exhaustive lists/counts in architecture docs (package lists, command tables, skill counts) drift silently because nobody re-counts (23 listed vs 31 actual). Add `<!-- drift-check: <shell command> -->` markers; run /ctx-architecture after adding packages/commands (/ctx-drift catches stale paths but not missing entries).
-- Template changes are invisible to existing projects until `ctx init --force`; non-destructive init never re-syncs. checkTemplateHeaders was added to `ctx drift`.
-- Any content duplicated in two locations without a sync mechanism drifts silently (Copilot CLI skills as condensed ctx skills; assets/why/ vs docs/). Wire freshness checks as build PREREQUISITES, not optional audit steps (make sync-copilot-skills, make sync-why must be build deps).
-- Machine-generated CLAUDE.md content (GitNexus injected 121 lines / 61%) consumes per-turn budget without proportional value. Auto-generated content belongs in on-demand skills; prefer a one-line pointer over inline content. Audit CLAUDE.md periodically.
-- CLI reference docs outpace implementation (ctx remind had no CLI, recall sync no Cobra wiring) — verify with `ctx <cmd> --help` before releasing docs. Agent style-violation sweeps are unreliable (8 found vs 48+ actual); follow with targeted grep + manual classification. Documentation audits must compare against known-good examples for the COMPLETE standard, not mere presence. New audit concerns (e.g. dead links) belong in an existing audit skill's checklist before becoming standalone.
+- Exhaustive lists/counts in architecture docs (package lists, command tables,
+  skill counts) drift silently because nobody re-counts (23 listed vs 31
+  actual). Add `<!-- drift-check: <shell command> -->` markers; run
+  /ctx-architecture after adding packages/commands (/ctx-drift catches stale
+  paths but not missing entries).
+- Template changes are invisible to existing projects until `ctx init --force`;
+  non-destructive init never re-syncs. checkTemplateHeaders was added to `ctx
+  drift`.
+- Any content duplicated in two locations without a sync mechanism drifts
+  silently (Copilot CLI skills as condensed ctx skills; assets/why/ vs docs/).
+  Wire freshness checks as build PREREQUISITES, not optional audit steps (make
+  sync-copilot-skills, make sync-why must be build deps).
+- Machine-generated CLAUDE.md content (GitNexus injected 121 lines / 61%)
+  consumes per-turn budget without proportional value. Auto-generated content
+  belongs in on-demand skills; prefer a one-line pointer over inline content.
+  Audit CLAUDE.md periodically.
+- CLI reference docs outpace implementation (ctx remind had no CLI, recall sync
+  no Cobra wiring) — verify with `ctx <cmd> --help` before releasing docs.
+  Agent style-violation sweeps are unreliable (8 found vs 48+ actual); follow
+  with targeted grep + manual classification. Documentation audits must compare
+  against known-good examples for the COMPLETE standard, not mere presence. New
+  audit concerns (e.g. dead links) belong in an existing audit skill's checklist
+  before becoming standalone.
 
 ---
 
@@ -226,10 +408,20 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 4 entries (2026-03-14 to 2026-04-04)
 
-- Any string containing English words alongside format directives ("%d entries checked") is user-facing text belonging in YAML assets — the format-verb (and URL-scheme, HTML-entity, err/) exemptions were removed from TestNoMagicStrings.
-- Any string reaching the user, including stderr warnings, routes through assets.TextDesc() for i18n readiness; create text.yaml entries and asset keys first.
-- Magic-string cleanup is fractal: each fix puts adjacent code under scrutiny (4 Fprintf calls → over-tokenized formats, magic hex perms, TOML tokens, missing docstrings). Budget 2–3× the initial estimate; commit per layer.
-- Naming a constant _alt and hardcoding one non-English language as a built-in default is implicit language favoritism that doesn't scale (alt_2? alt_3?). Use configurable lists from the start; default to a single canonical value, all extensions user-configured equally.
+- Any string containing English words alongside format directives ("%d entries
+  checked") is user-facing text belonging in YAML assets — the format-verb
+  (and URL-scheme, HTML-entity, err/) exemptions were removed from
+  TestNoMagicStrings.
+- Any string reaching the user, including stderr warnings, routes through
+  assets.TextDesc() for i18n readiness; create text.yaml entries and asset keys
+  first.
+- Magic-string cleanup is fractal: each fix puts adjacent code under scrutiny (4
+  Fprintf calls → over-tokenized formats, magic hex perms, TOML tokens,
+  missing docstrings). Budget 2–3× the initial estimate; commit per layer.
+- Naming a constant _alt and hardcoding one non-English language as a built-in
+  default is implicit language favoritism that doesn't scale (alt_2? alt_3?).
+  Use configurable lists from the start; default to a single canonical value,
+  all extensions user-configured equally.
 
 ---
 
@@ -237,12 +429,24 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 6 entries (2026-03-07 to 2026-03-23)
 
-- A constant used by only one domain (agent scoring, budget %, cooldowns) belongs in that domain's config package, not a god-object file.go. Check callers before placing.
-- Before adding any constant to internal/config, grep by VALUE (".jsonl") not just name — camelCase vs ALLCAPS variants hide duplicates (ExtJsonl vs existing ExtJSONL).
-- Project-root files created by `ctx init` (Makefile) are scaffolding (config/file), NOT context files loaded via ReadOrder (config/ctx). Check ReadOrder membership before moving a file constant.
-- SafeReadFile / validation.SafeReadFile take (baseDir, filename) separately — split full paths with filepath.Dir + filepath.Base when adapting os.ReadFile calls.
-- One-liner method wrappers that just forward a struct field to a stdlib/pkg function (checkBoundary → validation.ValidateBoundary with h.ContextDir) obscure the real dependency — inline them.
-- A param-struct field that is a function pointer where all callers pass thin wrappers varying only by a text key (MergeParams.UpdateFn) is "data in disguise" — replace the callback with the key and let the consumer dispatch.
+- A constant used by only one domain (agent scoring, budget %, cooldowns)
+  belongs in that domain's config package, not a god-object file.go. Check
+  callers before placing.
+- Before adding any constant to internal/config, grep by VALUE (".jsonl") not
+  just name — camelCase vs ALLCAPS variants hide duplicates (ExtJsonl vs
+  existing ExtJSONL).
+- Project-root files created by `ctx init` (Makefile) are scaffolding
+  (config/file), NOT context files loaded via ReadOrder (config/ctx). Check
+  ReadOrder membership before moving a file constant.
+- SafeReadFile / validation.SafeReadFile take (baseDir, filename) separately —
+  split full paths with filepath.Dir + filepath.Base when adapting os.ReadFile
+  calls.
+- One-liner method wrappers that just forward a struct field to a stdlib/pkg
+  function (checkBoundary → validation.ValidateBoundary with h.ContextDir)
+  obscure the real dependency — inline them.
+- A param-struct field that is a function pointer where all callers pass thin
+  wrappers varying only by a text key (MergeParams.UpdateFn) is "data in
+  disguise" — replace the callback with the key and let the consumer dispatch.
 
 ---
 
@@ -250,11 +454,28 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 6 entries (2026-03-16 to 2026-04-14)
 
-- System-level brevity instructions outcompete context-injected conventions; memory shifts probability (~40%→~70%) but doesn't create invariants. Invest in linter/PreToolUse gates for mechanically-checkable conventions; reserve behavioral nudges for judgment calls.
-- Force-loaded behavioral prose (AGENT_PLAYBOOK at ~14k tokens) gets skipped when the user's first message is a concrete task; action-gating hooks (qa-reminder, specs-nudge) are followed because they fire at the moment of violation. More injected content = less attention per token. Prefer action-gating hooks; reserve force-injection for hard rules + distilled checklists.
-- Any docstring/comment/documentation-formatting task is convention-sensitive: read CONVENTIONS.md (Documentation section) + LEARNINGS.md for known gaps FIRST, and audit all functions in scope against the template, not just diffed ones.
-- AST audit tests must default to scanning ALL documented functions (use opt-outs not exported-only opt-ins) — TestDocCommentStructure missed unexported helpers (84 violations fixed). And the stutter test (TestNoStutteryFunctions) walks *ast.FuncDecl only, not GenDecl — stuttery const/var/type names slip through until the audit is extended.
-- Every exemption map/allowlist in audit tests is a tempting agent shortcut: add DO-NOT-widen guard comments to every exemption data structure (10 across 7 files) and review PRs for drive-by allowlist additions.
+- System-level brevity instructions outcompete context-injected conventions;
+  memory shifts probability (~40%→~70%) but doesn't create invariants. Invest
+  in linter/PreToolUse gates for mechanically-checkable conventions; reserve
+  behavioral nudges for judgment calls.
+- Force-loaded behavioral prose (AGENT_PLAYBOOK at ~14k tokens) gets skipped
+  when the user's first message is a concrete task; action-gating hooks
+  (qa-reminder, specs-nudge) are followed because they fire at the moment of
+  violation. More injected content = less attention per token. Prefer
+  action-gating hooks; reserve force-injection for hard rules + distilled
+  checklists.
+- Any docstring/comment/documentation-formatting task is convention-sensitive:
+  read CONVENTIONS.md (Documentation section) + LEARNINGS.md for known gaps
+  FIRST, and audit all functions in scope against the template, not just diffed
+  ones.
+- AST audit tests must default to scanning ALL documented functions (use
+  opt-outs not exported-only opt-ins) — TestDocCommentStructure missed
+  unexported helpers (84 violations fixed). And the stutter test
+  (TestNoStutteryFunctions) walks *ast.FuncDecl only, not GenDecl — stuttery
+  const/var/type names slip through until the audit is extended.
+- Every exemption map/allowlist in audit tests is a tempting agent shortcut: add
+  DO-NOT-widen guard comments to every exemption data structure (10 across 7
+  files) and review PRs for drive-by allowlist additions.
 
 ---
 
@@ -262,11 +483,24 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 5 entries (2026-03-16 to 2026-05-10)
 
-- gofmt strips bare `//` padding lines as unnecessary whitespace, so programmatic Go generation must produce substantive content lines; always run gofmt after any scripted Go-file generation.
-- Agents reliably introduce gofmt issues during bulk renames (75+ files, 12 broken); run `gofmt -l` (then `-w`) as a standard step after any agent-driven bulk edit before trusting the build.
-- The "compile version X does not match go tool version Y" error comes from the CACHED toolchain (~/go/pkg/mod/golang.org/toolchain@…), not the system Go — reinstalling Go does nothing. Diagnose via `go env GOROOT`; fix by deleting the cached dir, bumping go.mod, or GOTOOLCHAIN=go<system>. `go clean -cache` and GOTOOLCHAIN=local don't help.
-- `make test` exit code is unreliable: the -cover flag can fail with "no such tool covdata" even when every package passes. Fall back to `go test ./...` (no -cover) and tally ^ok/^FAIL.
-- AST checks via go/packages only see files matching the current GOOS — darwin-only (_darwin.go) violations are invisible on Linux. Fix violations regardless; note coverage is platform-dependent (need multi-GOOS CI or a go/parser fallback).
+- gofmt strips bare `//` padding lines as unnecessary whitespace, so
+  programmatic Go generation must produce substantive content lines; always run
+  gofmt after any scripted Go-file generation.
+- Agents reliably introduce gofmt issues during bulk renames (75+ files, 12
+  broken); run `gofmt -l` (then `-w`) as a standard step after any agent-driven
+  bulk edit before trusting the build.
+- The "compile version X does not match go tool version Y" error comes from the
+  CACHED toolchain (~/go/pkg/mod/golang.org/toolchain@…), not the system Go
+  — reinstalling Go does nothing. Diagnose via `go env GOROOT`; fix by
+  deleting the cached dir, bumping go.mod, or GOTOOLCHAIN=go<system>. `go clean
+  -cache` and GOTOOLCHAIN=local don't help.
+- `make test` exit code is unreliable: the -cover flag can fail with "no such
+  tool covdata" even when every package passes. Fall back to `go test ./...` (no
+  -cover) and tally ^ok/^FAIL.
+- AST checks via go/packages only see files matching the current GOOS —
+  darwin-only (_darwin.go) violations are invisible on Linux. Fix violations
+  regardless; note coverage is platform-dependent (need multi-GOOS CI or a
+  go/parser fallback).
 
 ---
 
@@ -274,10 +508,25 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 4 entries (2026-03-01 to 2026-05-23)
 
-- Stale TASKS.md items often describe work already done in code but not asserted in tests — the task stayed open because nothing pinned the behavior. Triage older items by grep/git-blame on the named symbols; if implemented, close by writing the regression test (often one function). Applies to behavior-named tasks more than feature-named ones.
-- Tasks can be stale in reverse: implementation completed but task not marked done (recall sync was fully wired despite a "not registered" description). Run `ctx <cmd> --help` before assuming work remains.
-- Grep for callers must cover the ENTIRE working tree before deleting functions — with unstaged changes from a prior session, grep hits only committed+staged code. Always `make build` after deleting functions even when grep shows zero callers.
-- Spec-trailer improvisation is heuristic drift: when no on-topic spec exists, the path of least resistance cites the most-recent spec from context, satisfying the syntactic gate but defeating truthful traceability — and session-scoped "I'll be careful" commitments don't survive across sessions, so the fix must live in persistent context. Correct responses: scaffold a fresh spec, bundle into the next functional commit, or cite specs/meta/chores.md. (See specs/spec-trailer-discipline.md; AGENT_PLAYBOOK Spec Verification Step.)
+- Stale TASKS.md items often describe work already done in code but not asserted
+  in tests — the task stayed open because nothing pinned the behavior. Triage
+  older items by grep/git-blame on the named symbols; if implemented, close by
+  writing the regression test (often one function). Applies to behavior-named
+  tasks more than feature-named ones.
+- Tasks can be stale in reverse: implementation completed but task not marked
+  done (recall sync was fully wired despite a "not registered" description). Run
+  `ctx <cmd> --help` before assuming work remains.
+- Grep for callers must cover the ENTIRE working tree before deleting functions
+  — with unstaged changes from a prior session, grep hits only
+  committed+staged code. Always `make build` after deleting functions even when
+  grep shows zero callers.
+- Spec-trailer improvisation is heuristic drift: when no on-topic spec exists,
+  the path of least resistance cites the most-recent spec from context,
+  satisfying the syntactic gate but defeating truthful traceability — and
+  session-scoped "I'll be careful" commitments don't survive across sessions, so
+  the fix must live in persistent context. Correct responses: scaffold a fresh
+  spec, bundle into the next functional commit, or cite specs/meta/chores.md.
+  (See specs/spec-trailer-discipline.md; AGENT_PLAYBOOK Spec Verification Step.)
 
 ---
 
@@ -285,12 +534,32 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 6 entries (2026-02-19 to 2026-05-30)
 
-- Behavior-preserving refactors of formatting/rendering code: capture golden fixtures from the LIVE legacy path before deleting it (throwaway test writes testdata/*.golden), then assert byte-equality after — avoids silent drift from hand-transcribing expected output.
-- Removing a sentinel (ErrDirNotDeclared) cascades through ~10 errors.Is consumers and ~30 test fixtures; spec-level step boundaries that separate "swap resolver" from "remove guard" don't survive when the second references the soon-deleted sentinel. Plan the merged commit at spec time; do the compile-surface analysis then.
-- Subagent parallelism shines for well-bounded mechanical refactor WITH a canonical worked example on disk and an explicit fix-or-fail-with-a-blocker instruction (invoke the no-deferral rule). Do one worked example in the orchestrator, then dispatch subagents pointing at it.
-- Subagents reliably exceed scope (rename funcs, change signatures, restructure files even for em-dash fixes) and create new files without deleting originals. After any agent refactor: `git diff --stat`, `git diff --name-only HEAD`, revert out-of-scope changes, check for stale package decls/duplicate defs/orphaned imports, run gofmt + `go test ./...`.
-- Splitting a flat core/ package into subpackages exposes duplicated logic, misplaced types, and function-pointer smuggling invisible in the flat layout; circular-dep resolution during the split IS the design work that reveals the right structure.
-- Cross-cutting change ripple: path/asset/feature changes ripple across 15+ doc files + multiple layers (embed directive, accessors, callers, tests, config consts, build targets, docs). Grep broadly (not just code); a feature without docs (feature page, cli-reference, recipes, nav) is invisible.
+- Behavior-preserving refactors of formatting/rendering code: capture golden
+  fixtures from the LIVE legacy path before deleting it (throwaway test writes
+  testdata/*.golden), then assert byte-equality after — avoids silent drift
+  from hand-transcribing expected output.
+- Removing a sentinel (ErrDirNotDeclared) cascades through ~10 errors.Is
+  consumers and ~30 test fixtures; spec-level step boundaries that separate
+  "swap resolver" from "remove guard" don't survive when the second references
+  the soon-deleted sentinel. Plan the merged commit at spec time; do the
+  compile-surface analysis then.
+- Subagent parallelism shines for well-bounded mechanical refactor WITH a
+  canonical worked example on disk and an explicit fix-or-fail-with-a-blocker
+  instruction (invoke the no-deferral rule). Do one worked example in the
+  orchestrator, then dispatch subagents pointing at it.
+- Subagents reliably exceed scope (rename funcs, change signatures, restructure
+  files even for em-dash fixes) and create new files without deleting originals.
+  After any agent refactor: `git diff --stat`, `git diff --name-only HEAD`,
+  revert out-of-scope changes, check for stale package decls/duplicate
+  defs/orphaned imports, run gofmt + `go test ./...`.
+- Splitting a flat core/ package into subpackages exposes duplicated logic,
+  misplaced types, and function-pointer smuggling invisible in the flat layout;
+  circular-dep resolution during the split IS the design work that reveals the
+  right structure.
+- Cross-cutting change ripple: path/asset/feature changes ripple across 15+ doc
+  files + multiple layers (embed directive, accessors, callers, tests, config
+  consts, build targets, docs). Grep broadly (not just code); a feature without
+  docs (feature page, cli-reference, recipes, nav) is invisible.
 
 ---
 
@@ -298,10 +567,26 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 4 entries (2026-01-25 to 2026-04-03)
 
-- Full pre-commit gate, every time: (1) CGO_ENABLED=0 go build ./cmd/ctx, (2) golangci-lint run, (3) CGO_ENABLED=0 go test. Own the codebase — fix pre-existing lint issues you didn't introduce.
-- gosec permissions: 0o600 for files (incl. tests — G306 flags 0644 even in test code), 0o750 for dirs (G301); G304 file-inclusion is safe to //nolint:gosec in tests using t.TempDir(). Prefer renaming constants to avoid G101 false positives (Tokens→Usage, Passed→OK) over nolint/nosec/path exclusions, which break on file reorg.
-- Suppression anti-patterns: nolint:goconst normalizes magic strings (use config consts); nolint:errcheck in tests teaches agents to spread the pattern to production (use t.Fatal for setup, `defer func(){ _ = f.Close() }()` for cleanup); golangci-lint v2 ignores inline nolint for some linters — use config-level exclusions.rules for gosec, fix the code for errcheck. Use cmd.Printf/Println in Cobra commands instead of fmt.Fprintf. `defer os.Chdir(x)` fails errcheck — wrap in `defer func(){ _ = os.Chdir(x) }()`. CI Go-version mismatch: install-mode goinstall.
-- Chokepoint migrations have cascading benefits: centralizing file I/O into internal/io/ (already using config/fs consts) zeroed out TestNoRawPermissions for free. Prioritize chokepoint migrations (io, exec, write, err) before smaller dependent checks.
+- Full pre-commit gate, every time: (1) CGO_ENABLED=0 go build ./cmd/ctx, (2)
+  golangci-lint run, (3) CGO_ENABLED=0 go test. Own the codebase — fix
+  pre-existing lint issues you didn't introduce.
+- gosec permissions: 0o600 for files (incl. tests — G306 flags 0644 even in
+  test code), 0o750 for dirs (G301); G304 file-inclusion is safe to
+  //nolint:gosec in tests using t.TempDir(). Prefer renaming constants to avoid
+  G101 false positives (Tokens→Usage, Passed→OK) over nolint/nosec/path
+  exclusions, which break on file reorg.
+- Suppression anti-patterns: nolint:goconst normalizes magic strings (use config
+  consts); nolint:errcheck in tests teaches agents to spread the pattern to
+  production (use t.Fatal for setup, `defer func(){ _ = f.Close() }()` for
+  cleanup); golangci-lint v2 ignores inline nolint for some linters — use
+  config-level exclusions.rules for gosec, fix the code for errcheck. Use
+  cmd.Printf/Println in Cobra commands instead of fmt.Fprintf. `defer
+  os.Chdir(x)` fails errcheck — wrap in `defer func(){ _ = os.Chdir(x) }()`.
+  CI Go-version mismatch: install-mode goinstall.
+- Chokepoint migrations have cascading benefits: centralizing file I/O into
+  internal/io/ (already using config/fs consts) zeroed out TestNoRawPermissions
+  for free. Prioritize chokepoint migrations (io, exec, write, err) before
+  smaller dependent checks.
 
 ---
 
@@ -309,11 +594,41 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 5 entries (2026-01-25 to 2026-04-06)
 
-- Hook scripts receive JSON via stdin (HOOK_INPUT=$(cat) then jq), not env vars; key names are case-sensitive (PreToolUse, SessionEnd); use $CLAUDE_PROJECT_DIR, never hardcode paths; anchor regex to command-start `(^|;|&&|\|\|)\s*` ('ctx' binary vs dir); grep matches inside quoted args (test with blocked words); scripts silently lose execute permission (verify ls -la).
-- Output routing: plain-text hook stdout is silently ignored — Claude Code parses stdout starting with `{` as JSON directives; return JSON via printHookContext(). For UserPromptSubmit specifically, stdout is prepended as AI context (not user-visible), stderr+exit0 is swallowed, user-visible output requires {"systemMessage":"…"} or exit 2 (blocks); there is NO non-blocking user-visible channel. Two-tier severity is sufficient: unprefixed (agent context, may relay) and "IMPORTANT: Relay VERBATIM" (guaranteed); don't add more prefixes.
-- Agents only relay content with explicit display instructions: a system-reminder line with no "Display this line verbatim" is invisible to the user even when correct. IMPORTANT: signals internal priority, not user-facing output.
-- Compliance: soft instructions have a ~75–85% ceiling because "don't apply judgment" is itself judgment; for 100% compliance inject via additionalContext rather than instruct. Hook compliance degrades on narrow mid-session tasks (~15–25% skip) because CLAUDE.md's "may or may not be relevant" competes with hook authority — fix by elevating hook authority explicitly; the mandatory checkpoint relay block is the compliance canary. No reliable agent-side before-session-end event exists (SessionEnd fires after the agent is gone) — mid-session nudges + explicit /ctx-wrap-up are the only reliable persistence. Repeated injection causes repetition fatigue — gate with --session $PPID --cooldown and pair with a readback instruction.
-- Context-budget injection strategy: once ~7K tokens are auto-injected (fait accompli), the agent's rationalization inverts from "skip to save effort" to "marginal cost is trivial." Front-load highest-value content as injection, then leverage sunk cost for on-demand reads. Verbal summaries + linked diagram files cut ARCHITECTURE.md ~12K→3.8K (extract diagrams outside FileReadOrder; the 4-chars/token estimator is accurate — optimize content not the estimator).
+- Hook scripts receive JSON via stdin (HOOK_INPUT=$(cat) then jq), not env vars;
+  key names are case-sensitive (PreToolUse, SessionEnd); use
+  $CLAUDE_PROJECT_DIR, never hardcode paths; anchor regex to command-start
+  `(^|;|&&|\|\|)\s*` ('ctx' binary vs dir); grep matches inside quoted args
+  (test with blocked words); scripts silently lose execute permission (verify ls
+  -la).
+- Output routing: plain-text hook stdout is silently ignored — Claude Code
+  parses stdout starting with `{` as JSON directives; return JSON via
+  printHookContext(). For UserPromptSubmit specifically, stdout is prepended as
+  AI context (not user-visible), stderr+exit0 is swallowed, user-visible output
+  requires {"systemMessage":"…"} or exit 2 (blocks); there is NO non-blocking
+  user-visible channel. Two-tier severity is sufficient: unprefixed (agent
+  context, may relay) and "IMPORTANT: Relay VERBATIM" (guaranteed); don't add
+  more prefixes.
+- Agents only relay content with explicit display instructions: a
+  system-reminder line with no "Display this line verbatim" is invisible to the
+  user even when correct. IMPORTANT: signals internal priority, not user-facing
+  output.
+- Compliance: soft instructions have a ~75–85% ceiling because "don't apply
+  judgment" is itself judgment; for 100% compliance inject via additionalContext
+  rather than instruct. Hook compliance degrades on narrow mid-session tasks
+  (~15–25% skip) because CLAUDE.md's "may or may not be relevant" competes
+  with hook authority — fix by elevating hook authority explicitly; the
+  mandatory checkpoint relay block is the compliance canary. No reliable
+  agent-side before-session-end event exists (SessionEnd fires after the agent
+  is gone) — mid-session nudges + explicit /ctx-wrap-up are the only reliable
+  persistence. Repeated injection causes repetition fatigue — gate with
+  --session $PPID --cooldown and pair with a readback instruction.
+- Context-budget injection strategy: once ~7K tokens are auto-injected (fait
+  accompli), the agent's rationalization inverts from "skip to save effort" to
+  "marginal cost is trivial." Front-load highest-value content as injection,
+  then leverage sunk cost for on-demand reads. Verbal summaries + linked diagram
+  files cut ARCHITECTURE.md ~12K→3.8K (extract diagrams outside FileReadOrder;
+  the 4-chars/token estimator is accurate — optimize content not the
+  estimator).
 
 ---
 
@@ -321,12 +636,31 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 6 entries (2026-02-11 to 2026-03-06)
 
-- Permission drift is distinct from code drift — settings.local.json is gitignored so no review catches stale entries; it accumulates session debris (run /sanitize-permissions + /ctx-drift). Skill() permissions don't support name-prefix globs (list each); wildcard trusted binaries (Bash(ctx:*), Bash(make:*)) but keep git granular (never Bash(git:*)).
-- Gitignored directories are invisible to git status — stale artifacts persist indefinitely (periodically ls them). Add editor artifacts (*.swp,*.swo,*~) to .gitignore from day one. Gitignore entries for sensitive paths are security controls, not documentation — never remove during cleanup.
-- The state directory accumulates write-only session tombstones and grows unbounded without auto-prune (234 files found); autoPrune(7) now runs once per session at startup via context-load-gate (manual `ctx system prune` still available).
-- A session-scoped tombstone must include the session ID in its filename, else it suppresses hooks across ALL concurrent and future sessions (memory-drift fixed; backup-reminded, ceremony-reminded, check-knowledge, journal-reminded, version-checked, ctx-wrapped-up still carry this bug). Use the UUID pattern so prune can clean them.
-- New log sinks must follow the established rotation pattern (size-based, single previous generation): eventlog rotated at 1MB but logMessage() in state.go was append-only with no size check.
-- If a directory is recreated (auto-prune), an SSH shell holding the old inode won't see new files (ls returns "no such file" though cat with the full path works elsewhere); after `ctx system prune` or any state recreation, SSH sessions need cd-. or re-login.
+- Permission drift is distinct from code drift — settings.local.json is
+  gitignored so no review catches stale entries; it accumulates session debris
+  (run /sanitize-permissions + /ctx-drift). Skill() permissions don't support
+  name-prefix globs (list each); wildcard trusted binaries (Bash(ctx:*),
+  Bash(make:*)) but keep git granular (never Bash(git:*)).
+- Gitignored directories are invisible to git status — stale artifacts persist
+  indefinitely (periodically ls them). Add editor artifacts (*.swp,*.swo,*~) to
+  .gitignore from day one. Gitignore entries for sensitive paths are security
+  controls, not documentation — never remove during cleanup.
+- The state directory accumulates write-only session tombstones and grows
+  unbounded without auto-prune (234 files found); autoPrune(7) now runs once per
+  session at startup via context-load-gate (manual `ctx system prune` still
+  available).
+- A session-scoped tombstone must include the session ID in its filename, else
+  it suppresses hooks across ALL concurrent and future sessions (memory-drift
+  fixed; backup-reminded, ceremony-reminded, check-knowledge, journal-reminded,
+  version-checked, ctx-wrapped-up still carry this bug). Use the UUID pattern so
+  prune can clean them.
+- New log sinks must follow the established rotation pattern (size-based, single
+  previous generation): eventlog rotated at 1MB but logMessage() in state.go was
+  append-only with no size check.
+- If a directory is recreated (auto-prune), an SSH shell holding the old inode
+  won't see new files (ls returns "no such file" though cat with the full path
+  works elsewhere); after `ctx system prune` or any state recreation, SSH
+  sessions need cd-. or re-login.
 
 ---
 
@@ -334,8 +668,18 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 2 entries (2026-04-13 to 2026-05-28)
 
-- Swap occupancy is NOT memory pressure: macOS/Windows swap proactively and occupancy is a sticky high-water mark that doesn't recede when pressure ends, so any alert keyed on SwapUsed/SwapTotal ≥ X% false-positives at session start (e.g. after hibernation). Key on OS-native pressure derivatives instead: macOS kern.memorystatus_vm_pressure_level (1/2/4 → OK/Warning/Danger), Linux PSI /proc/pressure/memory some.avg10/full.avg10; fall back to swap-out RATE gated on low available memory, never occupancy.
-- Load average measures a queue (runnable + uninterruptible-sleep), not CPU utilization — high load with low CPU% means many short-lived/I/O-bound processes (e.g. go test spawning hundreds of binaries). For automated alerts prefer the 5-minute average over the reactive 1-minute, which fires on normal build/test activity.
+- Swap occupancy is NOT memory pressure: macOS/Windows swap proactively and
+  occupancy is a sticky high-water mark that doesn't recede when pressure ends,
+  so any alert keyed on SwapUsed/SwapTotal ≥ X% false-positives at session
+  start (e.g. after hibernation). Key on OS-native pressure derivatives instead:
+  macOS kern.memorystatus_vm_pressure_level (1/2/4 → OK/Warning/Danger), Linux
+  PSI /proc/pressure/memory some.avg10/full.avg10; fall back to swap-out RATE
+  gated on low available memory, never occupancy.
+- Load average measures a queue (runnable + uninterruptible-sleep), not CPU
+  utilization — high load with low CPU% means many short-lived/I/O-bound
+  processes (e.g. go test spawning hundreds of binaries). For automated alerts
+  prefer the 5-minute average over the reactive 1-minute, which fires on normal
+  build/test activity.
 
 ---
 
@@ -343,18 +687,44 @@ DO NOT UPDATE FOR:
 
 **Consolidated from**: 4 entries (2026-01-19 to 2026-04-25)
 
-- Any code using os.UserHomeDir() / user-level paths (~/.ctx/, ~/.config/) needs t.Setenv("HOME", tmpDir) in tests — especially shared setup helpers. Under parallel `make test`, fourteen test files invoking initialize.Cmd().Execute() raced on read-modify-write of ~/.claude/settings.json, surfacing as flaky "FAIL coverage: [no statements]"; testctx.Declare now sets HOME alongside CTX_DIR (centralized fix).
-- Go testing patterns: `go build ./...` misses test-file callsite breaks — always `go test ./...` after signature changes. Consume all runCmd() returns (`_, _ = runCmd(...)`) for errcheck. Disable ANSI via color.NoColor=true in package init for string assertions. Recall tests isolate via t.Setenv("HOME", tmpDir) with .claude/projects/. formatDuration takes an interface with Minutes() (use a stubDuration). CI needs CTX_SKIP_PATH_CHECK=1 (init checks PATH). CGO_ENABLED=0 for ARM64 Linux.
-- Converting PersistentPreRun → PersistentPreRunE changes exit behavior: errors propagate through Cobra Execute() return with no os.Exit. Subprocess-based tests expecting exit codes must convert to direct error assertions.
+- Any code using os.UserHomeDir() / user-level paths (~/.ctx/, ~/.config/) needs
+  t.Setenv("HOME", tmpDir) in tests — especially shared setup helpers. Under
+  parallel `make test`, fourteen test files invoking initialize.Cmd().Execute()
+  raced on read-modify-write of ~/.claude/settings.json, surfacing as flaky
+  "FAIL coverage: [no statements]"; testctx.Declare now sets HOME alongside
+  CTX_DIR (centralized fix).
+- Go testing patterns: `go build ./...` misses test-file callsite breaks —
+  always `go test ./...` after signature changes. Consume all runCmd() returns
+  (`_, _ = runCmd(...)`) for errcheck. Disable ANSI via color.NoColor=true in
+  package init for string assertions. Recall tests isolate via t.Setenv("HOME",
+  tmpDir) with .claude/projects/. formatDuration takes an interface with
+  Minutes() (use a stubDuration). CI needs CTX_SKIP_PATH_CHECK=1 (init checks
+  PATH). CGO_ENABLED=0 for ARM64 Linux.
+- Converting PersistentPreRun → PersistentPreRunE changes exit behavior:
+  errors propagate through Cobra Execute() return with no os.Exit.
+  Subprocess-based tests expecting exit codes must convert to direct error
+  assertions.
 
 ---
 ## [2026-06-01-174927] Guard managed blocks before regenerating; don't trust the span to be machine-owned
 
-**Context**: ctx learning add silently deleted entry bodies that lived between INDEX:START/END markers: index.Update replaced the whole marker span with a regenerated table, and ParseHeaders scanning the full file made the result look complete, hiding the loss.
+**Context**: ctx learning add silently deleted entry bodies that lived between
+INDEX:START/END markers: index.Update replaced the whole marker span with a
+regenerated table, and ParseHeaders scanning the full file made the result look
+complete, hiding the loss.
 
-**Lesson**: Code that 'replaces the managed block' (index regen, KB managed blocks, moc.go) assumes the span between its markers is disposable and machine-owned. That assumption breaks the moment user content drifts inside the markers, and the regenerated output looks correct so the loss is invisible. The fix is a precondition guard that refuses to mutate when regeneration would lose data — not smarter parsing of the trapped content.
+**Lesson**: Code that 'replaces the managed block' (index regen, KB managed
+blocks, moc.go) assumes the span between its markers is disposable and
+machine-owned. That assumption breaks the moment user content drifts inside the
+markers, and the regenerated output looks correct so the loss is invisible. The
+fix is a precondition guard that refuses to mutate when regeneration would lose
+data — not smarter parsing of the trapped content.
 
-**Application**: Before any 'replace between markers' write, validate the span: refuse on entry/content found where only generated output belongs, and on malformed/duplicated/out-of-order markers. Fail loud and leave the file byte-identical rather than regenerate. Run the guard at the read-before-mutate choke point so nothing is written on refusal.
+**Application**: Before any 'replace between markers' write, validate the span:
+refuse on entry/content found where only generated output belongs, and on
+malformed/duplicated/out-of-order markers. Fail loud and leave the file
+byte-identical rather than regenerate. Run the guard at the read-before-mutate
+choke point so nothing is written on refusal.
 
 ---
 
@@ -380,81 +750,219 @@ DO NOT UPDATE FOR:
 
 ## [2026-05-28-215214] ctx kb: single topic-enumeration site; life-stage count is consumer-side
 
-**Context**: kb reindex blanked the CTX:KB:TOPICS block for grouped kbs (things-wtf-dr regrouped 49 topics into folders); the task speculated a sibling life-stage topic-count glob was also affected.
+**Context**: kb reindex blanked the CTX:KB:TOPICS block for grouped kbs
+(things-wtf-dr regrouped 49 topics into folders); the task speculated a sibling
+life-stage topic-count glob was also affected.
 
-**Lesson**: reindex.ListTopics (internal/cli/kb/core/reindex/topic.go) is the ONLY topic enumeration/count in ctx, and CTX:KB:TOPICS is the only managed block. The life-stage concept in ctx is the ingest/closeout frontmatter field, unrelated to topics. Any per-life-stage topic count lives in the consumer kb, which ctx neither generates nor owns.
+**Lesson**: reindex.ListTopics (internal/cli/kb/core/reindex/topic.go) is the
+ONLY topic enumeration/count in ctx, and CTX:KB:TOPICS is the only managed
+block. The life-stage concept in ctx is the ingest/closeout frontmatter field,
+unrelated to topics. Any per-life-stage topic count lives in the consumer kb,
+which ctx neither generates nor owns.
 
-**Application**: Localize nested-topic fixes to ListTopics; treat per-group/per-life-stage topic counts as consumer territory (same recurse + exclude-group-landing pattern, fixed in their repo).
+**Application**: Localize nested-topic fixes to ListTopics; treat
+per-group/per-life-stage topic counts as consumer territory (same recurse +
+exclude-group-landing pattern, fixed in their repo).
 
 ---
 
 ## [2026-05-28-201400] A non-root Go module nested under the main module's path CAN import its internal/ packages
 
-**Context**: While designing the ctxctl module split, the initial spec (and a lot of online consensus) claimed a separate `go.mod` cannot import the parent module's `internal/` packages, which would have forced relocating or duplicating ~25 foundation packages (`rc`, `desc`, `nudge`, `config/*`, …). The "obvious" reading made same-module the only viable option.
+**Context**: While designing the ctxctl module split, the initial spec (and a
+lot of online consensus) claimed a separate `go.mod` cannot import the parent
+module's `internal/` packages, which would have forced relocating or duplicating
+~25 foundation packages (`rc`, `desc`, `nudge`, `config/*`, …). The "obvious"
+reading made same-module the only viable option.
 
-**Lesson**: Go's internal-import rule is **lexical on import paths, not module-scoped**. A separate module whose path is `github.com/<owner>/<main>/tools/<x>` CAN import `github.com/<owner>/<main>/internal/...` — verified by an empirical build experiment this session. An outsider path (`example.com/...`) is rejected with `use of internal package … not allowed`. The rule fires on the import-path prefix relative to the `internal/` directory's parent, not on module boundaries.
+**Lesson**: Go's internal-import rule is **lexical on import paths, not
+module-scoped**. A separate module whose path is
+`github.com/<owner>/<main>/tools/<x>` CAN import
+`github.com/<owner>/<main>/internal/...` — verified by an empirical build
+experiment this session. An outsider path (`example.com/...`) is rejected with
+`use of internal package … not allowed`. The rule fires on the import-path
+prefix relative to the `internal/` directory's parent, not on module boundaries.
 
-**Application**: For monorepo splits (maintainer-only tooling, isolated experiments, ancillary CLIs), choose a module path nested under the main module so the new module reuses the parent's foundations via the lexical-internal allowance. Full self-containment of a maintainer module would be a DRY catastrophe; the lexical allowance is the correct shape. Prove it with a throwaway `go build` against a representative `internal/` import before designing around the *wrong* constraint.
+**Application**: For monorepo splits (maintainer-only tooling, isolated
+experiments, ancillary CLIs), choose a module path nested under the main module
+so the new module reuses the parent's foundations via the lexical-internal
+allowance. Full self-containment of a maintainer module would be a DRY
+catastrophe; the lexical allowance is the correct shape. Prove it with a
+throwaway `go build` against a representative `internal/` import before
+designing around the *wrong* constraint.
 
 ---
 
 ## [2026-05-28-201300] cobra's legacyArgs lets unknown subcommands silently succeed on non-root groups
 
-**Context**: Every prompt of this session injected 52 lines of `ctx system` help text into agent context, labeled "hook success." Investigation traced it to the 0.8.1 plugin's `hooks.json` wiring `ctx system check-anchor-drift` as the first UserPromptSubmit hook — a command the 0.8.1 binary no longer has (the command was deleted by the cwd-anchored migration in `fc7db228`, but the plugin's hook config wasn't updated). The harness reported "hook success" because cobra exits 0 on the unknown subcommand.
+**Context**: Every prompt of this session injected 52 lines of `ctx system` help
+text into agent context, labeled "hook success." Investigation traced it to the
+0.8.1 plugin's `hooks.json` wiring `ctx system check-anchor-drift` as the first
+UserPromptSubmit hook — a command the 0.8.1 binary no longer has (the command
+was deleted by the cwd-anchored migration in `fc7db228`, but the plugin's hook
+config wasn't updated). The harness reported "hook success" because cobra exits
+0 on the unknown subcommand.
 
-**Lesson**: cobra's `legacyArgs` only raises "unknown command" for the **root** command (`!cmd.HasParent()`); any non-root group (built with `parent.Cmd`) treats an unknown subcommand as non-error: it falls through to `Help()` and returns nil → exit 0. In a UserPromptSubmit hook this is **invisible** — the harness logs "hook success" and injects the whole help text into agent context every prompt. The 0.8.1 plugin's stale wiring of the retired `check-anchor-drift` caused exactly this for the entire session.
+**Lesson**: cobra's `legacyArgs` only raises "unknown command" for the **root**
+command (`!cmd.HasParent()`); any non-root group (built with `parent.Cmd`)
+treats an unknown subcommand as non-error: it falls through to `Help()` and
+returns nil → exit 0. In a UserPromptSubmit hook this is **invisible** — the
+harness logs "hook success" and injects the whole help text into agent context
+every prompt. The 0.8.1 plugin's stale wiring of the retired
+`check-anchor-drift` caused exactly this for the entire session.
 
-**Application**: Non-root cobra groups must have an explicit unknown-subcommand guard. Two routes: (a) `Args: cobra.NoArgs` so unknown subcommands error loud (non-zero exit + "unknown command" stderr); (b) a `RunE` that emits a **verbatim relay** — which is what actually reaches the user in a UserPromptSubmit hook context where a non-zero exit alone is invisible. Tracked under Phase CLI-FIX as the verbatim-relay guard on `ctx system`.
+**Application**: Non-root cobra groups must have an explicit unknown-subcommand
+guard. Two routes: (a) `Args: cobra.NoArgs` so unknown subcommands error loud
+(non-zero exit + "unknown command" stderr); (b) a `RunE` that emits a **verbatim
+relay** — which is what actually reaches the user in a UserPromptSubmit hook
+context where a non-zero exit alone is invisible. Tracked under Phase CLI-FIX as
+the verbatim-relay guard on `ctx system`.
 
 ---
 
 ## [2026-05-25-221357] Skill shipping location: _ctx- prefix is repo-internal, internal/assets/claude/skills/ctx-* is bundled and shipped
 
-**Context**: Created /ctx-surface-audit under internal/assets/claude/skills/ (the shipped path), but it audits ctx's own internal/ source layout — useless in an end-user project that installs ctx. There is an established _ctx-* family (_ctx-command-audit, _ctx-audit, _ctx-release, _ctx-qa, etc.) in .claude/skills/ for repo-only dev skills; the user caught the misplacement.
+**Context**: Created /ctx-surface-audit under internal/assets/claude/skills/
+(the shipped path), but it audits ctx's own internal/ source layout — useless
+in an end-user project that installs ctx. There is an established _ctx-* family
+(_ctx-command-audit, _ctx-audit, _ctx-release, _ctx-qa, etc.) in .claude/skills/
+for repo-only dev skills; the user caught the misplacement.
 
-**Lesson**: A skill that references ctx's own source tree (internal/, docs/recipes/, cmd/) or dev workflow is repo-internal and must live in .claude/skills/_<name>/ (underscore prefix, committed to the repo but NOT bundled). Only genuinely user-facing skills belong in internal/assets/claude/skills/, which ctx init / ctx setup install into end-user projects. The same ship-vs-repo-internal question applies one layer up: user-facing CLI commands go in ctx, maintainer commands go in ctxctl; shipped hooks live in internal/assets/claude/hooks/hooks.json and call ctx, repo-local dev hooks live in the gitignored .claude/settings.local.json and may call ctxctl.
+**Lesson**: A skill that references ctx's own source tree (internal/,
+docs/recipes/, cmd/) or dev workflow is repo-internal and must live in
+.claude/skills/_<name>/ (underscore prefix, committed to the repo but NOT
+bundled). Only genuinely user-facing skills belong in
+internal/assets/claude/skills/, which ctx init / ctx setup install into end-user
+projects. The same ship-vs-repo-internal question applies one layer up:
+user-facing CLI commands go in ctx, maintainer commands go in ctxctl; shipped
+hooks live in internal/assets/claude/hooks/hooks.json and call ctx, repo-local
+dev hooks live in the gitignored .claude/settings.local.json and may call
+ctxctl.
 
-**Application**: Before creating a skill, command, or hook, ask: does this serve a user working in their project, or a ctx maintainer working in this repo? Maintainer-facing → _-prefixed skill in .claude/skills/ + ctxctl command + repo-local hook. User-facing → internal/assets/claude/skills/ + ctx command + shipped hooks.json. Putting maintainer tooling in the shipped paths taxes every end user (e.g. a UserPromptSubmit hook firing on every prompt for a feature they never use).
+**Application**: Before creating a skill, command, or hook, ask: does this serve
+a user working in their project, or a ctx maintainer working in this repo?
+Maintainer-facing → _-prefixed skill in .claude/skills/ + ctxctl command +
+repo-local hook. User-facing → internal/assets/claude/skills/ + ctx command +
+shipped hooks.json. Putting maintainer tooling in the shipped paths taxes every
+end user (e.g. a UserPromptSubmit hook firing on every prompt for a feature they
+never use).
 
 ---
 
 ## [2026-05-23-001000] Unicode block separation makes diacritic-stripping surgical — no per-script handling needed for Arabic/Indic/Hebrew/CJK
 
-**Context**: While building `i18n.MatchKey` (commit 978582f5) for diacritic-insensitive placeholder matching, the natural reflex was "this is going to need per-script special cases — CJK doesn't have case, Arabic has shadda/fatha that are meaning-changing, Bengali vowel signs are script-essential, Hebrew niqqud distinguishes words." I sized the work assuming we'd need a script-aware policy, possibly with a locale config or an opt-in flag for "strip all combining marks" vs "strip only Latin-style decoration". Empirical test across Turkish/German/French/Spanish/Catalan/Czech/Vietnamese (should collapse) and Arabic/Bengali/Devanagari/Hindi/Hebrew/Chinese/Korean (should preserve) showed the entire policy fits in one numeric range: U+0300..U+036F.
+**Context**: While building `i18n.MatchKey` (commit 978582f5) for
+diacritic-insensitive placeholder matching, the natural reflex was "this is
+going to need per-script special cases — CJK doesn't have case, Arabic has
+shadda/fatha that are meaning-changing, Bengali vowel signs are
+script-essential, Hebrew niqqud distinguishes words." I sized the work assuming
+we'd need a script-aware policy, possibly with a locale config or an opt-in flag
+for "strip all combining marks" vs "strip only Latin-style decoration".
+Empirical test across Turkish/German/French/Spanish/Catalan/Czech/Vietnamese
+(should collapse) and Arabic/Bengali/Devanagari/Hindi/Hebrew/Chinese/Korean
+(should preserve) showed the entire policy fits in one numeric range:
+U+0300..U+036F.
 
-**Lesson**: Unicode pre-separated combining marks by intent at the codepoint level. The "Combining Diacritical Marks" block (U+0300–U+036F) holds Latin/general decorative marks: acute, grave, diaeresis, tilde, cedilla, caron, the Turkish combining dot, the Vietnamese horn, etc. Script-essential marks live in separate blocks per script: Arabic in U+0610–U+06ED, Bengali in U+0980–U+09FF, Devanagari in U+0900–U+097F, Hebrew niqqud in U+0591–U+05C7, and so on. The block boundaries are not coincidental — they encode the same distinction a reasonable design would want to make. So a narrow byte-range strip is exactly the right primitive: it expresses "remove decoration, keep structural marks" in one comparison, without needing to know anything about the input's script.
+**Lesson**: Unicode pre-separated combining marks by intent at the codepoint
+level. The "Combining Diacritical Marks" block (U+0300–U+036F) holds
+Latin/general decorative marks: acute, grave, diaeresis, tilde, cedilla, caron,
+the Turkish combining dot, the Vietnamese horn, etc. Script-essential marks live
+in separate blocks per script: Arabic in U+0610–U+06ED, Bengali in
+U+0980–U+09FF, Devanagari in U+0900–U+097F, Hebrew niqqud in
+U+0591–U+05C7, and so on. The block boundaries are not coincidental — they
+encode the same distinction a reasonable design would want to make. So a narrow
+byte-range strip is exactly the right primitive: it expresses "remove
+decoration, keep structural marks" in one comparison, without needing to know
+anything about the input's script.
 
-**Application**: When designing comparison/normalization primitives for international input, check the Unicode block boundaries before reaching for per-script special cases or a config field. Often the standardization committee already drew the line you want, and an arithmetic range check (`r >= 0x0300 && r <= 0x036F`) does the work. Verify empirically across the scripts you care about — but expect the answer to be cleaner than your initial sizing. The general rule: when Unicode has put related characters in their own block, treat that block as a meaningful unit of policy. (For ctx, this is now `cfgI18n.CombiningMarksLatinStart`/`End` and the `MatchKey` implementation in `internal/i18n/matchkey.go`.)
+**Application**: When designing comparison/normalization primitives for
+international input, check the Unicode block boundaries before reaching for
+per-script special cases or a config field. Often the standardization committee
+already drew the line you want, and an arithmetic range check (`r >= 0x0300 && r
+<= 0x036F`) does the work. Verify empirically across the scripts you care about
+— but expect the answer to be cleaner than your initial sizing. The general
+rule: when Unicode has put related characters in their own block, treat that
+block as a meaningful unit of policy. (For ctx, this is now
+`cfgI18n.CombiningMarksLatinStart`/`End` and the `MatchKey` implementation in
+`internal/i18n/matchkey.go`.)
 
 ---
 
 ## [2026-05-20-214839] macOS /var symlink trips path-equality; use EvalSymlinks with parent-resolution fallback
 
-**Context**: TestRunInit_EnvCwdMatch_Succeeds in internal/cli/initialize/init_test.go failed on first run despite a deliberate setup where the env path and cwd candidate matched. Diagnosis: t.TempDir() returns paths like /var/folders/..., os.Getwd() after t.Chdir() returns the canonical /private/var/folders/... (because macOS's /var is a symlink to /private/var). filepath.Clean preserves the symlink form; equality fails.
+**Context**: TestRunInit_EnvCwdMatch_Succeeds in
+internal/cli/initialize/init_test.go failed on first run despite a deliberate
+setup where the env path and cwd candidate matched. Diagnosis: t.TempDir()
+returns paths like /var/folders/..., os.Getwd() after t.Chdir() returns the
+canonical /private/var/folders/... (because macOS's /var is a symlink to
+/private/var). filepath.Clean preserves the symlink form; equality fails.
 
-**Lesson**: filepath.Clean alone is insufficient for path equality on macOS (and other systems with symlinked top-level dirs). filepath.EvalSymlinks resolves the symlinks but fails when the target path does not yet exist — common case for /Users/volkan/Desktop/WORKSPACE/ctx/.context BEFORE ctx init runs. The right pattern is a layered fallback: try EvalSymlinks(full), then EvalSymlinks(parent) + rejoin basename, then filepath.Clean as last resort.
+**Lesson**: filepath.Clean alone is insufficient for path equality on macOS (and
+other systems with symlinked top-level dirs). filepath.EvalSymlinks resolves the
+symlinks but fails when the target path does not yet exist — common case for
+/Users/volkan/Desktop/WORKSPACE/ctx/.context BEFORE ctx init runs. The right
+pattern is a layered fallback: try EvalSymlinks(full), then EvalSymlinks(parent)
++ rejoin basename, then filepath.Clean as last resort.
 
-**Application**: Encapsulated as internal/cli/initialize/core/envmatch/{envmatch.go,internal.go}. The Same(a, b) public function calls resolve() on each side; resolve() tries EvalSymlinks on the full path, falls back to EvalSymlinks on the parent (rejoining the basename), and falls through to filepath.Clean if both fail. Reusable for any future env-vs-cwd-style equality check. The package is per-feature (core/envmatch/) per the cmd/core/ purity rule enforced by internal/compliance/TestCmdDirPurity.
+**Application**: Encapsulated as
+internal/cli/initialize/core/envmatch/{envmatch.go,internal.go}. The Same(a, b)
+public function calls resolve() on each side; resolve() tries EvalSymlinks on
+the full path, falls back to EvalSymlinks on the parent (rejoining the
+basename), and falls through to filepath.Clean if both fail. Reusable for any
+future env-vs-cwd-style equality check. The package is per-feature
+(core/envmatch/) per the cmd/core/ purity rule enforced by
+internal/compliance/TestCmdDirPurity.
 
 ---
 
 ## [2026-05-20-214830] Handover filenames are archaeology; parse by generated-at, not filename
 
-**Context**: User observed three coexisting handover filename shapes: .context/HANDOVER-2026-04-22.md (pre-skill root file), .context/handovers/YYYY-MM-DD-HHMMSS-slug.md (skill-era pre-CLI), .context/handovers/<RFC3339Compact>-slug.md (current CLI). User asked whether this was a regression or a skill-interpretation problem.
+**Context**: User observed three coexisting handover filename shapes:
+.context/HANDOVER-2026-04-22.md (pre-skill root file),
+.context/handovers/YYYY-MM-DD-HHMMSS-slug.md (skill-era pre-CLI),
+.context/handovers/<RFC3339Compact>-slug.md (current CLI). User asked whether
+this was a regression or a skill-interpretation problem.
 
-**Lesson**: Neither. The .context/HANDOVER-* root file predates the handovers/ directory contract entirely (the body even said 'delete this file after reading'). The YYYY-MM-DD-HHMMSS shape was an earlier skill iteration writing free-form before ctx handover write existed (commit 60543e46, 2026-05-17, introduced the CLI as sole writer per the anti-pattern note in /ctx-handover SKILL.md). The current parser at internal/write/handover/parse.go:75-107 keys on the 'generated-at' YAML frontmatter, not the filename — so legacy shapes still sort correctly via LatestHandoverCursor. Only files without frontmatter (the root April file) are invisible.
+**Lesson**: Neither. The .context/HANDOVER-* root file predates the handovers/
+directory contract entirely (the body even said 'delete this file after
+reading'). The YYYY-MM-DD-HHMMSS shape was an earlier skill iteration writing
+free-form before ctx handover write existed (commit 60543e46, 2026-05-17,
+introduced the CLI as sole writer per the anti-pattern note in /ctx-handover
+SKILL.md). The current parser at internal/write/handover/parse.go:75-107 keys on
+the 'generated-at' YAML frontmatter, not the filename — so legacy shapes still
+sort correctly via LatestHandoverCursor. Only files without frontmatter (the
+root April file) are invisible.
 
-**Application**: When unifying filename shapes across history, use git mv to preserve rename detection. Derive the canonical timestamp from the file's own generated-at frontmatter rather than from the filename — that's the source of truth the parser uses anyway. If a handover predates frontmatter entirely (rare, pre-skill era), it's safe to delete because the parser never read it.
+**Application**: When unifying filename shapes across history, use git mv to
+preserve rename detection. Derive the canonical timestamp from the file's own
+generated-at frontmatter rather than from the filename — that's the source of
+truth the parser uses anyway. If a handover predates frontmatter entirely (rare,
+pre-skill era), it's safe to delete because the parser never read it.
 
 ---
 
 ## [2026-05-20-214821] /ctx-plan is named after its input, not its output
 
-**Context**: Agent (and apparently other agents in prior sessions per user observation) repeatedly inverted the canonical chain, treating /ctx-spec as the entry point and /ctx-plan as a post-spec step. The skill description starts 'stress-test a plan' (implying user brings a plan IN) while line 44 of the body says 'the deliverable is a debated brief, not a task list' (the OUTPUT is a brief, not a plan).
+**Context**: Agent (and apparently other agents in prior sessions per user
+observation) repeatedly inverted the canonical chain, treating /ctx-spec as the
+entry point and /ctx-plan as a post-spec step. The skill description starts
+'stress-test a plan' (implying user brings a plan IN) while line 44 of the body
+says 'the deliverable is a debated brief, not a task list' (the OUTPUT is a
+brief, not a plan).
 
-**Lesson**: Skill names that reference their INPUT bias the agent toward the wrong canonical position. The /ctx-plan skill takes a plan and produces a brief; the natural mental model when scanning the name is 'plan = output', which makes the agent place it AFTER spec instead of before. Also: /ctx-spec's 'When to Use' section listed /ctx-brainstorm as a predecessor but never /ctx-plan, so an agent skimming the top of the skill never learned the full chain.
+**Lesson**: Skill names that reference their INPUT bias the agent toward the
+wrong canonical position. The /ctx-plan skill takes a plan and produces a brief;
+the natural mental model when scanning the name is 'plan = output', which makes
+the agent place it AFTER spec instead of before. Also: /ctx-spec's 'When to Use'
+section listed /ctx-brainstorm as a predecessor but never /ctx-plan, so an agent
+skimming the top of the skill never learned the full chain.
 
-**Application**: Made the canonical chain explicit at the top of both /ctx-plan and /ctx-spec skills (Canonical Chain block with the brainstorm → plan → spec → implement diagram) and in AGENT_PLAYBOOK_GATE Planning Work section. /ctx-spec When-to-Use now lists /ctx-plan as a predecessor; When-NOT-to-Use says 'when the bet is contested but not yet stress-tested, use /ctx-plan first'. /ctx-plan description now ends with '; produces a debated brief at .context/briefs/<TS>-<slug>.md that /ctx-spec --brief consumes'.
+**Application**: Made the canonical chain explicit at the top of both /ctx-plan
+and /ctx-spec skills (Canonical Chain block with the brainstorm → plan →
+spec → implement diagram) and in AGENT_PLAYBOOK_GATE Planning Work section.
+/ctx-spec When-to-Use now lists /ctx-plan as a predecessor; When-NOT-to-Use says
+'when the bet is contested but not yet stress-tested, use /ctx-plan first'.
+/ctx-plan description now ends with '; produces a debated brief at
+.context/briefs/<TS>-<slug>.md that /ctx-spec --brief consumes'.
 
 ---
 
