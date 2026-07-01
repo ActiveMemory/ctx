@@ -303,7 +303,14 @@ variants. Linters in `hack/` enforce the hard rules.
 - New editor integrations include an MCP-merge test covering: create / empty
   file / preserve existing keys / skip when registered / reject malformed JSON
 
-- Substrate vs. artifact placement: cognitive substrate (consumed and mutated via ctx-mediated paths — `ctx agent`, `ctx decision add`, `/ctx-kb-ingest`, `/ctx-handover`, ceremonies) lives under `.context/`; project artifacts (read and edited directly by humans — `specs/`, `CLAUDE.md`, `GETTING_STARTED.md`, `docs/`) live at the project root; tool config and tool homes (`.ctxrc`, `.claude/`) live at root by dotfile/tool convention. The kb is substrate, not artifact: direct file edits remain possible per Invariant 1, but the skill-mediated path is the discipline. Rationale recorded in DECISIONS.md.
+- Substrate vs. artifact placement: cognitive substrate (consumed and mutated
+  via ctx-mediated paths — `ctx agent`, `ctx decision add`, `/ctx-kb-ingest`,
+  `/ctx-handover`, ceremonies) lives under `.context/`; project artifacts (read
+  and edited directly by humans — `specs/`, `CLAUDE.md`, `GETTING_STARTED.md`,
+  `docs/`) live at the project root; tool config and tool homes (`.ctxrc`,
+  `.claude/`) live at root by dotfile/tool convention. The kb is substrate, not
+  artifact: direct file edits remain possible per Invariant 1, but the
+  skill-mediated path is the discipline. Rationale recorded in DECISIONS.md.
 
 ## User-Facing Surface Completeness
 
@@ -378,4 +385,6 @@ resolves correctly under cwd-anchoring).
 `tools/ctxctl/` is the first inhabitant. Future maintainer
 binaries follow the same shape.
 
-- Maintainer-only docs (features that run through the ctxctl binary, never shipped to users) live under docs/operations/runbooks/, not docs/recipes/ (user-facing). contributing.md is the entry point that links to the runbook.
+- Maintainer-only docs (features that run through the ctxctl binary, never
+  shipped to users) live under docs/operations/runbooks/, not docs/recipes/
+  (user-facing). contributing.md is the entry point that links to the runbook.

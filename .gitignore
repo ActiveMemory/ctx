@@ -89,6 +89,8 @@ tools/typecheck/opencode/node_modules/
 
 # Some ideas are best kept hidden.
 ideas
+inbox
+outbox
 # The dream's notebook about ideas/ — derived summaries, per-source
 # state, ledger, per-run digests, and pre-mutation backups. Inherits
 # ideas/'s privacy class; the don't-leak guard double-checks at write
@@ -103,3 +105,6 @@ dreams
 # Generated skills
 .claude/skills/generated
 .claude/skills/gitnexus
+
+# GitNexus code-graph index (local, do not commit)
+.gitnexus/
