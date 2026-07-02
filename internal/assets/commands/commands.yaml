@@ -62,6 +62,18 @@ agent:
       ctx agent --format json                # JSON output for programmatic use
       ctx agent --session $PPID              # Cooldown scoped to calling process
   short: Print AI-ready context packet
+ai:
+  long: |-
+    Run optional AI backend commands.
+  short: Run AI backend commands
+ai.ping:
+  long: |-
+    Check the configured AI backend and print model reachability.
+  short: Check AI backend reachability
+ai.propose:
+  long: |-
+    Generate a validation-only proposed-patch artifact from an input file.
+  short: Generate AI proposal artifact
 change:
   long: |-
     Show changes in context files and code since the last AI session.

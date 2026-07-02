@@ -12,6 +12,8 @@ const PrefixLong = "--"
 // Add command flag names: used for both flag registration and error display.
 const (
 	Application = "application"
+	APIKeyEnv   = "api-key-env"
+	Backend     = "backend"
 	Branch      = "branch"
 	Commit      = "commit"
 	Consequence = "consequence"
@@ -64,6 +66,8 @@ const (
 	Days        = "days"
 	Dir         = "dir"
 	DryRun      = "dry-run"
+	Endpoint    = "endpoint"
+	Emit        = "emit"
 	Event       = "event"
 
 	IncludeHub      = "include-hub"
@@ -87,6 +91,7 @@ const (
 	Note            = "note"
 	Message         = "message"
 	Minimal         = "minimal"
+	Model           = "model"
 	NoPluginEnable  = "no-plugin-enable"
 	NoSteeringInit  = "no-steering-init"
 	Out             = "out"
@@ -109,6 +114,7 @@ const (
 	Skills          = "skills"
 	Tag             = "tag"
 	Tool            = "tool"
+	Timeout         = "timeout"
 	Token           = "token"
 	Type            = "type"
 	Variant         = "variant"

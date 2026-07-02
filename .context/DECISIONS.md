@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-06-19 | `ctx ai` is a separate namespace with proposed-patch output only |
 | 2026-06-07 | ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption |
 | 2026-06-07 | Output belongs in write/ — taxonomy and emission style (consolidated) |
 | 2026-06-07 | Package taxonomy and shared-code placement (consolidated) |
@@ -108,6 +109,51 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-06-19-064500] `ctx ai` is a separate namespace with proposed-patch output only
+
+**Status**: Accepted
+
+**Context**: GitHub issue #92 (`ctx ai backend`) introduces an optional,
+local-first AI backend layer. The governing spec left several Block A choices
+open: whether AI use should live under a new `ctx ai <verb>` namespace or as
+flags on existing commands, where the validation consumer should write
+proposals, whether Block A needs a companion skill, and how to reconcile the
+spec's TOML examples with the repo's existing YAML `.ctxrc` parser.
+
+**Decision**: Block A uses a new top-level `ctx ai <verb>` namespace. Backend
+configuration uses the existing YAML `.ctxrc` shape under `backends:` rather
+than TOML-style `[backends]` tables. `ctx setup --backend <name>` is a distinct
+setup mode that can run without the current `<tool>` positional argument. The
+provisional proposal queue is `.context/proposals/ai/`, and the Block A
+validation consumer is `ctx ai propose <input> --emit ...`, a generic
+validation-only proposer that writes proposed-patch JSON artifacts and never
+mutates `.context/*.md`. No new companion skill ships in Block A; command
+assets, setup docs, the `ctx ai` CLI reference, the vLLM recipe, and the agent
+playbook note cover the user-facing surface.
+
+**Rationale**: A separate `ctx ai` namespace keeps optional AI behavior out of
+deterministic commands (`ctx status`, `ctx agent`, ceremonies, and hooks), makes
+fail-closed behavior explicit, and avoids smuggling backend availability into
+existing deterministic verbs through flags like `--use-ai`. YAML config matches
+the actual `internal/rc` implementation and avoids landing a spec that cannot
+be implemented without replacing the config parser. `.context/proposals/ai/`
+keeps AI-produced suggestions inside the cognitive substrate while preserving
+the human gate before canonical memory changes. A generic `propose` verb proves
+backend dispatch and artifact writing without pretending to settle the final
+Block B taxonomy; later `ctx ai compact` or `ctx ai ingest` commands remain
+available once the extraction-and-recall spec is promoted.
+
+**Consequence**: Implementations must add a deterministic-boundary guard so
+agent/status/ceremony paths cannot import `internal/backend` or invoke `ctx ai`.
+Multiple configured backends require `--backend <name>` or `backends.default`;
+there is no implicit selection and no deterministic fallback. Proposed-patch
+artifacts need a minimal schema with backend, model, input reference, emit
+kinds, proposed rows, source spans or citations when available, and status
+metadata. Documentation and command assets are part of the same deliverable
+because `ctx ai` is a user-facing surface. Spec: `specs/ctx-ai-backend.md`.
+
+---
 
 ## [2026-06-07-112203] ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption
 
@@ -1617,4 +1663,3 @@ inherits it, and cleanup is automatic at test end. One line replaces the helper.
 to maintain. Pattern reusable for other subprocess tests.
 
 ---
-

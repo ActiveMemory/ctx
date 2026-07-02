@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claudecheck"
 	coreAgents "github.com/ActiveMemory/ctx/internal/cli/setup/core/agents"
+	coreBackend "github.com/ActiveMemory/ctx/internal/cli/setup/core/backend"
 	coreCline "github.com/ActiveMemory/ctx/internal/cli/setup/core/cline"
 	coreCopilot "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot"
 	coreCopCLI "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilotcli"
@@ -39,7 +40,44 @@ import (
 //
 // Returns:
 //   - error: Non-nil if the tool is not supported or file write fails
-func Run(cmd *cobra.Command, args []string, writeFile bool) error {
+func Run(
+	cmd *cobra.Command,
+	args []string,
+	writeFile bool,
+	backend string,
+	endpoint string,
+	apiKeyEnv string,
+	model string,
+	timeout string,
+) error {
+	if backend != "" {
+		backendName := i18n.Fold(backend)
+		if runErr := coreBackend.Run(cmd.OutOrStdout(), coreBackend.Options{
+			Name:      backendName,
+			Endpoint:  endpoint,
+			APIKeyEnv: apiKeyEnv,
+			Model:     model,
+			Timeout:   timeout,
+			Write:     writeFile,
+		}); runErr != nil {
+			return runErr
+		}
+		if len(args) == 1 && i18n.Fold(args[0]) == cfgHook.ToolOpenCode {
+			if writeFile {
+				providerErr := coreOpenCode.EnsureProviderConfig(
+					cmd,
+					backendName,
+					coreBackend.ResolveEndpoint(backendName, endpoint),
+				)
+				if providerErr != nil {
+					return providerErr
+				}
+			}
+		}
+		if len(args) == 0 {
+			return nil
+		}
+	}
 	tool := i18n.Fold(args[0])
 
 	switch tool {

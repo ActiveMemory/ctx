@@ -10,6 +10,8 @@ package cmd
 const (
 	// UseAgent is the cobra Use string for the agent command.
 	UseAgent = "agent"
+	// UseAI is the cobra Use string for the ai command.
+	UseAI = "ai"
 	// UseChange is the cobra Use string for the change command.
 	UseChange = "change"
 	// UseCompact is the cobra Use string for the compact command.
@@ -64,12 +66,22 @@ const (
 	UseWatch = "watch"
 	// UseWhy is the cobra Use string for the why command.
 	UseWhy = "why [DOCUMENT]"
+	// UseAIPing is the cobra Use string for the ai ping command.
+	UseAIPing = "ping"
+	// UseAIPropose is the cobra Use string for the ai propose command.
+	UseAIPropose = "propose <input>"
 )
 
 // DescKeys for base commands.
 const (
 	// DescKeyAgent is the description key for the agent command.
 	DescKeyAgent = "agent"
+	// DescKeyAI is the description key for the ai command.
+	DescKeyAI = "ai"
+	// DescKeyAIPing is the description key for the ai ping command.
+	DescKeyAIPing = "ai.ping"
+	// DescKeyAIPropose is the description key for the ai propose command.
+	DescKeyAIPropose = "ai.propose"
 	// DescKeyChange is the description key for the change command.
 	DescKeyChange = "change"
 	// DescKeyCompact is the description key for the compact command.

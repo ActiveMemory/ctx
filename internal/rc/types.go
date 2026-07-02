@@ -6,7 +6,14 @@
 
 package rc
 
-import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
+import (
+	"fmt"
+
+	"gopkg.in/yaml.v3"
+
+	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
+	cfgRC "github.com/ActiveMemory/ctx/internal/config/rc"
+)
 
 // CtxRC represents the configuration from the .ctxrc file.
 //
@@ -62,6 +69,7 @@ import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 //     English list to keep applying.
 //   - Tool: Active AI tool identifier (e.g., claude,
 //     cursor, cline, kiro, codex)
+//   - Backends: Optional AI backend definitions for ctx ai commands
 //   - Steering: Steering layer configuration overrides
 //   - Hooks: Hook system configuration overrides
 //   - ProvenanceRequired: Per-project relaxation of
@@ -93,10 +101,94 @@ type CtxRC struct {
 	SpecNudgeMinLen     int                      `yaml:"spec_nudge_min_len"`
 	Placeholders        []string                 `yaml:"placeholders"`
 	Notify              *NotifyConfig            `yaml:"notify"`
+	Backends            BackendsRC               `yaml:"backends"`
 	Steering            *SteeringRC              `yaml:"steering"`
 	Hooks               *HooksRC                 `yaml:"hooks"`
 	ProvenanceRequired  *ProvenanceConfig        `yaml:"provenance_required"`
 	Dream               *DreamRC                 `yaml:"dream"`
+}
+
+// BackendsRC holds optional AI backend configuration from .ctxrc.
+//
+// Fields:
+//   - Default: optional backend selected when a ctx ai command does not pass
+//     --backend
+//   - Configs: named backend definitions keyed by backend name
+type BackendsRC struct {
+	Default string               `yaml:"default"`
+	Configs map[string]BackendRC `yaml:",inline"`
+}
+
+// UnmarshalYAML decodes the mixed backends mapping shape.
+//
+// Parameters:
+//   - value: YAML node for the backends value
+//
+// Returns:
+//   - error: decode failure, or nil when valid YAML shape was decoded
+func (backends *BackendsRC) UnmarshalYAML(value *yaml.Node) error {
+	if value.Kind != yaml.MappingNode {
+		return &yaml.TypeError{Errors: []string{cfgRC.ErrBackendsMapping}}
+	}
+
+	backends.Configs = make(map[string]BackendRC)
+	for idx := 0; idx < len(value.Content); idx += 2 {
+		key := value.Content[idx]
+		val := value.Content[idx+1]
+		if key.Value == cfgRC.BackendDefaultKey {
+			if val.Kind != yaml.ScalarNode {
+				return &yaml.TypeError{Errors: []string{cfgRC.ErrBackendsDefaultScalar}}
+			}
+			backends.Default = val.Value
+			continue
+		}
+
+		if val.Kind != yaml.MappingNode {
+			return &yaml.TypeError{Errors: []string{cfgRC.ErrBackendsMapping}}
+		}
+
+		backend := BackendRC{}
+		for backendIdx := 0; backendIdx < len(val.Content); backendIdx += 2 {
+			backendKey := val.Content[backendIdx].Value
+			backendVal := val.Content[backendIdx+1].Value
+			switch backendKey {
+			case cfgRC.BackendTypeKey:
+				backend.Type = backendVal
+			case cfgRC.BackendEndpointKey:
+				backend.Endpoint = backendVal
+			case cfgRC.BackendAPIKeyEnvKey:
+				backend.APIKeyEnv = backendVal
+			case cfgRC.BackendTimeoutKey:
+				backend.Timeout = backendVal
+			case cfgRC.BackendDefaultModelKey:
+				backend.DefaultModel = backendVal
+			default:
+				return &yaml.TypeError{Errors: []string{
+					fmt.Sprintf(cfgRC.ErrBackendsUnknownField, key.Value, backendKey),
+				}}
+			}
+		}
+		backends.Configs[key.Value] = backend
+	}
+
+	return nil
+}
+
+// BackendRC holds one named AI backend definition from .ctxrc.
+//
+// Fields:
+//   - Type: optional registered implementation type when it differs from the
+//     backend name
+//   - Endpoint: OpenAI-compatible HTTP endpoint URL
+//   - APIKeyEnv: optional environment variable name containing credentials
+//   - Timeout: optional request timeout duration string
+//   - DefaultModel: optional model selected by default for this backend
+type BackendRC struct {
+	Type         string `yaml:"type"`
+	Endpoint     string `yaml:"endpoint"`
+	APIKeyEnv    string `yaml:"api_key_env"`
+	Timeout      string `yaml:"timeout"`
+	DefaultModel string `yaml:"default_model"`
 }
 
 // DreamRC holds the ctx-dream configuration from .ctxrc. The dream is

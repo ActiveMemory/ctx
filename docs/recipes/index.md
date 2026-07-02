@@ -30,6 +30,15 @@ Aider, Copilot, or Windsurf. Includes **shell completion**,
 
 ---
 
+### [Local Inference with vLLM](local-inference-with-vllm.md)
+
+Configure a local OpenAI-compatible vLLM server for optional `ctx ai` ping and
+proposal commands without making deterministic ctx commands depend on AI.
+
+**Uses**: `ctx setup --backend`, `ctx ai ping`, `ctx ai propose`
+
+---
+
 ### [Multilingual Session Parsing](multilingual-sessions.md)
 
 Parse session journal entries written in **other languages**.
@@ -543,4 +552,3 @@ stepdown, and the Raft-lite durability caveat.
 
 **Uses**: `ctx hub start --peers`, `ctx hub status`,
 `ctx hub peer add/remove`, `ctx hub stepdown`
-

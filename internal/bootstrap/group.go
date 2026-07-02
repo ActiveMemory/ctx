@@ -8,6 +8,7 @@ package bootstrap
 
 import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
+	"github.com/ActiveMemory/ctx/internal/cli/ai"
 	"github.com/ActiveMemory/ctx/internal/cli/change"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
@@ -151,6 +152,7 @@ func runtimeCmds() []registration {
 //     connect, mcp, watch, and loop commands
 func integrations() []registration {
 	return []registration{
+		{ai.Cmd, embedCmd.GroupIntegration},
 		{setup.Cmd, embedCmd.GroupIntegration},
 		{steering.Cmd, embedCmd.GroupIntegration},
 		{trigger.Cmd, embedCmd.GroupIntegration},

@@ -48,8 +48,10 @@ func load() *CtxRC {
 	case pathErr == nil:
 		data, readErr := ctxIo.SafeReadUserFile(rcPath)
 		if readErr == nil {
-			if yamlErr := yaml.Unmarshal(data, cfg); yamlErr != nil {
+			if _, yamlErr := Validate(data); yamlErr != nil {
 				writeRC.ParseWarning(rcPath, yamlErr)
+			} else if decodeErr := yaml.Unmarshal(data, cfg); decodeErr != nil {
+				writeRC.ParseWarning(rcPath, decodeErr)
 			}
 		}
 	case errors.Is(pathErr, errCtx.ErrNoCtxHere):

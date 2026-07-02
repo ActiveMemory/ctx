@@ -87,6 +87,7 @@ have been initialized by `ctx init` (otherwise commands return
 
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
+| [`ctx ai`](ai.md#ctx-ai)                      | Optional AI backend ping and proposal commands           |
 | [`ctx setup`](setup.md#ctx-setup)             | Generate AI tool integration configs                     |
 | [`ctx steering`](steering.md#ctx-steering)    | Manage steering files (behavioral rules for AI tools)    |
 | [`ctx trigger`](trigger.md#ctx-trigger)       | Manage lifecycle triggers (scripts for automation)       |
@@ -198,6 +199,15 @@ dream:                       # ctx-dream config (opt-in; off by default)
   budget: 40                 # Step/token ceiling per pass
   model: ""                  # Executor model ("" = session default)
   executor: ""               # Executor command ("" = claude -p reference)
+backends:                     # Optional ctx ai backend definitions
+  default: vllm               # Used when --backend is omitted
+  vllm:
+    endpoint: http://localhost:8000
+    timeout: 30s
+    default_model: Qwen/Qwen2.5-Coder-7B-Instruct
+  openai:
+    api_key_env: OPENAI_API_KEY
+    default_model: gpt-4.1-mini
 ```
 
 | Field                   | Type       | Default        | Description                                                                                                    |
@@ -226,6 +236,13 @@ dream:                       # ctx-dream config (opt-in; off by default)
 | `hooks.dir`             | `string`   | `.context/hooks` | Hook scripts directory                                                                                      |
 | `hooks.timeout`         | `int`      | `10`           | Per-hook execution timeout in seconds                                                                          |
 | `hooks.enabled`         | `bool`     | `true`         | Whether hook execution is enabled                                                                              |
+| `backends`              | `object`   | *(none)*       | Optional backend definitions for `ctx ai` commands                                                             |
+| `backends.default`      | `string`   | *(empty)*      | Backend selected when `ctx ai` omits `--backend`                                                               |
+| `type`                  | `string`   | backend name   | Backend implementation when a named entry should use a different implementation                                |
+| `endpoint`              | `string`   | backend default| OpenAI-compatible endpoint URL                                                                                 |
+| `api_key_env`           | `string`   | backend default| Environment variable containing the API key                                                                    |
+| `timeout`               | `string`   | `30s`          | Backend request timeout duration                                                                               |
+| `default_model`         | `string`   | *(empty)*      | Model used when an AI request omits a model                                                                    |
 
 **Priority order:** CLI flags > Environment variables > `.ctxrc` > Defaults
 
