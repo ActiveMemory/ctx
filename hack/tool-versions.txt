@@ -1,0 +1,33 @@
+# Tooling dependency manifest — read by hack/check-tools.sh.
+#
+# Columns (whitespace-separated):
+#   name         tool name; bin: command on PATH, npm: package name,
+#                mcp: server name as registered with `claude mcp add`
+#   type         bin | npm | mcp
+#   requirement  required | optional  (required failures fail the check)
+#   min          minimum version, or "-" for presence-only
+#
+# Version minimums live here so bumps are one-line diffs.
+
+# Build / lint core — the check fails without these.
+go               bin   required   1.26
+git              bin   required   -
+golangci-lint    bin   required   -
+
+# Node toolchain — GitNexus and npx-launched MCP servers need it.
+node             bin   optional   20
+npm              bin   optional   -
+
+# Site builds (make site / ctx journal).
+pipx             bin   optional   -
+zensical         bin   optional   -
+
+# Makefile plumbing (sync-version).
+jq               bin   optional   -
+
+# AI tooling.
+claude           bin   optional   -
+gitnexus         npm   optional   -
+gitnexus         mcp   optional   -
+gemini-search    mcp   optional   -
+# firecrawl      mcp   optional   -   (enable when FireCrawl MCP is adopted)
