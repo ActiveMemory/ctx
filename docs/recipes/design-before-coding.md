@@ -23,22 +23,25 @@ the next session has no idea why things are shaped this way.
 ```text
 /ctx-brainstorm          # explore the design space
 /ctx-spec                # write the spec document
-/ctx-task-add            # break it into tasks
+/ctx-task-out            # decompose into a milestone plan
 /ctx-implement           # execute step-by-step
 ```
 
 Four skills, used in sequence. Each produces an artifact that feeds
-the next.
+the next. For specs small enough to implement in one session, the
+spec doubles as the plan: skip `/ctx-task-out` and break the work
+into TASKS.md entries with `/ctx-task-add` instead.
 
 ## Commands and Skills Used
 
-| Tool                | Type  | Purpose                                         |
-|---------------------|-------|-------------------------------------------------|
-| `/ctx-brainstorm`   | Skill | Structured design dialogue: explore approaches  |
-| `/ctx-spec`         | Skill | Scaffold and fill out a spec from the template  |
-| `/ctx-task-add`     | Skill | Add implementation tasks to TASKS.md            |
-| `/ctx-implement`    | Skill | Execute a plan step-by-step with verification   |
-| `/ctx-decision-add` | Skill | Record design choices made during brainstorming |
+| Tool                | Type  | Purpose                                            |
+|---------------------|-------|----------------------------------------------------|
+| `/ctx-brainstorm`   | Skill | Structured design dialogue: explore approaches     |
+| `/ctx-spec`         | Skill | Scaffold and fill out a spec from the template     |
+| `/ctx-task-out`     | Skill | Decompose a spec into `specs/plans/<milestone>.md` |
+| `/ctx-task-add`     | Skill | Add implementation tasks to TASKS.md               |
+| `/ctx-implement`    | Skill | Execute a plan step-by-step with verification      |
+| `/ctx-decision-add` | Skill | Record design choices made during brainstorming    |
 
 ## The Workflow
 
@@ -109,9 +112,10 @@ and won't accept "none" without a challenge.
 Sections that don't apply can be skipped. The result is a complete spec
 at `specs/{feature-name}.md`.
 
-### Step 3: Break into Tasks
+### Step 3: Task Out the Work
 
-After the spec is written, the skill offers to create tasks:
+After the spec is written, the skill routes by size. A small,
+single-session spec gets tasks in TASKS.md directly:
 
 ```text
 Agent: "Spec written to specs/rss-feed.md. Want me to break this
@@ -133,11 +137,37 @@ Each task is independently completable and references the spec via
 You can also invoke `/ctx-task-add` directly at any point to add
 individual tasks.
 
+A spec that spans multiple milestones (or more than about one
+session of implementation) gets `/ctx-task-out` instead:
+
+```text
+You: /ctx-task-out --spec specs/v1-substrate.md --milestone m0a
+
+Agent: "Open questions check: D-001 (language choice) is blocking
+  for m0a — three tasks would embed an assumption about its
+  answer. Resolve it before I decompose."
+
+You: [resolves D-001 in the spec]
+
+Agent: [writes specs/plans/m0a.md: data model, contracts, test
+  matrix, 24 tasks with falsifiable acceptance criteria]
+       "Plan written. TASKS.md gained 4 epic anchors, each
+       annotated Plan: specs/plans/m0a.md."
+```
+
+The plan document owns the fine-grained tasks; TASKS.md carries
+epic-level anchors only. Two hard gates apply: decomposition
+refuses to run past a blocking open question in the spec, and
+milestone N+1 is not tasked out while milestone N's definition of
+done is unmet.
+
 ### Step 4: Implement Step-by-Step
 
-Pick up tasks with `/ctx-implement`. The skill loads the spec, breaks
-work into atomic steps, and checkpoints after every 3-5 steps with
-a build and test verification:
+Pick up the work with `/ctx-implement`. The skill loads the plan —
+`specs/plans/<milestone>.md` when `/ctx-task-out` produced one, the
+spec itself for small features — breaks it into atomic steps, and
+checkpoints after every 3-5 steps with a build and test
+verification:
 
 ```text
 You: /ctx-implement (specs/rss-feed.md)
@@ -164,7 +194,7 @@ Not every feature needs all four steps. Use your judgment:
 |----------------------------------------|--------------------|
 | Vague idea, multiple valid approaches  | Step 1: Brainstorm |
 | Clear approach, need to document it    | Step 2: Spec       |
-| Spec already exists, need to plan work | Step 3: Tasks      |
+| Spec already exists, need to plan work | Step 3: Task out   |
 | Tasks exist, ready to code             | Step 4: Implement  |
 
 A brainstorm without a spec is fine for small decisions. A spec without
@@ -180,6 +210,7 @@ You don't need skill names. Natural language works:
 | "Let's think through this feature" | `/ctx-brainstorm`    |
 | "Spec this out"                    | `/ctx-spec`          |
 | "Write a design doc for..."        | `/ctx-spec`          |
+| "Task this out"                    | `/ctx-task-out`      |
 | "Break this into tasks"            | `/ctx-task-add`      |
 | "Implement the spec"               | `/ctx-implement`     |
 | "Let's design before we build"     | Starts at brainstorm |
@@ -209,8 +240,12 @@ You don't need skill names. Natural language works:
   structured design dialogue
 * [Skills Reference: /ctx-spec](../reference/skills.md#ctx-spec):
   spec scaffolding from template
+* [Skills Reference: /ctx-task-out](../reference/skills.md#ctx-task-out):
+  spec decomposition into a per-milestone plan
 * [Skills Reference: /ctx-implement](../reference/skills.md#ctx-implement):
   step-by-step execution with verification
+* [Scrutinizing a Plan](scrutinizing-a-plan.md): the adversarial
+  interview that belongs between brainstorm and spec
 * [Tracking Work Across Sessions](task-management.md): task lifecycle
   and archival
 * [Importing Claude Code Plans](import-plans.md): turning ephemeral plans

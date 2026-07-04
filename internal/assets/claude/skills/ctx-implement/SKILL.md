@@ -1,14 +1,17 @@
 ---
 name: ctx-implement
-description: "Execute a plan step-by-step with verification. Use when you have a plan document and need disciplined, checkpointed implementation."
+description: "Execute a plan step-by-step with verification. Use when you have a plan document — canonically specs/plans/<milestone>.md from /ctx-task-out — and need disciplined, checkpointed implementation."
 ---
 
-Take a plan (inline text, file path, or from the conversation)
-and execute it step-by-step with build/test verification between
-steps.
+Take a plan — canonically `specs/plans/<milestone>.md` as written
+by `/ctx-task-out`, though inline text, another file path, or a
+plan from the conversation also work — and execute it
+step-by-step with build/test verification between steps.
 
 ## When to Use
 
+- After `/ctx-task-out` has decomposed a spec into
+  `specs/plans/<milestone>.md` (the canonical input)
 - When the user provides a plan document or file and says
   "implement this"
 - When a multi-step task has been planned and needs disciplined
@@ -20,6 +23,9 @@ steps.
 ## When NOT to Use
 
 - For single-step tasks: just do them directly
+- When handed a bare multi-milestone spec instead of a plan:
+  suggest `/ctx-task-out --spec <path> --milestone <first>`
+  first; decomposing on the fly is what it exists to prevent
 - When the plan is vague or incomplete: use `/ctx-brainstorm`
   first to refine it
 - When the user wants to explore or discuss, not execute
@@ -29,6 +35,7 @@ steps.
 
 ```text
 /ctx-implement
+/ctx-implement specs/plans/m0a.md
 /ctx-implement path/to/plan.md
 /ctx-implement (the plan from our discussion above)
 ```
@@ -38,6 +45,14 @@ steps.
 ### 1. Load the plan
 
 - If a file path is provided, read it
+- If the file is a multi-milestone spec rather than a plan (no
+  task breakdown, no acceptance criteria, spans milestones),
+  redirect: suggest `/ctx-task-out --spec <path> --milestone
+  <first>` and stop rather than improvising a decomposition
+- If the plan's header shows `Status: Blocked`, stop: a
+  deferrable TBD graduated to blocking mid-milestone. Route its
+  resolution (a spec edit or DECISIONS.md entry) and a
+  `/ctx-task-out` amendment run before executing further tasks
 - If inline text is provided, use it directly
 - If neither, look back in the conversation for the most
   recent plan or approved design
@@ -85,6 +100,11 @@ Verify after every individual step before proceeding to the next.
 
 After every 3-5 steps (or after a significant milestone):
 - Summarize what has been completed
+- If executing `specs/plans/<milestone>.md`, check off completed
+  tasks and DoD items in the plan document — it is the execution
+  ledger that `/ctx-task-out`'s rolling-wave gate reads. Never
+  edit a task's acceptance criterion in place; a criterion
+  change goes back through `/ctx-task-out` (amendment mode)
 - Note any deviations from the plan
 - Ask the user if they want to continue, adjust, or stop
 
