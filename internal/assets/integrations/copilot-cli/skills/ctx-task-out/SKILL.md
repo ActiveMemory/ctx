@@ -115,7 +115,8 @@ do not mint sub-milestones here.
    marking `TBD` over inventing — same authority discipline as
    `/ctx-spec --brief`.
 4. Break down tasks: typically 15–40 per milestone. Each task
-   carries: id, title, dependencies (by id), the files/paths it
+   carries: id, a state cell (`st`, initialized `[ ]` — see the
+   ledger rule below), title, dependencies (by id), the files/paths it
    is expected to touch, a `[P]` marker when
    parallelizable with its siblings, a **falsifiable acceptance
    criterion** (a command to run, a test that must pass, an
@@ -136,7 +137,15 @@ do not mint sub-milestones here.
 6. Write `specs/plans/<milestone>.md` (create `specs/plans/` if
    absent).
 7. Sync anchors to TASKS.md: **epic-level anchors only** — one per
-   task cluster, each annotated `Plan: specs/plans/<milestone>.md`.
+   task cluster, each annotated `Plan: specs/plans/<milestone>.md`
+   with its task-id range. The clusters must **partition** the
+   plan's task ids: every id in exactly one epic, and the range
+   sizes must sum to the task count — state the arithmetic in the
+   plan; double-counted ids make the two surfaces irreconcilable.
+   State the completion rule where the anchors live: an epic is
+   checked `[x]` only when every task in its range is `[x]` or
+   `[o]` in the plan — the plan is the single source of truth for
+   milestone progress, TASKS.md epics are projections of it.
    One-way sync, plan → TASKS.md. Never duplicate the full task
    list into TASKS.md; never move or delete existing entries
    (CONSTITUTION).
@@ -155,15 +164,19 @@ do not mint sub-milestones here.
 ## Data model & storage (DDL, migrations, indexes)
 ## Contracts            (API signatures, schemas, CLI surface)
 ## Test matrix          (invariant × violation attempt × expected failure × task ref)
-## Task breakdown       (table: id · task · deps · files · [P] · acceptance criterion · spec ref)
+## Task breakdown       (table: id · st · task · deps · files · [P] · acceptance criterion · spec ref)
 ## Risks & measurement gates  (results that may reshape later tasks)
 ## Out of scope         (deferred to later milestones, with pointers)
 ## Amendments           (date · what · why — appended by amendment runs)
 ```
 
-The plan is the **execution ledger**: the task table carries
-per-task checkbox state, Scope & DoD carries the DoD checkboxes,
-and `/ctx-implement` updates both as it executes. DoD is
+The plan is the **execution ledger**: the task table's `st`
+column carries per-task state — `[ ]` pending, `[x]` done
+(acceptance criterion demonstrably passed), `[o]` obsoleted by
+amendment — Scope & DoD carries the DoD checkboxes, and
+`/ctx-implement` updates both as it executes. A task table
+without the `st` column is not a ledger: completion becomes
+unrecordable and the milestone unauditable. DoD is
 confirmed by measurement or by the user — never derived from
 task completion — and the rolling-wave gate reads the DoD
 checkboxes only. No other record of milestone progress exists.
@@ -176,8 +189,8 @@ deferrable TBD that graduated to blocking mid-milestone.
 Plans meet reality; the plan document owns that contact. When a
 measurement gate fires or the implementer hits a wall:
 
-- Tasks may be marked `obsolete` with a one-line reason; never
-  deleted.
+- Tasks may be marked obsolete (`st` → `[o]`) with a one-line
+  reason; never deleted.
 - New tasks are appended with fresh ids; ids are never reused.
 - An acceptance criterion is **never edited in place** once its
   task has started — weakening the test until it passes is the
@@ -204,7 +217,12 @@ Before writing the file, verify:
 - [ ] Task ids admit a topological order — verify by listing
       execution waves; `[P]` siblings share no files, edges, or
       sequences
+- [ ] Every task row has an `st` cell initialized `[ ]` — a
+      stateless table cannot be marked off or audited
 - [ ] TASKS.md gained anchors only — nothing moved, nothing deleted
+- [ ] Epic anchors partition the task ids (each id in exactly one
+      epic; range sizes sum to the task count) and the completion
+      rule is stated alongside them
 - [ ] The plan is implementable-alone: a fresh agent holding only
       the plan and the spec can state the acceptance check for
       any task without asking a question
