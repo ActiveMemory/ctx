@@ -41,7 +41,7 @@ ctx hub start --data-dir /srv/ctx-hub   # Custom data directory
 
 On first run, generates an **admin token** and prints it to
 stdout. Save this token; it's required for
-[`ctx connection register`](connection.md#ctx-connect-register) in
+[`ctx connection register`](connection.md#ctx-connection-register) in
 client projects. Subsequent runs reuse the stored token from
 `<data-dir>/admin.token`.
 

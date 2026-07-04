@@ -7,7 +7,7 @@ allowed-tools: Read, Edit, Write, Glob, Grep
 # Write an intent spec from a debrief — experimental
 
 > **Experimental / discardable.** ctx-native port of an external
-> `anchor-spec` skill. It deliberately writes a **loose intent spec** in
+> intent-spec skill. It deliberately writes a **loose intent spec** in
 > a ctx-namespaced location (`.context/specs/`), separate from
 > spec-kit's repo-root `specs/<NNN-slug>/`, so the two trees never
 > collide. This differs from canonical `/ctx-spec`, which walks the full

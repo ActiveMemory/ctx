@@ -54,8 +54,8 @@ have been initialized by `ctx init` (otherwise commands return
 
 | Command                                       | Description                                              |
 |-----------------------------------------------|----------------------------------------------------------|
-| [`ctx load`](context.md#ctx-load)             | Output assembled context in read order                   |
-| [`ctx agent`](context.md#ctx-agent)           | Print token-budgeted context packet for AI consumption   |
+| [`ctx load`](init-status.md#ctx-load)         | Output assembled context in read order                   |
+| [`ctx agent`](init-status.md#ctx-agent)       | Print token-budgeted context packet for AI consumption   |
 | [`ctx sync`](context.md#ctx-sync)             | Reconcile context with codebase state                    |
 | [`ctx drift`](context.md#ctx-drift)           | Detect stale paths, secrets, missing files               |
 | [`ctx compact`](context.md#ctx-compact)       | Archive completed tasks, clean up files                  |
@@ -63,7 +63,7 @@ have been initialized by `ctx init` (otherwise commands return
 | [`ctx task`](context.md#ctx-task)             | Add tasks, mark complete, archive, snapshot              |
 | [`ctx decision`](context.md#ctx-decision)     | Add decisions and reindex `DECISIONS.md`                 |
 | [`ctx learning`](context.md#ctx-learning)     | Add learnings and reindex `LEARNINGS.md`                 |
-| [`ctx convention`](context.md#ctx-convention) | Add conventions to `CONVENTIONS.md`                      |
+| [`ctx convention`](context.md#adding-entries) | Add conventions to `CONVENTIONS.md`                      |
 | [`ctx reindex`](context.md#ctx-reindex)       | Regenerate indices for `DECISIONS.md` and `LEARNINGS.md` |
 | [`ctx permission`](context.md#ctx-permission) | Permission snapshots (golden image)                      |
 | [`ctx change`](change.md#ctx-change)          | Show what changed since last session                     |
@@ -94,7 +94,7 @@ have been initialized by `ctx init` (otherwise commands return
 | [`ctx mcp`](mcp.md#ctx-mcp)                   | MCP server for AI tool integration (stdin/stdout)        |
 | [`ctx hook notify`](notify.md)                | Webhook notifications (setup, test, send)                |
 | [`ctx loop`](loop.md#ctx-loop)                | Generate autonomous loop script                          |
-| [`ctx connection`](connection.md#ctx-connection) | Client-side commands for connecting to a `ctx` Hub    |
+| [`ctx connection`](connection.md)             | Client-side commands for connecting to a `ctx` Hub      |
 | [`ctx hub`](hub.md#ctx-hub)                   | Operate a `ctx` Hub server or cluster                    |
 | [`ctx serve`](serve.md#ctx-serve)             | Serve a static site locally via zensical                 |
 | [`ctx site`](site.md#ctx-site)                | Site management (feed generation)                        |

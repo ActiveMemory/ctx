@@ -231,9 +231,9 @@ Cross-references:
   Closeout / handover writers and evidence-index SHA-pinning all
   assume git; once this spec ships, those writers don't need a
   `commit:none` fallback.
-- `ideas/001-sibling-project-undercover-analysis.md` — sibling
-  ships the `git`-required assumption verbatim ("anchor expects
-  `.git/` and `.anchor/` to live as siblings at the project
-  root").
+- `ideas/001-sibling-project-undercover-analysis.md` — the
+  surveyed sibling ships the `git`-required assumption verbatim
+  (its context dir and `.git/` live as siblings at the project
+  root).
 - `ideas/003-editorial-pipeline-debated-brief.md` — handover
   Provenance auto-recorded from `git HEAD`.

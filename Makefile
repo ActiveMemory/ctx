@@ -5,7 +5,7 @@
 .PHONY: build ctxctl test vet fmt fmt-context lint lint-style lint-drift lint-shellcheck lint-powershell \
 clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
-journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall \
+journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall check-tools \
 sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills sync-steering check-steering gemini-search \
 gitnexus-version gitnexus-update install-ctxctl reinstall-ctxctl
 
@@ -275,6 +275,10 @@ gpg-fix:
 ## gpg-test: Test GPG signing configuration
 gpg-test:
 	./hack/gpg-fix.sh --test
+
+## check-tools: Verify tooling dependency versions (Go, Node, GitNexus, MCP servers, ...)
+check-tools:
+	@./hack/check-tools.sh
 
 ## register-mcp: Register all MCP servers (gemini-search, gitnexus) with Claude Code
 register-mcp:

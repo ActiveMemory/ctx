@@ -34,6 +34,18 @@ const (
 	// DescKeyWriteInitFileExistsNoCtx is the text key for write init file exists
 	// no ctx messages.
 	DescKeyWriteInitFileExistsNoCtx = "write.init-file-exists-no-ctx"
+	// DescKeyWriteInitStatuslineDeployed is the text key for write init
+	// statusline deployed messages.
+	DescKeyWriteInitStatuslineDeployed = "write.init-statusline-deployed"
+	// DescKeyWriteInitStatuslineBackedUp is the text key for write init
+	// statusline backed up messages.
+	DescKeyWriteInitStatuslineBackedUp = "write.init-statusline-backed-up"
+	// DescKeyWriteInitStatuslineRestored is the text key for write init
+	// statusline restored messages.
+	DescKeyWriteInitStatuslineRestored = "write.init-statusline-restored"
+	// DescKeyWriteInitStatuslineRemoved is the text key for write init
+	// statusline removed messages.
+	DescKeyWriteInitStatuslineRemoved = "write.init-statusline-removed"
 )
 
 // DescKeys for init gitignore output.
@@ -263,6 +275,9 @@ const (
 	// DescKeyInitLabelPermissions is the text key for init label permissions
 	// messages.
 	DescKeyInitLabelPermissions = "init.label-permissions"
+	// DescKeyInitLabelStatusline is the text key for init label statusline
+	// messages.
+	DescKeyInitLabelStatusline = "init.label-statusline"
 	// DescKeyInitLabelPluginEnable is the text key for init label plugin enable
 	// messages.
 	DescKeyInitLabelPluginEnable = "init.label-plugin-enable"

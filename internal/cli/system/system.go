@@ -36,6 +36,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resume"
 	sessEvent "github.com/ActiveMemory/ctx/internal/cli/system/cmd/sessionevent"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/specsnudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/statusline"
 	"github.com/ActiveMemory/ctx/internal/cli/unknown"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 )
@@ -82,6 +83,7 @@ func Cmd() *cobra.Command {
 		resume.Cmd(),
 		sessEvent.Cmd(),
 		specsnudge.Cmd(),
+		statusline.Cmd(),
 	)
 	// An unknown `ctx system <verb>` must fail loud — emit a verbatim
 	// relay and exit non-zero — instead of dumping help at exit 0,
