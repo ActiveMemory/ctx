@@ -355,11 +355,11 @@ optionally create tasks referencing each imported spec.
 ### [Design Before Coding](design-before-coding.md)
 
 Front-load design with a four-skill chain: **brainstorm** the approach,
-**spec** the design, **task** the work, **implement** step-by-step.
+**spec** the design, **task out** the work, **implement** step-by-step.
 Each step produces an artifact that feeds the next.
 
-**Uses**: `/ctx-brainstorm`, `/ctx-spec`, `/ctx-task-add`,
-`/ctx-implement`, `/ctx-decision-add`
+**Uses**: `/ctx-brainstorm`, `/ctx-spec`, `/ctx-task-out`,
+`/ctx-task-add`, `/ctx-implement`, `/ctx-decision-add`
 
 ---
 

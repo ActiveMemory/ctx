@@ -40,6 +40,21 @@ func TestModelContextWindow(t *testing.T) {
 			want:  rc.DefaultContextWindow,
 		},
 		{
+			name:  "claude fable is always 1M",
+			model: "claude-fable-5",
+			want:  claude.ContextWindow1M,
+		},
+		{
+			name:  "claude mythos is always 1M",
+			model: "claude-mythos-5",
+			want:  claude.ContextWindow1M,
+		},
+		{
+			name:  "claude sonnet 5 is 1M as standard",
+			model: "claude-sonnet-5",
+			want:  claude.ContextWindow1M,
+		},
+		{
 			name:  "claude with 1m suffix",
 			model: "claude-opus-4-6[1m]",
 			want:  claude.ContextWindow1M,
