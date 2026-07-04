@@ -222,11 +222,16 @@ func ModelContextWindow(model string) int {
 
 	lower := i18n.Fold(model)
 
-	// 1M models: explicit [1m] suffix OR Opus 4.6+ (always 1M).
+	// 1M models: explicit [1m] suffix OR families that are always 1M
+	// (Opus 4.6+, Sonnet 5+, and the Claude 5 Mythos-class:
+	// Fable/Mythos).
 	if strings.Contains(lower, claude.ModelSuffix1M) {
 		return claude.ContextWindow1M
 	}
-	if strings.Contains(lower, claude.ModelOpus) {
+	if strings.Contains(lower, claude.ModelOpus) ||
+		strings.Contains(lower, claude.ModelFable) ||
+		strings.Contains(lower, claude.ModelMythos) ||
+		strings.Contains(lower, claude.ModelSonnet5) {
 		return claude.ContextWindow1M
 	}
 

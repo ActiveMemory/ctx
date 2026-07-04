@@ -22,6 +22,10 @@
 //     context window.
 //   - [ModelOpus] detects Opus-family models, which
 //     always have 1M context.
+//   - [ModelFable] and [ModelMythos] detect the Claude 5
+//     Mythos-class families, which always have 1M context.
+//   - [ModelSonnet5] detects Sonnet 5+, which carries a 1M
+//     window as standard.
 //   - [ContextWindow1M] is the numeric window size used
 //     for budget calculations.
 //
