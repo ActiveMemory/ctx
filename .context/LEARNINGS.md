@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-07-04 | Typed JSON round-trips silently drop user-owned keys |
 | 2026-07-03 | New Claude model families silently fall to the 200k default in ModelContextWindow |
 | 2026-06-07 | Pin an on-disk contract before splitting work across parallel agents |
 | 2026-06-07 | site/ is tracked build output — rebuild and bundle it with doc commits |
@@ -105,6 +106,16 @@ DO NOT UPDATE FOR:
 | 2026-04-26 | ctx system help can list project-local hooks not in the Go binary |
 | 2026-04-25 | Confident code comments can pull an LLM away from first-principles knowledge |
 <!-- INDEX:END -->
+
+---
+
+## [2026-07-04-152957] Typed JSON round-trips silently drop user-owned keys
+
+**Context**: The init permissions merge read settings.local.json into a typed struct and re-marshaled it, so every key ctx does not model (env, a user's statusLine) vanished on re-init
+
+**Lesson**: A typed read-modify-write of a file users also edit by hand is silent data loss; unknown fields do not survive encoding/json round-trips
+
+**Application**: Mutate shared JSON via raw-map surgery (map[string]json.RawMessage), rewriting only the keys ctx owns; see internal/cli/initialize/core/merge/settings.go
 
 ---
 
