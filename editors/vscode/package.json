@@ -92,12 +92,16 @@
             "description": "Reconcile context with codebase"
           },
           {
-            "name": "task",
-            "description": "Task operations: complete, archive, snapshot"
+            "name": "complete",
+            "description": "Mark a task complete by number or description"
           },
           {
             "name": "remind",
             "description": "Manage session-scoped reminders"
+          },
+          {
+            "name": "tasks",
+            "description": "Task operations: complete, archive, snapshot"
           },
           {
             "name": "pad",
@@ -112,52 +116,72 @@
             "description": "System diagnostics and bootstrap"
           },
           {
-            "name": "memory",
-            "description": "Memory bridge operations (sync, status, diff, import, publish)"
+            "name": "wrapup",
+            "description": "End-of-session wrap-up: capture learnings, decisions, and tasks"
           },
           {
-            "name": "journal",
-            "description": "Journal management (site, obsidian)"
+            "name": "remember",
+            "description": "Recall project context and present a structured readback"
           },
           {
-            "name": "doctor",
-            "description": "Context health diagnostics"
+            "name": "next",
+            "description": "Suggest what to work on next"
           },
           {
-            "name": "config",
-            "description": "Runtime configuration (switch, status, schema)"
+            "name": "brainstorm",
+            "description": "Design before implementation: turn a vague idea into a validated design"
+          },
+          {
+            "name": "reflect",
+            "description": "Reflect on session progress at a natural breakpoint"
+          },
+          {
+            "name": "spec",
+            "description": "Scaffold a feature spec from the project template"
+          },
+          {
+            "name": "implement",
+            "description": "Execute a plan step-by-step with verification"
+          },
+          {
+            "name": "verify",
+            "description": "Verify a change does what it should by exercising it end-to-end"
+          },
+          {
+            "name": "map",
+            "description": "Build and maintain architecture maps (ARCHITECTURE.md)"
           },
           {
             "name": "prompt",
             "description": "Prompt templates (list, add, show, rm)"
           },
           {
-            "name": "why",
-            "description": "Show rationale for context design decisions"
+            "name": "blog",
+            "description": "Generate a blog post draft from project progress"
           },
           {
-            "name": "change",
-            "description": "Show recent codebase changes"
+            "name": "changelog",
+            "description": "Generate a themed blog post from commits between releases"
           },
           {
-            "name": "dep",
-            "description": "Show project dependencies"
+            "name": "check-links",
+            "description": "Audit docs for dead links"
           },
           {
-            "name": "guide",
-            "description": "Quick start guide"
+            "name": "journal",
+            "description": "Journal management (site, obsidian)"
           },
           {
-            "name": "permission",
-            "description": "Permission snapshot and restore"
+            "name": "consolidate",
+            "description": "Consolidate redundant entries in LEARNINGS.md or DECISIONS.md"
           },
           {
-            "name": "site",
-            "description": "Documentation site (feed)"
+            "name": "audit",
+            "description": "Run a code-level convention audit across the codebase"
           },
           {
-            "name": "loop",
-            "description": "Generate autonomous iteration scripts"
+            "name": "worktree",
+            "description": "Manage git worktrees for parallel agent development"
           },
           {
             "name": "pause",
@@ -168,12 +192,44 @@
             "description": "Resume context hooks"
           },
           {
+            "name": "memory",
+            "description": "Memory bridge operations (sync, status, diff, import, publish)"
+          },
+          {
+            "name": "decisions",
+            "description": "Manage DECISIONS.md architectural decisions"
+          },
+          {
+            "name": "learnings",
+            "description": "Manage LEARNINGS.md gotchas and lessons"
+          },
+          {
+            "name": "config",
+            "description": "Runtime configuration (switch, status, schema)"
+          },
+          {
+            "name": "permissions",
+            "description": "Permission snapshot and restore"
+          },
+          {
+            "name": "changes",
+            "description": "Show recent codebase changes"
+          },
+          {
+            "name": "deps",
+            "description": "Show project dependencies"
+          },
+          {
+            "name": "guide",
+            "description": "Quick start guide"
+          },
+          {
             "name": "reindex",
             "description": "Rebuild context file indices"
           },
           {
-            "name": "diag",
-            "description": "Diagnose extension issues — times each step to find hangs"
+            "name": "why",
+            "description": "Show rationale for context design decisions"
           }
         ],
         "disambiguation": [

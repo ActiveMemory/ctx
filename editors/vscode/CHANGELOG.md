@@ -20,7 +20,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Automatic hooks**: file save, git commit, dependency change, and
   context file change handlers
 - **Follow-up suggestions**: context-aware buttons after each command
-- **`/diag` command**: diagnose extension issues with step-by-step timing
+
+### Changed
+
+- Slash-command surface reconciled to exactly the 45 commands the
+  extension dispatches. Singular commands renamed to plurals:
+  `/change`→`/changes`, `/dep`→`/deps`, `/task`→`/tasks`,
+  `/permission`→`/permissions`. Dedicated `/decisions` and `/learnings`
+  added alongside `/add`.
+
+### Removed
+
+- `/loop` and `/diag` slash commands. `/site` is now reached through
+  `/journal site`, and `/doctor` runs inline rather than as a top-level
+  slash command.
 
 ### Configuration
 
