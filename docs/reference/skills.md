@@ -64,7 +64,9 @@ opinionated behavior on top.
 | [`/ctx-link-check`](#ctx-link-check)                   | Audit docs for dead internal and external links                 | user-invocable |
 | [`/ctx-permission-sanitize`](#ctx-permission-sanitize) | Audit Claude Code permissions for security risks                | user-invocable |
 | [`/ctx-brainstorm`](#ctx-brainstorm)                     | Structured design dialogue before implementation                | user-invocable |
+| [`/ctx-plan`](#ctx-plan)                                 | Stress-test a plan through adversarial interview                | user-invocable |
 | [`/ctx-spec`](#ctx-spec)                                 | Scaffold a feature spec from a project template                 | user-invocable |
+| [`/ctx-task-out`](#ctx-task-out)                         | Decompose a committed spec into a per-milestone plan            | user-invocable |
 | [`/ctx-plan-import`](#ctx-plan-import)                 | Import Claude Code plan files into project specs                | user-invocable |
 | [`/ctx-implement`](#ctx-implement)                       | Execute a plan step-by-step with verification                   | user-invocable |
 | [`/ctx-loop`](#ctx-loop)                                 | Generate autonomous loop script                                 | user-invocable |
@@ -477,6 +479,33 @@ stress-test the chosen approach, and present the detailed design.
 "before we build", "what approach should we take?"
 
 **See also**:
+[`/ctx-plan`](#ctx-plan),
+[`/ctx-spec`](#ctx-spec)
+
+---
+
+### `/ctx-plan`
+
+Stress-test a plan through an adversarial interview before it becomes
+a spec. Asks one question at a time across scope, failure modes,
+rejected alternatives, sequencing, reversibility, and hidden
+assumptions — pushing back rather than validating. Stops when the
+user can articulate the bet, the rejections, the top failure modes,
+the cheapest validation, and the unwind cost. Concludes by offering
+to write a *debated brief* to `.context/briefs/<TS>-<slug>.md`, the
+canonical input for `/ctx-spec --brief`. Deliberately does **not**
+produce an implementation plan or task list — that happens two steps
+later, at [`/ctx-task-out`](#ctx-task-out).
+
+**Wraps**: reads code and context files;
+writes `.context/briefs/<TS>-<slug>.md`
+
+**Trigger phrases**: "attack this plan", "poke holes in this",
+"stress-test my plan", "scrutinize this before I commit"
+
+**See also**:
+[Scrutinizing a Plan](../recipes/scrutinizing-a-plan.md),
+[`/ctx-brainstorm`](#ctx-brainstorm),
 [`/ctx-spec`](#ctx-spec)
 
 ---
@@ -517,10 +546,55 @@ filling the gap from inference. If the brief contradicts a
 frozen contract, the contradiction is surfaced to the user
 rather than silently followed.
 
+Both flows end with a **tasking handoff**: specs that span
+multiple milestones (or more than roughly one session of
+implementation) are routed to [`/ctx-task-out`](#ctx-task-out)
+for decomposition; small specs go straight to
+[`/ctx-implement`](#ctx-implement).
+
 **See also**:
 [`/ctx-brainstorm`](#ctx-brainstorm),
 [`/ctx-plan`](#ctx-plan),
+[`/ctx-task-out`](#ctx-task-out),
 [`/ctx-plan-import`](#ctx-plan-import)
+
+---
+
+### `/ctx-task-out`
+
+Decompose a committed spec into a per-milestone implementation plan
+at `specs/plans/<milestone>.md` — data model, contracts, an
+invariant-test matrix, and typically 15-40 tasks, each with a
+**falsifiable acceptance criterion** (a command to run, a test that
+must pass, an observable behavior). The plan is the document
+[`/ctx-implement`](#ctx-implement) executes. The skill is a
+decomposer, not a designer: disagreements with the spec route back
+through [`/ctx-plan`](#ctx-plan) instead of being relitigated here.
+
+Two **hard gates** refuse rather than degrade:
+
+1. **Blocking-TBD gate**: the spec's open questions are classified
+   as blocking or deferrable for the target milestone; decomposition
+   refuses to proceed past a blocking TBD (a task that would embed
+   an assumption about its answer).
+2. **Rolling-wave gate**: milestone N+1 is not decomposed while
+   milestone N's definition of done is unmet, unless the user
+   overrides explicitly (recorded in the plan header).
+
+TASKS.md receives **epic-level anchors only**, each annotated
+`Plan: specs/plans/<milestone>.md` — the plan owns the fine-grained
+tasks, one-way sync, nothing moved or deleted. Single-session specs
+skip this step entirely: the spec *is* the plan.
+
+**Wraps**: reads the spec, TASKS.md, DECISIONS.md, CONVENTIONS.md;
+writes `specs/plans/<milestone>.md`, appends anchors to TASKS.md
+
+**Trigger phrases**: "task this out", "break down the spec",
+"decompose the spec", "plan out the milestone"
+
+**See also**:
+[`/ctx-spec`](#ctx-spec),
+[`/ctx-implement`](#ctx-implement)
 
 ---
 
@@ -543,13 +617,18 @@ optionally chains to `/ctx-task-add`
 ### `/ctx-implement`
 
 Execute a multi-step plan with build and test verification at each
-step. Loads a plan from a file or conversation context, breaks it
-into atomic steps, and checkpoints after every 3-5 steps.
+step. The canonical input is `specs/plans/<milestone>.md` as written
+by [`/ctx-task-out`](#ctx-task-out), but hand-written plan files and
+plans from conversation context work too. Breaks the plan into
+atomic steps and checkpoints after every 3-5 steps. Handed a bare
+multi-milestone spec instead of a plan, it redirects to
+`/ctx-task-out` rather than decomposing on the fly.
 
 **Wraps**: reads plan file, runs verification commands
 (`go build`, `go test`, etc.)
 
 **See also**:
+[`/ctx-task-out`](#ctx-task-out),
 [Running an Unattended AI Agent](../recipes/autonomous-loops.md)
 
 ---

@@ -78,10 +78,16 @@ alternatives have a recall trigger.
 
 ## Output
 
-`/ctx-plan` produces a clearer plan, not a document. Persist the
-deltas via:
+`/ctx-plan` concludes by offering to write a *debated brief* to
+`.context/briefs/<TS>-<slug>.md`: the bet, the rejections, the
+failure modes, the validation route, and the unwind cost, in your
+words. It deliberately does **not** produce an implementation plan
+or a task list — decomposition happens after the spec, via
+`/ctx-task-out`. Feed the interview's conclusions forward via:
 
-- **`/ctx-spec`** if the conclusions belong in a feature spec.
+- **`/ctx-spec --brief <path>`** to absorb the brief into a
+  committed spec; multi-milestone specs then flow to
+  `/ctx-task-out` for decomposition.
 - **`/ctx-decision-add`** if a tradeoff resolved into an
   architectural decision.
 - **`/ctx-learning-add`** if you discovered a project-specific

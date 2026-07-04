@@ -8,8 +8,8 @@ description: "Stress-test a plan through adversarial interview; produces a debat
 The project's design-to-implementation pipeline is:
 
 ```text
-/ctx-brainstorm  →  /ctx-plan  →  /ctx-spec  →  /ctx-implement
-   (vague)      (contested)    (committed)     (execution)
+/ctx-brainstorm → /ctx-plan → /ctx-spec → /ctx-task-out → /ctx-implement
+    (vague)     (contested)  (committed)   (decomposed)     (execution)
 ```
 
 `/ctx-plan` is the second step. It takes an idea that is no
@@ -17,7 +17,8 @@ longer vague but not yet committed, attacks it, and writes a
 *debated brief* to `.context/briefs/<TS>-<slug>.md`. The brief
 is consumed by `/ctx-spec --brief <path>` to produce the
 committed spec. This skill does **not** produce an implementation
-plan or a task list; the deliverable is the brief.
+plan or a task list; the deliverable is the brief. Decomposition
+into tasks happens two steps later, at `/ctx-task-out`.
 
 Do not invert the order. A "plan" run after `/ctx-spec` is
 fixing the foundation while the building is up; run

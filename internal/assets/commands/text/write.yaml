@@ -281,6 +281,7 @@ write.init-workflow-tips:
         Planning and design:
           /ctx-brainstorm           Structured design dialogue before implementation
           /ctx-spec                 Scaffold a feature spec from the project template
+          /ctx-task-out             Decompose a committed spec into a per-milestone plan
           /ctx-implement            Execute a plan step-by-step with checkpointed verification
 
         Periodic maintenance:
