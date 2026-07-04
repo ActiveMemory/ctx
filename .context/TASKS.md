@@ -2497,6 +2497,8 @@ shipped.
 
 ### Misc
 
+- [ ] Recipe: the full design-to-implementation pipeline from the operator's seat (new 'spec-driven-development.md' or a major fold into design-before-coding.md). Must cover, for a newcomer with zero tribal knowledge: (1) the 5-step chain INCLUDING /ctx-plan — design-before-coding.md's TL;DR currently omits the debated-brief step entirely; (2) altitude: the bet is debated once and the spec covers ALL milestones — briefs are per-bet, never per-milestone; (3) plans are just-in-time per milestone behind the rolling-wave gate (tasking distant milestones produces fiction); (4) blocking-TBD gates as the replacement for per-milestone debates — each task-out run forces exactly the decisions that milestone embeds, into DECISIONS.md; (5) two surfaces, one truth: plan = execution ledger (st column), TASKS.md epics = one-way projections over disjoint id ranges; DoD is measurement/Board-confirmed, never derived; (6) when a NEW brief happens: new bet (e.g. deferred machinery returning) or evidence falsifying the committed bet — never relitigating from below; (7) a worked multi-milestone example, not a one-session feature. Origin: zhc/os session a63353a3 (2026-07-03) — the operator had to reverse-engineer all seven from skill texts and agent explanations #priority:high #session:a63353a3 #branch:main #commit:511a609a #added:2026-07-03-232251
+
 - [ ] Tighten /ctx-spec (and /ctx-implement) skills to bake in spec-kit's one
   good discipline without adopting spec-kit: every /ctx-spec must end with (a)
   explicit, testable acceptance criteria and (b) a derived, dependency-ordered
