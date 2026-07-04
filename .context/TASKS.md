@@ -2429,7 +2429,7 @@ first
 the
 > serendipity nag. The `dream-guard` consolidation is the second open item.
 > Baseline is intentionally being frozen here for a controlled snapshot-VM
-> experiment (anchor SDD / spec-kit alignment); do not assume this phase is
+> experiment (SDD / spec-kit alignment); do not assume this phase is
 shipped.
 
 - [ ] Close the end-user dream UX loop: invoking /ctx-dream interactively is a
@@ -2496,6 +2496,14 @@ shipped.
   #added:2026-06-06-162238
 
 ### Misc
+
+- [x] Implement ctx system statusline per specs/statusline.md: stdin-JSON render (model, ctx%, cost), .ctxrc statusline block, setup merge with backup/restore. Informational only; no gating (spec records why) #priority:medium #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-140249
+
+- [x] Companion-tool feature-delta analysis; borrow/skip verdicts recorded in gitignored inbox/ notes (local only) #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-135227
+
+- [x] Add ctx-humanize plugin skill (SKILL.md + references/pattern-catalog.md, docs entry) with progressive disclosure and voice guardrails. Spec: specs/ctx-humanize.md #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-134612
+
+- [x] Add hack/check-tools.sh tooling dependency checker (manifest: hack/tool-versions.txt, make check-tools) — spec: specs/check-tools.md #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-132852
 
 - [ ] Recipe: the full design-to-implementation pipeline from the operator's seat (new 'spec-driven-development.md' or a major fold into design-before-coding.md). Must cover, for a newcomer with zero tribal knowledge: (1) the 5-step chain INCLUDING /ctx-plan — design-before-coding.md's TL;DR currently omits the debated-brief step entirely; (2) altitude: the bet is debated once and the spec covers ALL milestones — briefs are per-bet, never per-milestone; (3) plans are just-in-time per milestone behind the rolling-wave gate (tasking distant milestones produces fiction); (4) blocking-TBD gates as the replacement for per-milestone debates — each task-out run forces exactly the decisions that milestone embeds, into DECISIONS.md; (5) two surfaces, one truth: plan = execution ledger (st column), TASKS.md epics = one-way projections over disjoint id ranges; DoD is measurement/Board-confirmed, never derived; (6) when a NEW brief happens: new bet (e.g. deferred machinery returning) or evidence falsifying the committed bet — never relitigating from below; (7) a worked multi-milestone example, not a one-session feature. Origin: zhc/os session a63353a3 (2026-07-03) — the operator had to reverse-engineer all seven from skill texts and agent explanations #priority:high #session:a63353a3 #branch:main #commit:511a609a #added:2026-07-03-232251
 

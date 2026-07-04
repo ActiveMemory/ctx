@@ -656,7 +656,7 @@ that risk materializes.
 **Status**: Accepted
 
 **Context**: Per-session, operator-specific artifacts that grow without bound
-and can leak host/internal identifiers (ari, asgard, broadcom-class) into public
+and can leak host/internal identifiers into public
 mirrors when the project's .context/ is committed.
 
 **Decision**: Gitignore .context/handovers/; track only .gitkeep
@@ -686,8 +686,8 @@ already handles cross-machine knowledge persistence.
 **Decision**: Deprecate and remove ctx backup
 
 **Rationale**: Hub handles persistence, backup is env-specific, wrong layer for
-ctx to own. No external users depend on it. Broadcom mirror issue and GVFS
-Linux-only dependency add maintenance burden.
+ctx to own. No external users depend on it. An internal mirror issue and the
+GVFS Linux-only dependency add maintenance burden.
 
 **Consequence**: Need backup-strategy runbook before removal. Maintainer must
 set up replacement cron job. About 60 files to remove across CLI, config, hooks,
