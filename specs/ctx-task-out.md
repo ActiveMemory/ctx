@@ -12,6 +12,13 @@ completion semantics (overlapping id ranges, no rule for when an epic
 checks off). Both fixed: `st` column (`[ ]`/`[x]`/`[o]`) in template,
 step 4, ledger rule, and checklist; step 7 now requires a disjoint
 id partition with a sum check and a stated completion rule.
+Same round, consumer side: `/ctx-implement` (deliverable 4) gained
+an explicit **Ledger Duties** section — `st` flips only on
+demonstrated acceptance, DoD is never derived from task completion
+(its prior checkpoint wording said "check off completed tasks and
+DoD items", instructing exactly that), epic projection to TASKS.md
+is one-way on range completion, and criterion changes route through
+amendment mode. Plus a step-numbering typo fix (two step 3s).
 **Draft skill:** retired after landing (was
 `specs/ctx-task-out-SKILL-draft.md`; the installed skill superseded it).
 **Origin:** zhc/os session c887a6d4, 2026-07-03 — the gap surfaced in live use.

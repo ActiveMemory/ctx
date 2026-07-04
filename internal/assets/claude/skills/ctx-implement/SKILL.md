@@ -85,13 +85,15 @@ For each step:
 2. **Think through** the change before writing code: what does
    it touch, what could break, what's the simplest correct path?
 3. **Implement** the change
-3. **Verify** with the appropriate check:
+4. **Verify** with the appropriate check:
+   - Task from a task-out plan → its acceptance criterion,
+     verbatim (in addition to the map below)
    - Go code changed → `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx`
    - Tests affected → `CGO_ENABLED=0 go test ./...`
    - Config/template changed → build to verify embeds
    - Docs only → no verification needed
-4. **Report** step result: pass or fail
-5. **If failed**: stop, diagnose, fix, re-verify before
+5. **Report** step result: pass or fail
+6. **If failed**: stop, diagnose, fix, re-verify before
    moving to the next step
 
 Verify after every individual step before proceeding to the next.
@@ -100,11 +102,8 @@ Verify after every individual step before proceeding to the next.
 
 After every 3-5 steps (or after a significant milestone):
 - Summarize what has been completed
-- If executing `specs/plans/<milestone>.md`, check off completed
-  tasks and DoD items in the plan document — it is the execution
-  ledger that `/ctx-task-out`'s rolling-wave gate reads. Never
-  edit a task's acceptance criterion in place; a criterion
-  change goes back through `/ctx-task-out` (amendment mode)
+- If executing `specs/plans/<milestone>.md`, update the execution
+  ledger (see Ledger Duties below)
 - Note any deviations from the plan
 - Ask the user if they want to continue, adjust, or stop
 
@@ -116,6 +115,32 @@ After all steps complete:
 - Summarize what was implemented
 - Note any deviations from the original plan
 - Suggest context to persist (decisions, learnings, tasks)
+
+## Ledger Duties (plans from /ctx-task-out)
+
+A task-out plan is the execution ledger — the only record of
+milestone progress. Executing one carries four bookkeeping duties:
+
+- **`st` is the record.** Flip a task's `st` cell to `[x]` only
+  when its acceptance criterion has demonstrably passed — the
+  command ran, the test is green, the behavior was observed.
+  Tasks obsoleted by amendment become `[o]`. `st` never moves
+  backwards silently; a regression is a deviation to report.
+- **DoD is not yours to derive.** Scope & DoD checkboxes are
+  confirmed by measurement or by the user — never checked because
+  the tasks that "cover" them are done. The rolling-wave gate
+  reads DoD only; deriving it from task completion defeats the
+  gate.
+- **Project epics outward.** TASKS.md epics carry disjoint
+  task-id ranges (`Plan: specs/plans/<milestone>.md (Txx–Tyy)`).
+  When every task in a range is `[x]` or `[o]`, mark that epic
+  `[x]`. Sync is one-way, plan → TASKS.md; never track task
+  state in TASKS.md directly.
+- **Amendments, not edits.** Never edit a task's acceptance
+  criterion in place; a criterion change goes back through
+  `/ctx-task-out` (amendment mode). When a measurement gate
+  fires (Risks & measurement gates), stop and route the outcome
+  through an amendment before executing dependent tasks.
 
 ## Step Verification Map
 
@@ -188,6 +213,9 @@ During execution, verify:
 - [ ] Each step is verified before moving on
 - [ ] Failures are fixed in place, not deferred
 - [ ] Checkpoints happen every 3-5 steps
+- [ ] Task-out plans: `st` flipped only on demonstrated
+      acceptance; epics projected to TASKS.md when their range
+      completes; DoD boxes left to measurement or the user
 
 After completion, verify:
 - [ ] Final full verification passes
