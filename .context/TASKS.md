@@ -2517,3 +2517,11 @@ shipped.
   memory + adversarial /ctx-plan; avoid two-constitutions double-bookkeeping).
   #priority:medium #session:210b77dd #branch:main #commit:6b0d0107
   #added:2026-06-27-222130
+
+### Future
+
+- [ ] Hub curation: immutable promotion ledger (who accepted what, when, why) + mechanical validate floor for shared knowledge; revisit when ctx hub grows team-curation workflows #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
+
+- [ ] ctx-spec-views skill: manager-facing read-models (execution plan, spec briefs, task breakdowns) generated FROM specs/, never source of truth; spec it when someone actually needs the leadership view #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
+
+- [ ] KB convention: pinned upstream corpus for grounding — document a snapshot mode (dated local copy of high-churn upstream docs as the citable byte-stream) in KB rules; no code needed #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
