@@ -63,7 +63,7 @@ A commented `.ctxrc` showing all options and their defaults:
 
 ```yaml
 # .ctxrc: ctx runtime configuration
-# https://ctx.ist/configuration/
+# https://ctx.ist/home/configuration/
 #
 # All settings are optional. Missing values use defaults.
 # Priority: CLI flags > environment variables > .ctxrc > defaults
@@ -380,7 +380,7 @@ throughout the session.
 This replaces the previous approach of hardcoding `.context/` paths in agent
 instructions. 
 
-See [CLI Reference: bootstrap](../cli/system.md#ctx-system-bootstrap)
+See [CLI Reference: bootstrap](../cli/bootstrap.md#ctx-system-bootstrap)
 for full details.
 
 ---

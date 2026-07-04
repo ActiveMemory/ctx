@@ -59,7 +59,6 @@ opinionated behavior on top.
 | [`/ctx-blog-changelog`](#ctx-blog-changelog)             | Generate themed blog post from a commit range                   | user-invocable |
 | [`/ctx-consolidate`](#ctx-consolidate)                   | Consolidate redundant learnings or decisions                    | user-invocable |
 | [`/ctx-drift`](#ctx-drift)                               | Detect and fix context drift                                    | user-invocable |
-| [`/ctx-prompt`](#ctx-prompt)                             | Apply, list, and manage saved prompt templates                  | user-invocable |
 | [`/ctx-prompt-audit`](#ctx-prompt-audit)                 | Analyze prompting patterns for improvement                      | user-invocable |
 | [`/ctx-link-check`](#ctx-link-check)                   | Audit docs for dead internal and external links                 | user-invocable |
 | [`/ctx-permission-sanitize`](#ctx-permission-sanitize) | Audit Claude Code permissions for security risks                | user-invocable |
