@@ -11,15 +11,18 @@ each section with the user to produce a complete design document.
 The project's design-to-implementation pipeline is:
 
 ```text
-/ctx-brainstorm  →  /ctx-plan  →  /ctx-spec  →  /ctx-implement
-   (vague)      (contested)    (committed)     (execution)
+/ctx-brainstorm → /ctx-plan → /ctx-spec → /ctx-task-out → /ctx-implement
+    (vague)     (contested)  (committed)   (decomposed)     (execution)
 ```
 
 `/ctx-spec` is the third step. It consumes the *debated brief*
 produced by `/ctx-plan` (via `--brief <path>`) or writes a fresh
 spec interactively when no brief is needed. Specs are committed
 artifacts under `specs/`; briefs are working state under
-`.context/briefs/` that the spec absorbs.
+`.context/briefs/` that the spec absorbs. Downstream,
+`/ctx-task-out` decomposes multi-milestone specs into the plan
+document `/ctx-implement` executes; small specs go straight to
+`/ctx-implement`.
 
 Do not invert the order. A spec without a settled bet ahead of
 it is a wishlist; running `/ctx-plan` after `/ctx-spec` is fixing
@@ -89,6 +92,9 @@ follow the brief.
 4. Where the brief is silent, write `TBD` rather than inventing.
 5. Write the spec to `specs/{feature-name}.md` and surface the
    `TBD` entries for the user to fill in next.
+6. Apply the tasking handoff (step 7 of the interactive flow):
+   multi-milestone specs get `/ctx-task-out`, small specs go
+   straight to `/ctx-implement`.
 
 ## Process (interactive, when `--brief` is absent)
 
@@ -151,6 +157,14 @@ Write the completed spec to `specs/{feature-name}.md`.
   the path matches
 - If no tasks exist yet, offer to create them:
   > "Want me to break this into tasks in TASKS.md?"
+
+### 7. Hand Off to Tasking
+
+If the spec spans multiple milestones or more than ~one session
+of implementation, do not stop at coarse task creation: recommend
+`/ctx-task-out --spec specs/<name>.md --milestone <first>` and
+say why (specs stay concise; the plan carries decomposition). For
+small specs, suggest `/ctx-implement` directly.
 
 ## Skipping Sections
 

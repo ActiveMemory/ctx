@@ -10,8 +10,11 @@ It's complete enough that another session could implement from it alone.
 
 1. **Draft**: write the spec in this directory
 2. **Reference**: add a Phase to TASKS.md with `Spec: specs/<name>.md`
-3. **Implement**: follow the spec, checking off tasks as you go
-4. **Archive**: move to `specs/done/` when all tasks are complete
+3. **Task out**: for multi-milestone specs, `/ctx-task-out` writes
+   `specs/plans/<milestone>.md`; TASKS.md carries epic anchors only
+4. **Implement**: follow the plan (or the spec directly for
+   single-session features), checking off tasks as you go
+5. **Archive**: move to `specs/done/` when all tasks are complete
 
 ## Tips
 
