@@ -7,7 +7,6 @@
 package merge
 
 import (
-	"bytes"
 	"encoding/json"
 	"strings"
 
@@ -16,17 +15,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 	"github.com/ActiveMemory/ctx/internal/claude"
 	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
-	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/err/config"
-	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	errParser "github.com/ActiveMemory/ctx/internal/err/parser"
-	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/write/initialize"
 )
 
 // SettingsPermissions merges ctx permissions into settings.local.json.
+//
+// Only the permissions section is rewritten: all other top-level keys
+// in the settings file (hooks, statusLine, env, anything ctx does not
+// model) survive byte-for-byte via the raw-map read-modify-write in
+// settings.go.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -34,41 +34,35 @@ import (
 // Returns:
 //   - error: Non-nil if file operations fail
 func SettingsPermissions(cmd *cobra.Command) error {
-	var settings claude.Settings
-	existingContent, readErr := ctxIo.SafeReadUserFile(cfgClaude.Settings)
-	fileExists := readErr == nil
-	if fileExists {
-		unmarshalErr := json.Unmarshal(existingContent, &settings)
-		if unmarshalErr != nil {
+	raw, fileExists, readErr := readSettingsRaw()
+	if readErr != nil {
+		return readErr
+	}
+	var perms claude.PermissionsConfig
+	if rawPerms, exists := raw[cfgClaude.FieldPermissions]; exists {
+		if unmarshalErr := json.Unmarshal(rawPerms, &perms); unmarshalErr != nil {
 			return errParser.ParseFile(cfgClaude.Settings, unmarshalErr)
 		}
 	}
 	allowModified := Permissions(
-		&settings.Permissions.Allow, lookup.PermAllowListDefault(),
+		&perms.Allow, lookup.PermAllowListDefault(),
 	)
 	denyModified := Permissions(
-		&settings.Permissions.Deny, lookup.PermDenyListDefault(),
+		&perms.Deny, lookup.PermDenyListDefault(),
 	)
-	allowDeduped := DeduplicatePermissions(&settings.Permissions.Allow)
-	denyDeduped := DeduplicatePermissions(&settings.Permissions.Deny)
+	allowDeduped := DeduplicatePermissions(&perms.Allow)
+	denyDeduped := DeduplicatePermissions(&perms.Deny)
 	if !allowModified && !denyModified && !allowDeduped && !denyDeduped {
 		initialize.NoChanges(cmd, cfgClaude.Settings)
 		return nil
 	}
-	if mkdirErr := ctxIo.SafeMkdirAll(dir.Claude, fs.PermExec); mkdirErr != nil {
-		return errFs.Mkdir(dir.Claude, mkdirErr)
+	section, marshalErr := marshalSettingsSection(perms)
+	if marshalErr != nil {
+		return config.MarshalSettings(marshalErr)
 	}
-	var buf bytes.Buffer
-	encoder := json.NewEncoder(&buf)
-	encoder.SetEscapeHTML(false)
-	encoder.SetIndent("", token.Indent2)
-	if encodeErr := encoder.Encode(settings); encodeErr != nil {
-		return config.MarshalSettings(encodeErr)
-	}
-	if writeErr := ctxIo.SafeWriteFile(
-		cfgClaude.Settings, buf.Bytes(), fs.PermFile,
-	); writeErr != nil {
-		return errFs.FileWrite(cfgClaude.Settings, writeErr)
+	raw[cfgClaude.FieldPermissions] = section
+	if writeErr := writeSettingsRaw(raw); writeErr != nil {
+		return writeErr
 	}
 	if fileExists {
 		deduped := allowDeduped || denyDeduped

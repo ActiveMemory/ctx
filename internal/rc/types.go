@@ -95,8 +95,27 @@ type CtxRC struct {
 	Notify              *NotifyConfig            `yaml:"notify"`
 	Steering            *SteeringRC              `yaml:"steering"`
 	Hooks               *HooksRC                 `yaml:"hooks"`
+	Statusline          *StatuslineRC            `yaml:"statusline"`
 	ProvenanceRequired  *ProvenanceConfig        `yaml:"provenance_required"`
 	Dream               *DreamRC                 `yaml:"dream"`
+}
+
+// StatuslineRC holds status line configuration from .ctxrc.
+//
+// The status line is informational only: it renders model, context
+// usage, and session cost from the payload Claude Code provides.
+// There is deliberately no cost gating or model-switch nudging
+// (see specs/statusline.md, Decisions).
+//
+// Fields:
+//   - Enabled: Whether ctx init deploys (and keeps) the statusLine
+//     entry in .claude/settings.local.json (default true). Pointer
+//     type distinguishes unset (nil → true) from explicit false.
+//   - ShowCost: Whether the $ segment is rendered (default true).
+//     Disable for screen-sharing or recorded demos.
+type StatuslineRC struct {
+	Enabled  *bool `yaml:"enabled"`
+	ShowCost *bool `yaml:"show_cost"`
 }
 
 // DreamRC holds the ctx-dream configuration from .ctxrc. The dream is

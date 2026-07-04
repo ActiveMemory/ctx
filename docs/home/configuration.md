@@ -102,6 +102,10 @@ A commented `.ctxrc` showing all options and their defaults:
 #   timeout: 10
 #   enabled: true
 #
+# statusline:           # Claude Code status line (informational only)
+#   enabled: true       # Deploy statusLine via ctx init
+#   show_cost: true     # Render the $ session-cost segment
+#
 # provenance_required:  # Relax provenance flags for ctx add
 #   session_id: true    # Require --session-id (default: true)
 #   branch: true        # Require --branch (default: true)
@@ -146,6 +150,8 @@ A commented `.ctxrc` showing all options and their defaults:
 | `hooks.dir`             | `string`   | `.context/hooks` | Hook scripts directory                                                                                                                |
 | `hooks.timeout`         | `int`      | `10`          | Per-hook execution timeout in seconds                                                                                                     |
 | `hooks.enabled`         | `bool`     | `true`        | Whether hook execution is enabled                                                                                                         |
+| `statusline.enabled`    | `bool`     | `true`        | Whether `ctx init` deploys the Claude Code status line (`ctx system statusline`)                                                          |
+| `statusline.show_cost`  | `bool`     | `true`        | Whether the status line renders the session-cost (`$`) segment                                                                            |
 | `provenance_required.session_id` | `bool` | `true` | Require `--session-id` on `ctx add` for tasks, decisions, learnings                                                            |
 | `provenance_required.branch` | `bool` | `true`     | Require `--branch` on `ctx add` for tasks, decisions, learnings                                                                |
 | `provenance_required.commit` | `bool` | `true`     | Require `--commit` on `ctx add` for tasks, decisions, learnings                                                                |
