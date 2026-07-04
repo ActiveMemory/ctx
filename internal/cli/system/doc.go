@@ -29,6 +29,8 @@
 //   - session-event: record session lifecycle events
 //   - pause: session-scoped hook suppression
 //   - resume: session-scoped hook re-enable
+//   - statusline: render the Claude Code status line
+//     from the statusLine stdin payload
 //
 // # Hook Subcommands
 //

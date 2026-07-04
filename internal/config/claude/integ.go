@@ -21,6 +21,19 @@ const (
 	// SettingsGolden is the golden image of the Claude Code settings.
 	SettingsGolden = ".claude/settings.golden.json"
 
+	// FieldPermissions is the settings.local.json key for permissions.
+	FieldPermissions = "permissions"
+	// FieldStatusLine is the settings.local.json key for the status line.
+	FieldStatusLine = "statusLine"
+
+	// StatusLineType is the statusLine entry type for executable commands.
+	StatusLineType = "command"
+	// StatusLineCommand is the command ctx deploys as the status line.
+	StatusLineCommand = "ctx system statusline"
+	// PreviousStatusLine is the backup file (under .context/state/) holding
+	// a pre-existing statusLine entry displaced by ctx init.
+	PreviousStatusLine = "previous-statusline.json"
+
 	// GlobalSettings is the Claude Code global settings file.
 	// Located at ~/.claude/settings.json (not the project-local one).
 	GlobalSettings = "settings.json"

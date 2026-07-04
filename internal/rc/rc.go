@@ -587,6 +587,40 @@ func HooksEnabled() bool {
 	return true
 }
 
+// StatuslineEnabled returns whether the ctx status line is enabled.
+//
+// Returns true (default) when the statusline section is not configured
+// or when the enabled field is not explicitly set. Returns false only
+// when statusline.enabled is explicitly set to false in .ctxrc.
+//
+// Returns:
+//   - bool: True if the status line is enabled
+func StatuslineEnabled() bool {
+	cfg := RC()
+	if cfg.Statusline != nil && cfg.Statusline.Enabled != nil {
+		return *cfg.Statusline.Enabled
+	}
+	return true
+}
+
+// StatuslineShowCost returns whether the status line renders the cost
+// segment.
+//
+// Returns true (default) when the statusline section is not configured
+// or when the show_cost field is not explicitly set. Users disable it
+// for screen-sharing or recorded demos where an on-screen dollar
+// figure is unwanted.
+//
+// Returns:
+//   - bool: True if the cost segment should be rendered
+func StatuslineShowCost() bool {
+	cfg := RC()
+	if cfg.Statusline != nil && cfg.Statusline.ShowCost != nil {
+		return *cfg.Statusline.ShowCost
+	}
+	return true
+}
+
 // Reset clears the cached configuration, forcing
 // reload on the next access.
 func Reset() {

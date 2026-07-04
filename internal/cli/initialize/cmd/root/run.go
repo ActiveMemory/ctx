@@ -259,6 +259,14 @@ func Run(
 		initialize.InfoWarnNonFatal(cmd, label, permsErr)
 	}
 
+	// Merge the ctx status line into settings.local.json, backing up
+	// any pre-existing statusLine entry (specs/statusline.md).
+	if statuslineErr := coreMerge.SettingsStatusLine(cmd); statuslineErr != nil {
+		// Non-fatal: warn but continue
+		label := desc.Text(text.DescKeyInitLabelStatusline)
+		initialize.InfoWarnNonFatal(cmd, label, statuslineErr)
+	}
+
 	// Auto-enable plugin globally and locally unless suppressed.
 	if !noPluginEnable {
 		if pluginErr := plugin.EnableGlobally(cmd); pluginErr != nil {

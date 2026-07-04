@@ -66,6 +66,23 @@ type PermissionsConfig struct {
 	Deny  []string `json:"deny,omitempty"`
 }
 
+// StatusLineConfig represents the statusLine section of Claude Code's
+// settings.local.json.
+//
+// Claude Code pipes a JSON payload to the configured command on stdin
+// and displays the first line of its stdout as the status line. See
+// https://code.claude.com/docs/en/statusline for the payload schema.
+//
+// Fields:
+//   - Type: Entry type, "command" for executable status lines
+//   - Command: Shell command Claude Code runs on each status refresh
+//   - Padding: Optional horizontal padding override
+type StatusLineConfig struct {
+	Type    string `json:"type,omitempty"`
+	Command string `json:"command,omitempty"`
+	Padding *int   `json:"padding,omitempty"`
+}
+
 // Settings represents the full Claude Code settings.local.json structure.
 //
 // This is used when reading or writing project-level Claude Code configuration.
@@ -73,7 +90,9 @@ type PermissionsConfig struct {
 // Fields:
 //   - Hooks: Hook configuration for lifecycle events
 //   - Permissions: Tool permission configuration
+//   - StatusLine: Status line command configuration
 type Settings struct {
 	Hooks       HookConfig        `json:"hooks,omitempty"`
 	Permissions PermissionsConfig `json:"permissions,omitempty"`
+	StatusLine  *StatusLineConfig `json:"statusLine,omitempty"`
 }
