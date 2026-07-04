@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-07-03 | Keep sonnet-4-6 at the 200k default despite the API catalog listing 1M |
 | 2026-06-07 | ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption |
 | 2026-06-07 | Output belongs in write/ — taxonomy and emission style (consolidated) |
 | 2026-06-07 | Package taxonomy and shared-code placement (consolidated) |
@@ -108,6 +109,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-07-03-182236] Keep sonnet-4-6 at the 200k default despite the API catalog listing 1M
+
+**Status**: Accepted
+
+**Context**: Claude 5 window-detection fix (specs/model-context-window-fable.md); Anthropic's current catalog shows Sonnet 4.6 with a 1M window at the API level
+
+**Decision**: Keep sonnet-4-6 at the 200k default despite the API catalog listing 1M
+
+**Rationale**: ctx models Claude Code's per-session gating, not raw API capability: Sonnet 4.6's 1M is an explicit opt-in already handled by ModelSuffix1M and ClaudeSettingsHas1M, and the existing test deliberately pins the 200k default
+
+**Consequence**: Revisit only with session-level evidence (a sonnet-4-6 JSONL showing 1M without the [1m] suffix); over-reporting the window would silence the context hook while a session genuinely fills
+
+---
 
 ## [2026-06-07-112203] ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption
 

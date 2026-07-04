@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-07-03 | New Claude model families silently fall to the 200k default in ModelContextWindow |
 | 2026-06-07 | Pin an on-disk contract before splitting work across parallel agents |
 | 2026-06-07 | site/ is tracked build output — rebuild and bundle it with doc commits |
 | 2026-06-07 | ctx-dream is headless-first; invoking /ctx-dream interactively is debugging, not the UX |
@@ -104,6 +105,16 @@ DO NOT UPDATE FOR:
 | 2026-04-26 | ctx system help can list project-local hooks not in the Go binary |
 | 2026-04-25 | Confident code comments can pull an LLM away from first-principles knowledge |
 <!-- INDEX:END -->
+
+---
+
+## [2026-07-03-182238] New Claude model families silently fall to the 200k default in ModelContextWindow
+
+**Context**: claude-fable-5 sessions warned '104 percent full' while the 1M window was 79 percent free; ModelContextWindow only recognized the [1m] suffix and the opus substring
+
+**Lesson**: Unmapped model families inherit rc.DefaultContextWindow (200k), and every EffectiveContextWindow consumer (check-context-size hook, heartbeat, nudges, provenance) misreports against the wrong window
+
+**Application**: At every model launch: add the family substring to internal/config/claude, extend TestModelContextWindow, and sanity-check against a live session's /context output before trusting hook percentages
 
 ---
 

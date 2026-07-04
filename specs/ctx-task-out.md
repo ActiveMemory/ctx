@@ -108,9 +108,14 @@ to rename, keep the phrasal-verb constraint.
       milestone m0a) produces a plan passing the skill's own quality
       checklist — including a correct refusal while D-001 (language
       choice) is unresolved
-      *(gate half verified read-only 2026-07-03: D-001 open in the spec
-      → blocking-TBD refusal fires by construction; the plan-producing
-      run happens post-reinstall via the originating session)*
+      *(refusal half executed live 2026-07-03 by session c887a6d4
+      hand-running the landed SKILL.md against zhc/os m0a: the gate
+      surfaced TWO blockers — D-001 and D-003 (artifact schema
+      language), one more than this work order predicted; the
+      "schema format" example in the blocking definition earned its
+      place. Both blockers resolved same day via zhc/os DECISIONS.md
+      (D-003 → JSON Schema, steering; D-001 → Go, Board). The
+      plan-producing run happens post-reinstall.)*
 
 ## Review
 
