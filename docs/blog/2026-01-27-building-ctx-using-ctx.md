@@ -82,7 +82,7 @@ The core idea was simple:
 [**Ralph Loop**][ralph] (*An iterative AI development workflow*)
 had produced a working CLI:
 
-[ralph]: https://ctx.ist/autonomous-loop/ "Autonomous Loop"
+[ralph]: https://ctx.ist/operations/autonomous-loop/ "Autonomous Loop"
 
 ```
 feat(cli): implement amem init command
