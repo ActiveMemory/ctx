@@ -247,6 +247,21 @@
         }
       }
     },
+    "statusline": {
+      "type": "object",
+      "description": "Claude Code status line configuration. Informational only: renders model, context usage, and session cost; no cost gating or model-switch nudging.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether ctx init deploys (and keeps) the statusLine entry in .claude/settings.local.json. Default: true."
+        },
+        "show_cost": {
+          "type": "boolean",
+          "description": "Whether the $ segment is rendered. Disable for screen-sharing or recorded demos. Default: true."
+        }
+      }
+    },
     "dream": {
       "type": "object",
       "description": "ctx-dream memory-consolidation settings. Opt-in: nothing runs until enabled is true and a cron entry is installed.",

@@ -252,6 +252,8 @@ init.label-project-dirs:
   short: Project dirs
 init.label-permissions:
   short: Permissions
+init.label-statusline:
+  short: Status line
 init.label-plugin-enable:
   short: Plugin enablement
 init.label-steering:

@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-07-04 | Statusline informs, never gates |
 | 2026-07-03 | Keep sonnet-4-6 at the 200k default despite the API catalog listing 1M |
 | 2026-06-07 | ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption |
 | 2026-06-07 | Output belongs in write/ — taxonomy and emission style (consolidated) |
@@ -109,6 +110,20 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-07-04-152957] Statusline informs, never gates
+
+**Status**: Accepted
+
+**Context**: Porting a cost-aware status line whose reference design escalates to a spend alarm with a model-switch suggestion when an expensive model family is detected
+
+**Decision**: Statusline informs, never gates
+
+**Rationale**: A family-substring rule carries no task context: the expensive model is often the cheaper choice per outcome, and a statusline cannot see outcomes, so it must not prescribe. Alarms also only reach operators who are present and already see the dollar figure; unattended overspend belongs to loop/cron notifications
+
+**Consequence**: ctx system statusline renders model, ctx%, and plain cost only; show_cost exists for screen-sharing; any future budget enforcement must be a separate, deliberate feature, not statusline creep
+
+---
 
 ## [2026-07-03-182236] Keep sonnet-4-6 at the 200k default despite the API catalog listing 1M
 
@@ -656,7 +671,7 @@ that risk materializes.
 **Status**: Accepted
 
 **Context**: Per-session, operator-specific artifacts that grow without bound
-and can leak host/internal identifiers (ari, asgard, broadcom-class) into public
+and can leak host/internal identifiers into public
 mirrors when the project's .context/ is committed.
 
 **Decision**: Gitignore .context/handovers/; track only .gitkeep
@@ -686,8 +701,8 @@ already handles cross-machine knowledge persistence.
 **Decision**: Deprecate and remove ctx backup
 
 **Rationale**: Hub handles persistence, backup is env-specific, wrong layer for
-ctx to own. No external users depend on it. Broadcom mirror issue and GVFS
-Linux-only dependency add maintenance burden.
+ctx to own. No external users depend on it. An internal mirror issue and the
+GVFS Linux-only dependency add maintenance burden.
 
 **Consequence**: Need backup-strategy runbook before removal. Maintainer must
 set up replacement cron job. About 60 files to remove across CLI, config, hooks,

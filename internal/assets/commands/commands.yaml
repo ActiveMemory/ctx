@@ -1538,6 +1538,21 @@ system.specsnudge:
     Output: agent directive (always, when .context/ is initialized)
     Silent when: .context/ not initialized
   short: Plan-to-specs directory nudge
+system.statusline:
+  long: |-
+    Renders a one-line status line from the JSON payload Claude Code
+    pipes to the configured statusLine command on stdin.
+
+    Segments: user@host dir | model | ctx: N% | $C.CC
+    Missing payload fields drop their segment; malformed input renders
+    a degraded line. Always exits zero (a non-zero exit would blank
+    the status line). Output is sanitized to bounded printable ASCII.
+    Informational only: no cost gating, no model suggestions
+    (specs/statusline.md).
+
+    Wired by: ctx init (statusLine block in .claude/settings.local.json)
+    Config: .ctxrc statusline.enabled, statusline.show_cost
+  short: Render Claude Code status line from stdin JSON
 usage:
   long: |-
     Display per-session token usage statistics from stats JSONL files.

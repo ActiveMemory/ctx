@@ -564,6 +564,9 @@ system.sessionevent:
 system.specsnudge:
   short: '  ctx system specs-nudge'
 
+system.statusline:
+  short: '  ctx system statusline < payload.json'
+
 usage:
   short: |2-
       ctx usage

@@ -57,9 +57,9 @@ opinionated behavior on top.
 | [`/ctx-journal-enrich-all`](#ctx-journal-enrich-all)     | Full journal pipeline: export if needed, then batch-enrich      | user-invocable |
 | [`/ctx-blog`](#ctx-blog)                                 | Generate blog post draft from project activity                  | user-invocable |
 | [`/ctx-blog-changelog`](#ctx-blog-changelog)             | Generate themed blog post from a commit range                   | user-invocable |
+| [`/ctx-humanize`](#ctx-humanize)                         | Remove formulaic LLM writing patterns from human-facing prose   | user-invocable |
 | [`/ctx-consolidate`](#ctx-consolidate)                   | Consolidate redundant learnings or decisions                    | user-invocable |
 | [`/ctx-drift`](#ctx-drift)                               | Detect and fix context drift                                    | user-invocable |
-| [`/ctx-prompt`](#ctx-prompt)                             | Apply, list, and manage saved prompt templates                  | user-invocable |
 | [`/ctx-prompt-audit`](#ctx-prompt-audit)                 | Analyze prompting patterns for improvement                      | user-invocable |
 | [`/ctx-link-check`](#ctx-link-check)                   | Audit docs for dead internal and external links                 | user-invocable |
 | [`/ctx-permission-sanitize`](#ctx-permission-sanitize) | Audit Claude Code permissions for security risks                | user-invocable |
@@ -347,6 +347,23 @@ commit and unifying theme, analyzes diffs and journal entries from
 that period.
 
 **Wraps**: `git log`, `git diff --stat`; writes to `docs/blog/`
+
+**See also**: [Turning Activity into Content](../recipes/publishing.md)
+
+---
+
+### `/ctx-humanize`
+
+Review, rewrite, or edit human-facing prose (blog posts, docs,
+READMEs, announcements) to remove formulaic LLM writing
+patterns: significance inflation, brochure language, forced
+triplets, chatbot residue, em-dash typography. Preserves
+meaning, certainty, and voice; invents nothing. Defaults to
+review mode and only edits files when asked.
+
+**Wraps**: a 28-pattern catalog adapted from Wikipedia's "Signs
+of AI writing"; verifies typography mechanically before
+returning
 
 **See also**: [Turning Activity into Content](../recipes/publishing.md)
 

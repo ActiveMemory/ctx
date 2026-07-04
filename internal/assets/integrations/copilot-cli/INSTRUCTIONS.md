@@ -6,15 +6,27 @@
 ## IMPORTANT: You Have Persistent Memory
 
 This project uses Context (`ctx`) for context persistence across sessions.
-**Your memory is NOT ephemeral**: it lives in the context directory.
+When `ctx` is installed, **your memory is NOT ephemeral**: it lives in the
+context directory.
+
+`ctx` is an optional companion tool: helpful, but never required to build,
+test, or contribute to this project. If it is not installed, skip every
+`ctx`-dependent instruction in this file and help with the task as usual.
 
 ## On Session Start
 
-1. **Run `ctx system bootstrap`**: CRITICAL, not optional.
-   This tells you where the context directory is. If it returns any
-   error, relay the error output to the user verbatim, point them at
-   https://ctx.ist/home/getting-started/ for setup, and STOP.
-   Do not try to recover: the user decides.
+1. **Run `ctx system bootstrap`**: it tells you where the context
+   directory is.
+   - If the `ctx` command is not found: `ctx` is optional, so this is
+     not an error. Mention once that the user can enable persistent
+     context by cloning https://github.com/ActiveMemory/ctx and
+     following https://ctx.ist/home/getting-started/ (releases are
+     infrequent, so released versions may lag behind the repository).
+     Then continue with the user's task.
+   - If `ctx` is installed but returns an error: relay the error output
+     to the user verbatim, point them at
+     https://ctx.ist/home/getting-started/ for setup, and STOP.
+     Do not try to recover: the user decides.
 2. **Read AGENT_PLAYBOOK.md** from the context directory: it explains
    how to use this system
 3. **Run `ctx agent`** for a content summary

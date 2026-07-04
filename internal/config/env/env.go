@@ -12,6 +12,8 @@ package env
 const (
 	// Home is the environment variable for the user's home directory.
 	Home = "HOME"
+	// User is the environment variable for the current username.
+	User = "USER"
 	// CtxTokenBudget is the environment variable for overriding
 	// the token budget.
 	//nolint:gosec // G101: env var name, not a credential

@@ -21,7 +21,7 @@ reused. Gaps are expected after deletions.
 
 ```
 [1] zoom setup for kevin
-[2] don't forget to back up broadcom vm's gpg keys
+[2] don't forget to back up the work vm's gpg keys
 [5] check recent 20 journal entries
 ```
 
@@ -52,7 +52,7 @@ existing entries in file order, write back. One-time, automatic.
 
 ```
   1. zoom setup for kevin
-  2. don't forget to back up broadcom vm's gpg keys
+  2. don't forget to back up the work vm's gpg keys
   5. check recent 20 journal entries
 ```
 

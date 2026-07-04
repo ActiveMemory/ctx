@@ -7,7 +7,7 @@ allowed-tools: Read, Write, Glob, Grep, Bash(date:*)
 # Plan scrutiny (adversarial interview) — experimental
 
 > **Experimental / discardable.** This is a ctx-native port of an
-> external `anchor-plan` skill, kept as a project-level skill so it can
+> external plan-scrutiny skill, kept as a project-level skill so it can
 > be trialed and deleted without touching ctx's canonical
 > `/ctx-plan`. It feeds the experimental spec-kit delegation chain
 > `/ctx-experimental-plan → /ctx-experimental-spec →

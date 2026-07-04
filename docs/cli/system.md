@@ -102,6 +102,38 @@ ctx system session-event --type start --caller vscode
 ctx system session-event --type end --caller vscode
 ```
 
+#### `ctx system statusline`
+
+Renders the Claude Code status line. Claude Code pipes a JSON
+payload to the configured statusLine command after each assistant
+message; this command turns it into one line:
+
+```
+user@host ~/project | Opus | ctx: 42% | $1.23
+```
+
+`ctx init` wires it into `.claude/settings.local.json`, backing up
+any pre-existing statusLine entry to
+`.context/state/previous-statusline.json` (restored when
+`statusline.enabled: false` is set in `.ctxrc`; a statusLine that
+is not ctx's is never removed).
+
+Missing payload fields drop their segment. Output is sanitized to
+bounded printable ASCII, and the command always exits zero: a
+non-zero exit would blank the status line. The line is
+informational only; there is no cost gating and no model-switch
+nudging (see `specs/statusline.md` for the rationale).
+
+```bash
+ctx system statusline < payload.json
+```
+
+Config (`.ctxrc`): `statusline.enabled` (default `true`) and
+`statusline.show_cost` (render the `$` segment, default `true`;
+disable for screen-sharing or demos). Setting `enabled: false`
+blanks the rendered line immediately; the settings entry itself
+is restored/removed the next time the init merge runs.
+
 ## Hook Subcommands
 
 Hidden Claude Code hook handlers implementing the hook contract: read

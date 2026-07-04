@@ -74,6 +74,7 @@ func TestSchemaCoversCtxRC(t *testing.T) {
 		Tool                string `yaml:"tool"`
 		Steering            *int   `yaml:"steering"`
 		Hooks               *int   `yaml:"hooks"`
+		Statusline          *int   `yaml:"statusline"`
 		ProvenanceRequired  *int   `yaml:"provenance_required"`
 		Dream               *int   `yaml:"dream"`
 	}
