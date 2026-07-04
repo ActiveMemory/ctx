@@ -3,7 +3,15 @@
 **Status:** Implemented (session 1306853f, 2026-07-03) — skill at
 `internal/assets/claude/skills/ctx-task-out/SKILL.md`, amended after
 two review rounds (role-authority split, execution ledger, amendment
-mode, files column, matrix task refs, hard-gate refinements).
+mode, files column, matrix task refs, hard-gate refinements), plus a
+third round from the first real consumer (zhc/os m0a run, 2026-07-03):
+the template's task-table column list omitted the `st` state cell its
+own ledger paragraph required (template beats prose — the generated
+table was unauditable), and step 7's epic anchors lacked partition and
+completion semantics (overlapping id ranges, no rule for when an epic
+checks off). Both fixed: `st` column (`[ ]`/`[x]`/`[o]`) in template,
+step 4, ledger rule, and checklist; step 7 now requires a disjoint
+id partition with a sum check and a stated completion rule.
 **Draft skill:** retired after landing (was
 `specs/ctx-task-out-SKILL-draft.md`; the installed skill superseded it).
 **Origin:** zhc/os session c887a6d4, 2026-07-03 — the gap surfaced in live use.
@@ -104,7 +112,7 @@ to rename, keep the phrasal-verb constraint.
       `--brief` flows
 - [x] `/ctx-implement` names the plan artifact and redirects when handed
       a bare multi-milestone spec (and refuses a `Status: Blocked` plan)
-- [ ] A dry run against a real spec (e.g. zhc/os `specs/v1-substrate.md`,
+- [x] A dry run against a real spec (e.g. zhc/os `specs/v1-substrate.md`,
       milestone m0a) produces a plan passing the skill's own quality
       checklist — including a correct refusal while D-001 (language
       choice) is unresolved
@@ -116,6 +124,17 @@ to rename, keep the phrasal-verb constraint.
       place. Both blockers resolved same day via zhc/os DECISIONS.md
       (D-003 → JSON Schema, steering; D-001 → Go, Board). The
       plan-producing run happens post-reinstall.)*
+      *(plan-producing half executed 2026-07-03 by zhc/os session
+      a63353a3 with the registered skill: gates behaved — one
+      genuinely blocking TBD (config mechanism) was resolved via
+      DECISIONS.md before decomposition, two measurement-gated TBDs
+      were carried into the plan; output: 32 tasks, 15-row matrix at
+      zhc/os specs/plans/m0a.md. Board audit then found the two
+      skill gaps described in Status (stateless task table;
+      non-partitioned epic anchors) — plan amended downstream,
+      skill fixed here. The skill's own checklist passed while the
+      output was unauditable, which is exactly why the checklist
+      gained the two new boxes.)*
 
 ## Review
 
