@@ -24,6 +24,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   timed-out runs reject instead of rendering partial output as a clean
   result, and the process exit code is surfaced to callers rather than
   assuming any output means success.
+- **`/pause` and `/resume` pause and resume context hooks** (`ctx hook
+  pause` / `ctx hook resume`) instead of writing a session-snapshot JSON
+  while the hooks — which the command name promises to pause — kept firing.
+- **The onboarding gate no longer blocks `/guide`, `/why`, `/config`, and
+  `/hook`** in an uninitialized project; these mirror the CLI's init-exempt
+  set (the "run /init first" gate previously hid exactly the commands a new
+  user reaches for).
+- **Reminder `$(bell)` clears when the queue is empty.** The status bar now
+  reads `ctx remind list` ("No reminders.") instead of the provenance-only
+  `check-reminder` output, which never matched the hide condition and pinned
+  the bell on permanently.
+- **`/worktree` and `/changelog` git calls are cancellable** and time out
+  after 30s, so a git op blocked on an index lock can't hang the request.
+- **`saveWatcher` no longer runs against the wrong workspace root** — it
+  skips paths starting with `..`, matching its siblings.
+- Stopped regenerating the tracked `.github/copilot-instructions.md` on
+  every `.context/**` change (git churn / write amplification).
+
+### Changed
+
+- `/verify` and `/wrapup` descriptions corrected to match actual behavior
+  (both are read-only: `/verify` runs `ctx doctor` + `drift`; `/wrapup`
+  summarizes status, drift, and journal and *suggests* — does not persist —
+  decision/learning entries).
 
 ### Added
 
@@ -39,6 +63,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   command surface is now 43 commands, each mapping to a real `ctx`
   command.
 - `/system backup` subcommand (no CLI replacement).
+- **Unreachable Command-Palette registrations** — `activate()` registered
+  `ctx.*` commands with no matching `contributes.commands`, so none were
+  reachable from the palette. Removed pending a deliberate palette design.
 - **Violation guardrails** (the terminal-command watcher, the
   sensitive-file watcher, and `.context/state/violations.json`
   recording). Capturing the user's terminal text — credentials

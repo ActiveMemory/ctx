@@ -117,7 +117,7 @@
           },
           {
             "name": "wrapup",
-            "description": "End-of-session wrap-up: capture learnings, decisions, and tasks"
+            "description": "Summarize the session for end-of-session wrap-up (read-only)"
           },
           {
             "name": "remember",
@@ -145,7 +145,7 @@
           },
           {
             "name": "verify",
-            "description": "Verify a change does what it should by exercising it end-to-end"
+            "description": "Run verification checks (ctx doctor + drift)"
           },
           {
             "name": "map",

@@ -1510,18 +1510,66 @@ async function handleBlog(
   return { metadata: { command: "blog" } };
 }
 
+/**
+ * Run `git` with a timeout and cancellation, mirroring runCtx. Rejects on
+ * non-zero exit, timeout, or cancel — so a git op blocked on an index lock
+ * can't hang the request forever and Cancel actually kills the child.
+ */
+function execGit(
+  args: string[],
+  cwd: string,
+  token?: vscode.CancellationToken
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    if (token?.isCancellationRequested) {
+      reject(new Error("Cancelled"));
+      return;
+    }
+    let disposed = false;
+    // eslint-disable-next-line prefer-const
+    let disposable: { dispose(): void } | undefined;
+    const child = execFile(
+      "git",
+      args,
+      { cwd, timeout: 30000, maxBuffer: 1024 * 1024 },
+      (error, stdout, stderr) => {
+        if (!disposed) {
+          disposed = true;
+          disposable?.dispose();
+        }
+        if (error) {
+          const err = error as NodeJS.ErrnoException & {
+            killed?: boolean;
+            signal?: NodeJS.Signals | null;
+          };
+          if (err.killed || err.signal || token?.isCancellationRequested) {
+            reject(
+              new Error(`\`git ${args.join(" ")}\` was cancelled or timed out`)
+            );
+            return;
+          }
+          reject(error);
+          return;
+        }
+        resolve(stdout + stderr);
+      }
+    );
+    disposable = token?.onCancellationRequested(() => child.kill());
+  });
+}
+
 async function handleChangelog(
   stream: vscode.ChatResponseStream,
   cwd: string,
-  _token: vscode.CancellationToken
+  token: vscode.CancellationToken
 ): Promise<CtxResult> {
   stream.progress("Generating changelog...");
   try {
-    const result = await new Promise<string>((resolve, reject) => {
-      execFile("git", ["log", "--oneline", "--no-decorate", "-20"], { cwd }, (err, stdout) => {
-        if (err) { reject(err); } else { resolve(stdout); }
-      });
-    });
+    const result = await execGit(
+      ["log", "--oneline", "--no-decorate", "-20"],
+      cwd,
+      token
+    );
     if (result.trim()) {
       stream.markdown("## Recent Commits\n\n```\n" + result.trim() + "\n```\n\n" +
         "Use these to draft release notes or a changelog blog post.");
@@ -1700,17 +1748,13 @@ async function handleWorktree(
   stream: vscode.ChatResponseStream,
   prompt: string,
   cwd: string,
-  _token: vscode.CancellationToken
+  token: vscode.CancellationToken
 ): Promise<CtxResult> {
   stream.progress("Managing worktrees...");
   try {
     const subcmd = prompt.trim().split(/\s+/)[0]?.toLowerCase() || "list";
     if (subcmd === "list" || !prompt.trim()) {
-      const result = await new Promise<string>((resolve, reject) => {
-        execFile("git", ["worktree", "list"], { cwd }, (err, stdout) => {
-          if (err) { reject(err); } else { resolve(stdout); }
-        });
-      });
+      const result = await execGit(["worktree", "list"], cwd, token);
       stream.markdown("## Git Worktrees\n\n```\n" + result.trim() + "\n```\n\nCreate: `@ctx /worktree add <branch>`");
     } else if (subcmd === "add") {
       const branch = prompt.trim().split(/\s+/).slice(1).join("-").replace(/[^a-zA-Z0-9_/-]/g, "");
@@ -1718,11 +1762,11 @@ async function handleWorktree(
         stream.markdown("Usage: `@ctx /worktree add <branch-name>`");
       } else {
         const worktreePath = path.join(path.dirname(cwd), path.basename(cwd) + "-" + branch);
-        const result = await new Promise<string>((resolve, reject) => {
-          execFile("git", ["worktree", "add", worktreePath, "-b", branch], { cwd }, (err, stdout, stderr) => {
-            if (err) { reject(err); } else { resolve(stdout + stderr); }
-          });
-        });
+        const result = await execGit(
+          ["worktree", "add", worktreePath, "-b", branch],
+          cwd,
+          token
+        );
         stream.markdown(`Worktree created at \`${worktreePath}\`.\n\n\`\`\`\n${result.trim()}\n\`\`\``);
       }
     } else {
@@ -1739,16 +1783,19 @@ async function handlePause(
   cwd: string,
   token: vscode.CancellationToken
 ): Promise<CtxResult> {
-  stream.progress("Pausing session...");
+  stream.progress("Pausing context hooks...");
   try {
-    const stateDir = path.join(cwd, ".context", "state");
-    if (!fs.existsSync(stateDir)) { fs.mkdirSync(stateDir, { recursive: true }); }
-    const { stdout } = await runCtx(["status"], cwd, token);
-    const state = { paused_at: new Date().toISOString(), status: stdout.trim(), cwd };
-    fs.writeFileSync(path.join(stateDir, "paused-session.json"), JSON.stringify(state, null, 2), "utf-8");
-    stream.markdown("Session paused. State saved to `.context/state/paused-session.json`.\n\nResume with `@ctx /resume`.");
+    const { stdout, stderr } = await runCtx(["hook", "pause"], cwd, token);
+    const output = mergeOutput(stdout, stderr);
+    stream.markdown(
+      output
+        ? "```\n" + output + "\n```"
+        : "Context hooks paused for this session. Resume with `@ctx /resume`."
+    );
   } catch (err: unknown) {
-    stream.markdown(`**Error:** ${err instanceof Error ? err.message : String(err)}`);
+    stream.markdown(
+      `**Error:** Failed to pause hooks.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
   }
   return { metadata: { command: "pause" } };
 }
@@ -1758,24 +1805,19 @@ async function handleResume(
   cwd: string,
   token: vscode.CancellationToken
 ): Promise<CtxResult> {
-  stream.progress("Resuming session...");
+  stream.progress("Resuming context hooks...");
   try {
-    const statePath = path.join(cwd, ".context", "state", "paused-session.json");
-    if (!fs.existsSync(statePath)) {
-      stream.markdown("No paused session found. Start fresh with `@ctx /status`.");
-      return { metadata: { command: "resume" } };
-    }
-    const state = JSON.parse(fs.readFileSync(statePath, "utf-8"));
-    stream.markdown("## Resuming Session\n\n" + `Paused at: ${state.paused_at}\n\n` +
-      "### Status at pause\n```\n" + state.status + "\n```\n\n");
-    try {
-      const { stdout } = await runCtx(["status"], cwd, token);
-      stream.markdown("### Current Status\n```\n" + stdout.trim() + "\n```\n");
-    } catch { /* non-fatal */ }
-    fs.unlinkSync(statePath);
-    stream.markdown("\nSession resumed. Pause file removed.");
+    const { stdout, stderr } = await runCtx(["hook", "resume"], cwd, token);
+    const output = mergeOutput(stdout, stderr);
+    stream.markdown(
+      output
+        ? "```\n" + output + "\n```"
+        : "Context hooks resumed for this session."
+    );
   } catch (err: unknown) {
-    stream.markdown(`**Error:** ${err instanceof Error ? err.message : String(err)}`);
+    stream.markdown(
+      `**Error:** Failed to resume hooks.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
   }
   return { metadata: { command: "resume" } };
 }
@@ -2304,8 +2346,8 @@ async function handleFreeform(
       "| `/consolidate` | Find duplicate entries |\n" +
       "| `/audit` | Alignment audit (drift + conventions) |\n" +
       "| `/worktree` | Git worktree management |\n" +
-      "| `/pause` | Save session state |\n" +
-      "| `/resume` | Restore paused session |\n" +
+      "| `/pause` | Pause context hooks for this session |\n" +
+      "| `/resume` | Resume context hooks |\n" +
       "| `/changes [--since duration]` | Show what changed since last session |\n" +
       "| `/guide [--skills\\|--commands]` | Quick-reference cheat sheet |\n" +
       "| `/reindex` | Regenerate decision/learning indices |\n" +
@@ -2343,8 +2385,11 @@ const handler: vscode.ChatRequestHandler = async (
     return { metadata: { command: request.command || "none" } };
   }
 
-  // For non-init commands, verify .context/ exists
-  if (request.command !== "init" && !hasContextDir(cwd)) {
+  // Verify .context/ exists — except for commands that deliberately work
+  // without an initialized project (mirrors the CLI's AnnotationSkipInit):
+  // init plus the informational/config commands a new user reaches for.
+  const skipsInitGate = new Set(["init", "guide", "why", "config", "hook"]);
+  if (!skipsInitGate.has(request.command ?? "") && !hasContextDir(cwd)) {
     stream.markdown(
       "**Not initialized.** This project doesn't have a `.context/` directory yet.\n\n" +
         "Run `@ctx /init` to set up persistent context for this project."
@@ -2664,62 +2709,6 @@ export function activate(extensionContext: vscode.ExtensionContext) {
 
   extensionContext.subscriptions.push(participant);
 
-  // --- Command palette entries — open chat with the right slash command ---
-  const paletteCommands: Array<[string, string]> = [
-    ["ctx.init", "/init"],
-    ["ctx.status", "/status"],
-    ["ctx.agent", "/agent"],
-    ["ctx.drift", "/drift"],
-    ["ctx.recall", "/recall"],
-    ["ctx.hook", "/hook"],
-    ["ctx.add", "/add"],
-    ["ctx.load", "/load"],
-    ["ctx.compact", "/compact"],
-    ["ctx.sync", "/sync"],
-    ["ctx.complete", "/complete"],
-    ["ctx.remind", "/remind"],
-    ["ctx.tasks", "/tasks"],
-    ["ctx.pad", "/pad"],
-    ["ctx.notify", "/notify"],
-    ["ctx.system", "/system"],
-    ["ctx.wrapup", "/wrapup"],
-    ["ctx.remember", "/remember"],
-    ["ctx.next", "/next"],
-    ["ctx.brainstorm", "/brainstorm"],
-    ["ctx.reflect", "/reflect"],
-    ["ctx.spec", "/spec"],
-    ["ctx.implement", "/implement"],
-    ["ctx.verify", "/verify"],
-    ["ctx.map", "/map"],
-    ["ctx.blog", "/blog"],
-    ["ctx.changelog", "/changelog"],
-    ["ctx.checkLinks", "/check-links"],
-    ["ctx.journal", "/journal"],
-    ["ctx.consolidate", "/consolidate"],
-    ["ctx.audit", "/audit"],
-    ["ctx.worktree", "/worktree"],
-    ["ctx.pause", "/pause"],
-    ["ctx.resume", "/resume"],
-    ["ctx.memory", "/memory"],
-    ["ctx.decisions", "/decisions"],
-    ["ctx.learnings", "/learnings"],
-    ["ctx.config", "/config"],
-    ["ctx.permissions", "/permissions"],
-    ["ctx.changes", "/changes"],
-    ["ctx.guide", "/guide"],
-    ["ctx.reindex", "/reindex"],
-    ["ctx.why", "/why"],
-  ];
-  for (const [cmdId, slash] of paletteCommands) {
-    extensionContext.subscriptions.push(
-      vscode.commands.registerCommand(cmdId, () => {
-        vscode.commands.executeCommand("workbench.action.chat.open", {
-          query: `@ctx ${slash}`,
-        });
-      })
-    );
-  }
-
   // --- VS Code native hooks: background nudges on save, commit, and context change ---
   const cwd = getWorkspaceRoot();
 
@@ -2811,8 +2800,6 @@ export function activate(extensionContext: vscode.ExtensionContext) {
     const onContextChange = () => {
       if (hasContextDir(cwd)) {
         updateReminderStatus(cwd);
-        // Re-generate copilot-instructions.md when context files change
-        runCtx(["setup", "copilot", "--write"], cwd).catch(() => {});
       }
     };
     contextWatcher.onDidChange(onContextChange);
@@ -2879,10 +2866,14 @@ function updateReminderStatus(cwd: string): void {
   if (!bootstrapDone || !reminderStatusBar) {
     return;
   }
-  runCtx(["system", "check-reminder"], cwd)
+  // `ctx remind list` prints "No reminders." when the queue is empty. The
+  // hook relay (`system check-reminder`) instead always emits a provenance
+  // line that never contains that string, which pinned the bell on forever.
+  runCtx(["remind", "list"], cwd)
     .then(({ stdout }) => {
       const trimmed = stdout.trim();
-      if (trimmed && !trimmed.includes("no reminders")) {
+      const hasReminders = trimmed.length > 0 && !/no reminders/i.test(trimmed);
+      if (hasReminders) {
         reminderStatusBar!.text = "$(bell) ctx";
         reminderStatusBar!.tooltip = trimmed;
         reminderStatusBar!.show();

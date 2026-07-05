@@ -57,8 +57,8 @@ The extension auto-downloads the ctx CLI binary if it isn't on your PATH.
 | `/wrapup` | End-of-session wrap-up with status, drift, and journal audit |
 | `/remember` | Recall recent AI sessions for this project |
 | `/reflect` | Surface items worth persisting as decisions or learnings |
-| `/pause` | Save session state for later |
-| `/resume` | Restore a paused session |
+| `/pause` | Pause context hooks for this session |
+| `/resume` | Resume context hooks |
 
 ### Discovery & Planning
 
