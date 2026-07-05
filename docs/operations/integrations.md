@@ -321,6 +321,7 @@ These are invoked in Claude Code with `/skill-name`.
 | Skill               | Description                                      |
 |---------------------|--------------------------------------------------|
 | `/ctx-loop`         | Generate a Ralph Loop iteration script           |
+| `/ctx-task-out`     | Decompose a committed spec into a milestone plan |
 | `/ctx-implement`    | Execute a plan step-by-step with checks          |
 | `/ctx-plan-import` | Import Claude Code plan files into project specs |
 | `/ctx-worktree`     | Manage git worktrees for parallel agents         |

@@ -329,7 +329,9 @@ alone.
 
 **2. Task it out**: Break the work into individual tasks in TASKS.md under
 a dedicated Phase section. Each task should be independently completable and
-verifiable.
+verifiable. For multi-milestone specs, run `/ctx-task-out` instead of
+tasking by hand: it writes `specs/plans/<milestone>.md` with falsifiable
+acceptance criteria, and TASKS.md carries epic-level anchors only.
 
 **3. Cross-reference**: The Phase header in TASKS.md must reference the
 spec: `Spec: \`specs/feature-name.md\``. The first task in the phase should

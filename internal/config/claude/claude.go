@@ -38,6 +38,16 @@ const (
 const (
 	// ModelOpus is the substring identifying Opus models (always 1M).
 	ModelOpus = "opus"
+	// ModelFable is the substring identifying Fable models
+	// (Claude 5 family, Mythos-class; always 1M).
+	ModelFable = "fable"
+	// ModelMythos is the substring identifying Mythos models
+	// (same underlying model as Fable; always 1M).
+	ModelMythos = "mythos"
+	// ModelSonnet5 is the substring identifying Sonnet 5+ models,
+	// which carry a 1M window as standard (earlier Sonnets gate 1M
+	// behind the [1m] opt-in, covered by ModelSuffix1M).
+	ModelSonnet5 = "sonnet-5"
 )
 
 // Context window sizes.

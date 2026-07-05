@@ -19,7 +19,7 @@ vendor lock-in.
 `ctx` is infrastructure for preserving intent under scale. Without durable
 context, intelligence resets. With `ctx`, creation compounds.
 
-Read the full **[Manifesto](MANIFESTO.md)** | **[ctx.ist/manifesto](https://ctx.ist/manifesto/)**
+Read the full **[Manifesto](MANIFESTO.md)** | **[ctx.ist](https://ctx.ist/)**
 
 ## The Thesis
 
@@ -36,7 +36,7 @@ Read the full **[Thesis](https://ctx.ist/thesis/)**
 
 | Document                                                          | Context                                             |
 |-------------------------------------------------------------------|-----------------------------------------------------|
-| [Manifesto](https://ctx.ist/manifesto/)                           | Philosophy: creation, context, verification         |
+| [Manifesto](https://ctx.ist/)                                     | Philosophy: creation, context, verification         |
 | [The Thesis](https://ctx.ist/thesis/)                             | Whitepaper: context as deterministic state          |
 | [Design Invariants](https://ctx.ist/reference/design-invariants/) | System properties that must always hold             |
 | [Tool Comparison](https://ctx.ist/reference/comparison/)          | How `ctx` differs from .cursorrules, Aider, Copilot |
@@ -165,9 +165,9 @@ recipes are the right next stop.
 |-------------------------------------------------|----------------------------------------|
 | [Getting Started](https://ctx.ist)              | Installation, quick start, first steps |
 | [Recipes](https://ctx.ist/recipes/)             | Practical workflow guides              |
-| [CLI Reference](https://ctx.ist/cli-reference/) | All commands and options               |
-| [Context Files](https://ctx.ist/context-files/) | File formats and structure             |
-| [Integrations](https://ctx.ist/integrations/)   | Claude Code, Cursor, Aider setup       |
+| [CLI Reference](https://ctx.ist/cli/)           | All commands and options               |
+| [Context Files](https://ctx.ist/home/context-files/) | File formats and structure       |
+| [Integrations](https://ctx.ist/operations/integrations/) | Claude Code, Cursor, Aider setup |
 | [Operations](https://ctx.ist/operations/)       | Runbooks, day-to-day, hub deployment   |
 | [Security](https://ctx.ist/security/)           | Trust model, audit trail, permissions  |
 

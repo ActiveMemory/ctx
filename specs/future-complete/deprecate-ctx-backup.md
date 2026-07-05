@@ -9,10 +9,10 @@ to the OS/infrastructure layer, not the application layer.
 
 Since its introduction, `ctx hub` has landed as the real answer to
 "how do I make my context survive across machines." Meanwhile,
-`ctx backup` has accumulated tech debt (the Broadcom mirror repo
-broke `sync-to-asgard`, GVFS is Linux-only, the check_backup_age
-hook fires even in projects that never use backup) without
-delivering proportional value.
+`ctx backup` has accumulated tech debt (an internal mirror-repo
+issue broke the SMB sync target, GVFS is Linux-only, the
+check_backup_age hook fires even in projects that never use
+backup) without delivering proportional value.
 
 No user other than the project maintainer has ever configured it.
 
@@ -48,8 +48,8 @@ feature that `rsync`, `cp`, or a cron job handles better.
 
 ### 4. Active maintenance cost
 
-- The Broadcom mirror repo issue forced disabling `sync-to-asgard`
-  (reminder [12] in the project)
+- An internal mirror-repo issue forced disabling the SMB sync
+  target (reminder [12] in the project)
 - GVFS dependency is Linux-only, breaking macOS/Windows users
 - `check_backup_age` hook fires for everyone, even users who never
   configured backup, creating noise

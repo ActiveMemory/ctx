@@ -63,11 +63,9 @@ nav = [
   { "Recipes" = [
     "recipes/index.md",
     { "Getting Started" = [
-      "recipes/activating-context.md",
       "recipes/guide-your-agent.md",
       "recipes/multi-tool-setup.md",
       "recipes/multilingual-sessions.md",
-      "recipes/external-context.md",
     ]},
     { "Sessions" = [
       "recipes/session-lifecycle.md",

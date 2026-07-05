@@ -40,25 +40,30 @@ These have priority because other knowledge ingestion projects depend on them.
   `LEARNINGS.md`. When the `INDEX:START/END` block uses the dash-bullet format
   (what `ctx init` produces) rather than the pipe-table format, `ctx learning
   add` (1) rewrites the index as a table, (2) **duplicates** the
-  `<!-- INDEX:START -->` marker, and (3) **drops every existing learning body** —
+  `<!-- INDEX:START -->` marker, and (3) **drops every existing learning body**
+  —
   keeping only the newly added one. Observed live in `things-wtf-hub` (session
   aa32f065): a `LEARNINGS.md` with 4 bodies collapsed to 1 (a -44-line commit,
   2dc4d1a); recovered via `git show <good-sha>:.context/LEARNINGS.md`.
-  `ctx decision add` is UNAFFECTED because that repo's `DECISIONS.md` was already
-  table-format — so the bug is specifically the learning-add path's handling of
+  `ctx decision add` is UNAFFECTED because that repo's `DECISIONS.md` was
+  already
+  table-format — so the bug is specifically the learning-add path's handling
+  of
   the dash-bullet index variant (likely it can't parse dash-bullet entries, so
   it treats the file as empty and regenerates from only the new entry).
     - Repro: `ctx init` a repo, confirm `LEARNINGS.md` index is dash-bullet
       (`- entry`), add 2+ learnings by hand in that format, then run
-      `ctx learning add "x" --context … --lesson … --application …`. Expect: the
+      `ctx learning add "x" --context … --lesson … --application …`.
+      Expect: the
       hand-authored bodies vanish + a duplicated INDEX:START marker.
     - Likely fix: detect the existing index format (dash-bullet vs table) and
       preserve it round-trip, OR parse dash-bullet entries before regenerating;
       never emit a second INDEX:START; never drop bodies the parser didn't
       recognize (fail loud instead of silently regenerating).
     - Guard: a round-trip test for BOTH index formats (dash-bullet + table) that
-      asserts existing bodies survive an add and exactly one marker pair remains.
-    - Severity: HIGH — silent destruction of persisted memory, the one thing ctx
+      asserts existing bodies survive an add and exactly one marker pair
+      remains.
+- Severity: HIGH — silent destruction of persisted memory, the one thing ctx
       promises to protect; only git made it recoverable.
     - Provenance: things-wtf-hub session aa32f065 wrap-up; full write-up in that
       repo's LEARNINGS.md ("`ctx learning add` clobbers a dash-bullet-format
@@ -69,12 +74,15 @@ These have priority because other knowledge ingestion projects depend on them.
       between the markers, or markers that are missing/duplicated/out-of-order.
       Wired into the two read-before-mutate choke points (`entry.Write` and
       `index.Reindex`), so add and all reindex commands fail loud and leave the
-      file byte-identical instead of clobbering it. `index.Update`'s signature is
-      untouched (kept the CRITICAL blast radius stable). New `internal/err/index`
+      file byte-identical instead of clobbering it. `index.Update`'s signature
+      is
+      untouched (kept the CRITICAL blast radius stable). New
+      `internal/err/index`
       package + i18n messages. Verified: the real repro now errors with the file
       unchanged; well-formed adds still preserve all bodies and one marker pair.
       Tests: `index.TestValidate` (7 shapes) + `entry` round-trip
-      (refused-untouched + well-formed-preserved). Chosen behavior is fail-loud +
+      (refused-untouched + well-formed-preserved). Chosen behavior is fail-loud
+      +
       manual fix; auto-repair (`reindex --repair`) considered and declined.
       Spec: specs/fix-learning-add-index-data-loss.md.
 
@@ -127,14 +135,16 @@ These have priority because other knowledge ingestion projects depend on them.
       the ctx command's schema gates and
       INDEX:START/END maintenance.
     - Shape: `ctx decision add --json /path/to/payload.json` where the JSON is
-      `{"title":"…","context":"…","rationale":"…","consequence":"…"}`. The flag
+      `{"title":"…","context":"…","rationale":"…","consequence":"…"}`.
+      The flag
       supersedes individual content flags.
       Provenance (--session-id/--branch/--commit) can stay on the command line
       OR be folded into the JSON envelope ({"
-      provenance":{"session_id":"…","branch":"…","commit":"…"}}). Complements
+      provenance":{"session_id":"…","branch":"…","commit":"…"}}).
+      Complements
       the existing `--file` (which only replaces
       the title/body positional).
-    - Phase 2 (optional): array form `[{...},{...}]` for batch persists — useful
+- Phase 2 (optional): array form `[{...},{...}]` for batch persists — useful
       for `/ctx-wrap-up` writing N
       decisions+learnings in one call instead of N separate invocations.
     - Mirror per command: same shape applies to `ctx learning add --json …` (
@@ -155,7 +165,8 @@ These have priority because other knowledge ingestion projects depend on them.
   `PressureSupported=false` → no memory alert.
     - Explore the Windows-native signal: Memory Resource Notifications API (
       `CreateMemoryResourceNotification`/
-      `QueryMemoryResourceNotification` → `LowMemoryResourceNotification`), perf
+      `QueryMemoryResourceNotification` → `LowMemoryResourceNotification`),
+      perf
       counters (`Memory\Available MBytes`,
       `Committed Bytes`/`Commit Limit`), or `GlobalMemoryStatusEx.dwMemoryLoad`.
     - Open question: Windows aggressively manages working-set/commit and
@@ -195,14 +206,15 @@ These have priority because other knowledge ingestion projects depend on them.
       half-migrated package must not ship again. Pairs with the verbatim-relay
       guard task above — that one makes a
       future skew fail LOUD; this one closes the current gap.
-    - #in-progress 2026-05-28 (branch feat/hooks-wiring-guard, session 0066d49b):
+- #in-progress 2026-05-28 (branch feat/hooks-wiring-guard, session 0066d49b):
       Recurrence guard SHIPPED — `TestShippedHooksResolveToRegisteredCommands`
       in internal/compliance walks every `ctx <…>` invocation in the shipped
       hooks.json against the assembled cobra tree; a wired-but-unregistered verb
       fails `go test`. Proven both ways (passes clean, fails on a reintroduced
       `check-anchor-drift`). Spec: specs/hooks-wiring-guard.md. Implemented as a
       Go test, not a hack/release.sh step (cross-platform, no bash, runs in CI).
-      STILL OPEN: the live fix — cut/republish a release where plugin hooks.json
+      STILL OPEN: the live fix — cut/republish a release where plugin
+      hooks.json
       and binary share a post-fc7db228 commit, then reinstall for skewed users
       (a tag+publish action, maintainer-owned).
       CORRECTION to the Fix bullet above: shipped hooks must NOT "include
@@ -229,7 +241,8 @@ These have priority because other knowledge ingestion projects depend on them.
       cobra `legacyArgs` only raises "unknown
       command" for the ROOT command, never a non-root group). In a
       UserPromptSubmit hook a non-zero exit alone is
-      swallowed by the harness — "loud via exit code" is dead in the water; the
+      swallowed by the harness — "loud via exit code" is dead in the water;
+      the
       user never sees it.
     - Fix: route unknown `ctx system` subcommands through the existing
       nudge/verbatim-relay path (same mechanism the
@@ -255,27 +268,35 @@ These have priority because other knowledge ingestion projects depend on them.
       Approach used: add a RunE on system.Cmd() only (legacyArgs lets the
       leftover args reach the group's RunE for non-root); on unknown verb emit a
       message.NudgeBox to stdout, set SilenceUsage (else cobra re-dumps the help
-      we're killing), exit non-zero. system is Hidden so RootCmd PersistentPreRunE
+      we're killing), exit non-zero. system is Hidden so RootCmd
+      PersistentPreRunE
       early-returns — no context/git preconditions.
       Decisions settled with user: (1) DO fire the event-log + webhook relay leg
       (nudge.Relay), gated on a real session ID read best-effort from stdin via
-      session.ReadID (TTY-safe, timeout-guarded → IDUnknown means skip the leg);
+      session.ReadID (TTY-safe, timeout-guarded → IDUnknown means skip the
+      leg);
       (2) scoped to ctx system only, parent.Cmd untouched.
-      Follow-up surfaced: ctx hook (and any parent.Cmd group) has the same latent
-      exit-0-on-unknown behavior — not wired into hooks.json so out of scope here;
+      Follow-up surfaced: ctx hook (and any parent.Cmd group) has the same
+      latent
+      exit-0-on-unknown behavior — not wired into hooks.json so out of scope
+      here;
       capture as its own task if it ever gets hook-wired.
 
 - [x] Generalize the unknown-subcommand guard beyond `ctx system` (deferred from
   the #5 work above). `ctx hook` and any future `parent.Cmd` group still print
-  help + exit 0 on an unknown subcommand — the same latent pollution #5 fixed for
+  help + exit 0 on an unknown subcommand — the same latent pollution #5 fixed
+  for
   `ctx system`. Low priority while no other group is wired into hooks.json; the
   build-time wiring guard (specs/hooks-wiring-guard.md) only checks `ctx system`
-  + `ctx agent` today. If a `ctx hook <verb>` ever gets hook-wired, either extend
+  + `ctx agent` today. If a `ctx hook <verb>` ever gets hook-wired, either
+  extend
   the guard's coverage or fold a reusable opt-in into `parent.Cmd` (an optional
   unknown-subcommand handler groups opt into). #priority:low #added:2026-05-28
   DONE 2026-05-30 (branch feat/add-json-file-ingest, session 53db2521).
-  Rationale refined: the real justification is not the every-prompt amplification
-  (unique to hooks.json-wired groups) but making CLI drift LOUD — `ctx hook` is
+  Rationale refined: the real justification is not the every-prompt
+  amplification
+  (unique to hooks.json-wired groups) but making CLI drift LOUD — `ctx hook`
+  is
   consumed by name from skills/loops (`ctx hook notify|event|pause|...`), and a
   drifted verb silently returns help+exit-0 (agent misreads; for `notify` the
   human is never told). Lifted the handler from `system/core/unknown` into a
@@ -284,7 +305,8 @@ These have priority because other knowledge ingestion projects depend on them.
   user-facing (not Hidden) and previously rode the no-RunE PreRunE exemption, so
   it needed AnnotationSkipInit to stay reachable without an initialized
   context/git (bootstrap regression test added). Did NOT fold into `parent.Cmd`
-  (would widen every group's deps). Skill/loop `ctx hook <verb>` build-time guard
+  (would widen every group's deps). Skill/loop `ctx hook <verb>` build-time
+  guard
   left out of scope. Spec: specs/unknown-subcommand-relay-generalization.md.
 
 ## Important
@@ -443,7 +465,18 @@ Important things that agent (or human) yeeted to the future.
 
 ### Phase CT: Companion Tool Integration
 
-- [ ] Add a 'make strip-gitnexus' target (backed by a hack/ script) that mechanically removes the GitNexus auto-injected block — delimited by <!-- gitnexus:start --> / <!-- gitnexus:end --> markers — from AGENTS.md and CLAUDE.md. Marker-bounded delete (sed range or awk between markers). Must: (1) leave AGENTS.md as the redirect stub and CLAUDE.md ending at its Companion Tools / GITNEXUS.md pointer; (2) NOT touch GITNEXUS.md (the intended managed home for that content); (3) be idempotent (no-op when markers absent). Run it after 'npx gitnexus analyze'. Upstream-preferred guard is 'analyze --skip-agents-md'; this script is the belt-and-suspenders cleanup when analyze runs without that flag. Manual removal was done in 8da165a3; this automates it. #priority:medium #session:74c94e3a #branch:fix/notify-resolution-hardening #commit:8da165a3 #added:2026-06-02-085625
+- [ ] Add a 'make strip-gitnexus' target (backed by a hack/ script) that
+  mechanically removes the GitNexus auto-injected block — delimited by <!--
+  gitnexus:start --> / <!-- gitnexus:end --> markers — from AGENTS.md and
+  CLAUDE.md. Marker-bounded delete (sed range or awk between markers). Must: (1)
+  leave AGENTS.md as the redirect stub and CLAUDE.md ending at its Companion
+  Tools / GITNEXUS.md pointer; (2) NOT touch GITNEXUS.md (the intended managed
+  home for that content); (3) be idempotent (no-op when markers absent). Run it
+  after 'npx gitnexus analyze'. Upstream-preferred guard is 'analyze
+  --skip-agents-md'; this script is the belt-and-suspenders cleanup when analyze
+  runs without that flag. Manual removal was done in 8da165a3; this automates
+  it. #priority:medium #session:74c94e3a #branch:fix/notify-resolution-hardening
+  #commit:8da165a3 #added:2026-06-02-085625
 
 Session-start checks, suppressibility, and registry for companion MCP tools.
 
@@ -2079,7 +2112,8 @@ adjacent tool joins the list.
   two artifacts:
     - **Time-series** at `~/.ctx/state/skill-usage.jsonl`:
       append-only, one row per invocation, fields
-      `{ts, project, session_id, skill_name, source: "claude-code"|"opencode"|...}`.
+      `{ts, project, session_id, skill_name, source:
+      "claude-code"|"opencode"|...}`.
     - **Aggregate** at `~/.ctx/state/skill-usage.json`: derived
       rollup, `{skill_name → {count, first_used, last_used, projects[]}}`.
       Stays in `~/.ctx/state/` (user-global), not per-project, so
@@ -2189,7 +2223,8 @@ the zensical shell-out pattern (recommended).
   journal-corpus semantic recall (`ctx journal search "<query>"` shape).
 
 ### Phase EVA:
-`ctx kb ev append` helper — eliminate Edit-anchor brittleness for append-only structured rows
+`ctx kb ev append` helper — eliminate Edit-anchor brittleness for append-only
+structured rows
 
 `#priority:medium #added:2026-05-23`
 
@@ -2372,34 +2407,121 @@ DR-kb session a5736210 closeouts under
 
 ### Phase CLI-FIX: CLI Infrastructure Fixes
 
-- [ ] Reindex grouped-emit (ctx-side): RenderBlock should emit the CTX:KB:TOPICS managed block grouped by parent folder (### <group> headings) instead of one flat sorted list, for grouped kbs like things-wtf-dr (49 topics). ListTopics already returns slashed group/slug slugs (PR #106, spec specs/kb-reindex-nesting.md) so only RenderBlock + the consumer-facing block-format contract change; must still handle ungrouped/flat top-level topics. Deferred from the kb-reindex fix (managed-block format change). #priority:high active dependent work in the hub/other workstream; natural owner is ctx-side (ListTopics already recursive). #session:cf14dd25 #branch:main #commit:aae42fe8 #added:2026-05-28-215308
+- [ ] Reindex grouped-emit (ctx-side): RenderBlock should emit the CTX:KB:TOPICS
+  managed block grouped by parent folder (### <group> headings) instead of one
+  flat sorted list, for grouped kbs like things-wtf-dr (49 topics). ListTopics
+  already returns slashed group/slug slugs (PR #106, spec
+  specs/kb-reindex-nesting.md) so only RenderBlock + the consumer-facing
+  block-format contract change; must still handle ungrouped/flat top-level
+  topics. Deferred from the kb-reindex fix (managed-block format change).
+  #priority:high active dependent work in the hub/other workstream; natural
+  owner is ctx-side (ListTopics already recursive). #session:cf14dd25
+  #branch:main #commit:aae42fe8 #added:2026-05-28-215308
 
 ### ctx-dream v1
 
 > **STATUS (2026-06-20): NOT DONE.** The dream→serendipity *engine* has landed
-> (triage, review CLI, executor contract, enablement docs — all `[x]` below), but
-> the workstream is incomplete. **Next up: the end-user dream UX loop** (the first
-> `[ ]` task) — making `ctx dream` a clean run→digest experience and wiring the
+> (triage, review CLI, executor contract, enablement docs — all `[x]` below),
+but
+> the workstream is incomplete. **Next up: the end-user dream UX loop** (the
+first
+> `[ ]` task) — making `ctx dream` a clean run→digest experience and wiring
+the
 > serendipity nag. The `dream-guard` consolidation is the second open item.
 > Baseline is intentionally being frozen here for a controlled snapshot-VM
-> experiment (anchor SDD / spec-kit alignment); do not assume this phase is shipped.
+> experiment (SDD / spec-kit alignment); do not assume this phase is
+shipped.
 
-- [ ] Close the end-user dream UX loop: invoking /ctx-dream interactively is a debug-crawl, not a dream. (1) Reconsider de-listing /ctx-dream as a user-invocable slash-command — it's the headless executor's instruction set, not a user command; the user surfaces are 'ctx dream' (on-demand) + cron + /ctx-serendipity. (2) Make 'ctx dream' a clean run->digest experience for the terminal user. (3) Wire the 'ctx remind' nag ('a serendipity round is waiting') so dream->nag->review closes without the user watching a pass. #priority:high #session:2263caef #branch:main #commit:a1624af5 #added:2026-06-07-142015
+- [ ] Close the end-user dream UX loop: invoking /ctx-dream interactively is a
+  debug-crawl, not a dream. (1) Reconsider de-listing /ctx-dream as a
+  user-invocable slash-command — it's the headless executor's instruction set,
+  not a user command; the user surfaces are 'ctx dream' (on-demand) + cron +
+  /ctx-serendipity. (2) Make 'ctx dream' a clean run->digest experience for the
+  terminal user. (3) Wire the 'ctx remind' nag ('a serendipity round is
+  waiting') so dream->nag->review closes without the user watching a pass.
+  #priority:high #session:2263caef #branch:main #commit:a1624af5
+  #added:2026-06-07-142015
 
-- [ ] Replace skills/ctx-dream/guard.sh with a 'ctx system dream-guard' subcommand (convention: hook scripts are ctx system subcommands — cf. block-non-path-ctx). It reads the PreToolUse tool-call JSON on stdin and applies internal/dream.WriteScope + Leak as the SINGLE source of truth (eliminating the current Go-vs-shell guard duplication/drift), emitting the hook block decision. Then rewire the PreToolUse settings in docs/recipes/run-the-dream.md and docs/reference/dream-executor-contract.md to call 'ctx system dream-guard', and delete guard.sh. #priority:medium #session:2263caef #branch:main #commit:a1624af5 #added:2026-06-07-140456
+- [ ] Replace skills/ctx-dream/guard.sh with a 'ctx system dream-guard'
+  subcommand (convention: hook scripts are ctx system subcommands — cf.
+  block-non-path-ctx). It reads the PreToolUse tool-call JSON on stdin and
+  applies internal/dream.WriteScope + Leak as the SINGLE source of truth
+  (eliminating the current Go-vs-shell guard duplication/drift), emitting the
+  hook block decision. Then rewire the PreToolUse settings in
+  docs/recipes/run-the-dream.md and docs/reference/dream-executor-contract.md to
+  call 'ctx system dream-guard', and delete guard.sh. #priority:medium
+  #session:2263caef #branch:main #commit:a1624af5 #added:2026-06-07-140456
 
-- [x] Docs: executor-contract reference for non-Claude-Code harnesses — bounded pass, structural guard enforcement, fail-loud, proposals-only-into-dreams/ #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
+- [x] Docs: executor-contract reference for non-Claude-Code harnesses —
+  bounded pass, structural guard enforcement, fail-loud,
+  proposals-only-into-dreams/ #priority:medium #session:2263caef
+  #branch:fix/notify-resolution-hardening #commit:ef59aeea
+  #added:2026-06-07-112233
 
-- [x] Docs: Claude Code dream enablement guide — opt-in (.ctxrc dream.enabled), cron entry, guard hook wiring, ctx remind cadence #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening #commit:ef59aeea #added:2026-06-07-112233
+- [x] Docs: Claude Code dream enablement guide — opt-in (.ctxrc
+  dream.enabled), cron entry, guard hook wiring, ctx remind cadence
+  #priority:medium #session:2263caef #branch:fix/notify-resolution-hardening
+  #commit:ef59aeea #added:2026-06-07-112233
 
-- [x] Tests: git check-ignore guard refuses tracked path; ledger dedup-against-seen; crash-resume; 2605.12978 corrupted-artifact regression fixture #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Tests: git check-ignore guard refuses tracked path; ledger
+  dedup-against-seen; crash-resume; 2605.12978 corrupted-artifact regression
+  fixture #priority:medium #session:977ff594
+  #branch:fix/notify-resolution-hardening #commit:03a24cf0
+  #added:2026-06-06-162238
 
-- [x] Build ctx dream review CLI (accept/reject/amend) plus serendipity skill; mechanical applies instantly, generative drops to agent; backup-before-mutate; ctx remind cadence #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Build ctx dream review CLI (accept/reject/amend) plus serendipity skill;
+  mechanical applies instantly, generative drops to agent; backup-before-mutate;
+  ctx remind cadence #priority:medium #session:977ff594
+  #branch:fix/notify-resolution-hardening #commit:03a24cf0
+  #added:2026-06-06-162238
 
-- [x] Implement disciplined ideas triage: classify, ground against code and specs, semantic dedup; emit atomic provenanced proposals #priority:medium #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Implement disciplined ideas triage: classify, ground against code and
+  specs, semantic dedup; emit atomic provenanced proposals #priority:medium
+  #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0
+  #added:2026-06-06-162238
 
-- [x] Build proposal/ledger/state machinery: per-source state record, append-only ledger recording rejections, two-clocks read model #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Build proposal/ledger/state machinery: per-source state record,
+  append-only ledger recording rejections, two-clocks read model #priority:high
+  #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0
+  #added:2026-06-06-162238
 
-- [x] Build the three structural guards: write-scope, sources-as-data, dont-leak (git check-ignore refuses tracked paths) #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Build the three structural guards: write-scope, sources-as-data, dont-leak
+  (git check-ignore refuses tracked paths) #priority:high #session:977ff594
+  #branch:fix/notify-resolution-hardening #commit:03a24cf0
+  #added:2026-06-06-162238
 
-- [x] Settle executor: cron claude -p bounded scheduled pass; safety invariants structural not prompt-level #priority:high #session:977ff594 #branch:fix/notify-resolution-hardening #commit:03a24cf0 #added:2026-06-06-162238
+- [x] Settle executor: cron claude -p bounded scheduled pass; safety invariants
+  structural not prompt-level #priority:high #session:977ff594
+  #branch:fix/notify-resolution-hardening #commit:03a24cf0
+  #added:2026-06-06-162238
+
+### Misc
+
+- [x] Implement ctx system statusline per specs/statusline.md: stdin-JSON render (model, ctx%, cost), .ctxrc statusline block, setup merge with backup/restore. Informational only; no gating (spec records why) #priority:medium #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-140249
+
+- [x] Companion-tool feature-delta analysis; borrow/skip verdicts recorded in gitignored inbox/ notes (local only) #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-135227
+
+- [x] Add ctx-humanize plugin skill (SKILL.md + references/pattern-catalog.md, docs entry) with progressive disclosure and voice guardrails. Spec: specs/ctx-humanize.md #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-134612
+
+- [x] Add hack/check-tools.sh tooling dependency checker (manifest: hack/tool-versions.txt, make check-tools) — spec: specs/check-tools.md #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-132852
+
+- [ ] Recipe: the full design-to-implementation pipeline from the operator's seat (new 'spec-driven-development.md' or a major fold into design-before-coding.md). Must cover, for a newcomer with zero tribal knowledge: (1) the 5-step chain INCLUDING /ctx-plan — design-before-coding.md's TL;DR currently omits the debated-brief step entirely; (2) altitude: the bet is debated once and the spec covers ALL milestones — briefs are per-bet, never per-milestone; (3) plans are just-in-time per milestone behind the rolling-wave gate (tasking distant milestones produces fiction); (4) blocking-TBD gates as the replacement for per-milestone debates — each task-out run forces exactly the decisions that milestone embeds, into DECISIONS.md; (5) two surfaces, one truth: plan = execution ledger (st column), TASKS.md epics = one-way projections over disjoint id ranges; DoD is measurement/Board-confirmed, never derived; (6) when a NEW brief happens: new bet (e.g. deferred machinery returning) or evidence falsifying the committed bet — never relitigating from below; (7) a worked multi-milestone example, not a one-session feature. Origin: zhc/os session a63353a3 (2026-07-03) — the operator had to reverse-engineer all seven from skill texts and agent explanations #priority:high #session:a63353a3 #branch:main #commit:511a609a #added:2026-07-03-232251
+
+- [ ] Tighten /ctx-spec (and /ctx-implement) skills to bake in spec-kit's one
+  good discipline without adopting spec-kit: every /ctx-spec must end with (a)
+  explicit, testable acceptance criteria and (b) a derived, dependency-ordered
+  task breakdown into TASKS.md; and the spec is FROZEN once /ctx-implement
+  begins — changes go through a new decision record, not a silent edit.
+  Rationale + full ctx-vs-spec-kit analysis in
+  inbox/2026-06-27-ctx-vs-spec-kit-sdd-analysis.md (keep ctx's edge: persistent
+  memory + adversarial /ctx-plan; avoid two-constitutions double-bookkeeping).
+  #priority:medium #session:210b77dd #branch:main #commit:6b0d0107
+  #added:2026-06-27-222130
+
+### Future
+
+- [ ] Hub curation: immutable promotion ledger (who accepted what, when, why) + mechanical validate floor for shared knowledge; revisit when ctx hub grows team-curation workflows #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
+
+- [ ] ctx-spec-views skill: manager-facing read-models (execution plan, spec briefs, task breakdowns) generated FROM specs/, never source of truth; spec it when someone actually needs the leadership view #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
+
+- [ ] KB convention: pinned upstream corpus for grounding — document a snapshot mode (dated local copy of high-churn upstream docs as the citable byte-stream) in KB rules; no code needed #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004

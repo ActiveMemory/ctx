@@ -7,7 +7,7 @@ allowed-tools: Bash(specify:*), Read, Glob
 # Hand off an intent spec to spec-kit — experimental
 
 > **Experimental / discardable.** ctx-native port of an external
-> `anchor-handoff` skill. It is the delegation seam canonical ctx does
+> spec-handoff skill. It is the delegation seam canonical ctx does
 > not have: ctx's chain terminates at `/ctx-implement`, whereas this one
 > hands the intent spec to spec-kit. Trial it; if the seam is worth
 > keeping, promote it to a real `/ctx-handoff`.

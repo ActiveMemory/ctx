@@ -1,14 +1,17 @@
 ---
 name: ctx-implement
-description: "Execute a plan step-by-step with verification. Use when you have a plan document and need disciplined, checkpointed implementation."
+description: "Execute a plan step-by-step with verification. Use when you have a plan document — canonically specs/plans/<milestone>.md from /ctx-task-out — and need disciplined, checkpointed implementation."
 ---
 
-Take a plan (inline text, file path, or from the conversation)
-and execute it step-by-step with build/test verification between
-steps.
+Take a plan — canonically `specs/plans/<milestone>.md` as written
+by `/ctx-task-out`, though inline text, another file path, or a
+plan from the conversation also work — and execute it
+step-by-step with build/test verification between steps.
 
 ## When to Use
 
+- After `/ctx-task-out` has decomposed a spec into
+  `specs/plans/<milestone>.md` (the canonical input)
 - When the user provides a plan document or file and says
   "implement this"
 - When a multi-step task has been planned and needs disciplined
@@ -20,6 +23,9 @@ steps.
 ## When NOT to Use
 
 - For single-step tasks: just do them directly
+- When handed a bare multi-milestone spec instead of a plan:
+  suggest `/ctx-task-out --spec <path> --milestone <first>`
+  first; decomposing on the fly is what it exists to prevent
 - When the plan is vague or incomplete: use `/ctx-brainstorm`
   first to refine it
 - When the user wants to explore or discuss, not execute
@@ -29,6 +35,7 @@ steps.
 
 ```text
 /ctx-implement
+/ctx-implement specs/plans/m0a.md
 /ctx-implement path/to/plan.md
 /ctx-implement (the plan from our discussion above)
 ```
@@ -38,6 +45,14 @@ steps.
 ### 1. Load the plan
 
 - If a file path is provided, read it
+- If the file is a multi-milestone spec rather than a plan (no
+  task breakdown, no acceptance criteria, spans milestones),
+  redirect: suggest `/ctx-task-out --spec <path> --milestone
+  <first>` and stop rather than improvising a decomposition
+- If the plan's header shows `Status: Blocked`, stop: a
+  deferrable TBD graduated to blocking mid-milestone. Route its
+  resolution (a spec edit or DECISIONS.md entry) and a
+  `/ctx-task-out` amendment run before executing further tasks
 - If inline text is provided, use it directly
 - If neither, look back in the conversation for the most
   recent plan or approved design
@@ -70,13 +85,15 @@ For each step:
 2. **Think through** the change before writing code: what does
    it touch, what could break, what's the simplest correct path?
 3. **Implement** the change
-3. **Verify** with the appropriate check:
+4. **Verify** with the appropriate check:
+   - Task from a task-out plan → its acceptance criterion,
+     verbatim (in addition to the map below)
    - Go code changed → `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx`
    - Tests affected → `CGO_ENABLED=0 go test ./...`
    - Config/template changed → build to verify embeds
    - Docs only → no verification needed
-4. **Report** step result: pass or fail
-5. **If failed**: stop, diagnose, fix, re-verify before
+5. **Report** step result: pass or fail
+6. **If failed**: stop, diagnose, fix, re-verify before
    moving to the next step
 
 Verify after every individual step before proceeding to the next.
@@ -85,6 +102,8 @@ Verify after every individual step before proceeding to the next.
 
 After every 3-5 steps (or after a significant milestone):
 - Summarize what has been completed
+- If executing `specs/plans/<milestone>.md`, update the execution
+  ledger (see Ledger Duties below)
 - Note any deviations from the plan
 - Ask the user if they want to continue, adjust, or stop
 
@@ -96,6 +115,32 @@ After all steps complete:
 - Summarize what was implemented
 - Note any deviations from the original plan
 - Suggest context to persist (decisions, learnings, tasks)
+
+## Ledger Duties (plans from /ctx-task-out)
+
+A task-out plan is the execution ledger — the only record of
+milestone progress. Executing one carries four bookkeeping duties:
+
+- **`st` is the record.** Flip a task's `st` cell to `[x]` only
+  when its acceptance criterion has demonstrably passed — the
+  command ran, the test is green, the behavior was observed.
+  Tasks obsoleted by amendment become `[o]`. `st` never moves
+  backwards silently; a regression is a deviation to report.
+- **DoD is not yours to derive.** Scope & DoD checkboxes are
+  confirmed by measurement or by the user — never checked because
+  the tasks that "cover" them are done. The rolling-wave gate
+  reads DoD only; deriving it from task completion defeats the
+  gate.
+- **Project epics outward.** TASKS.md epics carry disjoint
+  task-id ranges (`Plan: specs/plans/<milestone>.md (Txx–Tyy)`).
+  When every task in a range is `[x]` or `[o]`, mark that epic
+  `[x]`. Sync is one-way, plan → TASKS.md; never track task
+  state in TASKS.md directly.
+- **Amendments, not edits.** Never edit a task's acceptance
+  criterion in place; a criterion change goes back through
+  `/ctx-task-out` (amendment mode). When a measurement gate
+  fires (Risks & measurement gates), stop and route the outcome
+  through an amendment before executing dependent tasks.
 
 ## Step Verification Map
 
@@ -168,6 +213,9 @@ During execution, verify:
 - [ ] Each step is verified before moving on
 - [ ] Failures are fixed in place, not deferred
 - [ ] Checkpoints happen every 3-5 steps
+- [ ] Task-out plans: `st` flipped only on demonstrated
+      acceptance; epics projected to TASKS.md when their range
+      completes; DoD boxes left to measurement or the user
 
 After completion, verify:
 - [ ] Final full verification passes

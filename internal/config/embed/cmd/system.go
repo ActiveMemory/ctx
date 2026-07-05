@@ -91,6 +91,9 @@ const (
 	// UseSystemSpecsNudge is the cobra Use string for the system specs nudge
 	// command.
 	UseSystemSpecsNudge = "specs-nudge"
+	// UseSystemStatusline is the cobra Use string for the system statusline
+	// command.
+	UseSystemStatusline = "statusline"
 )
 
 // DescKeys for system subcommands.
@@ -173,4 +176,7 @@ const (
 	// DescKeySystemSpecsNudge is the description key for the system specs nudge
 	// command.
 	DescKeySystemSpecsNudge = "system.specsnudge"
+	// DescKeySystemStatusline is the description key for the system statusline
+	// command.
+	DescKeySystemStatusline = "system.statusline"
 )

@@ -281,6 +281,7 @@ write.init-workflow-tips:
         Planning and design:
           /ctx-brainstorm           Structured design dialogue before implementation
           /ctx-spec                 Scaffold a feature spec from the project template
+          /ctx-task-out             Decompose a committed spec into a per-milestone plan
           /ctx-implement            Execute a plan step-by-step with checkpointed verification
 
         Periodic maintenance:
@@ -300,6 +301,14 @@ write.init-getting-started-saved:
   short: '  ✓ Quick-start reference saved to %s'
 write.init-no-changes:
   short: '  ○ %s (no changes needed)'
+write.init-statusline-deployed:
+  short: '  ✓ %s (statusLine → ctx system statusline)'
+write.init-statusline-backed-up:
+  short: '  ○ previous statusLine backed up to %s'
+write.init-statusline-restored:
+  short: '  ○ statusLine restored from %s'
+write.init-statusline-removed:
+  short: '  ○ %s (statusLine removed; statusline.enabled: false)'
 write.init-reset-prompt-header:
   short: 'ctx init --reset will OVERWRITE the following populated context files:'
 write.init-reset-prompt-dir:

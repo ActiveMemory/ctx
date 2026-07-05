@@ -167,8 +167,6 @@ const (
 	FileConnect = ".connect.enc"
 	// JSONIndent is the indentation string for JSON marshaling.
 	JSONIndent = "  "
-	// LockSentinel is the content written to lock files.
-	LockSentinel = "lock"
 	// SuffixPluralMD is the suffix for typed hub markdown
 	// filenames (e.g. "decisions.md").
 	SuffixPluralMD = "s.md"

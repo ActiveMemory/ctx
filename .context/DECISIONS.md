@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |----|--------|
+| 2026-07-04 | Statusline informs, never gates |
+| 2026-07-03 | Keep sonnet-4-6 at the 200k default despite the API catalog listing 1M |
 | 2026-06-07 | ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption |
 | 2026-06-07 | Output belongs in write/ — taxonomy and emission style (consolidated) |
 | 2026-06-07 | Package taxonomy and shared-code placement (consolidated) |
@@ -109,17 +111,62 @@ For significant decisions:
 
 -->
 
+## [2026-07-04-152957] Statusline informs, never gates
+
+**Status**: Accepted
+
+**Context**: Porting a cost-aware status line whose reference design escalates to a spend alarm with a model-switch suggestion when an expensive model family is detected
+
+**Decision**: Statusline informs, never gates
+
+**Rationale**: A family-substring rule carries no task context: the expensive model is often the cheaper choice per outcome, and a statusline cannot see outcomes, so it must not prescribe. Alarms also only reach operators who are present and already see the dollar figure; unattended overspend belongs to loop/cron notifications
+
+**Consequence**: ctx system statusline renders model, ctx%, and plain cost only; show_cost exists for screen-sharing; any future budget enforcement must be a separate, deliberate feature, not statusline creep
+
+---
+
+## [2026-07-03-182236] Keep sonnet-4-6 at the 200k default despite the API catalog listing 1M
+
+**Status**: Accepted
+
+**Context**: Claude 5 window-detection fix (specs/model-context-window-fable.md); Anthropic's current catalog shows Sonnet 4.6 with a 1M window at the API level
+
+**Decision**: Keep sonnet-4-6 at the 200k default despite the API catalog listing 1M
+
+**Rationale**: ctx models Claude Code's per-session gating, not raw API capability: Sonnet 4.6's 1M is an explicit opt-in already handled by ModelSuffix1M and ClaudeSettingsHas1M, and the existing test deliberately pins the 200k default
+
+**Consequence**: Revisit only with session-level evidence (a sonnet-4-6 JSONL showing 1M without the [1m] suffix); over-reporting the window would silence the context hook while a session genuinely fills
+
+---
+
 ## [2026-06-07-112203] ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption
 
 **Status**: Accepted
 
-**Context**: Settling ctx-dream v1 open questions. The executor runs the out-of-band dream pass (read ideas/, classify+ground, write proposals). Question was cron 'claude -p' vs a raw Anthropic-API scheduled loop.
+**Context**: Settling ctx-dream v1 open questions. The executor runs the
+out-of-band dream pass (read ideas/, classify+ground, write proposals). Question
+was cron 'claude -p' vs a raw Anthropic-API scheduled loop.
 
-**Decision**: ctx-dream executor is a documented contract, not a hardcoded cron/claude assumption
+**Decision**: ctx-dream executor is a documented contract, not a hardcoded
+cron/claude assumption
 
-**Rationale**: cron 'claude -p' is the reference executor (reuses Claude Code auth, tool-calling, and PreToolUse hooks so the three guards are structural for free; matches the existing skill draft and the cheap-validation goal). But we must NOT assume it is the only executor: other harnesses (different AI CLI, raw API loop, CI runner) must be able to run the same dream. So ctx owns an executor-agnostic Go core (dreams/ layout, state record, ledger, proposal schema, the three guards as callable logic) and the executor is a documented contract: run one bounded pass, enforce the three guards STRUCTURALLY (Claude Code via PreToolUse hooks; API loop via in-loop tool executor), fail loud, write proposals-only into dreams/. Dream is opt-in, not enabled by default.
+**Rationale**: cron 'claude -p' is the reference executor (reuses Claude Code
+auth, tool-calling, and PreToolUse hooks so the three guards are structural for
+free; matches the existing skill draft and the cheap-validation goal). But we
+must NOT assume it is the only executor: other harnesses (different AI CLI, raw
+API loop, CI runner) must be able to run the same dream. So ctx owns an
+executor-agnostic Go core (dreams/ layout, state record, ledger, proposal
+schema, the three guards as callable logic) and the executor is a documented
+contract: run one bounded pass, enforce the three guards STRUCTURALLY (Claude
+Code via PreToolUse hooks; API loop via in-loop tool executor), fail loud, write
+proposals-only into dreams/. Dream is opt-in, not enabled by default.
 
-**Consequence**: Guards live as reusable Go logic in internal/dream/, not only as a hook script. Two user-facing docs are required: a Claude Code enablement guide and an executor-contract reference for other harnesses. The serendipity review skill is split into its own spec (specs/ctx-serendipity.md). v1 ships the cron/claude-p reference path but the data contract + guards stay executor-portable.
+**Consequence**: Guards live as reusable Go logic in internal/dream/, not only
+as a hook script. Two user-facing docs are required: a Claude Code enablement
+guide and an executor-contract reference for other harnesses. The serendipity
+review skill is split into its own spec (specs/ctx-serendipity.md). v1 ships the
+cron/claude-p reference path but the data contract + guards stay
+executor-portable.
 
 ---
 
@@ -127,8 +174,14 @@ For significant decisions:
 
 **Consolidated from**: 3 entries (2026-03-17 to 2026-04-03)
 
-- Output functions belong in write/ (flat by domain, one package per CLI feature); core/ owns logic and types, cmd/ owns Cobra orchestration. No cmd.Print* calls in internal/cli/ outside internal/write/ — enables localization and clean separation.
-- Within write/, use pre-compute-then-print: functions with 4+ Printlns pre-compute conditional strings then emit one multiline block (TplXxxBlock), rejecting text/template (runtime errors, only 38/160 functions benefit); trivial and loop-based functions stay imperative.
+- Output functions belong in write/ (flat by domain, one package per CLI
+  feature); core/ owns logic and types, cmd/ owns Cobra orchestration. No
+  cmd.Print* calls in internal/cli/ outside internal/write/ — enables
+  localization and clean separation.
+- Within write/, use pre-compute-then-print: functions with 4+ Printlns
+  pre-compute conditional strings then emit one multiline block (TplXxxBlock),
+  rejecting text/template (runtime errors, only 38/160 functions benefit);
+  trivial and loop-based functions stay imperative.
 
 ---
 
@@ -136,12 +189,24 @@ For significant decisions:
 
 **Consolidated from**: 6 entries (2026-03-06 to 2026-05-17)
 
-- Three-zone taxonomy: cmd/ for Cobra wiring, core/ for logic and types, assets/ for templates and user-facing text; config/ for structural constants only. Symmetry makes navigation agent-friendly; shared domain types live in domain packages (internal/entry), not CLI subpackages.
-- Pure-logic functions return data structs; callers own I/O, file writes, and reporting — lets MCP and CLI callers control output independently. Receiver-stateless methods become free functions; callbacks that vary only by a string key become text-key data.
-- Shared formatting utilities (Pluralize, Duration, TruncateFirstLine, etc.) live in internal/format, not duplicated across CLI subpackages.
-- internal/parse is the home for shared text-to-typed-value conversions (parse.Date first), scoped to avoid becoming a junk drawer.
-- Every cross-package type goes in internal/entity/ — the cross-package-types audit (zero grandfathered violations) is the hardline; entity.Sentinel lives there even though it is a behavioral helper, over per-package duplication across 9 err packages.
-- Multi-segment directory paths are single composite constants (DirHooksMessages, DirMemoryArchive), not joined from segment constants.
+- Three-zone taxonomy: cmd/ for Cobra wiring, core/ for logic and types, assets/
+  for templates and user-facing text; config/ for structural constants only.
+  Symmetry makes navigation agent-friendly; shared domain types live in domain
+  packages (internal/entry), not CLI subpackages.
+- Pure-logic functions return data structs; callers own I/O, file writes, and
+  reporting — lets MCP and CLI callers control output independently.
+  Receiver-stateless methods become free functions; callbacks that vary only by
+  a string key become text-key data.
+- Shared formatting utilities (Pluralize, Duration, TruncateFirstLine, etc.)
+  live in internal/format, not duplicated across CLI subpackages.
+- internal/parse is the home for shared text-to-typed-value conversions
+  (parse.Date first), scoped to avoid becoming a junk drawer.
+- Every cross-package type goes in internal/entity/ — the cross-package-types
+  audit (zero grandfathered violations) is the hardline; entity.Sentinel lives
+  there even though it is a behavioral helper, over per-package duplication
+  across 9 err packages.
+- Multi-segment directory paths are single composite constants
+  (DirHooksMessages, DirMemoryArchive), not joined from segment constants.
 
 ---
 
@@ -149,8 +214,12 @@ For significant decisions:
 
 **Consolidated from**: 2 entries (2026-03-06 to 2026-03-14)
 
-- Errors centralize in internal/err, not per-package err.go files — single location makes duplicates visible, enables sentinel errors, prevents broken-window accumulation; all CLI err.go files migrated and deleted.
-- The monolithic 1995-line errors.go (188 functions) was split into 22 domain files (backup, config, crypto, …, validation) named by responsibility, so error constructors are findable by domain.
+- Errors centralize in internal/err, not per-package err.go files — single
+  location makes duplicates visible, enables sentinel errors, prevents
+  broken-window accumulation; all CLI err.go files migrated and deleted.
+- The monolithic 1995-line errors.go (188 functions) was split into 22 domain
+  files (backup, config, crypto, …, validation) named by responsibility, so
+  error constructors are findable by domain.
 
 ---
 
@@ -158,10 +227,19 @@ For significant decisions:
 
 **Consolidated from**: 4 entries (2026-03-23 to 2026-04-04)
 
-- String-typed enums (type Foo string + const blocks) belong in config/, not domain packages — types without behavior live in config; promote to entity/ only when methods/interfaces appear.
-- TestNoMagicStrings/TestNoMagicValues dropped the const/var exemption outside config/ (it masked 156+ string and 7 numeric constants in the wrong place); naming a constant in the wrong package does not fix the structural problem.
-- The 60+ config/ sub-package "explosion" is correct, not a bottleneck: Go's compile unit is the package, so granular packages give precise dependency tracking and minimal recompile; the DX cost is fixed by a README decision tree, not restructuring.
-- Cross-package magic strings (e.g. <pre> HTML tags used by normalize and format) promote to shared config constants (config/marker TagPre/TagPreClose); package-local copies deleted.
+- String-typed enums (type Foo string + const blocks) belong in config/, not
+  domain packages — types without behavior live in config; promote to entity/
+  only when methods/interfaces appear.
+- TestNoMagicStrings/TestNoMagicValues dropped the const/var exemption outside
+  config/ (it masked 156+ string and 7 numeric constants in the wrong place);
+  naming a constant in the wrong package does not fix the structural problem.
+- The 60+ config/ sub-package "explosion" is correct, not a bottleneck: Go's
+  compile unit is the package, so granular packages give precise dependency
+  tracking and minimal recompile; the DX cost is fixed by a README decision
+  tree, not restructuring.
+- Cross-package magic strings (e.g. <pre> HTML tags used by normalize and
+  format) promote to shared config constants (config/marker TagPre/TagPreClose);
+  package-local copies deleted.
 
 ---
 
@@ -169,11 +247,24 @@ For significant decisions:
 
 **Consolidated from**: 5 entries (2026-03-13 to 2026-04-03)
 
-- All user-facing text externalizes to embedded YAML domain files (commands/flags/text/examples split via dedicated loaders), justified by agent legibility (named DescKey constants as traversable graphs) and drift prevention, not i18n; the 3-file ceremony (DescKey + YAML + write/err fn) is the accepted cost.
-- Static embedded data and resource lookups use an explicit Init() called eagerly at startup, not per-accessor sync.Once or package-level init() — makes the startup dependency visible and testable; maps unexported, accessors are plain lookups.
-- A Go↔YAML linkage check (lint-drift check 5, shell grep+comm) catches orphaned/broken DescKey↔YAML links and cross-namespace duplicates at CI time, preventing silent runtime failures.
-- The build target depends on sync-why so derived assets/why/ files cannot drift from their docs/ sources — build fails without sync.
-- MCP resource name constants live in config/mcp/resource (parallel to config/mcp/tool); the resource→file mapping stays in server/resource (too many cross-cutting deps for a config package), pre-built once at server init for O(1) lookup.
+- All user-facing text externalizes to embedded YAML domain files
+  (commands/flags/text/examples split via dedicated loaders), justified by agent
+  legibility (named DescKey constants as traversable graphs) and drift
+  prevention, not i18n; the 3-file ceremony (DescKey + YAML + write/err fn) is
+  the accepted cost.
+- Static embedded data and resource lookups use an explicit Init() called
+  eagerly at startup, not per-accessor sync.Once or package-level init() —
+  makes the startup dependency visible and testable; maps unexported, accessors
+  are plain lookups.
+- A Go↔YAML linkage check (lint-drift check 5, shell grep+comm) catches
+  orphaned/broken DescKey↔YAML links and cross-namespace duplicates at CI
+  time, preventing silent runtime failures.
+- The build target depends on sync-why so derived assets/why/ files cannot drift
+  from their docs/ sources — build fails without sync.
+- MCP resource name constants live in config/mcp/resource (parallel to
+  config/mcp/tool); the resource→file mapping stays in server/resource (too
+  many cross-cutting deps for a config package), pre-built once at server init
+  for O(1) lookup.
 
 ---
 
@@ -181,11 +272,28 @@ For significant decisions:
 
 **Consolidated from**: 5 entries (2026-04-13 to 2026-05-21)
 
-- Walk boundary uses git as a hint, not a requirement: walkForContextDir consults findGitRoot to anchor ancestor .context candidates and falls back to CWD when no git is found — fixes nested-repo binding without making git mandatory or relying on unreliable project markers.
-- ctx activate is strict-CWD (drop upward walk): state-setting commands follow git's read-vs-state pattern (read walks, state refuses to cross repo boundaries); workspace-shared layouts are preserved by user action (cd first), not inferred walk.
-- Anchor ctx to CWD entirely: drop activate/deactivate, the env-var (CTX_DIR) resolver, and all walks. With .context/ mandated as .git/'s sibling, every resolver collapses to os.Stat; keeping any walk would force maintaining two implementations. Mental model matches helm/terraform/Claude Code; ~600-1000 LOC net deletion (specs/cwd-anchored-context.md).
-- Spec steps 1+2 (resolver swap + init-guard removal) merged into one commit because step 1 cannot compile without step 2; cleanest commit boundaries beat strict spec adherence — remaining steps stay discrete (4-commit decomposition, not the spec's 5).
-- Substrate vs. artifact placement: cognitive substrate (read AND written via ctx-mediated paths) lives under .context/; project artifacts (read/edited directly by humans, e.g. specs/, CLAUDE.md, docs/) live at root. kb passes all three coupling tests (mediated queries, pipeline coupling, skill discipline) so it stays under .context/.
+- Walk boundary uses git as a hint, not a requirement: walkForContextDir
+  consults findGitRoot to anchor ancestor .context candidates and falls back to
+  CWD when no git is found — fixes nested-repo binding without making git
+  mandatory or relying on unreliable project markers.
+- ctx activate is strict-CWD (drop upward walk): state-setting commands follow
+  git's read-vs-state pattern (read walks, state refuses to cross repo
+  boundaries); workspace-shared layouts are preserved by user action (cd first),
+  not inferred walk.
+- Anchor ctx to CWD entirely: drop activate/deactivate, the env-var (CTX_DIR)
+  resolver, and all walks. With .context/ mandated as .git/'s sibling, every
+  resolver collapses to os.Stat; keeping any walk would force maintaining two
+  implementations. Mental model matches helm/terraform/Claude Code; ~600-1000
+  LOC net deletion (specs/cwd-anchored-context.md).
+- Spec steps 1+2 (resolver swap + init-guard removal) merged into one commit
+  because step 1 cannot compile without step 2; cleanest commit boundaries beat
+  strict spec adherence — remaining steps stay discrete (4-commit
+  decomposition, not the spec's 5).
+- Substrate vs. artifact placement: cognitive substrate (read AND written via
+  ctx-mediated paths) lives under .context/; project artifacts (read/edited
+  directly by humans, e.g. specs/, CLAUDE.md, docs/) live at root. kb passes all
+  three coupling tests (mediated queries, pipeline coupling, skill discipline)
+  so it stays under .context/.
 
 ---
 
@@ -193,9 +301,20 @@ For significant decisions:
 
 **Consolidated from**: 3 entries (2026-03-01 to 2026-06-02)
 
-- Single global key at ~/.ctx/.ctx.key (matches ~/.claude/ convention); one key per machine covers ~99% of users. Replaced the over-engineered slug-based per-project key system; project-local key-next-to-ciphertext was a security antipattern that broke in worktrees. [Original 2026-03-01 entry was marked Superseded by the 2026-03-02 simplification.]
-- Legacy-key auto-migration replaced with a stderr warning only: warn-only is simpler, avoids silent file operations, and keeps the (small, alpha) userbase in control; docs carry migration instructions.
-- Removed the implicit project-local .context/.ctx.key auto-detection tier from ResolveKeyPath: resolution is now (1) explicit .ctxrc key_path, (2) global ~/.ctx/.ctx.key, (3) project-local only as a degenerate fallback when home is unavailable. The local tier was the only thing making worktrees differ from side-by-side terminals; its removal is net deletion, and the previously-silent fire-path decrypt failure is now surfaced.
+- Single global key at ~/.ctx/.ctx.key (matches ~/.claude/ convention); one key
+  per machine covers ~99% of users. Replaced the over-engineered slug-based
+  per-project key system; project-local key-next-to-ciphertext was a security
+  antipattern that broke in worktrees. [Original 2026-03-01 entry was marked
+  Superseded by the 2026-03-02 simplification.]
+- Legacy-key auto-migration replaced with a stderr warning only: warn-only is
+  simpler, avoids silent file operations, and keeps the (small, alpha) userbase
+  in control; docs carry migration instructions.
+- Removed the implicit project-local .context/.ctx.key auto-detection tier from
+  ResolveKeyPath: resolution is now (1) explicit .ctxrc key_path, (2) global
+  ~/.ctx/.ctx.key, (3) project-local only as a degenerate fallback when home is
+  unavailable. The local tier was the only thing making worktrees differ from
+  side-by-side terminals; its removal is net deletion, and the previously-silent
+  fire-path decrypt failure is now surfaced.
 
 ---
 
@@ -203,10 +322,27 @@ For significant decisions:
 
 **Consolidated from**: 4 entries (2026-05-24 to 2026-05-28)
 
-- Discipline enforcement belongs on the verbatim-relay channel, run out-of-band: relay is the one discipline channel that survives tunnel vision; run the auditor in a separate Claude Code session for fresh-context judgment and cost control. New generic channel: a skill writes .context/audit/<kind>.md, a check-audit hook relays unread reports verbatim, ctx audit list/show/dismiss manages lifecycle (digest-bound dismissal).
-- [Superseded] ctxctl first placed at cmd/ctxctl in the same Go module: binary-level isolation via transitive-import exclusion, zero relocation of existing internal/audit files, on the belief a separate go.mod couldn't import the parent's internal/.
-- That belief was empirically disproved: a nested module lexically under the parent path CAN import internal/. So ctxctl became a separate Go module at tools/ctxctl (own go.mod) — a hard module boundary guarantees ctx can never import ctxctl (the asymmetric requirement that matters); one-directional ctxctl→ctx coupling is acceptable for disposable maintainer tooling. A go.work wires the workspace; a guard test asserts cmd/ctx never imports internal/ctxctl.
-- ctxctl is PATH-installed alongside ctx (build to dist/, install to /usr/local/bin/ctxctl) for clean repo roots and one binary across all worktrees, mirroring ctx's install pattern; the local hook calls ctxctl from PATH.
+- Discipline enforcement belongs on the verbatim-relay channel, run out-of-band:
+  relay is the one discipline channel that survives tunnel vision; run the
+  auditor in a separate Claude Code session for fresh-context judgment and cost
+  control. New generic channel: a skill writes .context/audit/<kind>.md, a
+  check-audit hook relays unread reports verbatim, ctx audit list/show/dismiss
+  manages lifecycle (digest-bound dismissal).
+- [Superseded] ctxctl first placed at cmd/ctxctl in the same Go module:
+  binary-level isolation via transitive-import exclusion, zero relocation of
+  existing internal/audit files, on the belief a separate go.mod couldn't import
+  the parent's internal/.
+- That belief was empirically disproved: a nested module lexically under the
+  parent path CAN import internal/. So ctxctl became a separate Go module at
+  tools/ctxctl (own go.mod) — a hard module boundary guarantees ctx can never
+  import ctxctl (the asymmetric requirement that matters); one-directional
+  ctxctl→ctx coupling is acceptable for disposable maintainer tooling. A
+  go.work wires the workspace; a guard test asserts cmd/ctx never imports
+  internal/ctxctl.
+- ctxctl is PATH-installed alongside ctx (build to dist/, install to
+  /usr/local/bin/ctxctl) for clean repo roots and one binary across all
+  worktrees, mirroring ctx's install pattern; the local hook calls ctxctl from
+  PATH.
 
 ---
 
@@ -214,12 +350,31 @@ For significant decisions:
 
 **Consolidated from**: 6 entries (2026-05-10 to 2026-05-16)
 
-- Lift the sibling clean-room project's battle-tested editorial pipeline into ctx as v1, paired with handover: it is field-tested under production use and your-project is already paying the workaround tax (N=1 lived validation); lift the whole shape with a non-colliding rename, not hedge-and-defer.
-- Mandate git as an architectural precondition: persistent-memory is dishonest without an undo layer (git reflog); refuse-on-no-git rather than auto-git-init (ctx never modifies the filesystem outside .context/); eliminates commit:none dead-code branches. Breaking change in next minor.
-- KB ontology is pipeline-only-writer; no /ctx-kb-decide skill: in a KB you don't decide, you increase confidence — even NL assertions are evidence-capture events, not decision-capture. KB surface stays small (4 mode skills + ctx kb note); canonical capture skills unchanged.
-- Phase KB ships handover + editorial paired, not split: the closeout/fold mechanism is the integration point; shipping paired stresses the fold on day one rather than retrofitting it.
-- Editorial constitution lives at .context/ingest/KB-RULES.md, not CONSTITUTION.md: lifts the sibling project's resolved naming-collision (their 10-INGEST_RULES.md rename) so ctx CONSTITUTION.md keeps its singular meaning; same discipline carries to domain-decisions.md vs DECISIONS.md.
-- Phase KB lifts the *current* upstream pipeline shape (pass-mode contract, completion circuit breaker, source-coverage state-machine ledger, topic-adjacency pre-flight, cold-reader rubric, folder-shaped topics from day one, CLI-as-scaffold-authority), superseding the brief's 4-phase model — lifting the older shape would re-fight wounds the upstream author already healed.
+- Lift the sibling clean-room project's battle-tested editorial pipeline into
+  ctx as v1, paired with handover: it is field-tested under production use and
+  your-project is already paying the workaround tax (N=1 lived validation); lift
+  the whole shape with a non-colliding rename, not hedge-and-defer.
+- Mandate git as an architectural precondition: persistent-memory is dishonest
+  without an undo layer (git reflog); refuse-on-no-git rather than auto-git-init
+  (ctx never modifies the filesystem outside .context/); eliminates commit:none
+  dead-code branches. Breaking change in next minor.
+- KB ontology is pipeline-only-writer; no /ctx-kb-decide skill: in a KB you
+  don't decide, you increase confidence — even NL assertions are
+  evidence-capture events, not decision-capture. KB surface stays small (4 mode
+  skills + ctx kb note); canonical capture skills unchanged.
+- Phase KB ships handover + editorial paired, not split: the closeout/fold
+  mechanism is the integration point; shipping paired stresses the fold on day
+  one rather than retrofitting it.
+- Editorial constitution lives at .context/ingest/KB-RULES.md, not
+  CONSTITUTION.md: lifts the sibling project's resolved naming-collision (their
+  10-INGEST_RULES.md rename) so ctx CONSTITUTION.md keeps its singular meaning;
+  same discipline carries to domain-decisions.md vs DECISIONS.md.
+- Phase KB lifts the *current* upstream pipeline shape (pass-mode contract,
+  completion circuit breaker, source-coverage state-machine ledger,
+  topic-adjacency pre-flight, cold-reader rubric, folder-shaped topics from day
+  one, CLI-as-scaffold-authority), superseding the brief's 4-phase model —
+  lifting the older shape would re-fight wounds the upstream author already
+  healed.
 
 ---
 
@@ -227,12 +382,30 @@ For significant decisions:
 
 **Consolidated from**: 6 entries (2026-03-06 to 2026-05-23)
 
-- Peer MCP model for external tools (GitNexus, context-mode): side-by-side servers each queried independently by the agent, chosen over orchestrator/hub models to respect ctx's markdown-on-filesystem invariant and avoid coupling/plugin registries.
-- Skills stay CLI-based; MCP Prompts are the protocol equivalent: CLI is always available (PATH prereq), MCP is optional config, hooks are always CLI — two access patterns in one tool is gratuitous complexity.
-- Recommend companion RAGs as peer MCP servers, not bridged through ctx: MCP is the composition layer; ctx is context, RAGs are intelligence — no bridging, plugin system, or schema abstraction.
-- Companion tools documented as optional MCP enhancements with a runtime check (/ctx-remember smoke-tests MCPs at session start; companion_check:false suppresses) so users learn what enhances their workflow without being forced to install.
-- MCP gateway not worth the coupling cost: a gateway would make ctx own install/uninstall/version/error-surface for tools it doesn't ship (bidirectional ownership coupling); composition is already MCP's job and the skills already work peer-to-peer. The pluggable-graph-tool task was skipped as a direct consequence (pluggability without ownership is incoherent).
-- Skill body text uses capability-first language with canonical tools as examples; install-guide docs name canonical implementations directly (newcomers need a recommendation); allowed-tools frontmatter stays MCP-specific (genericizing to mcp__* is a permission expansion). Pure text rewrite, no new abstraction layer.
+- Peer MCP model for external tools (GitNexus, context-mode): side-by-side
+  servers each queried independently by the agent, chosen over orchestrator/hub
+  models to respect ctx's markdown-on-filesystem invariant and avoid
+  coupling/plugin registries.
+- Skills stay CLI-based; MCP Prompts are the protocol equivalent: CLI is always
+  available (PATH prereq), MCP is optional config, hooks are always CLI — two
+  access patterns in one tool is gratuitous complexity.
+- Recommend companion RAGs as peer MCP servers, not bridged through ctx: MCP is
+  the composition layer; ctx is context, RAGs are intelligence — no bridging,
+  plugin system, or schema abstraction.
+- Companion tools documented as optional MCP enhancements with a runtime check
+  (/ctx-remember smoke-tests MCPs at session start; companion_check:false
+  suppresses) so users learn what enhances their workflow without being forced
+  to install.
+- MCP gateway not worth the coupling cost: a gateway would make ctx own
+  install/uninstall/version/error-surface for tools it doesn't ship
+  (bidirectional ownership coupling); composition is already MCP's job and the
+  skills already work peer-to-peer. The pluggable-graph-tool task was skipped as
+  a direct consequence (pluggability without ownership is incoherent).
+- Skill body text uses capability-first language with canonical tools as
+  examples; install-guide docs name canonical implementations directly
+  (newcomers need a recommendation); allowed-tools frontmatter stays
+  MCP-specific (genericizing to mcp__* is a permission expansion). Pure text
+  rewrite, no new abstraction layer.
 
 ---
 
@@ -240,11 +413,26 @@ For significant decisions:
 
 **Consolidated from**: 5 entries (2026-03-14 to 2026-05-23)
 
-- Session prefixes are parser vocabulary, not i18n text: header-recognition patterns move to .ctxrc session_prefixes (default Session:), separating content recognition from interface language so users parse multilingual session files without code changes.
-- Classify rules are user-configurable via .ctxrc (classify_rules overrides config/memory defaults) — same pattern as session_prefixes, for non-English/specialized domains.
-- Spec signal words and the nudge threshold (spec_signal_words, spec_nudge_min_len) are .ctxrc-configurable — signal words are language- and project-dependent.
-- Keep i18n.Fold strict (Unicode case-fold, İ≠i, for identifier dedup/parsing/security comparison); add i18n.MatchKey (Fold + NFKD + strip combining marks) as a separate diacritic-insensitive primitive for matching user input against vocabulary lists. Two explicit-contract primitives beat one conflated primitive or an options flag.
-- Placeholder overrides use EXTEND, not REPLACE, semantics (diverging from SessionPrefixes' REPLACE): the dominant bilingual EN+TR case needs both default and added placeholders rejected simultaneously; REPLACE would silently lose baseline coverage. Opt-in placeholders_replace:true reserved if REPLACE is later wanted.
+- Session prefixes are parser vocabulary, not i18n text: header-recognition
+  patterns move to .ctxrc session_prefixes (default Session:), separating
+  content recognition from interface language so users parse multilingual
+  session files without code changes.
+- Classify rules are user-configurable via .ctxrc (classify_rules overrides
+  config/memory defaults) — same pattern as session_prefixes, for
+  non-English/specialized domains.
+- Spec signal words and the nudge threshold (spec_signal_words,
+  spec_nudge_min_len) are .ctxrc-configurable — signal words are language- and
+  project-dependent.
+- Keep i18n.Fold strict (Unicode case-fold, İ≠i, for identifier
+  dedup/parsing/security comparison); add i18n.MatchKey (Fold + NFKD + strip
+  combining marks) as a separate diacritic-insensitive primitive for matching
+  user input against vocabulary lists. Two explicit-contract primitives beat one
+  conflated primitive or an options flag.
+- Placeholder overrides use EXTEND, not REPLACE, semantics (diverging from
+  SessionPrefixes' REPLACE): the dominant bilingual EN+TR case needs both
+  default and added placeholders rejected simultaneously; REPLACE would silently
+  lose baseline coverage. Opt-in placeholders_replace:true reserved if REPLACE
+  is later wanted.
 
 ---
 
@@ -252,12 +440,32 @@ For significant decisions:
 
 **Consolidated from**: 7 entries (2026-04-01 to 2026-05-22)
 
-- Embedded foreign-language assets (TS/Bash/PowerShell/YAML) under internal/assets/ are intentional, not a smell: every file is //go:embed'd into the ctx binary and written at ctx setup; internal/ is about import privacy, not source language. The fix for the legibility gap was a contract README, not relocation (//go:embed can't reference ../).
-- assets/hooks/ split into assets/integrations/ (tool-integration assets: Copilot instructions, AGENTS.md, CLI scripts/skills) + assets/hooks/messages/ (hook-system templates) — integration assets are not hooks.
-- Embedded harnesses (//go:embed'd, shipped via ctx setup) and separately-published harnesses (e.g. VS Code extension → marketplace, own cadence) are first-class peers with distinct CI/release pipelines; a new harness declares which pattern it follows before placing files.
-- OpenCode plugin ships without a tool.execute.before hook: the natural fit (block-dangerous-commands) isn't a ctx Go subcommand and shimming would brick the editor (Cobra exit-1 read as {blocked:true}) on installs without the Claude wrapper. This omission is permanent — block-dangerous-commands will not be promoted to a ctx Go subcommand; the perpetually-pending re-add task is closed.
-- Under cwd-anchored, the OpenCode plugin's agent shell tool can't be anchored to project root (the @opencode-ai/plugin SDK exposes only env, not cwd on shell.env); drop the shell.env handler and document launch-from-root. Plugin-internal ceremony calls stay anchored; the cwd-anchored error message is self-fixing.
-- Editor-integration plugins must filter post-commit to actual git commit invocations (regex on the extracted command), not fire on every shell call — firing on noise trains users to ignore nudges.
+- Embedded foreign-language assets (TS/Bash/PowerShell/YAML) under
+  internal/assets/ are intentional, not a smell: every file is //go:embed'd into
+  the ctx binary and written at ctx setup; internal/ is about import privacy,
+  not source language. The fix for the legibility gap was a contract README, not
+  relocation (//go:embed can't reference ../).
+- assets/hooks/ split into assets/integrations/ (tool-integration assets:
+  Copilot instructions, AGENTS.md, CLI scripts/skills) + assets/hooks/messages/
+  (hook-system templates) — integration assets are not hooks.
+- Embedded harnesses (//go:embed'd, shipped via ctx setup) and
+  separately-published harnesses (e.g. VS Code extension → marketplace, own
+  cadence) are first-class peers with distinct CI/release pipelines; a new
+  harness declares which pattern it follows before placing files.
+- OpenCode plugin ships without a tool.execute.before hook: the natural fit
+  (block-dangerous-commands) isn't a ctx Go subcommand and shimming would brick
+  the editor (Cobra exit-1 read as {blocked:true}) on installs without the
+  Claude wrapper. This omission is permanent — block-dangerous-commands will
+  not be promoted to a ctx Go subcommand; the perpetually-pending re-add task is
+  closed.
+- Under cwd-anchored, the OpenCode plugin's agent shell tool can't be anchored
+  to project root (the @opencode-ai/plugin SDK exposes only env, not cwd on
+  shell.env); drop the shell.env handler and document launch-from-root.
+  Plugin-internal ceremony calls stay anchored; the cwd-anchored error message
+  is self-fixing.
+- Editor-integration plugins must filter post-commit to actual git commit
+  invocations (regex on the extracted command), not fire on every shell call —
+  firing on noise trains users to ignore nudges.
 
 ---
 
@@ -265,13 +473,35 @@ For significant decisions:
 
 **Consolidated from**: 8 entries (2026-02-26 to 2026-05-08)
 
-- Context injection v2: extract ~600 lines of diagrams out of FileReadOrder (53% token drop); auto-inject content via additionalContext (soft directives hit a ~75-85% compliance ceiling); imperative framing with an unconditional compliance checkpoint, verbatim relay as fallback. Inject CONSTITUTION/CONVENTIONS/ARCHITECTURE/PLAYBOOK verbatim, DECISIONS/LEARNINGS index-only, TASKS mention-only (~7,700 tokens).
-- Context-load-gate injects only CONSTITUTION + AGENT_PLAYBOOK_GATE (~2k tokens), not the full ReadOrder: hard rules must be present pre-action; everything else is pulled on-demand. AGENT_PLAYBOOK_GATE.md must stay in sync with AGENT_PLAYBOOK.md.
-- .context/state/ is the gitignored, project-scoped home for ephemeral runtime state (following the .context/logs/ precedent); all session state (cooldown tombstones, pause/throttle markers) consolidated there from /tmp, dropping the cleanup-tmp SessionEnd hook (4 hook events → 3).
-- Gate mkdir inside state.Dir() rather than per-caller so "no .context/state/ in uninitialized projects" is structurally enforced; state.Dir() returns ErrNotInitialized (hook callers absorb silently, interactive callers surface a path-bearing message).
-- Tighten state.Dir / rc.ContextDir to (string, error) with sentinel ErrDirNotDeclared: makes the empty-path case unrepresentable in a "looks fine" branch, closing the filepath.Join("", rel) trap that wrote state into CWD.
-- Hook/notification design: prefer toning down docs claims over adding hooks (fatigue from 9 UserPromptSubmit hooks); hook output must be structured JSON (additionalContext), not plain text; dropped prompt-coach hook (zero useful tips, invisible channel); de-emphasized /ctx-journal-normalize (expensive, nondeterministic).
-- Hook log rotation is size-based with one previous generation (current + .1, ~2MB cap), matching the eventlog pattern — O(1) size check, diagnostic logs don't need deep history.
+- Context injection v2: extract ~600 lines of diagrams out of FileReadOrder (53%
+  token drop); auto-inject content via additionalContext (soft directives hit a
+  ~75-85% compliance ceiling); imperative framing with an unconditional
+  compliance checkpoint, verbatim relay as fallback. Inject
+  CONSTITUTION/CONVENTIONS/ARCHITECTURE/PLAYBOOK verbatim, DECISIONS/LEARNINGS
+  index-only, TASKS mention-only (~7,700 tokens).
+- Context-load-gate injects only CONSTITUTION + AGENT_PLAYBOOK_GATE (~2k
+  tokens), not the full ReadOrder: hard rules must be present pre-action;
+  everything else is pulled on-demand. AGENT_PLAYBOOK_GATE.md must stay in sync
+  with AGENT_PLAYBOOK.md.
+- .context/state/ is the gitignored, project-scoped home for ephemeral runtime
+  state (following the .context/logs/ precedent); all session state (cooldown
+  tombstones, pause/throttle markers) consolidated there from /tmp, dropping the
+  cleanup-tmp SessionEnd hook (4 hook events → 3).
+- Gate mkdir inside state.Dir() rather than per-caller so "no .context/state/ in
+  uninitialized projects" is structurally enforced; state.Dir() returns
+  ErrNotInitialized (hook callers absorb silently, interactive callers surface a
+  path-bearing message).
+- Tighten state.Dir / rc.ContextDir to (string, error) with sentinel
+  ErrDirNotDeclared: makes the empty-path case unrepresentable in a "looks fine"
+  branch, closing the filepath.Join("", rel) trap that wrote state into CWD.
+- Hook/notification design: prefer toning down docs claims over adding hooks
+  (fatigue from 9 UserPromptSubmit hooks); hook output must be structured JSON
+  (additionalContext), not plain text; dropped prompt-coach hook (zero useful
+  tips, invisible channel); de-emphasized /ctx-journal-normalize (expensive,
+  nondeterministic).
+- Hook log rotation is size-based with one previous generation (current + .1,
+  ~2MB cap), matching the eventlog pattern — O(1) size check, diagnostic logs
+  don't need deep history.
 
 ---
 
@@ -279,13 +509,53 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: We explored whether ctx should grow a scheduled, background 'dream' (a sleep-time memory process) and how it should relate to canonical memory. Felt pain: the author's ideas/ folder is too overwhelming to triage, and canonical files bloat over time (109 decisions, 151 learnings, 154 unimported sessions). The risk to avoid: a background LLM job autonomously rewriting authoritative memory and silently corrupting it (the research shows continuous LLM consolidation is lossy and non-monotonic). Full debate: .context/briefs/20260606T203414Z-ctx-dream-disciplined-consolidator.md
+**Context**: We explored whether ctx should grow a scheduled, background 'dream'
+(a sleep-time memory process) and how it should relate to canonical memory. Felt
+pain: the author's ideas/ folder is too overwhelming to triage, and canonical
+files bloat over time (109 decisions, 151 learnings, 154 unimported sessions).
+The risk to avoid: a background LLM job autonomously rewriting authoritative
+memory and silently corrupting it (the research shows continuous LLM
+consolidation is lossy and non-monotonic). Full debate:
+.context/briefs/20260606T203414Z-ctx-dream-disciplined-consolidator.md
 
-**Decision**: ctx-dream: standalone proposing memory consolidator (Option B), human-gated via serendipity
+**Decision**: ctx-dream: standalone proposing memory consolidator (Option B),
+human-gated via serendipity
 
-**Rationale**: Chose a NEW, standalone, PROPOSING consolidator (Option B): it writes only to its own sidecar + proposals queue + ledger + per-dream archive, never autonomously to the five canonical files; a human 'serendipity' review session is the sole bridge (accept/reject/amend) into canonical. One skill, two modes: discipline (default; grounded, structured, provenanced proposals) and creative/exploration (a safe relaxation: resurface + chance, reader-only). Principle: decouple the cognition, reuse the plumbing (own the consolidation logic; reuse import/enrich/kb-ingest via the enriched-journal data contract). Standalone so mechanics evolve independently and changes to existing curation skills can't break it, and for creative freedom (don't assume existing verbs suffice). Discipline-first because it is the hard load-bearing substrate and creative is a strict, safer relaxation of it. Grounded in ideas/ctx-dreams/research: Auto-Dreamer (2605.20616) for the architecture, 'Useful Memories Become Faulty When Continuously Updated by LLMs' (2605.12978) for the threat model, and the deep-research eval cluster for the finding that a single agreeable LLM is not an adversarial gate (it silently repairs the missing justification), which is why the gate must be human. Rejected: Option A (dream owns a parallel canonical store, which does not fix bloat and creates two divergent substrates); autonomous mutation / auto-approve (violates 'each memory entry needs dedicated human attention'); pure-garden-only (under-serves engineering's need for grounding and actionability); coupling to existing skills' internals; garden-first build order.
+**Rationale**: Chose a NEW, standalone, PROPOSING consolidator (Option B): it
+writes only to its own sidecar + proposals queue + ledger + per-dream archive,
+never autonomously to the five canonical files; a human 'serendipity' review
+session is the sole bridge (accept/reject/amend) into canonical. One skill, two
+modes: discipline (default; grounded, structured, provenanced proposals) and
+creative/exploration (a safe relaxation: resurface + chance, reader-only).
+Principle: decouple the cognition, reuse the plumbing (own the consolidation
+logic; reuse import/enrich/kb-ingest via the enriched-journal data contract).
+Standalone so mechanics evolve independently and changes to existing curation
+skills can't break it, and for creative freedom (don't assume existing verbs
+suffice). Discipline-first because it is the hard load-bearing substrate and
+creative is a strict, safer relaxation of it. Grounded in
+ideas/ctx-dreams/research: Auto-Dreamer (2605.20616) for the architecture,
+'Useful Memories Become Faulty When Continuously Updated by LLMs' (2605.12978)
+for the threat model, and the deep-research eval cluster for the finding that a
+single agreeable LLM is not an adversarial gate (it silently repairs the missing
+justification), which is why the gate must be human. Rejected: Option A (dream
+owns a parallel canonical store, which does not fix bloat and creates two
+divergent substrates); autonomous mutation / auto-approve (violates 'each memory
+entry needs dedicated human attention'); pure-garden-only (under-serves
+engineering's need for grounding and actionability); coupling to existing
+skills' internals; garden-first build order.
 
-**Consequence**: Positive: nothing autonomous touches canonical, so the system is reversible by construction; the dream's mechanics can evolve freely; v1 (disciplined ideas/ triage, validated via a ctx-remind-nagged ~15-minute review round) is low-stakes and validates the mechanism and author engagement cheaply. Negative / trade-off: no human serendipity session = no consolidation, so the dream's entire value is gated behind human review cadence, and the author historically under-runs curation; mitigated only by ctx-remind nags + targeting felt pain (ideas/) + a pleasure-not-chore framing. Validation of the full product thesis (disciplined consolidation of canonical memory for engineering teams) is deferred to a later test on a project where bloat actually bites. Spec work proceeds via /ctx-spec --brief on the brief above; key mechanics remain open (executor, proposal schema, ledger schema, .context/ layout).
+**Consequence**: Positive: nothing autonomous touches canonical, so the system
+is reversible by construction; the dream's mechanics can evolve freely; v1
+(disciplined ideas/ triage, validated via a ctx-remind-nagged ~15-minute review
+round) is low-stakes and validates the mechanism and author engagement cheaply.
+Negative / trade-off: no human serendipity session = no consolidation, so the
+dream's entire value is gated behind human review cadence, and the author
+historically under-runs curation; mitigated only by ctx-remind nags + targeting
+felt pain (ideas/) + a pleasure-not-chore framing. Validation of the full
+product thesis (disciplined consolidation of canonical memory for engineering
+teams) is deferred to a later test on a project where bloat actually bites. Spec
+work proceeds via /ctx-spec --brief on the brief above; key mechanics remain
+open (executor, proposal schema, ledger schema, .context/ layout).
 
 ---
 
@@ -321,13 +591,21 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: The CLI-FIX spec specified the literal flag --json <file>, but --json is already a bool output-format flag across the CLI (ctx status/drift/doctor/bootstrap --json all mean 'emit machine-readable output').
+**Context**: The CLI-FIX spec specified the literal flag --json <file>, but
+--json is already a bool output-format flag across the CLI (ctx
+status/drift/doctor/bootstrap --json all mean 'emit machine-readable output').
 
 **Decision**: Name the add JSON-ingest flag --json-file, not --json
 
-**Rationale**: Overloading --json as a string input-path on the add commands would break that cross-command convention and confuse muscle memory. --json-file is unambiguous, parallels the existing --file/-f source flag, and leaves -j free. Pushed back on the spec's literal wording rather than satisfice.
+**Rationale**: Overloading --json as a string input-path on the add commands
+would break that cross-command convention and confuse muscle memory. --json-file
+is unambiguous, parallels the existing --file/-f source flag, and leaves -j
+free. Pushed back on the spec's literal wording rather than satisfice.
 
-**Consequence**: The add commands intentionally diverge from the spec's literal --json; the spec was updated to reflect --json-file. Any future JSON-input flag elsewhere should follow the --json-file naming, reserving --json for bool output.
+**Consequence**: The add commands intentionally diverge from the spec's literal
+--json; the spec was updated to reflect --json-file. Any future JSON-input flag
+elsewhere should follow the --json-file naming, reserving --json for bool
+output.
 
 ---
 
@@ -335,13 +613,27 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: `check-resource` alerted DANGER at swap-used ≥ 75% / memory-used ≥ 90% — pure occupancy. macOS swap is sticky (never recedes); post-hibernation swap stays >75% with idle RAM, producing false "wrap up the session" DANGER at session start. Memory occupancy on macOS includes reclaimable cache — also a poor pressure proxy.
+**Context**: `check-resource` alerted DANGER at swap-used ≥ 75% / memory-used
+≥ 90% — pure occupancy. macOS swap is sticky (never recedes);
+post-hibernation swap stays >75% with idle RAM, producing false "wrap up the
+session" DANGER at session start. Memory occupancy on macOS includes reclaimable
+cache — also a poor pressure proxy.
 
-**Decision**: Memory pressure detection uses OS-native signals (macOS pressure level + Linux PSI), not occupancy
+**Decision**: Memory pressure detection uses OS-native signals (macOS pressure
+level + Linux PSI), not occupancy
 
-**Rationale**: Occupancy is a level; pressure is a derivative. Only the kernel's derivative reflects current struggle. macOS: `sysctl kern.memorystatus_vm_pressure_level` (1/2/4 → OK/Warning/Danger). Linux: `/proc/pressure/memory` (PSI) `some.avg10 ≥ 10.0` → warn, `full.avg10 ≥ 10.0` → danger. Windows: filed as an exploratory task; unsupported for now ("other" platform falls through to `PressureSupported=false`, no alert).
+**Rationale**: Occupancy is a level; pressure is a derivative. Only the kernel's
+derivative reflects current struggle. macOS: `sysctl
+kern.memorystatus_vm_pressure_level` (1/2/4 → OK/Warning/Danger). Linux:
+`/proc/pressure/memory` (PSI) `some.avg10 ≥ 10.0` → warn, `full.avg10 ≥
+10.0` → danger. Windows: filed as an exploratory task; unsupported for now
+("other" platform falls through to `PressureSupported=false`, no alert).
 
-**Consequence**: `MemInfo` gains `Pressure` + `PressureSupported`; `threshold.go` drops both occupancy `byteCheck`s and emits a single pressure alert. Doctor swap row removed (no longer a health signal); occupancy fields retained for `ctx stats` display. PSI 10.0 defaults named in `config/stats` — retunable in one place. `make lint` 0 issues, `make test` ok on the change.
+**Consequence**: `MemInfo` gains `Pressure` + `PressureSupported`;
+`threshold.go` drops both occupancy `byteCheck`s and emits a single pressure
+alert. Doctor swap row removed (no longer a health signal); occupancy fields
+retained for `ctx stats` display. PSI 10.0 defaults named in `config/stats` —
+retunable in one place. `make lint` 0 issues, `make test` ok on the change.
 
 ---
 
@@ -349,13 +641,28 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: Adding a safety net for accidental `ctx pad rm` (and any other destructive pad mutation) required choosing where to insert the snapshot logic: per-subcommand (in each cmd/<op>/run.go), or at the persistence choke point (store.WriteEntriesWithIDs).
+**Context**: Adding a safety net for accidental `ctx pad rm` (and any other
+destructive pad mutation) required choosing where to insert the snapshot logic:
+per-subcommand (in each cmd/<op>/run.go), or at the persistence choke point
+(store.WriteEntriesWithIDs).
 
 **Decision**: Pad snapshot-on-mutate at the store.WriteEntries choke point
 
-**Rationale**: store.WriteEntriesWithIDs is invoked by every mutating pad subcommand (add/edit/mv/rm/merge/normalize/resolve/tag and undo itself); instrumenting it once gives universal coverage with one site of truth. Per-subcommand instrumentation would need maintenance every time a new pad mutation lands and is easy to forget. The snapshot itself is a byte-for-byte copy of the existing pad blob (no re-encryption), so plaintext and encrypted modes use identical logic; the existing ciphertext IS the snapshot.
+**Rationale**: store.WriteEntriesWithIDs is invoked by every mutating pad
+subcommand (add/edit/mv/rm/merge/normalize/resolve/tag and undo itself);
+instrumenting it once gives universal coverage with one site of truth.
+Per-subcommand instrumentation would need maintenance every time a new pad
+mutation lands and is easy to forget. The snapshot itself is a byte-for-byte
+copy of the existing pad blob (no re-encryption), so plaintext and encrypted
+modes use identical logic; the existing ciphertext IS the snapshot.
 
-**Consequence**: All future pad mutations get the safety net automatically without per-command wiring. The op label for the snapshot filename is derived from cmd.Name() at the call site, so the cmd parameter that already flowed in for diagnostic output now carries semantic weight too. New constraint: any future code path that bypasses WriteEntriesWithIDs to mutate the pad will silently bypass the safety net — a guardrail test could enforce this if/when that risk materializes.
+**Consequence**: All future pad mutations get the safety net automatically
+without per-command wiring. The op label for the snapshot filename is derived
+from cmd.Name() at the call site, so the cmd parameter that already flowed in
+for diagnostic output now carries semantic weight too. New constraint: any
+future code path that bypasses WriteEntriesWithIDs to mutate the pad will
+silently bypass the safety net — a guardrail test could enforce this if/when
+that risk materializes.
 
 ---
 
@@ -363,13 +670,23 @@ For significant decisions:
 
 **Status**: Accepted
 
-**Context**: Per-session, operator-specific artifacts that grow without bound and can leak host/internal identifiers (ari, asgard, broadcom-class) into public mirrors when the project's .context/ is committed.
+**Context**: Per-session, operator-specific artifacts that grow without bound
+and can leak host/internal identifiers into public
+mirrors when the project's .context/ is committed.
 
 **Decision**: Gitignore .context/handovers/; track only .gitkeep
 
-**Rationale**: Aligns with the existing per-personal-state gitignore family (journal, memory, state, logs, reminders.json, scratchpad.enc); the directory's .gitkeep keeps the read-side missing-dir gate passing on fresh clones; the rest of the closeout-fold pipeline already lives in .context/archive/closeouts/ which IS tracked.
+**Rationale**: Aligns with the existing per-personal-state gitignore family
+(journal, memory, state, logs, reminders.json, scratchpad.enc); the directory's
+.gitkeep keeps the read-side missing-dir gate passing on fresh clones; the rest
+of the closeout-fold pipeline already lives in .context/archive/closeouts/ which
+IS tracked.
 
-**Consequence**: ctx init template (internal/config/file/ignore.go) added .context/handovers/* and !.context/handovers/.gitkeep; existing tracked handovers untracked via git rm --cached but kept on disk; the 'handover is the sole authoritative recall artifact' phrasing in KB-RULES.md still holds — it's local-machine authoritative.
+**Consequence**: ctx init template (internal/config/file/ignore.go) added
+.context/handovers/* and !.context/handovers/.gitkeep; existing tracked
+handovers untracked via git rm --cached but kept on disk; the 'handover is the
+sole authoritative recall artifact' phrasing in KB-RULES.md still holds — it's
+local-machine authoritative.
 
 ---
 
@@ -384,8 +701,8 @@ already handles cross-machine knowledge persistence.
 **Decision**: Deprecate and remove ctx backup
 
 **Rationale**: Hub handles persistence, backup is env-specific, wrong layer for
-ctx to own. No external users depend on it. Broadcom mirror issue and GVFS
-Linux-only dependency add maintenance burden.
+ctx to own. No external users depend on it. An internal mirror issue and the
+GVFS Linux-only dependency add maintenance burden.
 
 **Consequence**: Need backup-strategy runbook before removal. Maintainer must
 set up replacement cron job. About 60 files to remove across CLI, config, hooks,

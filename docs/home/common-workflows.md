@@ -257,7 +257,7 @@ ctx system bootstrap
 
 This prints the resolved context directory, the files in it, and the
 operating rules. The `CLAUDE.md` template instructs the agent to run this
-automatically. See [CLI Reference: bootstrap](../cli/system.md#ctx-system-bootstrap).
+automatically. See [CLI Reference: bootstrap](../cli/bootstrap.md#ctx-system-bootstrap).
 
 ## The Two Skills You Should Always Use
 
@@ -355,6 +355,7 @@ These have no CLI equivalent. They require the agent's reasoning.
 | `/ctx-prompt-audit`       | Analyze prompting patterns for improvement                                              |
 | `/ctx-plan`               | Stress-test an existing plan through adversarial interview                              |
 | `/ctx-plan-import`       | Import Claude Code plan files into project specs                                        |
+| `/ctx-task-out`           | Decompose a committed spec into a per-milestone implementation plan                     |
 | `/ctx-implement`          | Execute a plan step-by-step with verification                                           |
 | `/ctx-worktree`           | Manage parallel agent worktrees                                                         |
 | `/ctx-journal-enrich`     | Add metadata, tags, and summaries to journal entries                                    |
