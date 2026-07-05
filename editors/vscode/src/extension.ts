@@ -23,70 +23,6 @@ let extensionCtx: vscode.ExtensionContext | undefined;
 // Status bar item for context reminders
 let reminderStatusBar: vscode.StatusBarItem | undefined;
 
-// --- Detection ring: deny patterns for governance ---
-const DENY_COMMAND_PATTERNS: RegExp[] = [
-  /\bsudo\s/,
-  /\brm\s+-rf\s+[/~]/,
-  /\bgit\s+push\b/,
-  /\bgit\s+reset\s+--hard\b/,
-  /\bcurl\s/,
-  /\bwget\s/,
-  /\bchmod\s+777\b/,
-];
-const DENY_COMMAND_SCRIPT_PATTERNS: RegExp[] = [
-  /hack\/[^/]+\.sh\b/,
-  /hack\\[^\\]+\.sh\b/,
-];
-const SENSITIVE_FILE_PATTERNS: RegExp[] = [
-  /\.env$/,
-  /\.env\./,
-  /\.pem$/,
-  /\.key$/,
-  /credentials/i,
-  /secret/i,
-];
-
-/**
- * Record a governance violation to .context/state/violations.json.
- * The MCP governance engine reads this file and escalates to CRITICAL
- * warnings in tool responses.
- */
-function recordViolation(
-  cwd: string,
-  kind: string,
-  detail: string
-): void {
-  try {
-    const stateDir = path.join(cwd, ".context", "state");
-    if (!fs.existsSync(stateDir)) {
-      fs.mkdirSync(stateDir, { recursive: true });
-    }
-    const violationsPath = path.join(stateDir, "violations.json");
-    let violations: { entries: Array<{ kind: string; detail: string; timestamp: string }> } = {
-      entries: [],
-    };
-    if (fs.existsSync(violationsPath)) {
-      try {
-        violations = JSON.parse(fs.readFileSync(violationsPath, "utf-8"));
-      } catch {
-        // corrupt file — reset
-      }
-    }
-    violations.entries.push({
-      kind,
-      detail,
-      timestamp: new Date().toISOString(),
-    });
-    // Keep only the last 50 violations
-    if (violations.entries.length > 50) {
-      violations.entries = violations.entries.slice(-50);
-    }
-    fs.writeFileSync(violationsPath, JSON.stringify(violations, null, 2), "utf-8");
-  } catch {
-    // Non-fatal — governance is advisory
-  }
-}
-
 function getCtxPath(): string {
   if (resolvedCtxPath) {
     return resolvedCtxPath;
@@ -345,11 +281,24 @@ function mergeOutput(stdout: string, stderr: string): string {
   return out + "\n" + err;
 }
 
+/**
+ * Result of a `ctx` invocation. `code` is the process exit code (0 on
+ * success, non-zero on failure); `null` when the process was terminated
+ * by a signal before exiting. Callers that must distinguish success from
+ * failure inspect `code` — a non-empty `stdout`/`stderr` is NOT proof of
+ * success (an unknown subcommand prints usage to stderr and exits 1).
+ */
+interface CtxRun {
+  stdout: string;
+  stderr: string;
+  code: number | null;
+}
+
 function runCtx(
   args: string[],
   cwd?: string,
   token?: vscode.CancellationToken
-): Promise<{ stdout: string; stderr: string }> {
+): Promise<CtxRun> {
   const ctxPath = getCtxPath();
   return new Promise((resolve, reject) => {
     if (token?.isCancellationRequested) {
@@ -376,16 +325,41 @@ function runCtx(
           disposable?.dispose();
         }
         if (error) {
-          // Still return output even on non-zero exit — ctx drift uses exit 1
-          // for "drift detected" which is a valid result
-          if (stdout || stderr) {
-            resolve({ stdout, stderr });
+          const err = error as NodeJS.ErrnoException & {
+            killed?: boolean;
+            signal?: NodeJS.Signals | null;
+            code?: number | string;
+          };
+          // Killed by cancellation, the 30s timeout, or a signal: the
+          // output is partial and MUST NOT be presented as a result.
+          // (execFile sets `killed` on timeout too, alongside SIGTERM.)
+          if (err.killed || err.signal || token?.isCancellationRequested) {
+            reject(
+              new Error(
+                `\`ctx ${args.join(" ")}\` was cancelled or timed out` +
+                  (err.signal ? ` (${err.signal})` : "")
+              )
+            );
             return;
           }
-          reject(error);
+          // Failure to spawn (e.g. ENOENT) surfaces as a string `code`
+          // and no output — there is no result to show.
+          if (typeof err.code === "string" || (!stdout && !stderr)) {
+            reject(error);
+            return;
+          }
+          // Non-zero exit WITH output. Surface the output (some commands,
+          // e.g. `ctx drift`, use exit 1 as a meaningful signal), but
+          // report the real exit code so callers can tell failure from
+          // success instead of assuming any output means it worked.
+          resolve({
+            stdout,
+            stderr,
+            code: typeof err.code === "number" ? err.code : 1,
+          });
           return;
         }
-        resolve({ stdout, stderr });
+        resolve({ stdout, stderr, code: 0 });
       }
     );
     disposable = token?.onCancellationRequested(() => {
@@ -419,7 +393,7 @@ async function handleInit(
     stream.progress("Generating Copilot instructions...");
     try {
       const hookResult = await runCtx(
-        ["hook", "copilot", "--write"],
+        ["setup", "copilot", "--write"],
         cwd,
         token
       );
@@ -530,54 +504,25 @@ async function handleRecall(
   let args: string[];
   let progressMsg: string;
 
+  // Session history moved from the standalone `ctx recall` command to
+  // `ctx journal source` (list + inspect raw session files). Lock/unlock/
+  // sync now operate on journal entries and are reached via `@ctx /journal`.
   switch (subcmd) {
     case "show":
       if (!rest) {
         stream.markdown("**Usage:** `@ctx /recall show <id>`");
         return { metadata: { command: "recall" } };
       }
-      args = ["recall", "show", rest];
+      args = ["journal", "source", "--show", rest];
       progressMsg = "Loading session details...";
-      break;
-    case "export":
-      if (!rest) {
-        stream.markdown("**Usage:** `@ctx /recall export <id>`");
-        return { metadata: { command: "recall" } };
-      }
-      args = ["recall", "export", rest];
-      progressMsg = "Exporting session...";
-      break;
-    case "lock":
-      if (!rest) {
-        stream.markdown("**Usage:** `@ctx /recall lock <id>`");
-        return { metadata: { command: "recall" } };
-      }
-      args = ["recall", "lock", rest];
-      progressMsg = "Locking session...";
-      break;
-    case "unlock":
-      if (!rest) {
-        stream.markdown("**Usage:** `@ctx /recall unlock <id>`");
-        return { metadata: { command: "recall" } };
-      }
-      args = ["recall", "unlock", rest];
-      progressMsg = "Unlocking session...";
-      break;
-    case "sync":
-      args = ["recall", "sync"];
-      progressMsg = "Syncing recall database...";
       break;
     case "list":
     default: {
-      args = ["recall", "list"];
-      progressMsg = "Searching session history...";
+      args = ["journal", "source"];
+      progressMsg = "Listing sessions...";
       const limitMatch = prompt.match(/(?:--limit\s+|limit\s+)(\d+)/);
       if (limitMatch) {
         args.push("--limit", limitMatch[1]);
-      }
-      const query = (subcmd === "list" ? rest : prompt.trim()).replace(/--limit\s+\d+/, "").replace(/limit\s+\d+/, "").trim();
-      if (query) {
-        args.push("--query", query);
       }
       break;
     }
@@ -610,7 +555,7 @@ async function handleHook(
   const tool = parts[0] || "copilot";
   const preview = parts.includes("preview") || parts.includes("--preview");
 
-  const args = ["hook", tool];
+  const args = ["setup", tool];
   if (!preview) {
     args.push("--write");
   }
@@ -661,7 +606,9 @@ async function handleAdd(
 
   stream.progress(`Adding ${type}...`);
   try {
-    const args = ["add", type];
+    // The generic `ctx add <type>` was split into per-artifact
+    // subcommands: `ctx task add`, `ctx decision add`, etc.
+    const args = [type, "add"];
     if (content) {
       args.push(content);
     }
@@ -760,7 +707,7 @@ async function handleComplete(
   stream.progress("Marking task as completed...");
   try {
     const { stdout, stderr } = await runCtx(
-      ["complete", taskRef],
+      ["task", "complete", taskRef],
       cwd,
       token
     );
@@ -850,11 +797,11 @@ async function handleTasks(
 
   switch (subcmd) {
     case "archive":
-      args = ["tasks", "archive"];
+      args = ["task", "archive"];
       progressMsg = "Archiving completed tasks...";
       break;
     case "snapshot":
-      args = rest ? ["tasks", "snapshot", rest] : ["tasks", "snapshot"];
+      args = rest ? ["task", "snapshot", rest] : ["task", "snapshot"];
       progressMsg = "Creating task snapshot...";
       break;
     default:
@@ -994,11 +941,11 @@ async function handleNotify(
 
   switch (subcmd) {
     case "setup":
-      args = ["notify", "setup"];
+      args = ["hook", "notify", "setup"];
       progressMsg = "Setting up webhook...";
       break;
     case "test":
-      args = ["notify", "test"];
+      args = ["hook", "notify", "test"];
       progressMsg = "Sending test notification...";
       break;
     default: {
@@ -1015,7 +962,7 @@ async function handleNotify(
         );
         return { metadata: { command: "notify" } };
       }
-      args = ["notify", ...parts];
+      args = ["hook", "notify", ...parts];
       progressMsg = "Sending notification...";
       break;
     }
@@ -1058,7 +1005,7 @@ async function handleSystem(
 
   switch (subcmd) {
     case "resources":
-      args = ["system", "resources"];
+      args = ["sysinfo"];
       progressMsg = "Checking system resources...";
       break;
     case "bootstrap":
@@ -1070,19 +1017,15 @@ async function handleSystem(
       progressMsg = "Running diagnostics...";
       break;
     case "message":
-      args = ["system", "message", ...parts.slice(1)];
+      args = ["hook", "message", ...parts.slice(1)];
       if (parts.length < 2 || !["list", "show", "edit", "reset"].includes(parts[1]?.toLowerCase())) {
-        args = ["system", "message", "list"];
+        args = ["hook", "message", "list"];
       }
       progressMsg = "Managing hook messages...";
       break;
     case "stats":
-      args = ["system", "stats"];
-      progressMsg = "Loading system stats...";
-      break;
-    case "backup":
-      args = ["system", "backup"];
-      progressMsg = "Running backup...";
+      args = ["usage"];
+      progressMsg = "Loading session usage...";
       break;
     default:
       stream.markdown(
@@ -1092,8 +1035,7 @@ async function handleSystem(
           "| `resources` | Show system resource usage |\n" +
           "| `doctor` | Diagnose context health |\n" +
           "| `bootstrap` | Print context location for AI agents |\n" +
-          "| `stats` | Show session and context stats |\n" +
-          "| `backup` | Backup context data |\n" +
+          "| `stats` | Show session token usage |\n" +
           "| `message list` | List hook message templates |\n" +
           "| `message show <hook>` | Show a hook message |\n" +
           "| `message edit <hook>` | Edit a hook message |\n" +
@@ -1208,7 +1150,7 @@ async function handleRemember(
 ): Promise<CtxResult> {
   stream.progress("Loading recent sessions...");
   try {
-    const args = ["recall", "list"];
+    const args = ["journal", "source"];
     const limitMatch = prompt.match(/(?:--limit\s+|limit\s+)(\d+)/);
     args.push("--limit", limitMatch ? limitMatch[1] : "3");
     const { stdout, stderr } = await runCtx(args, cwd, token);
@@ -1534,71 +1476,6 @@ async function handleMap(
     stream.markdown(`**Error:** ${err instanceof Error ? err.message : String(err)}`);
   }
   return { metadata: { command: "map" } };
-}
-
-async function handlePromptTpl(
-  stream: vscode.ChatResponseStream,
-  prompt: string,
-  cwd: string,
-  token: vscode.CancellationToken
-): Promise<CtxResult> {
-  stream.progress("Loading prompt templates...");
-  try {
-    const promptsDir = path.join(cwd, ".context", "prompts");
-    const parts = prompt.trim().split(/\s+/);
-    const subcmd = parts[0]?.toLowerCase();
-    const rest = parts.slice(1).join(" ");
-
-    if (subcmd === "add") {
-      if (!rest) {
-        stream.markdown("**Usage:** `@ctx /prompt add <file-path>`\n\nAdds a file as a prompt template.");
-        return { metadata: { command: "prompt" } };
-      }
-      const args = ["prompt", "add", rest];
-      const { stdout, stderr } = await runCtx(args, cwd, token);
-      const output = mergeOutput(stdout, stderr);
-      stream.markdown(output ? "```\n" + output + "\n```" : `Template **${rest}** added.`);
-      return { metadata: { command: "prompt" } };
-    }
-
-    if (subcmd === "rm" || subcmd === "remove" || subcmd === "delete") {
-      if (!rest) {
-        stream.markdown("**Usage:** `@ctx /prompt rm <name>`");
-        return { metadata: { command: "prompt" } };
-      }
-      const args = ["prompt", "rm", rest];
-      const { stdout, stderr } = await runCtx(args, cwd, token);
-      const output = mergeOutput(stdout, stderr);
-      stream.markdown(output ? "```\n" + output + "\n```" : `Template **${rest}** removed.`);
-      return { metadata: { command: "prompt" } };
-    }
-
-    if (!fs.existsSync(promptsDir)) {
-      stream.markdown("No `.context/prompts/` directory found.");
-      return { metadata: { command: "prompt" } };
-    }
-    const files = fs.readdirSync(promptsDir).filter((f) => f.endsWith(".md"));
-    if (!prompt.trim()) {
-      if (files.length === 0) {
-        stream.markdown("`.context/prompts/` is empty. Add prompt templates with `@ctx /prompt add <file>`.");
-      } else {
-        stream.markdown("## Prompt Templates\n\n" + files.map((f) => `- \`${f}\``).join("\n") +
-          "\n\nView: `@ctx /prompt <name>`\nAdd: `@ctx /prompt add <file>`\nRemove: `@ctx /prompt rm <name>`");
-      }
-    } else {
-      const name = prompt.trim();
-      const match = files.find((f) => f.toLowerCase().includes(name.toLowerCase()));
-      if (match) {
-        const content = fs.readFileSync(path.join(promptsDir, match), "utf-8");
-        stream.markdown(`## ${match}\n\n${content}`);
-      } else {
-        stream.markdown(`No template matching "${name}". Available: ${files.join(", ")}`);
-      }
-    }
-  } catch (err: unknown) {
-    stream.markdown(`**Error:** ${err instanceof Error ? err.message : String(err)}`);
-  }
-  return { metadata: { command: "prompt" } };
 }
 
 async function handleBlog(
@@ -1985,7 +1862,7 @@ async function handleDecisions(
   if (subcmd === "reindex") {
     stream.progress("Reindexing decisions...");
     try {
-      const { stdout, stderr } = await runCtx(["decisions", "reindex"], cwd, token);
+      const { stdout, stderr } = await runCtx(["decision", "reindex"], cwd, token);
       const output = mergeOutput(stdout, stderr);
       stream.markdown(output ? "```\n" + output + "\n```" : "Decision index rebuilt.");
     } catch (err: unknown) {
@@ -1994,7 +1871,7 @@ async function handleDecisions(
   } else {
     stream.progress("Loading decisions...");
     try {
-      const { stdout, stderr } = await runCtx(["decisions"], cwd, token);
+      const { stdout, stderr } = await runCtx(["decision"], cwd, token);
       const output = mergeOutput(stdout, stderr);
       stream.markdown(output ? "```\n" + output + "\n```" : "No decisions found.");
     } catch (err: unknown) {
@@ -2015,7 +1892,7 @@ async function handleLearnings(
   if (subcmd === "reindex") {
     stream.progress("Reindexing learnings...");
     try {
-      const { stdout, stderr } = await runCtx(["learnings", "reindex"], cwd, token);
+      const { stdout, stderr } = await runCtx(["learning", "reindex"], cwd, token);
       const output = mergeOutput(stdout, stderr);
       stream.markdown(output ? "```\n" + output + "\n```" : "Learning index rebuilt.");
     } catch (err: unknown) {
@@ -2024,7 +1901,7 @@ async function handleLearnings(
   } else {
     stream.progress("Loading learnings...");
     try {
-      const { stdout, stderr } = await runCtx(["learnings"], cwd, token);
+      const { stdout, stderr } = await runCtx(["learning"], cwd, token);
       const output = mergeOutput(stdout, stderr);
       stream.markdown(output ? "```\n" + output + "\n```" : "No learnings found.");
     } catch (err: unknown) {
@@ -2107,11 +1984,11 @@ async function handlePermissions(
 
   switch (subcmd) {
     case "snapshot":
-      args = ["permissions", "snapshot"];
+      args = ["permission", "snapshot"];
       progressMsg = "Saving permissions snapshot...";
       break;
     case "restore":
-      args = ["permissions", "restore"];
+      args = ["permission", "restore"];
       progressMsg = "Restoring permissions...";
       break;
     default:
@@ -2151,7 +2028,7 @@ async function handleChanges(
 ): Promise<CtxResult> {
   stream.progress("Checking what changed...");
   try {
-    const args = ["changes"];
+    const args = ["change"];
     const sinceMatch = prompt.match(/--since\s+(\S+)/);
     if (sinceMatch) {
       args.push("--since", sinceMatch[1]);
@@ -2169,37 +2046,6 @@ async function handleChanges(
     );
   }
   return { metadata: { command: "changes" } };
-}
-
-async function handleDeps(
-  stream: vscode.ChatResponseStream,
-  prompt: string,
-  cwd: string,
-  token: vscode.CancellationToken
-): Promise<CtxResult> {
-  stream.progress("Analyzing dependencies...");
-  try {
-    const args = ["deps"];
-    const formatMatch = prompt.match(/--format\s+(\S+)/);
-    if (formatMatch) {
-      args.push("--format", formatMatch[1]);
-    }
-    if (prompt.includes("--external")) {
-      args.push("--external");
-    }
-    const { stdout, stderr } = await runCtx(args, cwd, token);
-    const output = mergeOutput(stdout, stderr);
-    if (output) {
-      stream.markdown(output);
-    } else {
-      stream.markdown("No dependency information available.");
-    }
-  } catch (err: unknown) {
-    stream.markdown(
-      `**Error:** Failed to analyze dependencies.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
-    );
-  }
-  return { metadata: { command: "deps" } };
 }
 
 async function handleGuide(
@@ -2346,9 +2192,6 @@ async function handleFreeform(
   if (prompt.includes("map") || prompt.includes("dependencies") || prompt.includes("deps")) {
     return handleMap(stream, cwd, token);
   }
-  if (prompt.includes("prompt template") || prompt.includes("prompts")) {
-    return handlePromptTpl(stream, request.prompt, cwd, token);
-  }
   if (prompt.includes("blog") && prompt.includes("changelog")) {
     return handleChangelog(stream, cwd, token);
   }
@@ -2384,9 +2227,6 @@ async function handleFreeform(
   }
   if (prompt.includes("changes") || prompt.includes("what changed") || prompt.includes("since last session")) {
     return handleChanges(stream, request.prompt, cwd, token);
-  }
-  if (prompt.includes("deps") || prompt.includes("dependency graph") || prompt.includes("package graph")) {
-    return handleDeps(stream, request.prompt, cwd, token);
   }
   if (prompt.includes("guide") || prompt.includes("cheat sheet") || prompt.includes("quick reference")) {
     return handleGuide(stream, request.prompt, cwd, token);
@@ -2457,7 +2297,6 @@ async function handleFreeform(
       "| `/implement` | Show implementation plan |\n" +
       "| `/verify` | Run verification checks |\n" +
       "| `/map` | Show dependency map |\n" +
-      "| `/prompt [add\\|rm]` | Manage prompt templates |\n" +
       "| `/blog` | Draft blog post from context |\n" +
       "| `/changelog` | Recent commits for changelog |\n" +
       "| `/check-links` | Audit local links in context |\n" +
@@ -2468,7 +2307,6 @@ async function handleFreeform(
       "| `/pause` | Save session state |\n" +
       "| `/resume` | Restore paused session |\n" +
       "| `/changes [--since duration]` | Show what changed since last session |\n" +
-      "| `/deps [--format mermaid\\|table\\|json]` | Package dependency graph |\n" +
       "| `/guide [--skills\\|--commands]` | Quick-reference cheat sheet |\n" +
       "| `/reindex` | Regenerate decision/learning indices |\n" +
       "| `/why [topic]` | Read ctx philosophy |\n\n" +
@@ -2565,8 +2403,6 @@ const handler: vscode.ChatRequestHandler = async (
       return handleVerify(stream, cwd, token);
     case "map":
       return handleMap(stream, cwd, token);
-    case "prompt":
-      return handlePromptTpl(stream, request.prompt, cwd, token);
     case "blog":
       return handleBlog(stream, request.prompt, cwd, token);
     case "changelog":
@@ -2597,8 +2433,6 @@ const handler: vscode.ChatRequestHandler = async (
       return handlePermissions(stream, request.prompt, cwd, token);
     case "changes":
       return handleChanges(stream, request.prompt, cwd, token);
-    case "deps":
-      return handleDeps(stream, request.prompt, cwd, token);
     case "guide":
       return handleGuide(stream, request.prompt, cwd, token);
     case "reindex":
@@ -2804,12 +2638,6 @@ export function activate(extensionContext: vscode.ExtensionContext) {
             { prompt: "Load full context", command: "load" }
           );
           break;
-        case "deps":
-          followups.push(
-            { prompt: "Show dependency map", command: "map" },
-            { prompt: "Show context status", command: "status" }
-          );
-          break;
         case "guide":
           followups.push(
             { prompt: "Show context status", command: "status" },
@@ -2863,7 +2691,6 @@ export function activate(extensionContext: vscode.ExtensionContext) {
     ["ctx.implement", "/implement"],
     ["ctx.verify", "/verify"],
     ["ctx.map", "/map"],
-    ["ctx.prompt", "/prompt"],
     ["ctx.blog", "/blog"],
     ["ctx.changelog", "/changelog"],
     ["ctx.checkLinks", "/check-links"],
@@ -2879,7 +2706,6 @@ export function activate(extensionContext: vscode.ExtensionContext) {
     ["ctx.config", "/config"],
     ["ctx.permissions", "/permissions"],
     ["ctx.changes", "/changes"],
-    ["ctx.deps", "/deps"],
     ["ctx.guide", "/guide"],
     ["ctx.reindex", "/reindex"],
     ["ctx.why", "/why"],
@@ -2894,77 +2720,18 @@ export function activate(extensionContext: vscode.ExtensionContext) {
     );
   }
 
-  // --- VS Code native hooks (equivalent to Claude Code hooks.json) ---
+  // --- VS Code native hooks: background nudges on save, commit, and context change ---
   const cwd = getWorkspaceRoot();
-
-  // 2.18: Terminal command watcher — detect dangerous commands
-  if (cwd) {
-    const terminalWatcher = vscode.window.onDidStartTerminalShellExecution((e) => {
-      if (!bootstrapDone || !hasContextDir(cwd)) {
-        return;
-      }
-      const cmd = e.execution.commandLine?.value;
-      if (!cmd) {
-        return;
-      }
-      for (const pattern of DENY_COMMAND_PATTERNS) {
-        if (pattern.test(cmd)) {
-          recordViolation(cwd, "dangerous_command", cmd);
-          vscode.window.showWarningMessage(
-            `ctx: Dangerous command detected: ${cmd.slice(0, 80)}`
-          );
-          return;
-        }
-      }
-      for (const pattern of DENY_COMMAND_SCRIPT_PATTERNS) {
-        if (pattern.test(cmd)) {
-          recordViolation(cwd, "hack_script", cmd);
-          vscode.window.showWarningMessage(
-            `ctx: Direct hack/ script execution detected. Use make targets instead.`
-          );
-          return;
-        }
-      }
-    });
-    extensionContext.subscriptions.push(terminalWatcher);
-  }
-
-  // 2.19: Sensitive file edit watcher — detect modifications to .env, .pem, .key, credentials
-  // Note: only watches edits, not opens. onDidOpenTextDocument is too noisy
-  // (fires on search results, peek definition, git diffs, hover previews).
-  if (cwd) {
-    const fileEditWatcher = vscode.workspace.onDidChangeTextDocument((e) => {
-      if (!bootstrapDone || !hasContextDir(cwd)) {
-        return;
-      }
-      if (e.contentChanges.length === 0) {
-        return;
-      }
-      const rel = path.relative(cwd, e.document.uri.fsPath);
-      if (rel.startsWith("..")) {
-        return;
-      }
-      for (const pattern of SENSITIVE_FILE_PATTERNS) {
-        if (pattern.test(e.document.uri.fsPath)) {
-          recordViolation(cwd, "sensitive_file_edit", rel);
-          vscode.window.showWarningMessage(
-            `ctx: Sensitive file modified: ${rel}`
-          );
-          return;
-        }
-      }
-    });
-    extensionContext.subscriptions.push(fileEditWatcher);
-  }
 
   // 2.6: onDidSave → task completion check (PostToolUse Edit/Write equivalent)
   const saveWatcher = vscode.workspace.onDidSaveTextDocument((doc) => {
     if (!cwd || !bootstrapDone || !hasContextDir(cwd)) {
       return;
     }
-    // Only trigger for files inside the workspace, not for .context/ files themselves
+    // Only trigger for files inside this workspace root — not for .context/
+    // files themselves, and not for other roots (rel starting with "..").
     const rel = path.relative(cwd, doc.uri.fsPath);
-    if (rel.startsWith(".context")) {
+    if (rel.startsWith(".context") || rel.startsWith("..")) {
       return;
     }
     // Fire and forget — non-blocking background check
@@ -3045,7 +2812,7 @@ export function activate(extensionContext: vscode.ExtensionContext) {
       if (hasContextDir(cwd)) {
         updateReminderStatus(cwd);
         // Re-generate copilot-instructions.md when context files change
-        runCtx(["hook", "copilot", "--write"], cwd).catch(() => {});
+        runCtx(["setup", "copilot", "--write"], cwd).catch(() => {});
       }
     };
     contextWatcher.onDidChange(onContextChange);
@@ -3112,7 +2879,7 @@ function updateReminderStatus(cwd: string): void {
   if (!bootstrapDone || !reminderStatusBar) {
     return;
   }
-  runCtx(["system", "check-reminders"], cwd)
+  runCtx(["system", "check-reminder"], cwd)
     .then(({ stdout }) => {
       const trimmed = stdout.trim();
       if (trimmed && !trimmed.includes("no reminders")) {
@@ -3147,7 +2914,6 @@ export {
   handleConfig,
   handlePermissions,
   handleChanges,
-  handleDeps,
   handleGuide,
   handleReindex,
   handleWhy,

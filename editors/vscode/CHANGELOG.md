@@ -5,6 +5,47 @@ will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.10.0] - 2026-07-05
+
+### Fixed
+
+- **Commands now target the real `ctx` CLI.** The participant dispatched
+  a dozen-plus commands to subcommands that don't exist on the shipped
+  binary (`ctx tasks`, `ctx complete`, `ctx decisions`, `ctx recall`,
+  `ctx add`, `ctx notify`, …), so a large part of the surface was dead on
+  arrival. Every invocation is reconciled to the actual command tree:
+  `/task`, `/change`, `/decision`, `/learning`, `/permission` (the CLI
+  registry is singular); `complete`→`task complete`; `recall`→
+  `journal source`; `notify`→`hook notify`; `/add <type>`→`<type> add`;
+  tool-config `hook`→`setup`; `system stats`→`usage`, `system resources`→
+  `sysinfo`, `system message`→`hook message`, `check-reminders`→
+  `check-reminder`.
+- **`runCtx` no longer reports failures as success.** Cancelled or
+  timed-out runs reject instead of rendering partial output as a clean
+  result, and the process exit code is surfaced to callers rather than
+  assuming any output means success.
+
+### Added
+
+- **Command-parity test** (`commandParity.test.ts`): asserts
+  `package.json` ↔ dispatcher ↔ the real `ctx` command tree (built from
+  the same commit), so a future CLI rename can never silently strand a
+  command again.
+
+### Removed
+
+- `/prompt` and `/deps` slash commands — their `ctx prompt` / `ctx dep`
+  backing commands were removed from the CLI with no replacement. The
+  command surface is now 43 commands, each mapping to a real `ctx`
+  command.
+- `/system backup` subcommand (no CLI replacement).
+- **Violation guardrails** (the terminal-command watcher, the
+  sensitive-file watcher, and `.context/state/violations.json`
+  recording). Capturing the user's terminal text — credentials
+  included — into a file that an MCP server relays into model context
+  is a design decision that warrants its own review. It will be
+  re-proposed separately with a design note on the capture surface.
+
 ## [0.9.0] - 2026-03-19
 
 ### Added
@@ -20,20 +61,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Automatic hooks**: file save, git commit, dependency change, and
   context file change handlers
 - **Follow-up suggestions**: context-aware buttons after each command
-
-### Changed
-
-- Slash-command surface reconciled to exactly the 45 commands the
-  extension dispatches. Singular commands renamed to plurals:
-  `/change`→`/changes`, `/dep`→`/deps`, `/task`→`/tasks`,
-  `/permission`→`/permissions`. Dedicated `/decisions` and `/learnings`
-  added alongside `/add`.
-
-### Removed
-
-- `/loop` and `/diag` slash commands. `/site` is now reached through
-  `/journal site`, and `/doctor` runs inline rather than as a top-level
-  slash command.
+- **`/diag` command**: diagnose extension issues with step-by-step timing
 
 ### Configuration
 

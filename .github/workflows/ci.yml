@@ -119,8 +119,22 @@ jobs:
         working-directory: editors/vscode
         run: npm run lint
 
+      - name: Set up Go (command-parity oracle)
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build ctx (command-parity oracle)
+        run: go build -o "${{ github.workspace }}/ctxbin" ./cmd/ctx
+
       - name: Test (vitest)
         working-directory: editors/vscode
+        env:
+          # Ground-truth binary for commandParity.test.ts — built from this
+          # same commit so dispatched commands are checked against the real
+          # ctx tree, not a mock.
+          CTX_BIN: ${{ github.workspace }}/ctxbin
         run: npm test
 
       - name: Package dry-run (vsce)

@@ -2,7 +2,7 @@
   "name": "ctx-context",
   "displayName": "ctx — Persistent Context for AI",
   "description": "Chat participant (@ctx) for persistent project context across AI coding sessions",
-  "version": "0.8.1",
+  "version": "0.10.0",
   "publisher": "activememory",
   "license": "Apache-2.0",
   "homepage": "https://github.com/ActiveMemory/ctx",
@@ -152,10 +152,6 @@
             "description": "Build and maintain architecture maps (ARCHITECTURE.md)"
           },
           {
-            "name": "prompt",
-            "description": "Prompt templates (list, add, show, rm)"
-          },
-          {
             "name": "blog",
             "description": "Generate a blog post draft from project progress"
           },
@@ -214,10 +210,6 @@
           {
             "name": "changes",
             "description": "Show recent codebase changes"
-          },
-          {
-            "name": "deps",
-            "description": "Show project dependencies"
           },
           {
             "name": "guide",

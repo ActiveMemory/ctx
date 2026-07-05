@@ -11,7 +11,7 @@
 A VS Code Chat Participant that brings [ctx](https://ctx.ist) (persistent
 project context for AI coding sessions) directly into GitHub Copilot Chat.
 
-Type `@ctx` in the Chat view to access 45 slash commands, automatic context
+Type `@ctx` in the Chat view to access 43 slash commands, automatic context
 hooks, a reminder status bar, and natural language routing, all powered by
 the ctx CLI.
 
@@ -68,7 +68,6 @@ The extension auto-downloads the ctx CLI binary if it isn't on your PATH.
 | `/spec` | List or scaffold feature specs from templates |
 | `/verify` | Run verification checks (doctor + drift) |
 | `/map` | Show dependency map (go.mod, package.json) |
-| `/prompt` | Browse and view prompt templates |
 | `/blog` | Draft a blog post from recent context |
 | `/changelog` | Show recent commits for changelog |
 
@@ -92,7 +91,6 @@ The extension auto-downloads the ctx CLI binary if it isn't on your PATH.
 | `/config` | Manage config profiles (switch, status, schema) |
 | `/permissions` | Backup or restore Claude settings |
 | `/changes` | Show what changed since last session |
-| `/deps` | Show package dependency graph |
 | `/guide` | Quick-reference cheat sheet for ctx |
 | `/reindex` | Regenerate indices for DECISIONS.md and LEARNINGS.md |
 | `/why` | Read the philosophy behind ctx |
@@ -204,7 +202,7 @@ The extension is a single-file implementation
 Tests live in `src/extension.test.ts` and use vitest with a VS Code API
 mock. They verify:
 
-- All 45 command handlers exist and are callable
+- All 43 command handlers exist and are callable
 - `runCtx` invokes the correct binary with correct arguments
 - Platform detection returns valid GOOS/GOARCH values
 - Follow-up suggestions are returned after commands

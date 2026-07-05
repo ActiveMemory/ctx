@@ -264,7 +264,7 @@ describe("handleComplete", () => {
     await handleComplete(stream as never, "Fix login bug", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["complete", "Fix login bug"],
+      ["task", "complete", "Fix login bug"],
       expect.anything(),
       expect.any(Function)
     );
@@ -395,7 +395,7 @@ describe("handleTasks", () => {
     await handleTasks(stream as never, "archive", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["tasks", "archive"],
+      ["task", "archive"],
       expect.anything(),
       expect.any(Function)
     );
@@ -409,7 +409,7 @@ describe("handleTasks", () => {
     await handleTasks(stream as never, "snapshot pre-refactor", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["tasks", "snapshot", "pre-refactor"],
+      ["task", "snapshot", "pre-refactor"],
       expect.anything(),
       expect.any(Function)
     );
@@ -422,7 +422,7 @@ describe("handleTasks", () => {
     await handleTasks(stream as never, "snapshot", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["tasks", "snapshot"],
+      ["task", "snapshot"],
       expect.anything(),
       expect.any(Function)
     );
@@ -575,7 +575,7 @@ describe("handleNotify", () => {
     await handleNotify(stream as never, "setup", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["notify", "setup"],
+      ["hook", "notify", "setup"],
       expect.anything(),
       expect.any(Function)
     );
@@ -589,7 +589,7 @@ describe("handleNotify", () => {
     await handleNotify(stream as never, "test", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["notify", "test"],
+      ["hook", "notify", "test"],
       expect.anything(),
       expect.any(Function)
     );
@@ -602,7 +602,7 @@ describe("handleNotify", () => {
     await handleNotify(stream as never, "build done --event build", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["notify", "build", "done", "--event", "build"],
+      ["hook", "notify", "build", "done", "--event", "build"],
       expect.anything(),
       expect.any(Function)
     );
@@ -651,7 +651,7 @@ describe("handleSystem", () => {
     await handleSystem(stream as never, "resources", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["system", "resources"],
+      ["sysinfo"],
       expect.anything(),
       expect.any(Function)
     );
@@ -679,7 +679,7 @@ describe("handleSystem", () => {
     await handleSystem(stream as never, "message list", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["system", "message", "list"],
+      ["hook", "message", "list"],
       expect.anything(),
       expect.any(Function)
     );
