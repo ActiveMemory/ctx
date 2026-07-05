@@ -17,6 +17,7 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-06-10 | Stock macOS bash 3.2 treats empty-array expansion as unbound under set -u |
 | 2026-07-04 | Typed JSON round-trips silently drop user-owned keys |
 | 2026-07-03 | New Claude model families silently fall to the 200k default in ModelContextWindow |
 | 2026-06-07 | Pin an on-disk contract before splitting work across parallel agents |
@@ -108,6 +109,14 @@ DO NOT UPDATE FOR:
 <!-- INDEX:END -->
 
 ---
+
+## [2026-06-10-223128] Stock macOS bash 3.2 treats empty-array expansion as unbound under set -u
+
+**Context**: make audit aborted at hack/lint-drift.sh line 39 on a stock Mac (bash 3.2.57) with 'exclude_args[@]: unbound variable' while gating the #93 TOCTOU fix; the script works fine on Linux bash 4+
+
+**Lesson**: bash 3.2 (what every stock macOS ships, GPLv2 freeze) treats "${arr[@]}" on an empty array as an unbound-variable error under set -u; bash 4.4+ does not. Any 'set -u' script that expands a possibly-empty array breaks for every Mac contributor
+
+**Application**: Guard with ${arr[@]+"${arr[@]}"} (parameter-expansion alternate form) wherever a possibly-empty array is expanded in hack/ scripts; test hack/ scripts with /bin/bash, not just homebrew bash
 
 ## [2026-07-04-152957] Typed JSON round-trips silently drop user-owned keys
 
@@ -1980,4 +1989,3 @@ contradicting stdlib knowledge: pause, verify against memory of the actual API
 before patching within the existing frame.
 
 ---
-
