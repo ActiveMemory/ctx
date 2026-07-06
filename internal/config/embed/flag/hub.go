@@ -18,4 +18,6 @@ const (
 	DescKeyHubStartPeers = "hub.start.peers"
 	// DescKeyHubStopDataDir is the text key for hub stop --data-dir.
 	DescKeyHubStopDataDir = "hub.stop.data-dir"
+	// DescKeyHubRevokeToken is the text key for hub revoke --token.
+	DescKeyHubRevokeToken = "hub.revoke.token"
 )

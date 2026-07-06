@@ -291,6 +291,8 @@ hub.start.port:
   short: Hub listen port (default 9900)
 hub.stop.data-dir:
   short: Hub data directory (default ~/.ctx/hub-data/)
+hub.revoke.token:
+  short: Admin credential from hub startup (or $CTX_HUB_ADMIN_TOKEN)
 watch.dry-run:
   short: Show updates without applying
 watch.log:

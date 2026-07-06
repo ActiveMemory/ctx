@@ -63,6 +63,17 @@ func PeerRemoved(cmd *cobra.Command, addr string) {
 	))
 }
 
+// Revoked confirms a client token was revoked.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - clientID: ID of the client that was revoked
+func Revoked(cmd *cobra.Command, clientID string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHubRevoked), clientID,
+	))
+}
+
 // SteppedDown confirms leadership transfer.
 //
 // Parameters:

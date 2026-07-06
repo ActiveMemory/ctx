@@ -647,6 +647,10 @@ err.hub.internal:
   short: 'internal: %w'
 err.hub.duplicate-project:
   short: 'project already registered: %q'
+err.hub.unknown-client:
+  short: 'unknown client: %q'
+err.hub.admin-token-required:
+  short: 'admin token required: pass --token or set $CTX_HUB_ADMIN_TOKEN'
 err.hub.invalid-peer-action:
   short: "action must be 'add' or 'remove', got %q"
 err.hub.connect-sync-locked:

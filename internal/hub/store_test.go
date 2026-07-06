@@ -209,6 +209,127 @@ func TestStoreValidateToken_RejectsNearMissTokens(t *testing.T) {
 	}
 }
 
+func TestStore_RevokeClient_RemovesByID(t *testing.T) {
+	dir := t.TempDir()
+	s, err := NewStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if regErr := s.RegisterClient(ClientInfo{
+		ID: "c1", ProjectName: "alpha", Token: "tok_alpha",
+	}); regErr != nil {
+		t.Fatal(regErr)
+	}
+	if regErr := s.RegisterClient(ClientInfo{
+		ID: "c2", ProjectName: "beta", Token: "tok_beta",
+	}); regErr != nil {
+		t.Fatal(regErr)
+	}
+
+	if revErr := s.RevokeClient("c1"); revErr != nil {
+		t.Fatalf("RevokeClient: %v", revErr)
+	}
+
+	// Revoked client's token must no longer validate.
+	if s.ValidateToken("tok_alpha") != nil {
+		t.Error("revoked token should not validate")
+	}
+	// The surviving client must still validate, and the
+	// rebuilt tokenIdx must resolve it to the right record.
+	survivor := s.ValidateToken("tok_beta")
+	if survivor == nil {
+		t.Fatal("non-revoked client should still validate")
+	}
+	if survivor.ProjectName != "beta" {
+		t.Errorf("wrong survivor project: %q", survivor.ProjectName)
+	}
+}
+
+func TestStore_RevokeClient_UnknownIDReturnsError(t *testing.T) {
+	dir := t.TempDir()
+	s, err := NewStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if regErr := s.RegisterClient(ClientInfo{
+		ID: "c1", ProjectName: "alpha", Token: "tok_alpha",
+	}); regErr != nil {
+		t.Fatal(regErr)
+	}
+
+	if revErr := s.RevokeClient("does-not-exist"); revErr == nil {
+		t.Fatal("expected error revoking unknown client ID")
+	}
+
+	// The registry must be untouched by a failed revoke.
+	if s.ValidateToken("tok_alpha") == nil {
+		t.Error("existing client should be unaffected by a failed revoke")
+	}
+}
+
+func TestStore_RevokeClient_PersistsAcrossRestart(t *testing.T) {
+	dir := t.TempDir()
+
+	s1, err := NewStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if regErr := s1.RegisterClient(ClientInfo{
+		ID: "c1", ProjectName: "alpha", Token: "tok_alpha",
+	}); regErr != nil {
+		t.Fatal(regErr)
+	}
+	if regErr := s1.RegisterClient(ClientInfo{
+		ID: "c2", ProjectName: "beta", Token: "tok_beta",
+	}); regErr != nil {
+		t.Fatal(regErr)
+	}
+	if revErr := s1.RevokeClient("c1"); revErr != nil {
+		t.Fatal(revErr)
+	}
+
+	// Reopen from the same directory: the revocation must survive.
+	s2, err := NewStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s2.ValidateToken("tok_alpha") != nil {
+		t.Error("revocation should persist across restart")
+	}
+	if s2.ValidateToken("tok_beta") == nil {
+		t.Error("non-revoked client should persist across restart")
+	}
+}
+
+func TestStore_RegisterClient_RejectsDuplicateProject(t *testing.T) {
+	dir := t.TempDir()
+	s, err := NewStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if regErr := s.RegisterClient(ClientInfo{
+		ID: "c1", ProjectName: "alpha", Token: "tok_1",
+	}); regErr != nil {
+		t.Fatal(regErr)
+	}
+
+	// A second client with the same project name must be rejected.
+	dupErr := s.RegisterClient(ClientInfo{
+		ID: "c2", ProjectName: "alpha", Token: "tok_2",
+	})
+	if dupErr == nil {
+		t.Fatal("expected duplicate project registration to be rejected")
+	}
+
+	// The rejected client's token must not have been indexed.
+	if s.ValidateToken("tok_2") != nil {
+		t.Error("rejected duplicate should not be registered")
+	}
+}
+
 func TestStoreStats(t *testing.T) {
 	dir := t.TempDir()
 	s, err := NewStore(dir)

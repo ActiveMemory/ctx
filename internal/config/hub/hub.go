@@ -27,6 +27,8 @@ const (
 	MethodListen = "Listen"
 	// MethodStatus is the Status RPC method name.
 	MethodStatus = "Status"
+	// MethodRevoke is the Revoke RPC method name.
+	MethodRevoke = "Revoke"
 )
 
 // Full gRPC method paths (ServicePath + MethodName).
@@ -41,6 +43,8 @@ const (
 	PathListen = ServicePath + MethodListen
 	// PathStatus is the full gRPC path for Status.
 	PathStatus = ServicePath + MethodStatus
+	// PathRevoke is the full gRPC path for Revoke.
+	PathRevoke = ServicePath + MethodRevoke
 )
 
 // Authorization header.
@@ -193,6 +197,9 @@ const (
 	ErrInvalidAdminToken = "invalid admin token"
 	// ErrProjectNameRequired is the gRPC error for missing project name.
 	ErrProjectNameRequired = "project_name required"
+	// ErrClientIDRequired is the gRPC error for a missing client ID
+	// on the Revoke RPC.
+	ErrClientIDRequired = "client_id required"
 	// ErrMissingMetadata is the gRPC error for missing metadata.
 	ErrMissingMetadata = "missing metadata"
 	// ErrMissingToken is the gRPC error for missing auth token.
