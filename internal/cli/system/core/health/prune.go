@@ -30,6 +30,14 @@ import (
 // Returns:
 //   - int: Number of files pruned
 func AutoPrune(days int) int {
+	// Safety guard: a non-positive day count would put the cutoff at
+	// or after now, matching (and deleting) every state file. Never
+	// prune on a non-positive threshold — callers pass rc.AutoPruneDays,
+	// which already coerces this, but AutoPrune must be safe alone.
+	if days <= 0 {
+		return 0
+	}
+
 	// Best-effort: this runs from contextloadgate as fire-and-forget
 	// and must never block session startup. Any state.Dir failure
 	// (including the ErrNoCtxHere bail signal) is swallowed

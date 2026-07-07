@@ -13,11 +13,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/extract"
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/score"
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/sort"
-	"github.com/ActiveMemory/ctx/internal/config/agent"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // AssemblePacket builds a context packet respecting the token budget.
@@ -67,8 +67,10 @@ func AssemblePacket(
 		return pkt
 	}
 
-	// Tier 2: Tasks (up to 40% of the original budget)
-	taskCap := int(float64(budget) * agent.TaskBudgetPct)
+	// Tier 2: Tasks (up to 40% of the original budget, but never more
+	// than what is left — clamping to remaining keeps task + convention
+	// percentages that sum past 1.0 from overrunning the budget).
+	taskCap := min(int(float64(budget)*rc.TaskBudgetPct()), remaining)
 	allTasks := extract.ActiveTasks(ctx)
 	pkt.Tasks = FitItems(allTasks, taskCap)
 	taskTokens := EstimateSliceTokens(pkt.Tasks)
@@ -79,8 +81,9 @@ func AssemblePacket(
 		return pkt
 	}
 
-	// Tier 3: Conventions (up to 20% of the original budget)
-	convCap := int(float64(budget) * agent.ConventionBudgetPct)
+	// Tier 3: Conventions (up to 20% of the original budget, clamped to
+	// remaining for the same overrun-prevention reason as Tier 2).
+	convCap := min(int(float64(budget)*rc.ConventionBudgetPct()), remaining)
 	allConventions := ExtractAllConventions(ctx)
 	pkt.Conventions = FitItems(allConventions, convCap)
 	convTokens := EstimateSliceTokens(pkt.Conventions)

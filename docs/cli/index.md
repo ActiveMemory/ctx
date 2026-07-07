@@ -166,6 +166,12 @@ injection_token_warn: 15000  # Oversize injection warning (0 = disable)
 context_window: 200000       # Auto-detected for Claude Code; override for other tools
 billing_token_warn: 0        # One-shot billing warning at this token count (0 = disabled)
 key_rotation_days: 90        # Days before key rotation nudge
+auto_prune_days: 7           # Days before stale session-state files are pruned on load (0/neg = default)
+agent_cooldown_minutes: 10   # Minutes between repeated `ctx agent` emissions (0 = disable)
+task_budget_pct: 0.40        # Fraction of the agent token budget for tasks (0-1; 0 = none)
+convention_budget_pct: 0.20  # Fraction of the agent token budget for conventions (0-1; 0 = none)
+title_slug_max_len: 50       # Max characters in journal filename slugs (0/neg = default)
+recall_list_limit: 20        # Default `ctx journal source` list size (0/neg = default)
 session_prefixes:            # Recognized session header prefixes (extend for i18n)
   - "Session:"               # English (default)
   # - "Oturum:"              # Turkish (add as needed)
@@ -226,6 +232,12 @@ dream:                       # ctx-dream config (opt-in; off by default)
 | `hooks.dir`             | `string`   | `.context/hooks` | Hook scripts directory                                                                                      |
 | `hooks.timeout`         | `int`      | `10`           | Per-hook execution timeout in seconds                                                                          |
 | `hooks.enabled`         | `bool`     | `true`         | Whether hook execution is enabled                                                                              |
+| `auto_prune_days`       | `int`      | `7`            | Days before stale session-state files are auto-pruned on load (non-positive falls back to the default)         |
+| `agent_cooldown_minutes`| `int`      | `10`           | Minutes between repeated `ctx agent` emissions; an explicit `0` disables the cooldown                          |
+| `task_budget_pct`       | `number`   | `0.40`         | Fraction of the `ctx agent` token budget for tasks (clamped `0`–`1`; explicit `0` = none)                     |
+| `convention_budget_pct` | `number`   | `0.20`         | Fraction of the `ctx agent` token budget for conventions (clamped `0`–`1`; explicit `0` = none)               |
+| `title_slug_max_len`    | `int`      | `50`           | Maximum characters in title-derived journal filename slugs (non-positive falls back to the default)            |
+| `recall_list_limit`     | `int`      | `20`           | Default `ctx journal source` list size when `--limit` is omitted (non-positive falls back to the default)      |
 
 **Priority order:** CLI flags > Environment variables > `.ctxrc` > Defaults
 

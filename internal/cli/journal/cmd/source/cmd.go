@@ -14,8 +14,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Cmd returns the journal source subcommand.
@@ -94,7 +94,7 @@ func Cmd() *cobra.Command {
 	flagbind.IntFlagP(
 		c, &limit,
 		cFlag.Limit, cFlag.ShortMaxIterations,
-		journal.DefaultRecallListLimit,
+		rc.RecallListLimit(),
 		flag.DescKeyJournalSourceLimit,
 	)
 

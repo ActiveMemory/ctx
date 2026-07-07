@@ -11,10 +11,14 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
+	cfgAgent "github.com/ActiveMemory/ctx/internal/config/agent"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/env"
+	cfgJournal "github.com/ActiveMemory/ctx/internal/config/journal"
+	cfgLoadgate "github.com/ActiveMemory/ctx/internal/config/loadgate"
 	errCtx "github.com/ActiveMemory/ctx/internal/err/context"
 	"github.com/ActiveMemory/ctx/internal/i18n"
 )
@@ -677,5 +681,162 @@ func TestPlaceholders_UserDuplicateOfDefaultDedupes(t *testing.T) {
 	}
 	if _, ok := set["new-marker"]; !ok {
 		t.Errorf("set missing %q", "new-marker")
+	}
+}
+
+func TestAutoPruneDays_Default(t *testing.T) {
+	declareContext(t, "")
+	if got := AutoPruneDays(); got != cfgLoadgate.AutoPruneStaleDays {
+		t.Errorf("AutoPruneDays() = %d, want %d", got, cfgLoadgate.AutoPruneStaleDays)
+	}
+}
+
+func TestAutoPruneDays_Custom(t *testing.T) {
+	declareContext(t, `auto_prune_days: 14`)
+	if got := AutoPruneDays(); got != 14 {
+		t.Errorf("AutoPruneDays() = %d, want %d", got, 14)
+	}
+}
+
+func TestAgentCooldownMinutes_Default(t *testing.T) {
+	declareContext(t, "")
+	want := int(cfgAgent.DefaultCooldown / time.Minute)
+	if got := AgentCooldownMinutes(); got != want {
+		t.Errorf("AgentCooldownMinutes() = %d, want %d", got, want)
+	}
+}
+
+func TestAgentCooldownMinutes_Custom(t *testing.T) {
+	declareContext(t, `agent_cooldown_minutes: 30`)
+	if got := AgentCooldownMinutes(); got != 30 {
+		t.Errorf("AgentCooldownMinutes() = %d, want %d", got, 30)
+	}
+}
+
+func TestTaskBudgetPct_Default(t *testing.T) {
+	declareContext(t, "")
+	if got := TaskBudgetPct(); got != cfgAgent.TaskBudgetPct {
+		t.Errorf("TaskBudgetPct() = %v, want %v", got, cfgAgent.TaskBudgetPct)
+	}
+}
+
+func TestTaskBudgetPct_Custom(t *testing.T) {
+	declareContext(t, `task_budget_pct: 0.5`)
+	if got := TaskBudgetPct(); got != 0.5 {
+		t.Errorf("TaskBudgetPct() = %v, want %v", got, 0.5)
+	}
+}
+
+func TestConventionBudgetPct_Default(t *testing.T) {
+	declareContext(t, "")
+	if got := ConventionBudgetPct(); got != cfgAgent.ConventionBudgetPct {
+		t.Errorf("ConventionBudgetPct() = %v, want %v", got, cfgAgent.ConventionBudgetPct)
+	}
+}
+
+func TestConventionBudgetPct_Custom(t *testing.T) {
+	declareContext(t, `convention_budget_pct: 0.25`)
+	if got := ConventionBudgetPct(); got != 0.25 {
+		t.Errorf("ConventionBudgetPct() = %v, want %v", got, 0.25)
+	}
+}
+
+func TestTitleSlugMaxLen_Default(t *testing.T) {
+	declareContext(t, "")
+	if got := TitleSlugMaxLen(); got != cfgJournal.TitleSlugMaxLen {
+		t.Errorf("TitleSlugMaxLen() = %d, want %d", got, cfgJournal.TitleSlugMaxLen)
+	}
+}
+
+func TestTitleSlugMaxLen_Custom(t *testing.T) {
+	declareContext(t, `title_slug_max_len: 80`)
+	if got := TitleSlugMaxLen(); got != 80 {
+		t.Errorf("TitleSlugMaxLen() = %d, want %d", got, 80)
+	}
+}
+
+func TestRecallListLimit_Default(t *testing.T) {
+	declareContext(t, "")
+	if got := RecallListLimit(); got != cfgJournal.DefaultRecallListLimit {
+		t.Errorf("RecallListLimit() = %d, want %d",
+			got, cfgJournal.DefaultRecallListLimit)
+	}
+}
+
+func TestRecallListLimit_Custom(t *testing.T) {
+	declareContext(t, `recall_list_limit: 50`)
+	if got := RecallListLimit(); got != 50 {
+		t.Errorf("RecallListLimit() = %d, want %d", got, 50)
+	}
+}
+
+// TestAutoPruneDays_NegativeFallsBack guards the data-loss fix: a
+// negative day count must fall back to the default, never reach
+// health.AutoPrune (where it would move the cutoff into the future and
+// delete every state file).
+func TestAutoPruneDays_NegativeFallsBack(t *testing.T) {
+	declareContext(t, `auto_prune_days: -7`)
+	if got := AutoPruneDays(); got != cfgLoadgate.AutoPruneStaleDays {
+		t.Errorf("AutoPruneDays() = %d, want default %d",
+			got, cfgLoadgate.AutoPruneStaleDays)
+	}
+}
+
+// TestTitleSlugMaxLen_NegativeFallsBack guards the panic fix: a
+// negative cap must fall back to the default, never reach the slice
+// bound in slug.FromTitle.
+func TestTitleSlugMaxLen_NegativeFallsBack(t *testing.T) {
+	declareContext(t, `title_slug_max_len: -5`)
+	if got := TitleSlugMaxLen(); got != cfgJournal.TitleSlugMaxLen {
+		t.Errorf("TitleSlugMaxLen() = %d, want default %d",
+			got, cfgJournal.TitleSlugMaxLen)
+	}
+}
+
+// TestRecallListLimit_NegativeFallsBack: a non-positive limit is unset.
+func TestRecallListLimit_NegativeFallsBack(t *testing.T) {
+	declareContext(t, `recall_list_limit: -1`)
+	if got := RecallListLimit(); got != cfgJournal.DefaultRecallListLimit {
+		t.Errorf("RecallListLimit() = %d, want default %d",
+			got, cfgJournal.DefaultRecallListLimit)
+	}
+}
+
+// TestAgentCooldownMinutes_ZeroDisables: an explicit 0 is distinct from
+// unset and disables the cooldown (parity with --cooldown 0), rather
+// than being coerced back to the default.
+func TestAgentCooldownMinutes_ZeroDisables(t *testing.T) {
+	declareContext(t, `agent_cooldown_minutes: 0`)
+	if got := AgentCooldownMinutes(); got != 0 {
+		t.Errorf("AgentCooldownMinutes() = %d, want 0 (disabled)", got)
+	}
+}
+
+// TestTaskBudgetPct_ZeroAllowed: an explicit 0 zeroes the section
+// rather than falling back to the default.
+func TestTaskBudgetPct_ZeroAllowed(t *testing.T) {
+	declareContext(t, `task_budget_pct: 0.0`)
+	if got := TaskBudgetPct(); got != 0 {
+		t.Errorf("TaskBudgetPct() = %v, want 0", got)
+	}
+}
+
+// TestTaskBudgetPct_ClampsOutOfRange: values outside [0,1] are coerced.
+func TestTaskBudgetPct_ClampsOutOfRange(t *testing.T) {
+	declareContext(t, `task_budget_pct: 1.5`)
+	if got := TaskBudgetPct(); got != 1 {
+		t.Errorf("TaskBudgetPct() = %v, want 1 (clamped)", got)
+	}
+	declareContext(t, `task_budget_pct: -0.5`)
+	if got := TaskBudgetPct(); got != 0 {
+		t.Errorf("TaskBudgetPct() = %v, want 0 (clamped)", got)
+	}
+}
+
+// TestConventionBudgetPct_ZeroAllowed mirrors the task-pct case.
+func TestConventionBudgetPct_ZeroAllowed(t *testing.T) {
+	declareContext(t, `convention_budget_pct: 0.0`)
+	if got := ConventionBudgetPct(); got != 0 {
+		t.Errorf("ConventionBudgetPct() = %v, want 0", got)
 	}
 }

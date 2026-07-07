@@ -88,7 +88,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Auto-prune stale session state files (best-effort, silent).
 	// Runs once per session at startup - fast directory scan.
-	health.AutoPrune(loadgate.AutoPruneStaleDays)
+	health.AutoPrune(rc.AutoPruneDays())
 
 	// Unreachable under normal flow: state.Initialized() above already
 	// proved ContextDir succeeds. Kept defensive so a future ContextDir

@@ -12,12 +12,16 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/placeholders"
+	cfgAgent "github.com/ActiveMemory/ctx/internal/config/agent"
 	"github.com/ActiveMemory/ctx/internal/config/asset"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
+	cfgJournal "github.com/ActiveMemory/ctx/internal/config/journal"
+	cfgLoadgate "github.com/ActiveMemory/ctx/internal/config/loadgate"
 	cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/ActiveMemory/ctx/internal/config/parser"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -619,6 +623,112 @@ func StatuslineShowCost() bool {
 		return *cfg.Statusline.ShowCost
 	}
 	return true
+}
+
+// AutoPruneDays returns the number of days after which session state
+// files are eligible for auto-pruning during context load.
+//
+// Falls back to the default (7) when the key is absent, zero, or
+// negative: only a positive value is a real threshold. Guarding
+// non-positive values is a safety invariant — a negative day count
+// moves the prune cutoff into the future and would delete every
+// session-state file (see health.AutoPrune, which guards again).
+//
+// Returns:
+//   - int: Days threshold before state files are pruned
+func AutoPruneDays() int {
+	n := RC().AutoPruneDays
+	if n <= 0 {
+		return cfgLoadgate.AutoPruneStaleDays
+	}
+	return n
+}
+
+// AgentCooldownMinutes returns the cooldown, in minutes, between
+// repeated `ctx agent` context packet emissions. Consumers convert
+// this to a time.Duration.
+//
+// The field is a pointer so an unset key (nil → default 10) is
+// distinguishable from an explicit 0, which disables the cooldown
+// (parity with the `--cooldown 0` flag; cooldown.Active treats any
+// value <= 0 as "off").
+//
+// Returns:
+//   - int: Cooldown in minutes
+func AgentCooldownMinutes() int {
+	p := RC().AgentCooldownMinutes
+	if p == nil {
+		return int(cfgAgent.DefaultCooldown / time.Minute)
+	}
+	return *p
+}
+
+// TaskBudgetPct returns the fraction of the token budget allocated to
+// tasks in the agent context packet.
+//
+// The field is a pointer so an unset key (nil → default 0.40) is
+// distinguishable from an explicit 0, which zeroes the section.
+// Values are clamped to [0, 1].
+//
+// Returns:
+//   - float64: Task budget fraction
+func TaskBudgetPct() float64 {
+	p := RC().TaskBudgetPct
+	if p == nil {
+		return cfgAgent.TaskBudgetPct
+	}
+	return clampFraction(*p)
+}
+
+// ConventionBudgetPct returns the fraction of the token budget
+// allocated to conventions in the agent context packet.
+//
+// The field is a pointer so an unset key (nil → default 0.20) is
+// distinguishable from an explicit 0, which zeroes the section.
+// Values are clamped to [0, 1].
+//
+// Returns:
+//   - float64: Convention budget fraction
+func ConventionBudgetPct() float64 {
+	p := RC().ConventionBudgetPct
+	if p == nil {
+		return cfgAgent.ConventionBudgetPct
+	}
+	return clampFraction(*p)
+}
+
+// TitleSlugMaxLen returns the maximum character length for
+// title-derived slugs used in journal filenames.
+//
+// Falls back to the default (50) when the key is absent, zero, or
+// negative: only a positive length is meaningful. Guarding
+// non-positive values prevents a negative from reaching the slice
+// bound in slug.FromTitle (which would panic).
+//
+// Returns:
+//   - int: Maximum slug length in characters
+func TitleSlugMaxLen() int {
+	n := RC().TitleSlugMaxLen
+	if n <= 0 {
+		return cfgJournal.TitleSlugMaxLen
+	}
+	return n
+}
+
+// RecallListLimit returns the default number of sessions listed by
+// `ctx journal source` when --limit is omitted.
+//
+// Falls back to the default (20) when the key is absent, zero, or
+// negative: only a positive limit is meaningful.
+//
+// Returns:
+//   - int: Default session-list limit
+func RecallListLimit() int {
+	n := RC().RecallListLimit
+	if n <= 0 {
+		return cfgJournal.DefaultRecallListLimit
+	}
+	return n
 }
 
 // Reset clears the cached configuration, forcing

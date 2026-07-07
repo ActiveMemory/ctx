@@ -14,7 +14,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreHub "github.com/ActiveMemory/ctx/internal/cli/agent/core/hub"
 	coreSteering "github.com/ActiveMemory/ctx/internal/cli/agent/core/steering"
-	"github.com/ActiveMemory/ctx/internal/config/agent"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
@@ -108,7 +107,7 @@ func Cmd() *cobra.Command {
 	)
 	flagbind.DurationFlag(
 		c, &cooldown,
-		cFlag.Cooldown, agent.DefaultCooldown,
+		cFlag.Cooldown, time.Duration(rc.AgentCooldownMinutes())*time.Minute,
 		flag.DescKeyAgentCooldown,
 	)
 	flagbind.StringFlag(
