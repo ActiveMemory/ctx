@@ -44,6 +44,13 @@ func Import(
 	jstate *state.State,
 	opts entity.ImportOpts,
 ) (imported, updated, skipped int) {
+	// Track per-session outcomes so the recorded source stat is advanced
+	// only for sessions that fully caught up to their transcript. A write
+	// failure or a foreign-edited part leaves the entry behind the
+	// source, so its stat must not move — the next sweep has to retry.
+	failed := make(map[string]bool)
+	foreign := make(map[string]bool)
+
 	for _, fa := range plan.Actions {
 		if fa.Action == entity.ActionLocked {
 			skipped++
@@ -55,6 +62,15 @@ func Import(
 			writeRecall.SkipFile(
 				cmd, fa.Filename,
 				desc.Text(text.DescKeyLabelReasonExists),
+			)
+			continue
+		}
+		if fa.Action == entity.ActionForeignEdit {
+			skipped++
+			foreign[fa.Session.ID] = true
+			writeRecall.SkipFile(
+				cmd, fa.Filename,
+				desc.Text(text.DescKeyLabelReasonEdited),
 			)
 			continue
 		}
@@ -89,15 +105,25 @@ func Import(
 			imported++
 		}
 
-		// Write file.
-		if writeErr := io.SafeWriteFile(
+		// Write the entry atomically (temp + rename). Import is wired into
+		// a SessionEnd hook that can be killed during teardown; a torn
+		// write would leave a truncated entry that the next sweep records
+		// as unchanged and never repairs.
+		if writeErr := io.SafeWriteFileAtomic(
 			fa.Path, []byte(content), fs.PermFile,
 		); writeErr != nil {
 			err.WarnFile(cmd, fa.Filename, writeErr)
+			failed[fa.Session.ID] = true
 			continue
 		}
 
 		jstate.MarkImported(fa.Filename)
+
+		// Record the hash of the body ctx just wrote, so a later growth
+		// sweep can prove the file is still ctx-owned before re-rendering.
+		jstate.SetRenderHash(
+			fa.Filename, state.HashRender(extract.StripFrontmatter(content)),
+		)
 
 		if fileExists && !discard {
 			writeRecall.ImportedFile(
@@ -106,6 +132,17 @@ func Import(
 		} else {
 			writeRecall.ImportedFile(cmd, fa.Filename, "")
 		}
+	}
+
+	// Commit the observed source stats for sessions that caught up. A
+	// session with any failed write or foreign-edited part is skipped, so
+	// its recorded stat stays behind and the next sweep re-detects the
+	// growth instead of silently forgetting it.
+	for sid, obs := range plan.Sources {
+		if failed[sid] || foreign[sid] {
+			continue
+		}
+		jstate.MarkSource(sid, obs.SourceFile, obs.Mtime, obs.Size)
 	}
 
 	return imported, updated, skipped

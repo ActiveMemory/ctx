@@ -66,6 +66,123 @@ func TestRoundTrip(t *testing.T) {
 	}
 }
 
+func TestLoad_V1Tolerant(t *testing.T) {
+	dir := t.TempDir()
+
+	// A raw v1 state file: version 1, entries only, no sessions map.
+	v1 := `{"version":1,"entries":{"2026-01-21-old.md":{"exported":"2026-01-21"}}}`
+	statePath := filepath.Join(dir, journal.File)
+	if err := os.WriteFile(statePath, []byte(v1), fs.PermFile); err != nil {
+		t.Fatal(err)
+	}
+
+	loaded, err := Load(dir)
+	if err != nil {
+		t.Fatalf("Load v1: %v", err)
+	}
+
+	// Version normalises to current on load.
+	if loaded.Version != CurrentVersion {
+		t.Errorf("Version = %d, want %d", loaded.Version, CurrentVersion)
+	}
+	// Sessions map is initialised (non-nil) but empty.
+	if loaded.Sessions == nil {
+		t.Error("Sessions should be initialised, not nil")
+	}
+	if len(loaded.Sessions) != 0 {
+		t.Errorf("Sessions should be empty, got %d", len(loaded.Sessions))
+	}
+	// Existing entries are preserved untouched.
+	if !loaded.Exported("2026-01-21-old.md") {
+		t.Error("v1 entry should be preserved after load")
+	}
+}
+
+func TestSourceRoundTrip(t *testing.T) {
+	dir := t.TempDir()
+
+	s := &State{
+		Version: CurrentVersion,
+		Entries: map[string]File{
+			"2026-01-21-test.md": {
+				Exported:   "2026-01-21",
+				RenderHash: "deadbeef",
+			},
+		},
+		Sessions: map[string]Source{
+			"sess-abc": {
+				SourceFile:  "/transcripts/sess-abc.jsonl",
+				SourceMtime: 1234567890,
+				SourceSize:  4096,
+			},
+		},
+	}
+
+	if err := s.Save(dir); err != nil {
+		t.Fatalf("Save: %v", err)
+	}
+	loaded, err := Load(dir)
+	if err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+
+	src, ok := loaded.SessionSource("sess-abc")
+	if !ok {
+		t.Fatal("session not found after round-trip")
+	}
+	if src.SourceFile != "/transcripts/sess-abc.jsonl" {
+		t.Errorf("SourceFile = %q, want preserved", src.SourceFile)
+	}
+	if src.SourceMtime != 1234567890 {
+		t.Errorf("SourceMtime = %d, want 1234567890", src.SourceMtime)
+	}
+	if src.SourceSize != 4096 {
+		t.Errorf("SourceSize = %d, want 4096", src.SourceSize)
+	}
+	if got := loaded.Entries["2026-01-21-test.md"].RenderHash; got != "deadbeef" {
+		t.Errorf("RenderHash = %q, want %q", got, "deadbeef")
+	}
+}
+
+func TestSessionSourceAndMark(t *testing.T) {
+	s := &State{
+		Version:  CurrentVersion,
+		Entries:  make(map[string]File),
+		Sessions: make(map[string]Source),
+	}
+
+	if _, ok := s.SessionSource("nope"); ok {
+		t.Error("unknown session should report not found")
+	}
+
+	s.MarkSource("sess-1", "/t/sess-1.jsonl", 100, 200)
+	src, ok := s.SessionSource("sess-1")
+	if !ok {
+		t.Fatal("session should be found after MarkSource")
+	}
+	if src.SourceFile != "/t/sess-1.jsonl" || src.SourceMtime != 100 ||
+		src.SourceSize != 200 {
+		t.Errorf("unexpected source stats: %+v", src)
+	}
+
+	// MarkSource overwrites with the latest stats.
+	s.MarkSource("sess-1", "/t/sess-1.jsonl", 150, 300)
+	src, _ = s.SessionSource("sess-1")
+	if src.SourceMtime != 150 || src.SourceSize != 300 {
+		t.Errorf("MarkSource should overwrite, got %+v", src)
+	}
+}
+
+func TestMarkSource_NilMap(t *testing.T) {
+	// A State with a nil Sessions map (e.g. hand-constructed) must not
+	// panic on MarkSource.
+	s := &State{Version: CurrentVersion, Entries: make(map[string]File)}
+	s.MarkSource("sess-1", "/t/sess-1.jsonl", 1, 2)
+	if _, ok := s.SessionSource("sess-1"); !ok {
+		t.Error("MarkSource should initialise a nil Sessions map")
+	}
+}
+
 func TestCountUnenriched(t *testing.T) {
 	dir := t.TempDir()
 

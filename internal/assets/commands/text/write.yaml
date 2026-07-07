@@ -71,6 +71,8 @@ write.journal-import-nothing:
   short: Nothing to import.
 write.journal-import-part-new:
   short: import %d new
+write.journal-import-part-grown:
+  short: complete %d grown
 write.journal-import-part-regen:
   short: regenerate %d existing
 write.journal-import-part-skip:

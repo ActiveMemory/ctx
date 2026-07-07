@@ -170,6 +170,26 @@ Do not auto-commit; the user decides. But always run the
 `git status` check and always surface non-empty output. Do
 not skip this phase silently when the working tree is dirty.
 
+### Phase 4.5: Capture the session journal (best-effort)
+
+Before handing over, sweep this session — and any others that
+have grown since their last import — into the journal so the
+next session can read it:
+
+```bash
+ctx journal import --all -y
+```
+
+This is growth-aware and idempotent: it imports the live
+session as far as it has progressed today and self-heals on the
+next run, so running it mid-wrap-up is safe and needs no flags
+beyond `-y`. Treat it as **non-blocking** — if it errors, note
+the error and continue to the handover anyway; a failed import
+must never block the handover. (A `SessionEnd` hook runs the
+same sweep automatically; this ceremony step is belt-and-
+suspenders.) Enrichment is a separate LLM pass
+(`/ctx-journal-enrich-all`) and is not part of wrap-up.
+
 ### Phase 5: Delegate to `/ctx-handover` (mandatory)
 
 `/ctx-wrap-up` always ends here. Drafting the handover reuses

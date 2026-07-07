@@ -12,4 +12,7 @@ const (
 	DescKeyLabelReasonExists = "label.reason-exists"
 	// DescKeyLabelReasonUpdated is the text key for label reason updated messages.
 	DescKeyLabelReasonUpdated = "label.reason-updated"
+	// DescKeyLabelReasonEdited is the text key for the reason shown when a
+	// grown session's entry was edited outside ctx and is left untouched.
+	DescKeyLabelReasonEdited = "label.reason-edited"
 )

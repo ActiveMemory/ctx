@@ -67,7 +67,7 @@ Each session page includes the following sections:
 ### 1. Import Sessions
 
 ```bash
-# Import all sessions from current project (only new files)
+# Import new sessions and complete any whose transcript has grown
 ctx journal import --all
 
 # Import sessions from all projects
@@ -129,14 +129,18 @@ After editing, regenerate the site:
 ctx journal site --serve
 ```
 
-??? info "Safe by Default"
-    Running `ctx journal import --all` **only imports new sessions**. Existing
-    files are skipped entirely (*your edits and enrichments are never touched*).
+??? info "Self-Healing by Default"
+    Running `ctx journal import --all` imports new sessions **and completes any
+    whose source transcript has grown** since the last import, re-rendering them
+    up to the current end. Sessions whose source is unchanged are skipped, and
+    hand-edited entries are detected and left untouched with a warning
+    (*your edits and enrichments are never clobbered*).
 
-    Use `--regenerate` to re-import existing files. Conversation content is
-    regenerated, but YAML frontmatter (*topics, type, outcome, etc.*) is
-    preserved. You'll be prompted before any existing files are overwritten;
-    add `-y` to skip the prompt.
+    `--regenerate` is an edge-case full re-render, not the routine way to update.
+    Reach for it after a render-format change or to heal a pre-self-heal
+    truncated entry. Conversation content is regenerated, but YAML frontmatter
+    (*topics, type, outcome, etc.*) is preserved. You'll be prompted before any
+    existing files are overwritten; add `-y` to skip the prompt.
 
     Use `--keep-frontmatter=false` to discard enriched frontmatter during
     regeneration.
@@ -392,7 +396,7 @@ import → enrich → rebuild
 
 | Stage        | Command / Skill            | What it does                            | Skips if                           |
 |--------------|----------------------------|-----------------------------------------|------------------------------------|
-| **Import**   | `ctx journal import --all`  | Converts session JSONL to Markdown      | File already exists (safe default) |
+| **Import**   | `ctx journal import --all`  | Converts session JSONL to Markdown      | Source unchanged since last import |
 | **Enrich**   | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics     | Frontmatter already present        |
 | **Rebuild**  | `ctx journal site --build` | Generates static HTML site              | *(never)*                          |
 | **Obsidian** | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | *(never)*                          |

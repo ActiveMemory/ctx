@@ -94,6 +94,24 @@ func Import(
 			}
 		}
 
+		// Growth detection (session-level). The unit of memory is the
+		// source transcript, not the output file: a session whose
+		// recorded mtime/size still match is Unchanged (skip); one that
+		// grew is re-rendered part by part, guarded so a hand-edited
+		// body is never clobbered.
+		mtime, size, statOK := sourceStat(s.SourceFile)
+		rec, seen := jstate.SessionSource(s.ID)
+		forceRegen := singleSession || opts.Regenerate ||
+			opts.DiscardFrontmatter()
+		// Growth is any divergence from the recorded source: a different
+		// transcript file (a richer resume copy was picked), a newer
+		// mtime, or a larger size. Comparing the file path too means a
+		// switch to a larger resume transcript counts as growth even if
+		// its mtime/size happen not to differ from the old record.
+		grown := seen && statOK &&
+			(rec.SourceFile != s.SourceFile ||
+				rec.SourceMtime != mtime || rec.SourceSize != size)
+
 		// Plan each part.
 		for part := 1; part <= numParts; part++ {
 			filename := baseFilename
@@ -125,10 +143,39 @@ func Import(
 				jstate.Mark(filename, session.FrontmatterLocked)
 				action = entity.ActionLocked
 				plan.LockedCount++
-			case singleSession || opts.Regenerate || opts.DiscardFrontmatter():
+			case forceRegen:
 				action = entity.ActionRegenerate
 				plan.RegenCount++
+			case grown:
+				// The source grew. Re-render only if the existing body is
+				// provably still ctx's last write; otherwise a human
+				// edited it, so leave it untouched and warn. A grown
+				// re-render is counted as GrownCount, not RegenCount, so it
+				// does not trip the regenerate confirmation prompt: it is a
+				// non-destructive splice that preserves frontmatter.
+				if bodyEdited(path, jstate.RenderHash(filename)) {
+					action = entity.ActionForeignEdit
+					plan.SkipCount++
+				} else {
+					action = entity.ActionRegenerate
+					plan.GrownCount++
+				}
 			default:
+				// Unchanged (recorded stats match), adopted (file exists
+				// but the session predates source tracking), or an
+				// unreadable source: leave the file as-is.
+				//
+				// Adoption: a file that exists for a session never tracked
+				// under source tracking (a pre-v2 import) is taken as
+				// ctx-owned. Record its body hash now so a later growth
+				// sweep can re-render it, instead of reading the absent
+				// hash as a hand edit and stranding the growth (a
+				// still-live session imported across the v1→v2 upgrade).
+				if !seen && jstate.RenderHash(filename) == "" {
+					if h := adoptRenderHash(path); h != "" {
+						jstate.SetRenderHash(filename, h)
+					}
+				}
 				action = entity.ActionSkip
 				plan.SkipCount++
 			}
@@ -147,6 +194,23 @@ func Import(
 				Title:      title,
 				BaseName:   baseName,
 			})
+		}
+
+		// Stash the observed source stats in the plan, keyed by session.
+		// execute commits them to journal state only AFTER the session's
+		// writes succeed (see execute.Import): recording the stat at plan
+		// time would advance it even when the write later fails, silently
+		// forgetting the un-rendered growth. Adopted/unchanged sessions
+		// have no write and are committed unconditionally by execute.
+		if statOK {
+			if plan.Sources == nil {
+				plan.Sources = make(map[string]entity.SourceObservation)
+			}
+			plan.Sources[s.ID] = entity.SourceObservation{
+				SourceFile: s.SourceFile,
+				Mtime:      mtime,
+				Size:       size,
+			}
 		}
 	}
 

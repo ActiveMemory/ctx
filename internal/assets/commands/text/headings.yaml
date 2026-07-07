@@ -168,6 +168,8 @@ label.reason-exists:
   short: exists
 label.reason-updated:
   short: 'updated, frontmatter preserved'
+label.reason-edited:
+  short: 'edited outside ctx — left as-is (lock it, or re-import with --regenerate to discard)'
 label.loop-complete:
   short: '=== Loop Complete ==='
 

@@ -1002,17 +1002,24 @@ journal.import:
     By default, only sessions from the current project are imported. Use
     --all-projects to include sessions from all projects.
 
-    Safe by default: --all only imports new sessions. Existing files are
-    skipped. Use --regenerate to re-import existing files (preserves YAML
-    frontmatter by default). Use --keep-frontmatter=false to discard
-    enriched frontmatter during regeneration.
+    Self-healing by default: --all imports new sessions and completes any
+    whose source transcript has grown since the last import (re-rendering
+    them up to the current end), skipping only sessions whose source is
+    unchanged. Hand-edited entries are detected via a body render-hash and
+    left untouched with a warning, never clobbered.
+
+    --regenerate is an edge-case full re-render, not the routine way to
+    update: reach for it after a render-format change or to heal a
+    pre-self-heal truncated entry (preserves YAML frontmatter by default).
+    Use --keep-frontmatter=false to discard enriched frontmatter during
+    regeneration.
 
     Locked entries (via "ctx journal lock") are always skipped, regardless
     of flags.
 
     Examples:
-      ctx journal import abc123                              # Import one session
-      ctx journal import --all                               # Import only new
+      ctx journal import abc123                              # Import (or re-render) one session
+      ctx journal import --all                               # Import new + complete grown
       ctx journal import --all --dry-run                     # Preview changes
       ctx journal import --all --regenerate                  # Re-import (prompts)
       ctx journal import --all --regenerate -y               # Re-import, no prompt

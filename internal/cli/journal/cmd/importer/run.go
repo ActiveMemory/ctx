@@ -134,8 +134,9 @@ func Run(cmd *cobra.Command, args []string, opts entity.ImportOpts) error {
 	// 8. Dry-run → print summary and return.
 	if opts.DryRun {
 		writeRecall.ImportSummary(
-			cmd, importPlan.NewCount, importPlan.RegenCount,
-			importPlan.SkipCount, importPlan.LockedCount, true,
+			cmd, importPlan.NewCount, importPlan.GrownCount,
+			importPlan.RegenCount, importPlan.SkipCount,
+			importPlan.LockedCount, true,
 		)
 		return nil
 	}

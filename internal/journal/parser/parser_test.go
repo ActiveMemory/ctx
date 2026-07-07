@@ -49,6 +49,41 @@ func TestClaudeCodeParser_Matches(t *testing.T) {
 	}
 }
 
+func TestClaudeCodeParser_PartialTrailingLine(t *testing.T) {
+	// A transcript read mid-write can end in a half-written JSONL line.
+	// Growth-aware import relies on the parser treating that partial line
+	// as end-of-input: the complete lines import now and the missing
+	// record is captured losslessly on the next sweep. This pins that
+	// tolerance — no error, no dropped complete messages.
+	parser := NewClaudeCode()
+	dir := t.TempDir()
+
+	jsonlFile := filepath.Join(dir, "live.jsonl")
+	full := `{"uuid":"m1","sessionId":"live-1","slug":"live","type":"user","timestamp":"2026-01-20T10:00:00Z","cwd":"/home/test/project","version":"2.1.0","message":{"role":"user","content":[{"type":"text","text":"first"}]}}
+{"uuid":"m2","sessionId":"live-1","slug":"live","type":"assistant","timestamp":"2026-01-20T10:00:05Z","cwd":"/home/test/project","version":"2.1.0","message":{"role":"assistant","content":[{"type":"text","text":"reply"}]}}
+`
+	// A torn final line: valid JSON prefix, no closing brace, no newline.
+	partial := `{"uuid":"m3","sessionId":"live-1","type":"user","timestamp":"2026-01-20T10:00:1`
+	if err := os.WriteFile(
+		jsonlFile, []byte(full+partial), 0600,
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	sessions, err := parser.ParseFile(jsonlFile)
+	if err != nil {
+		t.Fatalf("ParseFile on a live transcript should not error: %v", err)
+	}
+	if len(sessions) != 1 {
+		t.Fatalf("expected 1 session, got %d", len(sessions))
+	}
+	// The two complete messages import; the partial one is skipped until
+	// the next sweep.
+	if got := len(sessions[0].Messages); got != 2 {
+		t.Errorf("expected 2 complete messages, got %d", got)
+	}
+}
+
 func TestClaudeCodeParser_ParseFile(t *testing.T) {
 	parser := NewClaudeCode()
 	dir := t.TempDir()
