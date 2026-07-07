@@ -376,6 +376,21 @@ plans, this attacks them.
 
 ---
 
+### [Spec-Driven Development](spec-driven-development.md)
+
+The full design-to-implementation pipeline from the operator's seat:
+**debate** the bet into a brief, **spec** all milestones once, **task
+out** each milestone just-in-time behind the rolling-wave gate, then
+**implement**. Covers the load-bearing mechanics a newcomer has to
+reverse-engineer otherwise — altitude, blocking-TBD gates, and the
+plan-as-ledger vs. TASKS.md-as-projection split — with a worked
+multi-milestone example.
+
+**Uses**: `/ctx-plan`, `/ctx-spec`, `/ctx-task-out`, `/ctx-implement`,
+`/ctx-decision-add`
+
+---
+
 ## Agents and Automation
 
 ### [Building Project Skills](building-skills.md)
