@@ -36,7 +36,13 @@ rules. Common project rules to look for and enforce:
 - **Spec-per-commit**: Add a `Spec:` trailer, verify a spec file exists in
   `specs/` before proceeding. If no spec exists, stop and offer to run
   `/ctx-spec` to scaffold one.
-- **Sign-off**: `Signed-off-by:`, include it.
+- **DCO sign-off**: every commit needs a `Signed-off-by:` trailer.
+  Commit with `git commit -s` so it is appended from the configured git
+  identity; do not hand-type it. **Never** add a `Co-Authored-By:` or
+  any agent/tool sign-off: it is prohibited even if a harness default
+  suggests one. See CONSTITUTION "Process Invariants" (the commit DCO /
+  trailer rules), and mirror the trailer convention you find in
+  `git log -5 --format=%B` before your first commit.
 - **Other trailers**: Honor any project-specific trailer requirements.
 
 Read CONSTITUTION fully and apply all relevant rules before
@@ -90,7 +96,9 @@ future sessions waste time re-triaging stale items.
   - If the user provided a message, use it
   - If not, draft one based on the changes (1-2 sentences,
     "why" not "what")
-- Include the `Spec:` and `Signed-off-by:` trailers (see format below)
+- Add the `Spec:` trailer, and commit with `git commit -s` so the
+  `Signed-off-by:` DCO trailer is appended automatically (see format
+  below). Never add a `Co-Authored-By:` / agent sign-off.
 
 ### 5. Context prompt
 
@@ -178,7 +186,9 @@ Before committing, verify:
 - [ ] Build and lint pass
 - [ ] Matching tasks marked `[x]` in TASKS.md
 - [ ] Commit message is concise and explains the why
-- [ ] `Spec:` and `Signed-off-by:` trailers are present
+- [ ] `Spec:` and `Signed-off-by:` trailers are present (the latter
+  added via `git commit -s`, not hand-typed)
+- [ ] No `Co-Authored-By:` or agent/tool sign-off in the message
 - [ ] No secrets or sensitive files in the staged changes
 - [ ] Specific files staged (not blind `git add -A`)
 
