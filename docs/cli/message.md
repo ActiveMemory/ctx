@@ -6,7 +6,7 @@
 #                 SPDX-License-Identifier: Apache-2.0
 
 title: Message
-icon: lucide/message-square-cog
+icon: lucide/message-square-text
 ---
 
 ![ctx](../images/ctx-banner.png)

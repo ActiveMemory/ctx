@@ -67,6 +67,9 @@ const (
 	// DescKeyWriteJournalImportPartNew is the text key for write journal import
 	// part new messages.
 	DescKeyWriteJournalImportPartNew = "write.journal-import-part-new"
+	// DescKeyWriteJournalImportPartGrown is the text key for the count of
+	// grown sessions completed by a growth-aware import sweep.
+	DescKeyWriteJournalImportPartGrown = "write.journal-import-part-grown"
 	// DescKeyWriteJournalImportPartRegen is the text key for write journal import
 	// part regen messages.
 	DescKeyWriteJournalImportPartRegen = "write.journal-import-part-regen"

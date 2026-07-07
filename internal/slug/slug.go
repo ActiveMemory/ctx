@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/i18n"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Path returns a slug that preserves `/` so vendor-namespaced
@@ -41,7 +42,8 @@ func Path(s string) string {
 //
 // Lowercases the input, replaces non-alphanumeric characters with hyphens,
 // collapses consecutive hyphens, trims leading/trailing hyphens, and
-// truncates on a word boundary at journal.TitleSlugMaxLen characters.
+// truncates on a word boundary at rc.TitleSlugMaxLen() characters
+// (configurable via .ctxrc title_slug_max_len; default 50).
 //
 // Parameters:
 //   - title: Human-readable title string
@@ -72,12 +74,13 @@ func FromTitle(title string) string {
 
 	slug := strings.TrimRight(sb.String(), token.Dash)
 
-	if len(slug) <= journal.TitleSlugMaxLen {
+	maxLen := rc.TitleSlugMaxLen()
+	if len(slug) <= maxLen {
 		return slug
 	}
 
 	// Truncate on a word (hyphen) boundary.
-	truncated := slug[:journal.TitleSlugMaxLen]
+	truncated := slug[:maxLen]
 	if idx := strings.LastIndex(truncated, token.Dash); idx > 0 {
 		truncated = truncated[:idx]
 	}

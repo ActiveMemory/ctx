@@ -11,7 +11,7 @@ icon: lucide/link
 
 ![ctx](../images/ctx-banner.png)
 
-## `ctx connect`
+## `ctx connection`
 
 Connect a project to a `ctx` Hub for cross-project
 knowledge sharing. Projects publish decisions, learnings,

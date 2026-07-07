@@ -71,10 +71,13 @@ ctx journal import gleaming-wobbling-sutherland
 Imported files land in `.context/journal/` as individual Markdown files with
 session metadata and the full conversation transcript.
 
-`--all` is safe by default: Only new sessions are imported. Existing files
-are skipped. Use `--regenerate` to re-import existing files (YAML frontmatter
-is preserved). Use `--regenerate --keep-frontmatter=false -y` to regenerate
-everything including frontmatter.
+`--all` is self-healing: it imports new sessions and completes any whose
+transcript has grown since the last import, skipping unchanged ones and never
+clobbering an entry you have hand-edited. You do not need `--regenerate` for
+routine re-imports; it is an edge-case tool for forcing a full re-render (after
+a format change, or to heal a pre-self-heal truncated entry). Add
+`--keep-frontmatter=false -y` to discard enriched frontmatter during that
+re-render.
 
 ### Step 2: Enrich Entries with Metadata
 
@@ -283,8 +286,9 @@ as you want.
 ## Tips
 
 * Import regularly. Run `ctx journal import --all` after each session to keep
-  your journal current. Only new sessions are imported: Existing files are
-  skipped by default.
+  your journal current. It is self-healing: new sessions are imported and any
+  whose transcript has grown are completed, while unchanged sources are
+  skipped.
 * Use batch enrichment. `/ctx-journal-enrich-all` filters noise (suggestion
   sessions, trivial sessions, multipart continuations) so you do not have to
   decide what is worth enriching.

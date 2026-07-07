@@ -61,13 +61,14 @@ func ImportedFile(cmd *cobra.Command, filename, suffix string) {
 // Parameters:
 //   - cmd: Cobra command for output. Nil is a no-op.
 //   - newCount: number of new files to import.
+//   - grownCount: number of grown sessions completed (self-heal).
 //   - regenCount: number of existing files to regenerate.
 //   - skipCount: number of existing files to skip.
 //   - lockedCount: number of locked files to skip.
 //   - dryRun: when true, uses "Would" instead of "Will".
 func ImportSummary(
 	cmd *cobra.Command,
-	newCount, regenCount, skipCount, lockedCount int,
+	newCount, grownCount, regenCount, skipCount, lockedCount int,
 	dryRun bool,
 ) {
 	if cmd == nil {
@@ -83,6 +84,11 @@ func ImportSummary(
 		parts = append(parts, fmt.Sprintf(
 			desc.Text(text.DescKeyWriteJournalImportPartNew),
 			newCount))
+	}
+	if grownCount > 0 {
+		parts = append(parts, fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalImportPartGrown),
+			grownCount))
 	}
 	if regenCount > 0 {
 		parts = append(parts, fmt.Sprintf(

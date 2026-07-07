@@ -33,7 +33,8 @@ import (
 func Import(cmd *cobra.Command, plan entity.ImportPlan) (bool, error) {
 	writeRecall.ImportSummary(
 		cmd,
-		plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false,
+		plan.NewCount, plan.GrownCount, plan.RegenCount,
+		plan.SkipCount, plan.LockedCount, false,
 	)
 	writeRecall.ConfirmPrompt(cmd)
 	reader := bufio.NewReader(os.Stdin)

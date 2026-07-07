@@ -54,6 +54,11 @@
           {"type": "command", "command": "cd \"${CLAUDE_PROJECT_DIR:?CLAUDE_PROJECT_DIR unset; cannot anchor ctx}\" && ctx system heartbeat"}
         ]
       }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [{"type": "command", "command": "cd \"${CLAUDE_PROJECT_DIR:?CLAUDE_PROJECT_DIR unset; cannot anchor ctx}\" && ctx journal import --all -y >/dev/null 2>&1 || true"}]
+      }
     ]
   }
 }

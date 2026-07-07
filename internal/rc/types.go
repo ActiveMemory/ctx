@@ -66,38 +66,65 @@ import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 //   - Hooks: Hook system configuration overrides
 //   - ProvenanceRequired: Per-project relaxation of
 //     provenance flags for ctx add (default: all required)
+//   - AutoPruneDays: Days after which session state files
+//     are eligible for auto-pruning during context load
+//     (default 7; zero or negative means "unset" → default)
+//   - AgentCooldownMinutes: Minutes to suppress repeated
+//     `ctx agent` context packet emissions. Pointer type
+//     distinguishes unset (nil → default 10) from an explicit
+//     0, which disables the cooldown (matches `--cooldown 0`).
+//   - TaskBudgetPct: Fraction of the token budget allocated
+//     to tasks in the agent context packet. Pointer type: nil
+//     → default 0.40; an explicit 0 zeroes the section;
+//     values clamp to [0, 1].
+//   - ConventionBudgetPct: Fraction of the token budget
+//     allocated to conventions in the agent context packet.
+//     Pointer type: nil → default 0.20; explicit 0 zeroes the
+//     section; values clamp to [0, 1].
+//   - TitleSlugMaxLen: Maximum character length for
+//     title-derived slugs used in journal filenames
+//     (default 50; zero or negative means "unset" → default)
+//   - RecallListLimit: Default number of sessions listed by
+//     `ctx journal source` when --limit is omitted
+//     (default 20; zero or negative means "unset" → default)
 type CtxRC struct {
-	Profile             string                   `yaml:"profile"`
-	Tool                string                   `yaml:"tool"`
-	TokenBudget         int                      `yaml:"token_budget"`
-	PriorityOrder       []string                 `yaml:"priority_order"`
-	AutoArchive         bool                     `yaml:"auto_archive"`
-	ArchiveAfterDays    int                      `yaml:"archive_after_days"`
-	ScratchpadEncrypt   *bool                    `yaml:"scratchpad_encrypt"`
-	EntryCountLearnings int                      `yaml:"entry_count_learnings"`
-	EntryCountDecisions int                      `yaml:"entry_count_decisions"`
-	ConventionLineCount int                      `yaml:"convention_line_count"`
-	InjectionTokenWarn  int                      `yaml:"injection_token_warn"`
-	ContextWindow       int                      `yaml:"context_window"`
-	BillingTokenWarn    int                      `yaml:"billing_token_warn"`
-	EventLog            bool                     `yaml:"event_log"`
-	KeyRotationDays     int                      `yaml:"key_rotation_days"`
-	TaskNudgeInterval   int                      `yaml:"task_nudge_interval"`
-	KeyPathOverride     string                   `yaml:"key_path"`
-	StaleAgeDays        int                      `yaml:"stale_age_days"`
-	SessionPrefixes     []string                 `yaml:"session_prefixes"`
-	FreshnessFiles      []FreshnessFile          `yaml:"freshness_files"`
-	CompanionCheck      *bool                    `yaml:"companion_check"`
-	ClassifyRules       []cfgMemory.ClassifyRule `yaml:"classify_rules"`
-	SpecSignalWords     []string                 `yaml:"spec_signal_words"`
-	SpecNudgeMinLen     int                      `yaml:"spec_nudge_min_len"`
-	Placeholders        []string                 `yaml:"placeholders"`
-	Notify              *NotifyConfig            `yaml:"notify"`
-	Steering            *SteeringRC              `yaml:"steering"`
-	Hooks               *HooksRC                 `yaml:"hooks"`
-	Statusline          *StatuslineRC            `yaml:"statusline"`
-	ProvenanceRequired  *ProvenanceConfig        `yaml:"provenance_required"`
-	Dream               *DreamRC                 `yaml:"dream"`
+	Profile              string                   `yaml:"profile"`
+	Tool                 string                   `yaml:"tool"`
+	TokenBudget          int                      `yaml:"token_budget"`
+	PriorityOrder        []string                 `yaml:"priority_order"`
+	AutoArchive          bool                     `yaml:"auto_archive"`
+	ArchiveAfterDays     int                      `yaml:"archive_after_days"`
+	ScratchpadEncrypt    *bool                    `yaml:"scratchpad_encrypt"`
+	EntryCountLearnings  int                      `yaml:"entry_count_learnings"`
+	EntryCountDecisions  int                      `yaml:"entry_count_decisions"`
+	ConventionLineCount  int                      `yaml:"convention_line_count"`
+	InjectionTokenWarn   int                      `yaml:"injection_token_warn"`
+	ContextWindow        int                      `yaml:"context_window"`
+	BillingTokenWarn     int                      `yaml:"billing_token_warn"`
+	EventLog             bool                     `yaml:"event_log"`
+	KeyRotationDays      int                      `yaml:"key_rotation_days"`
+	TaskNudgeInterval    int                      `yaml:"task_nudge_interval"`
+	KeyPathOverride      string                   `yaml:"key_path"`
+	StaleAgeDays         int                      `yaml:"stale_age_days"`
+	SessionPrefixes      []string                 `yaml:"session_prefixes"`
+	FreshnessFiles       []FreshnessFile          `yaml:"freshness_files"`
+	CompanionCheck       *bool                    `yaml:"companion_check"`
+	ClassifyRules        []cfgMemory.ClassifyRule `yaml:"classify_rules"`
+	SpecSignalWords      []string                 `yaml:"spec_signal_words"`
+	SpecNudgeMinLen      int                      `yaml:"spec_nudge_min_len"`
+	Placeholders         []string                 `yaml:"placeholders"`
+	Notify               *NotifyConfig            `yaml:"notify"`
+	Steering             *SteeringRC              `yaml:"steering"`
+	Hooks                *HooksRC                 `yaml:"hooks"`
+	Statusline           *StatuslineRC            `yaml:"statusline"`
+	ProvenanceRequired   *ProvenanceConfig        `yaml:"provenance_required"`
+	Dream                *DreamRC                 `yaml:"dream"`
+	AutoPruneDays        int                      `yaml:"auto_prune_days"`
+	AgentCooldownMinutes *int                     `yaml:"agent_cooldown_minutes"`
+	TaskBudgetPct        *float64                 `yaml:"task_budget_pct"`
+	ConventionBudgetPct  *float64                 `yaml:"convention_budget_pct"`
+	TitleSlugMaxLen      int                      `yaml:"title_slug_max_len"`
+	RecallListLimit      int                      `yaml:"recall_list_limit"`
 }
 
 // StatuslineRC holds status line configuration from .ctxrc.

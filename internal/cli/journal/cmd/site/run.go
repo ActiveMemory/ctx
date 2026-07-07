@@ -15,6 +15,7 @@ import (
 	readJournal "github.com/ActiveMemory/ctx/internal/assets/read/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/collapse"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/consolidate"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/core/extract"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/format"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/generate"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core/normalize"
@@ -25,6 +26,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgJournal "github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/zensical"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -142,12 +144,29 @@ func Run(
 				),
 			),
 		)
+		writeOK := true
 		if normalized != string(content) {
-			if writeErr := ctxIo.SafeWriteFile(
+			// Atomic: this rewrites the source entry body in place, so a
+			// torn write must never truncate a journal entry.
+			if writeErr := ctxIo.SafeWriteFileAtomic(
 				src, []byte(normalized), fs.PermFile,
 			); writeErr != nil {
 				err.WarnFile(cmd, entry.Filename, writeErr)
+				writeOK = false
 			}
+		}
+
+		// The in-place normalize is a body-authoring write, so refresh the
+		// entry's render hash to match what is now on disk. Do this on
+		// every non-failed entry — not only when a write happened — so an
+		// idempotent normalize still re-syncs the hash. Without this,
+		// growth-aware import would read a site-normalized body as a hand
+		// edit and refuse to self-heal (see plan.bodyEdited).
+		if writeOK {
+			jState.SetRenderHash(
+				entry.Filename,
+				state.HashRender(extract.StripFrontmatter(normalized)),
+			)
 		}
 
 		// Generate site copy with Markdown fixes
@@ -163,6 +182,13 @@ func Run(
 			err.WarnFile(cmd, entry.Filename, writeErr)
 			continue
 		}
+	}
+
+	// Persist the render hashes refreshed by the in-place normalize
+	// above, so growth-aware import can prove these entries are still
+	// ctx-owned. Best-effort: a save failure must not fail site build.
+	if saveErr := jState.Save(journalDir); saveErr != nil {
+		err.WarnFile(cmd, cfgJournal.File, saveErr)
 	}
 
 	// Remove orphan site files: entries whose source was renamed or deleted.

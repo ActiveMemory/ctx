@@ -91,6 +91,9 @@
         <loc>https://ctx.ist/recipes/session-archaeology/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/recipes/session-changes/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/recipes/session-reminders/</loc>
       </url>
       <url>
@@ -109,6 +112,12 @@
         <loc>https://ctx.ist/recipes/design-before-coding/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/recipes/scrutinizing-a-plan/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/spec-driven-development/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/recipes/scratchpad-with-claude/</loc>
       </url>
       <url>
@@ -118,7 +127,19 @@
         <loc>https://ctx.ist/recipes/memory-bridge/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/recipes/build-a-knowledge-base/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/typical-kb-session/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/recover-aborted-session/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/recipes/hook-output-patterns/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/hook-sequence-diagrams/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/customizing-hook-messages/</loc>
@@ -131,6 +152,9 @@
       </url>
       <url>
         <loc>https://ctx.ist/recipes/context-health/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/state-maintenance/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/configuration-profiles/</loc>
@@ -154,10 +178,16 @@
         <loc>https://ctx.ist/recipes/autonomous-loops/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/recipes/run-the-dream/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/recipes/when-to-use-agent-teams/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/parallel-worktrees/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/architecture-deep-dive/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/steering/</loc>
@@ -205,10 +235,19 @@
         <loc>https://ctx.ist/cli/memory/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/cli/kb/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/cli/watch/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/journal/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/handover/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/dream/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/pad/</loc>
@@ -277,7 +316,16 @@
         <loc>https://ctx.ist/cli/hook/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/cli/event/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/message/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/cli/system/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/bootstrap/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/completion/</loc>
@@ -302,6 +350,9 @@
       </url>
       <url>
         <loc>https://ctx.ist/reference/scratchpad/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/reference/dream-executor-contract/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/reference/versions/</loc>
@@ -329,6 +380,9 @@
       </url>
       <url>
         <loc>https://ctx.ist/operations/runbooks/breaking-migration/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/operations/runbooks/backup-strategy/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/operations/runbooks/hub-deployment/</loc>

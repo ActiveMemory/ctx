@@ -84,6 +84,13 @@ A commented `.ctxrc` showing all options and their defaults:
 # key_rotation_days: 90
 # task_nudge_interval: 5   # Edit/Write calls between task completion nudges
 #
+# auto_prune_days: 7            # days before stale session-state files are pruned on load (0/negative = default)
+# agent_cooldown_minutes: 10    # minutes between repeated `ctx agent` emissions (0 = disable the cooldown)
+# task_budget_pct: 0.40         # fraction of the `ctx agent` token budget for tasks (0-1; 0 = none)
+# convention_budget_pct: 0.20   # fraction of the `ctx agent` token budget for conventions (0-1; 0 = none)
+# title_slug_max_len: 50        # max characters in title-derived journal filename slugs (0/negative = default)
+# recall_list_limit: 20         # default `ctx journal source` list size when --limit is omitted (0/negative = default)
+#
 # notify:               # requires: ctx hook notify setup
 #   events:             # required: no events sent unless listed
 #     - loop
@@ -155,6 +162,12 @@ A commented `.ctxrc` showing all options and their defaults:
 | `provenance_required.session_id` | `bool` | `true` | Require `--session-id` on `ctx add` for tasks, decisions, learnings                                                            |
 | `provenance_required.branch` | `bool` | `true`     | Require `--branch` on `ctx add` for tasks, decisions, learnings                                                                |
 | `provenance_required.commit` | `bool` | `true`     | Require `--commit` on `ctx add` for tasks, decisions, learnings                                                                |
+| `auto_prune_days`        | `int`      | `7`           | Days before stale session-state files are auto-pruned on context load. Non-positive values fall back to the default (never prunes on `0` or negative) |
+| `agent_cooldown_minutes` | `int`      | `10`          | Minutes between repeated `ctx agent` context-packet emissions. An explicit `0` disables the cooldown (matches `--cooldown 0`); unset uses the default |
+| `task_budget_pct`        | `number`   | `0.40`        | Fraction of the `ctx agent` token budget reserved for tasks (clamped to `0`–`1`; explicit `0` allocates none; unset uses the default)                 |
+| `convention_budget_pct`  | `number`   | `0.20`        | Fraction of the `ctx agent` token budget reserved for conventions (clamped to `0`–`1`; explicit `0` allocates none; unset uses the default)           |
+| `title_slug_max_len`     | `int`      | `50`          | Maximum characters in title-derived journal filename slugs. Non-positive values fall back to the default                                              |
+| `recall_list_limit`      | `int`      | `20`          | Default number of sessions `ctx journal source` lists when `--limit` is omitted. Non-positive values fall back to the default                          |
 
 **Default priority order** (*used when `priority_order` is not set*):
 

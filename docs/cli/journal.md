@@ -29,12 +29,14 @@ ctx journal source [flags]
 
 **Flags**:
 
-| Flag             | Short | Description                               |
-|------------------|-------|-------------------------------------------|
-| `--limit`        | `-n`  | Maximum sessions to display (default: 20) |
-| `--project`      | `-p`  | Filter by project name                    |
-| `--tool`         | `-t`  | Filter by tool (e.g., `claude-code`)      |
-| `--all-projects` |       | Include sessions from all projects        |
+| Flag             | Short | Description                                       |
+|------------------|-------|---------------------------------------------------|
+| `--limit`        | `-M`  | Maximum sessions to display (default: 20)         |
+| `--project`      | `-p`  | Filter by project name                            |
+| `--tool`         | `-t`  | Filter by tool (e.g., `claude-code`)              |
+| `--since`        |       | Show sessions on or after this date (YYYY-MM-DD)  |
+| `--until`        |       | Show sessions on or before this date (YYYY-MM-DD) |
+| `--all-projects` |       | Include sessions from all projects                |
 
 Sessions are sorted by date (newest first) and display slug, project,
 start time, duration, turn count, and token usage.
@@ -87,23 +89,46 @@ ctx journal import [session-id] [flags]
 
 | Flag                 | Description                                                             |
 |----------------------|-------------------------------------------------------------------------|
-| `--all`              | Import all sessions (only new files by default)                         |
+| `--all`              | Import new sessions and complete any whose transcript has grown         |
 | `--all-projects`     | Import from all projects                                                |
-| `--regenerate`       | Re-import existing files (preserves YAML frontmatter by default)        |
+| `--regenerate`       | Edge case: force a full re-render of existing entries                   |
 | `--keep-frontmatter` | Preserve enriched YAML frontmatter during regeneration (default: true)  |
 | `--yes`, `-y`        | Skip confirmation prompt                                                |
 | `--dry-run`          | Show what would be imported without writing files                       |
 
-**Safe by default**: `--all` only imports new sessions. Existing files are
-skipped. Use `--regenerate` to re-import existing files (conversation content
-is regenerated, YAML frontmatter from enrichment is preserved by default).
-Use `--keep-frontmatter=false` to discard enriched frontmatter during
-regeneration.
+**Self-healing, no flags required.** Import's unit of memory is the *source
+transcript*, not the output file. A sweep (`--all`) automatically:
 
-Locked entries (via `ctx journal lock`) are always skipped, regardless of flags.
+- **imports new sessions** it has never seen;
+- **completes grown sessions** — any whose transcript gained messages since the
+  last import (for example, a session imported while it was still running) is
+  re-rendered up to its current end. Claude Code transcripts are append-only,
+  so "it grew" is detected from the file's size and mtime alone; a partial
+  import is just an intermediate state the next sweep finishes;
+- **skips unchanged sessions**, byte-for-byte, writing nothing.
 
-Single-session import (`ctx journal import <id>`) always writes without
-prompting, since you are explicitly targeting one session.
+So you never have to remember to re-import or time it: importing a live session
+mid-flight is safe and the next sweep heals it. That "no new flags" is the
+feature — it is why import is wired into `/ctx-wrap-up` and a `SessionEnd` hook,
+where it runs on the way out of every session (idempotent; one `stat` per
+session when there is nothing to do).
+
+**Your edits are never clobbered.** Journal entries are meant to be edited (add
+notes, clean up the transcript). Before re-rendering a grown entry, import
+checks whether the file's body is still exactly what ctx last wrote; if you
+edited it, ctx leaves the file untouched and warns, pointing you at
+`ctx journal lock` (permanent protection) or an explicit `--regenerate`
+(deliberate discard). Locked entries are never rewritten under any flag.
+
+**`--regenerate` is an edge-case tool**, not the routine path. Reach for it to
+(a) mass-re-render after a change to the render format, or (b) one-time heal a
+*pre-self-heal* entry that an old mid-session import truncated — its source will
+never grow again, so the automatic path cannot heal it, and `--regenerate`
+re-renders it from the full transcript. `--keep-frontmatter=false` additionally
+discards enriched frontmatter during that re-render.
+
+Single-session import (`ctx journal import <id>`) always re-renders the targeted
+session without prompting, since you are explicitly targeting it.
 
 The `journal/` directory should be gitignored (like `sessions/`) since it
 contains raw conversation data.
@@ -111,11 +136,11 @@ contains raw conversation data.
 **Example**:
 
 ```bash
-ctx journal import abc123                 # Import one session
-ctx journal import --all                  # Import only new sessions
+ctx journal import abc123                 # Import (or re-render) one session
+ctx journal import --all                  # Import new + complete grown sessions
 ctx journal import --all --dry-run        # Preview what would be imported
-ctx journal import --all --regenerate     # Re-import existing (prompts)
-ctx journal import --all --regenerate -y  # Re-import without prompting
+ctx journal import --all --regenerate     # Edge case: force full re-render (prompts)
+ctx journal import --all --regenerate -y  # Force full re-render without prompting
 ctx journal import --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
 ```
 

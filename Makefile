@@ -7,7 +7,7 @@ clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall check-tools \
 sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills sync-steering check-steering gemini-search \
-gitnexus-version gitnexus-update install-ctxctl reinstall-ctxctl
+gitnexus-version gitnexus-update gitnexus-index gitnexus-mcp strip-gitnexus install-ctxctl reinstall-ctxctl
 
 # Default binary name and output
 BINARY := ctx
@@ -306,6 +306,18 @@ gitnexus-update:
 gitnexus-analyze:
 	gitnexus analyze --embeddings --skill
 	echo "GitNexus updated AGENTS.md and CLAUDE.md -- DO NOT COMMIT THEM!"
+
+## gitnexus-index: Index this repo into GitNexus (Docker; no npm binary needed)
+gitnexus-index:
+	@./hack/gitnexus-index.sh
+
+## gitnexus-mcp: Launch the GitNexus stdio MCP server (what `claude mcp add` registers)
+gitnexus-mcp:
+	@./hack/gitnexus-docker.sh mcp
+
+## strip-gitnexus: Remove the GitNexus auto-injected block from AGENTS.md/CLAUDE.md
+strip-gitnexus:
+	@./hack/strip-gitnexus.sh
 
 ## gemini-search: Register gemini-search MCP server with Claude Code
 gemini-search:

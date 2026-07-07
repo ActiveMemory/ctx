@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.46">
+      <meta name="generator" content="zensical-0.0.47">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.19d3147f.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.5e19f6ca.min.css">
       
         
           
@@ -320,6 +320,8 @@
       
         
       
+        
+      
     
     
     
@@ -390,6 +392,8 @@
       
         
           
+        
+      
         
       
         
@@ -755,6 +759,8 @@
       
         
       
+        
+      
     
     
     
@@ -885,6 +891,8 @@
       
         
           
+        
+      
         
       
         
@@ -1455,6 +1463,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../dream-executor-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Dream Executor Contract
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../versions/" class="md-nav__link">
         
   
@@ -1985,6 +2020,8 @@
       
         
       
+        
+      
     
     
     
@@ -2080,7 +2117,7 @@ journal site with:</p>
 </table>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="1-import-sessions">1. Import Sessions<a class="headerlink" href="#1-import-sessions" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Import all sessions from current project (only new files)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Import new sessions and complete any whose transcript has grown</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>import<span class="w"> </span>--all
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Import sessions from all projects</span>
@@ -2132,13 +2169,17 @@ journal site with:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
 <details class="info">
-<summary>Safe by Default</summary>
-<p>Running <code>ctx journal import --all</code> <strong>only imports new sessions</strong>. Existing
-files are skipped entirely (<em>your edits and enrichments are never touched</em>).</p>
-<p>Use <code>--regenerate</code> to re-import existing files. Conversation content is
-regenerated, but YAML frontmatter (<em>topics, type, outcome, etc.</em>) is
-preserved. You'll be prompted before any existing files are overwritten;
-add <code>-y</code> to skip the prompt.</p>
+<summary>Self-Healing by Default</summary>
+<p>Running <code>ctx journal import --all</code> imports new sessions <strong>and completes any
+whose source transcript has grown</strong> since the last import, re-rendering them
+up to the current end. Sessions whose source is unchanged are skipped, and
+hand-edited entries are detected and left untouched with a warning
+(<em>your edits and enrichments are never clobbered</em>).</p>
+<p><code>--regenerate</code> is an edge-case full re-render, not the routine way to update.
+Reach for it after a render-format change or to heal a pre-self-heal
+truncated entry. Conversation content is regenerated, but YAML frontmatter
+(<em>topics, type, outcome, etc.</em>) is preserved. You'll be prompted before any
+existing files are overwritten; add <code>-y</code> to skip the prompt.</p>
 <p>Use <code>--keep-frontmatter=false</code> to discard enriched frontmatter during
 regeneration.</p>
 <p>Locked entries (via <code>ctx journal lock</code>) are always skipped, regardless
@@ -2444,7 +2485,7 @@ re-run, and stages skip already-processed entries.</p>
 <td><strong>Import</strong></td>
 <td><code>ctx journal import --all</code></td>
 <td>Converts session JSONL to Markdown</td>
-<td>File already exists (safe default)</td>
+<td>Source unchanged since last import</td>
 </tr>
 <tr>
 <td><strong>Enrich</strong></td>
@@ -2671,7 +2712,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.ee611ef6.min.js"></script>
+      <script src="../../assets/javascripts/bundle.0df4f2d0.min.js"></script>
       
     
   </body>

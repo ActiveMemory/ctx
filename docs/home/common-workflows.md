@@ -130,7 +130,7 @@ pipx install zensical
 Then, **import and serve**:
 
 ```bash
-# Import all sessions to .context/journal/ (only new files)
+# Import to .context/journal/ (new sessions + any that have grown; self-healing)
 ctx journal import --all
 
 # Generate and serve the journal site
@@ -141,11 +141,14 @@ Open [http://localhost:8000](http://localhost:8000) to browse.
 
 To update after new sessions, run the same two commands again.
 
-### Safe by Default
+### Self-Healing by Default
 
-`ctx journal import --all` is **safe by default**:
+`ctx journal import --all` is **self-healing by default**:
 
-* It only imports new sessions and **skips existing files**.
+* It imports new sessions and **completes any whose source transcript has
+  grown** since the last import, skipping only sessions whose source is
+  unchanged. Hand-edited entries are detected and left untouched, never
+  clobbered. See [`ctx journal import`](../cli/journal.md) for details.
 * Locked entries (*via `ctx journal lock`*) are **always skipped** by
   both import and enrichment skills.
 * If you add `locked: true` to frontmatter during enrichment, run

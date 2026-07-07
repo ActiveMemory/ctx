@@ -31,7 +31,7 @@ to questions never asked.
 - After `/ctx-architecture` or `/ctx-architecture principal` has
   produced artifacts
 - After a code-intelligence MCP has indexed the project
-  (canonical: GitNexus via `npx gitnexus analyze --embeddings`;
+  (canonical: GitNexus via `gitnexus analyze --embeddings`;
   equivalents apply their own indexing step) and architecture
   artifacts already exist
 - When the user says "enrich the architecture", "run enrichment
@@ -109,7 +109,8 @@ This skill requires a code-intelligence MCP (e.g., GitNexus,
 sourcegraph-cody, or equivalent). None is connected.
 
 If you have GitNexus, configure the MCP and run:
-  npx gitnexus analyze --embeddings
+  gitnexus analyze --embeddings
+  (or your Docker wrapper if the npm binary isn't viable)
 If you use a different code-intelligence MCP, configure it
 per its docs and re-run this skill.
 ```
@@ -127,7 +128,8 @@ For GitNexus, if the index is stale (commits after last index):
   GitNexus index is stale (last indexed: <date>, <N> commits
   since). Results would be unreliable.
 
-  Run `npx gitnexus analyze` to update, then re-run this skill.
+  Run `gitnexus analyze` (or your Docker wrapper if the npm
+  binary isn't viable) to update, then re-run this skill.
   ```
 
 (For non-GitNexus code-intelligence MCPs, apply the same

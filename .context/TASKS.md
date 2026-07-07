@@ -313,6 +313,68 @@ These have priority because other knowledge ingestion projects depend on them.
 
 Important things that agent (or human) yeeted to the future.
 
+- [x] Nav gap: doc pages absent from zensical.toml's nav are silently
+  unreachable from the site sidebar. Discovered + fully fixed 2026-07-06
+  (session 7f6de29d, UNCOMMITTED). Swept EVERY docs/ tree, not just
+  recipes:
+  - Recipes (10): scrutinizing-a-plan + spec-driven-development →
+    Knowledge and Tasks; session-changes → Sessions; hook-sequence-
+    diagrams → Hooks; state-maintenance → Maintenance; run-the-dream +
+    architecture-deep-dive → Agents and Automation; new "Knowledge Base"
+    group for build-a-knowledge-base + typical-kb-session + recover-
+    aborted-session.
+  - CLI: dream → Sessions; handover → Sessions; kb → Context; the real
+    subcommand docs event (`ctx hook event`) + message (`ctx hook
+    message`) → Runtime by hook; bootstrap (`ctx system bootstrap`) →
+    Runtime by system. Verified via bootstrap/group.go that each is a
+    live command, not a stale doc.
+  - Reference: dream-executor-contract. Operations: backup-strategy.
+  - DELETED docs/cli/connect.md — a verified pure-stale duplicate: the
+    command's Use string is now "connection" (connect renamed away),
+    connection.md (155 lines) fully supersedes it (same 6 subcommands,
+    no unique sections, no inbound links). Also fixed connection.md's
+    stale `## ctx connect` heading → `ctx connection`.
+  - RECURRENCE GUARD: internal/compliance/docs_nav_test.go
+    (TestEveryDocPageIsReachableInNav) fails when any non-blog docs/
+    page is missing from the nav. Proven both ways (fails on a planted
+    orphan naming it; passes clean). blog/ excluded by design (plugin-
+    rendered), includes/ excluded (partials).
+  Verified: TOML parses; full non-blog orphan sweep returns zero; guard
+  + compliance lint green. #priority:low #session:7f6de29d #branch:main
+  #commit:a0e5cbf9 #added:2026-07-06
+
+- [x] Adversarial code-review pass over the 2026-07-06 jumbo working
+  diff (Phase JI self-healing import + bundles ②③④: strip-gitnexus/
+  de-npx, spec-driven-development recipe, .ctxrc config-ification)
+  BEFORE committing. Do it at home with a real code-viewing setup —
+  remote triple-tmux is too cramped to review a ~48-file diff well,
+  and this wants proper human/agent back-and-forth. Run
+  `/ctx-code-review` on the working tree. Focus areas: the growth/
+  adopt/foreign-edit decision matrix in plan.Import (body-hash-over-
+  frontmatter design); the RegenCount-counts-Grown interaction (an
+  interactive `ctx journal import --all` without -y now prompts on
+  growth — intended? safe but maybe surprising); the new slug.FromTitle
+  → rc singleton coupling the ④ agent introduced (FromTitle is no
+  longer pure); state v2 migration/adoption on the real corpus; and the
+  SessionEnd-hook direct-wiring vs. the spec's original "thin system
+  verb". Everything built/tested/lint-clean this session, but nothing
+  is committed and nothing has had a second pair of eyes.
+  #priority:high #session:7f6de29d #branch:main #commit:a0e5cbf9
+  #added:2026-07-06
+  DONE 2026-07-06 (session 2cff382a, branch fix/jumbo-diff-review-fixes):
+  4-pass adversarial review found 20 findings (3 critical, 4 medium,
+  13 low); ALL fixed with regression tests. Highlights: C1 — `ctx
+  journal site` rewrote entry bodies without refreshing render_hash
+  (self-heal false-flagged every site-normalized entry as foreign-edit);
+  C2/C3 — negative `auto_prune_days` deleted all session state and
+  negative `title_slug_max_len` panicked (getters guarded ==0 not <=0);
+  M1 — MarkSource stamped at plan time stranded failed grown writes
+  (moved to execute, post-write). RegenCount concern confirmed → split
+  to GrownCount so routine growth no longer prompts. slug.FromTitle
+  purity: cooldown/budget-pct promoted to pointer types (0 = explicit).
+  Full build/lint/test green; docs updated; site rebuilt. See LEARNINGS
+  2026-07-06 entries and specs/gitnexus-docker-fold.md.
+
 - [x] Migrate Sprintf-based templates (tpl_*.go) to Go text/template or embedded
   template files — ObsidianReadme, LoopScript, and other multi-line format
   strings that can't move to YAML #added:2026-03-18-163629
@@ -465,7 +527,9 @@ Important things that agent (or human) yeeted to the future.
 
 ### Phase CT: Companion Tool Integration
 
-- [ ] Add a 'make strip-gitnexus' target (backed by a hack/ script) that
+- [ ] Backport the registry_mounts prune-fix to the os and orchestrator copies of gitnexus-docker.sh. The ctx copy (hack/gitnexus-docker.sh) now mounts every registered repo at its real path on all registry-touching branches (index-register + passthrough, matching what mcp already did), so a registry-rewriting gitnexus invocation no longer prunes repos it cannot stat in-container. The sibling copies still carry the bug — running their 'index'/'list' targets would silently deregister ctx from the global registry. Backport before using them. See LEARNINGS 'GitNexus prunes registry entries whose repo paths don't resolve in-container'. #priority:medium #session:334b20d1 #branch:main #commit:a0e5cbf9 #added:2026-07-04-212438
+
+- [x] Add a 'make strip-gitnexus' target (backed by a hack/ script) that
   mechanically removes the GitNexus auto-injected block — delimited by <!--
   gitnexus:start --> / <!-- gitnexus:end --> markers — from AGENTS.md and
   CLAUDE.md. Marker-bounded delete (sed range or awk between markers). Must: (1)
@@ -477,6 +541,38 @@ Important things that agent (or human) yeeted to the future.
   runs without that flag. Manual removal was done in 8da165a3; this automates
   it. #priority:medium #session:74c94e3a #branch:fix/notify-resolution-hardening
   #commit:8da165a3 #added:2026-06-02-085625
+  DONE 2026-07-06 (session 7f6de29d, UNCOMMITTED). hack/strip-gitnexus.sh
+  (awk marker-bounded delete + trailing-blank trim) + `make strip-gitnexus`
+  target (added to .PHONY). Ran it: stripped both blocks — CLAUDE.md now
+  ends at its Gemini/GITNEXUS.md pointer, AGENTS.md is the 3-line redirect
+  stub. Verified idempotent (2nd run no-op) and zero markers/npx remain.
+
+- [x] De-npx the gitnexus instructions across live surfaces: `npx
+  gitnexus analyze` fails on machines whose Node cannot build
+  gitnexus's pinned tree-sitter native addon (observed on Node 24;
+  downgrading the host Node is not an option), yet the wording sits in
+  CLAUDE.md's re-injected gitnexus block (note: dcbc8241 re-committed
+  the block 8da165a3 deliberately stripped — the strip-gitnexus target
+  above is the recurrence guard), AGENTS.md, GITNEXUS.md, the
+  ctx-remember SKILL.md (claude + copilot variants — the recall
+  readback literally suggests the npx command to users),
+  ctx-architecture-enrich SKILL.md, docs/recipes/multi-tool-setup.md,
+  and docs/home/getting-started.md. Fix: bare `gitnexus analyze` as
+  canonical wording everywhere; repo-local surfaces (GITNEXUS.md,
+  CLAUDE.md) additionally recommend the Docker path as the reliable
+  runner (make gitnexus-index / hack/gitnexus-docker.sh — image bakes
+  a compatible Node, host stays clean); deployed skill assets stay
+  generic ("gitnexus analyze — or your Docker wrapper if the npm
+  binary isn't viable"). Historical specs stay untouched.
+  #priority:medium #session:334b20d1 #branch:main #commit:a0e5cbf9
+  #added:2026-07-04
+  DONE 2026-07-06 (session 7f6de29d, UNCOMMITTED). Six safe surfaces
+  de-npx'd to bare `gitnexus analyze` (GITNEXUS.md + Docker path;
+  getting-started.md; multi-tool-setup.md; ctx-remember claude+copilot
+  generic wording; ctx-architecture-enrich generic). CLAUDE.md/AGENTS.md
+  handled by removal via strip-gitnexus (their npx sat in the managed
+  block). Copilot skills back in sync (make check-copilot-skills).
+  site/search.json (generated) and historical specs left untouched.
 
 Session-start checks, suppressibility, and registry for companion MCP tools.
 
@@ -598,7 +694,14 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
 - [ ] Add Unicode-aware slugification for non-ASCII
   content #added:2026-03-21-070953
 
-- [ ] Make TitleSlugMaxLen configurable via .ctxrc #added:2026-03-21-070944
+- [x] Make TitleSlugMaxLen configurable via .ctxrc #added:2026-03-21-070944
+  DONE 2026-07-06 (session 7f6de29d, UNCOMMITTED). Part of the config
+  batch (with auto_prune_days, agent_cooldown_minutes, task_budget_pct,
+  convention_budget_pct). Each: CtxRC field + yaml key + rc accessor
+  with zero-guard fallback to the existing config default (no magic
+  numbers) + ctxrc.schema.json entry + schema_test mirror + rc_test
+  default/override tests; consumers rewired to the accessors. golangci
+  0 issues; scoped tests green.
 
 - [ ] Spec and implement CRLF-to-LF newline normalization for journal and
   context files #added:2026-03-20-224845
@@ -873,14 +976,22 @@ Taxonomy (from prefix analysis):
 
 
 
-- [ ] Make AutoPruneStaleDays configurable via ctxrc. Currently hardcoded to 7
+- [x] Make AutoPruneStaleDays configurable via ctxrc. Currently hardcoded to 7
   days in config.AutoPruneStaleDays; add a ctxrc key (e.g., auto_prune_days) and
   fallback to the default. #priority:low #added:2026-03-07-220512
 
 
-- [ ] Add ctxrc support for recall.list.limit to make the default --limit for
+- [x] Add ctxrc support for recall.list.limit to make the default --limit for
   recall list configurable. Currently hardcoded as config.DefaultRecallListLimit
   (20). #priority:low #added:2026-03-07-164342
+  DONE 2026-07-06 (session 7f6de29d, UNCOMMITTED). Deferred from the
+  config batch (its consumer sat in the reserved journal tree), then
+  completed once that tree settled. yaml `recall_list_limit` +
+  RecallListLimit() accessor (zero-guard → journal.DefaultRecallListLimit)
+  + schema entry + schema_test mirror + rc_test default/custom;
+  consumer internal/cli/journal/cmd/source/cmd.go now uses the accessor
+  as the --limit default (dropped its config/journal import). Build +
+  rc/assets/source tests + lint all green. Completes the ④ batch (5/5).
 
 - [ ] Extract journal/core into a standalone journal parser package —
   functionally isolated enough for its own package rather than remaining as
@@ -945,11 +1056,11 @@ Taxonomy (from prefix analysis):
   .ctxrc — currently hardcoded in config (7/30/90 days, cap
     3) #added:2026-03-07-073900
 
-- [ ] Make DefaultAgentCooldown configurable via .ctxrc — currently hardcoded
+- [x] Make DefaultAgentCooldown configurable via .ctxrc — currently hardcoded
   at
   10 minutes in config #added:2026-03-07-073106
 
-- [ ] Make TaskBudgetPct and ConventionBudgetPct configurable via .ctxrc —
+- [x] Make TaskBudgetPct and ConventionBudgetPct configurable via .ctxrc —
   currently hardcoded at 0.40 and 0.20 in config #added:2026-03-07-072714
 
 - [ ] Localization inventory: audit config constants, write package templates,
@@ -2497,6 +2608,95 @@ shipped.
 
 ### Misc
 
+- [ ] New orchestrator skill /ctx-architecture-deep-dive: wrap the three-pass architecture arc (/ctx-architecture principal → /ctx-architecture-enrich → /ctx-architecture-failure-analysis) plus the synthesis step (milestone-readiness note → /ctx-task-out --milestone <next>) into one parameterized skill with machine-checkable preconditions (code-intel MCP actually serving the repo, index fresh vs HEAD, synced tree, fresh session). Prior art: zhc/os docs/runbooks/architecture-deep-dive.md — a runbook whose pasted prompt rotted within ONE milestone (needed a 'Historical' banner because it hard-codes milestone facts like 'M0b is untasked'); a skill that derives milestone state from specs/plans/ at runtime doesn't rot. The site recipe architecture-deep-dive documents the arc as prose — this skill would be its ceremony (see the 'unceremonied pipeline step' learning). os prototypes a project-local version first and folds lessons back here. #priority:medium #session:6c276362 #branch:main #commit:a0e5cbf9 #added:2026-07-04-210547
+
+- [ ] Skill assets hard-code `npx gitnexus analyze` as the stale-index remedy, but on hosts where GitNexus runs via Docker (tree-sitter@0.21.1 native addon vs Node 24 ABI — no arm64 prebuilt) that command is a silent no-op; os/GITNEXUS.md documents this and both os and ctx expose `make gitnexus-index` → hack|scripts/gitnexus-index.sh instead. Fix the suggestion to be project-aware: point at the repo-local indexing entry point (a `gitnexus-index` make target, an indexing script, or the repo's GITNEXUS.md instructions) and fall back to `npx gitnexus analyze` only when nothing repo-local exists. Sites: internal/assets/claude/skills/ctx-remember/SKILL.md:156, internal/assets/integrations/copilot-cli/skills/ctx-remember/SKILL.md:155, internal/assets/claude/skills/ctx-architecture-enrich/SKILL.md:34+112+130. Found live: /ctx-remember in the os project emitted the broken npx suggestion while the working `make gitnexus-index` existed one directory over. #priority:medium #session:6c276362 #branch:main #commit:a0e5cbf9 #added:2026-07-04-205437
+
+- [ ] Drop the persisted INDEX blocks from DECISIONS.md/LEARNINGS.md;
+  project the index on demand via new CLI verbs instead. The headings
+  ARE the index (`## [TS] Title` is one grep away); the stored table
+  is 6-7% dead weight on every read (measured 2026-07-04: 5,021B of
+  76,866B / 7,774B of 107,350B), doubles the merge-conflict surface
+  of every contributor PR that adds an entry (PR #117 conflicts in
+  two hunks — index row + body), and is the root cause of the
+  learning-add clobber bug class that index.Validate exists to guard.
+  An in-file index also only helps if the agent stops reading at the
+  marker — which nothing enforces; a command's output is bounded by
+  construction and can never go stale. Build order: (HL.1)
+  `ctx decision list` / `ctx learning list` (+ optional `show <ts>`)
+  projecting the headings; (HL.2) `ctx search <needle>` across the
+  five canonical files + .context/archive/** with labeled sources;
+  (HL.3) entry-add stops touching the index, one-shot tolerant strip
+  of INDEX:START/END (present → remove, absent → no-op; downstream
+  repos migrate on next write), reindex subcommands retired; (HL.4)
+  reword reader surfaces (agent packet, ctx-remember, CLAUDE.md) to
+  "run list/search", coordinating with the read-discipline task
+  above; (HL.5) audit index-table consumers (packet builder, drift,
+  recall format tests, hub rendering) before the strip. Obviates the
+  2026-03-06 "Consider indexing tasks and conventions" task (opposite
+  direction — do NOT add more indexes). Full analysis + plan:
+  inbox/2026-07-04-memory-file-index-drop.md (local only). Needs
+  /ctx-spec + a decision record before implementation.
+  #priority:medium #session:334b20d1 #branch:main #commit:a0e5cbf9
+  #added:2026-07-04
+
+- [ ] `ctx hub --mode git`: a git-backed hub mode beside the existing
+  server mode — the hub becomes a checkout on disk (same-repo dir or
+  dedicated knowledge repo), no daemon, no ports, no tokens. Core
+  shape: open-intake immutable inbox/ (mechanical validation floor is
+  the only write gate: schema, required evidence, size caps, secret
+  scan; entries inert until promoted) → human curation verbs
+  (promote/reject/defer) recording every disposition in a per-scope
+  ledger → living accepted pages → gitignored, bounded,
+  byte-reproducible .context/HUB.md overlay surfaced as a budgeted
+  section of the `ctx agent` packet. Precedence: local .context/
+  always wins; no conflict resolution by design (human-paced git sync
+  replaces consensus — the trust model in internal/hub/doc.go already
+  says every token holder is trusted, so election/failover is
+  infrastructure the deployment shape doesn't need). Lifecycle without
+  wiki rot: supersedes/reverifies/tombstones relations; delete is a
+  deliberately expensive secrets runbook. Trust = prevent (pathguard
+  on accepted/**) + detect (validate flags gate bypass) + attribute
+  (git commits + per-entry actor) + repair (re-curate). Absorbs the
+  Future task "Hub curation: immutable promotion ledger + mechanical
+  validate floor" (#added:2026-07-04-153004) — that idea, fully
+  formed. Full analysis + phased implementation plan (HG.1–HG.6,
+  data shapes, testing spine, open questions):
+  inbox/2026-07-04-hub-git-mode-analysis-and-plan.md (local only).
+  Needs /ctx-spec before implementation; --share semantics change
+  needs a decision record. #priority:medium
+  #session:334b20d1 #branch:main #commit:a0e5cbf9 #added:2026-07-04
+
+- [ ] Context-file read discipline for agent instruction surfaces:
+  CLAUDE.md's "Do You Remember" section, the ctx-remember skills
+  (claude + copilot variants), and the `ctx agent` packet's "Read These
+  Files" section all instruct FULL reads of TASKS.md / DECISIONS.md /
+  LEARNINGS.md. At current sizes (TASKS.md 133KB ≈ 52k tokens,
+  LEARNINGS.md 107KB, DECISIONS.md 77KB) a literal-minded agent pages
+  through 100k+ tokens at session start; the harness read-cap only
+  slows this, it doesn't stop it. Apply the GITNEXUS.md yield pattern
+  inward: every instruction surface directs the agent to (1) the
+  budgeted `ctx agent` packet, (2) a projected one-line-per-entry
+  view — `ctx decision list` / `ctx learning list` once the
+  index-drop task below lands (command output is bounded by
+  construction; until then, the file's INDEX block), (3) targeted
+  entry-body reads by timestamp — never a full-file page-through. Consider `ctx agent` emitting per-file
+  size/token hints so agents can self-limit. Name the existing relief
+  valves in the instructions: decisions-reference.md /
+  learnings-reference.md offload, /ctx-consolidate, ctx task archive.
+  #priority:high #session:334b20d1 #branch:main #commit:a0e5cbf9
+  #added:2026-07-04
+
+- [-] Fold journal import into /ctx-wrap-up so users never have to remember
+  to import journals (original sketch: an --exclude/--skip-active flag so
+  the ceremony could skip the live session whose import would otherwise
+  freeze a truncated transcript). SKIPPED same-day: the flag treats the
+  symptom. Making import growth-aware removes the hazard entirely and
+  needs no new flags — superseded by Phase JI below, spec
+  specs/journal-import-self-heal.md. #priority:medium
+  #session:334b20d1 #branch:main #commit:a0e5cbf9 #added:2026-07-04-164037
+  #superseded:2026-07-04
+
 - [x] Implement ctx system statusline per specs/statusline.md: stdin-JSON render (model, ctx%, cost), .ctxrc statusline block, setup merge with backup/restore. Informational only; no gating (spec records why) #priority:medium #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-140249
 
 - [x] Companion-tool feature-delta analysis; borrow/skip verdicts recorded in gitignored inbox/ notes (local only) #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-135227
@@ -2505,7 +2705,16 @@ shipped.
 
 - [x] Add hack/check-tools.sh tooling dependency checker (manifest: hack/tool-versions.txt, make check-tools) — spec: specs/check-tools.md #session:a31b3e67 #branch:main #commit:687bbd59 #added:2026-07-04-132852
 
-- [ ] Recipe: the full design-to-implementation pipeline from the operator's seat (new 'spec-driven-development.md' or a major fold into design-before-coding.md). Must cover, for a newcomer with zero tribal knowledge: (1) the 5-step chain INCLUDING /ctx-plan — design-before-coding.md's TL;DR currently omits the debated-brief step entirely; (2) altitude: the bet is debated once and the spec covers ALL milestones — briefs are per-bet, never per-milestone; (3) plans are just-in-time per milestone behind the rolling-wave gate (tasking distant milestones produces fiction); (4) blocking-TBD gates as the replacement for per-milestone debates — each task-out run forces exactly the decisions that milestone embeds, into DECISIONS.md; (5) two surfaces, one truth: plan = execution ledger (st column), TASKS.md epics = one-way projections over disjoint id ranges; DoD is measurement/Board-confirmed, never derived; (6) when a NEW brief happens: new bet (e.g. deferred machinery returning) or evidence falsifying the committed bet — never relitigating from below; (7) a worked multi-milestone example, not a one-session feature. Origin: zhc/os session a63353a3 (2026-07-03) — the operator had to reverse-engineer all seven from skill texts and agent explanations #priority:high #session:a63353a3 #branch:main #commit:511a609a #added:2026-07-03-232251
+- [x] Recipe: the full design-to-implementation pipeline from the operator's seat (new 'spec-driven-development.md' or a major fold into design-before-coding.md). Must cover, for a newcomer with zero tribal knowledge: (1) the 5-step chain INCLUDING /ctx-plan — design-before-coding.md's TL;DR currently omits the debated-brief step entirely; (2) altitude: the bet is debated once and the spec covers ALL milestones — briefs are per-bet, never per-milestone; (3) plans are just-in-time per milestone behind the rolling-wave gate (tasking distant milestones produces fiction); (4) blocking-TBD gates as the replacement for per-milestone debates — each task-out run forces exactly the decisions that milestone embeds, into DECISIONS.md; (5) two surfaces, one truth: plan = execution ledger (st column), TASKS.md epics = one-way projections over disjoint id ranges; DoD is measurement/Board-confirmed, never derived; (6) when a NEW brief happens: new bet (e.g. deferred machinery returning) or evidence falsifying the committed bet — never relitigating from below; (7) a worked multi-milestone example, not a one-session feature. Origin: zhc/os session a63353a3 (2026-07-03) — the operator had to reverse-engineer all seven from skill texts and agent explanations #priority:high #session:a63353a3 #branch:main #commit:511a609a #added:2026-07-03-232251
+  DONE 2026-07-06 (session 7f6de29d, UNCOMMITTED). New file
+  docs/recipes/spec-driven-development.md (all 7 points; five-step chain
+  with /ctx-plan first-class; worked four-milestone example — `ctx digest`)
+  + an entry in docs/recipes/index.md. Kept as a NEW file, not folded
+  into design-before-coding.md (different altitude: on-ramp vs operator
+  manual). Two flags for later: design-before-coding.md's TL;DR still
+  omits /ctx-plan (the new recipe compensates); and point 5's "Board" is
+  sibling-project vocab — rendered in ctx's own terms ("measurement or by
+  you"). Verified every claim against the skill texts.
 
 - [ ] Tighten /ctx-spec (and /ctx-implement) skills to bake in spec-kit's one
   good discipline without adopting spec-kit: every /ctx-spec must end with (a)
@@ -2517,6 +2726,125 @@ shipped.
   memory + adversarial /ctx-plan; avoid two-constitutions double-bookkeeping).
   #priority:medium #session:210b77dd #branch:main #commit:6b0d0107
   #added:2026-06-27-222130
+
+### Phase JI: Self-Healing Journal Import
+
+Spec: `specs/journal-import-self-heal.md`. Read the spec before starting
+any JI task. Goal: journal import becomes growth-aware and safe to run
+at any moment — from /ctx-wrap-up, a SessionEnd hook, or by hand — so
+importing is never something the user has to remember or time. Claude
+Code transcripts are append-only, so "source grew" is detectable from
+mtime+size and a partial import is just an intermediate state the next
+sweep completes. No new flags.
+
+- [x] JI.1: Journal state schema v2 — add per-session source tracking
+  to internal/journal/state: `sessions` map keyed by session id
+  recording source_file, source_mtime, source_size; add `render_hash`
+  to per-file entries. Version bump 1→2; v1 loads tolerantly (missing
+  maps initialise empty); first v2 run adopts already-imported sessions
+  by recording current source stats WITHOUT re-rendering. Tests: v1
+  round-trips to v2 losslessly, adoption is idempotent, missing-file
+  sources adopt as zero-stat (next stat marks Grown → captured, per
+  the statSource-fails-open principle). #priority:high
+  #session:334b20d1 #branch:main #commit:a0e5cbf9 #added:2026-07-04-173100
+
+- [x] JI.2: Growth-aware planning — replace plan.Import's
+  exists-check with a New/Grown/Unchanged decision from state v2.
+  Grown = recorded mtime OR size differs, including the chosen
+  (richest) transcript switching to a larger resume copy. Part-aware
+  re-render: growth only appends messages, so re-render the last part
+  plus newly created parts; earlier parts untouched by construction.
+  ActionRegenerate demoted to explicit-flag edge case (mass re-render
+  after format changes; healing pre-v2 truncated entries). Locked
+  entries never rewritten (existing invariant). Tests: import → grow
+  source → import yields complete entry flag-free; double sweep is
+  byte-identical and reports all Unchanged. #priority:high
+  #session:334b20d1 #branch:main #commit:a0e5cbf9 #added:2026-07-04-173100
+
+- [x] JI.3: Foreign-edit safety via render hash — every ctx-authored
+  write of a journal entry (import, enrich, normalize, fence-verify)
+  refreshes render_hash in state; the hash always reflects the last
+  ctx-authored write. On Grown: hash matches → splice fresh transcript
+  preserving enriched frontmatter (existing keep-frontmatter
+  machinery); hash differs or absent (pre-v2) → leave file untouched,
+  warn naming the file, suggest `ctx journal lock` or explicit
+  --regenerate. Never clobber. Tests: hand-edited entry survives a
+  Grown sweep byte-identical + warned; enriched frontmatter survives a
+  Grown re-render. #priority:high
+  #session:334b20d1 #branch:main #commit:a0e5cbf9 #added:2026-07-04-173100
+
+- [x] JI.4: Live-transcript parse tolerance — the JSONL session
+  parser treats a trailing partial line as end-of-input (truncate to
+  last complete line), no error, no warning; the missing record is
+  captured by the next sweep. Test fixture: transcript cut mid-record.
+  #priority:medium
+  #session:334b20d1 #branch:main #commit:a0e5cbf9 #added:2026-07-04-173100
+
+- [x] JI.5: Wrap-up integration — /ctx-wrap-up runs
+  `ctx journal import --all -y` as a best-effort, NON-BLOCKING step
+  before delegating to /ctx-handover; an import failure never blocks
+  the handover. Update the wrap-up skill + its docs; enrichment stays
+  out of the ceremony (LLM pass, belongs to /ctx-journal-enrich-all).
+  Depends on JI.1–JI.3 (safe to run mid-session). #priority:medium
+  #session:334b20d1 #branch:main #commit:a0e5cbf9 #added:2026-07-04-173100
+
+- [x] JI.6: SessionEnd hook — hooks.json entry firing the import
+  automatically on session end (thin `ctx system` verb per hook
+  conventions), making the ceremony step belt-and-suspenders
+  (import is idempotent; redundancy costs one stat per session).
+  Must be covered by TestShippedHooksResolveToRegisteredCommands.
+  Depends on JI.1–JI.3. #priority:medium
+  #session:334b20d1 #branch:main #commit:a0e5cbf9 #added:2026-07-04-173100
+
+  DONE 2026-07-06 (session 7f6de29d, branch main; UNCOMMITTED —
+  awaiting a GPG-capable terminal). Whole phase shipped:
+  - JI.1: state schema v2 (state/types.go: Sessions map + Source,
+    File.RenderHash; state.go: CurrentVersion 1→2, tolerant v1 load
+    normalising to v2, SessionSource/MarkSource; hash.go: HashRender,
+    RenderHash/SetRenderHash). Tests: v1 tolerance, source round-trip,
+    accessors, nil-map.
+  - JI.2+JI.3 landed together (Grown re-render is unsafe without the
+    hash guard): plan.Import decides New/Grown/Unchanged/Adopt/
+    ForeignEdit from source mtime+size vs state, hash-guarding every
+    Grown re-render. RENDER HASH IS OVER THE BODY (frontmatter
+    stripped): enrich/normalize/fence are agent-side (no ctx write to
+    refresh a whole-file hash; MarkEnriched/Normalized/FencesVerified
+    are dead code), so agent-side enrichment (frontmatter-only) still
+    verifies ctx-owned while a hand-edited body reads as foreign. New
+    entity.ActionForeignEdit + label.reason-edited i18n; execute.Import
+    stamps the hash on write and skips+warns on ForeignEdit.
+    plan_test.go covers every decision.
+  - JI.4: parser already skipped malformed lines; pinned with
+    TestClaudeCodeParser_PartialTrailingLine.
+  - JI.5: /ctx-wrap-up Phase 4.5 (best-effort, non-blocking import)
+    across all three skill variants (claude/copilot/opencode).
+  - JI.6: SessionEnd hook wires `ctx journal import --all -y` DIRECTLY
+    (mirrors the `ctx agent` hook), not a thin system verb — the
+    hooks-wiring guard resolves any `ctx <path>`, so no new command is
+    needed and ceremony+hook share one code path. Compliance guard
+    passes. Spec §5 updated to match.
+  DEFERRED refinement: Grown re-renders count toward RegenCount, so an
+  interactive `ctx journal import --all` without -y prompts on growth
+  (safe, hash-guarded; hook/ceremony use -y). A non-prompting Grown
+  path is a possible follow-up.
+  Spec: specs/journal-import-self-heal.md.
+
+- [x] JI.7: Docs + flag story — cli-reference and journal recipe:
+  document self-healing semantics (import any time, sweeps complete
+  what they started), reposition --regenerate/--keep-frontmatter as
+  edge-case tools, document the one-time --regenerate heal for pre-v2
+  truncated entries. No new flags is a feature; say so. #priority:low
+  #session:334b20d1 #branch:main #commit:a0e5cbf9 #added:2026-07-04-173100
+  DONE 2026-07-06 (session 7f6de29d, UNCOMMITTED). docs/cli/journal.md
+  import section rewritten: self-healing model (new + grown + skip-
+  unchanged), "edits never clobbered" (foreign-edit warning →
+  lock/--regenerate), --regenerate repositioned as the edge-case tool
+  (format re-render + one-time pre-self-heal truncation heal), the
+  SessionEnd-hook/wrap-up auto-import, and "no new flags is the
+  feature" stated. Also de-staled the skip-existing framing in
+  docs/recipes/publishing.md and docs/home/common-workflows.md.
+  (session-archaeology.md's --regenerate note left as-is — still
+  accurate.) Whole Phase JI (JI.1–JI.7) now complete.
 
 ### Future
 

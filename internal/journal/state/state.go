@@ -20,7 +20,13 @@ import (
 )
 
 // CurrentVersion is the schema version for the state file.
-const CurrentVersion = 1
+//
+// v2 adds the per-session Sessions map (source tracking for
+// growth-aware import) and the per-entry RenderHash field. v1 files
+// load tolerantly: the new maps initialise empty and the in-memory
+// version normalises to CurrentVersion, so the file becomes v2 on the
+// next Save.
+const CurrentVersion = 2
 
 // Load reads the state file from the journal directory.
 //
@@ -38,8 +44,9 @@ func Load(journalDir string) (*State, error) {
 	data, readErr := ctxIo.SafeReadUserFile(filepath.Clean(path))
 	if os.IsNotExist(readErr) {
 		return &State{
-			Version: CurrentVersion,
-			Entries: make(map[string]File),
+			Version:  CurrentVersion,
+			Entries:  make(map[string]File),
+			Sessions: make(map[string]Source),
 		}, nil
 	}
 	if readErr != nil {
@@ -53,6 +60,13 @@ func Load(journalDir string) (*State, error) {
 	if s.Entries == nil {
 		s.Entries = make(map[string]File)
 	}
+	// v1 files carry no Sessions map; initialise it empty so growth
+	// tracking starts cleanly, and normalise the version so the file
+	// round-trips as v2 on the next Save.
+	if s.Sessions == nil {
+		s.Sessions = make(map[string]Source)
+	}
+	s.Version = CurrentVersion
 	return &s, nil
 }
 
@@ -201,6 +215,70 @@ func (s *State) Rename(oldName, newName string) {
 	}
 	s.Entries[newName] = ff
 	delete(s.Entries, oldName)
+}
+
+// SessionSource returns the recorded source stats for a session, and
+// whether the session has been seen before.
+//
+// A session absent from the map has never been imported under schema
+// v2 (either genuinely new, or imported under v1 before source
+// tracking existed).
+//
+// Parameters:
+//   - id: session ID
+//
+// Returns:
+//   - Source: recorded source stats (zero value if absent)
+//   - bool: true if the session id is present in the map
+func (s *State) SessionSource(id string) (Source, bool) {
+	src, ok := s.Sessions[id]
+	return src, ok
+}
+
+// MarkSource records the transcript stats a session was last rendered
+// from. Called after a successful render (or during adoption of an
+// already-imported v1 session) so the next sweep can detect growth.
+//
+// Parameters:
+//   - id: session ID
+//   - sourceFile: absolute path to the transcript rendered from
+//   - mtime: Unix mtime (seconds) of the transcript
+//   - size: byte size of the transcript
+func (s *State) MarkSource(id, sourceFile string, mtime, size int64) {
+	if s.Sessions == nil {
+		s.Sessions = make(map[string]Source)
+	}
+	s.Sessions[id] = Source{
+		SourceFile:  sourceFile,
+		SourceMtime: mtime,
+		SourceSize:  size,
+	}
+}
+
+// RenderHash returns the recorded hash of the last ctx-authored write
+// of a file, or "" if none is recorded (pre-v2 entries, or entries
+// never written under v2).
+//
+// Parameters:
+//   - filename: journal entry filename
+//
+// Returns:
+//   - string: recorded render hash, or "" if absent
+func (s *State) RenderHash(filename string) string {
+	return s.Entries[filename].RenderHash
+}
+
+// SetRenderHash records the hash of a file as ctx just wrote it. Every
+// ctx-authored write of an entry must refresh this so growth-aware
+// import can later distinguish a ctx-owned file from a hand-edited one.
+//
+// Parameters:
+//   - filename: journal entry filename
+//   - hash: digest from HashRender over the written body
+func (s *State) SetRenderHash(filename, hash string) {
+	ff := s.Entries[filename]
+	ff.RenderHash = hash
+	s.Entries[filename] = ff
 }
 
 // ClearEnriched removes the enriched date for a file, resetting it to

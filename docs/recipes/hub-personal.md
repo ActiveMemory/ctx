@@ -234,7 +234,7 @@ rotation, failure recovery, and HA, see
   and when not to.
 - [Team knowledge bus](hub-team.md): the multi-human
   companion recipe.
-- [`ctx connect`](../cli/connection.md): the client-side
+- [`ctx connection`](../cli/connection.md): the client-side
   commands used above (`subscribe`, `publish`, `sync`,
   `listen`, `status`).
 - [`ctx add`](../cli/context.md): the `--share` flag

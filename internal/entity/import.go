@@ -18,6 +18,9 @@ const (
 	ActionSkip
 	// ActionLocked means the file is locked and never overwritten.
 	ActionLocked
+	// ActionForeignEdit means the source grew but the file's body was
+	// edited outside ctx, so it is left untouched and the user is warned.
+	ActionForeignEdit
 )
 
 // ImportOpts holds all flag values for the import command.
@@ -76,17 +79,43 @@ type FileAction struct {
 // Fields:
 //   - Actions: Per-file planned actions
 //   - NewCount: Files that will be created
-//   - RegenCount: Files that will be regenerated
+//   - RegenCount: Files that will be regenerated on explicit request
+//     (--regenerate, --discard-frontmatter, or single-session import)
+//   - GrownCount: Files re-rendered because their source transcript
+//     grew. Counted separately from RegenCount so a routine
+//     growth-aware sweep does not trip the regenerate confirmation
+//     prompt: growth is a non-destructive, frontmatter-preserving
+//     splice, not a discard.
 //   - SkipCount: Files that will be skipped
 //   - LockedCount: Files that are locked
 //   - RenameOps: Dedup renames to execute before import
+//   - Sources: Per-session source-transcript stats observed at plan
+//     time, keyed by session ID. execute stamps these into journal
+//     state only after a session's writes succeed, so a failed or
+//     partial render never advances the recorded source stat (which
+//     would strand the un-rendered growth).
 type ImportPlan struct {
 	Actions     []FileAction
 	NewCount    int
 	RegenCount  int
+	GrownCount  int
 	SkipCount   int
 	LockedCount int
 	RenameOps   []RenameOp
+	Sources     map[string]SourceObservation
+}
+
+// SourceObservation records a session's source-transcript stats as
+// observed at plan time.
+//
+// Fields:
+//   - SourceFile: Absolute path to the transcript planned from
+//   - Mtime: Unix mtime (seconds) of the transcript at plan time
+//   - Size: Byte size of the transcript at plan time
+type SourceObservation struct {
+	SourceFile string
+	Mtime      int64
+	Size       int64
 }
 
 // RenameOp describes a dedup rename (old slug → new slug).

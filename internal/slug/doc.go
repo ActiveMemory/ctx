@@ -14,7 +14,8 @@
 //   - **[FromTitle](title)**: strict kebab-case slug.
 //     Lowercases, replaces every non-alphanumeric run with
 //     a single hyphen, trims, and truncates on a word
-//     boundary at [journal.TitleSlugMaxLen]. Idempotent.
+//     boundary at [rc.TitleSlugMaxLen] (configurable via
+//     .ctxrc title_slug_max_len; default 50). Idempotent.
 //   - **[CleanTitle](title)**: normalises a display title
 //     for storage in YAML frontmatter (whitespace
 //     collapsing + length cap). Pairs with FromTitle.
@@ -37,6 +38,15 @@
 //
 // # Concurrency
 //
-// All functions are pure. Concurrent callers never
-// race.
+// FromTitle is not pure: it reads the cached .ctxrc
+// slug-length setting via [rc.TitleSlugMaxLen], which is
+// backed by a process-global singleton. Concurrent
+// FromTitle calls are safe against each other — the cache
+// is populated once via sync.Once and only read
+// thereafter — and every other function in the package is
+// pure. The one caveat is [rc.Reset], which clears the
+// cache (a test-only affordance): running it concurrently
+// with slug generation races the cache pointer, so tests
+// that call Reset must not do so while a FromTitle call is
+// in flight.
 package slug

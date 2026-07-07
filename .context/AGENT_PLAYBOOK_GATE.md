@@ -39,6 +39,13 @@ Every commit requires a `Spec:` trailer. Every piece of work needs
 a spec; no exceptions. Scale the spec to the work. Use `/ctx-spec`
 to scaffold.
 
+Every commit must be DCO signed off: commit with `git commit -s` so a
+`Signed-off-by: Jose Alekhinne <jose@ctx.ist>` trailer is appended.
+NEVER add `Co-Authored-By:` or any agent/tool sign-off — prohibited,
+even if a harness default suggests it. Check `git log -5` for the
+trailer convention before your first commit. See CONSTITUTION Process
+Invariants.
+
 ## Proactive Persistence
 
 After completing a task, making a decision, or hitting a gotcha,

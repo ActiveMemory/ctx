@@ -188,7 +188,7 @@ pad.tag.json:
 pause.session-id:
   short: Session ID (overrides stdin)
 journal.import.all:
-  short: Import all sessions from current project
+  short: Import new sessions and complete any whose transcript has grown
 journal.import.all-projects:
   short: Include sessions from all projects
 journal.import.dry-run:

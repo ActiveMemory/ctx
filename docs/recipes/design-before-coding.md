@@ -246,6 +246,9 @@ You don't need skill names. Natural language works:
   step-by-step execution with verification
 * [Scrutinizing a Plan](scrutinizing-a-plan.md): the adversarial
   interview that belongs between brainstorm and spec
+* [Spec-Driven Development](spec-driven-development.md): the full
+  operator's manual for the chain — the debated brief, per-milestone
+  tasking, and the gates — when a feature spans several milestones
 * [Tracking Work Across Sessions](task-management.md): task lifecycle
   and archival
 * [Importing Claude Code Plans](import-plans.md): turning ephemeral plans

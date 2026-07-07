@@ -20,14 +20,20 @@ Run the end-of-session context persistence ceremony.
 4. Capture any new conventions to `.context/CONVENTIONS.md`
 5. Update task status in `.context/TASKS.md`
 6. Save a session summary to `.context/sessions/`
-7. If `.context/kb/` exists, list pending closeouts under
+7. Sweep this session — and any others that grew since their
+   last import — into the journal: `ctx journal import --all
+   -y`. It is growth-aware and idempotent, so running it
+   mid-wrap-up is safe. Best-effort and **non-blocking**: if
+   it errors, note it and continue; never let it block the
+   handover.
+8. If `.context/kb/` exists, list pending closeouts under
    `.context/ingest/closeouts/` and count `open` rows in
    `.context/kb/outstanding-questions.md`; surface both
    counts so the operator sees what editorial residue is
    pending. The handover step's fold pass consumes the
    closeouts. Skip this step entirely when `.context/kb/`
    does not exist.
-8. **Mandatory final step:** delegate to `/ctx-handover` so
+9. **Mandatory final step:** delegate to `/ctx-handover` so
    the next session has something to read. Draft:
    - **Title**: short noun phrase naming the session arc
      (becomes the slug in `<TS>-<slug>.md`).

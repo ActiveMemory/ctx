@@ -90,14 +90,30 @@ func findSessionsWithFilter(
 		}
 	}
 
-	// Deduplicate by session ID
-	seen := make(map[string]bool)
-	var unique []*entity.Session
+	// Deduplicate by session ID, keeping the richest transcript (most
+	// messages) for each. One session can span multiple transcript files
+	// — a resume copies prior history into a new, larger file — and that
+	// largest copy is the authoritative source. Picking it here (rather
+	// than first-seen by walk order) means a partial early copy never
+	// wins over the complete one, so import cannot truncate a resumed
+	// session; switching to a larger copy is treated as growth downstream
+	// (plan.Import compares the recorded source path, mtime, and size).
+	richest := make(map[string]*entity.Session)
+	var order []string
 	for _, s := range filtered {
-		if !seen[s.ID] {
-			seen[s.ID] = true
-			unique = append(unique, s)
+		existing, ok := richest[s.ID]
+		if !ok {
+			order = append(order, s.ID)
+			richest[s.ID] = s
+			continue
 		}
+		if len(s.Messages) > len(existing.Messages) {
+			richest[s.ID] = s
+		}
+	}
+	unique := make([]*entity.Session, 0, len(order))
+	for _, id := range order {
+		unique = append(unique, richest[id])
 	}
 
 	// Sort by start time (newest first)

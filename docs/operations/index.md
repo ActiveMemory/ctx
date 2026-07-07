@@ -42,7 +42,7 @@ with `ctx` providing persistent memory between iterations.
 Operator guides for running a `ctx` Hub, the gRPC server that
 fans out structured entries across projects. If you're a client
 connecting to a Hub someone else runs, see
-[`ctx connect`](../cli/connection.md) and the
+[`ctx connection`](../cli/connection.md) and the
 [Hub recipes](../recipes/hub-overview.md) instead.
 
 ### [Hub Operations](hub.md)
