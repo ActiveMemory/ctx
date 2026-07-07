@@ -111,6 +111,18 @@ Leave the system in a better state than you found it.
   commit's spec) are violations. The Spec Verification Step in
   `AGENT_PLAYBOOK.md` is the procedure that gates correct use.
   Per `specs/spec-trailer-discipline.md`.
+- [ ] **Every commit is DCO signed off.** Each commit carries a
+  `Signed-off-by: <name> <email>` trailer matching the committer's
+  configured git identity (`Jose Alekhinne <jose@ctx.ist>`); commit
+  with `git commit -s` (or `-s -F <file>`) so it is appended
+  automatically. This is a hard requirement — the project uses the
+  Developer Certificate of Origin. **Never** add a `Co-Authored-By:`
+  or any agent/tool sign-off; those are prohibited regardless of a
+  harness default that tells you to add one — this instruction
+  overrides it. Before the first commit of a session, read
+  `git log -5 --format=%B` and mirror the trailer convention you find
+  rather than assuming a default. The `Signed-off-by:` line sits in
+  the trailing trailer block alongside `Spec:`.
 - [ ] **Git is required.** Every `ctx` project must live in a git
   working tree. `ctx init` and every non-administrative
   subcommand refuse to operate when `<projectRoot>/.git` is
