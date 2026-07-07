@@ -139,7 +139,7 @@ When adding a new team member to an existing hub:
 
 - [ ] Generate a client token (`ctx hub register --name "<name>"`)
 - [ ] Share the token and hub address securely
-- [ ] Have them run `ctx connect <hub-address> --token <token>`
+- [ ] Have them run `ctx connection register <hub-address> --token <token>`
 - [ ] Verify with `ctx connection status`
 - [ ] Point them to the [Hub Getting Started](../../recipes/hub-getting-started.md) recipe
 

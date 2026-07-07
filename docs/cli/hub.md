@@ -23,7 +23,7 @@ leadership before maintenance.
     You only need `ctx hub` if you are **running** a hub
     server or cluster. For client-side operations (register,
     subscribe, sync, publish, listen), see
-    [`ctx connect`](connection.md). For the mental model behind
+    [`ctx connection`](connection.md). For the mental model behind
     the hub as a whole, read the
     [`ctx` Hub overview](../recipes/hub-overview.md).
 
@@ -148,7 +148,7 @@ ctx hub stepdown
 
 ### See Also
 
-- [`ctx connect`](connection.md): client-side commands
+- [`ctx connection`](connection.md): client-side commands
   (register, subscribe, sync, publish, listen)
 - [`ctx` Hub overview](../recipes/hub-overview.md): mental
   model and user stories

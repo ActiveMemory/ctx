@@ -205,4 +205,4 @@ the end of the pipeline.
 | Operating a hub in production                     | [Operations](../operations/hub.md)               |
 | Assessing the security posture                    | [Security model](../security/hub.md)             |
 | Debugging a hub in trouble                        | [Failure modes](../operations/hub-failure-modes.md) |
-| Just reading the commands                         | [`ctx connect`](../cli/connection.md), [`ctx serve`](../cli/serve.md), [`ctx hub`](../cli/hub.md) |
+| Just reading the commands                         | [`ctx connection`](../cli/connection.md), [`ctx serve`](../cli/serve.md), [`ctx hub`](../cli/hub.md) |

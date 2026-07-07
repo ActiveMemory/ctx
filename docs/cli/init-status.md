@@ -147,7 +147,7 @@ in priority tiers:
    against the active prompt
 7. **Skill**: named skill content (from `--skill`)
 8. **Hub**: entries from `.context/hub/` (with `--include-hub`,
-   see [`ctx connect`](connection.md))
+   see [`ctx connection`](connection.md))
 
 Decisions and learnings are ranked by a combined score (how recent + how
 relevant to your current tasks). High-scoring entries are included with

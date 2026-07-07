@@ -171,5 +171,5 @@ call `ctx connection sync` manually.
   backup, log rotation, JSONL store layout.
 - **[Hub security model](../security/hub.md)**: token
   lifecycle, encryption at rest, threat model.
-- **[`ctx connect` reference](../cli/connection.md)** and
+- **[`ctx connection` reference](../cli/connection.md)** and
   **[`ctx hub start` reference](../cli/serve.md)**.
