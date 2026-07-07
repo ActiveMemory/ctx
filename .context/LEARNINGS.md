@@ -17,6 +17,9 @@ DO NOT UPDATE FOR:
 <!-- INDEX:START -->
 | Date | Learning |
 |----|--------|
+| 2026-07-04 | Probing whether a ctx subcommand exists needs bare invocation, not --help |
+| 2026-07-04 | GitNexus prunes registry entries whose repo paths don't resolve in-container |
+| 2026-07-04 | Compliance tests are the style guide for new commands |
 | 2026-07-04 | Typed JSON round-trips silently drop user-owned keys |
 | 2026-07-03 | New Claude model families silently fall to the 200k default in ModelContextWindow |
 | 2026-06-07 | Pin an on-disk contract before splitting work across parallel agents |
@@ -106,6 +109,36 @@ DO NOT UPDATE FOR:
 | 2026-04-26 | ctx system help can list project-local hooks not in the Go binary |
 | 2026-04-25 | Confident code comments can pull an LLM away from first-principles knowledge |
 <!-- INDEX:END -->
+
+---
+
+## [2026-07-04-212434] Probing whether a ctx subcommand exists needs bare invocation, not --help
+
+**Context**: During the PR #128 review I checked ctx command existence with 'ctx <cmd> --help' and got false positives — cobra short-circuits --help to exit 0 even for an unknown subcommand, so 'ctx system stats --help' appeared to succeed for a command that does not exist. Separately, probing with a real mutating verb ('ctx task complete 3') actually completed a live task in TASKS.md, which had to be reverted.
+
+**Lesson**: To detect CLI command drift, invoke the BARE subcommand and check the real exit code (unknown => exit 1); --help lies because it is a persistent flag cobra handles before dispatch. Never probe with a mutating verb against the live project — ctx subcommands write to .context/. Also: 'ctx system <unknown>' emits the 'relay VERBATIM' version-skew NudgeBox and exits 1, so a wrapper that treats non-empty stdout as success will render that notice as a normal result.
+
+**Application**: When auditing whether an editor/wrapper's ctx invocations are valid, probe each bare form for its exit code (against a throwaway repo, or use read-only forms only); treat any wrapper whose 'non-empty output => success' logic ignores exit codes as buggy.
+
+---
+
+## [2026-07-04-162854] GitNexus prunes registry entries whose repo paths don't resolve in-container
+
+**Context**: Folding the Docker gitnexus wrapper into ctx: indexing ctx silently dropped os from the global registry, and a plain 'gitnexus list' passthrough dropped it again after it was restored. Both 'gitnexus index' and 'gitnexus list' rewrite registry.json minus any entry whose path they cannot stat — and inside a container an unmounted repo is indistinguishable from a deleted one.
+
+**Lesson**: Any registry-touching gitnexus invocation run in Docker must mount EVERY registered repo at its real host path, not just the current one; otherwise it persists a pruned registry. A bash footgun compounded it: a '[ ... ] && cmd' filter as the last command of a while-loop body returns 1 when the filter fails on the final line, and set -e kills the script — use an if-block inside loops under set -e.
+
+**Application**: hack/gitnexus-docker.sh now has registry_mounts() (mount all registered repos, exclude the separately-mounted current one) wired into the index-register and passthrough branches; mcp already did this. The os and orchestrator copies of the wrapper still carry the prune bug — backport before running their index/list targets.
+
+---
+
+## [2026-07-04-160749] Compliance tests are the style guide for new commands
+
+**Context**: Implementing ctx system statusline tripped eight architecture gates in sequence: magic strings/values must live in internal/config/, one visibility per file, cmd/ files restricted to cmd.go+run.go+doc.go with helpers in core/, types in types.go, the ctxRC schema mirror struct, the system doc.go subcommand registry, godoc Parameters/Returns structure, and 80-char lines
+
+**Lesson**: House conventions are enforced by go test (internal/compliance/ and sibling suites), not documented prose; the test suite is the authoritative style guide
+
+**Application**: Before scaffolding a new command, read internal/compliance/ and copy an existing cmd package's structure; run the full suite early rather than discovering gates by failure at commit time
 
 ---
 
@@ -1978,6 +2011,80 @@ surrounding-code frame.
 **Application**: When an existing comment justifies a non-canonical approach
 contradicting stdlib knowledge: pause, verify against memory of the actual API
 before patching within the existing frame.
+
+---
+
+## [2026-07-06-a] `ctx journal site` rewrites source entry bodies in place
+
+**Context**: The self-heal render-hash guard assumed only `execute.go`
+(import) authors entry bodies. But `ctx journal site` (`make journal`)
+soft-wraps/collapses the *source* `.md` in place (site/run.go), and did
+NOT refresh the render hash. Result: after any site build, growth-aware
+import saw a hash mismatch and false-flagged every normalized entry as
+"edited outside ctx", stranding the growth.
+
+**Lesson**: A "prove the file is unchanged since we wrote it" hash is
+only valid if *every* code path that writes the body refreshes it. Grep
+all writers of the artifact, not just the obvious one.
+
+**Application**: When adding a content-integrity hash, enumerate every
+writer (`grep -rn SafeWriteFile <dir>`) and make each refresh the hash —
+or route all writes through one helper. Refresh unconditionally on every
+non-failed pass so an idempotent transform still re-syncs.
+
+---
+
+## [2026-07-06-b] zensical bundles a fixed lucide icon snapshot
+
+**Context**: `make site` failed with "template not found:
+.icons/lucide/message-square-cog.svg". A doc frontmatter `icon:` field
+referenced a lucide icon absent from zensical 0.0.47's bundled set (and
+0.0.47 is the latest). Blocks the entire build, not just that page.
+
+**Lesson**: zensical (like mkdocs-material) ships a frozen lucide
+snapshot; a valid-on-lucide.dev icon may not exist in the installed
+version. A single bad `icon:` fails the whole site build.
+
+**Application**: Before a site rebuild, validate every doc `icon:
+lucide/X` against the installed bundle
+(`find <zensical>/templates/.icons/lucide -name X.svg`). Pick from the
+bundled set, not lucide.dev.
+
+---
+
+## [2026-07-06-c] PATH `ctx` is a stale install; verify against the fresh binary
+
+**Context**: After editing an asset (commands.yaml) and `make build`,
+`ctx journal import --help` still showed the OLD text. Cause: `ctx` on
+PATH is `/usr/local/bin/ctx` (a prior `make install`), while `make
+build` produces `./ctx` in the repo. A project hook blocks running
+`./ctx` directly.
+
+**Lesson**: `make build` does not update the PATH binary. Verifying
+behavior via PATH `ctx` after a source change tests the stale install,
+not your change.
+
+**Application**: To verify a fresh build, copy it out
+(`cp ./ctx <scratch>/ctx-new`) and run that — it dodges the `./ctx`
+hook and reflects your edits. Or `sudo make reinstall`. Never trust
+PATH `ctx` help/behavior right after `make build`.
+
+---
+
+## [2026-07-06-d] `internal/assets` ← `internal/rc` blocks package-assets tests importing rc
+
+**Context**: Moving the `.ctxrc` schema-vs-struct bijection test to
+reflect over the real `rc.CtxRC` (drift-proofing it) failed: `rc`
+imports `internal/assets/read/placeholders`, which imports top-level
+`internal/assets`. So a `package assets` test importing `rc` forms a
+cycle (assets → rc → placeholders → assets).
+
+**Lesson**: `internal/assets` is a low-level leaf that `rc` transitively
+depends on; tests in `package assets` cannot import `rc`.
+
+**Application**: Home a struct-vs-schema guard in the package that owns
+the struct (`package rc`), importing `internal/assets` to read the
+embedded schema — that direction is acyclic (assets never imports rc).
 
 ---
 
