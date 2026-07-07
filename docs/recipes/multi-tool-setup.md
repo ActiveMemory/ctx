@@ -37,7 +37,7 @@ ctx setup opencode --write && ctx init
 ctx setup cursor # or: aider, copilot, windsurf
 
 # ## Companion tools (highly recommended) ##
-npx gitnexus analyze          # code knowledge graph
+gitnexus analyze              # code knowledge graph
 # Add Gemini Search MCP server for grounded web search
 ```
 
@@ -437,7 +437,7 @@ analysis, and domain clustering. Used by skills like `/ctx-refactor`
 then index your project:
 
 ```bash
-npx gitnexus analyze
+gitnexus analyze
 ```
 
 **Verification**:

@@ -334,7 +334,7 @@ The investment is small and the benefits compound over sessions:
 
 ```bash
 # Index your project for GitNexus (run once, then after major changes)
-npx gitnexus analyze
+gitnexus analyze
 ```
 
 (For non-GitNexus code-intelligence MCPs, apply that tool's own
