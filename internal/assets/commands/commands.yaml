@@ -382,6 +382,7 @@ hub:
       status    Show cluster status
       peer      Add or remove cluster peers
       stepdown  Transfer leadership to another node
+      revoke    Revoke a client token
 
     See `ctx hub <subcommand> --help` for details. For client-side
     setup (register, subscribe, sync, listen, publish), see
@@ -429,6 +430,18 @@ hub.stepdown:
     before the current leader steps down. Use before taking a
     node offline for maintenance.
   short: Transfer leadership
+hub.revoke:
+  long: |-
+    Revoke a client's token, invalidating it immediately.
+
+    Identify the client by its ID (as shown when it was
+    registered). The revoked token stops authenticating on the
+    next request; other clients are unaffected.
+
+    Requires the hub admin token, supplied via --token or the
+    CTX_HUB_ADMIN_TOKEN environment variable. The hub address is
+    read from the saved connection config.
+  short: Revoke a client token
 hook:
   long: |-
     Manage hook-related settings: messages, notifications,

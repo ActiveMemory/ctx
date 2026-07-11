@@ -67,6 +67,45 @@ func (s *Server) register(
 	}, nil
 }
 
+// revoke handles the Revoke RPC.
+//
+// Admin-token-gated (mirrors register): only the operator
+// holding the admin token may revoke a client. On success the
+// client's token stops validating immediately.
+//
+// Parameters:
+//   - ctx: request context (unused)
+//   - req: revoke request with admin token and client ID
+//
+// Returns:
+//   - *RevokeResponse: empty on success
+//   - error: PermissionDenied on bad admin token, InvalidArgument
+//     on empty client ID, NotFound on unknown client
+func (s *Server) revoke(
+	_ context.Context, req *RevokeRequest,
+) (*RevokeResponse, error) {
+	if req.AdminToken != s.adminToken {
+		return nil, status.Error(
+			codes.PermissionDenied,
+			cfgHub.ErrInvalidAdminToken,
+		)
+	}
+	if req.ClientID == "" {
+		return nil, status.Error(
+			codes.InvalidArgument,
+			cfgHub.ErrClientIDRequired,
+		)
+	}
+
+	if revErr := s.store.RevokeClient(req.ClientID); revErr != nil {
+		return nil, status.Error(
+			codes.NotFound, revErr.Error(),
+		)
+	}
+
+	return &RevokeResponse{}, nil
+}
+
 // publish handles the Publish RPC.
 //
 // Parameters:

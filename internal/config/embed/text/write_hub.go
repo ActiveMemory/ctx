@@ -26,4 +26,7 @@ const (
 	// DescKeyWriteHubClusterStats is the text key for hub
 	// cluster statistics.
 	DescKeyWriteHubClusterStats = "write.hub-cluster-stats"
+	// DescKeyWriteHubRevoked is the text key for the hub client
+	// revocation confirmation.
+	DescKeyWriteHubRevoked = "write.hub-revoked"
 )

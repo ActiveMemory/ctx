@@ -54,6 +54,10 @@ func serviceDesc(s *Server) *grpc.ServiceDesc {
 				MethodName: cfgHub.MethodStatus,
 				Handler:    makeStatusHandler(s),
 			},
+			{
+				MethodName: cfgHub.MethodRevoke,
+				Handler:    makeRevokeHandler(s),
+			},
 		},
 		Streams: []grpc.StreamDesc{
 			{
@@ -99,6 +103,28 @@ func makeRegisterHandler(s *Server) grpc.MethodHandler {
 			return nil, decErr
 		}
 		return s.register(ctx, req)
+	}
+}
+
+// makeRevokeHandler creates the Revoke handler.
+// Revoke uses admin token auth, not bearer (matches Register).
+//
+// Parameters:
+//   - s: hub server for request dispatch
+//
+// Returns:
+//   - grpc.MethodHandler: unary handler for Revoke RPC
+func makeRevokeHandler(s *Server) grpc.MethodHandler {
+	return func(
+		_ any, ctx context.Context,
+		dec func(any) error,
+		_ grpc.UnaryServerInterceptor,
+	) (any, error) {
+		req := &RevokeRequest{}
+		if decErr := dec(req); decErr != nil {
+			return nil, decErr
+		}
+		return s.revoke(ctx, req)
 	}
 }
 

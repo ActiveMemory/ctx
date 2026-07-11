@@ -24,6 +24,11 @@ const (
 	// SkipPathCheck is the environment variable that skips the PATH
 	// validation during init. Set to True in tests.
 	SkipPathCheck = "CTX_SKIP_PATH_CHECK"
+	// HubAdminToken is the environment variable holding the hub
+	// admin token, used as a fallback when --token is not passed
+	// to admin-gated commands like `ctx hub revoke`.
+	//nolint:gosec // G101: env var name, not a credential
+	HubAdminToken = "CTX_HUB_ADMIN_TOKEN"
 )
 
 // Environment toggle values.

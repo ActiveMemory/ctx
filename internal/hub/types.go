@@ -172,6 +172,20 @@ type RegisterResponse struct {
 	ClientToken string `json:"client_token"`
 }
 
+// RevokeRequest is the input for the Revoke RPC.
+//
+// Fields:
+//   - AdminToken: admin token from server startup
+//   - ClientID: ID of the client whose token to revoke
+type RevokeRequest struct {
+	AdminToken string `json:"admin_token"`
+	ClientID   string `json:"client_id"`
+}
+
+// RevokeResponse is the output of the Revoke RPC. It carries
+// no fields; a nil error signals the client was revoked.
+type RevokeResponse struct{}
+
 // PublishRequest is the input for the Publish RPC.
 //
 // Fields:
