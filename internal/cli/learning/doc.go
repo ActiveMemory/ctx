@@ -6,15 +6,14 @@
 
 // Package learning implements the **`ctx learning`**
 // command group for managing `LEARNINGS.md`, currently
-// just the `reindex` subcommand that regenerates the
-// quick-reference index table at the top of the file.
+// just the `add` subcommand that appends new entries.
 //
 // `LEARNINGS.md` is the project's running record of
-// gotchas, "gotcha" notes, and hard-won lessons. The
-// quick-reference index lets `ctx agent` inject a
-// token-cheap **table of contents** instead of the full
-// prose, so the AI can scan available learnings and
-// request the ones it needs by ID.
+// gotchas, "gotcha" notes, and hard-won lessons. A
+// quick-reference table of contents is projected on demand
+// by `ctx index LEARNINGS.md`, so `ctx agent` can scan
+// available learnings without reading the full prose —
+// computed, never stored in the file.
 //
 // # Subcommands
 //
@@ -24,14 +23,6 @@
 //     (session-id, branch, commit). Implementation in
 //     [internal/cli/learning/cmd/add] delegates to the
 //     shared add core.
-//   - **`ctx learning reindex`**: rebuilds the index
-//     table by parsing every entry header in
-//     `LEARNINGS.md` and emitting a fresh
-//     chronologically-sorted table between the
-//     `<!-- INDEX:START -->` / `<!-- INDEX:END -->`
-//     markers. Idempotent. See
-//     [internal/cli/learning/cmd/reindex] for the
-//     implementation.
 //
 // # Shared Add Core
 //

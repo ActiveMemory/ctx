@@ -11,8 +11,6 @@ const (
 	// DescKeyErrAddFileNotFound is the text key for err add file not found
 	// messages.
 	DescKeyErrAddFileNotFound = "err.add.file-not-found"
-	// DescKeyErrAddIndexUpdate is the text key for err add index update messages.
-	DescKeyErrAddIndexUpdate = "err.add.index-update"
 	// DescKeyErrAddJSONParse is the text key for err add json payload parse
 	// messages.
 	DescKeyErrAddJSONParse = "err.add.json-parse"

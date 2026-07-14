@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/handover"
 	"github.com/ActiveMemory/ctx/internal/cli/hook"
 	cliHub "github.com/ActiveMemory/ctx/internal/cli/hub"
+	"github.com/ActiveMemory/ctx/internal/cli/index"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/cli/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/kb"
@@ -33,7 +34,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/permission"
 	"github.com/ActiveMemory/ctx/internal/cli/prune"
-	"github.com/ActiveMemory/ctx/internal/cli/reindex"
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
 	"github.com/ActiveMemory/ctx/internal/cli/setup"
@@ -92,21 +92,21 @@ func contextCmds() []registration {
 // artifacts returns command registrations for the artifacts group.
 //
 // These commands operate on specific artifact files inside
-// .context/: the DECISIONS.md, LEARNINGS.md, TASKS.md, and
-// CONVENTIONS.md stores, plus the `reindex` shortcut that
-// rebuilds the decision/learning index tables in a single call.
-// Each noun parent owns its add subcommand (ctx <noun> add).
+// .context/: DECISIONS.md, LEARNINGS.md, TASKS.md, and
+// CONVENTIONS.md. Each noun parent owns its add subcommand
+// (ctx <noun> add); ctx index projects any file's headings as
+// a computed table of contents.
 //
 // Returns:
 //   - []registration: Decision, learning, task, convention,
-//     and reindex commands
+//     index, kb, and handover commands
 func artifacts() []registration {
 	return []registration{
 		{decision.Cmd, embedCmd.GroupArtifacts},
 		{learning.Cmd, embedCmd.GroupArtifacts},
 		{task.Cmd, embedCmd.GroupArtifacts},
 		{convention.Cmd, embedCmd.GroupArtifacts},
-		{reindex.Cmd, embedCmd.GroupArtifacts},
+		{index.Cmd, embedCmd.GroupArtifacts},
 		{kb.Cmd, embedCmd.GroupArtifacts},
 		{handover.Cmd, embedCmd.GroupArtifacts},
 	}

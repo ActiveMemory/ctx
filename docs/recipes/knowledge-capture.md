@@ -41,9 +41,7 @@ Or just tell your agent: *"What have we learned this session?"*
 | `ctx decision add`     | Command | Record an architectural decision              |
 | `ctx learning add`     | Command | Record a gotcha, tip, or lesson               |
 | `ctx convention add`   | Command | Record a coding pattern or standard           |
-| `ctx reindex`          | Command | Rebuild both quick-reference indices          |
-| `ctx decision reindex` | Command | Rebuild the DECISIONS.md index                |
-| `ctx learning reindex` | Command | Rebuild the LEARNINGS.md index                |
+| `ctx index <file>`     | Command | Project a file's headings as a table of contents |
 | `/ctx-decision-add`    | Skill   | AI-guided decision capture with validation    |
 | `/ctx-learning-add`    | Skill   | AI-guided learning capture with validation    |
 | `/ctx-convention-add`  | Skill   | AI-guided convention recording with placement |
@@ -192,21 +190,21 @@ ctx convention add "Use kebab-case for all CLI flag names" --section "Naming"
 Conventions work best for rules that come up repeatedly. Codify a pattern the
 third time you see it, not the first.
 
-### Step 5: Reindex After Manual Edits
+### Step 5: Project a Table of Contents on Demand
 
-`DECISIONS.md` and `LEARNINGS.md` maintain a quick-reference index at the top:
-a compact table of date and title for each entry. The index updates
-automatically via `ctx add`, but falls out of sync after hand edits.
+`DECISIONS.md` and `LEARNINGS.md` do not store an index. A quick-reference
+table of contents — the date and title for each entry — is computed on
+demand, so it can never fall out of sync with the file, even after hand
+edits.
 
 ```bash
-ctx reindex
+ctx index .context/DECISIONS.md
+ctx index .context/LEARNINGS.md
 ```
 
-This single command regenerates both indices. You can also reindex
-individually with `ctx decision reindex` or `ctx learning reindex`.
-
-Run reindex after any manual edit. The index lets AI tools scan all entries
-without reading the full file, which matters when token budgets are tight.
+The projection lets AI tools scan all entries without reading the full file,
+which matters when token budgets are tight. Use `--json` for machine-readable
+output.
 
 ### Step 6: Use `/ctx-reflect` to Surface What to Capture
 
@@ -328,8 +326,8 @@ ctx learning add "SQL migrations must be idempotent" \
 # Convention: record the pattern
 ctx convention add "API handlers return structured errors" --section "API"
 
-# Reindex after manual edits
-ctx reindex
+# Project a table of contents on demand
+ctx index .context/DECISIONS.md
 
 # Reflect at breakpoints (from AI assistant)
 # /ctx-reflect

@@ -81,12 +81,7 @@ const (
 )
 
 // Index markers for auto-generated table of contents sections.
-const (
-	// IndexStart marks the beginning of an auto-generated index.
-	IndexStart = "<!-- INDEX:START -->"
-	// IndexEnd marks the end of an auto-generated index.
-	IndexEnd = "<!-- INDEX:END -->"
-)
+const ()
 
 // Task checkbox prefixes for Markdown task lists.
 const (
@@ -168,10 +163,6 @@ const (
 	TablePipe = "|"
 	// TablePipeEscaped is an escaped pipe for use inside cells.
 	TablePipeEscaped = "\\|"
-	// TableRowFmt is the Printf format for a two-column table row.
-	TableRowFmt = "| %s | %s |"
-	// TableSepFmt is the Printf format for a two-column separator row.
-	TableSepFmt = "|%s|%s|"
 	// TableRowOpen is the leading "| " a markdown table row
 	// opens with.
 	TableRowOpen = "| "

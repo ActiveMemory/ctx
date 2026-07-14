@@ -18,7 +18,4 @@ const (
 	DescKeyLearning = "learning"
 	// DescKeyLearningAdd is the description key for the learning add command.
 	DescKeyLearningAdd = "learning.add"
-	// DescKeyLearningReindex is the description key for the learning reindex
-	// command.
-	DescKeyLearningReindex = "learning.reindex"
 )

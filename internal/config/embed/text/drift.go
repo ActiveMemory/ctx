@@ -14,8 +14,6 @@ const (
 	DescKeyDriftEntryCount = "drift.entry-count"
 	// DescKeyDriftMissingFile is the text key for drift missing file messages.
 	DescKeyDriftMissingFile = "drift.missing-file"
-	// DescKeyDriftRegenerated is the text key for drift regenerated messages.
-	DescKeyDriftRegenerated = "drift.regenerated"
 	// DescKeyDriftMissingPackage is the text key for drift missing package
 	// messages.
 	DescKeyDriftMissingPackage = "drift.missing-package"
@@ -25,8 +23,6 @@ const (
 	DescKeyDriftStaleAge = "drift.stale-age"
 	// DescKeyDriftStaleness is the text key for drift staleness messages.
 	DescKeyDriftStaleness = "drift.staleness"
-	// DescKeyDriftCleared is the text key for drift cleared messages.
-	DescKeyDriftCleared = "drift.cleared"
 	// DescKeyDriftApplying is the text key for drift applying messages.
 	DescKeyDriftApplying = "drift.applying"
 	// DescKeyDriftFixedCount is the text key for drift fixed count messages.

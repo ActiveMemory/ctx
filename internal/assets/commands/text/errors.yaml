@@ -3,8 +3,6 @@
 
 err.add.file-not-found:
   short: "context file %s not found. Run 'ctx init' first"
-err.add.index-update:
-  short: 'failed to update index in %s: %w'
 err.add.json-parse:
   short: 'failed to parse JSON payload %s: %w'
 err.add.missing-fields:
@@ -36,15 +34,6 @@ err.fmt.no-files:
   short: 'no context files found in %s'
 err.fmt.needs-formatting:
   short: files need formatting
-err.index.entries-in-block:
-  short: |-
-    %s has entry content between its INDEX:START and INDEX:END markers.
-    Refusing to regenerate the index because that would delete those entries.
-    Move the INDEX:END marker above your entries, then retry.
-err.index.malformed-markers:
-  short: |-
-    %s has missing, duplicated, or out-of-order INDEX:START/INDEX:END markers.
-    Refusing to regenerate the index. Restore a single well-formed marker pair, then retry.
 err.backup.context-dir-not-found:
   short: "context directory not found: %s - run 'ctx init'"
 err.backup.create-archive-dir:
@@ -461,12 +450,6 @@ err.journal.source.event-log-read:
   short: 'reading event log: %w'
 err.journal.source.open-log-file:
   short: 'failed to open log file: %w'
-err.journal.source.reindex-file-not-found:
-  short: "%s not found. Run 'ctx init' first"
-err.journal.source.reindex-file-read:
-  short: 'failed to read %s: %w'
-err.journal.source.reindex-file-write:
-  short: 'failed to write %s: %w'
 err.journal.source.stats-glob:
   short: 'globbing stats files: %w'
 err.reminder.parse-reminders:

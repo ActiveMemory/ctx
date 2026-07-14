@@ -9,11 +9,6 @@ heading.learnings:
 heading.learning-entry-start:
   short: '## ['
 
-# Column headers for index tables
-column.decision:
-  short: Decision
-column.learning:
-  short: Learning
 
 # Task section headings
 heading.completed:

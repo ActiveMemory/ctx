@@ -14,8 +14,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/context/token"
+	"github.com/ActiveMemory/ctx/internal/heading"
 	"github.com/ActiveMemory/ctx/internal/i18n"
-	"github.com/ActiveMemory/ctx/internal/index"
 )
 
 // Recency returns a score based on the entry's age.
@@ -32,7 +32,7 @@ import (
 //
 // Returns:
 //   - float64: Recency score between 0.2 and 1.0
-func Recency(eb *index.EntryBlock, now time.Time) float64 {
+func Recency(eb *heading.EntryBlock, now time.Time) float64 {
 	entryDate, err := time.ParseInLocation(
 		cfgTime.DateFormat, eb.Entry.Date, time.Local,
 	)
@@ -63,7 +63,7 @@ func Recency(eb *index.EntryBlock, now time.Time) float64 {
 //
 // Returns:
 //   - float64: Relevance score between 0.0 and 1.0
-func Relevance(eb *index.EntryBlock, keywords []string) float64 {
+func Relevance(eb *heading.EntryBlock, keywords []string) float64 {
 	if len(keywords) == 0 {
 		return 0.0
 	}
@@ -92,7 +92,7 @@ func Relevance(eb *index.EntryBlock, keywords []string) float64 {
 //
 // Returns:
 //   - float64: Combined score (0.0-2.0), or 0.0 if superseded
-func Score(eb *index.EntryBlock, keywords []string, now time.Time) float64 {
+func Score(eb *heading.EntryBlock, keywords []string, now time.Time) float64 {
 	if eb.IsSuperseded() {
 		return 0.0
 	}
@@ -139,7 +139,7 @@ func ExtractTaskKeywords(tasks []string) []string {
 // Returns:
 //   - []ScoredEntry: Entries sorted by score descending, with token estimates
 func All(
-	blocks []index.EntryBlock, keywords []string, now time.Time,
+	blocks []heading.EntryBlock, keywords []string, now time.Time,
 ) []Entry {
 	scored := make([]Entry, 0, len(blocks))
 	for i := range blocks {

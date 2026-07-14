@@ -14,15 +14,6 @@ const (
 	// DescKeyErrJournalSourceOpenLogFile is the text key for err journal source
 	// open log file messages.
 	DescKeyErrJournalSourceOpenLogFile = "err.journal.source.open-log-file"
-	// DescKeyErrJournalSourceReindexFileNotFound is the text key for err journal
-	// source reindex file not found messages.
-	DescKeyErrJournalSourceReindexFileNotFound = "err.journal.source.reindex-file-not-found"
-	// DescKeyErrJournalSourceReindexFileRead is the text key for err journal
-	// source reindex file read messages.
-	DescKeyErrJournalSourceReindexFileRead = "err.journal.source.reindex-file-read"
-	// DescKeyErrJournalSourceReindexFileWrite is the text key for err journal
-	// source reindex file write messages.
-	DescKeyErrJournalSourceReindexFileWrite = "err.journal.source.reindex-file-write"
 	// DescKeyErrJournalSourceStatsGlob is the text key for err journal source
 	// stats glob messages.
 	DescKeyErrJournalSourceStatsGlob = "err.journal.source.stats-glob"

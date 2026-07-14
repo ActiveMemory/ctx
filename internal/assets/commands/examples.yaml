@@ -81,11 +81,7 @@ ctx:
       ctx guide
 
 decision:
-  short: '  ctx decision reindex'
-
-decision.reindex:
-  short: '  ctx decision reindex'
-
+  short: '  ctx decision add'
 
 doctor:
   short: |2-
@@ -221,11 +217,11 @@ journal.unlock:
       ctx journal unlock --all
 
 learning:
-  short: '  ctx learning reindex'
+  short: '  ctx learning add'
 
-learning.reindex:
-  short: '  ctx learning reindex'
-
+index:
+  short: |2-
+      ctx index .context/DECISIONS.md
 load:
   short: |2-
       ctx load
@@ -345,9 +341,6 @@ permission.restore:
 
 permission.snapshot:
   short: '  ctx permission snapshot'
-
-reindex:
-  short: '  ctx reindex'
 
 remind:
   short: |2-
