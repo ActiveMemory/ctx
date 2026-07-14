@@ -1048,6 +1048,8 @@ write.hub-added-peer:
   short: 'Added peer %s'
 write.hub-removed-peer:
   short: 'Removed peer %s'
+write.hub-revoked:
+  short: 'Revoked client %s'
 write.hub-leadership-transferred:
   short: Leadership transferred
 write.hub-leader:

@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/hub/cmd/peer"
+	"github.com/ActiveMemory/ctx/internal/cli/hub/cmd/revoke"
 	"github.com/ActiveMemory/ctx/internal/cli/hub/cmd/start"
 	hubStatus "github.com/ActiveMemory/ctx/internal/cli/hub/cmd/status"
 	"github.com/ActiveMemory/ctx/internal/cli/hub/cmd/stepdown"
@@ -22,7 +23,7 @@ import (
 //
 // Returns:
 //   - *cobra.Command: hub with start, stop, status, peer,
-//     stepdown
+//     stepdown, revoke
 func Cmd() *cobra.Command {
 	return parent.Cmd(
 		cmd.DescKeyHub, cmd.UseHub,
@@ -31,5 +32,6 @@ func Cmd() *cobra.Command {
 		hubStatus.Cmd(),
 		peer.Cmd(),
 		stepdown.Cmd(),
+		revoke.Cmd(),
 	)
 }

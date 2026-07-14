@@ -122,6 +122,79 @@ func TestServerRegisterBadToken(t *testing.T) {
 	}
 }
 
+func TestServer_Revoke_RequiresAdminToken(t *testing.T) {
+	_, conn, adminTok := startTestServer(t)
+
+	reg := callRegister(t, conn, adminTok, "alpha")
+
+	// Revoke with a non-admin token must be rejected.
+	resp := &RevokeResponse{}
+	err := conn.Invoke(
+		context.Background(),
+		"/ctx.hub.v1.CtxHub/Revoke",
+		&RevokeRequest{
+			AdminToken: "not-the-admin-token",
+			ClientID:   reg.ClientID,
+		},
+		resp,
+	)
+	if err == nil {
+		t.Fatal("expected error revoking with non-admin token")
+	}
+}
+
+func TestServer_Revoke_RevokedTokenFailsValidate(t *testing.T) {
+	_, conn, adminTok := startTestServer(t)
+
+	reg := callRegister(t, conn, adminTok, "alpha")
+	ctx := authedCtx(reg.ClientToken)
+
+	// The client can publish while its token is valid.
+	pubResp := &PublishResponse{}
+	if pubErr := conn.Invoke(ctx,
+		"/ctx.hub.v1.CtxHub/Publish",
+		&PublishRequest{Entries: []PublishEntry{{
+			ID:        "e1",
+			Type:      "decision",
+			Content:   "Use Go",
+			Origin:    "alpha",
+			Timestamp: time.Now().Unix(),
+		}}},
+		pubResp,
+	); pubErr != nil {
+		t.Fatalf("Publish before revoke: %v", pubErr)
+	}
+
+	// Revoke the client (admin-gated).
+	revResp := &RevokeResponse{}
+	if revErr := conn.Invoke(
+		context.Background(),
+		"/ctx.hub.v1.CtxHub/Revoke",
+		&RevokeRequest{
+			AdminToken: adminTok,
+			ClientID:   reg.ClientID,
+		},
+		revResp,
+	); revErr != nil {
+		t.Fatalf("Revoke: %v", revErr)
+	}
+
+	// The revoked token must stop authenticating immediately.
+	if pubErr := conn.Invoke(ctx,
+		"/ctx.hub.v1.CtxHub/Publish",
+		&PublishRequest{Entries: []PublishEntry{{
+			ID:        "e2",
+			Type:      "decision",
+			Content:   "Should fail",
+			Origin:    "alpha",
+			Timestamp: time.Now().Unix(),
+		}}},
+		&PublishResponse{},
+	); pubErr == nil {
+		t.Fatal("expected publish with revoked token to fail")
+	}
+}
+
 func TestServerPublishAndSync(t *testing.T) {
 	_, conn, adminTok := startTestServer(t)
 

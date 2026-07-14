@@ -20,6 +20,8 @@ const (
 	UseHubPeer = "peer <add|remove> <address>"
 	// UseHubStepdown is the Use string for hub stepdown.
 	UseHubStepdown = "stepdown"
+	// UseHubRevoke is the Use string for hub revoke.
+	UseHubRevoke = "revoke <client-id>"
 
 	// DescKeyHub is the desc key for the hub command.
 	DescKeyHub = "hub"
@@ -33,4 +35,6 @@ const (
 	DescKeyHubPeer = "hub.peer"
 	// DescKeyHubStepdown is the desc key for hub stepdown.
 	DescKeyHubStepdown = "hub.stepdown"
+	// DescKeyHubRevoke is the desc key for hub revoke.
+	DescKeyHubRevoke = "hub.revoke"
 )
