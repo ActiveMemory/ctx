@@ -22,6 +22,7 @@
 //     replication
 //   - stepdown: ask the current leader to yield its role
 //     to another node
+//   - revoke: invalidate a client's token by client ID
 //
 // # Subpackages
 //
@@ -30,5 +31,6 @@
 //	cmd/status: health and topology display
 //	cmd/peer: peer management
 //	cmd/stepdown: leader yield
+//	cmd/revoke: client token revocation
 //	core: shared Hub client and config helpers
 package hub
