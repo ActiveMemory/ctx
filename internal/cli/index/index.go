@@ -4,18 +4,19 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package reindex
+package index
 
 import (
 	"github.com/spf13/cobra"
 
-	reindexRoot "github.com/ActiveMemory/ctx/internal/cli/reindex/cmd/root"
+	indexRoot "github.com/ActiveMemory/ctx/internal/cli/index/cmd/root"
 )
 
-// Cmd returns the reindex convenience command.
+// Cmd returns the "ctx index" command, which projects the Markdown headings
+// of a knowledge file as a computed table of contents.
 //
 // Returns:
-//   - *cobra.Command: The reindex command with subcommands registered
+//   - *cobra.Command: The index command.
 func Cmd() *cobra.Command {
-	return reindexRoot.Cmd()
+	return indexRoot.Cmd()
 }

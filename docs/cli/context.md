@@ -366,28 +366,34 @@ ctx permission restore
 
 ---
 
-### `ctx reindex`
+### `ctx index`
 
-Regenerate the quick-reference index for both `DECISIONS.md` and `LEARNINGS.md`
-in a single invocation.
+Project the Markdown headings of a knowledge file as a computed table of
+contents — recomputed on demand, never stored in the file.
 
 ```bash
-ctx reindex
+ctx index <file> [--depth N] [--json]
 ```
 
-This is a convenience wrapper around `ctx decision reindex` and
-`ctx learning reindex`. Both files grow at similar rates and users
-typically want to reindex both after manual edits.
+One generic command serves every knowledge file: `DECISIONS.md` and
+`LEARNINGS.md` (`## [timestamp] Title` entries), `CONVENTIONS.md`, and
+`TASKS.md` (`## Phase …` sections). By default only level-2 (`##`) headings
+are shown; `--depth 3` includes level-3 (`###`) sub-headings, and `--json`
+emits a machine-readable array of `{level, text}`.
 
-The index is a compact table of date and title for each entry, allowing
-AI tools to scan entries without reading the full file.
+Because the index is computed, it can never drift from the entries it
+summarizes, and adding an entry never rewrites the file's structure.
 
 **Example**:
 
 ```bash
-ctx reindex
-# ✓ Index regenerated with 12 entries
-# ✓ Index regenerated with 8 entries
+ctx index .context/DECISIONS.md
+# [2026-07-09-093951] Ship #131 as interim hub token revocation
+# [2026-07-06-214523] Journal resume picks the richest transcript
+# ...
+
+ctx index .context/TASKS.md --depth 3
+ctx index .context/LEARNINGS.md --json
 ```
 
 ---
@@ -400,26 +406,8 @@ Manage the `DECISIONS.md` file.
 ctx decision <subcommand>
 ```
 
-#### `ctx decision reindex`
-
-Regenerate the quick-reference index at the top of `DECISIONS.md`.
-
-```bash
-ctx decision reindex
-```
-
-The index is a compact table showing the date and title for each decision,
-allowing AI tools to quickly scan entries without reading the full file.
-
-Use this after manual edits to `DECISIONS.md` or when migrating existing
-files to use the index format.
-
-**Example**:
-
-```bash
-ctx decision reindex
-# ✓ Index regenerated with 12 entries
-```
+Use `ctx decision add` to append entries; see [`ctx index`](#ctx-index) to
+project a table of contents on demand.
 
 ---
 
@@ -431,23 +419,5 @@ Manage the `LEARNINGS.md` file.
 ctx learning <subcommand>
 ```
 
-#### `ctx learning reindex`
-
-Regenerate the quick-reference index at the top of `LEARNINGS.md`.
-
-```bash
-ctx learning reindex
-```
-
-The index is a compact table showing the date and title for each learning,
-allowing AI tools to quickly scan entries without reading the full file.
-
-Use this after manual edits to `LEARNINGS.md` or when migrating existing
-files to use the index format.
-
-**Example**:
-
-```bash
-ctx learning reindex
-# ✓ Index regenerated with 8 entries
-```
+Use `ctx learning add` to append entries; see [`ctx index`](#ctx-index) to
+project a table of contents on demand.

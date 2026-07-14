@@ -67,6 +67,7 @@ const (
 	Event       = "event"
 
 	IncludeHub      = "include-hub"
+	Depth           = "depth"
 	Fix             = "fix"
 	Force           = "force"
 	Reset           = "reset"

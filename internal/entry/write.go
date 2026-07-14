@@ -18,7 +18,6 @@ import (
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
 	"github.com/ActiveMemory/ctx/internal/i18n"
-	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -26,8 +25,9 @@ import (
 // Write formats and writes an entry to the appropriate context file.
 //
 // Handles the complete write cycle: read existing content,
-// format the entry,
-// append it, write back, and update the index if needed.
+// format the entry, append it, and write back. No index is
+// maintained in the file; a table of contents is projected on
+// demand by `ctx index <file>`.
 //
 // Parameters:
 //   - params: Params containing type, content, and optional fields
@@ -60,14 +60,6 @@ func Write(params entity.EntryParams) error {
 	existing, readErr := io.SafeReadUserFile(filepath.Clean(filePath))
 	if readErr != nil {
 		return errFs.FileRead(filePath, readErr)
-	}
-
-	// Decisions and Learnings carry an auto-generated index. Refuse to mutate
-	// the file when regenerating that index would lose data, before any write.
-	if fType == entry.Decision || fType == entry.Learning {
-		if vErr := index.Validate(string(existing), fileName); vErr != nil {
-			return vErr
-		}
 	}
 
 	var formatted string
@@ -107,25 +99,6 @@ func Write(params entity.EntryParams) error {
 		filePath, newContent, fs.PermFile,
 	); writeErr != nil {
 		return errFs.FileWrite(filePath, writeErr)
-	}
-
-	switch fType {
-	case entry.Decision:
-		indexed := index.UpdateDecisions(string(newContent))
-		if indexErr := io.SafeWriteFile(
-			filePath, []byte(indexed), fs.PermFile,
-		); indexErr != nil {
-			return errAdd.IndexUpdate(filePath, indexErr)
-		}
-	case entry.Learning:
-		indexed := index.UpdateLearnings(string(newContent))
-		if indexErr := io.SafeWriteFile(
-			filePath, []byte(indexed), fs.PermFile,
-		); indexErr != nil {
-			return errAdd.IndexUpdate(filePath, indexErr)
-		}
-		// case entry.Task, entry.Convention:
-		// No index to update for these types
 	}
 
 	return nil

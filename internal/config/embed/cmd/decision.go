@@ -18,7 +18,4 @@ const (
 	DescKeyDecision = "decision"
 	// DescKeyDecisionAdd is the description key for the decision add command.
 	DescKeyDecisionAdd = "decision.add"
-	// DescKeyDecisionReindex is the description key for the decision reindex
-	// command.
-	DescKeyDecisionReindex = "decision.reindex"
 )

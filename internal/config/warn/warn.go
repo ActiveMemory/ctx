@@ -187,15 +187,8 @@ const (
 	NotifyWebhookPost = "notify: webhook POST failed: %v"
 )
 
-// Warn context identifiers for index generation.
+// Warn context identifiers.
 const (
-	// IndexHeader is the context label for index header write errors.
-	IndexHeader = "index-header"
-	// IndexSeparator is the context label for index separator write
-	// errors.
-	IndexSeparator = "index-separator"
-	// IndexRow is the context label for index row write errors.
-	IndexRow = "index-row"
 	// ResponseBody is the context label for HTTP response body
 	// close errors.
 	ResponseBody = "response body"

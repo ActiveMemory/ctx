@@ -12,16 +12,16 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/score"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/heading"
 )
 
-func makeBlock(date, title, body string) index.EntryBlock {
+func makeBlock(date, title, body string) heading.EntryBlock {
 	header := "## [" + date + "-120000] " + title
 	lines := []string{header}
 	if body != "" {
 		lines = append(lines, "", body)
 	}
-	return index.EntryBlock{
+	return heading.EntryBlock{
 		Entry: entity.IndexEntry{
 			Timestamp: date + "-120000",
 			Date:      date,
@@ -207,7 +207,7 @@ func TestFillSection(t *testing.T) {
 	t.Run("superseded entries skipped", func(t *testing.T) {
 		superseded := []score.Entry{
 			{
-				EntryBlock: index.EntryBlock{
+				EntryBlock: heading.EntryBlock{
 					Entry: entity.IndexEntry{
 						Timestamp: "2026-02-19-120000",
 						Date:      "2026-02-19",

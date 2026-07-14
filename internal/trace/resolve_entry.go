@@ -17,7 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	cfgTrace "github.com/ActiveMemory/ctx/internal/config/trace"
 	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
-	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/heading"
 	"github.com/ActiveMemory/ctx/internal/io"
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/task"
@@ -46,7 +46,7 @@ func resolveEntry(
 		return resolved
 	}
 
-	entries := index.ParseHeaders(string(content))
+	entries := heading.ParseHeaders(string(content))
 
 	// Entries are 1-based; index into slice using number-1.
 	if number < 1 || number > len(entries) {

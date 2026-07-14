@@ -19,7 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/heading"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -45,7 +45,7 @@ func ScanFiles(
 	if decThreshold > 0 {
 		data, readErr := io.SafeReadFile(contextDir, ctx.Decision)
 		if readErr == nil {
-			count := len(index.ParseEntryBlocks(string(data)))
+			count := len(heading.ParseEntryBlocks(string(data)))
 			if count > decThreshold {
 				findings = append(findings, finding{
 					File:      ctx.Decision,
@@ -60,7 +60,7 @@ func ScanFiles(
 	if lrnThreshold > 0 {
 		data, readErr := io.SafeReadFile(contextDir, ctx.Learning)
 		if readErr == nil {
-			count := len(index.ParseEntryBlocks(string(data)))
+			count := len(heading.ParseEntryBlocks(string(data)))
 			if count > lrnThreshold {
 				findings = append(findings, finding{
 					File:      ctx.Learning,

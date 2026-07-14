@@ -215,6 +215,10 @@ site.feed.base-url:
   short: Base URL for entry links
 site.feed.out:
   short: Output path for the generated feed
+index.depth:
+  short: 'Max heading level to include (2 = ## only; 3 adds ###)'
+index.json:
+  short: Output headings as JSON
 status.json:
   short: Output as JSON
 status.verbose:

@@ -9,9 +9,9 @@
 //
 // DECISIONS.md records architectural choices with their
 // rationale, trade-offs, and timestamps. The decision
-// command group provides tooling to maintain this file's
-// quick-reference index table, which maps decision
-// numbers to one-line summaries for fast scanning.
+// command group provides tooling to append entries; a
+// quick-reference index is projected on demand by
+// `ctx index DECISIONS.md`, not stored in the file.
 //
 // # Subcommands
 //
@@ -19,13 +19,8 @@
 //     ADR-style fields (context, rationale, consequence)
 //     plus required provenance metadata (session-id, branch,
 //     commit)
-//   - reindex: scans DECISIONS.md entries and regenerates
-//     the index table at the top of the file, ensuring
-//     numbering and summaries stay consistent with the
-//     full entries below
 //
 // # Subpackages
 //
 //	cmd/add: cobra command for noun-first decision addition
-//	cmd/reindex: cobra command for index regeneration
 package decision

@@ -382,7 +382,8 @@ overlapping entries by keyword similarity, presents candidates, and
 Originals are archived, not deleted.
 
 **Wraps**: reads LEARNINGS.md and DECISIONS.md, writes consolidated
-entries, archives originals, runs `ctx reindex`
+entries, archives originals (the index is computed on demand by
+`ctx index`, so no rebuild step is needed)
 
 **See also**:
 [Detecting and Fixing Drift](../recipes/context-health.md)

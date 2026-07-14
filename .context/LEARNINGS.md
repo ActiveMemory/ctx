@@ -14,101 +14,16 @@ DO NOT UPDATE FOR:
 - Opinions without evidence
 -->
 
-<!-- INDEX:START -->
-| Date | Learning |
-|----|--------|
-| 2026-07-04 | Probing whether a ctx subcommand exists needs bare invocation, not --help |
-| 2026-07-04 | GitNexus prunes registry entries whose repo paths don't resolve in-container |
-| 2026-07-04 | Compliance tests are the style guide for new commands |
-| 2026-07-04 | Typed JSON round-trips silently drop user-owned keys |
-| 2026-07-03 | New Claude model families silently fall to the 200k default in ModelContextWindow |
-| 2026-06-07 | Pin an on-disk contract before splitting work across parallel agents |
-| 2026-06-07 | site/ is tracked build output — rebuild and bundle it with doc commits |
-| 2026-06-07 | ctx-dream is headless-first; invoking /ctx-dream interactively is debugging, not the UX |
-| 2026-06-07 | ctx-dream design principles (consolidated) |
-| 2026-06-07 | internal/audit & compliance gates for new code (consolidated) |
-| 2026-06-07 | Error handling: sentinels, unwrapping, and silent discards (consolidated) |
-| 2026-06-07 | git CLI wrapping quirks (consolidated) |
-| 2026-06-07 | TypeScript/integration test surfaces & exclusion rot (consolidated) |
-| 2026-06-07 | Editorial KB pipeline: design epistemology (consolidated) |
-| 2026-06-07 | Documentation, template & asset drift (consolidated) |
-| 2026-06-07 | User-facing text & magic-string discipline (consolidated) |
-| 2026-06-07 | Constant placement & helper smells (consolidated) |
-| 2026-06-07 | Convention enforcement: mechanical gates over prose (consolidated) |
-| 2026-06-07 | Go toolchain, gofmt & build-tag pitfalls (consolidated) |
-| 2026-06-07 | Stale-task triage & verify-before-acting (consolidated) |
-| 2026-06-07 | Refactor mechanics: subagents, cascades & golden fixtures (consolidated) |
-| 2026-06-07 | Linting, gosec & I/O chokepoints (consolidated) |
-| 2026-06-07 | Hook mechanics, output channels & compliance (consolidated) |
-| 2026-06-07 | State, tombstones, logs & filesystem hygiene (consolidated) |
-| 2026-06-07 | Host-pressure alerting: use derivatives, not levels (consolidated) |
-| 2026-06-07 | Go test isolation & patterns (consolidated) |
-| 2026-06-01 | Guard managed blocks before regenerating; don't trust the span to be machine-owned |
-| 2026-05-31 | macOS GUI apps inherit a minimal PATH; augment it to find a user-installed CLI |
-| 2026-05-31 | Tauri 2 requires rustc >= 1.88; bump the toolchain before cargo check |
-| 2026-05-28 | ctx kb: single topic-enumeration site; life-stage count is consumer-side |
-| 2026-05-28 | A non-root Go module nested under the main module's path CAN import its internal/ packages |
-| 2026-05-28 | cobra's legacyArgs lets unknown subcommands silently succeed on non-root groups |
-| 2026-05-25 | Skill shipping location: _ctx- prefix is repo-internal, internal/assets/claude/skills/ctx-* is bundled and shipped |
-| 2026-05-23 | Unicode block separation makes diacritic-stripping surgical — no per-script handling needed for Arabic/Indic/Hebrew/CJK |
-| 2026-05-20 | macOS /var symlink trips path-equality; use EvalSymlinks with parent-resolution fallback |
-| 2026-05-20 | Handover filenames are archaeology; parse by generated-at, not filename |
-| 2026-05-20 | /ctx-plan is named after its input, not its output |
-| 2026-05-17 | Creator confusion is the strongest doc-quality signal — louder than any user signal |
-| 2026-05-17 | `_helpers.go` / `_utils.go` filenames are project anti-pattern; use domain nouns |
-| 2026-05-11 | Naive Markdown line-sweep corrupts multi-line code spans and YAML lists |
-| 2026-05-08 | Cursor imports Claude Code hooks and sets CLAUDE_PROJECT_DIR per workspace |
-| 2026-04-14 | Constitution forbids context window as a deferral excuse |
-| 2026-04-14 | docs/cli/system.md and embed/cmd/system.go diverged on bootstrap promotion intent |
-| 2026-04-14 | Raft-lite trade-off is the load-bearing choice in internal/hub |
-| 2026-04-14 | Brand-name handling in title-case engines must cover possessives |
-| 2026-04-13 | GPG signing from non-TTY contexts requires pinentry-mac (or equivalent) |
-| 2026-04-13 | rc.ContextDir() is the single source of truth — fix the resolver, not callers |
-| 2026-04-09 | Pad index shifting is a real UX bug in batch operations |
-| 2026-04-03 | Bulk rename and replace_all hazards (consolidated) |
-| 2026-04-03 | Import cycles and package splits (consolidated) |
-| 2026-04-03 | Skill lifecycle and promotion (consolidated) |
-| 2026-04-03 | desc.Text() is the single highest-connectivity symbol in the codebase |
-| 2026-04-01 | Contributor PRs based on older code reintroduce removed features |
-| 2026-03-31 | Convention audits must check cmd/ purity, not just types and docstrings |
-| 2026-03-31 | JSON Schema default fields cause linter errors with some validators |
-| 2026-03-30 | lint-docstrings.sh greedy sed hid all return-type violations |
-| 2026-03-24 | lint-drift false positives from conflating constant namespaces |
-| 2026-03-23 | Typography detection script needs exclusion lists for intentional uses |
-| 2026-03-20 | Commit messages containing script paths trigger PreToolUse hooks |
-| 2026-03-18 | Lazy sync.Once per-accessor is a code smell for static embedded data |
-| 2026-03-17 | Write package output census: 69 trivial/simple, 38 consolidation candidates, 18 complex |
-| 2026-03-15 | Contributor PRs need post-merge follow-up commits for convention alignment |
-| 2026-03-06 | Stats sort uses string comparison on RFC3339 timestamps with mixed timezones |
-| 2026-03-05 | Blog post editorial feedback is higher-leverage than drafting |
-| 2026-03-04 | CONSTITUTION hook compliance is non-negotiable — don't work around it |
-| 2026-03-02 | Hook message registry test enforces exhaustive coverage of embedded templates |
-| 2026-03-01 | Model-to-window mapping requires ordered prefix matching |
-| 2026-03-01 | TASKS.md template checkbox syntax inside HTML comments is parsed by RegExTaskMultiline |
-| 2026-02-28 | ctx pad import, ctx pad export, and ctx system resources make three hack scripts redundant |
-| 2026-02-28 | Getting-started docs assumed Claude Code as the only agent |
-| 2026-02-28 | Plugin reload script must rebuild cache, not just delete it |
-| 2026-02-27 | site/ directory must be committed with docs changes |
-| 2026-02-27 | Doctor token_budget vs context_window confusion |
-| 2026-02-27 | Drift detector false positives on illustrative code examples |
-| 2026-02-26 | Webhook silence after ctxrc profile swap is the most common notify debugging red herring |
-| 2026-02-26 | Agent context loading and task routing (consolidated) |
-| 2026-02-26 | PATH and binary handling (consolidated) |
-| 2026-02-26 | Task management and exit criteria (consolidated) |
-| 2026-02-26 | Agent behavioral patterns (consolidated) |
-| 2026-02-26 | ctx add and decision recording (consolidated) |
-| 2026-02-24 | CLI tools don't benefit from in-memory caching of context files |
-| 2026-01-28 | IDE is already the UI |
-| 2026-04-29 | BunShell ctx.$ calls echo stdout to OpenCode's process unless .quiet() is set — leaks visible noise |
-| 2026-04-29 | OpenCode plugin compaction interop is breadcrumb-mediated: own your context preservation explicitly |
-| 2026-04-29 | @opencode-ai/plugin event hook is a single dispatcher, not an object of named handlers |
-| 2026-04-29 | OpenCode plugin hooks like shell.env take (input, output) and mutate; returned objects are ignored |
-| 2026-04-29 | OpenCode shell.env injects env only into agent's shell tool, not into plugin's own ctx.$ calls |
-| 2026-04-26 | OpenCode auto-loads only flat .ts files under .opencode/plugins/; subdirectories are ignored |
-| 2026-04-26 | OpenCode opencode.json MCP shape: command is Array<string>, no separate args field |
-| 2026-04-26 | ctx system help can list project-local hooks not in the Go binary |
-| 2026-04-25 | Confident code comments can pull an LLM away from first-principles knowledge |
-<!-- INDEX:END -->
+
+---
+
+## [2026-07-06-214523] git filter-branch leaves the originals in refs/original and the reflog
+
+**Context**: Rewrote the branch to strip agent Co-Authored-By trailers and called it clean after checking only the branch tip; the originals were still recoverable and visible in git log --all.
+
+**Lesson**: filter-branch rewrites the ref but keeps originals in refs/original/* and every reflog; clean requires update-ref -d on refs/original, git reflog expire --expire=now --all, and git gc --prune=now, then a re-check across ALL refs and dangling objects. Rewriting an annotated/signed tag strips its GPG signature.
+
+**Application**: After any history rewrite: purge refs/original + reflog + gc, then verify agent trailers are zero across the whole object store, not just main..HEAD.
 
 ---
 

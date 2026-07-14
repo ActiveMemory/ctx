@@ -159,8 +159,7 @@ and lessons learned, and **codify** conventions so they
 survive across sessions and team members.
 
 **Uses**: `ctx decision add`, `ctx learning add`,
-`ctx convention add`, `ctx decision reindex`,
-`ctx learning reindex`, `/ctx-decision-add`,
+`ctx convention add`, `ctx index`, `/ctx-decision-add`,
 `/ctx-learning-add`, `/ctx-convention-add`, `/ctx-reflect`
 
 ---

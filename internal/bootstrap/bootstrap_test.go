@@ -89,6 +89,7 @@ func TestInitialize(t *testing.T) {
 		"learning",
 		"task",
 		"convention",
+		"index",
 		"loop",
 		"journal",
 		"serve",
@@ -111,6 +112,29 @@ func TestInitialize(t *testing.T) {
 			t.Errorf("missing subcommand: %s", exp)
 		}
 	}
+}
+
+// TestReindexCommandRemoved guards the index-projection migration: the stored
+// DECISIONS/LEARNINGS index is gone, so no `reindex` command (top-level or
+// under decision/learning) may be reintroduced. The computed `ctx index`
+// replaces it. The `kb` subtree is exempt — KB keeps its own indexing
+// machinery (spec Non-Goal), so its `kb reindex` is out of scope.
+func TestReindexCommandRemoved(t *testing.T) {
+	root := Initialize(RootCmd())
+
+	var walk func(c *cobra.Command)
+	walk = func(c *cobra.Command) {
+		for _, sub := range c.Commands() {
+			if sub.Name() == "kb" {
+				continue // KB indexing is intentionally untouched
+			}
+			if sub.Name() == "reindex" {
+				t.Errorf("reindex command must not exist; found under %q", c.Name())
+			}
+			walk(sub)
+		}
+	}
+	walk(root)
 }
 
 func TestRootCmdVersion(t *testing.T) {

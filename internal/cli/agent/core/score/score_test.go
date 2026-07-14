@@ -11,16 +11,16 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/heading"
 )
 
-func makeBlock(date, title, body string) index.EntryBlock {
+func makeBlock(date, title, body string) heading.EntryBlock {
 	header := "## [" + date + "-120000] " + title
 	lines := []string{header}
 	if body != "" {
 		lines = append(lines, "", body)
 	}
-	return index.EntryBlock{
+	return heading.EntryBlock{
 		Entry: entity.IndexEntry{
 			Timestamp: date + "-120000",
 			Date:      date,
@@ -104,7 +104,7 @@ func TestRelevanceScore(t *testing.T) {
 
 func TestScoreEntry_Superseded(t *testing.T) {
 	now := time.Date(2026, 2, 19, 12, 0, 0, 0, time.Local)
-	eb := index.EntryBlock{
+	eb := heading.EntryBlock{
 		Entry: entity.IndexEntry{
 			Timestamp: "2026-02-19-120000",
 			Date:      "2026-02-19",
@@ -200,7 +200,7 @@ func TestExtractTaskKeywords_Empty(t *testing.T) {
 
 func TestScoreEntries_Ordering(t *testing.T) {
 	now := time.Date(2026, 2, 19, 12, 0, 0, 0, time.Local)
-	blocks := []index.EntryBlock{
+	blocks := []heading.EntryBlock{
 		makeBlock("2025-10-01", "Old irrelevant", "something unrelated"),
 		makeBlock("2026-02-19", "Recent relevant", "hook scoring for agent"),
 		makeBlock("2026-02-10", "Medium age", "hook configuration"),
@@ -234,7 +234,7 @@ func TestScoreEntries_Empty(t *testing.T) {
 
 func TestScoreEntries_TokenEstimate(t *testing.T) {
 	now := time.Now()
-	blocks := []index.EntryBlock{
+	blocks := []heading.EntryBlock{
 		makeBlock(
 			"2026-02-19", "Test entry",
 			"This is some body content for testing tokens.",

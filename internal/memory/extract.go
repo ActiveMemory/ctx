@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/memory"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/heading"
 	"github.com/ActiveMemory/ctx/internal/io"
 )
 
@@ -88,7 +88,7 @@ func extractPendingTasks(content string, max int) []string {
 // Returns:
 //   - []string: entry titles within the recency window
 func extractRecentEntries(content string, max int) []string {
-	blocks := index.ParseEntryBlocks(content)
+	blocks := heading.ParseEntryBlocks(content)
 	cutoff := time.Now().AddDate(
 		0, 0, -memory.PublishRecentDays,
 	).Format(cfgTime.DateFormat)

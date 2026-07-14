@@ -6,7 +6,7 @@
 
 package score
 
-import "github.com/ActiveMemory/ctx/internal/index"
+import "github.com/ActiveMemory/ctx/internal/heading"
 
 // Entry is an entry block with a computed relevance score.
 //
@@ -15,7 +15,7 @@ import "github.com/ActiveMemory/ctx/internal/index"
 //   - Score: Combined recency + relevance score (0.0-2.0)
 //   - Tokens: Estimated token count
 type Entry struct {
-	index.EntryBlock
+	heading.EntryBlock
 	Score  float64
 	Tokens int
 }

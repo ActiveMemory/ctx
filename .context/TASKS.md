@@ -2608,11 +2608,33 @@ shipped.
 
 ### Misc
 
+- [x] [Epic F] ctx index: docs (remove reindex, add ctx index) + final build/lint/test gate (T23-T24). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
+
+- [x] [Epic E] ctx index: strip INDEX blocks from .context files, remove marker constants, add guards (T19-T22). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
+
+- [x] [Epic D] ctx index: new 'ctx index <file>' command with --depth/--json + error handling (T13-T18). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
+
+- [x] [Epic C] ctx index: detach entry-write path from index blocks + delete block-maintenance API (T09-T12). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
+
+- [x] [Epic B] ctx index: remove reindex command surfaces — ctx reindex / decision reindex / learning reindex (T05-T08). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
+
+- [x] [Epic A] ctx index: rename internal/index→internal/heading + generic ATX heading matcher (T01-T04). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
+
+- [ ] ctx-remember nudge live-credit: the check-ceremony nudge is journal-driven (ScanJournalsForCeremonies over recent IMPORTED journals), so it can't credit the current live session's /ctx-remember and misfires until the session is imported. Have the /ctx-remember skill (or ctx) touch the ceremony throttle/marker when it runs live, so the signal reflects the current session instead of waiting for journal import. See internal/cli/system/cmd/checkceremony/run.go (remindedFile/ThrottleID) #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-220031
+
+- [ ] ctx-remember nudge self-suppress: the check-ceremony hook fires the 'try starting with /ctx-remember' relay even on the prompt that IS /ctx-remember, because entity.HookInput doesn't parse the UserPromptSubmit 'prompt' field (only session_id + tool_input.command). Add Prompt to HookInput and skip the ceremony nudge when the prompt starts with /ctx-remember or /ctx:ctx-remember. See internal/cli/system/cmd/checkceremony/run.go + internal/entity/hook.go #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-220031
+
+- [ ] ctx list/search: richer query surface over knowledge files (filtering, full-text) layered on top of the thin `ctx index` heading-projector — successor to the queued 'CLI-projected list/search' idea; index ships first as the projection primitive #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-215523
+
+- [ ] Re-sign the release tags (v0.1.0 through v0.8.0 and latest): the 2026-07-06 DCO history rewrite stripped their GPG signatures when the tagged commits changed SHA. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-214523
+
+- [ ] Create a /ctx-pr skill: scaffold a PR body from the branch's commits, Spec: trailers, and closed TASKS, written to inbox/ (gitignored) for the user to paste. MUST enforce the no-agent-signoff convention: no 'Co-Authored-By' and no 'Generated with ...' footer, per CONSTITUTION Process Invariants. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-213149
+
 - [ ] New orchestrator skill /ctx-architecture-deep-dive: wrap the three-pass architecture arc (/ctx-architecture principal → /ctx-architecture-enrich → /ctx-architecture-failure-analysis) plus the synthesis step (milestone-readiness note → /ctx-task-out --milestone <next>) into one parameterized skill with machine-checkable preconditions (code-intel MCP actually serving the repo, index fresh vs HEAD, synced tree, fresh session). Prior art: zhc/os docs/runbooks/architecture-deep-dive.md — a runbook whose pasted prompt rotted within ONE milestone (needed a 'Historical' banner because it hard-codes milestone facts like 'M0b is untasked'); a skill that derives milestone state from specs/plans/ at runtime doesn't rot. The site recipe architecture-deep-dive documents the arc as prose — this skill would be its ceremony (see the 'unceremonied pipeline step' learning). os prototypes a project-local version first and folds lessons back here. #priority:medium #session:6c276362 #branch:main #commit:a0e5cbf9 #added:2026-07-04-210547
 
 - [ ] Skill assets hard-code `npx gitnexus analyze` as the stale-index remedy, but on hosts where GitNexus runs via Docker (tree-sitter@0.21.1 native addon vs Node 24 ABI — no arm64 prebuilt) that command is a silent no-op; os/GITNEXUS.md documents this and both os and ctx expose `make gitnexus-index` → hack|scripts/gitnexus-index.sh instead. Fix the suggestion to be project-aware: point at the repo-local indexing entry point (a `gitnexus-index` make target, an indexing script, or the repo's GITNEXUS.md instructions) and fall back to `npx gitnexus analyze` only when nothing repo-local exists. Sites: internal/assets/claude/skills/ctx-remember/SKILL.md:156, internal/assets/integrations/copilot-cli/skills/ctx-remember/SKILL.md:155, internal/assets/claude/skills/ctx-architecture-enrich/SKILL.md:34+112+130. Found live: /ctx-remember in the os project emitted the broken npx suggestion while the working `make gitnexus-index` existed one directory over. #priority:medium #session:6c276362 #branch:main #commit:a0e5cbf9 #added:2026-07-04-205437
 
-- [ ] Drop the persisted INDEX blocks from DECISIONS.md/LEARNINGS.md;
+- [x] Drop the persisted INDEX blocks from DECISIONS.md/LEARNINGS.md;
   project the index on demand via new CLI verbs instead. The headings
   ARE the index (`## [TS] Title` is one grep away); the stored table
   is 6-7% dead weight on every read (measured 2026-07-04: 5,021B of
@@ -2635,8 +2657,18 @@ shipped.
   recall format tests, hub rendering) before the strip. Obviates the
   2026-03-06 "Consider indexing tasks and conventions" task (opposite
   direction — do NOT add more indexes). Full analysis + plan:
-  inbox/2026-07-04-memory-file-index-drop.md (local only). Needs
-  /ctx-spec + a decision record before implementation.
+  inbox/2026-07-04-memory-file-index-drop.md (local only).
+  Spec: specs/computed-index-projection.md (debated 2026-07-14 via
+  /ctx-plan; brief at .context/briefs/20260714T045513Z-computed-index-projection-over-persisted-blocks.md).
+  Design evolved from this task's build order: HL.1's per-noun
+  `ctx decision/learning list` is replaced by a single GENERIC
+  `ctx index <file>` heading-projector (works for TASKS phases too),
+  and HL.2's `ctx search` is deferred to a separate follow-up task
+  (richer list/search layers on top of the index primitive). The
+  cold-bucket/time-shard idea was killed by a validation pass
+  (~1.5% of entries are genuinely superseded — corpus already GC'd
+  by consolidation). `internal/index` is RENAMED to `internal/heading`
+  (parser retained; block-maintenance half deleted).
   #priority:medium #session:334b20d1 #branch:main #commit:a0e5cbf9
   #added:2026-07-04
 
