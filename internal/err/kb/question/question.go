@@ -58,7 +58,7 @@ func OpenFile(cause error) error {
 // Returns:
 //   - error: wrapped with operator-friendly prefix.
 func WriteRow(cause error) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbQuestionWriteRow), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbQuestionAppendRow), cause)
 }
 
 // ParseQNumber wraps a strconv.Atoi failure while parsing the

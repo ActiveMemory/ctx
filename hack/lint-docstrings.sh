@@ -26,6 +26,12 @@
 
 set -euo pipefail
 
+# Collect every violation first, then fail if any were found. Without
+# this the checks would print findings but still exit 0, letting
+# docstring regressions slip silently through `make audit`. The
+# `{ ...; } || true` wrapper keeps a mid-scan non-zero from aborting
+# the collection so the report stays complete.
+violations="$({
 find internal/ cmd/ -name '*.go' ! -name '*_test.go' ! -name 'doc.go' | sort | while read -r file; do
   grep -n '^func [a-zA-Z]' "$file" | while IFS=: read -r lineno rest; do
     funcname=$(echo "$rest" | sed 's/^func \([A-Za-z0-9_]*\).*/\1/')
@@ -152,3 +158,9 @@ find internal/ cmd/ -name 'doc.go' | sort | while read -r file; do
     echo "SHALLOW_DOC $file ($doclines doc lines, package $pkg)"
   fi
 done 2>/dev/null
+} || true)"
+
+if [ -n "$violations" ]; then
+  printf '%s\n' "$violations"
+  exit 1
+fi

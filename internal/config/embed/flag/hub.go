@@ -18,7 +18,6 @@ const (
 	DescKeyHubStartPeers = "hub.start.peers"
 	// DescKeyHubStopDataDir is the text key for hub stop --data-dir.
 	DescKeyHubStopDataDir = "hub.stop.data-dir"
-	// DescKeyHubRevokeToken is the text key for hub revoke --token.
-	//nolint:gosec // G101: i18n desc key, not a credential
-	DescKeyHubRevokeToken = "hub.revoke.token"
+	// DescKeyHubRevokeAuth is the text key for hub revoke --token.
+	DescKeyHubRevokeAuth = "hub.revoke.token"
 )

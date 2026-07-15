@@ -48,11 +48,9 @@ const FoldEntryPrefix = "- `"
 // mode field with a colon.
 const FoldEntryModePrefix = "`: mode="
 
-// FoldEntryPassModePrefix opens the optional pass-mode field
+// FoldEntryModeAttrPrefix opens the optional pass-mode field
 // in a folded entry's metadata section.
-//
-//nolint:gosec // G101: literal markdown delimiter, not a credential
-const FoldEntryPassModePrefix = ", pass-mode="
+const FoldEntryModeAttrPrefix = ", pass-mode="
 
 // FoldEntryGeneratedAtPrefix opens the generated-at timestamp
 // in a folded entry's metadata section.

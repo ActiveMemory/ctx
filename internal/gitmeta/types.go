@@ -10,6 +10,10 @@ package gitmeta
 // name. Branch is the literal "detached" (see
 // [github.com/ActiveMemory/ctx/internal/config/gitmeta.BranchDetached])
 // when HEAD points at a commit instead of a symbolic ref.
+//
+// Fields:
+//   - SHA: Short commit SHA of HEAD
+//   - Branch: Current branch name, or "detached" when HEAD is detached
 type HeadRef struct {
 	SHA    string
 	Branch string

@@ -20,7 +20,7 @@
 //   - Home: the user's home directory ($HOME)
 //   - CtxDir: overrides the default .context/
 //     directory location ($CTX_DIR)
-//   - CtxTokenBudget: overrides the default token
+//   - CtxBudget: overrides the default token
 //     budget for context window sizing
 //     ($CTX_TOKEN_BUDGET)
 //   - SessionID: active AI session identifier used

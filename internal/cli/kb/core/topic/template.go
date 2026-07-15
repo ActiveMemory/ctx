@@ -25,7 +25,7 @@ import (
 //   - string: substituted body.
 func Substitute(body, name, slug string) string {
 	body = strings.ReplaceAll(body, cfgKbCli.TokenTopicName, name)
-	body = strings.ReplaceAll(body, cfgKbCli.TokenTopicSlug, slug)
+	body = strings.ReplaceAll(body, cfgKbCli.TopicSlugPlaceholder, slug)
 	body = strings.ReplaceAll(body, cfgKbCli.TokenName, name)
 	body = strings.ReplaceAll(body, cfgKbCli.TokenSlug, slug)
 	return body

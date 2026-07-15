@@ -30,6 +30,10 @@ type TriggerInput struct {
 }
 
 // TriggerSession contains session metadata sent to trigger scripts.
+//
+// Fields:
+//   - ID: The session identifier
+//   - Model: The active model name for the session
 type TriggerSession struct {
 	ID    string `json:"id"`
 	Model string `json:"model"`
