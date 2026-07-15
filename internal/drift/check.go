@@ -26,8 +26,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/heading"
 	"github.com/ActiveMemory/ctx/internal/i18n"
-	"github.com/ActiveMemory/ctx/internal/index"
 	ctxIo "github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -272,7 +272,7 @@ func checkFileAge(ctx *entity.Context, report *Report) {
 // checkEntryCount warns when LEARNINGS.md or DECISIONS.md
 // have too many entries.
 //
-// Uses index.ParseEntryBlocks for counting and rc thresholds for limits.
+// Uses heading.ParseEntryBlocks for counting and rc thresholds for limits.
 // A threshold of 0 disables the check for that file.
 //
 // Parameters:
@@ -296,7 +296,7 @@ func checkEntryCount(ctx *entity.Context, report *Report) {
 		if f == nil {
 			continue
 		}
-		blocks := index.ParseEntryBlocks(string(f.Content))
+		blocks := heading.ParseEntryBlocks(string(f.Content))
 		if len(blocks) > c.threshold {
 			report.Warnings = append(report.Warnings, Issue{
 				File: f.Name,

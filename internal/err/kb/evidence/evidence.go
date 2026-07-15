@@ -121,5 +121,5 @@ func OpenIndex(cause error) error {
 // Returns:
 //   - error: wrapped with operator-friendly prefix.
 func WriteRow(cause error) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbEvidenceWriteRow), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbEvidenceAppendRow), cause)
 }

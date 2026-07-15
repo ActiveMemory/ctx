@@ -69,6 +69,33 @@ func (c *Client) Register(
 	return resp, callErr
 }
 
+// Revoke calls the Revoke RPC with the admin token,
+// invalidating the given client's token on the hub.
+//
+// Parameters:
+//   - ctx: context for the call
+//   - adminToken: admin token from hub startup
+//   - clientID: ID of the client to revoke
+//
+// Returns:
+//   - error: non-nil if auth fails or the client is unknown
+func (c *Client) Revoke(
+	ctx context.Context,
+	adminToken string,
+	clientID string,
+) error {
+	resp := &RevokeResponse{}
+	return c.conn.Invoke(
+		ctx,
+		cfgHub.PathRevoke,
+		&RevokeRequest{
+			AdminToken: adminToken,
+			ClientID:   clientID,
+		},
+		resp,
+	)
+}
+
 // Publish calls the Publish RPC.
 //
 // Parameters:

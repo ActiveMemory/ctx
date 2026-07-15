@@ -11,7 +11,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/agent"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/entity"
-	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/heading"
 )
 
 // ParseEntryBlocks parses a context file into entry blocks.
@@ -21,10 +21,12 @@ import (
 //   - fileName: Name of the file to parse (e.g., config.Decision)
 //
 // Returns:
-//   - []index.EntryBlock: Parsed entry blocks; nil if the file is not found
-func ParseEntryBlocks(ctx *entity.Context, fileName string) []index.EntryBlock {
+//   - []heading.EntryBlock: Parsed entry blocks; nil if the file is not found
+func ParseEntryBlocks(
+	ctx *entity.Context, fileName string,
+) []heading.EntryBlock {
 	if f := ctx.File(fileName); f != nil {
-		return index.ParseEntryBlocks(string(f.Content))
+		return heading.ParseEntryBlocks(string(f.Content))
 	}
 	return nil
 }

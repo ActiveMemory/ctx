@@ -15,6 +15,15 @@ package entity
 // failures in the caller's domain-typed errors.
 //
 // Consumed by [github.com/ActiveMemory/ctx/internal/write/kb/row.Append].
+//
+// Fields:
+//   - Header: Table header written when the artifact is created
+//   - NextID: Allocates the next monotonic ID from existing bytes
+//   - Render: Formats one markdown table row (with trailing newline)
+//   - ErrMkdir: Wraps a parent-directory mkdir failure
+//   - ErrRead: Wraps an artifact read failure
+//   - ErrOpen: Wraps an open-for-append failure
+//   - ErrWrite: Wraps a row-write failure
 type KBRowHooks struct {
 	Header   string
 	NextID   func(existing []byte) (string, error)

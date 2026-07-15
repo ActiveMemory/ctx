@@ -163,6 +163,45 @@ func (s *Store) RegisterClient(client ClientInfo) error {
 	return saveJSON(clientsPath(s.dir), s.clients)
 }
 
+// RevokeClient removes a client from the registry by ID,
+// invalidating its token immediately.
+//
+// The client is keyed by ID (a stable identifier) rather than
+// ProjectName (which an operator might rename) or Token (which
+// the operator revoking a leaked credential may not have to
+// hand). On success the token is dropped from tokenIdx, the
+// client is spliced out of the registry, tokenIdx is rebuilt to
+// keep its indices coherent with the shrunk slice, and the
+// registry file is rewritten atomically.
+//
+// Parameters:
+//   - id: ID of the client to revoke
+//
+// Returns:
+//   - error: errHub.UnknownClient if no client has the given
+//     ID, or a persistence error if the rewrite fails
+func (s *Store) RevokeClient(id string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	for i := range s.clients {
+		if s.clients[i].ID != id {
+			continue
+		}
+		delete(s.tokenIdx, s.clients[i].Token)
+		s.clients = append(s.clients[:i], s.clients[i+1:]...)
+		// The splice shifts every element after i down by one,
+		// so tokenIdx still points at stale indices. Rebuild it.
+		// Cheap because the registry is small.
+		s.tokenIdx = make(map[string]int, len(s.clients))
+		for j := range s.clients {
+			s.tokenIdx[s.clients[j].Token] = j
+		}
+		return saveJSONAtomic(clientsPath(s.dir), s.clients)
+	}
+	return errHub.UnknownClient(id)
+}
+
 // ValidateToken checks if a token matches a registered
 // client using constant-time comparison.
 //

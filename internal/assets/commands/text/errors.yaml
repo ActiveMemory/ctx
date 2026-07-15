@@ -3,8 +3,6 @@
 
 err.add.file-not-found:
   short: "context file %s not found. Run 'ctx init' first"
-err.add.index-update:
-  short: 'failed to update index in %s: %w'
 err.add.json-parse:
   short: 'failed to parse JSON payload %s: %w'
 err.add.missing-fields:
@@ -36,15 +34,6 @@ err.fmt.no-files:
   short: 'no context files found in %s'
 err.fmt.needs-formatting:
   short: files need formatting
-err.index.entries-in-block:
-  short: |-
-    %s has entry content between its INDEX:START and INDEX:END markers.
-    Refusing to regenerate the index because that would delete those entries.
-    Move the INDEX:END marker above your entries, then retry.
-err.index.malformed-markers:
-  short: |-
-    %s has missing, duplicated, or out-of-order INDEX:START/INDEX:END markers.
-    Refusing to regenerate the index. Restore a single well-formed marker pair, then retry.
 err.backup.context-dir-not-found:
   short: "context directory not found: %s - run 'ctx init'"
 err.backup.create-archive-dir:
@@ -461,12 +450,6 @@ err.journal.source.event-log-read:
   short: 'reading event log: %w'
 err.journal.source.open-log-file:
   short: 'failed to open log file: %w'
-err.journal.source.reindex-file-not-found:
-  short: "%s not found. Run 'ctx init' first"
-err.journal.source.reindex-file-read:
-  short: 'failed to read %s: %w'
-err.journal.source.reindex-file-write:
-  short: 'failed to write %s: %w'
 err.journal.source.stats-glob:
   short: 'globbing stats files: %w'
 err.reminder.parse-reminders:
@@ -647,6 +630,10 @@ err.hub.internal:
   short: 'internal: %w'
 err.hub.duplicate-project:
   short: 'project already registered: %q'
+err.hub.unknown-client:
+  short: 'unknown client: %q'
+err.hub.admin-token-required:
+  short: 'admin token required: pass --token or set $CTX_HUB_ADMIN_TOKEN'
 err.hub.invalid-peer-action:
   short: "action must be 'add' or 'remove', got %q"
 err.serve.no-running-hub:
@@ -769,7 +756,7 @@ err.kb.evidence.mkdir-dir:
   short: 'mkdir evidence-index parent: %w'
 err.kb.evidence.open-index:
   short: 'open evidence-index: %w'
-err.kb.evidence.write-row:
+err.kb.evidence.append-row:
   short: 'write evidence row: %w'
 err.kb.evidence.parse-id-number:
   short: 'parse EV number %q: %w'
@@ -797,7 +784,7 @@ err.kb.glossary.mkdir-dir:
   short: 'mkdir glossary parent: %w'
 err.kb.glossary.open-file:
   short: 'open glossary: %w'
-err.kb.glossary.write-row:
+err.kb.glossary.append-row:
   short: 'write glossary row: %w'
 err.kb.timeline.read-file:
   short: 'stat timeline: %w'
@@ -805,7 +792,7 @@ err.kb.timeline.mkdir-dir:
   short: 'mkdir timeline parent: %w'
 err.kb.timeline.open-file:
   short: 'open timeline: %w'
-err.kb.timeline.write-row:
+err.kb.timeline.append-row:
   short: 'write timeline row: %w'
 err.kb.sourcemap.read-file:
   short: 'stat source-map: %w'
@@ -813,7 +800,7 @@ err.kb.sourcemap.mkdir-dir:
   short: 'mkdir source-map parent: %w'
 err.kb.sourcemap.open-file:
   short: 'open source-map: %w'
-err.kb.sourcemap.write-row:
+err.kb.sourcemap.append-row:
   short: 'write source-map row: %w'
 err.kb.relationship.read-file:
   short: 'stat relationship-map: %w'
@@ -821,7 +808,7 @@ err.kb.relationship.mkdir-dir:
   short: 'mkdir relationship-map parent: %w'
 err.kb.relationship.open-file:
   short: 'open relationship-map: %w'
-err.kb.relationship.write-row:
+err.kb.relationship.append-row:
   short: 'write relationship-map row: %w'
 err.kb.contradiction.read-file:
   short: 'read contradictions: %w'
@@ -829,7 +816,7 @@ err.kb.contradiction.mkdir-dir:
   short: 'mkdir contradictions parent: %w'
 err.kb.contradiction.open-file:
   short: 'open contradictions: %w'
-err.kb.contradiction.write-row:
+err.kb.contradiction.append-row:
   short: 'write contradictions row: %w'
 err.kb.contradiction.parse-c-number:
   short: 'parse C number %q: %w'
@@ -839,7 +826,7 @@ err.kb.decision.mkdir-dir:
   short: 'mkdir decisions parent: %w'
 err.kb.decision.open-file:
   short: 'open decisions: %w'
-err.kb.decision.write-row:
+err.kb.decision.append-row:
   short: 'write decisions row: %w'
 err.kb.decision.parse-dd-number:
   short: 'parse DD number %q: %w'
@@ -849,7 +836,7 @@ err.kb.question.mkdir-dir:
   short: 'mkdir questions parent: %w'
 err.kb.question.open-file:
   short: 'open questions: %w'
-err.kb.question.write-row:
+err.kb.question.append-row:
   short: 'write questions row: %w'
 err.kb.question.parse-q-number:
   short: 'parse Q number %q: %w'

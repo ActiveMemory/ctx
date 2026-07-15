@@ -29,7 +29,6 @@
 //   - **File operations**: the target context
 //     file does not exist or its index could not
 //     be updated. Constructors: [FileNotFound],
-//     [IndexUpdate].
 //
 // # Wrapping Strategy
 //

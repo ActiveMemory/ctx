@@ -41,10 +41,8 @@
 //
 // # Context Identifiers
 //
-//   - [IndexHeader], [IndexSeparator], [IndexRow],
-//     [ResponseBody]: labels attached to warnings
-//     for traceability in index generation and HTTP
-//     operations.
+//   - [ResponseBody]: label attached to warnings for
+//     traceability in HTTP operations.
 //
 // # Why Centralized
 //

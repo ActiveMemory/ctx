@@ -61,10 +61,10 @@ have been initialized by `ctx init` (otherwise commands return
 | [`ctx compact`](context.md#ctx-compact)       | Archive completed tasks, clean up files                  |
 | [`ctx fmt`](context.md#ctx-fmt)               | Format context files to 80-char line width               |
 | [`ctx task`](context.md#ctx-task)             | Add tasks, mark complete, archive, snapshot              |
-| [`ctx decision`](context.md#ctx-decision)     | Add decisions and reindex `DECISIONS.md`                 |
-| [`ctx learning`](context.md#ctx-learning)     | Add learnings and reindex `LEARNINGS.md`                 |
+| [`ctx decision`](context.md#ctx-decision)     | Add decisions to `DECISIONS.md`                          |
+| [`ctx learning`](context.md#ctx-learning)     | Add learnings to `LEARNINGS.md`                          |
 | [`ctx convention`](context.md#adding-entries) | Add conventions to `CONVENTIONS.md`                      |
-| [`ctx reindex`](context.md#ctx-reindex)       | Regenerate indices for `DECISIONS.md` and `LEARNINGS.md` |
+| [`ctx index`](context.md#ctx-index)           | Project a file's headings as a table of contents         |
 | [`ctx permission`](context.md#ctx-permission) | Permission snapshots (golden image)                      |
 | [`ctx change`](change.md#ctx-change)          | Show what changed since last session                     |
 | [`ctx memory`](memory.md#ctx-memory)          | Bridge Claude Code auto memory into `.context/`          |

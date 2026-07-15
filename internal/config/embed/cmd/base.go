@@ -28,6 +28,8 @@ const (
 	UseSetup = "setup <tool>"
 	// UseInit is the cobra Use string for the init command.
 	UseInit = "init"
+	// UseIndex is the cobra Use string for the index command.
+	UseIndex = "index [FILE]"
 	// UseLoad is the cobra Use string for the load command.
 	UseLoad = "load"
 	// UseLoop is the cobra Use string for the loop command.
@@ -44,8 +46,6 @@ const (
 	UsePause = "pause"
 	// UsePermission is the cobra Use string for the permission command.
 	UsePermission = "permission"
-	// UseReindex is the cobra Use string for the reindex command.
-	UseReindex = "reindex"
 	// UseRemind is the cobra Use string for the remind command.
 	UseRemind = "remind [TEXT]"
 	// UseResume is the cobra Use string for the resume command.
@@ -88,12 +88,12 @@ const (
 	DescKeySetup = "setup"
 	// DescKeyInitialize is the description key for the initialize command.
 	DescKeyInitialize = "initialize"
+	// DescKeyIndex is the description key for the index command.
+	DescKeyIndex = "index"
 	// DescKeyLoad is the description key for the load command.
 	DescKeyLoad = "load"
 	// DescKeyLoop is the description key for the loop command.
 	DescKeyLoop = "loop"
-	// DescKeyReindex is the description key for the reindex command.
-	DescKeyReindex = "reindex"
 	// DescKeyServe is the description key for the serve command.
 	DescKeyServe = "serve"
 	// DescKeyStatus is the description key for the status command.

@@ -94,8 +94,6 @@ config.switched:
   short: 'switched to %s profile'
 confirm.proceed:
   short: 'Proceed? [y/N] '
-drift.cleared:
-  short: ✓ Index cleared (no %s found)
 drift.dead-path:
   short: references path that does not exist
 drift.entry-count:
@@ -104,8 +102,6 @@ drift.missing-file:
   short: required context file is missing
 drift.missing-package:
   short: package %s is not documented
-drift.regenerated:
-  short: ✓ Index regenerated with %d entries
 drift.secret:
   short: may contain secrets (constitution violation)
 drift.stale-age:
@@ -206,7 +202,7 @@ guide.default:
     TRACKING DECISIONS & KNOWLEDGE
       ctx add -t TYPE       Add a decision, learning, convention, or task
       ctx task complete     Mark a task as done in TASKS.md
-      ctx decision reindex  Rebuild the DECISIONS.md index table
+      ctx index FILE        Project a file's headings as a table of contents
 
     BROWSING HISTORY
       ctx journal source    List imported session transcripts

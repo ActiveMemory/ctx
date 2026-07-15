@@ -92,6 +92,28 @@ func saveJSON(path string, src any) error {
 	return io.SafeWriteFile(path, data, fs.PermFile)
 }
 
+// saveJSONAtomic marshals src and writes it to path atomically
+// (temp file + fsync + rename), so a crash or partial write can
+// never leave a truncated file in place. Used for destructive
+// full-file rewrites like client revocation, where a torn write
+// would corrupt the entire registry rather than a single record.
+//
+// Parameters:
+//   - path: file path to write
+//   - src: value to marshal as JSON
+//
+// Returns:
+//   - error: non-nil if marshal or write fails
+func saveJSONAtomic(path string, src any) error {
+	data, marshalErr := json.MarshalIndent(
+		src, "", cfgHub.JSONIndent,
+	)
+	if marshalErr != nil {
+		return marshalErr
+	}
+	return io.SafeWriteFileAtomic(path, data, fs.PermFile)
+}
+
 // appendFile appends data to a file, creating it if needed.
 //
 // Parameters:

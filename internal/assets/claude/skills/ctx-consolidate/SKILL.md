@@ -135,13 +135,9 @@ For each approved group:
 3. **Append originals to archive** at
    `archive/learnings-consolidated-YYYY-MM-DD.md` in the context
    directory (or `decisions-consolidated-YYYY-MM-DD.md`)
-4. **Rebuild the index**:
 
-```bash
-ctx learning reindex
-# or
-ctx decision reindex
-```
+No index rebuild is needed: the quick-reference index is computed on
+demand by `ctx index <file>`, never stored in the file.
 
 ### Step 6: Report Results
 
@@ -191,5 +187,4 @@ Before reporting results:
 - [ ] Waited for explicit user approval per group
 - [ ] Each consolidated entry preserves all unique information
 - [ ] Original entries are archived, not deleted
-- [ ] Ran `ctx reindex` after modifications
 - [ ] Reported what changed and where archives were written

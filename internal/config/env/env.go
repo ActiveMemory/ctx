@@ -14,16 +14,19 @@ const (
 	Home = "HOME"
 	// User is the environment variable for the current username.
 	User = "USER"
-	// CtxTokenBudget is the environment variable for overriding
+	// CtxBudget is the environment variable for overriding
 	// the token budget.
-	//nolint:gosec // G101: env var name, not a credential
-	CtxTokenBudget = "CTX_TOKEN_BUDGET"
+	CtxBudget = "CTX_TOKEN_BUDGET"
 	// SessionID is the environment variable for the active AI session ID.
 	// Used by ctx trace for context linking.
 	SessionID = "CTX_SESSION_ID"
 	// SkipPathCheck is the environment variable that skips the PATH
 	// validation during init. Set to True in tests.
 	SkipPathCheck = "CTX_SKIP_PATH_CHECK"
+	// HubAdmin is the environment variable holding the hub
+	// admin token, used as a fallback when --token is not passed
+	// to admin-gated commands like `ctx hub revoke`.
+	HubAdmin = "CTX_HUB_ADMIN_TOKEN"
 )
 
 // Environment toggle values.

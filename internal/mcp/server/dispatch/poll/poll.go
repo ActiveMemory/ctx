@@ -64,10 +64,14 @@ func (p *Poller) Subscribe(uri string) {
 		}
 	}
 
-	// Start poller if this is the first subscription.
+	// Start poller if this is the first subscription. Capture the
+	// stop channel in a local and hand it to the goroutine so poll
+	// never reads the p.pollStop field unsynchronized (Stop and
+	// Unsubscribe nil it out under the lock).
 	if len(p.subs) == 1 && p.pollStop == nil {
-		p.pollStop = make(chan struct{})
-		go p.poll()
+		stop := make(chan struct{})
+		p.pollStop = stop
+		go p.poll(stop)
 	}
 }
 

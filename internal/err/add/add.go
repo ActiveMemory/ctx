@@ -53,20 +53,6 @@ func JSONParse(path string, cause error) error {
 	)
 }
 
-// IndexUpdate wraps a failure to update the index in a context file.
-//
-// Parameters:
-//   - path: File path where the index update failed
-//   - cause: Underlying error from the write operation
-//
-// Returns:
-//   - error: "failed to update index in <path>: <cause>"
-func IndexUpdate(path string, cause error) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrAddIndexUpdate), path, cause,
-	)
-}
-
 // UnknownType returns an error for an unrecognized entry type.
 //
 // Parameters:

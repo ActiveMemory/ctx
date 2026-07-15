@@ -81,7 +81,7 @@ func load() *CtxRC {
 		logWarn.Warn(cfgWarn.ContextDirResolve, pathErr)
 	}
 
-	if envBudget := os.Getenv(env.CtxTokenBudget); envBudget != "" {
+	if envBudget := os.Getenv(env.CtxBudget); envBudget != "" {
 		budget, parseErr := strconv.Atoi(envBudget)
 		if parseErr == nil && budget > 0 {
 			cfg.TokenBudget = budget

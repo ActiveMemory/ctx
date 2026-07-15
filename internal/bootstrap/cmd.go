@@ -28,7 +28,7 @@ import (
 	writeBootstrap "github.com/ActiveMemory/ctx/internal/write/bootstrap"
 )
 
-// version is set at build time via ldflags:
+// version is set at build time via `ldflags`:
 //
 //	-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$(cat VERSION)
 var version = cfgBootstrap.DefaultVersion
@@ -49,7 +49,7 @@ func RootCmd() *cobra.Command {
 		Long:    long,
 		Example: desc.Example(cmd.DescKeyCtx),
 		Version: version,
-		// Cobra auto-prints returned errors to stderr by default;
+		// Cobra auto-prints returned errors to standard error by default;
 		// main.go also prints them via writeErr.With, producing a
 		// double-printed error. Silence cobra's path so writeErr is
 		// the sole printer. (SilenceUsage stays per-return so

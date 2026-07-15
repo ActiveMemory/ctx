@@ -215,14 +215,13 @@ ctx:
   short: Context - persistent context for AI coding assistants
 decision:
   long: |-
-    Manage the DECISIONS.md file and its quick-reference index.
+    Manage the DECISIONS.md file.
 
-    The decisions file maintains an auto-generated index at the top for quick
-    scanning. Use the subcommands to add entries and manage the index.
+    Use the add subcommand to append entries. A quick-reference index is
+    projected on demand by `ctx index DECISIONS.md`, not stored in the file.
 
     Subcommands:
       add        Add a new decision entry to DECISIONS.md
-      reindex    Regenerate the quick-reference index
 
     Examples:
       ctx decision add "Use PostgreSQL" \
@@ -230,7 +229,6 @@ decision:
         --context "Need a reliable database" \
         --rationale "ACID compliance and JSON support" \
         --consequence "Team needs PostgreSQL training"
-      ctx decision reindex
   short: Manage DECISIONS.md file
 decision.add:
   long: |-
@@ -253,20 +251,6 @@ decision.add:
         --rationale "PostgreSQL offers ACID compliance and JSON support" \
         --consequence "Team needs PostgreSQL training"
   short: Add a new decision entry to DECISIONS.md
-decision.reindex:
-  long: |-
-    Regenerate the quick-reference index at the top of DECISIONS.md.
-
-    The index is a compact table showing date and title for each decision,
-    allowing AI agents to quickly scan entries without reading the full file.
-
-    This command is useful after manual edits to DECISIONS.md or when
-    migrating existing files to use the index format.
-
-    Examples:
-      ctx decision reindex
-  short: Regenerate the quick-reference index
-
 dream:
   long: |-
     Run a gated, proposing memory-consolidation pass over ideas/.
@@ -382,6 +366,7 @@ hub:
       status    Show cluster status
       peer      Add or remove cluster peers
       stepdown  Transfer leadership to another node
+      revoke    Revoke a client token
 
     See `ctx hub <subcommand> --help` for details. For client-side
     setup (register, subscribe, sync, listen, publish), see
@@ -429,6 +414,18 @@ hub.stepdown:
     before the current leader steps down. Use before taking a
     node offline for maintenance.
   short: Transfer leadership
+hub.revoke:
+  long: |-
+    Revoke a client's token, invalidating it immediately.
+
+    Identify the client by its ID (as shown when it was
+    registered). The revoked token stops authenticating on the
+    next request; other clients are unaffected.
+
+    Requires the hub admin token, supplied via --token or the
+    CTX_HUB_ADMIN_TOKEN environment variable. The hub address is
+    read from the saved connection config.
+  short: Revoke a client token
 hook:
   long: |-
     Manage hook-related settings: messages, notifications,
@@ -580,14 +577,13 @@ journal.source:
   short: List and inspect session sources
 learning:
   long: |-
-    Manage the LEARNINGS.md file and its quick-reference index.
+    Manage the LEARNINGS.md file.
 
-    The learning file maintains an auto-generated index at the top for quick
-    scanning. Use the subcommands to add entries and manage the index.
+    Use the add subcommand to append entries. A quick-reference index is
+    projected on demand by `ctx index LEARNINGS.md`, not stored in the file.
 
     Subcommands:
       add        Add a new learning entry to LEARNINGS.md
-      reindex    Regenerate the quick-reference index
 
     Examples:
       ctx learning add "Go embed gotcha" \
@@ -595,7 +591,6 @@ learning:
         --context "Tried to embed files from parent directory" \
         --lesson "go:embed only works with files in same or child directories" \
         --application "Keep embedded files in internal/templates/"
-      ctx learning reindex
   short: Manage LEARNINGS.md file
 learning.add:
   long: |-
@@ -618,19 +613,25 @@ learning.add:
         --lesson "go:embed only works with files in same or child directories" \
         --application "Keep embedded files in internal/templates/, not project root"
   short: Add a new learning entry to LEARNINGS.md
-learning.reindex:
+index:
   long: |-
-    Regenerate the quick-reference index at the top of LEARNINGS.md.
+    Project the Markdown headings of a knowledge file as a computed table
+    of contents.
 
-    The index is a compact table showing date and title for each learning,
-    allowing AI agents to quickly scan entries without reading the full file.
+    ctx index reads any Markdown file and prints its ATX headings in file
+    order — a table of contents recomputed on demand, never stored in the
+    file. One command serves every knowledge file: DECISIONS.md and
+    LEARNINGS.md (## [timestamp] Title entries), CONVENTIONS.md, and
+    TASKS.md (## Phase ... sections).
 
-    This command is useful after manual edits to LEARNINGS.md or when
-    migrating existing files to use the index format.
+    By default only level-2 (##) headings are shown; use --depth 3 to include
+    level-3 (###) sub-headings. Use --json for machine-readable output.
 
     Examples:
-      ctx learning reindex
-  short: Regenerate the quick-reference index
+      ctx index .context/DECISIONS.md
+      ctx index .context/TASKS.md --depth 3
+      ctx index .context/LEARNINGS.md --json
+  short: Project a file's headings as a table of contents
 load:
   long: |-
     Load and display the assembled context
@@ -1074,24 +1075,6 @@ journal.unlock:
       ctx journal unlock abc12345
       ctx journal unlock --all
   short: Remove lock protection from journal entries
-reindex:
-  long: |-
-    Regenerate the quick-reference index at the top of both DECISIONS.md
-    and LEARNINGS.md in a single invocation.
-
-    This is a convenience wrapper around:
-      ctx decision reindex
-      ctx learning reindex
-
-    The index is a compact table showing date and title for each entry,
-    allowing AI agents to quickly scan entries without reading the full file.
-
-    Run this after manual edits to either file or when migrating existing
-    files to use the index format.
-
-    Examples:
-      ctx reindex
-  short: Regenerate indices for DECISIONS.md and LEARNINGS.md
 remind:
   long: |-
     Manage session-scoped reminders stored in .context/reminders.json.

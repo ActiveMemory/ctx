@@ -346,8 +346,6 @@ func TestConstants(t *testing.T) {
 		{"Learning", ctx.Learning, "LEARNINGS.md"},
 		{"PrefixTaskUndone", marker.PrefixTaskUndone, "- [ ]"},
 		{"PrefixTaskDone", marker.PrefixTaskDone, "- [x]"},
-		{"IndexStart", marker.IndexStart, "<!-- INDEX:START -->"},
-		{"IndexEnd", marker.IndexEnd, "<!-- INDEX:END -->"},
 	}
 
 	for _, tt := range tests {

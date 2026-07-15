@@ -58,7 +58,7 @@ func ParsePathArg(arg string) string {
 	return arg[:idx]
 }
 
-// TraceFile runs git log to retrieve commits touching the given file and
+// Trace runs git log to retrieve commits touching the given file and
 // prints context refs for each commit.
 //
 // Parameters:

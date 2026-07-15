@@ -41,9 +41,6 @@
 //   - **ctx:permissions**: the auto-managed allow/
 //     deny entries in `settings.local.json`-style
 //     comments.
-//   - **INDEX:START / INDEX:END**: the
-//     auto-generated index table inside
-//     DECISIONS.md / LEARNINGS.md.
 //
 // # Concurrency
 //
