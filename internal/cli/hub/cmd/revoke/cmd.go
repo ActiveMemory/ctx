@@ -47,7 +47,7 @@ func Cmd() *cobra.Command {
 			// the CTX_HUB_ADMIN_TOKEN environment variable.
 			token := adminToken
 			if token == "" {
-				token = os.Getenv(env.HubAdminToken)
+				token = os.Getenv(env.HubAdmin)
 			}
 			if token == "" {
 				cobraCmd.SilenceUsage = true
@@ -59,7 +59,7 @@ func Cmd() *cobra.Command {
 
 	flagbind.StringFlag(
 		c, &adminToken,
-		cFlag.Token, flag.DescKeyHubRevokeToken,
+		cFlag.Token, flag.DescKeyHubRevokeAuth,
 	)
 
 	return c

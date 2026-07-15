@@ -58,5 +58,5 @@ func OpenFile(cause error) error {
 // Returns:
 //   - error: wrapped with operator-friendly prefix.
 func WriteRow(cause error) error {
-	return fmt.Errorf(desc.Text(text.DescKeyErrKbGlossaryWriteRow), cause)
+	return fmt.Errorf(desc.Text(text.DescKeyErrKbGlossaryAppendRow), cause)
 }

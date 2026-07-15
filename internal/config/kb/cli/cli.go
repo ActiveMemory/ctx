@@ -12,10 +12,9 @@ package cli
 const (
 	// TokenTopicName is the long-form token for the topic name.
 	TokenTopicName = "<TOPIC_NAME>"
-	// TokenTopicSlug is the long-form token for the slug.
+	// TopicSlugPlaceholder is the long-form token for the slug.
 	//
-	//nolint:gosec // G101: angle-bracket placeholder, not a credential
-	TokenTopicSlug = "<TOPIC_SLUG>"
+	TopicSlugPlaceholder = "<TOPIC_SLUG>"
 	// TokenName is the short-form token for the topic name.
 	TokenName = "<NAME>"
 	// TokenSlug is the short-form token for the slug.

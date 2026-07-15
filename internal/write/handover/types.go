@@ -41,6 +41,12 @@ type Entry struct {
 
 // Frontmatter holds the four required frontmatter fields of a
 // handover file.
+//
+// Fields:
+//   - SHA: Commit SHA the handover was written at
+//   - Branch: Git branch the handover was written on
+//   - GeneratedAt: Time the handover was written
+//   - Title: Human-readable handover title
 type Frontmatter struct {
 	SHA         string    `yaml:"sha"`
 	Branch      string    `yaml:"branch"`
@@ -50,6 +56,11 @@ type Frontmatter struct {
 
 // File pairs a handover's on-disk path with parsed frontmatter
 // and the raw body bytes.
+//
+// Fields:
+//   - Path: Absolute path to the handover file
+//   - Frontmatter: Parsed frontmatter block
+//   - Body: Raw markdown body after the frontmatter
 type File struct {
 	Path        string
 	Frontmatter Frontmatter

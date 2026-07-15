@@ -124,7 +124,7 @@ archive_after_days: 14
 // TestGetRC_TokenBudgetEnvOverride: CTX_TOKEN_BUDGET beats .ctxrc.
 func TestGetRC_TokenBudgetEnvOverride(t *testing.T) {
 	declareContext(t, `token_budget: 4000`)
-	t.Setenv(env.CtxTokenBudget, "2000")
+	t.Setenv(env.CtxBudget, "2000")
 	Reset()
 
 	rc := RC()
@@ -284,7 +284,7 @@ func TestGetRC_PartialConfig(t *testing.T) {
 
 func TestGetRC_InvalidEnvBudget(t *testing.T) {
 	declareContext(t, "")
-	t.Setenv(env.CtxTokenBudget, "not-a-number")
+	t.Setenv(env.CtxBudget, "not-a-number")
 	Reset()
 
 	rc := RC()
@@ -298,7 +298,7 @@ func TestGetRC_InvalidEnvBudget(t *testing.T) {
 
 func TestGetRC_NegativeEnvBudget(t *testing.T) {
 	declareContext(t, "")
-	t.Setenv(env.CtxTokenBudget, "-100")
+	t.Setenv(env.CtxBudget, "-100")
 	Reset()
 
 	rc := RC()

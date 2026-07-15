@@ -16,8 +16,8 @@ const (
 	// DescKeyErrKbGlossaryOpenFile wraps an open-for-append
 	// failure.
 	DescKeyErrKbGlossaryOpenFile = "err.kb.glossary.open-file"
-	// DescKeyErrKbGlossaryWriteRow wraps a row-write failure.
-	DescKeyErrKbGlossaryWriteRow = "err.kb.glossary.write-row"
+	// DescKeyErrKbGlossaryAppendRow wraps a row-write failure.
+	DescKeyErrKbGlossaryAppendRow = "err.kb.glossary.append-row"
 )
 
 // Timeline writer DescKeys.
@@ -30,8 +30,8 @@ const (
 	// DescKeyErrKbTimelineOpenFile wraps an open-for-append
 	// failure.
 	DescKeyErrKbTimelineOpenFile = "err.kb.timeline.open-file"
-	// DescKeyErrKbTimelineWriteRow wraps a row-write failure.
-	DescKeyErrKbTimelineWriteRow = "err.kb.timeline.write-row"
+	// DescKeyErrKbTimelineAppendRow wraps a row-write failure.
+	DescKeyErrKbTimelineAppendRow = "err.kb.timeline.append-row"
 )
 
 // Source-map writer DescKeys.
@@ -44,8 +44,8 @@ const (
 	// DescKeyErrKbSourcemapOpenFile wraps an open-for-append
 	// failure.
 	DescKeyErrKbSourcemapOpenFile = "err.kb.sourcemap.open-file"
-	// DescKeyErrKbSourcemapWriteRow wraps a row-write failure.
-	DescKeyErrKbSourcemapWriteRow = "err.kb.sourcemap.write-row"
+	// DescKeyErrKbSourcemapAppendRow wraps a row-write failure.
+	DescKeyErrKbSourcemapAppendRow = "err.kb.sourcemap.append-row"
 )
 
 // Relationship-map writer DescKeys.
@@ -59,9 +59,9 @@ const (
 	// DescKeyErrKbRelationshipOpenFile wraps an open-for-append
 	// failure.
 	DescKeyErrKbRelationshipOpenFile = "err.kb.relationship.open-file"
-	// DescKeyErrKbRelationshipWriteRow wraps a row-write
+	// DescKeyErrKbRelationshipAppendRow wraps a row-write
 	// failure.
-	DescKeyErrKbRelationshipWriteRow = "err.kb.relationship.write-row"
+	DescKeyErrKbRelationshipAppendRow = "err.kb.relationship.append-row"
 )
 
 // Contradiction writer DescKeys.
@@ -75,9 +75,9 @@ const (
 	// DescKeyErrKbContradictionOpenFile wraps an
 	// open-for-append failure.
 	DescKeyErrKbContradictionOpenFile = "err.kb.contradiction.open-file"
-	// DescKeyErrKbContradictionWriteRow wraps a row-write
+	// DescKeyErrKbContradictionAppendRow wraps a row-write
 	// failure.
-	DescKeyErrKbContradictionWriteRow = "err.kb.contradiction.write-row"
+	DescKeyErrKbContradictionAppendRow = "err.kb.contradiction.append-row"
 	// DescKeyErrKbContradictionParseCNumber wraps a
 	// strconv.Atoi failure on a C-### digit string.
 	DescKeyErrKbContradictionParseCNumber = "err.kb.contradiction.parse-c-number"
@@ -93,8 +93,8 @@ const (
 	// DescKeyErrKbDecisionOpenFile wraps an open-for-append
 	// failure.
 	DescKeyErrKbDecisionOpenFile = "err.kb.decision.open-file"
-	// DescKeyErrKbDecisionWriteRow wraps a row-write failure.
-	DescKeyErrKbDecisionWriteRow = "err.kb.decision.write-row"
+	// DescKeyErrKbDecisionAppendRow wraps a row-write failure.
+	DescKeyErrKbDecisionAppendRow = "err.kb.decision.append-row"
 	// DescKeyErrKbDecisionParseDDNumber wraps a strconv.Atoi
 	// failure on a DD-### digit string.
 	DescKeyErrKbDecisionParseDDNumber = "err.kb.decision.parse-dd-number"
@@ -110,8 +110,8 @@ const (
 	// DescKeyErrKbQuestionOpenFile wraps an open-for-append
 	// failure.
 	DescKeyErrKbQuestionOpenFile = "err.kb.question.open-file"
-	// DescKeyErrKbQuestionWriteRow wraps a row-write failure.
-	DescKeyErrKbQuestionWriteRow = "err.kb.question.write-row"
+	// DescKeyErrKbQuestionAppendRow wraps a row-write failure.
+	DescKeyErrKbQuestionAppendRow = "err.kb.question.append-row"
 	// DescKeyErrKbQuestionParseQNumber wraps a strconv.Atoi
 	// failure on a Q-### digit string.
 	DescKeyErrKbQuestionParseQNumber = "err.kb.question.parse-q-number"

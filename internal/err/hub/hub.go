@@ -23,7 +23,7 @@ import (
 //   - error: "generate token: <cause>"
 func GenerateToken(cause error) error {
 	return fmt.Errorf(
-		desc.Text(text.DescKeyErrHubGenerateToken), cause,
+		desc.Text(text.DescKeyErrHubGenerateFailed), cause,
 	)
 }
 
@@ -77,7 +77,7 @@ func UnknownClient(id string) error {
 //   - error: guidance on how to supply the admin token
 func AdminTokenRequired() error {
 	return errors.New(
-		desc.Text(text.DescKeyErrHubAdminTokenRequired),
+		desc.Text(text.DescKeyErrHubAdminRequired),
 	)
 }
 

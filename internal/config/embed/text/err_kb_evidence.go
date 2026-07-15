@@ -23,9 +23,9 @@ const (
 	// DescKeyErrKbEvidenceOpenIndex wraps an open-for-append
 	// failure on the evidence-index.
 	DescKeyErrKbEvidenceOpenIndex = "err.kb.evidence.open-index"
-	// DescKeyErrKbEvidenceWriteRow wraps a row-write failure on
+	// DescKeyErrKbEvidenceAppendRow wraps a row-write failure on
 	// the evidence-index.
-	DescKeyErrKbEvidenceWriteRow = "err.kb.evidence.write-row"
+	DescKeyErrKbEvidenceAppendRow = "err.kb.evidence.append-row"
 	// DescKeyErrKbEvidenceParseIDNumber wraps a strconv.Atoi
 	// failure parsing an EV-### number.
 	DescKeyErrKbEvidenceParseIDNumber = "err.kb.evidence.parse-id-number"

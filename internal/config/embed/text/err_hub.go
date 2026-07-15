@@ -8,9 +8,9 @@ package text
 
 // DescKeys for hub error messages.
 const (
-	// DescKeyErrHubGenerateToken is the text key for token
+	// DescKeyErrHubGenerateFailed is the text key for token
 	// generation failures.
-	DescKeyErrHubGenerateToken = "err.hub.generate-token"
+	DescKeyErrHubGenerateFailed = "err.hub.generate-token"
 	// DescKeyErrHubInternal is the text key for internal hub
 	// errors.
 	DescKeyErrHubInternal = "err.hub.internal"
@@ -20,9 +20,9 @@ const (
 	// DescKeyErrHubUnknownClient is the text key for a
 	// revocation targeting a client ID that is not registered.
 	DescKeyErrHubUnknownClient = "err.hub.unknown-client"
-	// DescKeyErrHubAdminTokenRequired is the text key for an
+	// DescKeyErrHubAdminRequired is the text key for an
 	// admin-gated command invoked with no admin token supplied.
-	DescKeyErrHubAdminTokenRequired = "err.hub.admin-token-required"
+	DescKeyErrHubAdminRequired = "err.hub.admin-token-required"
 	// DescKeyErrHubInvalidPeerAction is the text key for
 	// unrecognized peer action errors.
 	DescKeyErrHubInvalidPeerAction = "err.hub.invalid-peer-action"

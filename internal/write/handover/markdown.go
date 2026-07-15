@@ -89,7 +89,7 @@ func renderBody(entry Entry, folded []entity.CloseoutFile) string {
 			sb.WriteString(cfgHandover.FoldEntryModePrefix)
 			sb.WriteString(f.Frontmatter.Mode)
 			if f.Frontmatter.PassMode != "" {
-				sb.WriteString(cfgHandover.FoldEntryPassModePrefix)
+				sb.WriteString(cfgHandover.FoldEntryModeAttrPrefix)
 				sb.WriteString(f.Frontmatter.PassMode)
 			}
 			sb.WriteString(cfgHandover.FoldEntryGeneratedAtPrefix)
