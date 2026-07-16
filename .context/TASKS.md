@@ -2652,7 +2652,16 @@ shipped.
 
 - [ ] Re-sign the release tags (v0.1.0 through v0.8.0 and latest): the 2026-07-06 DCO history rewrite stripped their GPG signatures when the tagged commits changed SHA. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-214523
 
-- [ ] Create a /ctx-pr skill: scaffold a PR body from the branch's commits, Spec: trailers, and closed TASKS, written to inbox/ (gitignored) for the user to paste. MUST enforce the no-agent-signoff convention: no 'Co-Authored-By' and no 'Generated with ...' footer, per CONSTITUTION Process Invariants. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-213149
+- [x] Create a /ctx-pr skill: scaffold a PR body from the branch's commits, Spec: trailers, and closed TASKS, written to inbox/ (gitignored) for the user to paste. MUST enforce the no-agent-signoff convention: no 'Co-Authored-By' and no 'Generated with ...' footer, per CONSTITUTION Process Invariants. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-213149
+  DONE 2026-07-15 (session 87e465a0). Shipped as REPO-INTERNAL _ctx-pr
+  (.claude/skills/_ctx-pr/SKILL.md, `_` prefix = not bundled in the plugin;
+  chosen over a shipped ctx-pr because it hard-enforces ctx's own CONSTITUTION
+  conventions + writes to the ctx-repo inbox/). Derives the body from
+  git log <base>..HEAD (subjects/bodies/Spec: trailers), the deduped specs,
+  and the [ ]→[x] TASKS diff; writes inbox/pr-<branch>-<UTCstamp>.md. Hard
+  constraints in a self-check block: no Co-Authored-By / agent sign-off /
+  "Generated with…" footer, no git push / gh pr create, empty base..HEAD
+  refuses to fabricate. Spec: specs/ctx-pr-skill.md.
 
 - [ ] New orchestrator skill /ctx-architecture-deep-dive: wrap the three-pass architecture arc (/ctx-architecture principal → /ctx-architecture-enrich → /ctx-architecture-failure-analysis) plus the synthesis step (milestone-readiness note → /ctx-task-out --milestone <next>) into one parameterized skill with machine-checkable preconditions (code-intel MCP actually serving the repo, index fresh vs HEAD, synced tree, fresh session). Prior art: zhc/os docs/runbooks/architecture-deep-dive.md — a runbook whose pasted prompt rotted within ONE milestone (needed a 'Historical' banner because it hard-codes milestone facts like 'M0b is untasked'); a skill that derives milestone state from specs/plans/ at runtime doesn't rot. The site recipe architecture-deep-dive documents the arc as prose — this skill would be its ceremony (see the 'unceremonied pipeline step' learning). os prototypes a project-local version first and folds lessons back here. #priority:medium #session:6c276362 #branch:main #commit:a0e5cbf9 #added:2026-07-04-210547
 
