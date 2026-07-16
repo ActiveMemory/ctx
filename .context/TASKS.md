@@ -2509,7 +2509,16 @@ DR-kb session a5736210 closeouts under
   directly update the docs whenever it makes sense.
 - [ ] Human: Do a documentation audit for AI-generated artifacts. #important
   #not-urgent
-- [ ] Human: test `ctx init` on a fresh ubuntu install.
+- [x] Human: test `ctx init` on a fresh ubuntu install.
+  DONE 2026-07-15 (session 87e465a0). This machine is bare-metal fresh
+  Ubuntu; ctx 0.8.1 installed at /usr/local/bin/ctx. Smoke-tested in a
+  throwaway temp git repo: `ctx init` created all 9 canonical files +
+  steering + kb scaffold + templates, wired .claude/settings.local.json
+  (plugin enabled, statusline), CLAUDE.md, Makefile, and 9 .gitignore
+  entries; detected the Claude plugin (0.8.1, hot-reload). Follow-on
+  `ctx status` (9 files, 22 invariants), `ctx agent` (packet rendered,
+  unfilled steering tombstones correctly skipped), and `ctx drift`
+  (11 checks PASSED, no drift) all clean. Temp repo removed.
 - [ ] Human: These shall be done before a release cut. Especially when the
   amount of code generated is around hundreds of thousands of lines of code,
   we need to sit down and spend as much time as needed. For two reasons:
