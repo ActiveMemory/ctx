@@ -87,6 +87,36 @@ func ScanJournalsForCeremonies(files []string) (remember, wrapUp bool) {
 	return
 }
 
+// InvokedByPrompt reports whether the given UserPromptSubmit prompt
+// is itself an invocation of a ctx ceremony slash command
+// (/ctx-remember or /ctx-wrap-up), in either the bare (/ctx-remember)
+// or plugin-scoped (/ctx:ctx-remember) form.
+//
+// It compares against the prompt's first whitespace-delimited token, so
+// a command with trailing arguments still matches while unrelated text
+// that merely contains the command name (prose, or /ctx-remembering)
+// does not.
+//
+// Parameters:
+//   - prompt: the raw UserPromptSubmit prompt text
+//
+// Returns:
+//   - bool: true if the prompt's first token is a ceremony command
+func InvokedByPrompt(prompt string) bool {
+	fields := strings.Fields(prompt)
+	if len(fields) == 0 {
+		return false
+	}
+	first := fields[0]
+	for _, cmd := range []string{ceremony.RememberCmd, ceremony.WrapUpCmd} {
+		if first == ceremony.SlashPrefix+cmd ||
+			first == ceremony.PluginSlashPrefix+cmd {
+			return true
+		}
+	}
+	return false
+}
+
 // Emit builds a ceremony nudge message box based on which
 // ceremonies (remember, wrapUp) are missing from recent sessions.
 //

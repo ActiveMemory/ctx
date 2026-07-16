@@ -49,6 +49,17 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
+	// Live-session credit + self-suppression: when the current prompt is
+	// itself a ceremony command, the operator is running the ceremony
+	// now. Touch the day marker to credit it (the imported-journal scan
+	// below lags until import) and return without nudging, so the very
+	// prompt that runs /ctx-remember is never answered with a nudge to
+	// run /ctx-remember.
+	if coreCeremony.InvokedByPrompt(input.Prompt) {
+		internalIo.TouchFile(remindedFile)
+		return nil
+	}
+
 	journalDir := filepath.Join(ctxDir, dir.Journal)
 	files := coreCeremony.RecentJournalFiles(
 		journalDir, ceremony.JournalLookback,

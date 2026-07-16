@@ -12,9 +12,13 @@ package entity
 // Fields:
 //   - SessionID: Claude Code session identifier
 //   - ToolInput: Tool-specific fields from the invocation
+//   - Prompt: Raw prompt text on UserPromptSubmit events (empty for
+//     tool-triggered hooks). Lets prompt-driven hooks recognize when the
+//     current prompt is itself a ctx ceremony command.
 type HookInput struct {
 	SessionID string    `json:"session_id"`
 	ToolInput ToolInput `json:"tool_input"`
+	Prompt    string    `json:"prompt"`
 }
 
 // ToolInput contains the tool-specific fields from a Claude Code hook

@@ -2629,9 +2629,24 @@ shipped.
 
 - [x] [Epic A] ctx index: rename internal/index→internal/heading + generic ATX heading matcher (T01-T04). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
 
-- [ ] ctx-remember nudge live-credit: the check-ceremony nudge is journal-driven (ScanJournalsForCeremonies over recent IMPORTED journals), so it can't credit the current live session's /ctx-remember and misfires until the session is imported. Have the /ctx-remember skill (or ctx) touch the ceremony throttle/marker when it runs live, so the signal reflects the current session instead of waiting for journal import. See internal/cli/system/cmd/checkceremony/run.go (remindedFile/ThrottleID) #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-220031
+- [x] ctx-remember nudge live-credit: the check-ceremony nudge is journal-driven (ScanJournalsForCeremonies over recent IMPORTED journals), so it can't credit the current live session's /ctx-remember and misfires until the session is imported. Have the /ctx-remember skill (or ctx) touch the ceremony throttle/marker when it runs live, so the signal reflects the current session instead of waiting for journal import. See internal/cli/system/cmd/checkceremony/run.go (remindedFile/ThrottleID) #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-220031
+  DONE 2026-07-15 (session 87e465a0). Fixed in ctx itself (not the skill):
+  checkceremony.Run now parses the live prompt and, when it IS a ceremony
+  command, touches the daily marker (credits the live session) — no more
+  journal-import lag. Unified with the self-suppress fix below via
+  ceremony.InvokedByPrompt. Verified end-to-end against the built binary.
+  Spec: specs/ceremony-nudge-live-session.md.
 
-- [ ] ctx-remember nudge self-suppress: the check-ceremony hook fires the 'try starting with /ctx-remember' relay even on the prompt that IS /ctx-remember, because entity.HookInput doesn't parse the UserPromptSubmit 'prompt' field (only session_id + tool_input.command). Add Prompt to HookInput and skip the ceremony nudge when the prompt starts with /ctx-remember or /ctx:ctx-remember. See internal/cli/system/cmd/checkceremony/run.go + internal/entity/hook.go #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-220031
+- [x] ctx-remember nudge self-suppress: the check-ceremony hook fires the 'try starting with /ctx-remember' relay even on the prompt that IS /ctx-remember, because entity.HookInput doesn't parse the UserPromptSubmit 'prompt' field (only session_id + tool_input.command). Add Prompt to HookInput and skip the ceremony nudge when the prompt starts with /ctx-remember or /ctx:ctx-remember. See internal/cli/system/cmd/checkceremony/run.go + internal/entity/hook.go #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-220031
+  DONE 2026-07-15 (session 87e465a0). Added Prompt (json:"prompt") to
+  entity.HookInput; checkceremony.Run now returns without nudging when the
+  live prompt is a ceremony command (ceremony.InvokedByPrompt matches the
+  first token against the bare /ctx-remember|/ctx-wrap-up and plugin
+  /ctx:ctx-remember|/ctx:ctx-wrap-up forms — first-token equality, so
+  /ctx-remembering and prose mentions don't match). Verified end-to-end:
+  bare + plugin forms suppress, normal prompt still nudges. Tests:
+  ceremony_test.go (12 cases) + checkceremony/run_test.go. Spec:
+  specs/ceremony-nudge-live-session.md.
 
 - [ ] ctx list/search: richer query surface over knowledge files (filtering, full-text) layered on top of the thin `ctx index` heading-projector — successor to the queued 'CLI-projected list/search' idea; index ships first as the projection primitive #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-215523
 
