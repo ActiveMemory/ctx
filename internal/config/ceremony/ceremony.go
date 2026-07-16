@@ -17,4 +17,9 @@ const (
 	RememberCmd = "ctx-remember"
 	// WrapUpCmd is the command name scanned in journals for /ctx-wrap-up usage.
 	WrapUpCmd = "ctx-wrap-up"
+	// SlashPrefix is the bare slash-command form, e.g. /ctx-remember.
+	SlashPrefix = "/"
+	// PluginSlashPrefix is the plugin-scoped slash-command form, e.g.
+	// /ctx:ctx-remember.
+	PluginSlashPrefix = "/ctx:"
 )

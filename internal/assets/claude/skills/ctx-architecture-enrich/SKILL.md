@@ -31,9 +31,11 @@ to questions never asked.
 - After `/ctx-architecture` or `/ctx-architecture principal` has
   produced artifacts
 - After a code-intelligence MCP has indexed the project
-  (canonical: GitNexus via `gitnexus analyze --embeddings`;
-  equivalents apply their own indexing step) and architecture
-  artifacts already exist
+  (canonical: GitNexus, via the repo's own indexing entry point if
+  it has one — a `make gitnexus-index` target, a script, or its
+  `GITNEXUS.md` — else `gitnexus analyze --embeddings`; equivalents
+  apply their own indexing step) and architecture artifacts already
+  exist
 - When the user says "enrich the architecture", "run enrichment
   pass", "add graph data", "quantify the danger zones"
 - When DANGER-ZONES.md exists but lacks blast radius numbers
@@ -108,9 +110,10 @@ If no code-intelligence MCP is connected:
 This skill requires a code-intelligence MCP (e.g., GitNexus,
 sourcegraph-cody, or equivalent). None is connected.
 
-If you have GitNexus, configure the MCP and run:
+If you have GitNexus, configure the MCP and index the repo with
+its own entry point if it has one (a `make gitnexus-index` target,
+a script, or its GITNEXUS.md), else run:
   gitnexus analyze --embeddings
-  (or your Docker wrapper if the npm binary isn't viable)
 If you use a different code-intelligence MCP, configure it
 per its docs and re-run this skill.
 ```
@@ -128,8 +131,9 @@ For GitNexus, if the index is stale (commits after last index):
   GitNexus index is stale (last indexed: <date>, <N> commits
   since). Results would be unreliable.
 
-  Run `gitnexus analyze` (or your Docker wrapper if the npm
-  binary isn't viable) to update, then re-run this skill.
+  Reindex with the repo's own entry point (a `make gitnexus-index`
+  target, a script, or its GITNEXUS.md) if it has one, else run
+  `gitnexus analyze`; then re-run this skill.
   ```
 
 (For non-GitNexus code-intelligence MCPs, apply the same

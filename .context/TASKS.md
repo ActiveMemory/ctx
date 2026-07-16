@@ -2509,7 +2509,16 @@ DR-kb session a5736210 closeouts under
   directly update the docs whenever it makes sense.
 - [ ] Human: Do a documentation audit for AI-generated artifacts. #important
   #not-urgent
-- [ ] Human: test `ctx init` on a fresh ubuntu install.
+- [x] Human: test `ctx init` on a fresh ubuntu install.
+  DONE 2026-07-15 (session 87e465a0). This machine is bare-metal fresh
+  Ubuntu; ctx 0.8.1 installed at /usr/local/bin/ctx. Smoke-tested in a
+  throwaway temp git repo: `ctx init` created all 9 canonical files +
+  steering + kb scaffold + templates, wired .claude/settings.local.json
+  (plugin enabled, statusline), CLAUDE.md, Makefile, and 9 .gitignore
+  entries; detected the Claude plugin (0.8.1, hot-reload). Follow-on
+  `ctx status` (9 files, 22 invariants), `ctx agent` (packet rendered,
+  unfilled steering tombstones correctly skipped), and `ctx drift`
+  (11 checks PASSED, no drift) all clean. Temp repo removed.
 - [ ] Human: These shall be done before a release cut. Especially when the
   amount of code generated is around hundreds of thousands of lines of code,
   we need to sit down and spend as much time as needed. For two reasons:
@@ -2620,19 +2629,52 @@ shipped.
 
 - [x] [Epic A] ctx index: rename internal/index→internal/heading + generic ATX heading matcher (T01-T04). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
 
-- [ ] ctx-remember nudge live-credit: the check-ceremony nudge is journal-driven (ScanJournalsForCeremonies over recent IMPORTED journals), so it can't credit the current live session's /ctx-remember and misfires until the session is imported. Have the /ctx-remember skill (or ctx) touch the ceremony throttle/marker when it runs live, so the signal reflects the current session instead of waiting for journal import. See internal/cli/system/cmd/checkceremony/run.go (remindedFile/ThrottleID) #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-220031
+- [x] ctx-remember nudge live-credit: the check-ceremony nudge is journal-driven (ScanJournalsForCeremonies over recent IMPORTED journals), so it can't credit the current live session's /ctx-remember and misfires until the session is imported. Have the /ctx-remember skill (or ctx) touch the ceremony throttle/marker when it runs live, so the signal reflects the current session instead of waiting for journal import. See internal/cli/system/cmd/checkceremony/run.go (remindedFile/ThrottleID) #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-220031
+  DONE 2026-07-15 (session 87e465a0). Fixed in ctx itself (not the skill):
+  checkceremony.Run now parses the live prompt and, when it IS a ceremony
+  command, touches the daily marker (credits the live session) — no more
+  journal-import lag. Unified with the self-suppress fix below via
+  ceremony.InvokedByPrompt. Verified end-to-end against the built binary.
+  Spec: specs/ceremony-nudge-live-session.md.
 
-- [ ] ctx-remember nudge self-suppress: the check-ceremony hook fires the 'try starting with /ctx-remember' relay even on the prompt that IS /ctx-remember, because entity.HookInput doesn't parse the UserPromptSubmit 'prompt' field (only session_id + tool_input.command). Add Prompt to HookInput and skip the ceremony nudge when the prompt starts with /ctx-remember or /ctx:ctx-remember. See internal/cli/system/cmd/checkceremony/run.go + internal/entity/hook.go #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-220031
+- [x] ctx-remember nudge self-suppress: the check-ceremony hook fires the 'try starting with /ctx-remember' relay even on the prompt that IS /ctx-remember, because entity.HookInput doesn't parse the UserPromptSubmit 'prompt' field (only session_id + tool_input.command). Add Prompt to HookInput and skip the ceremony nudge when the prompt starts with /ctx-remember or /ctx:ctx-remember. See internal/cli/system/cmd/checkceremony/run.go + internal/entity/hook.go #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-220031
+  DONE 2026-07-15 (session 87e465a0). Added Prompt (json:"prompt") to
+  entity.HookInput; checkceremony.Run now returns without nudging when the
+  live prompt is a ceremony command (ceremony.InvokedByPrompt matches the
+  first token against the bare /ctx-remember|/ctx-wrap-up and plugin
+  /ctx:ctx-remember|/ctx:ctx-wrap-up forms — first-token equality, so
+  /ctx-remembering and prose mentions don't match). Verified end-to-end:
+  bare + plugin forms suppress, normal prompt still nudges. Tests:
+  ceremony_test.go (12 cases) + checkceremony/run_test.go. Spec:
+  specs/ceremony-nudge-live-session.md.
 
 - [ ] ctx list/search: richer query surface over knowledge files (filtering, full-text) layered on top of the thin `ctx index` heading-projector — successor to the queued 'CLI-projected list/search' idea; index ships first as the projection primitive #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-215523
 
 - [ ] Re-sign the release tags (v0.1.0 through v0.8.0 and latest): the 2026-07-06 DCO history rewrite stripped their GPG signatures when the tagged commits changed SHA. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-214523
 
-- [ ] Create a /ctx-pr skill: scaffold a PR body from the branch's commits, Spec: trailers, and closed TASKS, written to inbox/ (gitignored) for the user to paste. MUST enforce the no-agent-signoff convention: no 'Co-Authored-By' and no 'Generated with ...' footer, per CONSTITUTION Process Invariants. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-213149
+- [x] Create a /ctx-pr skill: scaffold a PR body from the branch's commits, Spec: trailers, and closed TASKS, written to inbox/ (gitignored) for the user to paste. MUST enforce the no-agent-signoff convention: no 'Co-Authored-By' and no 'Generated with ...' footer, per CONSTITUTION Process Invariants. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-213149
+  DONE 2026-07-15 (session 87e465a0). Shipped as REPO-INTERNAL _ctx-pr
+  (.claude/skills/_ctx-pr/SKILL.md, `_` prefix = not bundled in the plugin;
+  chosen over a shipped ctx-pr because it hard-enforces ctx's own CONSTITUTION
+  conventions + writes to the ctx-repo inbox/). Derives the body from
+  git log <base>..HEAD (subjects/bodies/Spec: trailers), the deduped specs,
+  and the [ ]→[x] TASKS diff; writes inbox/pr-<branch>-<UTCstamp>.md. Hard
+  constraints in a self-check block: no Co-Authored-By / agent sign-off /
+  "Generated with…" footer, no git push / gh pr create, empty base..HEAD
+  refuses to fabricate. Spec: specs/ctx-pr-skill.md.
 
 - [ ] New orchestrator skill /ctx-architecture-deep-dive: wrap the three-pass architecture arc (/ctx-architecture principal → /ctx-architecture-enrich → /ctx-architecture-failure-analysis) plus the synthesis step (milestone-readiness note → /ctx-task-out --milestone <next>) into one parameterized skill with machine-checkable preconditions (code-intel MCP actually serving the repo, index fresh vs HEAD, synced tree, fresh session). Prior art: zhc/os docs/runbooks/architecture-deep-dive.md — a runbook whose pasted prompt rotted within ONE milestone (needed a 'Historical' banner because it hard-codes milestone facts like 'M0b is untasked'); a skill that derives milestone state from specs/plans/ at runtime doesn't rot. The site recipe architecture-deep-dive documents the arc as prose — this skill would be its ceremony (see the 'unceremonied pipeline step' learning). os prototypes a project-local version first and folds lessons back here. #priority:medium #session:6c276362 #branch:main #commit:a0e5cbf9 #added:2026-07-04-210547
 
-- [ ] Skill assets hard-code `npx gitnexus analyze` as the stale-index remedy, but on hosts where GitNexus runs via Docker (tree-sitter@0.21.1 native addon vs Node 24 ABI — no arm64 prebuilt) that command is a silent no-op; os/GITNEXUS.md documents this and both os and ctx expose `make gitnexus-index` → hack|scripts/gitnexus-index.sh instead. Fix the suggestion to be project-aware: point at the repo-local indexing entry point (a `gitnexus-index` make target, an indexing script, or the repo's GITNEXUS.md instructions) and fall back to `npx gitnexus analyze` only when nothing repo-local exists. Sites: internal/assets/claude/skills/ctx-remember/SKILL.md:156, internal/assets/integrations/copilot-cli/skills/ctx-remember/SKILL.md:155, internal/assets/claude/skills/ctx-architecture-enrich/SKILL.md:34+112+130. Found live: /ctx-remember in the os project emitted the broken npx suggestion while the working `make gitnexus-index` existed one directory over. #priority:medium #session:6c276362 #branch:main #commit:a0e5cbf9 #added:2026-07-04-205437
+- [x] Skill assets hard-code `npx gitnexus analyze` as the stale-index remedy, but on hosts where GitNexus runs via Docker (tree-sitter@0.21.1 native addon vs Node 24 ABI — no arm64 prebuilt) that command is a silent no-op; os/GITNEXUS.md documents this and both os and ctx expose `make gitnexus-index` → hack|scripts/gitnexus-index.sh instead. Fix the suggestion to be project-aware: point at the repo-local indexing entry point (a `gitnexus-index` make target, an indexing script, or the repo's GITNEXUS.md instructions) and fall back to `npx gitnexus analyze` only when nothing repo-local exists. Sites: internal/assets/claude/skills/ctx-remember/SKILL.md:156, internal/assets/integrations/copilot-cli/skills/ctx-remember/SKILL.md:155, internal/assets/claude/skills/ctx-architecture-enrich/SKILL.md:34+112+130. Found live: /ctx-remember in the os project emitted the broken npx suggestion while the working `make gitnexus-index` existed one directory over. #priority:medium #session:6c276362 #branch:main #commit:a0e5cbf9 #added:2026-07-04-205437
+  DONE 2026-07-15 (session 87e465a0). Reworded all four sites (ctx-remember
+  companion-check suggestion; enrich precondition, no-MCP block, and >5-commit
+  hard-stop) to prefer the repo's own indexing entry point (make gitnexus-index
+  target / script / GITNEXUS.md) and fall back to bare `gitnexus analyze` only
+  when none exists — kept generic since these ship to arbitrary projects. (npx
+  itself was already gone via the 2026-07-06 de-npx pass; this is the
+  project-aware follow-up.) Copilot ctx-remember copy regenerated via
+  sync-copilot-skills; check-copilot-skills green. Spec:
+  specs/gitnexus-project-aware-reindex.md.
 
 - [x] Drop the persisted INDEX blocks from DECISIONS.md/LEARNINGS.md;
   project the index on demand via new CLI verbs instead. The headings
