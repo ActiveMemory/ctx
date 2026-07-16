@@ -45,6 +45,46 @@ For significant decisions:
 
 -->
 
+## [2026-07-15-000000] Live ceremony credit reuses the daily throttle marker, suppressing the day's other ceremony nudge
+
+**Status**: Accepted
+
+**Context**: The `check-ceremony` hook nudges the operator to open
+sessions with `/ctx-remember` and close them with `/ctx-wrap-up`. It was
+journal-driven only, so it self-nudged on the very prompt that ran a
+ceremony and kept nudging until the session was journal-imported. The
+fix (specs/ceremony-nudge-live-session.md) parses the live prompt and,
+when it is a ceremony command, credits it immediately. The question was
+*how* to record that live credit.
+
+**Alternatives Considered**:
+- Reuse the existing per-day throttle marker (`ceremony-reminded`):
+  touching it on a live ceremony credits the session and settles the
+  ceremony question for the day. Pros: zero new state; one guard;
+  matches the check's existing once-per-day cadence. Cons: crediting a
+  live `/ctx-remember` also suppresses a would-be `/ctx-wrap-up` nudge
+  for the rest of that day (and vice-versa).
+- Per-ceremony live markers (separate remember/wrap-up credit): Pros:
+  the other ceremony can still nudge the same day. Cons: new state files,
+  a second throttle axis, and more moving parts for a coarse daily nudge.
+
+**Decision**: Reuse the single daily throttle marker. On a live ceremony
+prompt, `check-ceremony` touches `ceremony-reminded` and returns without
+nudging.
+
+**Rationale**: The check is a deliberately coarse daily cadence, not a
+per-ceremony ledger. An operator actively running one ceremony does not
+need to be nagged about the other on that same prompt, and the marker's
+"settled for today" semantics already express exactly that. The extra
+state a per-ceremony scheme buys is not worth it for a once-a-day hint.
+
+**Consequence**: Running either ceremony live suppresses both ceremony
+nudges for the rest of that day. This is intended; the trade-off is
+documented in the spec's Trade-off section. If a per-ceremony cadence is
+ever wanted, this is the decision to revisit.
+
+**Related**: See spec specs/ceremony-nudge-live-session.md.
+
 ## [2026-07-04-152957] Statusline informs, never gates
 
 **Status**: Accepted
