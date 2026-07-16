@@ -152,8 +152,11 @@ whatever you have connected.
    2026-05-23 "MCP gateway not worth the coupling cost").
 4. For GitNexus specifically: if it responds but the current repo
    is not indexed or the index is stale, suggest:
-   > "GitNexus index is stale: run `gitnexus analyze` (or your
-   > Docker wrapper if the npm binary isn't viable) to rehydrate."
+   > "GitNexus index is stale: reindex with the repo's own entry
+   > point — a `make gitnexus-index` target, an indexing script, or
+   > the steps in its `GITNEXUS.md` — if it has one; otherwise run
+   > `gitnexus analyze`. (On hosts where the npm binary can't build,
+   > the repo-local Docker path is the reliable runner.)"
 
 Present companion status as a one-line note after the readback
 only when there's something actionable (stale index). Absent
