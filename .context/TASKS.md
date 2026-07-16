@@ -2650,7 +2650,18 @@ shipped.
 
 - [ ] ctx list/search: richer query surface over knowledge files (filtering, full-text) layered on top of the thin `ctx index` heading-projector — successor to the queued 'CLI-projected list/search' idea; index ships first as the projection primitive #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-13-215523
 
-- [ ] Re-sign the release tags (v0.1.0 through v0.8.0 and latest): the 2026-07-06 DCO history rewrite stripped their GPG signatures when the tagged commits changed SHA. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-214523
+- [x] Re-sign the release tags (v0.1.0 through v0.8.0 and latest): the 2026-07-06 DCO history rewrite stripped their GPG signatures when the tagged commits changed SHA. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-214523
+  DONE 2026-07-15 (session 87e465a0). All 8 annotated tags (latest, v0.1.0,
+  v0.1.1, v0.1.2, v0.2.0, v0.3.0, v0.6.0, v0.8.0) were annotated-but-unsigned
+  after the rewrite. Re-signed each FAITHFULLY: preserved the exact target
+  commit, tagger identity (older tags stay alekhinejose@gmail.com, newer
+  jose@ctx.ist — the signing key carries both UIDs), tagger date+tz, and
+  message (extracted from the object, rebuilt with --cleanup=verbatim + per-tag
+  GIT_COMMITTER_NAME/EMAIL/DATE). Verified all 8: `git tag -v` = Good signature
+  AND object-minus-signature byte-identical to the pre-resign backup (only a
+  signature was added). LOCAL only — pushing the re-signed tags to origin
+  (git push origin --tags --force) is the maintainer's step; force needed
+  because origin holds the unsigned versions.
 
 - [x] Create a /ctx-pr skill: scaffold a PR body from the branch's commits, Spec: trailers, and closed TASKS, written to inbox/ (gitignored) for the user to paste. MUST enforce the no-agent-signoff convention: no 'Co-Authored-By' and no 'Generated with ...' footer, per CONSTITUTION Process Invariants. #session:2cff382a #branch:fix/jumbo-diff-review-fixes #commit:945850af #added:2026-07-06-213149
   DONE 2026-07-15 (session 87e465a0). Shipped as REPO-INTERNAL _ctx-pr
