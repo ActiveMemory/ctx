@@ -17,6 +17,26 @@ DO NOT UPDATE FOR:
 
 ---
 
+## [2026-07-17-081010] An insert helper that returns content[:i]+x instead of content[:i]+x+content[i:] silently drops the tail
+
+**Context**: insert.AfterHeader (the fallback beforeFirstEntry takes for a knowledge file with no ## [ entries) returned content[:insertPoint]+entry, truncating the file at the insertion point and discarding everything after it. Masked in practice because a ctx-init'd file has nothing after its comment block, so the dropped tail was empty; it bites the moment any non-entry section sits below the preamble of an as-yet-entry-less file. Same family as the LEARNINGS clobber bug index.Validate guards: silent memory loss, git-only recovery.
+
+**Lesson**: A string-splice 'insert' must reattach the tail. content[:i]+x is append-with-truncation, NOT insert. The sibling Task() splice did it right (content[:i]+x+sep+content[i:]); AfterHeader was the odd one out and nobody noticed because the package had ZERO tests. EOF-anchored fixtures mask the bug precisely because the tail is empty there.
+
+**Application**: Audit any result built from content[:i] for a matching content[i:] on the other side of the inserted text; a lone content[:i] is the smell. Test insert/splice helpers with a NON-empty tail, not just an EOF-anchored fixture. When touching a data-mutating helper with no tests, adding the test is part of the fix, not optional.
+
+---
+
+## [2026-07-17-081010] Uninitialized desc.Text() returns empty, and strings.Index(s, "") == 0 makes anchor-based inserts silently match at offset 0
+
+**Context**: Writing a layout proof for the insert package, both cases passed on the first run — for the wrong reason. A *_test.go that never calls lookup.Init() (via TestMain) gets "" back from every desc.Text() call, because the embedded asset lookup is uninitialized in that test binary. Anchor logic such as beforeFirstEntry does strings.Index(content, desc.Text(headingKey)); with a "" needle that returns 0, so 'insert before the anchor' prepends to the whole file (above the H1) and any assertion of the form 'entry appears before X' passes trivially.
+
+**Lesson**: strings.Index(s, "") == 0: an empty needle 'matches' at the start of any string. So a text-driven test whose helper resolves labels through desc.Text MUST initialize the asset lookup, or it exercises a degenerate offset-0 code path that production never takes — and passes for the wrong reason. This nearly caused a false 'measurement gate validated' report when the gate was in fact broken.
+
+**Application**: Any package test that calls desc.Text (directly, or transitively through the code under test) needs a TestMain calling lookup.Init() (see internal/cli/system/core/session/testmain_test.go for the pattern). When a text/anchor-driven test passes suspiciously easily, dump desc.Text() of the keys involved and assert they are non-empty before trusting the assertions.
+
+---
+
 ## [2026-07-16-120001] OpenCode plugin integration gotchas (consolidated)
 
 **Consolidated from**: 7 entries (2026-04-26 to 2026-04-29)

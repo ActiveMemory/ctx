@@ -17,12 +17,15 @@ import (
 	"github.com/ActiveMemory/ctx/internal/inspect"
 )
 
-// AfterHeader finds a header line and inserts content after it.
+// AfterHeader finds a header line and inserts content after it,
+// preserving any content that follows the insertion point.
 //
 // Skips blank lines and HTML comment blocks (<!-- ... -->) between the header
 // and the insertion point, so new entries land after index tables, format
 // guides, and other comment-wrapped metadata. Falls back to appending at the
-// end if the header is not found.
+// end if the header is not found. When content already follows the insertion
+// point, the entry is separated from it by a "---" rule; when nothing
+// follows, the entry is appended as-is.
 //
 // Parameters:
 //   - content: Existing file content
@@ -69,7 +72,23 @@ func AfterHeader(content, entry, header string) []byte {
 		insertPoint = inspect.SkipWhitespace(content, insertPoint)
 	}
 
-	return []byte(content[:insertPoint] + entry)
+	// Preserve whatever follows the insertion point. Returning
+	// content[:insertPoint]+entry truncated the file here, silently
+	// discarding the tail: on an entry-less knowledge file any section
+	// below the preamble was destroyed by an add. An empty tail keeps
+	// the original byte-for-byte output, so only the losing shape
+	// changes. See specs/fix-afterheader-tail-truncation.md.
+	tail := content[insertPoint:]
+	if tail == "" {
+		return []byte(content[:insertPoint] + entry)
+	}
+
+	return []byte(
+		content[:insertPoint] + entry +
+			token.NewlineLF + token.Separator +
+			token.NewlineLF + token.NewlineLF +
+			tail,
+	)
 }
 
 // AppendAtEnd appends an entry at the end of content.
