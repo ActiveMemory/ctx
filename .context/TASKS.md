@@ -2940,6 +2940,17 @@ sweep completes. No new flags.
 - [ ] KB convention: pinned upstream corpus for grounding — document a snapshot mode (dated local copy of high-churn upstream docs as the citable byte-stream) in KB rules; no code needed #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
 
 - [ ] Progressive disclosure for canonical context files: the growth warnings (LEARNINGS/DECISIONS/CONVENTIONS over threshold) are NOT redundancy — consolidation only got LEARNINGS 98→88 because the entries are distinct, dense signal. The real lever is a structural pass: canonical files carry a tight summary/index and detail loads on demand (via `ctx index`/`ctx search` projection + an archive/detail tier). Manual design exercise first (/ctx-brainstorm → spec), then codify the repeatable procedure as a new skill (e.g. /ctx-progressive-disclosure). This exercise IS the baseline for the skill. #priority:medium #session:87e465a0 #branch:main #added:2026-07-16
+  DESIGN DONE 2026-07-16 (session 87e465a0): /ctx-brainstorm run to
+  completion (Understanding Lock → approaches → stress-test → design).
+  Spec: specs/progressive-disclosure.md. Decision: DECISIONS.md
+  [2026-07-16-215955]. Shape: each canonical root becomes BOUNDED —
+  staging zone (where `add` already writes, zero code change) + `## Themes`
+  gists+links; bodies roll out to .context/<noun>/<theme>.md; staging IS
+  the watermark (no state file); structure self-similar so nesting is
+  available but deferred. Scope LEARNINGS/DECISIONS/CONVENTIONS; excludes
+  CONSTITUTION + TASKS. IMPLEMENTATION STILL OPEN — phasing sketched in
+  the spec (guards+invariants first, then the pass-as-skill dry-run, then
+  rollout). The skill itself is the final deliverable.
 
 - [ ] Journal parser schema drift: `ctx journal import` reports "Schema drift detected" — Claude Code transcripts now emit fields/records the parser doesn't recognize: unknown fields classifierMetaLines, session_id, toolDenialKind; unknown record type file-history-delta; unknown block type fallback. Import still works but silently ignores them. Update internal/journal parser to recognize (or explicitly skip) the new CC schema; run `ctx journal schema check` for the full report. #priority:medium #session:87e465a0 #branch:main #added:2026-07-16
 
