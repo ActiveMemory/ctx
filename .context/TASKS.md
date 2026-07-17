@@ -2951,16 +2951,16 @@ land first.
 in its range is `[x]` or `[o]` in `specs/plans/pd-m1.md`. The plan — not
 this list — is the single source of truth for milestone progress.
 
-- [ ] [E1] Structural vocabulary, types, error sentinels (T01–T03). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+- [x] [E1] Structural vocabulary, types, error sentinels (T01–T03). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
 
-- [ ] [E2] Root parser + Validate precondition (T04–T06). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+- [x] [E2] Root parser + Validate precondition (T04–T06). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
 
-- [ ] [E3] Cross-file invariants: pairing, uniqueness, links (T07–T09). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+- [x] [E3] Cross-file invariants: pairing, uniqueness, links (T07–T09). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
 
 - [x] [E4] Layout proofs — the add-path de-risking; MEASUREMENT GATE: if these fail, the "zero change to add" premise is wrong and the spec's Layout section must be revisited via /ctx-plan (T10–T12). Plan: specs/plans/pd-m1.md #priority:high #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
   DONE 2026-07-17: gate FIRED (T10 empty-staging destroyed ## Themes), root cause was the pre-existing insert.AfterHeader tail-truncation bug — fixed separately (specs/fix-afterheader-tail-truncation.md, merged), T10–T12 now green unchanged. Design premise holds.
 
-- [ ] [E5] doc.go, compliance wiring, milestone gate (T13–T15). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+- [x] [E5] doc.go, compliance wiring, milestone gate (T13–T15). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
 
 - [ ] Progressive disclosure for canonical context files: the growth warnings (LEARNINGS/DECISIONS/CONVENTIONS over threshold) are NOT redundancy — consolidation only got LEARNINGS 98→88 because the entries are distinct, dense signal. The real lever is a structural pass: canonical files carry a tight summary/index and detail loads on demand (via `ctx index`/`ctx search` projection + an archive/detail tier). Manual design exercise first (/ctx-brainstorm → spec), then codify the repeatable procedure as a new skill (e.g. /ctx-progressive-disclosure). This exercise IS the baseline for the skill. #priority:medium #session:87e465a0 #branch:main #added:2026-07-16
   DESIGN DONE 2026-07-16 (session 87e465a0): /ctx-brainstorm run to

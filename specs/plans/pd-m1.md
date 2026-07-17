@@ -19,13 +19,13 @@ layout proof land first.
 DoD (confirmed by measurement or by the user — never derived from task
 completion):
 
-- [ ] `make lint` reports 0 issues and `go test ./...` is green
-- [ ] The **layout proof** passes for all three kinds, with populated
+- [x] `make lint` reports 0 issues and `go test ./...` is green
+- [x] The **layout proof** passes for all three kinds, with populated
       *and* empty staging: `add` lands in the staging zone with a
       `## Themes` section present (T10–T12)
-- [ ] `Validate` refuses every malformed shape in the test matrix with
+- [x] `Validate` refuses every malformed shape in the test matrix with
       the correct sentinel (T06)
-- [ ] LEARNINGS.md / DECISIONS.md / CONVENTIONS.md bodies are
+- [x] LEARNINGS.md / DECISIONS.md / CONVENTIONS.md bodies are
       **byte-identical** to milestone start (`git diff --stat` shows no
       change to them)
 
@@ -100,21 +100,21 @@ No CLI surface in M1. No `ctx agent` change (spec Non-Goals).
 
 | id | st | task | deps | files | [P] | acceptance criterion | spec ref |
 |---|---|---|---|---|---|---|---|
-| T01 | [ ] | Structural vocabulary constants | — | `internal/config/disclosure/disclosure.go` | [P] | `go test ./internal/config/disclosure/` asserts `HeadingThemes == "## Themes"` and `HeadingRecent == "## Recent"` | Design/Layout |
-| T02 | [ ] | Error sentinels + i18n text | — | `internal/err/disclosure/*.go`, `commands/text/errors.yaml` | [P] | `go test ./internal/err/...` green; test asserts every `err.disclosure.*` sentinel's `Error()` resolves non-empty via `desc.Text` (no English literal in Go) | CONVENTIONS/Error Handling |
-| T03 | [ ] | `Root`/`Theme`/`Kind` types | — | `internal/disclosure/types.go` | [P] | `go build ./...` green; `make audit` type-file report shows 0 violations | Data model |
-| T04 | [ ] | `Parse` for entry kinds (LEARNINGS/DECISIONS) | T01,T03 | `internal/disclosure/parse.go` | | `go test ./internal/disclosure/ -run TestParse_EntryKind`: fixture splits into preamble/staging/themes **and** round-trips byte-for-byte | Design/Layout |
-| T05 | [ ] | `Parse` for CONVENTIONS kind (`## Themes` then `## Recent`) | T04 | `internal/disclosure/parse.go` | | `-run TestParse_ConventionKind`: round-trips byte-for-byte; `Staging` == the `## Recent` section | Design/Layout |
-| T06 | [ ] | `Validate` precondition | T02,T04,T05 | `internal/disclosure/validate.go` | | `-run TestValidate` table test: every matrix row T06 returns its named sentinel; valid + un-migrated return `nil` | Guards §2 |
-| T07 | [ ] | Invariant: gists ↔ theme files 1:1 | T04 | `internal/disclosure/invariant.go` | | `-run TestInvariant_Pairing`: orphan file → `ErrOrphanThemeFile`; gist w/o file → `ErrMissingThemeFile`; 1:1 → nil; 0↔0 → nil | Invariants |
-| T08 | [ ] | Invariant: entry in exactly one place | T07 | `internal/disclosure/invariant.go` | | `-run TestInvariant_Uniqueness`: dup across staging+theme → `ErrDuplicateEntry`; dup across two themes → `ErrDuplicateEntry`; single → nil | Invariants |
-| T09 | [ ] | Invariant: theme links resolve | T08 | `internal/disclosure/invariant.go` | | `-run TestInvariant_Links`: broken link → `ErrBrokenThemeLink`; resolving link → nil | Invariants |
+| T01 | [x] | Structural vocabulary constants | — | `internal/config/disclosure/disclosure.go` | [P] | `go test ./internal/config/disclosure/` asserts `HeadingThemes == "## Themes"` and `HeadingRecent == "## Recent"` | Design/Layout |
+| T02 | [x] | Error sentinels + i18n text | — | `internal/err/disclosure/*.go`, `commands/text/errors.yaml` | [P] | `go test ./internal/err/...` green; test asserts every `err.disclosure.*` sentinel's `Error()` resolves non-empty via `desc.Text` (no English literal in Go) | CONVENTIONS/Error Handling |
+| T03 | [x] | `Root`/`Theme`/`Kind` types | — | `internal/disclosure/types.go` | [P] | `go build ./...` green; `make audit` type-file report shows 0 violations | Data model |
+| T04 | [x] | `Parse` for entry kinds (LEARNINGS/DECISIONS) | T01,T03 | `internal/disclosure/parse.go` | | `go test ./internal/disclosure/ -run TestParse_EntryKind`: fixture splits into preamble/staging/themes **and** round-trips byte-for-byte | Design/Layout |
+| T05 | [x] | `Parse` for CONVENTIONS kind (`## Themes` then `## Recent`) | T04 | `internal/disclosure/parse.go` | | `-run TestParse_ConventionKind`: round-trips byte-for-byte; `Staging` == the `## Recent` section | Design/Layout |
+| T06 | [x] | `Validate` precondition | T02,T04,T05 | `internal/disclosure/validate.go` | | `-run TestValidate` table test: every matrix row T06 returns its named sentinel; valid + un-migrated return `nil` | Guards §2 |
+| T07 | [x] | Invariant: gists ↔ theme files 1:1 | T04 | `internal/disclosure/invariant.go` | | `-run TestInvariant_Pairing`: orphan file → `ErrOrphanThemeFile`; gist w/o file → `ErrMissingThemeFile`; 1:1 → nil; 0↔0 → nil | Invariants |
+| T08 | [x] | Invariant: entry in exactly one place | T07 | `internal/disclosure/invariant.go` | | `-run TestInvariant_Uniqueness`: dup across staging+theme → `ErrDuplicateEntry`; dup across two themes → `ErrDuplicateEntry`; single → nil | Invariants |
+| T09 | [x] | Invariant: theme links resolve | T08 | `internal/disclosure/invariant.go` | | `-run TestInvariant_Links`: broken link → `ErrBrokenThemeLink`; resolving link → nil | Invariants |
 | T10 | [x] | **Layout proof — LEARNINGS** (populated + empty staging) | — | `internal/cli/add/core/insert/layout_learning_test.go` | [P] | `-run TestAdd_LearningLandsAboveThemes`: after `AppendEntry` on a Themes-bearing fixture, `strings.Index(out,newEntry) < strings.Index(out,"## Themes")` — for **both** populated and empty staging | Design/Layout |
 | T11 | [x] | **Layout proof — DECISIONS** (populated + empty staging) | — | `internal/cli/add/core/insert/layout_decision_test.go` | [P] | `-run TestAdd_DecisionLandsAboveThemes`: same assertion, both cases | Design/Layout |
 | T12 | [x] | **Layout proof — CONVENTIONS** (`## Recent`) | — | `internal/cli/add/core/insert/layout_convention_test.go` | [P] | `-run TestAdd_ConventionLandsInRecent`: after `AppendEntry`, new section index `>` `## Recent` index and `>` `## Themes` index | Design/Layout |
-| T13 | [ ] | `doc.go` for `internal/disclosure` | T04–T09 | `internal/disclosure/doc.go` | | `make audit` green (doc.go quality floor: behavior-grounded, ~25–100 body lines, related-packages section) | CONVENTIONS/Documentation |
-| T14 | [ ] | Compliance wiring — invariants vs the real tree | T06–T09 | `internal/compliance/disclosure_test.go` | | `go test ./internal/compliance/ -run TestDisclosureInvariants` green on today's tree (vacuous pass); proven-both-ways via a planted-violation temp fixture that fails it | Invariants |
-| T15 | [ ] | Milestone gate | T01–T14 | — | | `make lint` = 0 issues; `go test ./...` green; `git diff --stat` shows **no** change to `.context/{LEARNINGS,DECISIONS,CONVENTIONS}.md` | Scope & DoD |
+| T13 | [x] | `doc.go` for `internal/disclosure` | T04–T09 | `internal/disclosure/doc.go` | | `make audit` green (doc.go quality floor: behavior-grounded, ~25–100 body lines, related-packages section) | CONVENTIONS/Documentation |
+| T14 | [x] | Compliance wiring — invariants vs the real tree | T06–T09 | `internal/compliance/disclosure_test.go` | | `go test ./internal/compliance/ -run TestDisclosureInvariants` green on today's tree (vacuous pass); proven-both-ways via a planted-violation temp fixture that fails it | Invariants |
+| T15 | [x] | Milestone gate | T01–T14 | — | | `make lint` = 0 issues; `go test ./...` green; `git diff --stat` shows **no** change to `.context/{LEARNINGS,DECISIONS,CONVENTIONS}.md` | Scope & DoD |
 
 **Execution waves** (topological order): `T01,T02,T03` ∥ → `T04` → `T05`
 → `T06` → `T07` → `T08` → `T09` → `T13,T14` → `T15`.
@@ -171,3 +171,5 @@ every task in its range is `[x]` or `[o]` here.
 | date | what | why |
 |---|---|---|
 | 2026-07-17 | E4 measurement gate **fired** on T10 (empty-staging case): `ctx learning add` destroyed the `## Themes` section. Root cause was **not** a design flaw but a pre-existing bug — `insert.AfterHeader` truncated the tail (`content[:i]+entry`, dropping `content[i:]`). Fixed on `fix/afterheader-tail-truncation` (spec `specs/fix-afterheader-tail-truncation.md`), merged into this branch; T10–T12 now green with unchanged assertions. Deps T10–T12→`—` (they use only `insert.AppendEntry`, not T01). | The gate did its job: it surfaced a real data-loss defect before any content moved. The design premise ("add needs no accommodation") holds, restated as "add needed one bug fix." No `/ctx-plan` re-open needed — the layout design is sound. |
+| 2026-07-17 | Contract refinement: `Parse` is `Parse(content, k) Root` (no error), not `(Root, error)`. Splitting a byte string into segments cannot fail; all refusal lives in `Validate`. An always-nil error return is a smell (and `unparam` would flag it if enabled). Acceptance criteria unaffected (they never referenced the error). Structure decisions are this skill's remit. | Total functions read cleaner and force no dead error-handling on callers. |
+| 2026-07-17 | Finding for **M4** (not M1): the real `CONVENTIONS.md` uses `##` headings, not the `###` prose sections the spec's layout assumed. A `##` convention entry collides with the `## Themes`/`## Recent` delimiters. This graduates the "CONVENTIONS staging-parse" TBD to blocking at M4 and likely needs a spec revisit for the conventions layout. M1 unaffected: un-migrated conventions parse as all-preamble and validate vacuously. | Recorded now so M4 starts from reality; the layout proof T12 tested the *design's* `###` assumption, which the real file does not meet. |
