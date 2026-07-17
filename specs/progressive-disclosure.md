@@ -107,11 +107,19 @@ semantic work there is against their interest.
 
 1. **Append → verify → remove.** Never remove-then-append. Any verify
    failure aborts the whole pass with the root untouched.
-2. **Precondition validate** (`index.Validate`-style): exactly one
+2. **Precondition validate** (`index.Validate`-style): **zero or one**
    `## Themes`; no `## [` below it; staging parses into discrete
    entries. Refuse and fail loud otherwise. **Never regenerate from
    "what I recognized"** — that was the exact root cause of the original
    clobber bug (unparsed content treated as empty).
+
+   Zero `## Themes` means the root is **not yet migrated**: this is the
+   first run, and the pass creates the section (see step 5 of the pass).
+   Two or more is malformed → refuse. Accepting zero is what keeps
+   un-migrated roots passing from day one, so the gate is a signal rather
+   than noise that trains people to ignore it. The *invariants* need no
+   such carve-out: "no `## [` below `## Themes`" and "gists ↔ theme files
+   1:1" are vacuously true on an un-migrated root.
 3. **Crash ordering**: theme-file appends (additive) first, then one
    root rewrite. Worst case = duplication (detectable, recoverable),
    never loss.

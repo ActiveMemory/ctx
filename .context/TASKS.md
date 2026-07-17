@@ -2939,6 +2939,28 @@ sweep completes. No new flags.
 
 - [ ] KB convention: pinned upstream corpus for grounding — document a snapshot mode (dated local copy of high-churn upstream docs as the citable byte-stream) in KB rules; no code needed #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
 
+### Phase PD-M1: Progressive Disclosure — Guards, Invariants, Vocabulary
+
+Plan: `specs/plans/pd-m1.md` · Spec: `specs/progressive-disclosure.md`
+Milestone 1 builds the refusal machinery and proves the layout premise.
+**Nothing moves** — no entry body is relocated and no gist is authored;
+the pass (M2+) that moves bodies is the clobber risk class, so guards
+land first.
+
+**Completion rule**: an epic below is checked `[x]` only when every task
+in its range is `[x]` or `[o]` in `specs/plans/pd-m1.md`. The plan — not
+this list — is the single source of truth for milestone progress.
+
+- [ ] [E1] Structural vocabulary, types, error sentinels (T01–T03). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+
+- [ ] [E2] Root parser + Validate precondition (T04–T06). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+
+- [ ] [E3] Cross-file invariants: pairing, uniqueness, links (T07–T09). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+
+- [ ] [E4] Layout proofs — the add-path de-risking; MEASUREMENT GATE: if these fail, the "zero change to add" premise is wrong and the spec's Layout section must be revisited via /ctx-plan (T10–T12). Plan: specs/plans/pd-m1.md #priority:high #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+
+- [ ] [E5] doc.go, compliance wiring, milestone gate (T13–T15). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+
 - [ ] Progressive disclosure for canonical context files: the growth warnings (LEARNINGS/DECISIONS/CONVENTIONS over threshold) are NOT redundancy — consolidation only got LEARNINGS 98→88 because the entries are distinct, dense signal. The real lever is a structural pass: canonical files carry a tight summary/index and detail loads on demand (via `ctx index`/`ctx search` projection + an archive/detail tier). Manual design exercise first (/ctx-brainstorm → spec), then codify the repeatable procedure as a new skill (e.g. /ctx-progressive-disclosure). This exercise IS the baseline for the skill. #priority:medium #session:87e465a0 #branch:main #added:2026-07-16
   DESIGN DONE 2026-07-16 (session 87e465a0): /ctx-brainstorm run to
   completion (Understanding Lock → approaches → stress-test → design).
