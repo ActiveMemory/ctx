@@ -21,16 +21,16 @@ and tested here first.
 DoD (confirmed by measurement or by the user — never derived from task
 completion):
 
-- [ ] `make lint` = 0 issues, `go test ./...` green, `make audit` passes
-- [ ] `ctx disclosure inspect <file>` reports, for each kind, the staging
+- [x] `make lint` = 0 issues, `go test ./...` green, `make audit` passes
+- [x] `ctx disclosure inspect <file>` reports, for each kind, the staging
       entries and current themes; `--json` emits the same structured
       (E2)
-- [ ] Running `ctx disclosure inspect` against any file **writes
+- [x] Running `ctx disclosure inspect` against any file **writes
       nothing** — the file is byte-identical after (E2 acceptance)
-- [ ] The dry-run skill, exercised on a fixture root, produces a
+- [x] The dry-run skill, exercised on a fixture root, produces a
       theme→entries plan with proposed gists and moves/writes nothing
       (E3, verified by driving it)
-- [ ] `git diff` shows **no change** to `.context/{LEARNINGS,DECISIONS,
+- [x] `git diff` shows **no change** to `.context/{LEARNINGS,DECISIONS,
       CONVENTIONS}.md` across the whole milestone
 
 ## Data model & storage
@@ -116,10 +116,10 @@ No `ctx agent` change (spec Non-Goals). No mover, no write path.
 | T08 | [x] | reject non-knowledge file | T05 | `internal/cli/disclosure/cmd/inspect/run.go`, `run_test.go` | | `inspect README.md` exits non-zero with the kind-inference sentinel | Contracts |
 | T09 | [x] | `doc.go` for the CLI group + disclosure additions | T05 | `internal/cli/disclosure/doc.go`, `cmd/**/doc.go` | | `make audit` doc.go + docstring floors pass | CONVENTIONS |
 | T10 | [x] | command wiring guard stays green | T05 | — | | `go test ./internal/compliance/ -run TestShippedHooksResolve` and command-tree tests green with the new group | CLI |
-| T11 | [ ] | `ctx-digest` skill (dry-run) SKILL.md | T06 | `internal/assets/claude/skills/ctx-digest/SKILL.md` | | skill frontmatter valid (`go test ./internal/assets/... -run Frontmatter`); body describes inspect→propose→gist→plan and states "moves nothing (M2); apply is M3" | Skill |
-| T12 | [ ] | **dry-run drive** (measurement) | T11 | scratchpad fixture | | drive the skill on a fixture root: a theme→entries plan with gists is produced AND the fixture is byte-identical after | Scope/DoD |
-| T13 | [ ] | copilot skill sync | T11 | `internal/assets/integrations/copilot-cli/skills/ctx-digest/**` | | `make check-copilot-skills` green | Skill |
-| T14 | [ ] | milestone gate | T01–T13 | — | | `make lint` 0, `go test ./...` green, `make audit` pass; canonical `.md` byte-identical | Scope/DoD |
+| T11 | [x] |XX `ctx-digest` skill (dry-run) SKILL.md | T06 | `internal/assets/claude/skills/ctx-digest/SKILL.md` | | skill frontmatter valid (`go test ./internal/assets/... -run Frontmatter`); body describes inspect→propose→gist→plan and states "moves nothing (M2); apply is M3" | Skill |
+| T12 | [x] |XX **dry-run drive** (measurement) | T11 | scratchpad fixture | | drive the skill on a fixture root: a theme→entries plan with gists is produced AND the fixture is byte-identical after | Scope/DoD |
+| T13 | [x] |XX copilot skill sync | T11 | `internal/assets/integrations/copilot-cli/skills/ctx-digest/**` | | `make check-copilot-skills` green | Skill |
+| T14 | [x] |XX milestone gate | T01–T13 | — | | `make lint` 0, `go test ./...` green, `make audit` pass; canonical `.md` byte-identical | Scope/DoD |
 
 **Execution waves:** `T01,T02,T04` ∥ → `T03` → `T05` → `T06,T07,T08` →
 `T09,T10` → `T11` → `T12,T13` → `T14`.
