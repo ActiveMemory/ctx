@@ -2981,6 +2981,25 @@ M3, behind this fully-exercised read+plan path.
 
 - [x] [E3] `ctx-digest` dry-run skill + copilot sync + milestone gate; MEASUREMENT GATE T12: dry-run must produce a coherent theme plan and move nothing (T11–T14). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
 
+### Phase PD-M3: Progressive Disclosure — the mover (append→verify→remove + gist write-back)
+
+Plan: `specs/plans/pd-m3.md` · Spec: `specs/progressive-disclosure.md`
+Milestone 3 delivers **the mover**: the first pass that WRITES canonical
+files. It moves staged entries into per-theme tier-1 files and folds their
+gists into `## Themes`, under the spec's guards (validate → append → verify
+byte-presence → single root rewrite; fail loud, no auto-repair). Entry
+kinds only; CONVENTIONS digestion is M4. The write path is guarded by code,
+not agent discipline — the clobber risk class the M1 guards exist for.
+
+**Completion rule**: an epic is `[x]` only when every task in its range is
+`[x]`/`[o]` in `specs/plans/pd-m3.md` (the plan is the source of truth).
+
+- [ ] [E1] Mover core: `Plan`/`Assignment` types, `SplitStaging` lossless byte-cut, `WriteThemeBullet` gist write-back, `Apply` IO mover, abort/first-run/idempotency/invariants/conservation tests (T01–T09). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
+
+- [ ] [E2] `ctx disclosure apply` CLI — reads plan JSON, refuses non-knowledge files + convention kind, write-safe on error, doc.go + wiring guards (T10–T13). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
+
+- [ ] [E3] `ctx-digest` apply-path skill + copilot sync; MEASUREMENT GATE T16: driven apply on a realistic fixture moves entries + writes gists losslessly; real LEARNINGS→DECISIONS rollout is human-gated (T17); milestone gate (T14–T18). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
+
 - [ ] Progressive disclosure for canonical context files: the growth warnings (LEARNINGS/DECISIONS/CONVENTIONS over threshold) are NOT redundancy — consolidation only got LEARNINGS 98→88 because the entries are distinct, dense signal. The real lever is a structural pass: canonical files carry a tight summary/index and detail loads on demand (via `ctx index`/`ctx search` projection + an archive/detail tier). Manual design exercise first (/ctx-brainstorm → spec), then codify the repeatable procedure as a new skill (e.g. /ctx-progressive-disclosure). This exercise IS the baseline for the skill. #priority:medium #session:87e465a0 #branch:main #added:2026-07-16
   DESIGN DONE 2026-07-16 (session 87e465a0): /ctx-brainstorm run to
   completion (Understanding Lock → approaches → stress-test → design).
