@@ -17,6 +17,26 @@ DO NOT UPDATE FOR:
 
 ---
 
+## [2026-07-18-084406] Adding a new internal/ package must clear a fixed audit gauntlet — satisfy it up front
+
+**Context**: The internal/disclosure + internal/cli/disclosure packages tripped ~6 make audit rounds while building pd-m1/m2.
+
+**Lesson**: All mechanically enforced: doc.go per package (compliance), docstring Parameters/Returns floor on ALL funcs incl. unexported (lint-docstrings), string literals must live in config/* (magic-strings), exported API and unexported helpers in SEPARATE files (mixed-visibility), <=80-char lines, DescKey<->YAML bijection (both directions), no dead exports, and TestDocGoSubcommandDrift mis-parses a group doc.go bullet like '- internal/cli/x/cmd/y:' as subcommand claims (bulletRe backtracks on the slash).
+
+**Application**: For a new package, from the first file: one doc.go with a package comment (never a package comment in a regular file); split exported vs unexported functions across files; every literal as a config constant; full Parameters/Returns docstrings; and in a group doc.go use SPACED bullets ('- ctx x sub: ...') not slash-paths, or leave documented empty like kb/doc.go.
+
+---
+
+## [2026-07-18-084406] A /ctx-task-out measurement gate caught a pre-existing bug before it could compound
+
+**Context**: pd-m1's E4 'layout proof' epic was decomposed specifically to prove-or-kill the progressive-disclosure premise that 'ctx add needs zero change' BEFORE building the mover on it. The empty-staging case failed: ctx learning add destroyed the ## Themes section.
+
+**Lesson**: The root cause was a shipped insert.AfterHeader tail-truncation bug (content[:i]+entry, dropping content[i:]), not a design flaw. The gate surfaced a real data-loss defect in ~4 tasks instead of after building on a false premise. Decomposing a milestone's load-bearing assumption into an early falsifiable task pays for itself.
+
+**Application**: When running /ctx-task-out, make the riskiest load-bearing assumption its OWN early task with a falsifiable acceptance check; treat its failure as signal about reality (a real bug), not just about the plan. Log the gate firing in the plan's Amendments.
+
+---
+
 ## [2026-07-17-081010] An insert helper that returns content[:i]+x instead of content[:i]+x+content[i:] silently drops the tail
 
 **Context**: insert.AfterHeader (the fallback beforeFirstEntry takes for a knowledge file with no ## [ entries) returned content[:insertPoint]+entry, truncating the file at the insertion point and discarding everything after it. Masked in practice because a ctx-init'd file has nothing after its comment block, so the dropped tail was empty; it bites the moment any non-entry section sits below the preamble of an as-yet-entry-less file. Same family as the LEARNINGS clobber bug index.Validate guards: silent memory loss, git-only recovery.

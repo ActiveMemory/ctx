@@ -2933,6 +2933,8 @@ sweep completes. No new flags.
 
 ### Future
 
+- [ ] PD-M3: the mover — append->verify->remove + gist write-back; first milestone that WRITES canonical files (clobber risk class). Decompose via /ctx-task-out --milestone pd-m3; consumes the disclosure.Inspection built in M2. #session:87e465a0 #branch:design/progressive-disclosure #commit:2ff82775 #added:2026-07-18-084419
+
 - [ ] Hub curation: immutable promotion ledger (who accepted what, when, why) + mechanical validate floor for shared knowledge; revisit when ctx hub grows team-curation workflows #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
 
 - [ ] ctx-spec-views skill: manager-facing read-models (execution plan, spec briefs, task breakdowns) generated FROM specs/, never source of truth; spec it when someone actually needs the leadership view #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
