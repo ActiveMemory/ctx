@@ -750,6 +750,18 @@ write.status-file-compact:
   short: '  %s %s (%s)'
 write.status-file-verbose:
   short: '  %s %s (%s) [%s tokens, %s]'
+write.disclosure-kind:
+  short: 'Kind: %s'
+write.disclosure-staged-header:
+  short: 'Staged (%d):'
+write.disclosure-staged-line:
+  short: '  [%s] %s'
+write.disclosure-themes-header:
+  short: 'Themes (%d):'
+write.disclosure-theme-line:
+  short: '  %s → %s'
+write.disclosure-none:
+  short: '  (none)'
 write.status-header-block:
   short: |-
     Context Status

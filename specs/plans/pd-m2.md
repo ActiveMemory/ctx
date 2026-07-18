@@ -106,16 +106,16 @@ No `ctx agent` change (spec Non-Goals). No mover, no write path.
 
 | id | st | task | deps | files | [P] | acceptance criterion | spec ref |
 |---|---|---|---|---|---|---|---|
-| T01 | [ ] | `KindFor` filename→Kind | — | `internal/disclosure/kind.go`, `kind_test.go` | [P] | `go test ./internal/disclosure/ -run TestKindFor`: three canonical names map true; others false | Contracts |
-| T02 | [ ] | `StagedEntry` type + `StagedEntries` | — | `internal/disclosure/types.go`, `inspect.go`, `inspect_test.go` | | `-run TestStagedEntries`: N entries in order; empty staging → nil | Data model |
-| T03 | [ ] | `Inspection` type + `Inspect` | T01,T02 | `internal/disclosure/types.go`, `inspect.go` | | `-run TestInspect`: kind/staging/themes match a Parse of the same fixture | Contracts |
-| T04 | [ ] | `Use` constants + kind-inference error sentinel | — | `internal/config/embed/cmd/*.go`, `internal/err/disclosure/*.go`, `commands/text/errors.yaml` | [P] | `go test ./internal/audit/ -run TestDescKeyYAMLLinkage` green (bijection holds) | CONVENTIONS |
-| T05 | [ ] | `ctx disclosure inspect` group + human output | T03,T04 | `internal/cli/disclosure/**`, `internal/bootstrap/group.go` | | `ctx disclosure inspect <fixture>` prints kind, staged list, theme list | CLI |
-| T06 | [ ] | `--json` output | T05 | `internal/cli/disclosure/cmd/inspect/run.go` | | `inspect --json <fixture>` output `json.Unmarshal`s into Inspection with expected values | CLI |
-| T07 | [ ] | write-nothing guarantee | T05 | `internal/cli/disclosure/cmd/inspect/run_test.go` | | integration test: file bytes before == after `inspect` | Scope/DoD |
-| T08 | [ ] | reject non-knowledge file | T05 | `internal/cli/disclosure/cmd/inspect/run.go`, `run_test.go` | | `inspect README.md` exits non-zero with the kind-inference sentinel | Contracts |
-| T09 | [ ] | `doc.go` for the CLI group + disclosure additions | T05 | `internal/cli/disclosure/doc.go`, `cmd/**/doc.go` | | `make audit` doc.go + docstring floors pass | CONVENTIONS |
-| T10 | [ ] | command wiring guard stays green | T05 | — | | `go test ./internal/compliance/ -run TestShippedHooksResolve` and command-tree tests green with the new group | CLI |
+| T01 | [x] | `KindFor` filename→Kind | — | `internal/disclosure/kind.go`, `kind_test.go` | [P] | `go test ./internal/disclosure/ -run TestKindFor`: three canonical names map true; others false | Contracts |
+| T02 | [x] | `StagedEntry` type + `StagedEntries` | — | `internal/disclosure/types.go`, `inspect.go`, `inspect_test.go` | | `-run TestStagedEntries`: N entries in order; empty staging → nil | Data model |
+| T03 | [x] | `Inspection` type + `Inspect` | T01,T02 | `internal/disclosure/types.go`, `inspect.go` | | `-run TestInspect`: kind/staging/themes match a Parse of the same fixture | Contracts |
+| T04 | [x] | `Use` constants + kind-inference error sentinel | — | `internal/config/embed/cmd/*.go`, `internal/err/disclosure/*.go`, `commands/text/errors.yaml` | [P] | `go test ./internal/audit/ -run TestDescKeyYAMLLinkage` green (bijection holds) | CONVENTIONS |
+| T05 | [x] | `ctx disclosure inspect` group + human output | T03,T04 | `internal/cli/disclosure/**`, `internal/bootstrap/group.go` | | `ctx disclosure inspect <fixture>` prints kind, staged list, theme list | CLI |
+| T06 | [x] | `--json` output | T05 | `internal/cli/disclosure/cmd/inspect/run.go` | | `inspect --json <fixture>` output `json.Unmarshal`s into Inspection with expected values | CLI |
+| T07 | [x] | write-nothing guarantee | T05 | `internal/cli/disclosure/cmd/inspect/run_test.go` | | integration test: file bytes before == after `inspect` | Scope/DoD |
+| T08 | [x] | reject non-knowledge file | T05 | `internal/cli/disclosure/cmd/inspect/run.go`, `run_test.go` | | `inspect README.md` exits non-zero with the kind-inference sentinel | Contracts |
+| T09 | [x] | `doc.go` for the CLI group + disclosure additions | T05 | `internal/cli/disclosure/doc.go`, `cmd/**/doc.go` | | `make audit` doc.go + docstring floors pass | CONVENTIONS |
+| T10 | [x] | command wiring guard stays green | T05 | — | | `go test ./internal/compliance/ -run TestShippedHooksResolve` and command-tree tests green with the new group | CLI |
 | T11 | [ ] | `ctx-digest` skill (dry-run) SKILL.md | T06 | `internal/assets/claude/skills/ctx-digest/SKILL.md` | | skill frontmatter valid (`go test ./internal/assets/... -run Frontmatter`); body describes inspect→propose→gist→plan and states "moves nothing (M2); apply is M3" | Skill |
 | T12 | [ ] | **dry-run drive** (measurement) | T11 | scratchpad fixture | | drive the skill on a fixture root: a theme→entries plan with gists is produced AND the fixture is byte-identical after | Scope/DoD |
 | T13 | [ ] | copilot skill sync | T11 | `internal/assets/integrations/copilot-cli/skills/ctx-digest/**` | | `make check-copilot-skills` green | Skill |

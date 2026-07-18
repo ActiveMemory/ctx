@@ -14,6 +14,11 @@ const (
 	UseChange = "change"
 	// UseCompact is the cobra Use string for the compact command.
 	UseCompact = "compact"
+	// UseDisclosure is the cobra Use string for the disclosure command group.
+	UseDisclosure = "disclosure"
+	// UseDisclosureInspect is the cobra Use string for the disclosure
+	// inspect subcommand.
+	UseDisclosureInspect = "inspect [FILE]"
 	// UseDoctor is the cobra Use string for the doctor command.
 	UseDoctor = "doctor"
 	// UseDrift is the cobra Use string for the drift command.
@@ -90,6 +95,11 @@ const (
 	DescKeyInitialize = "initialize"
 	// DescKeyIndex is the description key for the index command.
 	DescKeyIndex = "index"
+	// DescKeyDisclosure is the description key for the disclosure group.
+	DescKeyDisclosure = "disclosure"
+	// DescKeyDisclosureInspect is the description key for the disclosure
+	// inspect subcommand.
+	DescKeyDisclosureInspect = "disclosure-inspect"
 	// DescKeyLoad is the description key for the load command.
 	DescKeyLoad = "load"
 	// DescKeyLoop is the description key for the loop command.

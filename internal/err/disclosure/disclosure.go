@@ -7,6 +7,9 @@
 package disclosure
 
 import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
@@ -54,4 +57,27 @@ const (
 	ErrBrokenThemeLink = entity.Sentinel(
 		text.DescKeyErrDisclosureBrokenThemeLink,
 	)
+
+	// ErrNotAKnowledgeFile: the file handed to `ctx disclosure` is not a
+	// canonical knowledge file (LEARNINGS/DECISIONS/CONVENTIONS). Wrap
+	// with [NotAKnowledgeFile] to name the offending path.
+	ErrNotAKnowledgeFile = entity.Sentinel(
+		text.DescKeyErrDisclosureNotKnowledgeFileMsg,
+	)
 )
+
+// NotAKnowledgeFile wraps [ErrNotAKnowledgeFile] with the offending path
+// and the expected filenames.
+//
+// Parameters:
+//   - path: the file that was not a canonical knowledge file
+//
+// Returns:
+//   - error: wrapping ErrNotAKnowledgeFile for errors.Is matches
+func NotAKnowledgeFile(path string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrDisclosureNotKnowledgeFile),
+		ErrNotAKnowledgeFile,
+		path,
+	)
+}

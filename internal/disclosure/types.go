@@ -31,9 +31,9 @@ const (
 //   - Gist: the "just enough" one-liner conveying the theme
 //   - Link: relative path to the theme file holding the bodies
 type Theme struct {
-	Name string
-	Gist string
-	Link string
+	Name string `json:"name"`
+	Gist string `json:"gist"`
+	Link string `json:"link"`
 }
 
 // Root is a parsed progressive-disclosure root, split into its regions.
@@ -61,4 +61,30 @@ type Root struct {
 	ThemesRaw string
 	Themes    []Theme
 	HasThemes bool
+}
+
+// StagedEntry is one un-digested entry in a root's staging zone,
+// identified for the dry-run pass to propose a theme for.
+//
+// Fields:
+//   - Timestamp: the entry's timestamp (e.g. "2026-07-18-120000")
+//   - Title: the entry's title text
+type StagedEntry struct {
+	Timestamp string `json:"timestamp"`
+	Title     string `json:"title"`
+}
+
+// Inspection is the read-only view of a root the dry-run pass consumes:
+// what kind it is, which entries are staged (awaiting digestion), and
+// which themes already exist. It is the structured form of a Parse,
+// stable across the CLI's JSON output.
+//
+// Fields:
+//   - Kind: the root's kind name ("learning" | "decision" | "convention")
+//   - Staging: the un-digested entries, in file order
+//   - Themes: the current ## Themes (name/gist/link), in file order
+type Inspection struct {
+	Kind    string        `json:"kind"`
+	Staging []StagedEntry `json:"staging"`
+	Themes  []Theme       `json:"themes"`
 }

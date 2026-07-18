@@ -2973,9 +2973,9 @@ M3, behind this fully-exercised read+plan path.
 **Completion rule**: an epic is `[x]` only when every task in its range is
 `[x]`/`[o]` in `specs/plans/pd-m2.md` (the plan is the source of truth).
 
-- [ ] [E1] Disclosure inspect model: KindFor, StagedEntries, Inspect (T01–T04). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
+- [x] [E1] Disclosure inspect model: KindFor, StagedEntries, Inspect (T01–T04). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
 
-- [ ] [E2] `ctx disclosure inspect` CLI — read-only, JSON, write-nothing, non-knowledge-file rejection (T05–T10). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
+- [x] [E2] `ctx disclosure inspect` CLI — read-only, JSON, write-nothing, non-knowledge-file rejection (T05–T10). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
 
 - [ ] [E3] `ctx-digest` dry-run skill + copilot sync + milestone gate; MEASUREMENT GATE T12: dry-run must produce a coherent theme plan and move nothing (T11–T14). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
 

@@ -150,6 +150,10 @@ err.disclosure.missing-theme-file:
   short: 'progressive disclosure: a theme gist in the root has no matching theme file'
 err.disclosure.multiple-themes:
   short: 'progressive disclosure: the root has more than one "## Themes" section'
+err.disclosure.not-knowledge-file-msg:
+  short: 'not a canonical knowledge file'
+err.disclosure.not-knowledge-file:
+  short: '%w: %s (expected LEARNINGS.md, DECISIONS.md, or CONVENTIONS.md)'
 err.disclosure.orphan-theme-file:
   short: 'progressive disclosure: a theme file has no matching gist in the root'
 err.disclosure.staging-unparsable:
