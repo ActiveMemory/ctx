@@ -2933,13 +2933,66 @@ sweep completes. No new flags.
 
 ### Future
 
+- [ ] PD-M3: the mover — append->verify->remove + gist write-back; first milestone that WRITES canonical files (clobber risk class). Decompose via /ctx-task-out --milestone pd-m3; consumes the disclosure.Inspection built in M2. #session:87e465a0 #branch:design/progressive-disclosure #commit:2ff82775 #added:2026-07-18-084419
+
 - [ ] Hub curation: immutable promotion ledger (who accepted what, when, why) + mechanical validate floor for shared knowledge; revisit when ctx hub grows team-curation workflows #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
 
 - [ ] ctx-spec-views skill: manager-facing read-models (execution plan, spec briefs, task breakdowns) generated FROM specs/, never source of truth; spec it when someone actually needs the leadership view #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
 
 - [ ] KB convention: pinned upstream corpus for grounding — document a snapshot mode (dated local copy of high-churn upstream docs as the citable byte-stream) in KB rules; no code needed #priority:low #session:a31b3e67 #branch:main #commit:d800734c #added:2026-07-04-153004
 
+### Phase PD-M1: Progressive Disclosure — Guards, Invariants, Vocabulary
+
+Plan: `specs/plans/pd-m1.md` · Spec: `specs/progressive-disclosure.md`
+Milestone 1 builds the refusal machinery and proves the layout premise.
+**Nothing moves** — no entry body is relocated and no gist is authored;
+the pass (M2+) that moves bodies is the clobber risk class, so guards
+land first.
+
+**Completion rule**: an epic below is checked `[x]` only when every task
+in its range is `[x]` or `[o]` in `specs/plans/pd-m1.md`. The plan — not
+this list — is the single source of truth for milestone progress.
+
+- [x] [E1] Structural vocabulary, types, error sentinels (T01–T03). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+
+- [x] [E2] Root parser + Validate precondition (T04–T06). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+
+- [x] [E3] Cross-file invariants: pairing, uniqueness, links (T07–T09). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+
+- [x] [E4] Layout proofs — the add-path de-risking; MEASUREMENT GATE: if these fail, the "zero change to add" premise is wrong and the spec's Layout section must be revisited via /ctx-plan (T10–T12). Plan: specs/plans/pd-m1.md #priority:high #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+  DONE 2026-07-17: gate FIRED (T10 empty-staging destroyed ## Themes), root cause was the pre-existing insert.AfterHeader tail-truncation bug — fixed separately (specs/fix-afterheader-tail-truncation.md, merged), T10–T12 now green unchanged. Design premise holds.
+
+- [x] [E5] doc.go, compliance wiring, milestone gate (T13–T15). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
+
+### Phase PD-M2: Progressive Disclosure — the dry-run pass (inspect + propose)
+
+Plan: `specs/plans/pd-m2.md` · Spec: `specs/progressive-disclosure.md`
+Milestone 2 delivers the digesting pass in **dry-run only**: a read-only
+`ctx disclosure inspect` CLI and a skill that proposes themes + gists and
+shows the plan — **moving nothing**. The mover (append→verify→remove) is
+M3, behind this fully-exercised read+plan path.
+
+**Completion rule**: an epic is `[x]` only when every task in its range is
+`[x]`/`[o]` in `specs/plans/pd-m2.md` (the plan is the source of truth).
+
+- [x] [E1] Disclosure inspect model: KindFor, StagedEntries, Inspect (T01–T04). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
+
+- [x] [E2] `ctx disclosure inspect` CLI — read-only, JSON, write-nothing, non-knowledge-file rejection (T05–T10). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
+
+- [x] [E3] `ctx-digest` dry-run skill + copilot sync + milestone gate; MEASUREMENT GATE T12: dry-run must produce a coherent theme plan and move nothing (T11–T14). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
+
 - [ ] Progressive disclosure for canonical context files: the growth warnings (LEARNINGS/DECISIONS/CONVENTIONS over threshold) are NOT redundancy — consolidation only got LEARNINGS 98→88 because the entries are distinct, dense signal. The real lever is a structural pass: canonical files carry a tight summary/index and detail loads on demand (via `ctx index`/`ctx search` projection + an archive/detail tier). Manual design exercise first (/ctx-brainstorm → spec), then codify the repeatable procedure as a new skill (e.g. /ctx-progressive-disclosure). This exercise IS the baseline for the skill. #priority:medium #session:87e465a0 #branch:main #added:2026-07-16
+  DESIGN DONE 2026-07-16 (session 87e465a0): /ctx-brainstorm run to
+  completion (Understanding Lock → approaches → stress-test → design).
+  Spec: specs/progressive-disclosure.md. Decision: DECISIONS.md
+  [2026-07-16-215955]. Shape: each canonical root becomes BOUNDED —
+  staging zone (where `add` already writes, zero code change) + `## Themes`
+  gists+links; bodies roll out to .context/<noun>/<theme>.md; staging IS
+  the watermark (no state file); structure self-similar so nesting is
+  available but deferred. Scope LEARNINGS/DECISIONS/CONVENTIONS; excludes
+  CONSTITUTION + TASKS. IMPLEMENTATION STILL OPEN — phasing sketched in
+  the spec (guards+invariants first, then the pass-as-skill dry-run, then
+  rollout). The skill itself is the final deliverable.
 
 - [ ] Journal parser schema drift: `ctx journal import` reports "Schema drift detected" — Claude Code transcripts now emit fields/records the parser doesn't recognize: unknown fields classifierMetaLines, session_id, toolDenialKind; unknown record type file-history-delta; unknown block type fallback. Import still works but silently ignores them. Update internal/journal parser to recognize (or explicitly skip) the new CC schema; run `ctx journal schema check` for the full report. #priority:medium #session:87e465a0 #branch:main #added:2026-07-16
 

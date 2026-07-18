@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/connection"
 	"github.com/ActiveMemory/ctx/internal/cli/convention"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
+	"github.com/ActiveMemory/ctx/internal/cli/disclosure"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/dream"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
@@ -107,6 +108,7 @@ func artifacts() []registration {
 		{task.Cmd, embedCmd.GroupArtifacts},
 		{convention.Cmd, embedCmd.GroupArtifacts},
 		{index.Cmd, embedCmd.GroupArtifacts},
+		{disclosure.Cmd, embedCmd.GroupArtifacts},
 		{kb.Cmd, embedCmd.GroupArtifacts},
 		{handover.Cmd, embedCmd.GroupArtifacts},
 	}

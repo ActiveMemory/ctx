@@ -632,6 +632,28 @@ index:
       ctx index .context/TASKS.md --depth 3
       ctx index .context/LEARNINGS.md --json
   short: Project a file's headings as a table of contents
+disclosure:
+  long: |-
+    Inspect the canonical knowledge files under progressive disclosure.
+
+    A knowledge file's staging zone holds recent, un-digested entries; a
+    ## Themes section carries a gist and a link per theme. ctx disclosure
+    reports that structure so the digesting pass can propose how to fold
+    staged entries into their theme files.
+  short: Inspect knowledge files under progressive disclosure
+disclosure-inspect:
+  long: |-
+    Report a knowledge file's staging entries and current themes.
+
+    ctx disclosure inspect reads a canonical knowledge file (LEARNINGS.md,
+    DECISIONS.md, or CONVENTIONS.md) and prints which entries are staged
+    (awaiting digestion) and which themes already exist. It is read-only
+    and never writes. Use --json for machine-readable output.
+
+    Examples:
+      ctx disclosure inspect .context/LEARNINGS.md
+      ctx disclosure inspect .context/DECISIONS.md --json
+  short: Report a knowledge file's staged entries and themes
 load:
   long: |-
     Load and display the assembled context
