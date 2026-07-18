@@ -2962,6 +2962,23 @@ this list — is the single source of truth for milestone progress.
 
 - [x] [E5] doc.go, compliance wiring, milestone gate (T13–T15). Plan: specs/plans/pd-m1.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-16
 
+### Phase PD-M2: Progressive Disclosure — the dry-run pass (inspect + propose)
+
+Plan: `specs/plans/pd-m2.md` · Spec: `specs/progressive-disclosure.md`
+Milestone 2 delivers the digesting pass in **dry-run only**: a read-only
+`ctx disclosure inspect` CLI and a skill that proposes themes + gists and
+shows the plan — **moving nothing**. The mover (append→verify→remove) is
+M3, behind this fully-exercised read+plan path.
+
+**Completion rule**: an epic is `[x]` only when every task in its range is
+`[x]`/`[o]` in `specs/plans/pd-m2.md` (the plan is the source of truth).
+
+- [ ] [E1] Disclosure inspect model: KindFor, StagedEntries, Inspect (T01–T04). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
+
+- [ ] [E2] `ctx disclosure inspect` CLI — read-only, JSON, write-nothing, non-knowledge-file rejection (T05–T10). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
+
+- [ ] [E3] `ctx-digest` dry-run skill + copilot sync + milestone gate; MEASUREMENT GATE T12: dry-run must produce a coherent theme plan and move nothing (T11–T14). Plan: specs/plans/pd-m2.md #priority:medium #session:87e465a0 #branch:design/progressive-disclosure #added:2026-07-18
+
 - [ ] Progressive disclosure for canonical context files: the growth warnings (LEARNINGS/DECISIONS/CONVENTIONS over threshold) are NOT redundancy — consolidation only got LEARNINGS 98→88 because the entries are distinct, dense signal. The real lever is a structural pass: canonical files carry a tight summary/index and detail loads on demand (via `ctx index`/`ctx search` projection + an archive/detail tier). Manual design exercise first (/ctx-brainstorm → spec), then codify the repeatable procedure as a new skill (e.g. /ctx-progressive-disclosure). This exercise IS the baseline for the skill. #priority:medium #session:87e465a0 #branch:main #added:2026-07-16
   DESIGN DONE 2026-07-16 (session 87e465a0): /ctx-brainstorm run to
   completion (Understanding Lock → approaches → stress-test → design).

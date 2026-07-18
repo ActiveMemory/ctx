@@ -50,6 +50,31 @@ Reading the root **alone** yields compressed history **+** verbatim
 recent delta = a complete current picture, with **no staleness gap**,
 because staging *is* the un-digested remainder by construction.
 
+### Gist format (resolves the M2-blocking "just enough" TBD)
+
+Each theme is exactly one bullet line under `## Themes`:
+
+```
+- <theme-name> — <one-line gist> → [<theme-name>](<noun>/<slug>.md)
+```
+
+- `<theme-name>`: a short kebab-or-words label (e.g. `hooks`, `error
+  handling`).
+- `<one-line gist>`: **one line, a soft ceiling of ~140 chars**, saying
+  what the theme *covers* — the shape of its knowledge, not a list of
+  its entries ("hook mechanics: output channels, key names, compliance
+  wiring", not "entry A; entry B; entry C"). It conveys *whether to
+  drill*, nothing more.
+- The separator is the em-dash metadata separator (`token.MetaSeparator`)
+  before the gist and ` → ` before the link; the link target is
+  `<noun>/<slug>.md` relative to the context dir. This is exactly the
+  shape `disclosure.parseThemeBullet` already parses.
+
+The gist is **authored by the pass** (an LLM summarizing the theme's
+entries), regenerated whenever the theme gains entries. It is stored
+(not recomputed on read) precisely because it is expensive to produce —
+the reconciling rationale in DECISIONS `[2026-07-16-215955]`.
+
 ### Layout (forced by the existing write path)
 
 `ctx X add` must not change. Verified anchors:
