@@ -141,7 +141,8 @@ func renderThemeBullet(a Assignment, noun string) string {
 
 // headingLineOffsets returns the byte offset of every line whose trimmed
 // content equals heading (an exact ATX heading line). Used to find and
-// count region-delimiting headings.
+// count region-delimiting headings. Headings inside an HTML comment are
+// skipped — they are illustrative examples, not structure.
 //
 // Parameters:
 //   - content: the text to scan
@@ -150,10 +151,11 @@ func renderThemeBullet(a Assignment, noun string) string {
 // Returns:
 //   - []int: byte offsets of each matching line's start, in order
 func headingLineOffsets(content, heading string) []int {
+	spans := htmlCommentSpans(content)
 	var offsets []int
 	for i := 0; i < len(content); {
 		line, next := lineAt(content, i)
-		if strings.TrimSpace(line) == heading {
+		if strings.TrimSpace(line) == heading && !insideAnySpan(i, spans) {
 			offsets = append(offsets, i)
 		}
 		if next == -1 {
@@ -165,7 +167,8 @@ func headingLineOffsets(content, heading string) []int {
 }
 
 // firstLinePrefixOffset returns the byte offset of the first line that
-// starts with prefix, or -1.
+// starts with prefix, or -1. A match inside an HTML comment is skipped: a
+// "## [" example in a knowledge file's format guide is not a staging entry.
 //
 // Parameters:
 //   - content: the text to scan
@@ -174,9 +177,10 @@ func headingLineOffsets(content, heading string) []int {
 // Returns:
 //   - int: byte offset of the first matching line, or -1 if none
 func firstLinePrefixOffset(content, prefix string) int {
+	spans := htmlCommentSpans(content)
 	for i := 0; i < len(content); {
 		line, next := lineAt(content, i)
-		if strings.HasPrefix(line, prefix) {
+		if strings.HasPrefix(line, prefix) && !insideAnySpan(i, spans) {
 			return i
 		}
 		if next == -1 {
@@ -185,6 +189,57 @@ func firstLinePrefixOffset(content, prefix string) int {
 		i = next
 	}
 	return -1
+}
+
+// htmlCommentSpans returns the [start, end) byte ranges of every HTML
+// comment (token.HTMLCommentOpen … token.HTMLCommentClose) in content; an
+// unterminated open runs to EOF. The structural heading scans use it to
+// ignore headings that are only illustrative examples inside a comment —
+// e.g. the "## [YYYY-MM-DD] Title" line in a knowledge file's format guide,
+// which must not be mistaken for a staging entry.
+//
+// Parameters:
+//   - content: the text to scan
+//
+// Returns:
+//   - [][2]int: {start, end} byte ranges in order; nil when none
+func htmlCommentSpans(content string) [][2]int {
+	var spans [][2]int
+	for i := 0; i < len(content); {
+		open := strings.Index(content[i:], token.HTMLCommentOpen)
+		if open == -1 {
+			break
+		}
+		start := i + open
+		afterOpen := start + len(token.HTMLCommentOpen)
+		rel := strings.Index(content[afterOpen:], token.HTMLCommentClose)
+		if rel == -1 {
+			spans = append(spans, [2]int{start, len(content)})
+			break
+		}
+		end := afterOpen + rel + len(token.HTMLCommentClose)
+		spans = append(spans, [2]int{start, end})
+		i = end
+	}
+	return spans
+}
+
+// insideAnySpan reports whether byte offset off falls within any of the
+// [start, end) ranges (from htmlCommentSpans).
+//
+// Parameters:
+//   - off: the byte offset to test
+//   - spans: byte ranges to test against
+//
+// Returns:
+//   - bool: true when off is inside a span
+func insideAnySpan(off int, spans [][2]int) bool {
+	for _, s := range spans {
+		if off >= s[0] && off < s[1] {
+			return true
+		}
+	}
+	return false
 }
 
 // lineAt returns the line beginning at byte offset i (without its
