@@ -45,6 +45,20 @@ For significant decisions:
 
 -->
 
+## [2026-07-19-100259] M4 conventions digestion: curated ## -section taxonomy, unified into the entry-kind mover
+
+**Status**: Accepted
+
+**Context**: CONVENTIONS.md is the last unbounded canonical root (390 lines, 18 stable curated ## sections). The M3 mover refuses the convention kind (ErrApplyNotEntryKind). The spec assumed conventions accrete as ### entries under a ## Recent staging zone, but the real file is a curated ## -section taxonomy with no ## Recent and no timestamps — the blocking TBD for M4.
+
+**Decision**: M4 conventions digestion: curated ## -section taxonomy, unified into the entry-kind mover
+
+**Rationale**: Approach A (unify) over a separate convention path or a one-time script: the file already fits the entry-kind preamble|staging|## Themes shape, so parametrizing the mover by a per-kind entry prefix (## for conventions vs ## [) removes special-case code instead of adding a parallel path. Identity = section title (no timestamp). Keep the scanner dumb — no fence detection (a rabbit hole in a destructive parser); byte-conservation plus the human-gated plan review make a dumb scanner safe against false ## boundaries. Curated-taxonomy matches what conventions are: stable, not accreting.
+
+**Consequence**: Retire parseConvention, ConventionLinePrefix and HeadingRecent (## Recent); the three-self-similar-tiers claim becomes literally true. New sentinel ErrDuplicateStagedTitle (fail-loud on duplicate ## titles). heading.ParseEntryBlocks stays untouched (zero regression to the live LEARNINGS/DECISIONS path). ctx convention add joins the unified prepend anchor (insert before the first ## section, skipping the structural ## Themes; fallback AfterHeader), landing new conventions newest-first in staging above ## Themes — correcting the old AppendAtEnd inconsistency (decisions/learnings already prepend). This add-path change is IN M4 scope. specs/progressive-disclosure.md revised accordingly.
+
+---
+
 ## Themes
 
 - package-structure-and-quality-gates — Package taxonomy & quality gates: write/ output, internal/err, config/ constants, doc.go floor, AST audit tests, log split, GraphBuilder interface → [package-structure-and-quality-gates](decisions/package-structure-and-quality-gates.md)
