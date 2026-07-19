@@ -18,6 +18,7 @@ const (
 	Context     = "context"
 	File        = "file"
 	Lesson      = "lesson"
+	Plan        = "plan"
 	Priority    = "priority"
 	Rationale   = "rationale"
 	Section     = "section"

@@ -14,9 +14,11 @@
 //
 //   - ctx disclosure inspect <file>: read-only report of a root's
 //     staged entries and current themes, which the dry-run digesting
-//     pass consumes. The mover (apply) subcommands arrive in a later
-//     milestone.
+//     pass consumes.
+//   - ctx disclosure apply <file> --plan <path|->: the mover — moves a
+//     digest plan's staged entries into per-theme files and folds their
+//     gists into the root, under the append→verify→remove guards.
 //
-// The parse/inspect domain logic lives in internal/disclosure; output
-// rendering in internal/write/disclosure.
+// The parse/inspect/apply domain logic lives in internal/disclosure;
+// output rendering in internal/write/disclosure.
 package disclosure

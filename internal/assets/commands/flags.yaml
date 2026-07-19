@@ -219,6 +219,10 @@ index.depth:
   short: 'Max heading level to include (2 = ## only; 3 adds ###)'
 index.json:
   short: Output headings as JSON
+disclosure-apply.plan:
+  short: 'Digest plan JSON (file path, or - for stdin)'
+disclosure-apply.json:
+  short: Output the apply result as JSON
 status.json:
   short: Output as JSON
 status.verbose:

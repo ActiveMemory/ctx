@@ -654,6 +654,27 @@ disclosure-inspect:
       ctx disclosure inspect .context/LEARNINGS.md
       ctx disclosure inspect .context/DECISIONS.md --json
   short: Report a knowledge file's staged entries and themes
+disclosure-apply:
+  long: |-
+    Apply a digest plan: move staged entries into theme files.
+
+    ctx disclosure apply reads a digest plan (JSON, from --plan or stdin),
+    moves the named staged entries out of a canonical knowledge file
+    (LEARNINGS.md or DECISIONS.md) into per-theme files under
+    .context/<noun>/, and folds each theme's gist into the root's
+    ## Themes section.
+
+    It is the write half of progressive disclosure. The move is guarded:
+    entry bodies are appended to their theme files and verified
+    byte-present before anything is removed from the root, which is
+    rewritten once, last. Any failure leaves the root untouched. It refuses
+    a malformed root and CONVENTIONS.md (a later milestone).
+
+    Examples:
+      ctx disclosure apply .context/LEARNINGS.md --plan plan.json
+      ctx disclosure inspect .context/LEARNINGS.md --json | build-plan |
+        ctx disclosure apply .context/LEARNINGS.md --plan -
+  short: Apply a digest plan, moving staged entries into theme files
 load:
   long: |-
     Load and display the assembled context

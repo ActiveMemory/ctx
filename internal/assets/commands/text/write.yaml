@@ -762,6 +762,8 @@ write.disclosure-theme-line:
   short: '  %s → %s'
 write.disclosure-none:
   short: '  (none)'
+write.disclosure-applied:
+  short: 'Moved %d entries into %d themes: %s'
 write.status-header-block:
   short: |-
     Context Status

@@ -21,6 +21,9 @@ const (
 	DescKeyWriteDisclosureThemeLine = "write.disclosure-theme-line"
 	// DescKeyWriteDisclosureNone marks an empty list.
 	DescKeyWriteDisclosureNone = "write.disclosure-none"
+	// DescKeyWriteDisclosureApplied reports a completed apply: entries
+	// moved, themes touched, and the touched slugs.
+	DescKeyWriteDisclosureApplied = "write.disclosure-applied"
 )
 
 // DescKeys for progressive-disclosure guard and invariant errors.

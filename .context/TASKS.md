@@ -2996,7 +2996,7 @@ not agent discipline — the clobber risk class the M1 guards exist for.
 
 - [x] [E1] Mover core: `Plan`/`Assignment` types, `SplitStaging` lossless byte-cut, `WriteThemeBullet` gist write-back, `Apply` IO mover, abort/first-run/idempotency/invariants/conservation tests (T01–T09). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
 
-- [ ] [E2] `ctx disclosure apply` CLI — reads plan JSON, refuses non-knowledge files + convention kind, write-safe on error, doc.go + wiring guards (T10–T13). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
+- [x] [E2] `ctx disclosure apply` CLI — reads plan JSON, refuses non-knowledge files + convention kind, write-safe on error, doc.go + wiring guards (T10–T13). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
 
 - [ ] [E3] `ctx-digest` apply-path skill + copilot sync; MEASUREMENT GATE T16: driven apply on a realistic fixture moves entries + writes gists losslessly; real LEARNINGS→DECISIONS rollout is human-gated (T17); milestone gate (T14–T18). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
 
