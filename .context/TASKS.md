@@ -2994,7 +2994,7 @@ not agent discipline — the clobber risk class the M1 guards exist for.
 **Completion rule**: an epic is `[x]` only when every task in its range is
 `[x]`/`[o]` in `specs/plans/pd-m3.md` (the plan is the source of truth).
 
-- [ ] [E1] Mover core: `Plan`/`Assignment` types, `SplitStaging` lossless byte-cut, `WriteThemeBullet` gist write-back, `Apply` IO mover, abort/first-run/idempotency/invariants/conservation tests (T01–T09). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
+- [x] [E1] Mover core: `Plan`/`Assignment` types, `SplitStaging` lossless byte-cut, `WriteThemeBullet` gist write-back, `Apply` IO mover, abort/first-run/idempotency/invariants/conservation tests (T01–T09). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
 
 - [ ] [E2] `ctx disclosure apply` CLI — reads plan JSON, refuses non-knowledge files + convention kind, write-safe on error, doc.go + wiring guards (T10–T13). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
 

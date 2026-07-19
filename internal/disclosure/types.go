@@ -88,3 +88,42 @@ type Inspection struct {
 	Staging []StagedEntry `json:"staging"`
 	Themes  []Theme       `json:"themes"`
 }
+
+// Plan is the digest plan the ctx-digest skill authors and Apply
+// executes: per target theme, which staged entries move there and the
+// gist to write back. Entry identity is timestamp+title (joined by
+// cfgDisc.IDSeparator), matching entryIDs and CheckUniqueness.
+//
+// Fields:
+//   - Kind: the root's kind name ("learning" | "decision")
+//   - Assignments: one per target theme; together they partition the
+//     entries the pass moves out of staging
+type Plan struct {
+	Kind        string       `json:"kind"`
+	Assignments []Assignment `json:"assignments"`
+}
+
+// Assignment moves a set of staged entries into one theme and (re)writes
+// that theme's gist bullet in the root's ## Themes.
+//
+// Fields:
+//   - Theme: the theme's name — bullet label, and heading on first use
+//   - Slug: the theme-file basename stem, resolved to <noun>/<slug>.md
+//   - Gist: the authored one-line gist (spec ### Gist format)
+//   - Entries: entry IDs to move here, in file order
+type Assignment struct {
+	Theme   string   `json:"theme"`
+	Slug    string   `json:"slug"`
+	Gist    string   `json:"gist"`
+	Entries []string `json:"entries"`
+}
+
+// ApplyResult reports what a successful Apply did, for CLI output.
+//
+// Fields:
+//   - Moved: the number of entries moved out of staging
+//   - Themes: the theme slugs created or appended, in plan order
+type ApplyResult struct {
+	Moved  int      `json:"moved"`
+	Themes []string `json:"themes"`
+}

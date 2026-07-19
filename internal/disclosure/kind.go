@@ -8,6 +8,7 @@ package disclosure
 
 import (
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
+	cfgDisc "github.com/ActiveMemory/ctx/internal/config/disclosure"
 	cfgEntry "github.com/ActiveMemory/ctx/internal/config/entry"
 )
 
@@ -50,5 +51,27 @@ func (k Kind) String() string {
 		return cfgEntry.Convention
 	default:
 		return ""
+	}
+}
+
+// ThemeDir returns the context-relative subdirectory that holds a kind's
+// theme files (<noun>/<slug>.md). It is false for the convention kind —
+// whose digestion is a later milestone — and for an unknown kind, so the
+// mover refuses rather than write entry bodies to a guessed path.
+//
+// Parameters:
+//   - k: the root kind
+//
+// Returns:
+//   - string: the theme-file subdirectory (meaningful only when ok)
+//   - bool: true for the entry kinds (learning, decision) the mover digests
+func ThemeDir(k Kind) (string, bool) {
+	switch k {
+	case KindLearning:
+		return cfgDisc.ThemeDirLearning, true
+	case KindDecision:
+		return cfgDisc.ThemeDirDecision, true
+	default:
+		return "", false
 	}
 }
