@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	cfgDisc "github.com/ActiveMemory/ctx/internal/config/disclosure"
 	cfgFile "github.com/ActiveMemory/ctx/internal/config/file"
 	cfgFs "github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/token"
@@ -33,8 +32,8 @@ import (
 //   - error: an IO error, or nil
 func appendTheme(path string, a Assignment, moved map[string]string) error {
 	var spans strings.Builder
-	for _, id := range a.Entries {
-		spans.WriteString(moved[id])
+	for _, e := range a.Entries {
+		spans.WriteString(moved[entryID(e)])
 	}
 
 	var payload string
@@ -65,8 +64,8 @@ func verifyThemes(themeDir string, plan Plan, moved map[string]string) error {
 		if readErr != nil {
 			return readErr
 		}
-		for _, id := range a.Entries {
-			if vErr := verifyContains(string(content), moved[id]); vErr != nil {
+		for _, e := range a.Entries {
+			if vErr := verifyContains(string(content), moved[entryID(e)]); vErr != nil {
 				return vErr
 			}
 		}
@@ -138,57 +137,4 @@ func freshThemesBoundary(remaining string) string {
 	default:
 		return blank
 	}
-}
-
-// renderThemeBullet renders one theme bullet line (no trailing newline),
-// in the exact shape parseThemeBullet reads back:
-// "- <theme> — <gist> → [<theme>](<noun>/<slug>.md)".
-//
-// Parameters:
-//   - a: the assignment supplying theme name, gist, and slug
-//   - noun: the theme-file subdirectory for this kind
-//
-// Returns:
-//   - string: the rendered bullet line
-func renderThemeBullet(a Assignment, noun string) string {
-	link := noun + token.Slash + a.Slug + cfgFile.ExtMarkdown
-	return token.PrefixListDash + a.Theme + token.MetaSeparator + a.Gist +
-		cfgDisc.ThemeArrow + cfgDisc.LinkLabelOpen + a.Theme +
-		cfgDisc.LinkOpen + link + cfgDisc.LinkClose
-}
-
-// lineByteOffsets returns the byte offset of the start of each line in
-// content, with a trailing sentinel offset. Index i is the byte offset
-// where line i begins; the value can overshoot len(content) for the
-// synthetic final element, so callers clamp with clampOffset.
-//
-// Parameters:
-//   - content: the text to index
-//
-// Returns:
-//   - []int: byte offsets per line, plus one trailing sentinel
-func lineByteOffsets(content string) []int {
-	lines := strings.Split(content, token.NewlineLF)
-	offs := make([]int, len(lines)+1)
-	for i, ln := range lines {
-		offs[i+1] = offs[i] + len(ln) + len(token.NewlineLF)
-	}
-	return offs
-}
-
-// clampOffset bounds a byte offset to [0, n]. The final line offset from
-// lineByteOffsets overshoots by one newline when content has no trailing
-// newline; clamping keeps slice bounds valid without special-casing.
-//
-// Parameters:
-//   - off: a candidate byte offset
-//   - n: the length to clamp to
-//
-// Returns:
-//   - int: off bounded to [0, n]
-func clampOffset(off, n int) int {
-	if off > n {
-		return n
-	}
-	return off
 }

@@ -30,13 +30,13 @@ func TestApplyInvariants(t *testing.T) {
 	}
 	rootPath := writeRoot(t, dir, migratedRoot())
 
-	idA := idFor("2026-01-01-000000", "Alpha")
-	idB := idFor("2026-01-02-000000", "Beta")
 	plan := disclosure.Plan{
 		Kind: "learning",
 		Assignments: []disclosure.Assignment{
-			{Theme: "context", Slug: "context", Gist: "context entries", Entries: []string{idA}},
-			{Theme: "hooks", Slug: "hooks", Gist: "hook mechanics", Entries: []string{idB}},
+			{Theme: "context", Slug: "context", Gist: "context entries",
+				Entries: []disclosure.StagedEntry{ent("2026-01-01-000000", "Alpha")}},
+			{Theme: "hooks", Slug: "hooks", Gist: "hook mechanics",
+				Entries: []disclosure.StagedEntry{ent("2026-01-02-000000", "Beta")}},
 		},
 	}
 	if _, err := disclosure.Apply(rootPath, plan, dir); err != nil {

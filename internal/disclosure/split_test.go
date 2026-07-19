@@ -28,6 +28,11 @@ func idFor(ts, title string) string {
 	return ts + cfgDisc.IDSeparator + title
 }
 
+// ent builds a staged-entry reference for a plan assignment.
+func ent(ts, title string) disclosure.StagedEntry {
+	return disclosure.StagedEntry{Timestamp: ts, Title: title}
+}
+
 // T02: the byte-cut is lossless — a moved entry's span is verbatim
 // (including the trailing blank lines and "---" separator that
 // ParseEntryBlocks trims), and the remaining staging is byte-exact.
@@ -113,8 +118,10 @@ func TestFlattenPlan(t *testing.T) {
 		ids, err := disclosure.FlattenPlan(disclosure.Plan{
 			Kind: "learning",
 			Assignments: []disclosure.Assignment{
-				{Theme: "t1", Slug: "t1", Gist: "g1", Entries: []string{idA}},
-				{Theme: "t2", Slug: "t2", Gist: "g2", Entries: []string{idB}},
+				{Theme: "t1", Slug: "t1", Gist: "g1",
+					Entries: []disclosure.StagedEntry{ent("2026-01-01-000000", "Alpha")}},
+				{Theme: "t2", Slug: "t2", Gist: "g2",
+					Entries: []disclosure.StagedEntry{ent("2026-01-02-000000", "Beta")}},
 			},
 		})
 		if err != nil {

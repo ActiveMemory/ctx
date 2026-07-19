@@ -20,11 +20,11 @@ func TestApplyFirstRun(t *testing.T) {
 	dir := t.TempDir()
 	rootPath := writeRoot(t, dir, learnPreamble+stagingTwo) // no ## Themes
 
-	idA := idFor("2026-01-01-000000", "Alpha")
 	plan := disclosure.Plan{
 		Kind: "learning",
 		Assignments: []disclosure.Assignment{
-			{Theme: "context", Slug: "context", Gist: "context entries", Entries: []string{idA}},
+			{Theme: "context", Slug: "context", Gist: "context entries",
+				Entries: []disclosure.StagedEntry{ent("2026-01-01-000000", "Alpha")}},
 		},
 	}
 

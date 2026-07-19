@@ -104,18 +104,21 @@ type Plan struct {
 }
 
 // Assignment moves a set of staged entries into one theme and (re)writes
-// that theme's gist bullet in the root's ## Themes.
+// that theme's gist bullet in the root's ## Themes. Its Entries are the
+// same {timestamp, title} shape inspect reports under "staging", so a
+// digest plan lifts them verbatim from the inspection — no NUL-joined id
+// to hand-author.
 //
 // Fields:
 //   - Theme: the theme's name — bullet label, and heading on first use
 //   - Slug: the theme-file basename stem, resolved to <noun>/<slug>.md
 //   - Gist: the authored one-line gist (spec ### Gist format)
-//   - Entries: entry IDs to move here, in file order
+//   - Entries: the staged entries to move here, in file order
 type Assignment struct {
-	Theme   string   `json:"theme"`
-	Slug    string   `json:"slug"`
-	Gist    string   `json:"gist"`
-	Entries []string `json:"entries"`
+	Theme   string        `json:"theme"`
+	Slug    string        `json:"slug"`
+	Gist    string        `json:"gist"`
+	Entries []StagedEntry `json:"entries"`
 }
 
 // ApplyResult reports what a successful Apply did, for CLI output.

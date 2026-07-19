@@ -28,13 +28,15 @@ func TestApplyAbort_RootUntouched(t *testing.T) {
 	rootPath := writeRoot(t, dir, migratedRoot())
 	before := readFile(t, rootPath)
 
-	idA := idFor("2026-01-01-000000", "Alpha")
-	idB := idFor("2026-01-02-000000", "Beta")
 	plan := disclosure.Plan{
 		Kind: "learning",
 		Assignments: []disclosure.Assignment{
-			{Theme: "context", Slug: "context", Gist: "g", Entries: []string{idA}}, // succeeds
-			{Theme: "hooks", Slug: "hooks", Gist: "g", Entries: []string{idB}},     // append fails (dir)
+			// context: a fresh file, its append succeeds.
+			{Theme: "context", Slug: "context", Gist: "g",
+				Entries: []disclosure.StagedEntry{ent("2026-01-01-000000", "Alpha")}},
+			// hooks: hooks.md is a directory, so this append fails.
+			{Theme: "hooks", Slug: "hooks", Gist: "g",
+				Entries: []disclosure.StagedEntry{ent("2026-01-02-000000", "Beta")}},
 		},
 	}
 

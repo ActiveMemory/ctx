@@ -50,13 +50,13 @@ func TestApply(t *testing.T) {
 	}
 	rootPath := writeRoot(t, dir, migratedRoot())
 
-	idA := idFor("2026-01-01-000000", "Alpha")
-	idB := idFor("2026-01-02-000000", "Beta")
 	plan := disclosure.Plan{
 		Kind: "learning",
 		Assignments: []disclosure.Assignment{
-			{Theme: "context", Slug: "context", Gist: "context entries", Entries: []string{idA}},
-			{Theme: "hooks", Slug: "hooks", Gist: "hook mechanics", Entries: []string{idB}},
+			{Theme: "context", Slug: "context", Gist: "context entries",
+				Entries: []disclosure.StagedEntry{ent("2026-01-01-000000", "Alpha")}},
+			{Theme: "hooks", Slug: "hooks", Gist: "hook mechanics",
+				Entries: []disclosure.StagedEntry{ent("2026-01-02-000000", "Beta")}},
 		},
 	}
 
@@ -130,7 +130,8 @@ func TestApply_Refusals(t *testing.T) {
 		before := readFile(t, p)
 		_, err := disclosure.Apply(p, disclosure.Plan{
 			Assignments: []disclosure.Assignment{
-				{Theme: "t", Slug: "t", Gist: "g", Entries: []string{"x"}},
+				{Theme: "t", Slug: "t", Gist: "g",
+					Entries: []disclosure.StagedEntry{ent("2026-01-01-000000", "x")}},
 			},
 		}, dir)
 		if err != errDisc.ErrMultipleThemes {

@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	cfgDisc "github.com/ActiveMemory/ctx/internal/config/disclosure"
+	cfgFile "github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -121,6 +122,23 @@ func parseThemeBullet(body string) Theme {
 	return t
 }
 
+// renderThemeBullet renders one theme bullet line (no trailing newline),
+// the inverse of parseThemeBullet and in the exact shape it reads back:
+// "- <theme> — <gist> → [<theme>](<noun>/<slug>.md)".
+//
+// Parameters:
+//   - a: the assignment supplying theme name, gist, and slug
+//   - noun: the theme-file subdirectory for this kind
+//
+// Returns:
+//   - string: the rendered bullet line
+func renderThemeBullet(a Assignment, noun string) string {
+	link := noun + token.Slash + a.Slug + cfgFile.ExtMarkdown
+	return token.PrefixListDash + a.Theme + token.MetaSeparator + a.Gist +
+		cfgDisc.ThemeArrow + cfgDisc.LinkLabelOpen + a.Theme +
+		cfgDisc.LinkOpen + link + cfgDisc.LinkClose
+}
+
 // headingLineOffsets returns the byte offset of every line whose trimmed
 // content equals heading (an exact ATX heading line). Used to find and
 // count region-delimiting headings.
@@ -186,4 +204,41 @@ func lineAt(content string, i int) (line string, next int) {
 		return content[i:], -1
 	}
 	return content[i : i+rel], i + rel + 1
+}
+
+// lineByteOffsets returns the byte offset of the start of each line in
+// content, with a trailing sentinel offset. Index i is the byte offset
+// where line i begins; the value can overshoot len(content) for the
+// synthetic final element, so callers clamp with clampOffset. SplitStaging
+// uses it to cut entry spans on raw byte boundaries.
+//
+// Parameters:
+//   - content: the text to index
+//
+// Returns:
+//   - []int: byte offsets per line, plus one trailing sentinel
+func lineByteOffsets(content string) []int {
+	lines := strings.Split(content, token.NewlineLF)
+	offs := make([]int, len(lines)+1)
+	for i, ln := range lines {
+		offs[i+1] = offs[i] + len(ln) + len(token.NewlineLF)
+	}
+	return offs
+}
+
+// clampOffset bounds a byte offset to [0, n]. The final line offset from
+// lineByteOffsets overshoots by one newline when content has no trailing
+// newline; clamping keeps slice bounds valid without special-casing.
+//
+// Parameters:
+//   - off: a candidate byte offset
+//   - n: the length to clamp to
+//
+// Returns:
+//   - int: off bounded to [0, n]
+func clampOffset(off, n int) int {
+	if off > n {
+		return n
+	}
+	return off
 }

@@ -19,7 +19,6 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 	"github.com/ActiveMemory/ctx/internal/cli/disclosure/cmd/apply"
-	cfgDisc "github.com/ActiveMemory/ctx/internal/config/disclosure"
 	"github.com/ActiveMemory/ctx/internal/disclosure"
 	errDisc "github.com/ActiveMemory/ctx/internal/err/disclosure"
 )
@@ -34,10 +33,6 @@ func TestMain(m *testing.M) {
 const fixtureRoot = "# Learnings\n\n<!-- guide -->\n\n" +
 	"## [2026-07-15-120000] a staged entry\n\n**Context**: x.\n\n---\n\n" +
 	"## Themes\n\n- hooks — hook mechanics → [hooks](learnings/hooks.md)\n"
-
-func stagedID() string {
-	return "2026-07-15-120000" + cfgDisc.IDSeparator + "a staged entry"
-}
 
 // writeFile writes content to <dir>/<name> and returns the path.
 func writeFile(t *testing.T, dir, name, content string) string {
@@ -75,7 +70,9 @@ func movePlan() disclosure.Plan {
 		Kind: "learning",
 		Assignments: []disclosure.Assignment{{
 			Theme: "context", Slug: "context", Gist: "context stuff",
-			Entries: []string{stagedID()},
+			Entries: []disclosure.StagedEntry{
+				{Timestamp: "2026-07-15-120000", Title: "a staged entry"},
+			},
 		}},
 	}
 }

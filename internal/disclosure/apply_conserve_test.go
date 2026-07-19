@@ -36,13 +36,13 @@ func TestApplyConservation(t *testing.T) {
 		t.Fatalf("precondition: %d staged, want 2", len(beforeStaged))
 	}
 
-	idA := idFor("2026-01-01-000000", "Alpha")
-	idB := idFor("2026-01-02-000000", "Beta")
 	plan := disclosure.Plan{
 		Kind: "learning",
 		Assignments: []disclosure.Assignment{
-			{Theme: "context", Slug: "context", Gist: "g1", Entries: []string{idA}},
-			{Theme: "hooks", Slug: "hooks", Gist: "g2", Entries: []string{idB}},
+			{Theme: "context", Slug: "context", Gist: "g1",
+				Entries: []disclosure.StagedEntry{ent("2026-01-01-000000", "Alpha")}},
+			{Theme: "hooks", Slug: "hooks", Gist: "g2",
+				Entries: []disclosure.StagedEntry{ent("2026-01-02-000000", "Beta")}},
 		},
 	}
 	res, err := disclosure.Apply(rootPath, plan, dir)

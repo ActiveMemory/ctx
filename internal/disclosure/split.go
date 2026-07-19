@@ -14,9 +14,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/heading"
 )
 
-// FlattenPlan concatenates a plan's per-theme entry IDs into one ordered
-// move list, in assignment order. An assignment that names no entries is
-// a malformed plan (a theme with nothing to receive), not a no-op.
+// FlattenPlan resolves a plan's per-theme staged entries into one ordered
+// list of entry identities (timestamp+title), in assignment order. An
+// assignment that names no entries is a malformed plan (a theme with
+// nothing to receive), not a no-op.
 //
 // Parameters:
 //   - p: the digest plan
@@ -30,7 +31,9 @@ func FlattenPlan(p Plan) ([]string, error) {
 		if len(a.Entries) == 0 {
 			return nil, errDisc.ErrEmptyAssignment
 		}
-		ids = append(ids, a.Entries...)
+		for _, e := range a.Entries {
+			ids = append(ids, entryID(e))
+		}
 	}
 	return ids, nil
 }

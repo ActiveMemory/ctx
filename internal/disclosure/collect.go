@@ -82,3 +82,17 @@ func entryIDs(content string) []string {
 	}
 	return ids
 }
+
+// entryID is a single staged entry's identity: timestamp joined to title
+// by IDSeparator, matching the ids in entryIDs and the keys SplitStaging
+// returns. Identity is timestamp+title, not timestamp alone: two entries
+// added in the same second share a timestamp but are distinct.
+//
+// Parameters:
+//   - e: a staged entry
+//
+// Returns:
+//   - string: the entry's identity
+func entryID(e StagedEntry) string {
+	return e.Timestamp + cfgDisc.IDSeparator + e.Title
+}
