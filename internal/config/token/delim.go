@@ -59,6 +59,10 @@ const (
 	Plus = "+"
 	// Hash is the hash/pound character.
 	Hash = "#"
+	// HTMLCommentOpen begins an HTML/Markdown comment.
+	HTMLCommentOpen = "<!--"
+	// HTMLCommentClose ends an HTML/Markdown comment.
+	HTMLCommentClose = "-->"
 	// ParentDir is the relative parent directory component.
 	ParentDir = ".."
 	// FrontmatterDelimiter is the YAML frontmatter

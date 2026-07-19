@@ -9,6 +9,7 @@ package disclosure
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -63,6 +64,40 @@ func Human(cmd *cobra.Command, insp disclosure.Inspection) {
 //   - error: non-nil only if JSON marshaling fails
 func JSON(cmd *cobra.Command, insp disclosure.Inspection) error {
 	b, err := json.MarshalIndent(insp, "", token.Space+token.Space)
+	if err != nil {
+		return err
+	}
+	cmd.Println(string(b))
+	return nil
+}
+
+// ApplyHuman prints an ApplyResult as a one-line summary: how many
+// entries moved, into how many themes, and which theme slugs.
+//
+// Parameters:
+//   - cmd: Cobra command for the output stream
+//   - res: the apply result to render
+func ApplyHuman(cmd *cobra.Command, res disclosure.ApplyResult) {
+	slugs := strings.Join(res.Themes, token.CommaSpace)
+	if slugs == "" {
+		slugs = token.Dash
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteDisclosureApplied),
+		res.Moved, len(res.Themes), slugs,
+	))
+}
+
+// ApplyJSON prints an ApplyResult as indented JSON.
+//
+// Parameters:
+//   - cmd: Cobra command for the output stream
+//   - res: the apply result to render
+//
+// Returns:
+//   - error: non-nil only if JSON marshaling fails
+func ApplyJSON(cmd *cobra.Command, res disclosure.ApplyResult) error {
+	b, err := json.MarshalIndent(res, "", token.Space+token.Space)
 	if err != nil {
 		return err
 	}

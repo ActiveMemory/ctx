@@ -40,6 +40,34 @@ func TestKindFor(t *testing.T) {
 	}
 }
 
+// T01 (pd-m3): ThemeDir maps the digestible entry kinds to their theme
+// subdirectory and refuses convention/unknown so the mover never writes
+// to a guessed path.
+func TestThemeDir(t *testing.T) {
+	cases := []struct {
+		name   string
+		kind   disclosure.Kind
+		wantOK bool
+		want   string
+	}{
+		{"learning", disclosure.KindLearning, true, "learnings"},
+		{"decision", disclosure.KindDecision, true, "decisions"},
+		{"convention", disclosure.KindConvention, false, ""},
+		{"unknown", disclosure.Kind(99), false, ""},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got, ok := disclosure.ThemeDir(tc.kind)
+			if ok != tc.wantOK {
+				t.Fatalf("ThemeDir(%v) ok = %v, want %v", tc.kind, ok, tc.wantOK)
+			}
+			if got != tc.want {
+				t.Errorf("ThemeDir(%v) = %q, want %q", tc.kind, got, tc.want)
+			}
+		})
+	}
+}
+
 // T02: StagedEntries lists the staging zone's entries in order, and is
 // empty when staging holds none.
 func TestStagedEntries(t *testing.T) {

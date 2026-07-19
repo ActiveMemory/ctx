@@ -37,6 +37,18 @@ const (
 	// target; a theme gist's link is the "(...)" following it.
 	LinkOpen = "]("
 
+	// LinkLabelOpen is the "[" that begins a markdown link's label.
+	LinkLabelOpen = "["
+
+	// LinkClose is the ")" that ends a markdown link's target.
+	LinkClose = ")"
+
+	// ThemeArrow separates a theme bullet's gist from its markdown link:
+	// "- name — gist → [name](noun/slug.md)". The mover's gist write-back
+	// renders it; parseThemeBullet locates the link via LinkOpen, so the
+	// arrow is cosmetic structure rather than a parse anchor.
+	ThemeArrow = " → "
+
 	// ThemeDirLearning, ThemeDirDecision, and ThemeDirConvention name the
 	// per-kind subdirectories of the context directory that hold theme
 	// files (<theme>.md), reachable only via the root's links.

@@ -109,3 +109,44 @@ func TestParse_ConventionKind(t *testing.T) {
 		t.Errorf("themes parse wrong: %+v", r.Themes)
 	}
 }
+
+// A "## [" line inside an HTML comment (a knowledge file's format guide —
+// e.g. DECISIONS.md's "## [YYYY-MM-DD] Decision Title" example) must not be
+// mistaken for a staging entry. Regression: after a fold empties the real
+// staging, such a commented example would otherwise leave a non-empty,
+// unparsable staging zone and trip Validate (ErrStagingUnparsable).
+func TestParse_CommentedEntryExampleNotStaging(t *testing.T) {
+	const root = "# Decisions\n\n<!-- DECISION FORMATS\n\n" +
+		"## [YYYY-MM-DD] Decision Title\n\n**Status**: Accepted\n\n-->\n\n" +
+		"## Themes\n\n- sec — security → [sec](decisions/sec.md)\n"
+
+	r := disclosure.Parse(root, disclosure.KindDecision)
+	if strings.TrimSpace(r.Staging) != "" {
+		t.Errorf("Staging = %q, want empty (commented example belongs in preamble)",
+			r.Staging)
+	}
+	if !strings.Contains(r.Preamble, "## [YYYY-MM-DD]") {
+		t.Errorf("commented example missing from preamble; preamble=%q", r.Preamble)
+	}
+	if r.Reconstruct() != root {
+		t.Error("round-trip mismatch after comment-aware parse")
+	}
+	if err := disclosure.Validate(r); err != nil {
+		t.Errorf("Validate = %v, want nil (commented example is not real staging)", err)
+	}
+}
+
+// A "## Themes" line inside an HTML comment is an example, not a second
+// themes section: Validate must not read it as a duplicate (ErrMultipleThemes).
+func TestParse_CommentedThemesNotCounted(t *testing.T) {
+	const root = "# Learnings\n\n<!-- example: ## Themes goes here -->\n\n" +
+		"## Themes\n\n- hooks — hook mechanics → [hooks](learnings/hooks.md)\n"
+
+	r := disclosure.Parse(root, disclosure.KindLearning)
+	if !r.HasThemes {
+		t.Fatal("HasThemes = false, want true (one real ## Themes)")
+	}
+	if err := disclosure.Validate(r); err != nil {
+		t.Errorf("Validate = %v, want nil (commented ## Themes is not a duplicate)", err)
+	}
+}

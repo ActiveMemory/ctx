@@ -19,6 +19,9 @@ const (
 	// UseDisclosureInspect is the cobra Use string for the disclosure
 	// inspect subcommand.
 	UseDisclosureInspect = "inspect [FILE]"
+	// UseDisclosureApply is the cobra Use string for the disclosure
+	// apply subcommand.
+	UseDisclosureApply = "apply [FILE]"
 	// UseDoctor is the cobra Use string for the doctor command.
 	UseDoctor = "doctor"
 	// UseDrift is the cobra Use string for the drift command.
@@ -100,6 +103,9 @@ const (
 	// DescKeyDisclosureInspect is the description key for the disclosure
 	// inspect subcommand.
 	DescKeyDisclosureInspect = "disclosure-inspect"
+	// DescKeyDisclosureApply is the description key for the disclosure
+	// apply subcommand.
+	DescKeyDisclosureApply = "disclosure-apply"
 	// DescKeyLoad is the description key for the load command.
 	DescKeyLoad = "load"
 	// DescKeyLoop is the description key for the loop command.

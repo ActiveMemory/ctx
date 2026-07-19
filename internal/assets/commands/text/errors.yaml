@@ -158,6 +158,16 @@ err.disclosure.orphan-theme-file:
   short: 'progressive disclosure: a theme file has no matching gist in the root'
 err.disclosure.staging-unparsable:
   short: 'progressive disclosure: the staging zone could not be parsed into discrete entries'
+err.disclosure.apply-not-entry-kind:
+  short: 'progressive disclosure: the mover digests only LEARNINGS.md and DECISIONS.md; conventions digestion is a later milestone'
+err.disclosure.empty-assignment:
+  short: 'progressive disclosure: a digest-plan assignment names no entries to move'
+err.disclosure.entry-assigned-twice:
+  short: 'progressive disclosure: a digest plan assigns the same entry to more than one theme'
+err.disclosure.entry-not-in-staging:
+  short: 'progressive disclosure: a digest plan references an entry that is not in the root''s staging zone'
+err.disclosure.verify-failed:
+  short: 'progressive disclosure: an entry body was not byte-present after being appended to its theme file; aborting with the root untouched'
 err.crypto.ciphertext-too-short:
   short: ciphertext too short
 err.crypto.create-cipher:

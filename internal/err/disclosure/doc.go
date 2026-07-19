@@ -16,20 +16,25 @@
 // errors.Is against the value returned by [Validate] and the invariant
 // checks in internal/disclosure.
 //
-// They fall into two groups:
+// They fall into three groups:
 //
 //   - **Structure** ([ErrMultipleThemes], [ErrEntryBelowThemes],
 //     [ErrStagingUnparsable]): the precondition refused a malformed root.
 //   - **Cross-file** ([ErrOrphanThemeFile], [ErrMissingThemeFile],
 //     [ErrDuplicateEntry], [ErrBrokenThemeLink]): the root ↔ theme-file
 //     link graph or the one-place-per-entry invariant is broken.
+//   - **Mover** ([ErrApplyNotEntryKind], [ErrEmptyAssignment],
+//     [ErrEntryAssignedTwice], [ErrEntryNotInStaging], [ErrVerifyFailed]):
+//     the milestone-3 digesting pass refused a malformed plan, was handed
+//     an unsupported kind, or aborted because a moved body was not
+//     byte-present after its theme-file append.
 //
 // # Wrapping strategy
 //
-// Milestone 1 returns these bare — the guard identity is what the checks
-// assert. Parameterized wrappers that name the specific theme file or
-// entry are deferred to the digesting pass (a later milestone), which is
-// where the message reaches an operator.
+// The structure and cross-file guards are returned bare — the guard
+// identity is what the checks assert. The mover sentinels are likewise
+// bare; the operator-facing message is resolved from errors.yaml at the
+// CLI boundary.
 //
 // # Concurrency
 //

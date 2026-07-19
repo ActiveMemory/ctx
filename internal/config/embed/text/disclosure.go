@@ -21,6 +21,9 @@ const (
 	DescKeyWriteDisclosureThemeLine = "write.disclosure-theme-line"
 	// DescKeyWriteDisclosureNone marks an empty list.
 	DescKeyWriteDisclosureNone = "write.disclosure-none"
+	// DescKeyWriteDisclosureApplied reports a completed apply: entries
+	// moved, themes touched, and the touched slugs.
+	DescKeyWriteDisclosureApplied = "write.disclosure-applied"
 )
 
 // DescKeys for progressive-disclosure guard and invariant errors.
@@ -55,4 +58,26 @@ const (
 	// DescKeyErrDisclosureStagingUnparsable: the staging zone could not
 	// be parsed into discrete entries.
 	DescKeyErrDisclosureStagingUnparsable = "err.disclosure.staging-unparsable"
+)
+
+// DescKeys for the milestone-3 mover (the digesting pass that writes
+// canonical files). Each value is the key of an entry in
+// commands/text/errors.yaml; the bijection is enforced by
+// internal/audit.TestDescKeyYAMLLinkage.
+const (
+	// DescKeyErrDisclosureApplyNotEntryKind: apply was invoked on a root
+	// whose kind the mover does not handle (convention/unknown).
+	DescKeyErrDisclosureApplyNotEntryKind = "err.disclosure.apply-not-entry-kind"
+	// DescKeyErrDisclosureEmptyAssignment: a plan assignment names no
+	// entries to move.
+	DescKeyErrDisclosureEmptyAssignment = "err.disclosure.empty-assignment"
+	// DescKeyErrDisclosureEntryAssignedTwice: a plan assigns the same
+	// entry to more than one theme.
+	DescKeyErrDisclosureEntryAssignedTwice = "err.disclosure.entry-assigned-twice"
+	// DescKeyErrDisclosureEntryNotInStaging: a plan references an entry
+	// that is not in the root's staging zone.
+	DescKeyErrDisclosureEntryNotInStaging = "err.disclosure.entry-not-in-staging"
+	// DescKeyErrDisclosureVerifyFailed: after appending an entry body to a
+	// theme file, the body was not byte-present on re-read.
+	DescKeyErrDisclosureVerifyFailed = "err.disclosure.verify-failed"
 )
