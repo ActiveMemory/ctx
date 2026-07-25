@@ -2998,7 +2998,35 @@ not agent discipline — the clobber risk class the M1 guards exist for.
 
 - [x] [E2] `ctx disclosure apply` CLI — reads plan JSON, refuses non-knowledge files + convention kind, write-safe on error, doc.go + wiring guards (T10–T13). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
 
-- [ ] [E3] `ctx-digest` apply-path skill + copilot sync; MEASUREMENT GATE T16: driven apply on a realistic fixture moves entries + writes gists losslessly; real LEARNINGS→DECISIONS rollout is human-gated (T17); milestone gate (T14–T18). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
+- [x] [E3] `ctx-digest` apply-path skill + copilot sync; MEASUREMENT GATE T16: driven apply on a realistic fixture moves entries + writes gists losslessly; real LEARNINGS→DECISIONS rollout is human-gated (T17); milestone gate (T14–T18). Plan: specs/plans/pd-m3.md #priority:medium #session:f706d9de #branch:design/progressive-disclosure #added:2026-07-18
+
+### Progressive disclosure — Milestone 4 (CONVENTIONS)
+
+Plan: `specs/plans/pd-m4.md` · Spec: `specs/progressive-disclosure.md`
+Milestone 4 teaches the mover the **convention kind**: CONVENTIONS.md's 18
+curated `## ` sections fold into per-theme tier-1 files under the same
+`preamble | staging | ## Themes` layout as entry kinds (per-kind entry
+prefix `## ` vs `## [`, title identity). Retires the `### `-under-`##
+Recent` model; `ctx convention add` prepends above `## Themes`.
+
+**Completion rule**: an epic is `[x]` only when every task in its range is
+`[x]`/`[o]` in `specs/plans/pd-m4.md` (the plan is the source of truth).
+Epics partition T01–T22: E1[T01–04] E2[T05–09] E3[T10–12] E4[T13–15]
+E5[T16–17] E6[T18–19] E7[T20–22] = 22.
+
+- [x] [E1] Config + vocabulary: `EntryPrefix(Kind)`, retire `ConventionLinePrefix`/`HeadingRecent`, `ErrDuplicateStagedTitle`, `ThemeDir(convention)` (T01–T04). Plan: specs/plans/pd-m4.md #priority:medium #session:8bc7532d #branch:design/pd-m4-conventions #added:2026-07-19
+
+- [x] [E2] Parser unification: convention `## `-enumerator (title identity), prefix-parametrized `parseEntryKind`, delete `parseConvention`, kind-aware inspect, `SplitStaging` on `## ` (T05–T09). Plan: specs/plans/pd-m4.md #priority:medium #session:8bc7532d #branch:design/pd-m4-conventions #added:2026-07-19
+
+- [x] [E3] Validate: generalize entry-below-themes to per-kind prefix, dup-title fail-loud (`ErrDuplicateStagedTitle`), rule-3 via enumerator (T10–T12). Plan: specs/plans/pd-m4.md #priority:medium #session:8bc7532d #branch:design/pd-m4-conventions #added:2026-07-19
+
+- [x] [E4] Mover: lift `ErrApplyNotEntryKind` for conventions, Apply end-to-end + title-only identity through the plan (T13–T15). Plan: specs/plans/pd-m4.md #priority:medium #session:8bc7532d #branch:design/pd-m4-conventions #added:2026-07-19
+
+- [x] [E5] Add-path: `ctx convention add` prepends above `## Themes` (was AppendAtEnd) + post-fold invariant test (T16–T17). Plan: specs/plans/pd-m4.md #priority:medium #session:8bc7532d #branch:design/pd-m4-conventions #added:2026-07-19
+
+- [x] [E6] `ctx-digest` skill — convention path + copilot sync (T18–T19). Plan: specs/plans/pd-m4.md #priority:medium #session:8bc7532d #branch:design/pd-m4-conventions #added:2026-07-19
+
+- [x] [E7] MEASUREMENT GATE T20 (drive digest on realistic CONVENTIONS fixture); real CONVENTIONS rollout human-gated (T21); milestone gate (T20–T22). Plan: specs/plans/pd-m4.md #priority:medium #session:8bc7532d #branch:design/pd-m4-conventions #added:2026-07-19
 
 - [ ] Progressive disclosure for canonical context files: the growth warnings (LEARNINGS/DECISIONS/CONVENTIONS over threshold) are NOT redundancy — consolidation only got LEARNINGS 98→88 because the entries are distinct, dense signal. The real lever is a structural pass: canonical files carry a tight summary/index and detail loads on demand (via `ctx index`/`ctx search` projection + an archive/detail tier). Manual design exercise first (/ctx-brainstorm → spec), then codify the repeatable procedure as a new skill (e.g. /ctx-progressive-disclosure). This exercise IS the baseline for the skill. #priority:medium #session:87e465a0 #branch:main #added:2026-07-16
   DESIGN DONE 2026-07-16 (session 87e465a0): /ctx-brainstorm run to

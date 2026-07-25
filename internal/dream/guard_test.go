@@ -91,6 +91,10 @@ func gitInit(t *testing.T, root string) {
 	run("init")
 	run("config", "user.email", "test@example.com")
 	run("config", "user.name", "Test")
+	// Never reach for the GPG agent from a test (pinentry hijacks the
+	// terminal and hangs the run); local config wins over global.
+	run("config", "commit.gpgsign", "false")
+	run("config", "tag.gpgsign", "false")
 	gitignore := filepath.Join(root, ".gitignore")
 	if writeErr := writeFixture(
 		gitignore, "dreams/\nideas/\n",

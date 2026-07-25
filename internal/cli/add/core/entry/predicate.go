@@ -36,6 +36,18 @@ func FileTypeIsDecision(fileType string) bool {
 	return entry.FromUserInput(fileType) == entry.Decision
 }
 
+// FileTypeIsConvention reports whether fileType represents a convention
+// entry.
+//
+// Parameters:
+//   - fileType: The type string to check (e.g., "convention", "conventions")
+//
+// Returns:
+//   - bool: True if fileType is a convention type
+func FileTypeIsConvention(fileType string) bool {
+	return entry.FromUserInput(fileType) == entry.Convention
+}
+
 // FileTypeIsLearning reports whether fileType represents a learning entry.
 //
 // Parameters:

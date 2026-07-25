@@ -19,8 +19,19 @@ node             bin   optional   20
 npm              bin   optional   -
 
 # Site builds (make site / ctx journal).
+#
+# zensical is an EXACT pin ('=' prefix), not a floor: it must match the
+# generator stamped into the committed site/ — see the `generator` meta
+# tag in site/index.html. Any mismatch in either direction rewrites
+# pages in site/ with output from a different generator, and CI never
+# rebuilds the site, so this pin is the only defense. `make site`
+# refuses to run on a mismatch.
+#
+# Bumping: install the new zensical, bump this line, run `make site`,
+# and commit the regenerated site/ together with this change — so the
+# pin and the artifact always move in one reviewable diff.
 pipx             bin   optional   -
-zensical         bin   optional   -
+zensical         bin   optional   =0.0.51
 
 # Makefile plumbing (sync-version).
 jq               bin   optional   -

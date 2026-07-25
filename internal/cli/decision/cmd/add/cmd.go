@@ -14,7 +14,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	"github.com/ActiveMemory/ctx/internal/validate"
 )
 
 // Cmd returns the "ctx decision add" subcommand.
@@ -34,23 +33,11 @@ func Cmd() *cobra.Command {
 		if overlayErr := jsonpayload.OverlayFlags(cobraCmd); overlayErr != nil {
 			return overlayErr
 		}
-		flags := cobraCmd.Flags()
-		names := []string{
+		return build.RequiredBodyFlags(cobraCmd, []string{
 			cFlag.Context,
 			cFlag.Rationale,
 			cFlag.Consequence,
-		}
-		for _, name := range names {
-			value, getErr := flags.GetString(name)
-			if getErr != nil {
-				return getErr
-			}
-			rejectErr := validate.RejectPlaceholder(name, value)
-			if rejectErr != nil {
-				return rejectErr
-			}
-		}
-		return nil
+		})
 	}
 	return c
 }

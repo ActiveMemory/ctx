@@ -88,6 +88,15 @@ func SectionRequired() error {
 	return errors.New(desc.Text(text.DescKeyErrAddSectionRequired))
 }
 
+// ThemeSpec returns a validation error when `add --section Themes` is
+// given content that does not carry both a theme name and its gist.
+//
+// Returns:
+//   - error: Formatted error showing the expected "<name> — <gist>" shape
+func ThemeSpec() error {
+	return errors.New(desc.Text(text.DescKeyErrAddThemeSpec))
+}
+
 // MissingFields returns a validation error for missing required fields.
 //
 // Parameters:

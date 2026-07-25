@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.47">
+      <meta name="generator" content="zensical-0.0.51">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.5e19f6ca.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.62c9b9cc.min.css">
       
         
           
@@ -1225,10 +1225,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ctx-reindex" class="md-nav__link">
+  <a href="#ctx-index" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        <code>ctx reindex</code>
+        <code>ctx index</code>
       </span>
     </span>
   </a>
@@ -1244,23 +1244,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ctx decision">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ctx-decision-reindex" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        <code>ctx decision reindex</code>
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1271,23 +1254,6 @@
       </span>
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="ctx learning">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ctx-learning-reindex" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        <code>ctx learning reindex</code>
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2143,10 +2109,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ctx-reindex" class="md-nav__link">
+  <a href="#ctx-index" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        <code>ctx reindex</code>
+        <code>ctx index</code>
       </span>
     </span>
   </a>
@@ -2162,23 +2128,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ctx decision">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ctx-decision-reindex" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        <code>ctx decision reindex</code>
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -2189,23 +2138,6 @@
       </span>
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="ctx learning">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ctx-learning-reindex" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        <code>ctx learning reindex</code>
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2730,55 +2662,41 @@ No-op if the files already match.</p>
 </span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="c1"># Restored from golden image.</span>
 </span></code></pre></div>
 <hr />
-<h3 id="ctx-reindex"><code>ctx reindex</code><a class="headerlink" href="#ctx-reindex" title="Permanent link">&para;</a></h3>
-<p>Regenerate the quick-reference index for both <code>DECISIONS.md</code> and <code>LEARNINGS.md</code>
-in a single invocation.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ctx<span class="w"> </span>reindex
+<h3 id="ctx-index"><code>ctx index</code><a class="headerlink" href="#ctx-index" title="Permanent link">&para;</a></h3>
+<p>Project the Markdown headings of a knowledge file as a computed table of
+contents — recomputed on demand, never stored in the file.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ctx<span class="w"> </span>index<span class="w"> </span>&lt;file&gt;<span class="w"> </span><span class="o">[</span>--depth<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
 </span></code></pre></div>
-<p>This is a convenience wrapper around <code>ctx decision reindex</code> and
-<code>ctx learning reindex</code>. Both files grow at similar rates and users
-typically want to reindex both after manual edits.</p>
-<p>The index is a compact table of date and title for each entry, allowing
-AI tools to scan entries without reading the full file.</p>
+<p>One generic command serves every knowledge file: <code>DECISIONS.md</code> and
+<code>LEARNINGS.md</code> (<code>## [timestamp] Title</code> entries), <code>CONVENTIONS.md</code>, and
+<code>TASKS.md</code> (<code>## Phase …</code> sections). By default only level-2 (<code>##</code>) headings
+are shown; <code>--depth 3</code> includes level-3 (<code>###</code>) sub-headings, and <code>--json</code>
+emits a machine-readable array of <code>{level, text}</code>.</p>
+<p>Because the index is computed, it can never drift from the entries it
+summarizes, and adding an entry never rewrites the file's structure.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ctx<span class="w"> </span>reindex
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ctx<span class="w"> </span>index<span class="w"> </span>.context/DECISIONS.md
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># [2026-07-09-093951] Ship #131 as interim hub token revocation</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1"># [2026-07-06-214523] Journal resume picks the richest transcript</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># ...</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>ctx<span class="w"> </span>index<span class="w"> </span>.context/TASKS.md<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>ctx<span class="w"> </span>index<span class="w"> </span>.context/LEARNINGS.md<span class="w"> </span>--json
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-decision"><code>ctx decision</code><a class="headerlink" href="#ctx-decision" title="Permanent link">&para;</a></h3>
 <p>Manage the <code>DECISIONS.md</code> file.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
-<h4 id="ctx-decision-reindex"><code>ctx decision reindex</code><a class="headerlink" href="#ctx-decision-reindex" title="Permanent link">&para;</a></h4>
-<p>Regenerate the quick-reference index at the top of <code>DECISIONS.md</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>reindex
-</span></code></pre></div>
-<p>The index is a compact table showing the date and title for each decision,
-allowing AI tools to quickly scan entries without reading the full file.</p>
-<p>Use this after manual edits to <code>DECISIONS.md</code> or when migrating existing
-files to use the index format.</p>
-<p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>reindex
-</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
-</span></code></pre></div>
+<p>Use <code>ctx decision add</code> to append entries; see <a href="#ctx-index"><code>ctx index</code></a> to
+project a table of contents on demand.</p>
 <hr />
 <h3 id="ctx-learning"><code>ctx learning</code><a class="headerlink" href="#ctx-learning" title="Permanent link">&para;</a></h3>
 <p>Manage the <code>LEARNINGS.md</code> file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
-<h4 id="ctx-learning-reindex"><code>ctx learning reindex</code><a class="headerlink" href="#ctx-learning-reindex" title="Permanent link">&para;</a></h4>
-<p>Regenerate the quick-reference index at the top of <code>LEARNINGS.md</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>reindex
-</span></code></pre></div>
-<p>The index is a compact table showing the date and title for each learning,
-allowing AI tools to quickly scan entries without reading the full file.</p>
-<p>Use this after manual edits to <code>LEARNINGS.md</code> or when migrating existing
-files to use the index format.</p>
-<p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>reindex
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
-</span></code></pre></div>
+<p>Use <code>ctx learning add</code> to append entries; see <a href="#ctx-index"><code>ctx index</code></a> to
+project a table of contents on demand.</p>
 
 
 
@@ -2926,7 +2844,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.0df4f2d0.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7f30b55.min.js"></script>
       
     
   </body>

@@ -11,7 +11,6 @@ import (
 
 	cfgDisc "github.com/ActiveMemory/ctx/internal/config/disclosure"
 	errDisc "github.com/ActiveMemory/ctx/internal/err/disclosure"
-	"github.com/ActiveMemory/ctx/internal/heading"
 )
 
 // Validate is the progressive-disclosure precondition (spec Guards §2).
@@ -22,10 +21,14 @@ import (
 // Rules:
 //   - zero or one "## Themes". Zero is the not-yet-migrated first-run
 //     case and is valid; two or more is malformed (ErrMultipleThemes).
-//   - no "## [" entry below "## Themes" (ErrEntryBelowThemes): entries
-//     must stay in the staging zone above it.
-//   - for entry kinds, a non-empty staging zone must parse into discrete
-//     "## [" entries (ErrStagingUnparsable).
+//   - no entry heading below "## Themes" (ErrEntryBelowThemes): entries
+//     must stay in the staging zone above it. The heading that opens an
+//     entry is per-kind ([EntryPrefix]).
+//   - a non-empty staging zone must enumerate into discrete entries
+//     (ErrStagingUnparsable), for every kind.
+//   - for conventions, no two staged sections share a title
+//     (ErrDuplicateStagedTitle): with no timestamp, the title is the
+//     whole identity, so a duplicate makes a plan entry unaddressable.
 //
 // Invariants that are vacuously true on an un-migrated root (no themes,
 // no theme files) need no special-casing here.
@@ -40,16 +43,26 @@ func Validate(r Root) error {
 		return errDisc.ErrMultipleThemes
 	}
 
-	entryBelow := r.HasThemes &&
-		firstLinePrefixOffset(r.ThemesRaw, cfgDisc.EntryLinePrefix) != -1
-	if entryBelow {
+	if r.HasThemes && entryBelowThemes(r.ThemesRaw, r.Kind) {
 		return errDisc.ErrEntryBelowThemes
 	}
 
-	if r.Kind != KindConvention &&
-		strings.TrimSpace(r.Staging) != "" &&
-		len(heading.ParseEntryBlocks(r.Staging)) == 0 {
+	blocks := stagedBlocks(r.Staging, r.Kind)
+	if strings.TrimSpace(r.Staging) != "" && len(blocks) == 0 {
 		return errDisc.ErrStagingUnparsable
+	}
+
+	// Title-only identity is unique to conventions; entry kinds carry a
+	// timestamp and may legitimately repeat a title, so this rule stays
+	// scoped rather than becoming a general uniqueness check.
+	if r.Kind == KindConvention {
+		seen := make(map[string]bool, len(blocks))
+		for _, b := range blocks {
+			if seen[b.Title] {
+				return errDisc.ErrDuplicateStagedTitle
+			}
+			seen[b.Title] = true
+		}
 	}
 
 	return nil

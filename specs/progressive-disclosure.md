@@ -75,31 +75,34 @@ entries), regenerated whenever the theme gains entries. It is stored
 (not recomputed on read) precisely because it is expensive to produce —
 the reconciling rationale in DECISIONS `[2026-07-16-215955]`.
 
-### Layout (forced by the existing write path)
+### Layout (one shared shape across kinds)
 
-`ctx X add` must not change. Verified anchors:
+`ctx decision/learning add` are unchanged; `ctx convention add` gains the shared prepend anchor. Verified anchors:
 
 | File | Insert | Staging must sit |
 |---|---|---|
 | DECISIONS, LEARNINGS | `beforeFirstEntry`: before the first line-start `## [`; falls back to `AfterHeader` when none | **above** `## Themes` |
-| CONVENTIONS | `AppendAtEnd` (EOF) | **below**, in a trailing `## Recent` |
+| CONVENTIONS | `beforeFirstEntry`: before the first line-start `## ` (excluding the structural `## Themes`); falls back to `AfterHeader` when none | **above** `## Themes` |
 
 ```
 LEARNINGS.md / DECISIONS.md          CONVENTIONS.md
 # Learnings                          # Conventions
 <!-- UPDATE WHEN … -->               <!-- … -->
-                                     ## Themes
-## [ts] newest      ← add (STAGING)     - naming — gist… → link
-## [ts] entry                           - output — gist… → link
-## Themes                            ## Recent
-  - hooks — gist… → link                ### new convention  ← add (STAGING)
-  - output — gist… → link
+## [ts] newest      ← add (STAGING)  ## Newest convention  ← add (STAGING)
+## [ts] entry                        ## Older convention
+## Themes                            ## Themes
+  - hooks — gist… → link               - naming — gist… → link
+  - output — gist… → link              - output — gist… → link
 ```
 
 Because the fallback is `AfterHeader`, an entry lands above `## Themes`
-**even when staging is empty**. CONVENTIONS needs the explicit
-`## Recent` heading because `###` prose sections would otherwise nest
-ambiguously *inside* `## Themes`.
+**even when staging is empty**. All three kinds share one layout —
+preamble | staging | `## Themes` — differing only in the entry prefix
+(`## [` for decisions/learnings, `## ` for conventions) and identity
+(timestamp vs section title). Conventions **prepend** newest-first like
+the other two (correcting the original `AppendAtEnd`); the anchor skips
+the exact `## Themes` string, the only structural `## `. No `## Recent`,
+no `###` convention model.
 
 ### Consequence: no consumption rewire
 
@@ -119,7 +122,7 @@ Agent-driven, human-gated, never inline in another ceremony:
    byte-presence → only then remove from staging**.
 4. Regenerate the gist of **every theme it touched**; leave untouched
    themes alone.
-5. Create `## Themes` (and `## Recent` for conventions) on first run.
+5. Create `## Themes` on first run.
 
 ### Triggers — suggestion only
 
@@ -133,7 +136,7 @@ semantic work there is against their interest.
 1. **Append → verify → remove.** Never remove-then-append. Any verify
    failure aborts the whole pass with the root untouched.
 2. **Precondition validate** (`index.Validate`-style): **zero or one**
-   `## Themes`; no `## [` below it; staging parses into discrete
+   `## Themes`; no entry below it (`## [` for decisions/learnings, `## ` for conventions); staging parses into discrete
    entries. Refuse and fail loud otherwise. **Never regenerate from
    "what I recognized"** — that was the exact root cause of the original
    clobber bug (unparsed content treated as empty).
@@ -153,11 +156,12 @@ semantic work there is against their interest.
 
 ## Invariants (mechanically checkable)
 
-- No line-start `## [` below `## Themes` in a root.
+- No line-start entry below `## Themes` in a root (`## [` for decisions/learnings, `## ` for conventions; only the exact `## Themes` is structural).
 - Root gists ↔ theme files are 1:1 (no orphan file; no gist without a
   file).
 - Every theme link resolves (existing `ctx drift` path check).
 - Every entry lives in **exactly one** place: staging XOR one theme file.
+- Convention staging titles are **unique** — identity is the section title, so duplicates fail loud (`ErrDuplicateStagedTitle`).
 
 ## Tests
 
@@ -166,8 +170,8 @@ semantic work there is against their interest.
   moved body byte-present in exactly one theme file; zero loss, zero
   dups.
 - **`add` still works**: `ctx learning add` with populated *and* empty
-  staging both land above `## Themes`; `ctx convention add` lands inside
-  `## Recent`.
+  staging both land above `## Themes`; `ctx convention add` **prepends**
+  above `## Themes` too (correcting its original `AppendAtEnd`).
 - **Abort**: corrupt the root → pass refuses, file byte-identical.
 - **Idempotency**: pass with empty staging = no-op.
 
@@ -178,15 +182,17 @@ semantic work there is against their interest.
   knows where to drill.
 - No entry is lost or duplicated across a pass; guards refuse on
   malformed input.
-- `ctx decision/learning/convention add` work unchanged, with zero code
-  edits to the add path.
+- `ctx decision/learning add` are unchanged. `ctx convention add` moves
+  from `AppendAtEnd` to the shared prepend anchor (above `## Themes`),
+  correcting the original inconsistency — the one deliberate add-path
+  change.
 - The pass is codified as a reusable skill.
 
 ## Non-Goals
 
 - **No time-sharding, no recency-gating, no load-excluded cold bucket** —
   settled in `specs/computed-index-projection.md`.
-- **No change to the `add` write path.**
+- **No change to the decision/learning `add` write path** (the convention path changes: `AppendAtEnd` → prepend above `## Themes`, correcting an original inconsistency).
 - **No `ctx agent` packet rewire** — boundedness makes it unnecessary.
 - **No taxonomy/nesting machinery now** — the structure is self-similar,
   so nesting is available when themes outgrow their file.
@@ -196,9 +202,10 @@ semantic work there is against their interest.
 
 ## Phasing (sketch — refine via /ctx-task-out)
 
-1. Guards + invariants + the structural vocabulary (`## Themes`,
-   `## Recent`), with tests, before any content moves.
+1. Guards + invariants + the structural vocabulary (`## Themes`), with
+   tests, before any content moves.
 2. The pass as a skill, dry-run first (propose themes, move nothing).
 3. First real rollout on LEARNINGS (largest corpus), then DECISIONS.
-4. CONVENTIONS (prose model, `## Recent`, edits-behind-a-link UX).
+4. CONVENTIONS (curated `## `-section model, unified into the entry-kind
+   mover + prepend add-path, edits-behind-a-link UX).
 5. Wire the suggest-only triggers.

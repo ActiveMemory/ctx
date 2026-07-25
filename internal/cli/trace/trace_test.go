@@ -33,6 +33,10 @@ func TestTraceTagAndShow(t *testing.T) {
 	run(t, "git", "init")
 	run(t, "git", "config", "user.email", "test@test.com")
 	run(t, "git", "config", "user.name", "Test")
+	// Never reach for the GPG agent from a test (pinentry hijacks the
+	// terminal and hangs the run); local config wins over global.
+	run(t, "git", "config", "commit.gpgsign", "false")
+	run(t, "git", "config", "tag.gpgsign", "false")
 
 	// Init ctx
 	initCmd := initialize.Cmd()

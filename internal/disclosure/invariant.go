@@ -62,7 +62,7 @@ func CheckPairing(root Root, themeDir string) error {
 //   - error: ErrDuplicateEntry, a read error, or nil
 func CheckUniqueness(root Root, themeDir string) error {
 	seen := map[string]bool{}
-	for _, id := range entryIDs(root.Staging) {
+	for _, id := range entryIDs(root.Staging, root.Kind) {
 		if seen[id] {
 			return errDisc.ErrDuplicateEntry
 		}
@@ -78,7 +78,7 @@ func CheckUniqueness(root Root, themeDir string) error {
 		if readErr != nil {
 			return readErr
 		}
-		for _, id := range entryIDs(string(data)) {
+		for _, id := range entryIDs(string(data), root.Kind) {
 			if seen[id] {
 				return errDisc.ErrDuplicateEntry
 			}

@@ -14,13 +14,20 @@
 # claude CLI. Prints one table; the answer to "is this machine ready
 # to work on ctx?".
 #
-# Verdicts: OK, MISSING, OUTDATED, SKIP (probe impossible — no
-# claude CLI, no network). Only failures of tools marked `required`
-# in the manifest affect the exit code.
+# Verdicts: OK, MISSING, OUTDATED, DRIFT (ahead of an exact pin),
+# SKIP (probe impossible — no claude CLI, no network). Only failures
+# of tools marked `required` in the manifest affect the exit code.
+#
+# Manifest version column: a bare value is a minimum ("at least
+# this"); a leading '=' is an exact pin ("exactly this", reporting
+# both older and newer).
 #
 # Usage:
 #   ./hack/check-tools.sh            # exit 1 only on required-tool failures
 #   ./hack/check-tools.sh --strict   # optional-tool failures also fatal
+#   ./hack/check-tools.sh --only zensical --strict
+#                                    # probe one row; use as a build-target
+#                                    # precondition (see `make site`)
 #
 # Spec: specs/check-tools.md
 
@@ -30,7 +37,27 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MANIFEST="${SCRIPT_DIR}/tool-versions.txt"
 
 STRICT=false
-[ "${1:-}" = "--strict" ] && STRICT=true
+ONLY=""
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --strict) STRICT=true ;;
+        --only)
+            shift
+            if [ $# -eq 0 ]; then
+                echo "--only requires a tool name" >&2
+                exit 1
+            fi
+            ONLY="$1"
+            ;;
+        --only=*) ONLY="${1#--only=}" ;;
+        *)
+            echo "unknown argument: $1" >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
 
 if [ ! -f "$MANIFEST" ]; then
     echo "manifest not found: $MANIFEST" >&2
@@ -112,6 +139,28 @@ check_bin() {
     fi
     local ver
     ver="$(bin_version "$name")"
+    # A leading '=' makes the manifest value an exact pin rather than a
+    # floor. Both directions are reportable: behind the pin is a silent
+    # regression, ahead of it is drift the operator has to acknowledge
+    # (by bumping the pin) before it reaches committed artifacts.
+    if [ "${min#=}" != "$min" ]; then
+        local pin="${min#=}"
+        if [ -z "$ver" ]; then
+            add_row "$name" "$requirement" "OK" "present" "pin $pin (version unreadable)"
+            return 0
+        fi
+        if [ "$ver" = "$pin" ]; then
+            add_row "$name" "$requirement" "OK" "$ver" "pin $pin"
+            return 0
+        fi
+        if version_gte "$pin" "$ver"; then
+            add_row "$name" "$requirement" "DRIFT" "$ver" "ahead of pin $pin"
+        else
+            add_row "$name" "$requirement" "OUTDATED" "$ver" "pinned to $pin"
+        fi
+        fail "$requirement"
+        return 0
+    fi
     if [ "$min" != "-" ] && [ -n "$ver" ] && ! version_gte "$min" "$ver"; then
         add_row "$name" "$requirement" "OUTDATED" "$ver" "minimum is $min"
         fail "$requirement"
@@ -171,8 +220,14 @@ check_mcp() {
     fi
 }
 
+MATCHED=0
+
 while read -r name type requirement min _; do
     case "$name" in ''|\#*) continue ;; esac
+    if [ -n "$ONLY" ] && [ "$name" != "$ONLY" ]; then
+        continue
+    fi
+    MATCHED=$((MATCHED + 1))
     case "$type" in
         bin) check_bin "$name" "$requirement" "$min" ;;
         npm) check_npm "$name" "$requirement" ;;
@@ -183,6 +238,12 @@ while read -r name type requirement min _; do
             ;;
     esac
 done < "$MANIFEST"
+
+# A typo in --only must not read as "nothing failed".
+if [ -n "$ONLY" ] && [ "$MATCHED" -eq 0 ]; then
+    echo "no manifest row named '$ONLY' in $MANIFEST" >&2
+    exit 1
+fi
 
 printf '%s' "$ROWS" | awk -F'\t' '
 BEGIN {

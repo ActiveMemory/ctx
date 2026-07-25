@@ -16,7 +16,8 @@ import (
 //
 // For tasks, inserts after the target section header. For decisions and
 // learnings, inserts before existing entries (reverse-chronological order).
-// For conventions, appends to the end of the file.
+// For conventions, inserts at the top of the target H2 section (section
+// is honored here too, and the section is created when absent).
 //
 // Parameters:
 //   - existing: Current file content as bytes
@@ -46,7 +47,9 @@ func AppendEntry(
 	case coreEntry.FileTypeIsLearning(fileType):
 		return Learning(existingStr, entry)
 	default:
-		// Default (conventions): append at the end
-		return AppendAtEnd(existingStr, entry)
+		// Conventions: bullets live inside an H2 section, so the entry is
+		// inserted there rather than appended at EOF (which lands below
+		// ## Themes on a folded root).
+		return Convention(existingStr, entry, section)
 	}
 }

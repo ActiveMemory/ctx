@@ -67,11 +67,28 @@ type Root struct {
 // identified for the dry-run pass to propose a theme for.
 //
 // Fields:
-//   - Timestamp: the entry's timestamp (e.g. "2026-07-18-120000")
+//   - Timestamp: the entry's timestamp (e.g. "2026-07-18-120000"); empty
+//     for a convention, whose identity is its title alone
 //   - Title: the entry's title text
 type StagedEntry struct {
 	Timestamp string `json:"timestamp"`
 	Title     string `json:"title"`
+}
+
+// stagedBlock is one addressable unit of a staging zone, independent of
+// which kind produced it: the fields behind its identity plus the line it
+// starts on. It is what lets identification, enumeration, and the
+// destructive span-cutting in SplitStaging share a single code path
+// across the timestamped kinds and conventions.
+//
+// Fields:
+//   - Timestamp: the entry's timestamp; always empty for a convention
+//   - Title: the entry or section title
+//   - StartLine: index of the heading line within the staging zone
+type stagedBlock struct {
+	Timestamp string
+	Title     string
+	StartLine int
 }
 
 // Inspection is the read-only view of a root the dry-run pass consumes:

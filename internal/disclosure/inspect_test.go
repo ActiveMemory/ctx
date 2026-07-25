@@ -52,7 +52,9 @@ func TestThemeDir(t *testing.T) {
 	}{
 		{"learning", disclosure.KindLearning, true, "learnings"},
 		{"decision", disclosure.KindDecision, true, "decisions"},
-		{"convention", disclosure.KindConvention, false, ""},
+		// M4/T04: conventions resolve a theme dir now. Under M3 this was
+		// (false, "") — the refusal that kept the mover off the kind.
+		{"convention", disclosure.KindConvention, true, "conventions"},
 		{"unknown", disclosure.Kind(99), false, ""},
 	}
 	for _, tc := range cases {

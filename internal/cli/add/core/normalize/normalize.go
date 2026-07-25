@@ -29,3 +29,22 @@ func TargetSection(section string) string {
 	}
 	return section
 }
+
+// ConventionSection ensures a convention section name is an H2 heading.
+//
+// Conventions group bullets under "## " sections, and the digesting pass
+// addresses those sections by heading (specs/progressive-disclosure.md),
+// so the heading level is load-bearing rather than cosmetic: an "### "
+// section would not be seen as a staged entry.
+//
+// Parameters:
+//   - section: Raw section name from user input (non-empty)
+//
+// Returns:
+//   - string: Normalized H2 heading (e.g., "## Go style")
+func ConventionSection(section string) string {
+	if !strings.HasPrefix(section, token.HeadingLevelTwoStart) {
+		return token.HeadingLevelTwoStart + section
+	}
+	return section
+}

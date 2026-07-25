@@ -55,6 +55,9 @@ func Cmd(noun, descKey, useStr string) *cobra.Command {
 		Long:    long,
 		Example: desc.Example(descKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if secErr := requireSection(noun, section); secErr != nil {
+				return secErr
+			}
 			withNoun := append([]string{noun}, args...)
 			return run.Run(cmd, withNoun, entity.AddConfig{
 				Priority:    priority,
