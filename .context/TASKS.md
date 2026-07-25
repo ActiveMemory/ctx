@@ -3046,3 +3046,7 @@ E5[T16–17] E6[T18–19] E7[T20–22] = 22.
 - [ ] Drift path-checker false-positives on angle-bracket placeholders: `ctx drift` flags CONVENTIONS.md template placeholders (`internal/assets/claude/skills/ctx-<area>/SKILL.md`, `docs/recipes/<related-recipe>.md`, `docs/cli/<command>.md`) as missing path references. These are illustrative `<…>` placeholders, not real paths — the path checker should skip any path segment containing `<`/`>`. (Same class as the just-consolidated "detection scripts flag illustrative examples" learning.) #priority:low #session:87e465a0 #branch:main #added:2026-07-16
 
 - [ ] ARCHITECTURE.md package-doc drift: `ctx drift` reports ~44 internal/ packages "not documented" in ARCHITECTURE.md (incl. the renamed internal/heading). Either backfill the package coverage via /ctx-architecture, or reframe ARCHITECTURE.md's scope so the drift check doesn't expect exhaustive per-package coverage. #priority:low #session:87e465a0 #branch:main #added:2026-07-16
+
+### Progressive disclosure — Milestone 5 (suggest-only triggers)
+
+- [ ] M5: suggest-only trigger wiring for progressive disclosure — growth nudge points at /ctx-digest; /ctx-remember surfaces oversized roots; /ctx-wrap-up surfaces them at session end. Suggest only, never auto-fold. Plan: pd-m4.md Out-of-scope table. #session:951e1535 #branch:main #commit:1a880bf3 #added:2026-07-25-132759

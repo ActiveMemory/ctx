@@ -45,6 +45,34 @@ For significant decisions:
 
 -->
 
+## [2026-07-25-132759] Theme declaration via the Themes section keyword, on all three canonical kinds
+
+**Status**: Accepted
+
+**Context**: pd-m4 needed a way to NAME a theme up front (ctx <kind> add --section Themes), distinct from folding entries into it. The section-vs-entry distinction in conventions surfaced the need.
+
+**Decision**: Theme declaration via the Themes section keyword, on all three canonical kinds
+
+**Rationale**: Content is '<name> — <gist>', split on the same em-dash separator the theme parser reads back, so it round-trips. It writes BOTH the gist bullet and the theme file, because a bullet without its file fails the gist-to-file pairing invariant and would leave a root ctx disclosure refuses to touch. Generalized to learnings/decisions since they also have a ## Themes region.
+
+**Consequence**: New internal/write/theme package + disclosure.AddTheme; theme adds bypass the per-kind body-flag gate (a theme has only a name and gist); a new user-facing CLI surface across all three canonical kinds.
+
+---
+
+## [2026-07-25-132719] ctx convention add requires --section; no default; placeholders rejected (strict)
+
+**Status**: Accepted
+
+**Context**: The convention add-path (pd-m4). A default or catch-all section is where an undecided caller dumps every convention, defeating the H2-section grouping the digest pass folds on.
+
+**Decision**: ctx convention add requires --section; no default; placeholders rejected (strict)
+
+**Rationale**: Choosing the section IS the thinking; the CLI refuses to do it for the caller. Enforced strictly via validate.RejectPlaceholder, which rejects empty/whitespace AND the shipped placeholder set (TBD, n/a, none, pending, …). Deviates deliberately from the plan's original T16 ('just move the anchor').
+
+**Consequence**: ctx convention add errors without a concrete --section; agents and scripts must name the target H2 section. Pinned by TestConventionAddRequiresSection (7 cases); a refused add leaves the root byte-identical.
+
+---
+
 ## [2026-07-19-100259] M4 conventions digestion: curated ## -section taxonomy, unified into the entry-kind mover
 
 **Status**: Accepted

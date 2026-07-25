@@ -15,6 +15,36 @@ DO NOT UPDATE FOR:
 -->
 
 
+## [2026-07-25-124457] Using the proprietary sibling repo as design evidence leaks its internals into tracked files
+
+**Context**: While deciding the pd-m4 add-path shape, I read the sibling repo's convention file to settle the question, then quoted its guide text and attributed the decision to it in a tracked plan file. An unrelated build warning prompted the sweep that caught it.
+
+**Lesson**: The leak vector is not NAMING the sibling (allowed) — it is citing its designs or guide text as evidence in tracked specs/plans. Both the quote and the attribution are leaks.
+
+**Application**: Cite ctx's OWN files as design evidence and describe designs on their merits; never quote or attribute to the sibling in tracked files; git grep the staged tree before committing any spec authored while consulting it. Per specs/public-repo-hygiene.md.
+
+---
+
+## [2026-07-25-124457] Skill and doc examples of a serialized structure must round-trip through the real parser
+
+**Context**: The ctx-digest skill documented digest-plan entries as JSON strings, but Assignment.Entries is []StagedEntry{timestamp,title}; the documented form failed json.Unmarshal. Latent since M3 — any agent following the skill verbatim failed at the apply step.
+
+**Lesson**: A hand-authored example of a serialized structure drifts from the code silently; nothing tests the prose.
+
+**Application**: Verify skill/doc JSON/YAML examples against the actual unmarshal target — build the binary and run the exact documented command — before shipping the skill.
+
+---
+
+## [2026-07-25-124457] A guard derived from a capability accessor silently lifts when the accessor is extended
+
+**Context**: pd-m4 T04 made ThemeDir(convention) return true; Apply's refusal of the convention kind was DERIVED from ThemeDir returning false. That one-line 'vocabulary' change silently opened the destructive mover to CONVENTIONS.md before the convention parse/validate/dup-title paths existed. Caught by TestApply_Refusals.
+
+**Lesson**: When a refusal is derived from a capability check (if !capable { refuse }) instead of an explicit guard, extending that capability lifts the refusal as an invisible side effect — and the two tasks look independent in the plan.
+
+**Application**: Before extending a capability accessor, grep for guards that read it. When a multi-task arc will open a destructive path, add an EXPLICIT gate that the opening task removes deliberately, so it cannot open early.
+
+---
+
 ## [2026-07-19-210439] The disclosure parser is a deliberately dumb line-scanner (skips <!-- --> comments, not code fences)
 
 **Context**: M4 unifies conventions into the ## -section entry model, where ## collides far more than ## [. Fence detection was considered and rejected.
