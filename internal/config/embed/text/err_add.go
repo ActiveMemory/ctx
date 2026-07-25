@@ -25,6 +25,9 @@ const (
 	// DescKeyErrAddSectionRequired is the text key for err add section required
 	// messages.
 	DescKeyErrAddSectionRequired = "err.add.section-required"
+	// DescKeyErrAddThemeSpec is the text key for a malformed theme spec
+	// passed to `add --section Themes` (missing the name/gist separator).
+	DescKeyErrAddThemeSpec = "err.add.theme-spec"
 	// DescKeyErrAddUnknownType is the text key for err add unknown type messages.
 	DescKeyErrAddUnknownType = "err.add.unknown-type"
 )

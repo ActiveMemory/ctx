@@ -18,9 +18,12 @@ import (
 // byte-for-byte; nothing is normalized. Themes is the parsed view of the
 // raw themes region. HasThemes is false for a not-yet-migrated root.
 //
-// Layout per kind (see specs/progressive-disclosure.md):
-//   - entry kinds:  preamble | staging (## [ entries) | ## Themes …
-//   - conventions:  preamble | ## Themes … | ## Recent (staging)
+// Layout is the same for every kind (see specs/progressive-disclosure.md):
+//
+//	preamble | staging | ## Themes …
+//
+// Only the prefix opening a staged entry differs — "## [" for the
+// timestamped kinds, "## " for a convention's curated prose sections.
 //
 // Parameters:
 //   - content: the full root file content
@@ -33,24 +36,18 @@ func Parse(content string, k Kind) Root {
 	themeOffsets := headingLineOffsets(content, cfgDisc.HeadingThemes)
 	r.HasThemes = len(themeOffsets) > 0
 
-	if k == KindConvention {
-		parseConvention(&r, content, themeOffsets)
-	} else {
-		parseEntryKind(&r, content, themeOffsets)
-	}
+	parseRegions(&r, content, themeOffsets)
 
 	r.Themes = parseThemes(r.ThemesRaw)
 	return r
 }
 
-// Reconstruct returns the root's content in file order for its kind. It
-// is the inverse of Parse: Reconstruct(Parse(c, k)) == c.
+// Reconstruct returns the root's content in file order. It is the inverse
+// of Parse: Reconstruct(Parse(c, k)) == c. The region order is the same
+// for every kind, so this needs no per-kind branch.
 //
 // Returns:
 //   - string: the reassembled root content
 func (r Root) Reconstruct() string {
-	if r.Kind == KindConvention {
-		return r.Preamble + r.ThemesRaw + r.Staging
-	}
 	return r.Preamble + r.Staging + r.ThemesRaw
 }

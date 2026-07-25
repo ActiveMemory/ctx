@@ -15,6 +15,26 @@ DO NOT UPDATE FOR:
 -->
 
 
+## [2026-07-19-210439] The disclosure parser is a deliberately dumb line-scanner (skips <!-- --> comments, not code fences)
+
+**Context**: M4 unifies conventions into the ## -section entry model, where ## collides far more than ## [. Fence detection was considered and rejected.
+
+**Lesson**: Fence detection (nested/tilde/indented fences) is a rabbit hole in a parser that does destructive moves. Safety comes from byte-conservation (a mis-cut is a reversible mis-grouping, not loss) plus the human-gated plan review (a false entry shows up at inspect).
+
+**Application**: Don't add fence-awareness to the disclosure scanner; a stray ## inside a fenced code block is fixed at authoring time (rewrite that one line), never by the tool.
+
+---
+
+## [2026-07-19-210439] Measurement gates surface a real bug in every disclosure milestone
+
+**Context**: pd-m1's add-path measurement gate flushed the insert.AfterHeader tail-truncation bug; pd-m3's T17 real rollout surfaced the DECISIONS-template comment-parse bug (a ## [ inside <!-- --> read as staging, so Validate returned ErrStagingUnparsable once the fold emptied real staging).
+
+**Lesson**: For the disclosure work, driving the REAL fold — not unit tests — is where bugs hide. The measurement gate is not ceremony.
+
+**Application**: Treat pd-m4 T20 (drive the digest on the real CONVENTIONS.md) as the authoritative gate; expect it to find something; verify conservation + all invariants on the real file before T21's human-gated rollout.
+
+---
+
 ---
 
 ## Themes

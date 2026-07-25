@@ -58,6 +58,15 @@ const (
 		text.DescKeyErrDisclosureBrokenThemeLink,
 	)
 
+	// ErrDuplicateStagedTitle: two staged sections of a convention root
+	// share a title. Conventions are addressed by title alone (they carry
+	// no timestamp), so a duplicate makes identity ambiguous — the mover
+	// could not say which section a plan entry names. Fail loud rather
+	// than move the wrong bytes.
+	ErrDuplicateStagedTitle = entity.Sentinel(
+		text.DescKeyErrDisclosureDuplicateStagedTitle,
+	)
+
 	// ErrNotAKnowledgeFile: the file handed to `ctx disclosure` is not a
 	// canonical knowledge file (LEARNINGS/DECISIONS/CONVENTIONS). Wrap
 	// with [NotAKnowledgeFile] to name the offending path.

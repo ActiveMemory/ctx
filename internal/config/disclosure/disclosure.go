@@ -16,18 +16,23 @@ const (
 	// it.
 	HeadingThemes = "## Themes"
 
-	// HeadingRecent delimits the staging zone of a CONVENTIONS root.
-	// Conventions append at EOF and their entries are prose sections, so
-	// their staging needs an explicit trailing heading that "## Themes"
-	// cannot provide.
-	HeadingRecent = "## Recent"
-
 	// EntryLinePrefix marks a timestamped entry heading ("## [ts] Title")
 	// in LEARNINGS/DECISIONS.
 	EntryLinePrefix = "## ["
 
-	// ConventionLinePrefix marks a prose section heading in CONVENTIONS.
-	ConventionLinePrefix = "### "
+	// SectionLinePrefix marks a curated prose section heading ("## Title")
+	// in CONVENTIONS — the convention kind's entry prefix, the counterpart
+	// to EntryLinePrefix for timestamped kinds. HeadingThemes shares this
+	// prefix, so callers scanning for entries must skip it explicitly.
+	SectionLinePrefix = "## "
+
+	// SectionUnfiled names the section used only when a non-CLI caller
+	// reaches the convention add-path with no section and the root holds
+	// none either. It is NOT a default the CLI offers: `ctx convention
+	// add` refuses an empty or placeholder --section outright, because a
+	// catch-all section is where an undecided caller dumps everything.
+	// The name is deliberately unattractive so a human notices it.
+	SectionUnfiled = "Unfiled"
 
 	// IDSeparator joins the timestamp and title of an entry identity. A
 	// NUL never appears in a heading line, so entry text cannot forge it.

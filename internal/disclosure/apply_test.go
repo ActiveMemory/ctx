@@ -113,14 +113,23 @@ func TestApply_Refusals(t *testing.T) {
 		}
 	})
 
-	t.Run("convention kind refused", func(t *testing.T) {
+	// M4/T13 (C6): the mover digests conventions now. The refusal that
+	// used to live here was derived from ThemeDir; ErrApplyNotEntryKind
+	// survives only as depth against a future Kind added without a
+	// ThemeDir case, which Apply's own surface cannot construct (KindFor
+	// rejects unknown basenames first). That leg is pinned by
+	// TestThemeDir's Kind(99) case instead.
+	t.Run("convention kind accepted", func(t *testing.T) {
 		p := filepath.Join(dir, "CONVENTIONS.md")
 		if err := os.WriteFile(p, []byte("# Conventions\n"), 0o644); err != nil {
 			t.Fatal(err)
 		}
 		_, err := disclosure.Apply(p, disclosure.Plan{}, dir)
-		if err != errDisc.ErrApplyNotEntryKind {
-			t.Errorf("err = %v, want ErrApplyNotEntryKind", err)
+		if errors.Is(err, errDisc.ErrApplyNotEntryKind) {
+			t.Errorf("err = %v, want the convention kind to be accepted", err)
+		}
+		if err != nil {
+			t.Errorf("empty plan on a convention root: err = %v, want nil", err)
 		}
 	})
 

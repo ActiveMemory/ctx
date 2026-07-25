@@ -14,15 +14,21 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
-// parseEntryKind splits an entry-based root: preamble, then the staging
+// parseRegions splits a root of any kind: preamble, then the staging
 // entries, then the ## Themes region (which runs to EOF). It writes the
 // Preamble, Staging, and ThemesRaw fields of r.
+//
+// One path serves all three kinds because the layout is identical; only
+// the line prefix that opens an entry differs ([EntryPrefix]). Cutting
+// the themes region off first is what makes the convention prefix "## "
+// safe to scan for — the structural "## Themes" is no longer in the text
+// being searched.
 //
 // Parameters:
 //   - r: the root being assembled (mutated in place)
 //   - content: the full root content
 //   - themeOffsets: byte offsets of every ## Themes heading line
-func parseEntryKind(r *Root, content string, themeOffsets []int) {
+func parseRegions(r *Root, content string, themeOffsets []int) {
 	beforeThemes := content
 	if r.HasThemes {
 		t := themeOffsets[0]
@@ -30,44 +36,12 @@ func parseEntryKind(r *Root, content string, themeOffsets []int) {
 		r.ThemesRaw = content[t:]
 	}
 
-	si := firstLinePrefixOffset(beforeThemes, cfgDisc.EntryLinePrefix)
+	si := firstLinePrefixOffset(beforeThemes, EntryPrefix(r.Kind))
 	if si != -1 {
 		r.Preamble = beforeThemes[:si]
 		r.Staging = beforeThemes[si:]
 	} else {
 		r.Preamble = beforeThemes
-	}
-}
-
-// parseConvention splits a conventions root: preamble, the ## Themes
-// region, then the ## Recent staging region. An un-migrated conventions
-// file has no ## Themes; its prose sections are the staging directly.
-//
-// Parameters:
-//   - r: the root being assembled (mutated in place)
-//   - content: the full root content
-//   - themeOffsets: byte offsets of every ## Themes heading line
-func parseConvention(r *Root, content string, themeOffsets []int) {
-	if !r.HasThemes {
-		si := firstLinePrefixOffset(content, cfgDisc.ConventionLinePrefix)
-		if si != -1 {
-			r.Preamble = content[:si]
-			r.Staging = content[si:]
-		} else {
-			r.Preamble = content
-		}
-		return
-	}
-
-	t := themeOffsets[0]
-	r.Preamble = content[:t]
-	recentOffsets := headingLineOffsets(content[t:], cfgDisc.HeadingRecent)
-	if len(recentOffsets) > 0 {
-		rec := t + recentOffsets[0]
-		r.ThemesRaw = content[t:rec]
-		r.Staging = content[rec:]
-	} else {
-		r.ThemesRaw = content[t:]
 	}
 }
 
@@ -189,6 +163,43 @@ func firstLinePrefixOffset(content, prefix string) int {
 		i = next
 	}
 	return -1
+}
+
+// entryBelowThemes reports whether an entry heading of kind k appears
+// inside the themes region — below "## Themes", where the digesting pass
+// cannot reach it.
+//
+// The region opens with its own "## Themes" heading, which shares the
+// convention entry prefix ("## "), so that line is skipped explicitly:
+// without it every migrated convention root would report a violation
+// against itself. Headings inside an HTML comment are skipped for the
+// same reason they are elsewhere — they are examples, not structure.
+//
+// Parameters:
+//   - themesRaw: the root's raw themes region
+//   - k: the root kind, selecting the entry prefix
+//
+// Returns:
+//   - bool: true when an entry heading sits in the themes region
+func entryBelowThemes(themesRaw string, k Kind) bool {
+	if themesRaw == "" {
+		return false
+	}
+	prefix := EntryPrefix(k)
+	spans := htmlCommentSpans(themesRaw)
+	for i := 0; i < len(themesRaw); {
+		line, next := lineAt(themesRaw, i)
+		if strings.HasPrefix(line, prefix) &&
+			strings.TrimSpace(line) != cfgDisc.HeadingThemes &&
+			!insideAnySpan(i, spans) {
+			return true
+		}
+		if next == -1 {
+			break
+		}
+		i = next
+	}
+	return false
 }
 
 // htmlCommentSpans returns the [start, end) byte ranges of every HTML

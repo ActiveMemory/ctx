@@ -32,6 +32,11 @@ func gitInit(t *testing.T, root string) {
 		{"init", "-q"},
 		{"config", "user.email", "test@example.com"},
 		{"config", "user.name", "Test User"},
+		// The developer's global config may set commit.gpgsign; a
+		// test must never reach for the GPG agent (pinentry hijacks
+		// the terminal and hangs the run). Local config wins.
+		{"config", "commit.gpgsign", "false"},
+		{"config", "tag.gpgsign", "false"},
 		{"commit", "--allow-empty", "-m", "init", "-q"},
 	} {
 		//nolint:gosec // G204: test fixture, args are hardcoded above

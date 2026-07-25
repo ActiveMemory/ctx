@@ -6,13 +6,10 @@
 
 package disclosure
 
-import (
-	"github.com/ActiveMemory/ctx/internal/heading"
-)
-
 // StagedEntries returns the un-digested entries in a root's staging zone,
-// in file order. Conventions have no "## [" entries, so this is empty for
-// them (their digestion is a later milestone).
+// in file order, per the root's own kind: timestamped "## [" entries for
+// LEARNINGS/DECISIONS, curated "## " prose sections for CONVENTIONS. A
+// convention's Timestamp is always empty — its identity is its title.
 //
 // Parameters:
 //   - root: the parsed root
@@ -20,15 +17,15 @@ import (
 // Returns:
 //   - []StagedEntry: the staged entries, nil when staging holds none
 func StagedEntries(root Root) []StagedEntry {
-	blocks := heading.ParseEntryBlocks(root.Staging)
+	blocks := stagedBlocks(root.Staging, root.Kind)
 	if len(blocks) == 0 {
 		return nil
 	}
 	entries := make([]StagedEntry, 0, len(blocks))
 	for _, b := range blocks {
 		entries = append(entries, StagedEntry{
-			Timestamp: b.Entry.Timestamp,
-			Title:     b.Entry.Title,
+			Timestamp: b.Timestamp,
+			Title:     b.Title,
 		})
 	}
 	return entries

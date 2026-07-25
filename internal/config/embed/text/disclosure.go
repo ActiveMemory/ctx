@@ -80,4 +80,7 @@ const (
 	// DescKeyErrDisclosureVerifyFailed: after appending an entry body to a
 	// theme file, the body was not byte-present on re-read.
 	DescKeyErrDisclosureVerifyFailed = "err.disclosure.verify-failed"
+	// DescKeyErrDisclosureDuplicateStagedTitle: two staged sections of a
+	// convention root share a title, so title identity cannot address them.
+	DescKeyErrDisclosureDuplicateStagedTitle = "err.disclosure.duplicate-staged-title"
 )

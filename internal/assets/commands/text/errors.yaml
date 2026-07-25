@@ -22,6 +22,8 @@ err.add.no-content-provided:
     %s
 err.add.section-required:
   short: 'task requires --section flag to specify target phase (e.g., --section "Misc")'
+err.add.theme-spec:
+  short: 'adding a theme needs "<name> — <gist>": the em-dash separates the theme name from its one-line gist (e.g. "errors — how failures surface")'
 err.add.unknown-type:
   short: 'unknown type %q. Valid types: decision, task, learning, convention'
 err.fmt.no-context-dir:
@@ -168,6 +170,8 @@ err.disclosure.entry-not-in-staging:
   short: 'progressive disclosure: a digest plan references an entry that is not in the root''s staging zone'
 err.disclosure.verify-failed:
   short: 'progressive disclosure: an entry body was not byte-present after being appended to its theme file; aborting with the root untouched'
+err.disclosure.duplicate-staged-title:
+  short: 'progressive disclosure: two staged sections share a title; a convention entry is addressed by its title alone, so the duplicate must be renamed before it can be digested'
 err.crypto.ciphertext-too-short:
   short: ciphertext too short
 err.crypto.create-cipher:

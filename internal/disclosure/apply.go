@@ -20,10 +20,14 @@ import (
 // guards (specs/progressive-disclosure.md §Guards). It is the first pass
 // that writes a canonical knowledge file.
 //
+// It digests every canonical kind. Conventions differ only in how their
+// staged entries are identified — by section title, with no timestamp —
+// which the enumeration behind SplitStaging and entryID already absorbs;
+// the write sequence below is identical.
+//
 // Order is load-bearing:
-//  1. Refuse a non-knowledge file, an un-digestible kind (conventions are
-//     a later milestone), or a malformed root (Validate) — before any
-//     write.
+//  1. Refuse a non-knowledge file, an unknown kind, or a malformed root
+//     (Validate) — before any write.
 //  2. Compute the lossless staging split and the theme-file appends.
 //  3. Append entry bodies to their theme files (additive first).
 //  4. Verify byte-presence by re-reading each theme file. Any miss aborts
@@ -66,7 +70,7 @@ func Apply(rootPath string, plan Plan, ctxDir string) (ApplyResult, error) {
 	if planErr != nil {
 		return ApplyResult{}, planErr
 	}
-	moved, remaining, splitErr := SplitStaging(root.Staging, moveIDs)
+	moved, remaining, splitErr := SplitStaging(root.Staging, moveIDs, kind)
 	if splitErr != nil {
 		return ApplyResult{}, splitErr
 	}

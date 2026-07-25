@@ -41,7 +41,7 @@ func TestSplitStaging(t *testing.T) {
 	idB := idFor("2026-01-02-000000", "Beta")
 
 	t.Run("move first", func(t *testing.T) {
-		moved, remaining, err := disclosure.SplitStaging(stagingTwo, []string{idA})
+		moved, remaining, err := disclosure.SplitStaging(stagingTwo, []string{idA}, disclosure.KindLearning)
 		if err != nil {
 			t.Fatalf("SplitStaging err = %v", err)
 		}
@@ -54,7 +54,7 @@ func TestSplitStaging(t *testing.T) {
 	})
 
 	t.Run("move second", func(t *testing.T) {
-		moved, remaining, err := disclosure.SplitStaging(stagingTwo, []string{idB})
+		moved, remaining, err := disclosure.SplitStaging(stagingTwo, []string{idB}, disclosure.KindLearning)
 		if err != nil {
 			t.Fatalf("SplitStaging err = %v", err)
 		}
@@ -67,7 +67,7 @@ func TestSplitStaging(t *testing.T) {
 	})
 
 	t.Run("move both leaves empty staging", func(t *testing.T) {
-		moved, remaining, err := disclosure.SplitStaging(stagingTwo, []string{idA, idB})
+		moved, remaining, err := disclosure.SplitStaging(stagingTwo, []string{idA, idB}, disclosure.KindLearning)
 		if err != nil {
 			t.Fatalf("SplitStaging err = %v", err)
 		}
@@ -80,7 +80,7 @@ func TestSplitStaging(t *testing.T) {
 	})
 
 	t.Run("move none is identity", func(t *testing.T) {
-		moved, remaining, err := disclosure.SplitStaging(stagingTwo, nil)
+		moved, remaining, err := disclosure.SplitStaging(stagingTwo, nil, disclosure.KindLearning)
 		if err != nil {
 			t.Fatalf("SplitStaging err = %v", err)
 		}
@@ -94,14 +94,15 @@ func TestSplitStaging(t *testing.T) {
 
 	t.Run("unknown id", func(t *testing.T) {
 		_, _, err := disclosure.SplitStaging(stagingTwo,
-			[]string{idFor("2026-09-09-090909", "Ghost")})
+			[]string{idFor("2026-09-09-090909", "Ghost")},
+			disclosure.KindLearning)
 		if err != errDisc.ErrEntryNotInStaging {
 			t.Errorf("err = %v, want ErrEntryNotInStaging", err)
 		}
 	})
 
 	t.Run("duplicate id", func(t *testing.T) {
-		_, _, err := disclosure.SplitStaging(stagingTwo, []string{idA, idA})
+		_, _, err := disclosure.SplitStaging(stagingTwo, []string{idA, idA}, disclosure.KindLearning)
 		if err != errDisc.ErrEntryAssignedTwice {
 			t.Errorf("err = %v, want ErrEntryAssignedTwice", err)
 		}

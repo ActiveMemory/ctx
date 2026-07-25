@@ -55,23 +55,51 @@ func (k Kind) String() string {
 }
 
 // ThemeDir returns the context-relative subdirectory that holds a kind's
-// theme files (<noun>/<slug>.md). It is false for the convention kind —
-// whose digestion is a later milestone — and for an unknown kind, so the
-// mover refuses rather than write entry bodies to a guessed path.
+// theme files (<noun>/<slug>.md). It is false only for an unknown kind,
+// so the mover refuses rather than write entry bodies to a guessed path.
 //
 // Parameters:
 //   - k: the root kind
 //
 // Returns:
 //   - string: the theme-file subdirectory (meaningful only when ok)
-//   - bool: true for the entry kinds (learning, decision) the mover digests
+//   - bool: true for every kind the mover digests
 func ThemeDir(k Kind) (string, bool) {
 	switch k {
 	case KindLearning:
 		return cfgDisc.ThemeDirLearning, true
 	case KindDecision:
 		return cfgDisc.ThemeDirDecision, true
+	case KindConvention:
+		return cfgDisc.ThemeDirConvention, true
 	default:
 		return "", false
+	}
+}
+
+// EntryPrefix returns the line prefix that opens an entry heading in a
+// kind's staging zone: "## [" for the timestamped kinds (learning,
+// decision), "## " for the curated prose sections of a convention root.
+//
+// Parametrizing this prefix is what collapses the two former parse paths
+// into one — the structural difference between the kinds is the prefix
+// and the identity (timestamp+title vs title alone), not the layout.
+//
+// Callers scanning a convention root must skip [cfgDisc.HeadingThemes],
+// which shares the "## " prefix but is structure, not an entry.
+//
+// Parameters:
+//   - k: the root kind
+//
+// Returns:
+//   - string: the kind's entry-heading line prefix
+func EntryPrefix(k Kind) string {
+	switch k {
+	case KindLearning, KindDecision:
+		return cfgDisc.EntryLinePrefix
+	case KindConvention:
+		return cfgDisc.SectionLinePrefix
+	default:
+		return cfgDisc.EntryLinePrefix
 	}
 }

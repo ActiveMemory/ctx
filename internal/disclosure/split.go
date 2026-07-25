@@ -9,9 +9,7 @@ package disclosure
 import (
 	"strings"
 
-	cfgDisc "github.com/ActiveMemory/ctx/internal/config/disclosure"
 	errDisc "github.com/ActiveMemory/ctx/internal/err/disclosure"
-	"github.com/ActiveMemory/ctx/internal/heading"
 )
 
 // FlattenPlan resolves a plan's per-theme staged entries into one ordered
@@ -42,23 +40,27 @@ func FlattenPlan(p Plan) ([]string, error) {
 // zone and returns each moved entry's verbatim span alongside the
 // remaining staging, byte-exact.
 //
-// It cuts on raw header-to-next-header byte spans rather than reusing
-// heading.ParseEntryBlocks' BlockContent — that helper trims trailing
-// blank lines, so re-joining parsed blocks would silently drop the
-// inter-entry whitespace. ParseEntryBlocks is used only to identify the
-// entries and their order; the spans are cut from the original bytes so
+// It cuts on raw header-to-next-header byte spans rather than reusing a
+// parsed block's trimmed content — trimming would silently drop the
+// inter-entry whitespace. The block enumeration identifies the entries
+// and their order; the spans are cut from the original bytes so
 // Reconstruct-grade fidelity holds (spec Guards §1, Conservation).
 //
+// Both kinds cut identically. Only the enumeration differs: "## [ts]
+// Title" entries for the timestamped kinds, "## Title" sections for a
+// convention root, whose identity is its title alone.
+//
 // Parameters:
-//   - staging: the root's raw staging zone (starts at the first "## [")
+//   - staging: the root's raw staging zone (starts at the first entry)
 //   - moveIDs: entry IDs (timestamp+IDSeparator+title) to move out
+//   - k: the kind whose entry shape staging follows
 //
 // Returns:
 //   - map[string]string: moved id -> its verbatim span
 //   - string: the remaining staging (un-moved entries, byte-exact)
 //   - error: ErrEntryAssignedTwice (dup id), ErrEntryNotInStaging (unknown)
 func SplitStaging(
-	staging string, moveIDs []string,
+	staging string, moveIDs []string, k Kind,
 ) (map[string]string, string, error) {
 	want := make(map[string]bool, len(moveIDs))
 	for _, id := range moveIDs {
@@ -68,7 +70,7 @@ func SplitStaging(
 		want[id] = true
 	}
 
-	blocks := heading.ParseEntryBlocks(staging)
+	blocks := stagedBlocks(staging, k)
 	byteOff := lineByteOffsets(staging)
 
 	moved := make(map[string]string, len(moveIDs))
@@ -78,15 +80,15 @@ func SplitStaging(
 	var removals []span
 
 	for i, b := range blocks {
-		id := b.Entry.Timestamp + cfgDisc.IDSeparator + b.Entry.Title
+		id := b.id()
 		if !want[id] || seen[id] {
 			continue
 		}
 		endLine := len(byteOff) - 1
 		if i+1 < len(blocks) {
-			endLine = blocks[i+1].StartIndex
+			endLine = blocks[i+1].StartLine
 		}
-		start := clampOffset(byteOff[b.StartIndex], len(staging))
+		start := clampOffset(byteOff[b.StartLine], len(staging))
 		end := clampOffset(byteOff[endLine], len(staging))
 		moved[id] = staging[start:end]
 		removals = append(removals, span{start, end})

@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/i18n"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/theme"
 )
 
 // Write formats and writes an entry to the appropriate context file.
@@ -60,6 +61,23 @@ func Write(params entity.EntryParams) error {
 	existing, readErr := io.SafeReadUserFile(filepath.Clean(filePath))
 	if readErr != nil {
 		return errFs.FileRead(filePath, readErr)
+	}
+
+	// `--section Themes` declares a theme rather than adding an entry: the
+	// content is a "<name> — <gist>" spec, not a formatted entry body.
+	if theme.IsTarget(params.Section) {
+		newRoot, themeErr := theme.Apply(
+			contextDir, fileName, string(existing), params.Content,
+		)
+		if themeErr != nil {
+			return themeErr
+		}
+		if writeErr := io.SafeWriteFile(
+			filePath, newRoot, fs.PermFile,
+		); writeErr != nil {
+			return errFs.FileWrite(filePath, writeErr)
+		}
+		return nil
 	}
 
 	var formatted string

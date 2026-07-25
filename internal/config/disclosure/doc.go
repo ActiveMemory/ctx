@@ -11,12 +11,15 @@
 //
 // A bounded root is delimited by ATX headings whose exact text is
 // load-bearing: [HeadingThemes] ("## Themes") marks the themes region
-// and, for entry files, the lower bound of the staging zone;
-// [HeadingRecent] ("## Recent") marks the staging zone of a CONVENTIONS
-// root, which appends at EOF and cannot reuse "## Themes" (a "###" prose
-// section would nest ambiguously inside it). [ThemeDirLearning],
-// [ThemeDirDecision], and [ThemeDirConvention] name the per-kind
-// subdirectories of the context directory that hold theme files.
+// and the lower bound of the staging zone, for every kind.
+//
+// Within the staging zone, one line prefix opens each entry, and it is
+// the only structural difference between the kinds: [EntryLinePrefix]
+// ("## [") for the timestamped LEARNINGS/DECISIONS entries, and
+// [SectionLinePrefix] ("## ") for the curated prose sections of a
+// CONVENTIONS root. [ThemeDirLearning], [ThemeDirDecision], and
+// [ThemeDirConvention] name the per-kind subdirectories of the context
+// directory that hold theme files.
 //
 // These constants are a single source of truth: the parser
 // (internal/disclosure), the validate precondition, and the add-path

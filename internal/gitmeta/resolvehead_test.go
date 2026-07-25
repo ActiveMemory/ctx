@@ -103,6 +103,10 @@ func TestResolveHead_RealRepoReturnsBranchName(t *testing.T) {
 	runGit("init", "--initial-branch=trunk")
 	runGit("config", "user.email", "test@example.com")
 	runGit("config", "user.name", "Test")
+	// Never reach for the GPG agent from a test (pinentry hijacks the
+	// terminal and hangs the run); local config wins over global.
+	runGit("config", "commit.gpgsign", "false")
+	runGit("config", "tag.gpgsign", "false")
 	runGit("commit", "--allow-empty", "-m", "init")
 
 	ref, err := gitmeta.ResolveHead(tmp)

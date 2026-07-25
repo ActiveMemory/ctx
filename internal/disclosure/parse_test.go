@@ -25,12 +25,22 @@ const (
 	entryUnmigrated = "# Learnings\n\n<!-- guide -->\n\n" +
 		"## [2026-07-15-120000] a staged entry\n\n**Context**: x.\n"
 
+	// Convention fixtures (M4): the same preamble | staging | ## Themes
+	// layout as the entry kinds. Staging holds curated "## " prose
+	// sections; the retired model nested "### " under a "## Recent".
 	conventionMigrated = "# Conventions\n\n<!-- guide -->\n\n" +
-		"## Themes\n\n- naming — file naming → [naming](conventions/naming.md)\n\n" +
-		"## Recent\n\n### a recent convention\n\nprose.\n"
+		"## Error handling\n\nwrap with %w.\n\n" +
+		"## Naming\n\nname files for their concern.\n\n" +
+		"## Themes\n\n- naming — file naming → [naming](conventions/naming.md)\n"
 
 	conventionUnmigrated = "# Conventions\n\n<!-- guide -->\n\n" +
-		"### a convention\n\nprose.\n"
+		"## a convention\n\nprose.\n"
+
+	// A "## " line inside the preamble's HTML comment is an illustrative
+	// example in the authoring guide, not a staged section.
+	conventionCommentedExample = "# Conventions\n\n" +
+		"<!--\nAdd sections like:\n\n## Section Title\n\nprose.\n-->\n\n" +
+		"## Real Section\n\nreal prose.\n"
 )
 
 // T04/T05: Parse must round-trip every shape byte-for-byte — nothing is
@@ -46,6 +56,7 @@ func TestParse_RoundTrip(t *testing.T) {
 		{"entry un-migrated", entryUnmigrated, disclosure.KindDecision},
 		{"convention migrated", conventionMigrated, disclosure.KindConvention},
 		{"convention un-migrated", conventionUnmigrated, disclosure.KindConvention},
+		{"convention commented example", conventionCommentedExample, disclosure.KindConvention},
 		{"empty", "", disclosure.KindLearning},
 	}
 	for _, tc := range cases {
@@ -89,24 +100,67 @@ func TestParse_EntryKindUnmigrated(t *testing.T) {
 	}
 }
 
-// T05: conventions split has themes between ## Themes and ## Recent, and
-// staging is the ## Recent region.
+// M4/T07: a convention root splits on the same preamble | staging |
+// ## Themes layout as the entry kinds — staging is the "## " sections
+// above the themes region, not a "## Recent" block below it.
 func TestParse_ConventionKind(t *testing.T) {
 	r := disclosure.Parse(conventionMigrated, disclosure.KindConvention)
 	if !r.HasThemes {
 		t.Fatal("HasThemes = false, want true")
 	}
-	if !strings.HasPrefix(strings.TrimSpace(r.Staging), "## Recent") {
-		t.Errorf("staging must start at ## Recent; staging=%q", r.Staging)
+	if !strings.HasPrefix(r.Staging, "## Error handling") {
+		t.Errorf("staging must start at the first section; staging=%q", r.Staging)
 	}
-	if !strings.Contains(r.Staging, "a recent convention") {
-		t.Errorf("recent section not in staging; staging=%q", r.Staging)
+	if !strings.Contains(r.Staging, "## Naming") {
+		t.Errorf("second section not in staging; staging=%q", r.Staging)
 	}
-	if strings.Contains(r.ThemesRaw, "## Recent") {
-		t.Errorf("themes region leaked ## Recent; themesRaw=%q", r.ThemesRaw)
+	if strings.Contains(r.Staging, "## Themes") {
+		t.Errorf("staging leaked the themes section; staging=%q", r.Staging)
+	}
+	if !strings.HasPrefix(r.Preamble, "# Conventions") ||
+		strings.Contains(r.Preamble, "## Error handling") {
+		t.Errorf("preamble wrong; preamble=%q", r.Preamble)
 	}
 	if len(r.Themes) != 1 || r.Themes[0].Link != "conventions/naming.md" {
 		t.Errorf("themes parse wrong: %+v", r.Themes)
+	}
+}
+
+// M4/T05/T09 (C2): the convention enumerator reports one entry per
+// curated section, with title identity and no timestamp.
+func TestStagedEntries_Convention(t *testing.T) {
+	r := disclosure.Parse(conventionMigrated, disclosure.KindConvention)
+	got := disclosure.StagedEntries(r)
+	if len(got) != 2 {
+		t.Fatalf("StagedEntries = %d, want 2: %+v", len(got), got)
+	}
+	want := []string{"Error handling", "Naming"}
+	for i, w := range want {
+		if got[i].Title != w {
+			t.Errorf("entry %d title = %q, want %q", i, got[i].Title, w)
+		}
+		if got[i].Timestamp != "" {
+			t.Errorf("entry %d timestamp = %q, want empty (title identity)",
+				i, got[i].Timestamp)
+		}
+	}
+}
+
+// M4/T09 (C7): a "## " line inside an HTML comment is an authoring
+// example, not a staged section — the comment-skip carried over from M3
+// must hold for the convention prefix, which collides far more readily
+// than "## [".
+func TestParse_ConventionCommentSkip(t *testing.T) {
+	r := disclosure.Parse(conventionCommentedExample, disclosure.KindConvention)
+	if !strings.HasPrefix(r.Staging, "## Real Section") {
+		t.Errorf("staging must start at the real section; staging=%q", r.Staging)
+	}
+	if strings.Contains(r.Staging, "Add sections like") {
+		t.Errorf("comment leaked into staging; staging=%q", r.Staging)
+	}
+	entries := disclosure.StagedEntries(r)
+	if len(entries) != 1 || entries[0].Title != "Real Section" {
+		t.Errorf("StagedEntries = %+v, want just Real Section", entries)
 	}
 }
 

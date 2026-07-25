@@ -4,7 +4,7 @@
 
 .PHONY: build ctxctl test vet fmt fmt-context lint lint-style lint-drift lint-shellcheck lint-powershell \
 clean all release build-all help \
-test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
+test-coverage smoke site site-guard site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall check-tools \
 sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills sync-steering check-steering gemini-search \
 gitnexus-version gitnexus-update gitnexus-index gitnexus-mcp strip-gitnexus install-ctxctl reinstall-ctxctl
@@ -19,6 +19,11 @@ OUTPUT := $(BINARY)
 # repo copy / worktree shares one binary and the root stays clean.
 CTXCTL_BINARY := ctxctl
 CTXCTL_OUTPUT := dist/$(CTXCTL_BINARY)
+
+# Exact zensical pin for site builds, read from the tooling manifest
+# (leading '=' stripped) so the installer and the check can never
+# disagree about the version.
+ZENSICAL_PIN := $(shell awk '$$1 == "zensical" && $$2 == "bin" { sub(/^=/, "", $$4); print $$4 }' hack/tool-versions.txt)
 
 # Default target
 all: build
@@ -224,12 +229,34 @@ reinstall-ctxctl: ctxctl
 	install -m 0755 $(CTXCTL_OUTPUT) /usr/local/bin/$(CTXCTL_BINARY) 2>/dev/null || sudo install -m 0755 $(CTXCTL_OUTPUT) /usr/local/bin/$(CTXCTL_BINARY)
 	@echo "ctxctl reinstalled to /usr/local/bin/$(CTXCTL_BINARY)"
 
-## site-setup: Install zensical via pipx
+## site-setup: Install the pinned zensical via pipx
 site-setup:
-	pipx install zensical
+	pipx install 'zensical==$(ZENSICAL_PIN)'
+
+# Refuse to build the site with a generator that is not the pinned one.
+# Both directions matter: behind the pin silently regenerates pages from
+# an older generator, ahead of it regenerates them from a newer one. The
+# size of the resulting diff varies with the version gap — it is not
+# predictable, which is exactly why it must not be produced by accident.
+# Reuses the manifest pin and the version comparison in check-tools.sh
+# rather than reimplementing either.
+site-guard:
+	@./hack/check-tools.sh --only zensical --strict || { \
+	  echo ""; \
+	  echo "make site refused to run: zensical is not the pinned $(ZENSICAL_PIN)."; \
+	  echo ""; \
+	  echo "Rebuilding with a different generator rewrites pages in site/ with"; \
+	  echo "that generator's output. CI never rebuilds the site, so this check"; \
+	  echo "is the only thing standing between an accidental churn diff and main."; \
+	  echo ""; \
+	  echo "  Behind the pin  -> install the pin:  make site-setup"; \
+	  echo "  Ahead of it     -> intentional upgrade? bump the pin in"; \
+	  echo "                     hack/tool-versions.txt, rebuild, and commit the"; \
+	  echo "                     regenerated site/ with the pin bump."; \
+	  exit 1; }
 
 ## site: Build documentation site and generate feed
-site:
+site: site-guard
 	zensical build
 	ctx site feed
 

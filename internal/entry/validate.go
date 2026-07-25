@@ -12,6 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	errAdd "github.com/ActiveMemory/ctx/internal/err/add"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/theme"
 )
 
 // Validate checks that required fields are present for the given entry type.
@@ -30,6 +31,14 @@ func Validate(params entity.EntryParams, examplesFn func(string) string) error {
 			examples = examplesFn(params.Type)
 		}
 		return errAdd.NoContentProvided(params.Type, examples)
+	}
+
+	// A theme declaration is not an entry. It carries a name and a gist
+	// and nothing else — no body fields, no provenance — so the per-kind
+	// requirements below do not apply to it. Its own shape is validated
+	// where it is written (internal/write/theme).
+	if theme.IsTarget(params.Section) {
+		return nil
 	}
 
 	// Provenance is required for task, decision, and learning

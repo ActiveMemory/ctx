@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../images/favicon-32.png">
-      <meta name="generator" content="zensical-0.0.47">
+      <meta name="generator" content="zensical-0.0.51">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.5e19f6ca.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.62c9b9cc.min.css">
       
         
           
@@ -1171,10 +1171,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-5-reindex-after-manual-edits" class="md-nav__link">
+  <a href="#step-5-project-a-table-of-contents-on-demand" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Step 5: Reindex After Manual Edits
+        Step 5: Project a Table of Contents on Demand
       </span>
     </span>
   </a>
@@ -2261,10 +2261,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-5-reindex-after-manual-edits" class="md-nav__link">
+  <a href="#step-5-project-a-table-of-contents-on-demand" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Step 5: Reindex After Manual Edits
+        Step 5: Project a Table of Contents on Demand
       </span>
     </span>
   </a>
@@ -2555,19 +2555,9 @@ branch, and commit hash from its context, so no manual flags are needed.</p>
 <td>Record a coding pattern or standard</td>
 </tr>
 <tr>
-<td><code>ctx reindex</code></td>
+<td><code>ctx index &lt;file&gt;</code></td>
 <td>Command</td>
-<td>Rebuild both quick-reference indices</td>
-</tr>
-<tr>
-<td><code>ctx decision reindex</code></td>
-<td>Command</td>
-<td>Rebuild the DECISIONS.md index</td>
-</tr>
-<tr>
-<td><code>ctx learning reindex</code></td>
-<td>Command</td>
-<td>Rebuild the LEARNINGS.md index</td>
+<td>Project a file's headings as a table of contents</td>
 </tr>
 <tr>
 <td><code>/ctx-decision-add</code></td>
@@ -2702,16 +2692,17 @@ expressive than what you would type at a command prompt.</p>
 </span></code></pre></div>
 <p>Conventions work best for rules that come up repeatedly. Codify a pattern the
 third time you see it, not the first.</p>
-<h3 id="step-5-reindex-after-manual-edits">Step 5: Reindex After Manual Edits<a class="headerlink" href="#step-5-reindex-after-manual-edits" title="Permanent link">&para;</a></h3>
-<p><code>DECISIONS.md</code> and <code>LEARNINGS.md</code> maintain a quick-reference index at the top:
-a compact table of date and title for each entry. The index updates
-automatically via <code>ctx add</code>, but falls out of sync after hand edits.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>reindex
+<h3 id="step-5-project-a-table-of-contents-on-demand">Step 5: Project a Table of Contents on Demand<a class="headerlink" href="#step-5-project-a-table-of-contents-on-demand" title="Permanent link">&para;</a></h3>
+<p><code>DECISIONS.md</code> and <code>LEARNINGS.md</code> do not store an index. A quick-reference
+table of contents — the date and title for each entry — is computed on
+demand, so it can never fall out of sync with the file, even after hand
+edits.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>index<span class="w"> </span>.context/DECISIONS.md
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>index<span class="w"> </span>.context/LEARNINGS.md
 </span></code></pre></div>
-<p>This single command regenerates both indices. You can also reindex
-individually with <code>ctx decision reindex</code> or <code>ctx learning reindex</code>.</p>
-<p>Run reindex after any manual edit. The index lets AI tools scan all entries
-without reading the full file, which matters when token budgets are tight.</p>
+<p>The projection lets AI tools scan all entries without reading the full file,
+which matters when token budgets are tight. Use <code>--json</code> for machine-readable
+output.</p>
 <h3 id="step-6-use-ctx-reflect-to-surface-what-to-capture">Step 6: Use <code>/ctx-reflect</code> to Surface What to Capture<a class="headerlink" href="#step-6-use-ctx-reflect-to-surface-what-to-capture" title="Permanent link">&para;</a></h3>
 <div class="admonition tip">
 <p class="admonition-title">Keep It Conversational</p>
@@ -2831,8 +2822,8 @@ rather than waiting for explicit instructions.</p>
 </span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Convention: record the pattern</span>
 </span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>ctx<span class="w"> </span>convention<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;API handlers return structured errors&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;API&quot;</span>
 </span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
-</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># Reindex after manual edits</span>
-</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>ctx<span class="w"> </span>reindex
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># Project a table of contents on demand</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>ctx<span class="w"> </span>index<span class="w"> </span>.context/DECISIONS.md
 </span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>
 </span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="c1"># Reflect at breakpoints (from AI assistant)</span>
 </span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="c1"># /ctx-reflect</span>
@@ -3071,7 +3062,7 @@ The documentation on this website is distributed under
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.0df4f2d0.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7f30b55.min.js"></script>
       
     
   </body>
