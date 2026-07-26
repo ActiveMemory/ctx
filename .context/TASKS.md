@@ -3049,4 +3049,26 @@ E5[T16–17] E6[T18–19] E7[T20–22] = 22.
 
 ### Progressive disclosure — Milestone 5 (suggest-only triggers)
 
-- [ ] M5: suggest-only trigger wiring for progressive disclosure — growth nudge points at /ctx-digest; /ctx-remember surfaces oversized roots; /ctx-wrap-up surfaces them at session end. Suggest only, never auto-fold. Plan: pd-m4.md Out-of-scope table. #session:951e1535 #branch:main #commit:1a880bf3 #added:2026-07-25-132759
+- [ ] M5: suggest-only trigger wiring for progressive disclosure — growth nudge points at /ctx-digest; /ctx-remember surfaces oversized roots; /ctx-wrap-up surfaces them at session end. Suggest only, never auto-fold. Plan: specs/plans/pd-m5.md #session:951e1535 #branch:main #commit:1a880bf3 #added:2026-07-25-132759
+
+Plan: `specs/plans/pd-m5.md` · Spec: `specs/progressive-disclosure.md`
+Two suggest-only signals from one `knowledge.Health`: **foldable root**
+(staging count → `/ctx-digest`) and **heavy page** (bytes over root +
+theme files → split/extract). No auto-fold, no state file.
+
+**Completion rule**: an epic is `[x]` only when every task in its range is
+`[x]`/`[o]` in `specs/plans/pd-m5.md` (the plan is the source of truth).
+Epics partition T01–T23: E1[T01–03] E2[T04–08] E3[T09–12] E4[T13–14]
+E5[T15–20] E6[T21–23] = 23.
+
+- [ ] [E1] Config: retire `ConventionLineCount`; add `ConventionSectionCount` + `ThemePageByteCeiling` + runtime defaults (T01–T03). Plan: specs/plans/pd-m5.md #priority:medium #session:951e1535 #branch:design/pd-m5-triggers #added:2026-07-25
+
+- [ ] [E2] Health core: `finding` Kind/Path; foldable signal via `disclosure.StagedEntries`; heavy signal over root + theme-file bytes; combine with foldable-first ordering (T04–T08). Plan: specs/plans/pd-m5.md #priority:medium #session:951e1535 #branch:design/pd-m5-triggers #added:2026-07-25
+
+- [ ] [E3] Wiring: warning text (`/ctx-digest` primary + split/extract); format routing by kind; `check-knowledge` report path; hook uses `Health` (T09–T12). Plan: specs/plans/pd-m5.md #priority:medium #session:951e1535 #branch:design/pd-m5-triggers #added:2026-07-25
+
+- [ ] [E4] Skills: `/ctx-remember` + `/ctx-wrap-up` surface foldable/heavy, suggest-only (T13–T14). Plan: specs/plans/pd-m5.md #priority:medium #session:951e1535 #branch:design/pd-m5-triggers #added:2026-07-25
+
+- [ ] [E5] Tests: health fixtures, heavy root + theme file, both-fire ordering, convention measure, boundary/disable, surface parity (T15–T20). Plan: specs/plans/pd-m5.md #priority:medium #session:951e1535 #branch:design/pd-m5-triggers #added:2026-07-25
+
+- [ ] [E6] Sync + gates: copilot skill sync, measurement gate (T22), milestone gate (T21–T23). Plan: specs/plans/pd-m5.md #priority:medium #session:951e1535 #branch:design/pd-m5-triggers #added:2026-07-25
