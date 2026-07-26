@@ -82,10 +82,10 @@ DoD:
 | T06 | [x] | heavy signal: byte scan of the root file | T04 | `knowledge.go` | | unit: root > ceiling → heavy finding on root path | Signal 2 |
 | T07 | [x] | heavy signal: byte scan of theme files via `disclosure.ThemeDir(kind)` | T04,T06 | `knowledge.go` | | unit: 80 KB theme file → heavy finding on that file (**M3**) | Signal 2 |
 | T08 | [x] | `knowledge.Health`: combine signals; both-fire → foldable first | T05,T06,T07 | `knowledge.go` | | unit: large un-migrated root → foldable ordered before heavy (**M4**) | Contracts |
-| T09 | [ ] | warning text: foldable→/ctx-digest primary (consolidate/drift secondary); heavy→split/extract | T08 | `internal/assets/commands/text/hooks.yaml`, `internal/assets/hooks/messages/check-knowledge/warning.txt` | | build embeds; message-registry test green; text names /ctx-digest | Contracts |
-| T10 | [ ] | `FormatWarnings`/`EmitWarning` route by `Kind` | T08,T09 | `knowledge.go` | | unit: foldable vs heavy render distinct remedy lines | Contracts |
-| T11 | [ ] | `ctx system check-knowledge` report path the skills call | T08 | `internal/cli/system/cmd/checkknowledge/*.go` | | e2e: command prints findings for an oversized fixture root | Contracts |
-| T12 | [ ] | hook wiring: `CheckHealth` uses `Health`; throttle/log-first unchanged | T08,T10 | `knowledge.go` | | e2e: hook nudge names /ctx-digest for a foldable root; throttled once/day | Triggers |
+| T09 | [x] | warning text: foldable→/ctx-digest primary (consolidate/drift secondary); heavy→split/extract | T08 | `internal/assets/commands/text/hooks.yaml`, `internal/assets/hooks/messages/check-knowledge/warning.txt` | | build embeds; message-registry test green; text names /ctx-digest | Contracts |
+| T10 | [x] | `FormatWarnings`/`EmitWarning` route by `Kind` | T08,T09 | `knowledge.go` | | unit: foldable vs heavy render distinct remedy lines | Contracts |
+| T11 | [x] | `ctx system check-knowledge` report path the skills call | T08 | `internal/cli/system/cmd/checkknowledge/*.go` | | e2e: command prints findings for an oversized fixture root | Contracts |
+| T12 | [x] | hook wiring: `CheckHealth` uses `Health`; throttle/log-first unchanged | T08,T10 | `knowledge.go` | | e2e: hook nudge names /ctx-digest for a foldable root; throttled once/day | Triggers |
 | T13 | [ ] | `/ctx-remember` skill: surface foldable/heavy at session start (read-only) | T11 | `internal/assets/claude/skills/ctx-remember/SKILL.md` | [P] | frontmatter test green; body calls the report path, relays suggestions | Triggers |
 | T14 | [ ] | `/ctx-wrap-up` skill: surface at session end, suggest-only never inline | T11 | `internal/assets/claude/skills/ctx-wrap-up/SKILL.md` | [P] | frontmatter test green; body surfaces + explicitly does not fold | Triggers |
 | T15 | [x] | `Health` unit tests: foldable, folded-quiet fixtures | T05 | `internal/cli/system/core/knowledge/*_test.go` | | **M1,M2** pass | Tests |

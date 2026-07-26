@@ -16,8 +16,32 @@ import (
 	coreKnowledge "github.com/ActiveMemory/ctx/internal/cli/system/core/knowledge"
 	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
+
+// RunReport prints the current knowledge-health findings on demand, for the
+// /ctx-remember and /ctx-wrap-up skills to relay. Unlike the hook [Run]
+// it reads no stdin, does not throttle, and does not relay: the skills
+// call it deliberately at session boundaries and want the live state.
+// Prints nothing when every root is within limits (a clean session start
+// says nothing about knowledge health).
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//
+// Returns:
+//   - error: nil; a missing context directory is not an error here
+func RunReport(cmd *cobra.Command) error {
+	ctxDir, dirErr := rc.ContextDir()
+	if dirErr != nil {
+		return nil
+	}
+	if report := coreKnowledge.Report(ctxDir); report != "" {
+		writeSetup.Nudge(cmd, report)
+	}
+	return nil
+}
 
 // Run executes the check-knowledge hook logic.
 //

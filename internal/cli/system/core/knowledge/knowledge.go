@@ -21,7 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/disclosure"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
-	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Health scans the canonical knowledge roots and returns the two M5
@@ -100,11 +99,33 @@ func Health(contextDir string, t Thresholds) []finding {
 // Returns:
 //   - string: formatted warning lines for template injection
 func FormatWarnings(findings []finding) string {
-	var b strings.Builder
-	findingFmt := desc.Text(text.DescKeyCheckKnowledgeFindingFormat)
+	var foldables, heavies []finding
 	for _, f := range findings {
-		io.SafeFprintf(&b, findingFmt, f.File, f.Count, f.Unit, f.Threshold)
+		if f.Kind == heavy {
+			heavies = append(heavies, f)
+			continue
+		}
+		foldables = append(foldables, f)
 	}
+
+	findingFmt := desc.Text(text.DescKeyCheckKnowledgeFindingFormat)
+	var b strings.Builder
+	writeGroup := func(group []finding, remedyKey string) {
+		if len(group) == 0 {
+			return
+		}
+		if b.Len() > 0 {
+			b.WriteString(token.NewlineLF)
+		}
+		for _, f := range group {
+			io.SafeFprintf(&b, findingFmt, f.File, f.Count, f.Unit, f.Threshold)
+		}
+		b.WriteString(desc.Text(remedyKey))
+	}
+	// Foldable first: when a root trips both, folding is the move that
+	// reduces both, so its remedy leads.
+	writeGroup(foldables, text.DescKeyCheckKnowledgeRemedyFoldable)
+	writeGroup(heavies, text.DescKeyCheckKnowledgeRemedyHeavy)
 	return b.String()
 }
 
@@ -120,11 +141,11 @@ func FormatWarnings(findings []finding) string {
 //     honor the log-first principle: if the relay audit entry or
 //     webhook fails, the nudge box should not be printed.
 func EmitWarning(sessionID, fileWarnings string) (string, error) {
-	fallback := fileWarnings + token.NewlineLF + desc.Text(
-		text.DescKeyCheckKnowledgeFallback,
-	)
+	// fileWarnings already carries its per-kind remedy lines (see
+	// FormatWarnings), so it is a complete fallback on template-load
+	// failure — no generic remedy to append.
 	content := message.Load(hook.CheckKnowledge, hook.VariantWarning,
-		map[string]any{knowledge.VarFileWarnings: fileWarnings}, fallback)
+		map[string]any{knowledge.VarFileWarnings: fileWarnings}, fileWarnings)
 	if content == "" {
 		return "", nil
 	}
@@ -163,12 +184,7 @@ func EmitWarning(sessionID, fileWarnings string) (string, error) {
 //     log-first principle and skip printing the box when the relay
 //     audit entry could not be written.
 func CheckHealth(sessionID, ctxDir string) (string, bool, error) {
-	t := Thresholds{
-		Learnings:   rc.EntryCountLearnings(),
-		Decisions:   rc.EntryCountDecisions(),
-		Conventions: rc.ConventionSectionCount(),
-		PageBytes:   rc.ThemePageByteCeiling(),
-	}
+	t := thresholds()
 
 	// All disabled - nothing to check
 	if t.Learnings == 0 && t.Decisions == 0 &&
@@ -187,4 +203,23 @@ func CheckHealth(sessionID, ctxDir string) (string, bool, error) {
 		return "", false, emitErr
 	}
 	return box, true, nil
+}
+
+// Report returns the formatted knowledge-health findings for on-demand
+// display by the /ctx-remember and /ctx-wrap-up skills. Unlike
+// [CheckHealth] it neither throttles nor relays: the skills call it
+// deliberately, want the current state every time, and must not spam the
+// hook audit trail. Empty string when every root is within limits.
+//
+// Parameters:
+//   - ctxDir: absolute path to the context directory
+//
+// Returns:
+//   - string: the formatted findings + per-kind remedies, or "" if clean
+func Report(ctxDir string) string {
+	findings := Health(ctxDir, thresholds())
+	if len(findings) == 0 {
+		return ""
+	}
+	return FormatWarnings(findings)
 }

@@ -11,12 +11,15 @@ const (
 	// DescKeyCheckKnowledgeBoxTitle is the text key for check knowledge box title
 	// messages.
 	DescKeyCheckKnowledgeBoxTitle = "check-knowledge.box-title"
-	// DescKeyCheckKnowledgeFallback is the text key for check knowledge fallback
-	// messages.
-	DescKeyCheckKnowledgeFallback = "check-knowledge.fallback"
 	// DescKeyCheckKnowledgeFindingFormat is the text key for check knowledge
 	// finding format messages.
 	DescKeyCheckKnowledgeFindingFormat = "check-knowledge.finding-format"
+	// DescKeyCheckKnowledgeRemedyFoldable is the remedy line for foldable
+	// roots (accreted staging): fold via /ctx-digest.
+	DescKeyCheckKnowledgeRemedyFoldable = "check-knowledge.remedy-foldable"
+	// DescKeyCheckKnowledgeRemedyHeavy is the remedy line for heavy pages
+	// (over the byte ceiling): split or extract-to-tooling.
+	DescKeyCheckKnowledgeRemedyHeavy = "check-knowledge.remedy-heavy"
 	// DescKeyCheckKnowledgeRelayMessage is the text key for check knowledge relay
 	// message messages.
 	DescKeyCheckKnowledgeRelayMessage = "check-knowledge.relay-message"

@@ -15,7 +15,22 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgFile "github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/disclosure"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
+
+// thresholds builds the four M5 limits from rc, shared by CheckHealth
+// (the throttled hook path) and Report (the on-demand skill path).
+//
+// Returns:
+//   - Thresholds: the current rc-configured limits
+func thresholds() Thresholds {
+	return Thresholds{
+		Learnings:   rc.EntryCountLearnings(),
+		Decisions:   rc.EntryCountDecisions(),
+		Conventions: rc.ConventionSectionCount(),
+		PageBytes:   rc.ThemePageByteCeiling(),
+	}
+}
 
 // foldUnit is the foldability count's unit: sections for a convention
 // root (its identity is the section title), entries for the timestamped
