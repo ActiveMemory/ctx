@@ -27,7 +27,9 @@ const (
 	// DescKeyWriteKnowledgeUnitEntries is the text key for write knowledge unit
 	// entries messages.
 	DescKeyWriteKnowledgeUnitEntries = "write.knowledge-unit-entries"
-	// DescKeyWriteKnowledgeUnitLines is the text key for write knowledge unit
-	// lines messages.
-	DescKeyWriteKnowledgeUnitLines = "write.knowledge-unit-lines"
+	// DescKeyWriteKnowledgeUnitSections is the unit for a convention root's
+	// staged-section foldability count.
+	DescKeyWriteKnowledgeUnitSections = "write.knowledge-unit-sections"
+	// DescKeyWriteKnowledgeUnitBytes is the unit for a heavy-page byte weight.
+	DescKeyWriteKnowledgeUnitBytes = "write.knowledge-unit-bytes"
 )

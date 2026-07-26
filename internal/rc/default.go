@@ -21,8 +21,10 @@ const (
 	DefaultEntryCountLearnings = runtime.DefaultEntryCountLearnings
 	// DefaultEntryCountDecisions is the max decisions shown.
 	DefaultEntryCountDecisions = runtime.DefaultEntryCountDecisions
-	// DefaultConventionLineCount is the max convention lines.
-	DefaultConventionLineCount = runtime.DefaultConventionLineCount
+	// DefaultConventionSectionCount is the staged-section fold threshold.
+	DefaultConventionSectionCount = runtime.DefaultConventionSectionCount
+	// DefaultThemePageByteCeiling is the heavy-page byte ceiling.
+	DefaultThemePageByteCeiling = runtime.DefaultThemePageByteCeiling
 	// DefaultInjectionTokenWarn is the injection warn threshold.
 	DefaultInjectionTokenWarn = runtime.DefaultInjectionTokenWarn
 	// DefaultContextWindow is the default context window size.

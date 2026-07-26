@@ -37,17 +37,18 @@ import (
 //     (8000 token budget, 7-day archive, etc.)
 func Default() *CtxRC {
 	return &CtxRC{
-		TokenBudget:         DefaultTokenBudget,
-		PriorityOrder:       nil, // nil means use config.ReadOrder
-		AutoArchive:         true,
-		ArchiveAfterDays:    DefaultArchiveAfterDays,
-		EntryCountLearnings: DefaultEntryCountLearnings,
-		EntryCountDecisions: DefaultEntryCountDecisions,
-		ConventionLineCount: DefaultConventionLineCount,
-		InjectionTokenWarn:  DefaultInjectionTokenWarn,
-		ContextWindow:       DefaultContextWindow,
-		TaskNudgeInterval:   DefaultTaskNudgeInterval,
-		StaleAgeDays:        DefaultStaleAgeDays,
+		TokenBudget:          DefaultTokenBudget,
+		PriorityOrder:        nil, // nil means use config.ReadOrder
+		AutoArchive:          true,
+		ArchiveAfterDays:     DefaultArchiveAfterDays,
+		EntryCountLearnings:  DefaultEntryCountLearnings,
+		EntryCountDecisions:  DefaultEntryCountDecisions,
+		ConventionSections:   DefaultConventionSectionCount,
+		ThemePageByteCeiling: DefaultThemePageByteCeiling,
+		InjectionTokenWarn:   DefaultInjectionTokenWarn,
+		ContextWindow:        DefaultContextWindow,
+		TaskNudgeInterval:    DefaultTaskNudgeInterval,
+		StaleAgeDays:         DefaultStaleAgeDays,
 	}
 }
 
@@ -200,14 +201,27 @@ func EntryCountDecisions() int {
 	return RC().EntryCountDecisions
 }
 
-// ConventionLineCount returns the line count threshold for CONVENTIONS.md.
+// ConventionSectionCount returns the staged-section count threshold for
+// CONVENTIONS.md — the foldability watermark unit (M5). It replaces the
+// former line-count measure.
 //
-// Returns 0 if the check is disabled. Default: 200.
+// Returns 0 if the check is disabled. Default: 12.
 //
 // Returns:
-//   - int: Threshold above which a drift warning is emitted
-func ConventionLineCount() int {
-	return RC().ConventionLineCount
+//   - int: staged-section count above which a fold nudge is emitted
+func ConventionSectionCount() int {
+	return RC().ConventionSections
+}
+
+// ThemePageByteCeiling returns the byte ceiling above which a page (a
+// root or a theme file) is flagged heavy (M5).
+//
+// Returns 0 if the check is disabled. Default: 65536.
+//
+// Returns:
+//   - int: byte size above which a split/extract nudge is emitted
+func ThemePageByteCeiling() int {
+	return RC().ThemePageByteCeiling
 }
 
 // InjectionTokenWarn returns the token threshold for

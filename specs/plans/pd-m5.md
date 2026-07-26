@@ -74,25 +74,25 @@ DoD:
 
 | id | st | task | deps | files | [P] | acceptance criterion | spec ref |
 |---|---|---|---|---|---|---|---|
-| T01 | [ ] | runtime: retire `DefaultConventionLineCount`; add `DefaultConventionSectionCount=12`, `DefaultThemePageByteCeiling=65536` | — | `internal/config/runtime/runtime.go`, `doc.go` | [P] | build; `grep DefaultConventionLineCount` → none | Triggers/Config |
-| T02 | [ ] | rc types+accessors: retire `ConventionLineCount`; add `ConventionSectionCount`, `ThemePageByteCeiling` | T01 | `internal/rc/types.go`, `rc.go`, `default.go` | | unit: accessors return defaults; `rc.ConventionSectionCount()==12` | Config |
-| T03 | [ ] | retire `ConventionLineCount` refs project-wide | T02 | `internal/**`, validate_test yaml keys | | `grep -rn ConventionLineCount internal/` → no non-test hits; config test green | Config |
-| T04 | [ ] | `finding` type: add `Kind` (foldable\|heavy) + `Path`; extend `Unit` | — | `internal/cli/system/core/knowledge/types.go` | [P] | unit: zero-value + both kinds construct | Data model |
-| T05 | [ ] | foldable signal: count staging via `disclosure.StagedEntries` per kind (replaces ParseEntryBlocks + line-count) | T02,T04 | `internal/cli/system/core/knowledge/knowledge.go` | | unit: un-migrated 40-entry → foldable(40); folded → none (**M1,M2**) | Signal 1 |
-| T06 | [ ] | heavy signal: byte scan of the root file | T04 | `knowledge.go` | | unit: root > ceiling → heavy finding on root path | Signal 2 |
-| T07 | [ ] | heavy signal: byte scan of theme files via `disclosure.ThemeDir(kind)` | T04,T06 | `knowledge.go` | | unit: 80 KB theme file → heavy finding on that file (**M3**) | Signal 2 |
-| T08 | [ ] | `knowledge.Health`: combine signals; both-fire → foldable first | T05,T06,T07 | `knowledge.go` | | unit: large un-migrated root → foldable ordered before heavy (**M4**) | Contracts |
+| T01 | [x] | runtime: retire `DefaultConventionLineCount`; add `DefaultConventionSectionCount=12`, `DefaultThemePageByteCeiling=65536` | — | `internal/config/runtime/runtime.go`, `doc.go` | [P] | build; `grep DefaultConventionLineCount` → none | Triggers/Config |
+| T02 | [x] | rc types+accessors: retire `ConventionLineCount`; add `ConventionSectionCount`, `ThemePageByteCeiling` | T01 | `internal/rc/types.go`, `rc.go`, `default.go` | | unit: accessors return defaults; `rc.ConventionSectionCount()==12` | Config |
+| T03 | [x] | retire `ConventionLineCount` refs project-wide | T02 | `internal/**`, validate_test yaml keys | | `grep -rn ConventionLineCount internal/` → no non-test hits; config test green | Config |
+| T04 | [x] | `finding` type: add `Kind` (foldable\|heavy) + `Path`; extend `Unit` | — | `internal/cli/system/core/knowledge/types.go` | [P] | unit: zero-value + both kinds construct | Data model |
+| T05 | [x] | foldable signal: count staging via `disclosure.StagedEntries` per kind (replaces ParseEntryBlocks + line-count) | T02,T04 | `internal/cli/system/core/knowledge/knowledge.go` | | unit: un-migrated 40-entry → foldable(40); folded → none (**M1,M2**) | Signal 1 |
+| T06 | [x] | heavy signal: byte scan of the root file | T04 | `knowledge.go` | | unit: root > ceiling → heavy finding on root path | Signal 2 |
+| T07 | [x] | heavy signal: byte scan of theme files via `disclosure.ThemeDir(kind)` | T04,T06 | `knowledge.go` | | unit: 80 KB theme file → heavy finding on that file (**M3**) | Signal 2 |
+| T08 | [x] | `knowledge.Health`: combine signals; both-fire → foldable first | T05,T06,T07 | `knowledge.go` | | unit: large un-migrated root → foldable ordered before heavy (**M4**) | Contracts |
 | T09 | [ ] | warning text: foldable→/ctx-digest primary (consolidate/drift secondary); heavy→split/extract | T08 | `internal/assets/commands/text/hooks.yaml`, `internal/assets/hooks/messages/check-knowledge/warning.txt` | | build embeds; message-registry test green; text names /ctx-digest | Contracts |
 | T10 | [ ] | `FormatWarnings`/`EmitWarning` route by `Kind` | T08,T09 | `knowledge.go` | | unit: foldable vs heavy render distinct remedy lines | Contracts |
 | T11 | [ ] | `ctx system check-knowledge` report path the skills call | T08 | `internal/cli/system/cmd/checkknowledge/*.go` | | e2e: command prints findings for an oversized fixture root | Contracts |
 | T12 | [ ] | hook wiring: `CheckHealth` uses `Health`; throttle/log-first unchanged | T08,T10 | `knowledge.go` | | e2e: hook nudge names /ctx-digest for a foldable root; throttled once/day | Triggers |
 | T13 | [ ] | `/ctx-remember` skill: surface foldable/heavy at session start (read-only) | T11 | `internal/assets/claude/skills/ctx-remember/SKILL.md` | [P] | frontmatter test green; body calls the report path, relays suggestions | Triggers |
 | T14 | [ ] | `/ctx-wrap-up` skill: surface at session end, suggest-only never inline | T11 | `internal/assets/claude/skills/ctx-wrap-up/SKILL.md` | [P] | frontmatter test green; body surfaces + explicitly does not fold | Triggers |
-| T15 | [ ] | `Health` unit tests: foldable, folded-quiet fixtures | T05 | `internal/cli/system/core/knowledge/*_test.go` | | **M1,M2** pass | Tests |
-| T16 | [ ] | `Health` unit tests: heavy root + heavy theme file | T07 | `knowledge` test | [P] | **M3** pass | Tests |
-| T17 | [ ] | `Health` unit test: both-fire ordering | T08 | `knowledge` test | [P] | **M4** pass | Tests |
-| T18 | [ ] | convention measure test: sections not lines | T05 | `knowledge` test | [P] | **M5** pass | Tests |
-| T19 | [ ] | boundary + disable tests (`>N`, `0` disables) | T08 | `knowledge` test | [P] | **M6,M7** pass | Tests |
+| T15 | [x] | `Health` unit tests: foldable, folded-quiet fixtures | T05 | `internal/cli/system/core/knowledge/*_test.go` | | **M1,M2** pass | Tests |
+| T16 | [x] | `Health` unit tests: heavy root + heavy theme file | T07 | `knowledge` test | [P] | **M3** pass | Tests |
+| T17 | [x] | `Health` unit test: both-fire ordering | T08 | `knowledge` test | [P] | **M4** pass | Tests |
+| T18 | [x] | convention measure test: sections not lines | T05 | `knowledge` test | [P] | **M5** pass | Tests |
+| T19 | [x] | boundary + disable tests (`>N`, `0` disables) | T08 | `knowledge` test | [P] | **M6,M7** pass | Tests |
 | T20 | [ ] | surface parity test: hook findings == report findings | T11,T12 | `knowledge`/checkknowledge test | | **M8** pass | Tests |
 | T21 | [ ] | copilot skill sync | T13,T14 | `internal/assets/integrations/copilot-cli/skills/**` | [P] | `make check-copilot-skills` green | Skill |
 | T22 | [ ] |XX **measurement gate**: drive Health on a realistic .context (oversized root + fat theme file) | T12,T11 | scratchpad fixture | | foldable + heavy both surface; suggestions correct; throttle holds | Risks |

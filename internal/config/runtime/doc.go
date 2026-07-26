@@ -25,8 +25,13 @@
 //     [DefaultEntryCountDecisions] (20): entry
 //     count thresholds that trigger consolidation
 //     nudges.
-//   - [DefaultConventionLineCount] (200): line
-//     limit for CONVENTIONS.md before a nudge.
+//   - [DefaultConventionSectionCount] (12): staged
+//     `## ` sections in CONVENTIONS.md before a
+//     fold nudge (the watermark unit; replaces the
+//     old line count).
+//   - [DefaultThemePageByteCeiling] (65 536): byte
+//     ceiling above which a root or theme file is
+//     flagged heavy (split / extract-to-tooling).
 //   - [DefaultInjectionTokenWarn] (15 000): token
 //     count that triggers an oversize injection
 //     warning.

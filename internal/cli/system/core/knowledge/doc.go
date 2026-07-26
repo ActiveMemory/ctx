@@ -12,9 +12,12 @@
 //
 // # Public Surface
 //
-//   - **[ScanFiles](contextDir)**: counts entries
-//     in DECISIONS.md and LEARNINGS.md, and lines
-//     in CONVENTIONS.md, and returns the result.
+//   - **[Health](contextDir, thresholds)**: emits the
+//     two M5 signals — foldable roots (staging count
+//     via disclosure.StagedEntries → /ctx-digest) and
+//     heavy pages (bytes over the root and every theme
+//     file → split / extract-to-tooling), foldable
+//     first.
 //   - **[FormatWarnings](report, thresholds)**:
 //     turns the scan into the human-readable
 //     warning text emitted via the VERBATIM relay.
@@ -32,11 +35,15 @@
 //     0 disables)
 //   - `entry_count_learnings`     (default 30;
 //     0 disables)
-//   - `convention_line_count`     (default 200;
+//   - `convention_section_count`  (default 12;
+//     0 disables)
+//   - `theme_page_byte_ceiling`   (default 65536;
 //     0 disables)
 //
-// Crossing a threshold means "consider running
-// `/ctx-consolidate`", not "stop adding entries".
+// Crossing a foldability threshold means "consider
+// running `/ctx-digest`"; crossing the weight ceiling
+// means "split the theme or extract to tooling" —
+// never "stop adding entries".
 //
 // # Concurrency
 //

@@ -17,8 +17,16 @@ const (
 	DefaultEntryCountLearnings = 30
 	// DefaultEntryCountDecisions is the entry count threshold for DECISIONS.md.
 	DefaultEntryCountDecisions = 20
-	// DefaultConventionLineCount is the line count threshold for CONVENTIONS.md.
-	DefaultConventionLineCount = 200
+	// DefaultConventionSectionCount is the staged-section count threshold
+	// for CONVENTIONS.md — the foldability watermark unit (M5). It replaces
+	// the former line-count measure: a section count is what the digest
+	// pass acts on, so it is the honest "should I fold?" signal.
+	DefaultConventionSectionCount = 12
+	// DefaultThemePageByteCeiling is the byte ceiling above which a page
+	// (a root or a theme file) is flagged heavy (M5). Bytes, not lines:
+	// a line hides 10 or 200 characters. Past this, the advice is split or
+	// extract-to-tooling — an LLM is a poor linter.
+	DefaultThemePageByteCeiling = 65536
 	// DefaultInjectionTokenWarn is the token threshold for
 	// oversize injection warning.
 	DefaultInjectionTokenWarn = 15000

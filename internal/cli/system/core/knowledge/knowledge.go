@@ -7,7 +7,6 @@
 package knowledge
 
 import (
-	"bytes"
 	"fmt"
 	"strings"
 
@@ -19,75 +18,77 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/knowledge"
 	"github.com/ActiveMemory/ctx/internal/config/token"
-	"github.com/ActiveMemory/ctx/internal/heading"
+	"github.com/ActiveMemory/ctx/internal/disclosure"
 	"github.com/ActiveMemory/ctx/internal/io"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// ScanFiles checks knowledge files against their configured
-// thresholds and returns any that exceed the limits.
+// Health scans the canonical knowledge roots and returns the two M5
+// signals: foldable roots (staging accretion → /ctx-digest) and heavy
+// pages (byte weight over the ceiling → split / extract-to-tooling). One
+// scan feeds the check-knowledge hook and the skill report path alike, so
+// they cannot drift.
+//
+// Foldability is the staging-zone count via disclosure.StagedEntries, so
+// it reads a never-migrated root correctly and quiets once a root is
+// folded. Weight is bytes over the root AND every theme file, closing the
+// blindness the root-only measure had to the bulk folding relocates.
+//
+// Findings are ordered foldable-first: when a root trips both, folding is
+// the single move that reduces both.
 //
 // Parameters:
 //   - contextDir: absolute path to the context directory
-//   - decThreshold: max decision entries (0 = disabled)
-//   - lrnThreshold: max learning entries (0 = disabled)
-//   - convThreshold: max convention lines (0 = disabled)
+//   - t: the four thresholds (0 disables a check)
 //
 // Returns:
-//   - []KnowledgeFinding: files exceeding thresholds,
-//     or nil if all within limits
-func ScanFiles(
-	contextDir string, decThreshold, lrnThreshold, convThreshold int,
-) []finding {
-	var findings []finding
+//   - []finding: signals found, or nil when every root is within limits
+func Health(contextDir string, t Thresholds) []finding {
+	roots := []struct {
+		file      string
+		threshold int
+	}{
+		{ctx.Learning, t.Learnings},
+		{ctx.Decision, t.Decisions},
+		{ctx.Convention, t.Conventions},
+	}
 
-	if decThreshold > 0 {
-		data, readErr := io.SafeReadFile(contextDir, ctx.Decision)
-		if readErr == nil {
-			count := len(heading.ParseEntryBlocks(string(data)))
-			if count > decThreshold {
-				findings = append(findings, finding{
-					File:      ctx.Decision,
-					Count:     count,
-					Threshold: decThreshold,
-					Unit:      desc.Text(text.DescKeyWriteKnowledgeUnitEntries),
+	var foldables, heavies []finding
+	for _, r := range roots {
+		data, readErr := io.SafeReadFile(contextDir, r.file)
+		if readErr != nil {
+			continue
+		}
+		kind, ok := disclosure.KindFor(r.file)
+		if !ok {
+			continue
+		}
+
+		// Signal 1 — foldable root (staging count).
+		if r.threshold > 0 {
+			n := len(disclosure.StagedEntries(disclosure.Parse(string(data), kind)))
+			if n > r.threshold {
+				foldables = append(foldables, finding{
+					Kind: foldable, File: r.file, Count: n,
+					Threshold: r.threshold, Unit: foldUnit(kind),
 				})
 			}
 		}
-	}
 
-	if lrnThreshold > 0 {
-		data, readErr := io.SafeReadFile(contextDir, ctx.Learning)
-		if readErr == nil {
-			count := len(heading.ParseEntryBlocks(string(data)))
-			if count > lrnThreshold {
-				findings = append(findings, finding{
-					File:      ctx.Learning,
-					Count:     count,
-					Threshold: lrnThreshold,
-					Unit:      desc.Text(text.DescKeyWriteKnowledgeUnitEntries),
-				})
+		// Signal 2 — heavy pages (bytes): the root, then its theme files.
+		if t.PageBytes > 0 {
+			if len(data) > t.PageBytes {
+				heavies = append(heavies, heavyFinding(r.file, len(data), t.PageBytes))
 			}
+			heavies = append(heavies, heavyThemeFiles(contextDir, kind, t.PageBytes)...)
 		}
 	}
 
-	if convThreshold > 0 {
-		data, readErr := io.SafeReadFile(contextDir, ctx.Convention)
-		if readErr == nil {
-			lineCount := bytes.Count(data, []byte(token.NewlineLF))
-			if lineCount > convThreshold {
-				findings = append(findings, finding{
-					File:      ctx.Convention,
-					Count:     lineCount,
-					Threshold: convThreshold,
-					Unit:      desc.Text(text.DescKeyWriteKnowledgeUnitLines),
-				})
-			}
-		}
+	if len(foldables) == 0 && len(heavies) == 0 {
+		return nil
 	}
-
-	return findings
+	return append(foldables, heavies...)
 }
 
 // FormatWarnings builds a pre-formatted findings list string
@@ -162,18 +163,20 @@ func EmitWarning(sessionID, fileWarnings string) (string, error) {
 //     log-first principle and skip printing the box when the relay
 //     audit entry could not be written.
 func CheckHealth(sessionID, ctxDir string) (string, bool, error) {
-	lrnThreshold := rc.EntryCountLearnings()
-	decThreshold := rc.EntryCountDecisions()
-	convThreshold := rc.ConventionLineCount()
+	t := Thresholds{
+		Learnings:   rc.EntryCountLearnings(),
+		Decisions:   rc.EntryCountDecisions(),
+		Conventions: rc.ConventionSectionCount(),
+		PageBytes:   rc.ThemePageByteCeiling(),
+	}
 
 	// All disabled - nothing to check
-	if lrnThreshold == 0 && decThreshold == 0 && convThreshold == 0 {
+	if t.Learnings == 0 && t.Decisions == 0 &&
+		t.Conventions == 0 && t.PageBytes == 0 {
 		return "", false, nil
 	}
 
-	findings := ScanFiles(
-		ctxDir, decThreshold, lrnThreshold, convThreshold,
-	)
+	findings := Health(ctxDir, t)
 	if len(findings) == 0 {
 		return "", false, nil
 	}

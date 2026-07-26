@@ -932,8 +932,10 @@ write.provenance-context:
 
 write.knowledge-unit-entries:
   short: "entries"
-write.knowledge-unit-lines:
-  short: "lines"
+write.knowledge-unit-sections:
+  short: "sections"
+write.knowledge-unit-bytes:
+  short: "bytes"
 
 write.version-drift-fallback:
   short: "VERSION (%s), plugin.json (%s), marketplace.json (%s) are out of sync. Update all three before releasing."

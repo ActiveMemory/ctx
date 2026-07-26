@@ -90,7 +90,8 @@ archive_after_days: 7
 scratchpad_encrypt: true
 entry_count_learnings: 30
 entry_count_decisions: 20
-convention_line_count: 200
+convention_section_count: 12
+theme_page_byte_ceiling: 65536
 injection_token_warn: 15000
 context_window: 200000
 event_log: false
