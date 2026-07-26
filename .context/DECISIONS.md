@@ -45,6 +45,62 @@ For significant decisions:
 
 -->
 
+## [2026-07-25-190410] Beyond a byte ceiling, knowledge content should become tooling, not more Markdown
+
+**Status**: Accepted
+
+**Context**: Designing M5's heavy-page signal; the failure case is a convention theme file growing toward ~1MB.
+
+**Decision**: Beyond a byte ceiling, knowledge content should become tooling, not more Markdown
+
+**Rationale**: An LLM is a poor linter: it cannot reliably apply a large ruleset expressed as prose. Past a ceiling, recursive folding (more Markdown) is the wrong fix; the right move is extracting the content to actual tooling (a linter), code, or docs. So the heavy-page remedy is an advisory 'split OR extract to tooling', decided by the human, not tier-2 auto-fold.
+
+**Consequence**: The heavy-page nudge frames the ceiling as a smell ('a context file this heavy is a linter in prose'), prompting extraction rather than endless subdivision. Tier-2 theme recursion remains deferred, not precluded.
+
+---
+
+## [2026-07-25-190410] M5 knowledge health is two suggest-only signals: foldable root (staging count) and heavy page (bytes)
+
+**Status**: Accepted
+
+**Context**: M5 wires the growth nudge, /ctx-remember, and /ctx-wrap-up to progressive disclosure. The 2026-07-16 foundational decision already fixed staging-as-watermark, the three surfaces, and suggest-only. Left open: the signal/threshold, and that the original root-only measure was blind to theme-file bloat that folding itself creates.
+
+**Decision**: M5 knowledge health is two suggest-only signals: foldable root (staging count) and heavy page (bytes)
+
+**Rationale**: Two questions need two measures. 'Should I fold?' is a COUNT of staged entries/sections via disclosure.StagedEntries (suggest /ctx-digest). 'Is this page too heavy to be useful context?' is a BYTE count, scanned over the root AND every theme file under .context/<noun>/ (suggest split or extract). Folding relocates bulk into theme files, so a root-only signal is blind to the bloat it creates. One knowledge.Health function feeds all three surfaces so hook and skills cannot drift. No state file: staging plus on-disk bytes are self-describing.
+
+**Consequence**: convention_line_count (200 lines) is replaced by convention_section_count (foldability) plus a shared theme_page_byte_ceiling (weight); a deliberate behavior change, framed as user education. Theme files are now scanned. Reuses disclosure.StagedEntries and the check-knowledge daily-throttle / log-first plumbing.
+
+---
+
+## [2026-07-25-132759] Theme declaration via the Themes section keyword, on all three canonical kinds
+
+**Status**: Accepted
+
+**Context**: pd-m4 needed a way to NAME a theme up front (ctx <kind> add --section Themes), distinct from folding entries into it. The section-vs-entry distinction in conventions surfaced the need.
+
+**Decision**: Theme declaration via the Themes section keyword, on all three canonical kinds
+
+**Rationale**: Content is '<name> — <gist>', split on the same em-dash separator the theme parser reads back, so it round-trips. It writes BOTH the gist bullet and the theme file, because a bullet without its file fails the gist-to-file pairing invariant and would leave a root ctx disclosure refuses to touch. Generalized to learnings/decisions since they also have a ## Themes region.
+
+**Consequence**: New internal/write/theme package + disclosure.AddTheme; theme adds bypass the per-kind body-flag gate (a theme has only a name and gist); a new user-facing CLI surface across all three canonical kinds.
+
+---
+
+## [2026-07-25-132719] ctx convention add requires --section; no default; placeholders rejected (strict)
+
+**Status**: Accepted
+
+**Context**: The convention add-path (pd-m4). A default or catch-all section is where an undecided caller dumps every convention, defeating the H2-section grouping the digest pass folds on.
+
+**Decision**: ctx convention add requires --section; no default; placeholders rejected (strict)
+
+**Rationale**: Choosing the section IS the thinking; the CLI refuses to do it for the caller. Enforced strictly via validate.RejectPlaceholder, which rejects empty/whitespace AND the shipped placeholder set (TBD, n/a, none, pending, …). Deviates deliberately from the plan's original T16 ('just move the anchor').
+
+**Consequence**: ctx convention add errors without a concrete --section; agents and scripts must name the target H2 section. Pinned by TestConventionAddRequiresSection (7 cases); a refused add leaves the root byte-identical.
+
+---
+
 ## [2026-07-19-100259] M4 conventions digestion: curated ## -section taxonomy, unified into the entry-kind mover
 
 **Status**: Accepted

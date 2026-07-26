@@ -263,6 +263,8 @@ usage.last:
   short: Show last N entries
 usage.session:
   short: Filter by session ID (prefix match)
+system.checkknowledge.report:
+  short: Print current knowledge-health findings on demand (skills), bypassing the daily throttle
 system.markjournal.check:
   short: Check if stage is set (exit 1 if not)
 system.pause.session-id:

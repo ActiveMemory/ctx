@@ -12,6 +12,9 @@ package flag
 // prune, resource, stats) live in their own per-command files in
 // this package since those commands were promoted to top-level.
 const (
+	// DescKeySystemCheckKnowledgeReport is the description key for the system
+	// check-knowledge --report flag.
+	DescKeySystemCheckKnowledgeReport = "system.checkknowledge.report"
 	// DescKeySystemMarkJournalCheck is the description key for the system mark
 	// journal check flag.
 	DescKeySystemMarkJournalCheck = "system.markjournal.check"

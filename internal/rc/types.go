@@ -97,7 +97,8 @@ type CtxRC struct {
 	ScratchpadEncrypt    *bool                    `yaml:"scratchpad_encrypt"`
 	EntryCountLearnings  int                      `yaml:"entry_count_learnings"`
 	EntryCountDecisions  int                      `yaml:"entry_count_decisions"`
-	ConventionLineCount  int                      `yaml:"convention_line_count"`
+	ConventionSections   int                      `yaml:"convention_section_count"`
+	ThemePageByteCeiling int                      `yaml:"theme_page_byte_ceiling"`
 	InjectionTokenWarn   int                      `yaml:"injection_token_warn"`
 	ContextWindow        int                      `yaml:"context_window"`
 	BillingTokenWarn     int                      `yaml:"billing_token_warn"`

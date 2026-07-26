@@ -166,16 +166,17 @@ check-journal.relay-prefix:
   short: 'IMPORTANT: Relay this journal reminder to the user VERBATIM before answering their question.'
 check-knowledge.box-title:
   short: Knowledge File Growth
-check-knowledge.fallback:
-  short: |-
-    Large knowledge files dilute agent context. Consider:
-     • Review and remove outdated entries
-     • Use /ctx-consolidate to merge overlapping entries
-     • Use /ctx-drift for semantic drift (stale patterns)
-     • Move stale entries to .context/archive/ manually
 check-knowledge.finding-format:
   short: |
     %s has %d %s (recommended: ≤%d).
+check-knowledge.remedy-foldable:
+  short: |2
+     • Run /ctx-digest to fold the staging zone into themes
+     • /ctx-consolidate or /ctx-drift if entries overlap rather than accrete
+check-knowledge.remedy-heavy:
+  short: |2
+     • Split the theme, or extract it to tooling — a context file this
+       heavy is a linter in prose, and an LLM is a poor linter
 check-knowledge.relay-message:
   short: Knowledge file growth detected
 check-knowledge.relay-prefix:

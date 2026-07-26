@@ -104,6 +104,7 @@ const (
 	Scope           = "scope"
 	Peers           = "peers"
 	Port            = "port"
+	Report          = "report"
 	Serve           = "serve"
 	Share           = "share"
 	Show            = "show"

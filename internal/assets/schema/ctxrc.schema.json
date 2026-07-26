@@ -45,9 +45,14 @@
       "description": "Entry count threshold for DECISIONS.md drift warning. Default: 20. 0 disables.",
       "minimum": 0
     },
-    "convention_line_count": {
+    "convention_section_count": {
       "type": "integer",
-      "description": "Line count threshold for CONVENTIONS.md drift warning. Default: 200. 0 disables.",
+      "description": "Staged-section count threshold for CONVENTIONS.md before a fold nudge (/ctx-digest). The foldability watermark unit; replaces convention_line_count. Default: 12. 0 disables.",
+      "minimum": 0
+    },
+    "theme_page_byte_ceiling": {
+      "type": "integer",
+      "description": "Byte ceiling above which a root or theme file is flagged heavy (split or extract-to-tooling). Default: 65536. 0 disables.",
       "minimum": 0
     },
     "injection_token_warn": {
