@@ -91,6 +91,8 @@
 //   - RoleFollower, RoleActive: status role labels
 //   - ReplicateInterval (5s): follower retry
 //     interval
+//   - HubSyncTimeout (10s): session-start pull
+//     deadline
 //   - ThrottleHubSync: daily sync throttle marker
 //
 // # Why Centralized

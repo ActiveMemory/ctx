@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	connectCfg "github.com/ActiveMemory/ctx/internal/cli/connection/core/config"
@@ -53,10 +54,17 @@ func Connected(ctxDir string) (bool, error) {
 	return true, nil
 }
 
+// syncTimeout bounds the session-start pull RPC. It is a var,
+// not the bare constant, so tests can shrink it to exercise the
+// deadline against a deliberately unresponsive hub without
+// waiting the full production interval.
+var syncTimeout = time.Duration(cfgHub.HubSyncTimeout) * time.Second
+
 // Sync pulls new entries from the hub and writes them to
-// .context/hub/. Returns the count of synced entries
-// and a formatted status message, or empty string if no
-// new entries.
+// .context/hub/. Returns a formatted status message, or
+// empty string if nothing was synced (no new entries, or
+// any failure — every failure is surfaced as a warning and
+// still returns "" so the hook never blocks).
 //
 // Parameters:
 //   - sessionID: current session ID (unused, for future)
@@ -66,6 +74,7 @@ func Connected(ctxDir string) (bool, error) {
 func Sync(_ string) string {
 	cfg, loadErr := connectCfg.Load()
 	if loadErr != nil {
+		logWarn.Warn(cfgWarn.HubSyncLoadConfig, loadErr)
 		return ""
 	}
 
@@ -73,6 +82,7 @@ func Sync(_ string) string {
 		cfg.HubAddr, cfg.Token,
 	)
 	if dialErr != nil {
+		logWarn.Warn(cfgWarn.HubSyncDial, cfg.HubAddr, dialErr)
 		return ""
 	}
 	defer func() {
@@ -81,14 +91,31 @@ func Sync(_ string) string {
 		}
 	}()
 
-	entries, syncErr := client.Sync(
-		context.Background(), cfg.Types, 0,
+	// Bound the pull with a deadline so a hub that accepts the
+	// connection but never responds (hung server, black-hole
+	// proxy) cannot stall session start: the RPC has no inherent
+	// timeout, and this hook must never block. An exceeded
+	// deadline surfaces as a warning like any other sync failure.
+	// The throttle marker is stamped unconditionally after the
+	// pull, so a cut-off pull retries on the next day's first
+	// session, not the next session.
+	ctx, cancel := context.WithTimeout(
+		context.Background(), syncTimeout,
 	)
-	if syncErr != nil || len(entries) == 0 {
+	defer cancel()
+
+	entries, syncErr := client.Sync(ctx, cfg.Types, 0)
+	if syncErr != nil {
+		logWarn.Warn(cfgWarn.HubSyncPull, cfg.HubAddr, syncErr)
+		return ""
+	}
+	if len(entries) == 0 {
+		// Genuine empty result: not an error, no warning.
 		return ""
 	}
 
 	if writeErr := render.WriteEntries(entries); writeErr != nil {
+		logWarn.Warn(cfgWarn.HubSyncWrite, len(entries), writeErr)
 		return ""
 	}
 

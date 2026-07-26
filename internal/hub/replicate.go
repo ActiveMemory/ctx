@@ -8,6 +8,8 @@ package hub
 
 import (
 	"context"
+	"errors"
+	stdio "io"
 	"time"
 
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
@@ -81,6 +83,7 @@ func replicateOnce(
 		),
 	)
 	if dialErr != nil {
+		logWarn.Warn(cfgWarn.HubReplicateDial, masterAddr, dialErr)
 		return
 	}
 	defer func() {
@@ -98,21 +101,38 @@ func replicateOnce(
 		cfgHub.PathSync,
 	)
 	if streamErr != nil {
+		logWarn.Warn(cfgWarn.HubReplicateStream, masterAddr, streamErr)
 		return
 	}
 
 	if sendErr := stream.SendMsg(&SyncRequest{
 		SinceSequence: lastSeq,
 	}); sendErr != nil {
+		logWarn.Warn(cfgWarn.HubReplicateSend, masterAddr, sendErr)
 		return
 	}
 	if closeErr := stream.CloseSend(); closeErr != nil {
+		logWarn.Warn(cfgWarn.HubReplicateCloseSend, masterAddr, closeErr)
 		return
 	}
 
 	for {
 		msg := &EntryMsg{}
 		if recvErr := stream.RecvMsg(msg); recvErr != nil {
+			// io.EOF is the normal end of every sync stream
+			// and a done caller context is routine shutdown;
+			// warning on either would spam stderr once per
+			// replication cycle. Anything else is a transport
+			// failure worth surfacing. errors.Is is used inline
+			// (rather than the strict eof helper) so a wrapped EOF
+			// is still suppressed here — the lenient polarity this
+			// warn-suppression path wants, opposite to eof's
+			// strict clean-end checks in client.go.
+			if !errors.Is(recvErr, stdio.EOF) && ctx.Err() == nil {
+				logWarn.Warn(
+					cfgWarn.HubReplicateRecv, masterAddr, recvErr,
+				)
+			}
 			return
 		}
 		entry := Entry{

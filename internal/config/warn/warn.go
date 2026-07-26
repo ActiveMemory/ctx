@@ -120,6 +120,33 @@ const (
 	// the loss visible.
 	HubReplicateAppend = "hub replicate append: %v"
 
+	// HubReplicateDial is the stderr format for a failed gRPC
+	// client construction toward the master. Takes (masterAddr,
+	// error). Like every replication warning, it fires once per
+	// attempt; the loop retries on its own interval.
+	HubReplicateDial = "hub replicate dial %s: %v"
+
+	// HubReplicateStream is the stderr format for a failed sync
+	// stream open toward the master. Takes (masterAddr, error).
+	HubReplicateStream = "hub replicate open stream %s: %v"
+
+	// HubReplicateSend is the stderr format for a failed sync
+	// request send on the replication stream. Takes (masterAddr,
+	// error).
+	HubReplicateSend = "hub replicate send request %s: %v"
+
+	// HubReplicateCloseSend is the stderr format for a failed
+	// half-close of the replication stream. Takes (masterAddr,
+	// error).
+	HubReplicateCloseSend = "hub replicate close send %s: %v"
+
+	// HubReplicateRecv is the stderr format for a transport
+	// failure while receiving replicated entries. Takes
+	// (masterAddr, error). io.EOF (the normal end of a sync
+	// stream) and caller shutdown are deliberately not warned;
+	// see replicateOnce.
+	HubReplicateRecv = "hub replicate recv %s: %v"
+
 	// StateInitializedProbe is the stderr format for failures
 	// inside [state.Initialized] beyond "no context dir declared."
 	// Hooks bail on false either way, but a visible warning shows
@@ -185,6 +212,30 @@ const (
 	// delivering a notification (fire-and-forget, but visible).
 	// Takes (error).
 	NotifyWebhookPost = "notify: webhook POST failed: %v"
+)
+
+// Hubsync hook warning formats. The session-start hubsync hook
+// must never block or fail the session, so [hubsync.Sync] keeps
+// returning a (possibly empty) nudge string — these warnings are
+// the only signal that a configured hub sync went wrong instead
+// of merely finding nothing new.
+const (
+	// HubSyncLoadConfig is the format for a failed connection
+	// config load. Takes (error).
+	HubSyncLoadConfig = "hubsync: load connection config: %v"
+
+	// HubSyncDial is the format for a rejected hub address at
+	// client construction. Takes (addr, error).
+	HubSyncDial = "hubsync: dial %s: %v"
+
+	// HubSyncPull is the format for a failed Sync RPC. Takes
+	// (addr, error). A genuine zero-entry result is not an
+	// error and is never warned.
+	HubSyncPull = "hubsync: sync from %s: %v"
+
+	// HubSyncWrite is the format for a failed entry write after
+	// a successful pull. Takes (count, error).
+	HubSyncWrite = "hubsync: write %d entries: %v"
 )
 
 // Warn context identifiers.
