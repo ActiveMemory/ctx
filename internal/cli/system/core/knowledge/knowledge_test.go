@@ -163,3 +163,34 @@ func TestHealth_BoundaryAndDisable(t *testing.T) {
 		t.Errorf("threshold 0 should disable: %+v", got)
 	}
 }
+
+// M8: the hook path (CheckHealth) and the on-demand report path (Report)
+// derive from one Health scan, so they surface the same findings. The
+// report's text is exactly what the hook's nudge box wraps.
+func TestSurfaceParity(t *testing.T) {
+	dir := t.TempDir()
+	// rc defaults apply in the test env (learnings threshold 30).
+	writeFile(t, dir, "LEARNINGS.md", unmigratedLearnings(35))
+
+	report := Report(dir)
+	if report == "" {
+		t.Fatal("report is empty on a foldable root")
+	}
+	if !strings.Contains(report, "LEARNINGS.md") ||
+		!strings.Contains(report, "/ctx-digest") {
+		t.Errorf("report missing finding or remedy:\n%s", report)
+	}
+
+	box, warned, err := CheckHealth("sess1234", dir)
+	if err != nil {
+		t.Fatalf("CheckHealth err = %v", err)
+	}
+	if !warned {
+		t.Fatal("hook did not warn on a foldable root the report flagged")
+	}
+	// The hook's box wraps exactly the report's finding text.
+	if !strings.Contains(box, "LEARNINGS.md") ||
+		!strings.Contains(box, "/ctx-digest") {
+		t.Errorf("hook box and report diverged:\nbox=%s\nreport=%s", box, report)
+	}
+}

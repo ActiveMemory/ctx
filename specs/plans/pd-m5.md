@@ -16,17 +16,17 @@ one shared `knowledge.Health`, emitting two suggestion-only signals:
 auto-fold, no state file.
 
 DoD:
-- [ ] `knowledge.Health` emits foldable + heavy findings from one scan;
+- [x] `knowledge.Health` emits foldable + heavy findings from one scan;
   both consumed by the hook and the skill report path.
-- [ ] Foldability is staging-based across all three kinds via
+- [x] Foldability is staging-based across all three kinds via
   `disclosure.StagedEntries`; `convention_line_count` retired for
   `convention_section_count`.
-- [ ] Weight scan covers the root **and** every theme file, in bytes.
-- [ ] The growth nudge suggests `/ctx-digest` (foldable) and
+- [x] Weight scan covers the root **and** every theme file, in bytes.
+- [x] The growth nudge suggests `/ctx-digest` (foldable) and
   split/extract (heavy); `/ctx-remember` and `/ctx-wrap-up` surface both.
-- [ ] Suggestion-only; existing daily-throttle/snooze reused; no new
+- [x] Suggestion-only; existing daily-throttle/snooze reused; no new
   state file.
-- [ ] `make lint` 0, `go test ./...` green, `make audit` pass.
+- [x] `make lint` 0, `go test ./...` green, `make audit` pass.
 
 ## Data model & storage
 
@@ -86,17 +86,17 @@ DoD:
 | T10 | [x] | `FormatWarnings`/`EmitWarning` route by `Kind` | T08,T09 | `knowledge.go` | | unit: foldable vs heavy render distinct remedy lines | Contracts |
 | T11 | [x] | `ctx system check-knowledge` report path the skills call | T08 | `internal/cli/system/cmd/checkknowledge/*.go` | | e2e: command prints findings for an oversized fixture root | Contracts |
 | T12 | [x] | hook wiring: `CheckHealth` uses `Health`; throttle/log-first unchanged | T08,T10 | `knowledge.go` | | e2e: hook nudge names /ctx-digest for a foldable root; throttled once/day | Triggers |
-| T13 | [ ] | `/ctx-remember` skill: surface foldable/heavy at session start (read-only) | T11 | `internal/assets/claude/skills/ctx-remember/SKILL.md` | [P] | frontmatter test green; body calls the report path, relays suggestions | Triggers |
-| T14 | [ ] | `/ctx-wrap-up` skill: surface at session end, suggest-only never inline | T11 | `internal/assets/claude/skills/ctx-wrap-up/SKILL.md` | [P] | frontmatter test green; body surfaces + explicitly does not fold | Triggers |
+| T13 | [x] | `/ctx-remember` skill: surface foldable/heavy at session start (read-only) | T11 | `internal/assets/claude/skills/ctx-remember/SKILL.md` | [P] | frontmatter test green; body calls the report path, relays suggestions | Triggers |
+| T14 | [x] | `/ctx-wrap-up` skill: surface at session end, suggest-only never inline | T11 | `internal/assets/claude/skills/ctx-wrap-up/SKILL.md` | [P] | frontmatter test green; body surfaces + explicitly does not fold | Triggers |
 | T15 | [x] | `Health` unit tests: foldable, folded-quiet fixtures | T05 | `internal/cli/system/core/knowledge/*_test.go` | | **M1,M2** pass | Tests |
 | T16 | [x] | `Health` unit tests: heavy root + heavy theme file | T07 | `knowledge` test | [P] | **M3** pass | Tests |
 | T17 | [x] | `Health` unit test: both-fire ordering | T08 | `knowledge` test | [P] | **M4** pass | Tests |
 | T18 | [x] | convention measure test: sections not lines | T05 | `knowledge` test | [P] | **M5** pass | Tests |
 | T19 | [x] | boundary + disable tests (`>N`, `0` disables) | T08 | `knowledge` test | [P] | **M6,M7** pass | Tests |
-| T20 | [ ] | surface parity test: hook findings == report findings | T11,T12 | `knowledge`/checkknowledge test | | **M8** pass | Tests |
-| T21 | [ ] | copilot skill sync | T13,T14 | `internal/assets/integrations/copilot-cli/skills/**` | [P] | `make check-copilot-skills` green | Skill |
-| T22 | [ ] |XX **measurement gate**: drive Health on a realistic .context (oversized root + fat theme file) | T12,T11 | scratchpad fixture | | foldable + heavy both surface; suggestions correct; throttle holds | Risks |
-| T23 | [ ] |XX milestone gate | T01–T22 | — | | `make lint` 0, `go test ./...` green, `make audit` pass; DoD confirmed | Scope/DoD |
+| T20 | [x] | surface parity test: hook findings == report findings | T11,T12 | `knowledge`/checkknowledge test | | **M8** pass | Tests |
+| T21 | [x] | copilot skill sync | T13,T14 | `internal/assets/integrations/copilot-cli/skills/**` | [P] | `make check-copilot-skills` green | Skill |
+| T22 | [x] | **measurement gate**: drive Health on a realistic .context (oversized root + fat theme file) | T12,T11 | scratchpad fixture | | foldable + heavy both surface; suggestions correct; throttle holds | Risks |
+| T23 | [x] | milestone gate | T01–T22 | — | | `make lint` 0, `go test ./...` green, `make audit` pass; DoD confirmed | Scope/DoD |
 
 **Execution waves** (each `∥` group is file-disjoint): `T01 ∥ T04` →
 `T02` → `T03 ∥ T05 ∥ T06` → `T07` → `T08` → `T09` → `T10 ∥ T11` →

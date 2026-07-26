@@ -171,6 +171,24 @@ Do not auto-commit; the user decides. But always run the
 `git status` check and always surface non-empty output. Do
 not skip this phase silently when the working tree is dirty.
 
+### Phase 4.4: Surface knowledge health (suggest-only)
+
+Run:
+
+```bash
+ctx system check-knowledge --report
+```
+
+When it prints findings, surface them as a closing suggestion:
+a *foldable* root → run `/ctx-digest` **next session**; a *heavy*
+page → split the theme or extract it to tooling. Prints nothing
+when every root is within limits — then say nothing.
+
+**Never fold inline here.** The human is closing the laptop to go
+live their life; running a semantic pass at wrap-up is against
+their interest (spec: progressive-disclosure `### Triggers`). This
+phase suggests for *next* session; it does not act.
+
 ### Phase 4.5: Capture the session journal (best-effort)
 
 Before handing over, sweep this session — and any others that

@@ -61,7 +61,21 @@ feel like a file search rather than genuine recall:
    `/ctx-remember` does not run any editorial pass. If the
    directory does not exist or holds no postdated entries,
    skip the step.
-6. **Present the structured readback** (see format below)
+6. **Check knowledge health (read-only).** Run:
+
+   ```bash
+   ctx system check-knowledge --report
+   ```
+
+   It prints nothing when every canonical root is within limits.
+   When it prints findings, surface them in the readback's
+   **Knowledge health** line: a *foldable* root suggests
+   `/ctx-digest` (fold the staging zone into themes); a *heavy*
+   page suggests splitting the theme or extracting it to tooling.
+   Suggest only — never run `/ctx-digest` or edit a file here.
+   If it prints nothing, omit the line.
+
+7. **Present the structured readback** (see format below)
 
 ## Readback Format
 
@@ -78,6 +92,12 @@ relevant. Pick the most recent or most impactful.
 
 **Next step**: Suggest what to work on next based on the active
 tasks, or ask the user for direction if priorities are unclear.
+
+**Knowledge health** (only when `ctx system check-knowledge
+--report` printed findings): name the foldable roots and/or heavy
+pages it reported and the suggested remedy (`/ctx-digest`, or
+split/extract). Suggestion only; omit the line entirely when the
+report was empty.
 
 ## Readback Rules
 
