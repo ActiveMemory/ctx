@@ -124,12 +124,56 @@ Agent-driven, human-gated, never inline in another ceremony:
    themes alone.
 5. Create `## Themes` on first run.
 
-### Triggers — suggestion only
+### Triggers — suggestion only (milestone 5)
 
 The growth/threshold nudge, `/ctx-remember`, and `/ctx-wrap-up` may
 **suggest** the pass. None of them perform it. Wrap-up especially must
 stay light: the human is closing the laptop to go live their life, and
 semantic work there is against their interest.
+
+All three surfaces read one function — `knowledge.Health(ctxDir,
+thresholds) → []Finding` — so the hook (Go) and the skills (prose calling
+a `ctx` report path) can never drift. It emits **two signal kinds**,
+because "should I fold this?" and "is this too heavy to be useful
+context?" are different questions with different units. No state file:
+the staging zone and on-disk bytes are self-describing (the watermark
+principle from the M1 decision).
+
+**Signal 1 — foldable root (a *count*).** The number of staged entries,
+via `disclosure.StagedEntries` (`## [` blocks for decisions/learnings,
+`## ` sections for conventions, both excluding the structural
+`## Themes`). This reads a never-migrated root correctly — with no
+`## Themes`, the whole entry region is staging. Over its per-kind
+threshold, the finding suggests **`/ctx-digest`** (fold staging into
+themes); `/ctx-consolidate` and `/ctx-drift` are demoted to secondary
+("if entries overlap rather than just accrete").
+
+**Signal 2 — heavy page (a *byte count*).** Bytes, not lines: a line
+hides 10 or 200 characters, but bytes are the true context cost. Scanned
+over the root **and every theme file** under `.context/<noun>/*.md` —
+the root-only measure was blind to the bloat folding itself relocates
+into theme files. Over the byte ceiling, the finding is advisory: *split
+the theme, or extract it to actual tooling.* Past a ceiling, more
+Markdown is the wrong fix — an LLM is a poor linter and cannot reliably
+apply a large ruleset written as prose, so the remedy prompts the human
+to decide whether the content still belongs in an LLM-read file at all.
+Tier-2 auto-fold is **not** the heavy-page remedy (it stays deferred; see
+Non-Goals).
+
+When both signals fire on one root (a large un-migrated file is both
+foldable and heavy), the formatter leads with `/ctx-digest` — folding
+reduces both.
+
+**Config** (rc-tunable; `0` disables a check, preserving the existing
+convention): per-kind staging counts (`entry_count_learnings` 30,
+`entry_count_decisions` 20 carry over unchanged; `convention_line_count`
+is **replaced** by `convention_section_count`, since a section count is
+the watermark unit — a deliberate behavior change framed as user
+education), and a shared `theme_page_byte_ceiling` for signal 2.
+
+The existing `check-knowledge` daily-throttle + snooze plumbing and the
+`NudgeBox`/`EmitAndRelay` log-first path are reused, so a user who
+declines to fold is not nagged every session.
 
 ## Guards
 
@@ -162,6 +206,12 @@ semantic work there is against their interest.
 - Every theme link resolves (existing `ctx drift` path check).
 - Every entry lives in **exactly one** place: staging XOR one theme file.
 - Convention staging titles are **unique** — identity is the section title, so duplicates fail loud (`ErrDuplicateStagedTitle`).
+- **(M5)** The foldability signal counts the *staging zone*, not the
+  whole file: a folded root (entries moved to theme files) reports a
+  count below threshold and stops nudging; a never-migrated root reports
+  its full entry count.
+- **(M5)** The weight scan covers the root **and** every theme file; a
+  heavy theme file is flagged even when the root is lean.
 
 ## Tests
 
@@ -174,6 +224,16 @@ semantic work there is against their interest.
   above `## Themes` too (correcting its original `AppendAtEnd`).
 - **Abort**: corrupt the root → pass refuses, file byte-identical.
 - **Idempotency**: pass with empty staging = no-op.
+- **(M5) `knowledge.Health` fixtures**: un-migrated large root →
+  foldable finding; migrated root + oversized theme file → heavy finding;
+  both at once → foldable leads; all under threshold → no findings.
+- **(M5) Boundary**: each threshold fires at `> N`, not `>= N`; `0`
+  disables the check.
+- **(M5) Convention measure**: a folded 5-section / 250-line convention
+  root does **not** foldable-nudge (section count, not lines).
+- **(M5) Surface parity**: the `check-knowledge` hook and the skill
+  report path produce the same findings from the same root (shared
+  `Health`).
 
 ## Acceptance
 
@@ -187,6 +247,13 @@ semantic work there is against their interest.
   correcting the original inconsistency — the one deliberate add-path
   change.
 - The pass is codified as a reusable skill.
+- **(M5)** The growth nudge, `/ctx-remember`, and `/ctx-wrap-up` each
+  surface foldable roots (→ `/ctx-digest`) and heavy pages (→ split /
+  extract), from one shared `knowledge.Health`, suggestion-only.
+- **(M5)** The foldability signal is staging-based across all three
+  kinds; `convention_line_count` is retired for `convention_section_count`.
+- **(M5)** Theme files are scanned for weight; nothing auto-folds and no
+  state file is introduced.
 
 ## Non-Goals
 
@@ -195,7 +262,11 @@ semantic work there is against their interest.
 - **No change to the decision/learning `add` write path** (the convention path changes: `AppendAtEnd` → prepend above `## Themes`, correcting an original inconsistency).
 - **No `ctx agent` packet rewire** — boundedness makes it unnecessary.
 - **No taxonomy/nesting machinery now** — the structure is self-similar,
-  so nesting is available when themes outgrow their file.
+  so nesting is available when themes outgrow their file. **(M5)** The
+  heavy-page signal deliberately does **not** auto-recurse (tier-2 fold);
+  it advises the human to split or extract-to-tooling, because past a
+  byte ceiling the right answer may be "this belongs in a linter, not a
+  context file," which no automatic subdivision can decide.
 - **CONSTITUTION.md and TASKS.md are out of scope** — the former is small
   by design, the latter is auto-archived.
 - **KB pipeline untouched.**
@@ -208,4 +279,11 @@ semantic work there is against their interest.
 3. First real rollout on LEARNINGS (largest corpus), then DECISIONS.
 4. CONVENTIONS (curated `## `-section model, unified into the entry-kind
    mover + prepend add-path, edits-behind-a-link UX).
-5. Wire the suggest-only triggers.
+5. **Wire the suggest-only triggers (milestone 5).** One
+   `knowledge.Health` emitting foldable (staging count → `/ctx-digest`)
+   and heavy (bytes over root + theme files → split/extract) findings;
+   consumed by the `check-knowledge` hook and a report path the
+   `/ctx-remember` and `/ctx-wrap-up` skills call. Retire
+   `convention_line_count` for `convention_section_count`; add
+   `theme_page_byte_ceiling`. Suggestion-only, no state file, throttle
+   reused. Decompose via `/ctx-task-out --milestone pd-m5`.

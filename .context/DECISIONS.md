@@ -45,6 +45,34 @@ For significant decisions:
 
 -->
 
+## [2026-07-25-190410] Beyond a byte ceiling, knowledge content should become tooling, not more Markdown
+
+**Status**: Accepted
+
+**Context**: Designing M5's heavy-page signal; the failure case is a convention theme file growing toward ~1MB.
+
+**Decision**: Beyond a byte ceiling, knowledge content should become tooling, not more Markdown
+
+**Rationale**: An LLM is a poor linter: it cannot reliably apply a large ruleset expressed as prose. Past a ceiling, recursive folding (more Markdown) is the wrong fix; the right move is extracting the content to actual tooling (a linter), code, or docs. So the heavy-page remedy is an advisory 'split OR extract to tooling', decided by the human, not tier-2 auto-fold.
+
+**Consequence**: The heavy-page nudge frames the ceiling as a smell ('a context file this heavy is a linter in prose'), prompting extraction rather than endless subdivision. Tier-2 theme recursion remains deferred, not precluded.
+
+---
+
+## [2026-07-25-190410] M5 knowledge health is two suggest-only signals: foldable root (staging count) and heavy page (bytes)
+
+**Status**: Accepted
+
+**Context**: M5 wires the growth nudge, /ctx-remember, and /ctx-wrap-up to progressive disclosure. The 2026-07-16 foundational decision already fixed staging-as-watermark, the three surfaces, and suggest-only. Left open: the signal/threshold, and that the original root-only measure was blind to theme-file bloat that folding itself creates.
+
+**Decision**: M5 knowledge health is two suggest-only signals: foldable root (staging count) and heavy page (bytes)
+
+**Rationale**: Two questions need two measures. 'Should I fold?' is a COUNT of staged entries/sections via disclosure.StagedEntries (suggest /ctx-digest). 'Is this page too heavy to be useful context?' is a BYTE count, scanned over the root AND every theme file under .context/<noun>/ (suggest split or extract). Folding relocates bulk into theme files, so a root-only signal is blind to the bloat it creates. One knowledge.Health function feeds all three surfaces so hook and skills cannot drift. No state file: staging plus on-disk bytes are self-describing.
+
+**Consequence**: convention_line_count (200 lines) is replaced by convention_section_count (foldability) plus a shared theme_page_byte_ceiling (weight); a deliberate behavior change, framed as user education. Theme files are now scanned. Reuses disclosure.StagedEntries and the check-knowledge daily-throttle / log-first plumbing.
+
+---
+
 ## [2026-07-25-132759] Theme declaration via the Themes section keyword, on all three canonical kinds
 
 **Status**: Accepted
