@@ -2115,17 +2115,17 @@
 the AI repeats mistakes it made yesterday, and decisions get rediscovered
 instead of remembered.</p>
 <p><strong>Without <code>ctx</code>:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&gt; &quot;Add the validation middleware we discussed&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&gt; "Add the validation middleware we discussed"
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>I don&#39;t have context about previous discussions. Could you describe
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>what validation middleware you&#39;re referring to?
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>I don't have context about previous discussions. Could you describe
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>what validation middleware you're referring to?
 </span></code></pre></div>
 <p><strong>With <code>ctx</code>:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&gt; &quot;Add the validation middleware we discussed&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&gt; "Add the validation middleware we discussed"
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Yes. From the Jan 15 session. You decided on Zod schemas at the
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>route level (DECISIONS.md #12), and the pattern is in
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>CONVENTIONS.md. I&#39;ll follow the existing middleware in
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>CONVENTIONS.md. I'll follow the existing middleware in
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>src/middleware/auth.ts as a reference.
 </span></code></pre></div>
 <p>That's the whole pitch: <strong>your AI remembers</strong>.</p>
@@ -2239,7 +2239,10 @@ the OpenCode integration. OpenCode's execution model (explicit user
 approval for every shell command) makes a pre-execution blocklist
 unnecessary.</p>
 <h2 id="slash-commands">Slash Commands<a class="headerlink" href="#slash-commands" title="Permanent link">&para;</a></h2>
-<p>Four skills are available as slash commands:</p>
+<p>The skills are generated from the canonical ctx skill tree at build
+time, so their names and behavior match the Claude Code integration
+one-to-one.</p>
+<p>Session lifecycle:</p>
 <table>
 <thead>
 <tr>
@@ -2263,6 +2266,93 @@ unnecessary.</p>
 <tr>
 <td><code>/ctx-wrap-up</code></td>
 <td>End-of-session ceremony. Captures learnings, decisions, conventions, and outstanding tasks to <code>.context/</code> files.</td>
+</tr>
+<tr>
+<td><code>/ctx-handover</code></td>
+<td>Write a per-session handover note for the next agent (invoked by <code>/ctx-wrap-up</code>).</td>
+</tr>
+</tbody>
+</table>
+<p>The planning arc from the
+<a href="../../recipes/design-before-coding/">Design Before Coding</a>
+recipe:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/ctx-brainstorm</code></td>
+<td>Design before implementation: turn a vague idea into a validated design.</td>
+</tr>
+<tr>
+<td><code>/ctx-plan</code></td>
+<td>Stress-test a plan through adversarial interview; produces a debated brief.</td>
+</tr>
+<tr>
+<td><code>/ctx-spec</code></td>
+<td>Scaffold a feature spec from the project template.</td>
+</tr>
+<tr>
+<td><code>/ctx-task-out</code></td>
+<td>Decompose a committed spec into a per-milestone implementation plan.</td>
+</tr>
+<tr>
+<td><code>/ctx-implement</code></td>
+<td>Execute a plan step-by-step with verification.</td>
+</tr>
+</tbody>
+</table>
+<p>Capture:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/ctx-task-add</code></td>
+<td>Add a task when follow-up work is identified.</td>
+</tr>
+<tr>
+<td><code>/ctx-decision-add</code></td>
+<td>Record an architectural decision with rationale.</td>
+</tr>
+</tbody>
+</table>
+<p>Knowledge-base editorial pipeline (active when <code>.context/kb/</code> exists):</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/ctx-kb-ingest</code></td>
+<td>Editorial knowledge-ingestion pass over supplied sources.</td>
+</tr>
+<tr>
+<td><code>/ctx-kb-ask</code></td>
+<td>Q&amp;A grounded in the existing kb.</td>
+</tr>
+<tr>
+<td><code>/ctx-kb-note</code></td>
+<td>Park a finding for the next ingest pass.</td>
+</tr>
+<tr>
+<td><code>/ctx-kb-site-review</code></td>
+<td>Mechanical structural audit of the kb.</td>
+</tr>
+<tr>
+<td><code>/ctx-kb-ground</code></td>
+<td>Read-only freshness audit over the kb's tracked sources.</td>
 </tr>
 </tbody>
 </table>
