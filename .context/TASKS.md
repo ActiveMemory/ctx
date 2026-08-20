@@ -2617,6 +2617,8 @@ shipped.
 
 ### Misc
 
+- [ ] Regenerate site/ for docs/home/opencode.md (OpenCode skill parity, issue #158): zensical not installed on this machine, so make site could not run; run make site on a machine with the pinned zensical and commit the site/ churn #priority:medium #session:45d47165 #branch:feat/158-opencode-skill-parity #commit:ce5a8328 #added:2026-08-19-211552
+
 - [x] [Epic F] ctx index: docs (remove reindex, add ctx index) + final build/lint/test gate (T23-T24). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
 
 - [x] [Epic E] ctx index: strip INDEX blocks from .context files, remove marker constants, add guards (T19-T22). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851

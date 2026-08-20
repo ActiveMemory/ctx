@@ -1,85 +1,290 @@
 ---
 name: ctx-kb-ground
-description: "Read-only freshness audit over the kb's tracked sources (URLs, in-tree paths, MCP resources) declared in grounding-sources.md. Classifies each source's drift state, annotates the source-coverage ledger, and writes a ground closeout; flags drifted or new-to-kb sources for /ctx-kb-ingest. Never mints evidence, authors prose, or transitions ledger states."
+description: Read-only freshness audit over the kb's tracked sources (URLs, in-tree paths, MCP resources) declared in grounding-sources.md. Classifies each source's drift state, annotates the source-coverage ledger, and writes a ground closeout; flags drifted or new-to-kb sources for /ctx-kb-ingest. Never mints evidence, authors prose, or transitions ledger states.
 ---
+
+# Ground the KB Against Its Tracked Sources
 
 Walk the sources declared in `.context/ingest/grounding-sources.md`
 and report whether the kb's claims are still current. This is the
-*"are we still current?"* pass — a read-only freshness audit, not
-a re-ingest.
+*"are we still current?"* pass — a **read-only freshness audit**,
+not a re-ingest.
 
-Each tracked source — URLs, in-tree paths, or MCP resources —
+Each tracked source — **URLs, in-tree paths, or MCP resources** —
 gets resolved and classified as `unchanged`, `drifted`, `gone`,
 `freshness opaque`, or `new to kb`. The skill annotates the
-source-coverage ledger's `Residue` / `Next action` cells and
-writes a ground closeout. It does NOT mint `EV-###` rows, author
-topic-page prose, transition ledger states, or modify Confidence
-bands; those are `/ctx-kb-ingest`'s authority.
+source-coverage ledger's `Residue` and `Next action` cells and
+writes a ground closeout summarising findings. It does **NOT**
+mint `EV-###` rows, author topic-page prose, transition ledger
+states, or modify Confidence bands; those are `/ctx-kb-ingest`'s
+authority.
 
-If a tracked source drifted or is new to the kb, flag it and
-recommend a follow-up `/ctx-kb-ingest`. The declarative watch
-list in `grounding-sources.md` persists across sessions and
-tracks sources from anywhere the kb cites — the web, this repo's
-tree, an MCP server. Distance from the repo is irrelevant; what
-matters is that the kb depends on them for evidence.
+If a tracked source drifted or is new to the kb, this skill flags
+it and recommends a follow-up `/ctx-kb-ingest`. The declarative
+watch list in `grounding-sources.md` is what makes this skill
+distinct from ingest: it **persists across sessions** (ingest's
+source list is per-invocation) and tracks sources from anywhere
+the kb cites — public web, this repo's tree, behind an MCP
+server. Distance from the repo is irrelevant; what matters is
+that the kb depends on them for evidence.
+
+Authoritative background reading:
+`.context/ingest/KB-RULES.md` §Authority boundary and
+§Source-coverage ledger; `specs/kb-editorial-pipeline.md`
+§Interface and §Edge Cases.
 
 ## When to Use
 
 - The user says "re-ground the kb", "check upstream",
-  "refresh sources".
-- A grounding cadence is hitting its scheduled boundary.
-- A prior pass left a `Q-###` row that names "needs
-  re-grounding".
+  "are the docs still current?", or invokes the explicit slash
+  form.
+- Before a release / handover where source freshness matters.
+- After an external vendor has shipped a version bump.
+- Periodically (per the user's cadence) as kb hygiene.
 
 ## When NOT to Use
 
-- The user has new sources to add (`/ctx-kb-ingest`).
-- The user asks a question (`/ctx-kb-ask`).
-- The user wants a mechanical audit (`/ctx-kb-site-review`).
+- The user has new materials in hand (use `/ctx-kb-ingest`).
+- The user is asking a content question (use `/ctx-kb-ask`).
+- The user wants a structural audit (use `/ctx-kb-site-review`).
 
-## Input
+## Authority Boundary (vs Other Skills)
 
-No positional arg. Sources come from
-`.context/ingest/grounding-sources.md` (one source per line;
-`NONE` on a line is a per-pass skip).
+- **`/ctx-kb-ground`**: read-only freshness audit over the
+  sources listed in `grounding-sources.md` (URLs, in-tree paths,
+  MCP resources). Annotates the source-coverage ledger's
+  `Residue` and `Next action` cells; writes a ground closeout.
+  **May not** mint `EV-###` rows, author prose, modify a topic
+  page, change a Confidence band, or transition ledger states.
+- **`/ctx-kb-ingest`**: handles anything this skill surfaces
+  as new material to absorb.
+- **`/ctx-kb-ask`**: handles read-only questions about kb
+  content.
+- **`/ctx-kb-site-review`**: handles structural audit (separate
+  surface from source-freshness audit).
+
+## Usage Examples
+
+```text
+/ctx-kb-ground
+```
+
+No arguments. Sources come from
+`.context/ingest/grounding-sources.md`.
+
+## Input Contract
+
+The file `.context/ingest/grounding-sources.md` is the sole
+declaration surface. Each non-empty, non-comment line names a
+source (URL, in-tree path, MCP resource identifier) the user
+wants this skill to track. A line whose value is the literal
+`NONE` is a **per-pass skip**: this invocation does nothing and
+re-prompts on the next invocation. Lines beginning with `#` are
+comments.
+
+There is no CLI argument for sources. To configure what this
+skill checks, edit `grounding-sources.md`.
 
 ## Pre-Write Gates
+
+Three distinct refusals, each leaves zero residue:
 
 - `.context/` missing → suggest `ctx init` and stop.
 - `.context/ingest/` missing → suggest `ctx init --upgrade`
   and stop.
-- `grounding-sources.md` missing or empty → prompt the user
-  once for sources to add; if they decline, write a ground
-  closeout with `sources: 0` and stop.
+- Kb scope undeclared → refuse with the scope message and stop.
+
+## Refuse-on-Empty
+
+`.context/ingest/grounding-sources.md` may be in three states:
+
+1. **Missing or empty**: file does not exist, or has only
+   comments and blank lines. Prompt once:
+
+   > `grounding-sources.md` has no sources. List one source per
+   > line (URL, in-tree path, MCP resource). `NONE` on a line
+   > is a per-pass skip and re-prompts next invocation.
+
+   Stop. Do not synthesize a list. Do not invent sources from
+   the kb's `source-map.md` (that file's authority is ingest;
+   grounding's declaration surface is separate by design).
+
+2. **Single line `NONE`**: per-pass skip. Write no closeout;
+   return exactly:
+
+   > grounding-sources.md is `NONE` for this pass; skipping.
+   > Edit `.context/ingest/grounding-sources.md` to set actual
+   > sources, or leave `NONE` to keep skipping.
+
+   The next invocation re-prompts as in (1) above.
+
+3. **One or more sources listed**: proceed to Process.
+
+The empty-and-prompt path is the one exception to the
+refuse-on-empty pattern other mode skills enforce; the rationale
+is that grounding's declaration lives in a file the user owns
+(not in a slash argument), so a one-shot prompt is cheaper than
+forcing them to remember the filename.
 
 ## Process
 
-1. Verify pre-write gates.
-2. Read `.context/ingest/grounding-sources.md`. For each
-   non-skipped line, fetch / re-read the source and compare
-   against `evidence-index.md` rows already citing it.
-3. Update the source-coverage ledger row for each source
-   touched: `partially-ingested` → `partially-ingested`
-   (touched), `comprehensive` → `comprehensive` (if no drift
-   detected), or flag drift in the closeout.
-4. For each source that surfaces material the kb should
-   absorb, flag it and recommend a follow-up
-   `/ctx-kb-ingest` invocation in the closeout's Next pass
-   hint.
-5. Write the ground closeout under
-   `.context/ingest/closeouts/<TS>-ground-closeout.md` with
-   required frontmatter (`sha`, `branch`, `mode: ground`,
-   `pass-mode: n/a`, `life-stage`, `generated-at`) and a
-   body listing each source touched, its drift verdict, and
-   any Next pass hint.
+1. **Verify pre-write gates.** Refuse cleanly if any gate fails.
+   Zero residue on refusal.
+
+2. **Read `.context/ingest/grounding-sources.md`.** Handle the
+   three states per §Refuse-on-empty.
+
+3. **For each declared source**, in order of appearance:
+
+   - **Resolve** the source: fetch the URL, stat the in-tree
+     path, enumerate the MCP resource.
+   - **Cross-reference** against `.context/kb/source-map.md` to
+     find the kb's short-name for this source (if any). If
+     absent, the source is *new to the kb*; record it as a flag
+     to surface in the closeout (do not mint a `source-map.md`
+     row; that is ingest's authority).
+   - **Check freshness** using the strongest available signal:
+     - URL: HTTP Last-Modified header, or ETag, or visible
+       version stamp on the page; compare against the
+       `source-map.md` row's `dated:` cell (if present).
+     - In-tree path: file mtime + git SHA; compare against the
+       `evidence-index.md` rows that cite the source by SHA
+       (in-repo citations pin to a SHA at extraction time per
+       `KB-RULES.md` §Evidence discipline).
+     - MCP resource: whatever freshness primitive the resource
+       exposes; if none, treat as opaque (record as
+       *"freshness opaque"* in the closeout).
+   - **Classify the refresh outcome** as one of:
+     - **`unchanged`**: source has not drifted since the
+       kb's last extraction; no ledger update needed.
+     - **`drifted`**: source has changed; the kb's claims
+       citing this source may be stale; advance the ledger row
+       to a state that reflects the staleness:
+       - If the row was `comprehensive`, advance to a typed
+         `superseded-pending` annotation in the `Residue` cell
+         (do not write a new state name; the state machine in
+         `KB-RULES.md` is closed; `Residue` is the
+         human-readable annotation surface).
+       - If the row was anywhere prior to `comprehensive`,
+         leave the state and add a `drifted` note in `Residue`
+         + `Next action` set to the explicit
+         `/ctx-kb-ingest <slug>` resumption.
+     - **`gone`**: source returns 404, file deleted, MCP
+       resource removed; flag for the user. The right
+       resolution may be `superseded` (with a named successor)
+       or `skipped` (out of scope); that judgment is the
+       user's, not this skill's.
+     - **`freshness opaque`**: no freshness signal available;
+       record in `Residue` cell as *"freshness opaque
+       (<date checked>)"*; no ledger state change.
+   - **Advance the ledger row** only for `drifted` and `gone`
+     cases, and only via `Residue` / `Next action` annotation
+     (not state change). State transitions out of `comprehensive`
+     are ingest's authority.
+
+4. **Write the ground closeout.** Create
+   `.context/ingest/closeouts/<TIMESTAMP>-ground-closeout.md`
+   with required frontmatter:
+
+   ```yaml
+   ---
+   sha: <short>
+   branch: <name>
+   mode: ground
+   pass-mode: refresh
+   life-stage: <bootstrap|maintenance>
+   generated-at: <RFC-3339>
+   ---
+   ```
+
+   Body sections:
+   - **Inputs**: declared sources from
+     `grounding-sources.md`, count + one bullet each.
+   - **Refresh outcomes**: for each source: `unchanged`,
+     `drifted`, `gone`, `freshness opaque`, or `new to kb`.
+     Cite the kb short-name (or *"new to kb"*) and the
+     evidence used to classify (Last-Modified header, version
+     stamp, file mtime).
+   - **Ledger updates**: every `Residue` / `Next action`
+     change applied to a `source-coverage.md` row, with the
+     before/after annotation.
+   - **Flags**: sources the refresh found `gone`, sources
+     classified `new to kb`, sources with conflicting
+     freshness signals. Each flag names the source and the
+     recommended next pipeline step.
+   - **Next pass hint**: explicit invocations to absorb
+     drifted / new material (e.g. *"`/ctx-kb-ingest <slug>` to
+     refresh `cursor/hooks` against the v1.2 docs"*).
+
+## Edge Cases
+
+| Case | Expected behavior |
+|------|-------------------|
+| `grounding-sources.md` missing or empty (only comments/blank) | Prompt once with the standard text; stop. No closeout. |
+| `grounding-sources.md` single line `NONE` | Skip this pass with the standard skip text; stop. No closeout. |
+| `.context/` missing | Refuse; suggest `ctx init`. No residue. |
+| `.context/ingest/` missing | Refuse; suggest `ctx init --upgrade`. No residue. |
+| Kb scope undeclared | Refuse with the scope message. No residue. |
+| Source returns 404 / file deleted / MCP resource removed | Classify `gone`; flag; recommend the user choose `superseded` (with successor) or `skipped` (out of scope). Do not auto-transition. |
+| Source unchanged since last extraction | Record `unchanged` in closeout's `Refresh outcomes`; no ledger update. |
+| Source drifted since last extraction (URL bumped, file mtime newer than cited SHA) | Record `drifted`; annotate ledger row's `Residue` / `Next action`; recommend `/ctx-kb-ingest <slug>`. Do not modify topic-page prose. |
+| Source has no freshness primitive (opaque) | Record `freshness opaque (<date checked>)`; no ledger state change; surface in `Flags` so the user can decide cadence. |
+| Source listed in `grounding-sources.md` but not in `source-map.md` (new to kb) | Classify `new to kb`; flag; recommend `/ctx-kb-ingest <source>` to admit. Do not mint a `source-map.md` row from this skill. |
+| Source listed in `grounding-sources.md` but URL malformed or path nonexistent | Surface as a per-source error in the closeout's `Flags`; continue with remaining sources; do not abort the pass. |
+| Source's `source-map.md` row has `dated:` but `evidence-index.md` rows lack `occurred:` | Flag (temporal-precedence rule needs it); recommend hand-edit. Do not auto-edit. |
+| User added a new source to `grounding-sources.md` since the last pass | Treated as a regular declared source; classified per the freshness check; no special path. |
+| Mid-pass MCP fetch failure | Record per-source error; continue; do not abort the whole pass. |
 
 ## Anti-Patterns
 
-- Authoring topic-page prose from refresh output. Authoring
-  is `/ctx-kb-ingest`'s authority.
-- Minting `EV-###` rows. Evidence minting is ingest's
-  authority.
-- Promoting confidence bands without contradicting evidence.
-  Drift detection alone is not promotion.
-- Skipping the closeout. Even a no-op refresh writes one so
-  the ledger advance is auditable.
+- Minting `EV-###` rows from this skill. Evidence authoring is
+  ingest's authority.
+- Authoring topic-page prose from this skill. Page authoring is
+  ingest's authority.
+- Modifying a claim's Confidence band from this skill. Demotion
+  is evidence work.
+- Auto-transitioning a `comprehensive` ledger row out of
+  `comprehensive`. State changes require ingest judgment; this
+  skill annotates `Residue` / `Next action` only.
+- Synthesising a source list when `grounding-sources.md` is
+  empty. The declaration surface is the file the user owns.
+- Inventing a freshness signal when none exists. *"Freshness
+  opaque"* is the honest classification.
+- Skipping the closeout once pre-write gates pass and at least
+  one source was processed.
+
+## Output Contract
+
+For pre-write refusals, return only the specified refusal text
+and stop. No residue.
+
+For empty / `NONE` cases, return the matching prompt or skip
+text and stop. No closeout in those cases.
+
+For passes that processed at least one source, end with this
+structured summary:
+
+- **Sources checked**: count + one bullet each, classified
+  (`unchanged | drifted | gone | freshness opaque | new to kb`).
+- **Ledger updates**: count + one-line categories.
+- **Flags**: count + categories.
+- **Closeout**: filename on its own line.
+- **Next-recommended-action**: explicit invocations to absorb
+  drifted / new material (or `none` if every source was
+  `unchanged`).
+
+## Quality Checklist
+
+Before reporting completion, verify:
+
+- [ ] Pre-write gates passed (or the matching refusal was
+      returned with zero residue).
+- [ ] Every declared source from `grounding-sources.md` was
+      checked, classified, and recorded in `Refresh outcomes`.
+- [ ] No `EV-###` row was minted, no topic-page prose was
+      written, no Confidence band was changed, no ledger state
+      was transitioned (only `Residue` / `Next action`
+      annotated).
+- [ ] Every `drifted` / `gone` / `new to kb` source has an
+      explicit `Next-recommended-action`.
+- [ ] Closeout written with all required frontmatter fields.
