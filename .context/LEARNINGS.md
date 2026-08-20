@@ -6,6 +6,7 @@
 | 2026-08-23 | Codex trust and hook wiring facts verified against codex 0.148 |
 | 2026-08-23 | hack scripts must survive macOS /bin/bash 3.2 and BSD grep |
 | 2026-08-23 | make lint SA5011 false positives mean a corrupted golangci-lint cache |
+| 2026-08-19 | Empty-array expansion under set -u kills lint-drift.sh on stock macOS bash 3.2 |
 | 2026-07-25 | Using the proprietary sibling repo as design evidence leaks its internals into tracked files |
 | 2026-07-25 | Skill and doc examples of a serialized structure must round-trip through the real parser |
 | 2026-07-25 | A guard derived from a capability accessor silently lifts when the accessor is extended |
@@ -85,6 +86,16 @@ DO NOT UPDATE FOR:
 **Lesson**: Nondeterministic staticcheck SA5011 on the guarded nil-check pattern is a corrupted golangci-lint build cache, not real findings. 'golangci-lint cache clean && make lint' returned 0 issues.
 
 **Application**: Before chasing staticcheck findings in files a branch never touched, check whether the finding set is stable across two runs; if it varies, clean the golangci-lint cache first.
+
+---
+
+## [2026-08-19-211547] Empty-array expansion under set -u kills lint-drift.sh on stock macOS bash 3.2
+
+**Context**: make audit had never passed on this stock macOS machine: lint-drift.sh died with "exclude_args[@]: unbound variable" because bash 3.2 treats expanding an empty array as an unset-variable error under set -u. (The sibling lint-docstrings.sh gotchas — apostrophe in a $( ) comment, grep -P on BSD grep — are covered by the 2026-08-23 "hack scripts must survive macOS /bin/bash 3.2 and BSD grep" learning.)
+
+**Lesson**: Bash 3.2 under set -u aborts on ${arr[@]} when the array is empty; bash 4.4+ made this legal, so Linux CI never sees it.
+
+**Application**: In hack/ scripts guard every possibly-empty array expansion with ${arr[@]+"${arr[@]}"}. Per specs/hack-script-portability.md.
 
 ---
 
