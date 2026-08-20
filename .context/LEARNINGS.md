@@ -6,6 +6,7 @@
 | 2026-08-23 | Codex trust and hook wiring facts verified against codex 0.148 |
 | 2026-08-23 | hack scripts must survive macOS /bin/bash 3.2 and BSD grep |
 | 2026-08-23 | make lint SA5011 false positives mean a corrupted golangci-lint cache |
+| 2026-08-19 | Exact zensical pin does not prevent site/ churn: underlying libs drift |
 | 2026-07-25 | Using the proprietary sibling repo as design evidence leaks its internals into tracked files |
 | 2026-07-25 | Skill and doc examples of a serialized structure must round-trip through the real parser |
 | 2026-07-25 | A guard derived from a capability accessor silently lifts when the accessor is extended |
@@ -85,6 +86,16 @@ DO NOT UPDATE FOR:
 **Lesson**: Nondeterministic staticcheck SA5011 on the guarded nil-check pattern is a corrupted golangci-lint build cache, not real findings. 'golangci-lint cache clean && make lint' returned 0 issues.
 
 **Application**: Before chasing staticcheck findings in files a branch never touched, check whether the finding set is stable across two runs; if it varies, clean the golangci-lint cache first.
+
+---
+
+## [2026-08-19-221024] Exact zensical pin does not prevent site/ churn: underlying libs drift
+
+**Context**: make site with the exactly-pinned zensical 0.0.51 (fresh pipx install) still churned 100+ committed site/ pages with HTML-entity encoding differences (&#39; vs ') untouched by the docs change — the pin fixes the generator version, not its Python dependency tree.
+
+**Lesson**: The generator pin is necessary but not sufficient for reproducible site builds; markdown-renderer deps under zensical encode entities differently across environments, and CI never rebuilds the site to catch it.
+
+**Application**: After make site, review git status -- site/ and commit ONLY pages your docs change affects (plus search.json); restore the rest. If full-site churn is ever intended, do it as its own chore commit.
 
 ---
 

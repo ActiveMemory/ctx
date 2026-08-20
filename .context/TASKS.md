@@ -2617,7 +2617,9 @@ shipped.
 
 ### Misc
 
-- [ ] Regenerate site/ for docs/home/opencode.md (OpenCode skill parity, issue #158): zensical not installed on this machine, so make site could not run; run make site on a machine with the pinned zensical and commit the site/ churn #priority:medium #session:45d47165 #branch:feat/158-opencode-skill-parity #commit:ce5a8328 #added:2026-08-19-211552
+- [ ] Full-site regen as standalone chore: make site with pinned zensical 0.0.51 rewrites 100+ pages with HTML-entity encoding differences (lib drift beneath the pin). Decide the canonical encoding, regenerate the whole site/ in one chore commit, and consider pinning zensical's dep tree (pipx runpip freeze) so future builds are reproducible. See LEARNINGS 2026-08-19 zensical-pin entry. #priority:medium #session:45d47165 #branch:feat/158-opencode-skill-parity #commit:f3f73875 #added:2026-08-19-221230
+
+- [x] Regenerate site/ for docs/home/opencode.md (OpenCode skill parity, issue #158): zensical not installed on this machine, so make site could not run; run make site on a machine with the pinned zensical and commit the site/ churn #priority:medium #session:45d47165 #branch:feat/158-opencode-skill-parity #commit:ce5a8328 #added:2026-08-19-211552
 
 - [x] [Epic F] ctx index: docs (remove reindex, add ctx index) + final build/lint/test gate (T23-T24). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
 
