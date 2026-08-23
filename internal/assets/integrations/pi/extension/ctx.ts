@@ -18,8 +18,10 @@
 // Compaction interop is breadcrumb-mediated and stateless across reloads:
 // an injected custom_message is a valid compaction cut point, so once it
 // ages past keepRecentTokens Pi folds it into the lossy LLM summary. The
-// branch-scan predicate below re-injects exactly when no ctx-injected
-// custom_message exists after the most recent compaction entry, so
+// re-injection predicate below scans the LIVE context
+// (buildContextEntries: summary + kept tail + post-compaction entries),
+// so a packet that survived into the kept tail of a recent compaction
+// suppresses re-injection, a folded-away packet triggers it, and
 // extension-instance teardown on /new /resume /fork /reload (which resets
 // all in-memory state) can only cause an extra injection, never a missed
 // one. We deliberately do NOT take ownership of the Pi LLM summary via
@@ -85,6 +87,12 @@ function runCtx(
 		);
 		const input = child.stdin;
 		if (input) {
+			// Swallow async stream errors (EPIPE when the child exits
+			// before the write flushes, destroyed-stream writes on a
+			// failed spawn): spawn/exec failures already surface in
+			// the execFile callback, and a raw 'error' emission must
+			// not escape Pi's handler stack as an uncaught exception.
+			input.on("error", () => {});
 			if (stdin !== undefined) {
 				input.write(stdin);
 			}
@@ -120,27 +128,20 @@ function fetchPacket(
 }
 
 // needsContextInjection: true when no ctx-injected custom_message exists
-// after the most recent compaction entry in the current branch. Fresh
-// sessions (no compaction, no injection yet) return true, so the first
-// turn always gets the packet.
+// in the LIVE context. Pi's live context is compaction-aware
+// (summary + kept tail + post-compaction entries), so a packet that
+// survived into the kept tail of a recent compaction is present and
+// suppresses re-injection, while a packet that aged past keepRecentTokens
+// was folded into the summary and is re-injected. Fresh sessions (no
+// injection yet) return true, so the first turn always gets the packet.
 function needsContextInjection(
 	sm: ExtensionContext["sessionManager"],
 ): boolean {
-	const branch = sm.getBranch();
-	let lastCompaction = -1;
-	for (let i = branch.length - 1; i >= 0; i--) {
-		if (branch[i].type === "compaction") {
-			lastCompaction = i;
-			break;
-		}
-	}
-	for (let i = branch.length - 1; i > lastCompaction; i--) {
-		const entry = branch[i];
-		if (entry.type === "custom_message" && entry.customType === CTX_CONTEXT_TYPE) {
-			return false;
-		}
-	}
-	return true;
+	return !sm.buildContextEntries().some(
+		(entry) =>
+			entry.type === "custom_message" &&
+			entry.customType === CTX_CONTEXT_TYPE,
+	);
 }
 
 export default function (pi: ExtensionAPI) {
@@ -172,8 +173,8 @@ export default function (pi: ExtensionAPI) {
 	});
 
 	pi.on("session_compact", async (_event, _ctx) => {
-		// The branch-scan predicate subsumes the flag; dropping the cache
-		// makes the next re-injection fresh.
+		// The live-context predicate subsumes the flag; dropping the
+		// cache makes the next re-injection fresh.
 		packetCache = undefined;
 	});
 

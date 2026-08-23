@@ -96,8 +96,8 @@ avoids the `hook.StdinReadTimeout` (2s) stall on open pipes. Consequences:
 | Pi event | Action |
 |----------|--------|
 | `session_start` | Warm-up: run `ctx agent --budget 4000` (cwd-anchored to `ctx.cwd`), cache the packet; keep out of the prompt path |
-| `before_agent_start` | Inject the cached packet as a persistent `message` **only when** no ctx-injected `custom_message` (our `customType`) exists in the current branch **after the most recent compaction entry** (branch-scan predicate via `ctx.sessionManager`) |
-| `session_compact` (success) | No-op for the flag (the branch-scan predicate subsumes it); optionally drop the cache so the next injection re-warms |
+| `before_agent_start` | Inject the cached packet as a persistent `message` **only when** no ctx-injected `custom_message` (our `customType`) exists in the **live context** — compaction-aware scan of `sessionManager.buildContextEntries()` (summary + kept tail + post-compaction entries) |
+| `session_compact` (success) | No-op for the flag (the live-context predicate subsumes it); optionally drop the cache so the next injection re-warms |
 | `tool_result` — tool `bash`, command matches `git commit`, **`!event.isError`** | Envelope call `ctx system post-commit` |
 | `tool_result` — tool `edit` or `write`, **`!event.isError`** | Envelope call `ctx system check-task-completion` |
 | `agent_settled` | Envelope call `ctx system check-persistence` |
@@ -115,8 +115,9 @@ Design notes:
   reload:** Pi's own compaction mechanics validate the design — an injected
   `custom_message` is a valid compaction cut point, so once it ages past
   `keepRecentTokens` it is folded into the lossy LLM summary and re-injection
-  is genuinely needed; scanning the branch for our `customType` since the last
-  compaction entry decides precisely (no duplicate when the packet is still in
+  is genuinely needed; scanning the LIVE context for our `customType`
+  (`buildContextEntries()`: summary + kept tail + post-compaction entries)
+  decides precisely (no duplicate when the packet is still in
   the kept tail, no `/reload` duplicate, no missed injection after
   switch/fork/reload — extension state resets are fail-safe). The rejected
   alternative: a custom `session_before_compact` summary would *replace* Pi's
@@ -143,7 +144,7 @@ Design notes:
 internal/assets/integrations/pi/
 ├── extension/
 │   └── ctx.ts            # Thin shim extension (~150 lines with envelope +
-│                         # branch-scan + isError gating)
+│                         # live-context scan + isError gating)
 └── skills/               # Same bundled skill set as OpenCode (10 skills)
     ├── ctx-agent/SKILL.md
     ├── ctx-handover/SKILL.md

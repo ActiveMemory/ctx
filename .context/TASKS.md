@@ -3138,3 +3138,17 @@ embedded TS shim + bundled skills + shared AGENTS.md template.
   requirement" section documents the correct envelope shape; fix the opencode
   plugin the same way (or add envelope flags on the Go side) #priority:medium
   #added:2026-08-23-151000
+- [ ] PI.8 (audit follow-ups, non-blocking): from the fable-5 effort-max
+  branch audit (2026-08-23, verdict ship-ready after MAJOR 1, which is
+  fixed on-branch): (a) post-compaction re-warm runs `ctx agent` inline on
+  the prompt path (up to 15s) — consider re-warming inside the
+  session_compact handler instead; (b) embedded assets are not EOL-pinned
+  (no .gitattributes; Windows builds embed CRLF skills vs LF on CI —
+  cross-binary refresh flapping; add `internal/assets/** text eol=lf`
+  pin, repo-wide pre-existing hazard); (c) hook nudge stdout is discarded —
+  Pi's tool_result handlers can return {content} to append the nudge to the
+  tool result and reach the LLM (OpenCode parity chose .quiet(); design
+  decision, not a bug); (d) tools/typecheck/pi/tsconfig.json could mirror
+  the opencode twin's explicit `paths` mapping for @earendil-works/pi-coding-agent
+  (resolution works today via node_modules probing; hardening only)
+  #priority:low #added:2026-08-23-221600
