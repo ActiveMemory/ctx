@@ -12,9 +12,9 @@
 // The command accepts exactly one positional argument:
 // the name of an AI coding tool (e.g., claude,
 // cursor, copilot, kiro, cline, aider, windsurf,
-// copilot-cli, agents). It outputs configuration
-// snippets and setup instructions specific to that
-// tool.
+// copilot-cli, agents, opencode, pi). It outputs
+// configuration snippets and setup instructions
+// specific to that tool.
 //
 // Without --write, the command prints the integration
 // instructions and configuration content to stdout

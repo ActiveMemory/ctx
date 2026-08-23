@@ -25,6 +25,7 @@ var skillTrees = []string{
 	asset.DirClaudeSkills,
 	asset.DirIntegrationsOpenCodeSkill,
 	asset.DirIntegrationsCopilotSkill,
+	asset.DirIntegrationsPiSkill,
 }
 
 // skillFrontmatter is the minimum frontmatter contract every
@@ -38,7 +39,7 @@ type skillFrontmatter struct {
 }
 
 // TestSkillFrontmatter walks every embedded SKILL.md across
-// the three tool trees and asserts the minimum frontmatter
+// the four tool trees and asserts the minimum frontmatter
 // contract: `name` matches the containing directory's
 // basename, and `description` is a non-empty string. All
 // violations are reported in a single pass.

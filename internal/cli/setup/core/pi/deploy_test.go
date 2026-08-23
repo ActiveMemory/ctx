@@ -11,11 +11,14 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
+	"strings"
 	"testing"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 )
 
 func testCmd(buf *bytes.Buffer) *cobra.Command {
@@ -94,6 +97,97 @@ func TestDeploySkills_RefreshesStaleSkill(t *testing.T) {
 	}
 	if bytes.Contains(buf.Bytes(), []byte("skipped")) {
 		t.Fatalf("expected refresh, got skipped output %q", buf.String())
+	}
+}
+
+func TestDeploy_FreshProject_CreatesAllFiles(t *testing.T) {
+	withTempProjectDir(t)
+
+	var buf bytes.Buffer
+	if err := Deploy(testCmd(&buf)); err != nil {
+		t.Fatalf("Deploy: %v", err)
+	}
+
+	ext, err := agent.PiExtension()
+	if err != nil {
+		t.Fatalf("PiExtension: %v", err)
+	}
+	got, err := os.ReadFile(
+		filepath.Join(".pi", "extensions", "ctx.ts"))
+	if err != nil {
+		t.Fatalf("read extension: %v", err)
+	}
+	if !bytes.Equal(got, ext["ctx.ts"]) {
+		t.Fatal("extension not byte-identical to embedded")
+	}
+
+	skills, err := agent.PiSkills()
+	if err != nil {
+		t.Fatalf("PiSkills: %v", err)
+	}
+	if len(skills) == 0 {
+		t.Fatal("no embedded skills discovered")
+	}
+	for name, content := range skills {
+		p := filepath.Join(".pi", "skills", name, "SKILL.md")
+		got, readErr := os.ReadFile(p)
+		if readErr != nil {
+			t.Fatalf("skill %q not created: %v", name, readErr)
+		}
+		if !bytes.Equal(got, content) {
+			t.Fatalf("skill %q not byte-identical to embedded", name)
+		}
+	}
+
+	agents, err := os.ReadFile("AGENTS.md")
+	if err != nil {
+		t.Fatalf("AGENTS.md not created: %v", err)
+	}
+	if !bytes.Contains(agents, []byte(marker.AgentsStart)) {
+		t.Fatal("AGENTS.md missing ctx marker block")
+	}
+}
+
+func TestDeploySkills_DeterministicOrdering(t *testing.T) {
+	withTempProjectDir(t)
+
+	skills, err := agent.PiSkills()
+	if err != nil {
+		t.Fatalf("PiSkills: %v", err)
+	}
+	names := make([]string, 0, len(skills))
+	for name := range skills {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+
+	var buf bytes.Buffer
+	if err := deploySkills(testCmd(&buf)); err != nil {
+		t.Fatalf("deploySkills: %v", err)
+	}
+
+	// Per-skill output lines are emitted in deploy order,
+	// so their sequence must be lexicographic.
+	var got []string
+	for _, line := range strings.Split(buf.String(), "\n") {
+		trimmed := strings.TrimSpace(line)
+		for _, name := range names {
+			if strings.Contains(trimmed,
+				filepath.Join(".pi", "skills", name)) {
+				got = append(got, name)
+				break
+			}
+		}
+	}
+	if len(got) != len(names) {
+		t.Fatalf("expected %d skill lines, got %d: %q",
+			len(names), len(got), buf.String())
+	}
+	for i, name := range got {
+		if name != names[i] {
+			t.Fatalf("skill %d out of order: %q vs %q",
+				i, name, names[i])
+		}
 	}
 }
 

@@ -175,7 +175,7 @@ internal/assets/read/agent/pi.go                  # PiExtension(), PiSkills()
                                                   # not silent)
 internal/config/hook/hook.go                      # ToolPi = "pi" (tool-const block),
                                                   # DirPi = ".pi", DirPiExtensions,
-                                                  # FilePiExtension = "ctx.ts",
+                                                  # FilePiExtensionDeploy = "ctx.ts",
                                                   # DirPiSkills = "skills"
 internal/assets/commands/text/hooks.yaml          # hook.pi instructions text +
                                                   # "pi" line in hook.supported-tools

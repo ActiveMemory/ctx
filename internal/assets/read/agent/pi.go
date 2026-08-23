@@ -14,6 +14,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/asset"
 )
 
+// pi.go is a deliberate deviation from agent.go's layout:
+// the Pi integration embeds two surfaces (an extension
+// directory and a skill tree), so both accessors live in
+// this file instead of joining the single-payload
+// accessors in agent.go.
+
 // PiExtension reads all embedded Pi extension files.
 // Returns a map of filename to content for files in
 // integrations/pi/extension/.
