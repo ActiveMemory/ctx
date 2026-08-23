@@ -3085,32 +3085,50 @@ embedded TS shim + bundled skills + shared AGENTS.md template.
 
 - [ ] Read `specs/pi-cli-integration.md` before starting any PI task.
   #added:2026-08-23-151000
-- [ ] PI.1: Embedded assets — `internal/assets/integrations/pi/extension/index.ts`
-  (thin shim: before_agent_start packet injection + compacted re-injection flag,
-  session_compact breadcrumb, tool_result post-commit / check-task-completion,
-  agent_settled check-persistence) and `internal/assets/integrations/pi/skills/`
-  (same 10-skill set as OpenCode) #added:2026-08-23-151000
-- [ ] PI.2: Accessors + constants — `internal/assets/read/agent/pi.go`
+- [x] PI.1: Embedded assets — `internal/assets/integrations/pi/extension/ctx.ts`
+  (thin shim: before_agent_start branch-scan packet injection,
+  session_start warm-up cache, session_compact cache drop, tool_result
+  post-commit / check-task-completion with isError gating, agent_settled
+  check-persistence; hook-JSON envelope on piped stdin) and
+  `internal/assets/integrations/pi/skills/` (same 10-skill set as
+  OpenCode; embed.go directives added) #added:2026-08-23-151000
+  #completed:2026-08-23
+- [x] PI.2: Accessors + constants — `internal/assets/read/agent/pi.go`
   (PiExtension, PiSkills) and `internal/config/hook` pi path constants
-  #added:2026-08-23-151000
-- [ ] PI.3: `internal/cli/setup/core/pi/` package — pi.go, extension.go,
-  skill.go, validate.go + tests modeled on the opencode suite
-  #added:2026-08-23-151000
-- [ ] PI.4: CLI wiring — `case cfgHook.ToolPi` branch in setup root.Run()
+  (+ asset.go DirIntegrationsPi*) #added:2026-08-23-151000
+  #completed:2026-08-23
+- [x] PI.3: `internal/cli/setup/core/pi/` package — pi.go, extension.go,
+  skill.go, validate.go + deploy_test.go/testmain_test.go modeled on the
+  opencode suite (all 4 tests green) #added:2026-08-23-151000
+  #completed:2026-08-23
+- [x] PI.4: CLI wiring — `case cfgHook.ToolPi` branch in setup root.Run()
   (run.go + doc.go); supporting text: hooks.yaml hook.pi + supported-tools line,
   write.yaml write.hook-pi-*, config/embed/text DescKeys, write/setup InfoPi*
-  (TestDescKeyYAMLLinkage-enforced; no new Use* constant, no new subcommand)
-  #added:2026-08-23-151000
-- [ ] PI.5: Docs — pi entry in supported-tools reference + pi quickstart guide +
-  regenerate site/ #added:2026-08-23-151000
-- [ ] PI.6: Validation — make build + make lint + go test ./... green;
-  scratch-project dry-run + --write + live pi smoke test per spec
-  #added:2026-08-23-151000
-- [ ] PI.7: CI type-check for the pi extension — tools/typecheck/pi/
-  (tsconfig + package.json with @earendil-works/pi-coding-agent types,
-  tsc --noEmit) + typecheck-pi-extension job in .github/workflows/ci.yml
-  (mirrors tools/typecheck/opencode/). Decisions locked 2026-08-23:
-  display:true, CI typecheck in scope #added:2026-08-23-151000
+  (TestDescKeyYAMLLinkage green; no new Use* constant, no new subcommand)
+  #added:2026-08-23-151000 #completed:2026-08-23
+- [x] PI.5: Docs — pi entry in supported-tools reference (integrations.md +
+  setup.md + multi-tool-setup.md) + pi quickstart guide (docs/home/pi.md +
+  zensical nav). NOTE: site/ HTML rebuild deferred — this machine's zensical
+  0.0.51 venv renders entity-escape drift (120 files, &#39; vs ') vs the
+  committed artifacts (unpinned zensical transitive deps); rebuild on the
+  canonical build machine and stage site/ with a follow-up commit
+  #added:2026-08-23-151000 #completed:2026-08-23
+- [x] PI.6: Validation — go build ./... + golangci-lint (0 issues) + targeted
+  go test green; full-suite delta vs clean main verified: zero new failures
+  (20 failing packages, all pre-existing Windows-environment: CRLF render
+  drift, .exe exec, audit path exemptions). Scratch project: init +
+  dry-run + --write + idempotent re-run + tamper-refresh (byte-identical to
+  embedded) + unknown-tool list all verified with a freshly built binary.
+  Live pi: extension loads clean (A/B run with/without .pi identical);
+  full LLM round-trip blocked by local pi provider config (gx10-spark/*
+  unreachable from this environment) — left for a working-provider machine
+  #added:2026-08-23-151000 #completed:2026-08-23
+- [x] PI.7: CI type-check for the pi extension — tools/typecheck/pi/
+  (tsconfig + package.json + lockfile with @earendil-works/pi-coding-agent
+  0.84.2 types, tsc --noEmit PASSING locally) + typecheck-pi-extension job in
+  .github/workflows/ci.yml (mirrors tools/typecheck/opencode/). Decisions
+  locked 2026-08-23: display:true, CI typecheck in scope
+  #added:2026-08-23-151000 #completed:2026-08-23
 - [ ] Bug (review finding, pre-existing): OpenCode plugin lifecycle legs lack
   the hook-JSON stdin envelope — `ctx system post-commit` from
   internal/assets/integrations/opencode/plugin/index.ts bails silently in
