@@ -89,6 +89,28 @@ jobs:
         working-directory: tools/typecheck/opencode
         run: npx tsc --noEmit
 
+  typecheck-pi-extension:
+    name: Typecheck Pi extension
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: tools/typecheck/pi/package-lock.json
+
+      - name: Install dependencies
+        working-directory: tools/typecheck/pi
+        run: npm ci
+
+      - name: Type-check embedded extension
+        working-directory: tools/typecheck/pi
+        run: npx tsc --noEmit
+
   vscode-extension:
     name: VS Code extension build + typecheck
     runs-on: ubuntu-latest
