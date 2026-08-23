@@ -15,6 +15,26 @@ DO NOT UPDATE FOR:
 -->
 
 
+## [2026-08-23-204632] Windows git over HTTPS fails with SEC_E_NO_CREDENTIALS unless the openssl backend is pinned
+
+**Context**: During the pi integration, every `git fetch`/`ls-remote` over an https remote on this Windows machine failed with `schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030e)` - git's default TLS (schannel) has no usable credential state here. `gh` (own TLS stack) worked fine, and SSH keys were rejected, so the failure looked like a credentials/remote problem.
+
+**Lesson**: git's schannel backend and the Windows credential manager can be broken independently of the remote; the fix is a per-invocation backend override, not key/credential surgery.
+
+**Application**: On this machine, run every git https remote operation as `git -c http.sslBackend=openssl <cmd>` (git 2.51 supports it). Diagnose with `gh api` first to rule out remote-side auth before touching keys.
+
+---
+
+## [2026-08-23-204632] zensical site rebuilds are non-reproducible off the canonical toolchain (entity-escape drift)
+
+**Context**: Rebuilding site/ locally with the pinned zensical 0.0.51 (fresh venv, Python 3.10) produced 120 files of pure escape drift (`&#39;` vs literal `'` inside highlighted code blocks) against the committed artifacts; pinning pygments older did not help.
+
+**Lesson**: The zensical pin only pins the generator, not its transitive deps (markdown/pygments/jinja resolution drifts), so committed site/ output is not reproducible on arbitrary machines; the drift is user-invisible (entities render identically) but is pure diff churn that flips back on the next canonical build.
+
+**Application**: After a local `zensical build`, run `git diff --ignore-cr-at-eol --numstat site/` and inspect representative hunks BEFORE committing; if the delta is escape drift rather than real content, revert site/ (`git checkout -- site/`, remove new untracked pages) and defer the rebuild to the canonical build machine; record the deferral in the task notes.
+
+---
+
 ## [2026-07-25-124457] Using the proprietary sibling repo as design evidence leaks its internals into tracked files
 
 **Context**: While deciding the pd-m4 add-path shape, I read the sibling repo's convention file to settle the question, then quoted its guide text and attributed the decision to it in a tracked plan file. An unrelated build warning prompted the sweep that caught it.
