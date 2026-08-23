@@ -3072,3 +3072,51 @@ E5[T15–20] E6[T21–23] = 23.
 - [ ] [E5] Tests: health fixtures, heavy root + theme file, both-fire ordering, convention measure, boundary/disable, surface parity (T15–T20). Plan: specs/plans/pd-m5.md #priority:medium #session:951e1535 #branch:design/pd-m5-triggers #added:2026-07-25
 
 - [ ] [E6] Sync + gates: copilot skill sync, measurement gate (T22), milestone gate (T21–T23). Plan: specs/plans/pd-m5.md #priority:medium #session:951e1535 #branch:design/pd-m5-triggers #added:2026-07-25
+
+## Phase PI — Pi CLI Integration
+
+Spec: `specs/pi-cli-integration.md`
+Branch: `feat/pi-cli-integration` (based on upstream main ce5a8328, 2026-08-23)
+
+Pi (earendil-works/pi, pi.dev) is a self-extensible coding-agent CLI with a
+TypeScript extension system, Agent Skills support, native AGENTS.md, and — by
+design — no MCP. Integration follows the OpenCode blueprint: Go setup package +
+embedded TS shim + bundled skills + shared AGENTS.md template.
+
+- [ ] Read `specs/pi-cli-integration.md` before starting any PI task.
+  #added:2026-08-23-151000
+- [ ] PI.1: Embedded assets — `internal/assets/integrations/pi/extension/index.ts`
+  (thin shim: before_agent_start packet injection + compacted re-injection flag,
+  session_compact breadcrumb, tool_result post-commit / check-task-completion,
+  agent_settled check-persistence) and `internal/assets/integrations/pi/skills/`
+  (same 10-skill set as OpenCode) #added:2026-08-23-151000
+- [ ] PI.2: Accessors + constants — `internal/assets/read/agent/pi.go`
+  (PiExtension, PiSkills) and `internal/config/hook` pi path constants
+  #added:2026-08-23-151000
+- [ ] PI.3: `internal/cli/setup/core/pi/` package — pi.go, extension.go,
+  skill.go, validate.go + tests modeled on the opencode suite
+  #added:2026-08-23-151000
+- [ ] PI.4: CLI wiring — `case cfgHook.ToolPi` branch in setup root.Run()
+  (run.go + doc.go); supporting text: hooks.yaml hook.pi + supported-tools line,
+  write.yaml write.hook-pi-*, config/embed/text DescKeys, write/setup InfoPi*
+  (TestDescKeyYAMLLinkage-enforced; no new Use* constant, no new subcommand)
+  #added:2026-08-23-151000
+- [ ] PI.5: Docs — pi entry in supported-tools reference + pi quickstart guide +
+  regenerate site/ #added:2026-08-23-151000
+- [ ] PI.6: Validation — make build + make lint + go test ./... green;
+  scratch-project dry-run + --write + live pi smoke test per spec
+  #added:2026-08-23-151000
+- [ ] PI.7: CI type-check for the pi extension — tools/typecheck/pi/
+  (tsconfig + package.json with @earendil-works/pi-coding-agent types,
+  tsc --noEmit) + typecheck-pi-extension job in .github/workflows/ci.yml
+  (mirrors tools/typecheck/opencode/). Decisions locked 2026-08-23:
+  display:true, CI typecheck in scope #added:2026-08-23-151000
+- [ ] Bug (review finding, pre-existing): OpenCode plugin lifecycle legs lack
+  the hook-JSON stdin envelope — `ctx system post-commit` from
+  internal/assets/integrations/opencode/plugin/index.ts bails silently in
+  FullPreamble (no envelope fed via BunShell), so the post-commit nudge is
+  likely dead; check-task-completion/check-persistence run but key per-session
+  state to IDUnknown. Spec: specs/pi-cli-integration.md "Hook envelope
+  requirement" section documents the correct envelope shape; fix the opencode
+  plugin the same way (or add envelope flags on the Go side) #priority:medium
+  #added:2026-08-23-151000
