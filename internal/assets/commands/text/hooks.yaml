@@ -425,6 +425,27 @@ hook.opencode:
     Run with --write to generate all files:
 
       ctx setup opencode --write
+hook.pi:
+  short: |
+    Pi Integration
+    ==============
+
+    Generate .pi/extensions/ctx.ts with ctx lifecycle hooks for the
+    Pi coding-agent CLI (pi.dev). Pi has no built-in MCP by design,
+    so the extension is a thin shim that wires Pi lifecycle events to
+    ctx system subcommands.
+
+    This creates:
+      .pi/extensions/ctx.ts             Extension shim
+      .pi/skills/ctx-*/SKILL.md         ctx skills
+      AGENTS.md                         Agent instructions
+
+    Note: project-local .pi/ files load only after the project is
+    trusted; first `pi` launch prompts for trust.
+
+    Run with --write to generate all files:
+
+      ctx setup pi --write
 hook.supported-tools:
   short: |
     Supported tools:
@@ -435,6 +456,7 @@ hook.supported-tools:
       copilot      - GitHub Copilot (VS Code extension)
       copilot-cli  - GitHub Copilot CLI (terminal agent)
       opencode     - OpenCode terminal AI agent
+      pi           - Pi coding-agent CLI (pi.dev)
       windsurf     - Windsurf IDE
 hook.windsurf:
   short: |

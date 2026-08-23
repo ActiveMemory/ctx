@@ -224,6 +224,38 @@ func InfoOpenCodeSummary(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteHookOpenCodeSummary))
 }
 
+// InfoPiCreated reports that a Pi integration file was created.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the created file
+func InfoPiCreated(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookPiCreated),
+		targetFile))
+}
+
+// InfoPiSkipped reports that a Pi integration file was skipped
+// because it already exists.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the existing file
+func InfoPiSkipped(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookPiSkipped),
+		targetFile))
+}
+
+// InfoPiSummary prints the post-write summary for Pi.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoPiSummary(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(desc.Text(text.DescKeyWriteHookPiSummary))
+}
+
 // InfoCopilotCLISkipped reports that copilot-cli hooks were skipped
 // because they already exist.
 //

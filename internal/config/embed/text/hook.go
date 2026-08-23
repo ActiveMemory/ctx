@@ -18,6 +18,8 @@ const (
 	DescKeyHookCopilotCLI = "hook.copilot-cli"
 	// DescKeyHookOpenCode is the text key for hook opencode messages.
 	DescKeyHookOpenCode = "hook.opencode"
+	// DescKeyHookPi is the text key for hook pi messages.
+	DescKeyHookPi = "hook.pi"
 	// DescKeyHookSupportedTools is the text key for hook supported tools messages.
 	DescKeyHookSupportedTools = "hook.supported-tools"
 	// DescKeyHookWindsurf is the text key for hook windsurf messages.
@@ -74,6 +76,15 @@ const (
 	// DescKeyWriteHookOpenCodeSummary is the text key for write hook opencode
 	// summary messages.
 	DescKeyWriteHookOpenCodeSummary = "write.hook-opencode-summary"
+	// DescKeyWriteHookPiCreated is the text key for write hook pi created
+	// messages.
+	DescKeyWriteHookPiCreated = "write.hook-pi-created"
+	// DescKeyWriteHookPiSkipped is the text key for write hook pi skipped
+	// messages.
+	DescKeyWriteHookPiSkipped = "write.hook-pi-skipped"
+	// DescKeyWriteHookPiSummary is the text key for write hook pi summary
+	// messages.
+	DescKeyWriteHookPiSummary = "write.hook-pi-summary"
 	// DescKeyWriteHookUnknownTool is the text key for write hook unknown tool
 	// messages.
 	DescKeyWriteHookUnknownTool = "write.hook-unknown-tool"

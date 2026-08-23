@@ -24,6 +24,8 @@ const (
 	DirIntegrationsCopilotSkill   = "integrations/copilot-cli/skills"
 	DirIntegrationsOpenCodePlugin = "integrations/opencode/plugin"
 	DirIntegrationsOpenCodeSkill  = "integrations/opencode/skills"
+	DirIntegrationsPiExtension    = "integrations/pi/extension"
+	DirIntegrationsPiSkill        = "integrations/pi/skills"
 	DirHooksMessages              = "hooks/messages"
 	DirHooksTrace                 = "hooks/trace"
 	DirI18nPlaceholders           = "i18n/placeholders"
