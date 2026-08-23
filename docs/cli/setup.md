@@ -36,6 +36,7 @@ ctx setup <tool> [flags]
 | `aider`       | Aider CLI                                    |
 | `copilot`     | GitHub Copilot                               |
 | `opencode`    | OpenCode (terminal-first AI coding agent)    |
+| `pi`          | Pi coding-agent CLI (pi.dev)                 |
 | `windsurf`    | Windsurf IDE                                 |
 
 !!! note "Claude Code Uses the Plugin System"
@@ -59,4 +60,7 @@ ctx setup cline --write
 
 # Generate OpenCode plugin, skills, AGENTS.md, and global MCP config
 ctx setup opencode --write
+
+# Generate Pi extension, skills, and AGENTS.md
+ctx setup pi --write
 ```

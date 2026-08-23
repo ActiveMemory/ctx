@@ -605,6 +605,55 @@ ctx status
 
 ---
 
+## Pi
+
+Pi (earendil-works/pi, pi.dev) is a self-extensible coding-agent CLI.
+By design it has no built-in MCP, so `ctx` integrates via a thin
+TypeScript extension, Agent-Skills-standard skills, and `AGENTS.md`
+instructions. All logic stays in the `ctx` binary via `ctx system`
+subcommands.
+
+### Setup
+
+```bash
+# Generate Pi extension, skills, and AGENTS.md
+ctx setup pi --write
+
+# Initialize context
+ctx init
+```
+
+### What Gets Created
+
+| File | Purpose |
+|------|---------|
+| `.pi/extensions/ctx.ts` | Lifecycle extension (hooks to `ctx system`) |
+| `AGENTS.md` | Agent instructions (read natively) |
+| `.pi/skills/ctx-*/SKILL.md` | `ctx` skills (invoke as `/skill:ctx-*`) |
+
+Project-local `.pi/` files load only after the project is trusted;
+the first `pi` launch in a new project prompts for trust.
+
+### How It Works
+
+The extension wires Pi lifecycle events to `ctx system`:
+
+- **`session_start`**: warms the ctx agent packet off the prompt path.
+- **`before_agent_start`**: injects the packet as a persistent message
+  when no ctx-injected message exists after the most recent compaction
+  (fresh sessions inject on the first turn; re-injection after
+  compaction is a breadcrumb into `.context/`).
+- **`tool_result` (bash, on `git commit`, not `isError`)**: runs
+  `ctx system post-commit`.
+- **`tool_result` (edit/write, not `isError`)**: runs
+  `ctx system check-task-completion`.
+- **`agent_settled`**: runs `ctx system check-persistence`.
+
+The extension is a single file with no runtime dependencies; no
+`npm install` needed. Pi loads it automatically on launch.
+
+---
+
 ## Windsurf IDE
 
 Windsurf supports custom instructions and file-based context.

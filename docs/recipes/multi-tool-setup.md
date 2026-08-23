@@ -33,6 +33,9 @@ claude /plugin install ctx@activememory-ctx
 # ## OpenCode ##
 ctx setup opencode --write && ctx init
 
+# ## Pi ##
+ctx setup pi --write && ctx init
+
 # ## Cursor / Aider / Copilot / Windsurf ##
 ctx setup cursor # or: aider, copilot, windsurf
 
@@ -159,6 +162,25 @@ registers the `ctx` MCP server globally. See
     With the plugin installed, OpenCode gets lifecycle hooks and skills
     automatically. Context loads at session start, survives compaction,
     and persists at session end, with no manual steps needed.
+
+#### Pi
+
+Run the one-liner from the project root:
+
+```bash
+ctx setup pi --write && ctx init
+```
+
+This deploys a lifecycle extension (Pi has no built-in MCP by design),
+Agent-Skills-standard skills, and `AGENTS.md`. Project-local `.pi/`
+files load only after the project is trusted. See
+[`ctx` for Pi](../home/pi.md) for full details.
+
+!!! tip "Pi Is a First-Class Citizen"
+    With the extension installed, Pi gets lifecycle hooks and skills
+    automatically. Context loads on the first prompt, survives
+    compaction, and persists at session end, with no manual steps
+    needed.
 
 #### VS Code
 
