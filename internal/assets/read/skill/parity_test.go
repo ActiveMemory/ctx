@@ -16,13 +16,33 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/asset"
 )
 
-// syncedSkillTrees lists the embedded skill trees that are generated
-// from the canonical Claude tree by a hack/sync-*-skills.sh script.
-// Enrollment is opt-in by directory presence: a skill directory with
-// no Claude counterpart is tool-only and exempt.
-var syncedSkillTrees = []string{
-	asset.DirIntegrationsOpenCodeSkill,
+// presenceSkillTrees lists generated trees with opt-in enrollment:
+// a skill syncs iff its directory exists in the tree, and a
+// directory with no Claude counterpart is tool-only and exempt
+// (the Copilot tree carries native wrapper skills).
+var presenceSkillTrees = []string{
 	asset.DirIntegrationsCopilotSkill,
+}
+
+// mirrorSkillTrees lists generated trees that fully mirror the
+// canonical Claude tree: every canonical skill outside
+// claudeOnlySkills must be present, orphans are removed by the
+// sync script, and references/ directories are copied along.
+var mirrorSkillTrees = []string{
+	asset.DirIntegrationsOpenCodeSkill,
+	asset.DirCodexSkills,
+}
+
+// claudeOnlySkills mirrors the EXCLUDE lists in
+// hack/sync-opencode-skills.sh and hack/sync-codex-skills.sh:
+// skills whose body only makes sense inside Claude Code. A skill
+// excluded in a script but not here fails the completeness check,
+// so the lists cannot silently drift apart in that direction.
+var claudeOnlySkills = map[string]bool{
+	"ctx-permission-sanitize": true, // audits .claude/settings.local.json
+	"ctx-plan-import":         true, // imports ~/.claude/plans/
+	"ctx-dream":               true, // headless `claude -p` cron + guard.sh
+	"ctx-skill-create":        true, // authors Claude Code skills/plugins
 }
 
 // TestSyncedSkillParity asserts the sync contract at the test layer,
@@ -30,10 +50,24 @@ var syncedSkillTrees = []string{
 // audit` on developer machines): every skill in a generated tree that
 // has a canonical Claude counterpart must be byte-identical to that
 // counterpart minus `allowed-tools:` lines (the Claude Code-specific
-// frontmatter key the sync scripts strip).
+// frontmatter key the sync scripts strip). Mirror trees are
+// additionally held to completeness (every canonical skill outside
+// claudeOnlySkills is present), no orphans, and reference parity
+// (every embedded canonical references/ file is a byte-copy;
+// non-.md references sit outside the canonical embed glob and are
+// covered by the sync scripts, not this test).
 func TestSyncedSkillParity(t *testing.T) {
-	var checked, exempt int
-	for _, tree := range syncedSkillTrees {
+	var checked, exempt, refsChecked int
+	allTrees := make([]string, 0, len(mirrorSkillTrees)+len(presenceSkillTrees))
+	allTrees = append(allTrees, mirrorSkillTrees...)
+	allTrees = append(allTrees, presenceSkillTrees...)
+
+	mirror := make(map[string]bool, len(mirrorSkillTrees))
+	for _, tree := range mirrorSkillTrees {
+		mirror[tree] = true
+	}
+
+	for _, tree := range allTrees {
 		entries, dirErr := fs.ReadDir(assets.FS, tree)
 		if dirErr != nil {
 			t.Errorf("read skill tree %q: %v", tree, dirErr)
@@ -47,9 +81,25 @@ func TestSyncedSkillParity(t *testing.T) {
 				asset.DirClaudeSkills, entry.Name(), asset.FileSKILLMd,
 			))
 			if readErr != nil {
+				if mirror[tree] {
+					t.Errorf(
+						"%s: orphaned — no canonical claude counterpart; "+
+							"run the tree's sync script and commit",
+						path.Join(tree, entry.Name()),
+					)
+					continue
+				}
 				// No ctx counterpart — tool-only skill, left
-				// untouched by the sync script.
+				// untouched by the presence-based sync script.
 				exempt++
+				continue
+			}
+			if mirror[tree] && claudeOnlySkills[entry.Name()] {
+				t.Errorf(
+					"%s: Claude-only skill must not ship in a mirror "+
+						"tree; run the tree's sync script and commit",
+					path.Join(tree, entry.Name()),
+				)
 				continue
 			}
 			generatedPath := path.Join(tree, entry.Name(), asset.FileSKILLMd)
@@ -62,18 +112,82 @@ func TestSyncedSkillParity(t *testing.T) {
 				t.Errorf(
 					"%s: drifted from canonical claude source minus "+
 						"allowed-tools — run 'make sync-opencode-skills "+
-						"sync-copilot-skills' and commit",
+						"sync-codex-skills sync-copilot-skills' and commit",
 					generatedPath,
 				)
 			}
 			checked++
 		}
 	}
+
+	// Completeness and reference parity for mirror trees.
+	canonicalEntries, canonErr := fs.ReadDir(assets.FS, asset.DirClaudeSkills)
+	if canonErr != nil {
+		t.Fatalf("read canonical skill tree: %v", canonErr)
+	}
+	for _, entry := range canonicalEntries {
+		if !entry.IsDir() || claudeOnlySkills[entry.Name()] {
+			continue
+		}
+		for _, tree := range mirrorSkillTrees {
+			generatedPath := path.Join(tree, entry.Name(), asset.FileSKILLMd)
+			if _, genErr := fs.ReadFile(assets.FS, generatedPath); genErr != nil {
+				t.Errorf(
+					"%s: canonical skill missing from mirror tree — "+
+						"run the tree's sync script and commit",
+					generatedPath,
+				)
+			}
+		}
+		refDir := path.Join(
+			asset.DirClaudeSkills, entry.Name(), asset.DirReferences)
+		refEntries, refErr := fs.ReadDir(assets.FS, refDir)
+		if refErr != nil {
+			// No embedded references for this skill.
+			continue
+		}
+		for _, ref := range refEntries {
+			if ref.IsDir() {
+				continue
+			}
+			canonicalRef, refReadErr := fs.ReadFile(
+				assets.FS, path.Join(refDir, ref.Name()))
+			if refReadErr != nil {
+				t.Errorf("%s: read: %v", path.Join(refDir, ref.Name()), refReadErr)
+				continue
+			}
+			for _, tree := range mirrorSkillTrees {
+				generatedRefPath := path.Join(
+					tree, entry.Name(), asset.DirReferences, ref.Name())
+				generatedRef, genRefErr := fs.ReadFile(assets.FS, generatedRefPath)
+				if genRefErr != nil {
+					t.Errorf(
+						"%s: canonical reference missing from mirror "+
+							"tree — run the tree's sync script and commit",
+						generatedRefPath,
+					)
+					continue
+				}
+				if !bytes.Equal(generatedRef, canonicalRef) {
+					t.Errorf(
+						"%s: drifted from canonical reference — run "+
+							"the tree's sync script and commit",
+						generatedRefPath,
+					)
+				}
+				refsChecked++
+			}
+		}
+	}
+
 	if checked == 0 {
 		t.Fatal("no synced SKILL.md files discovered — embed glob or tree constants regressed")
 	}
-	t.Logf("verified %d synced skills (%d tool-only exempt) across %d trees",
-		checked, exempt, len(syncedSkillTrees))
+	t.Logf(
+		"verified %d synced skills (%d tool-only exempt, %d references) across %d trees",
+		checked, exempt, refsChecked,
+		len(mirrorSkillTrees)+len(presenceSkillTrees),
+	)
 }
 
 // TestAllowedToolsConfinedToFrontmatter guards the sync transform's

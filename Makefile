@@ -473,7 +473,7 @@ check-opencode-skills:
 	if ! diff -rq "$$TMPDIR/before" internal/assets/integrations/opencode/skills/ > /dev/null 2>&1; then \
 		echo "FAIL: OpenCode skills are stale — run 'make sync-opencode-skills'"; \
 		diff -rq "$$TMPDIR/before" internal/assets/integrations/opencode/skills/ || true; \
-		cp -r "$$TMPDIR/before/"* internal/assets/integrations/opencode/skills/; \
+		rm -rf internal/assets/integrations/opencode/skills && cp -r "$$TMPDIR/before" internal/assets/integrations/opencode/skills; \
 		rm -rf "$$TMPDIR"; \
 		exit 1; \
 	fi; \
