@@ -224,6 +224,117 @@ func InfoOpenCodeSummary(cmd *cobra.Command) {
 	cmd.Println(desc.Text(text.DescKeyWriteHookOpenCodeSummary))
 }
 
+// InfoCodexCreated reports that a Codex integration file was created.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the created file
+func InfoCodexCreated(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCodexCreated),
+		targetFile))
+}
+
+// InfoCodexMerged reports that ctx content was merged into an
+// existing Codex integration file.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the merged file
+func InfoCodexMerged(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCodexMerged),
+		targetFile))
+}
+
+// InfoCodexSkipped reports that a Codex integration file was
+// skipped because it is already up to date.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the existing file
+func InfoCodexSkipped(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCodexSkipped),
+		targetFile))
+}
+
+// InfoCodexRejected reports that a foreign (not ctx-managed) file
+// occupies a Codex integration path and was left untouched.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the foreign file
+func InfoCodexRejected(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCodexRejected),
+		targetFile))
+}
+
+// InfoCodexPluginActive reports that the ctx Codex plugin is
+// enabled, so hooks, MCP, and skills are not deployed per project.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoCodexPluginActive(cmd *cobra.Command) {
+	cmd.Println(desc.Text(text.DescKeyWriteHookCodexPluginActive))
+}
+
+// InfoCodexPluginWrongVariant warns that the enabled ctx Codex
+// plugin is the legacy Claude Code variant and that the
+// project-local route is being deployed instead.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoCodexPluginWrongVariant(cmd *cobra.Command) {
+	cmd.Println(desc.Text(text.DescKeyWriteHookCodexPluginWrongVariant))
+	cmd.Println()
+}
+
+// InfoCodexProjectAlso warns that a project-local .codex/hooks.json
+// coexists with the enabled plugin, which would run every hook
+// twice; names the file to remove.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoCodexProjectAlso(cmd *cobra.Command) {
+	cmd.Println(desc.Text(text.DescKeyWriteHookCodexProjectAlso))
+}
+
+// InfoCodexSummary prints the post-write summary for Codex,
+// ending with the /hooks trust reminder.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoCodexSummary(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(desc.Text(text.DescKeyWriteHookCodexSummary))
+}
+
+// InfoCodexSummaryPlugin prints the post-write summary for the
+// plugin-enabled short-circuit: hooks, MCP, and skills come from
+// the installed plugin, so only AGENTS.md was deployed and no
+// project-local trust step applies.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoCodexSummaryPlugin(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(desc.Text(text.DescKeyWriteHookCodexSummaryPlugin))
+}
+
+// InfoCodexState prints the detection state line for
+// `ctx setup codex`.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - stateLabel: human-readable detection state
+func InfoCodexState(cmd *cobra.Command, stateLabel string) {
+	cmd.Println()
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookCodexState), stateLabel))
+}
+
 // InfoPiCreated reports that a Pi integration file was created.
 //
 // Parameters:

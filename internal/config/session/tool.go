@@ -14,6 +14,8 @@ const (
 	ToolCopilot = "copilot"
 	// ToolCopilotCLI is the tool identifier for GitHub Copilot CLI sessions.
 	ToolCopilotCLI = "copilot-cli"
+	// ToolCodex is the tool identifier for OpenAI Codex sessions.
+	ToolCodex = "codex"
 	// ToolMarkdown is the tool identifier for Markdown session files.
 	ToolMarkdown = "markdown"
 )

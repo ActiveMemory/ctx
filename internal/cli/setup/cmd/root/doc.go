@@ -11,10 +11,11 @@
 //
 // The command accepts exactly one positional argument:
 // the name of an AI coding tool (e.g., claude,
-// cursor, copilot, kiro, cline, aider, windsurf,
-// copilot-cli, agents, opencode, pi). It outputs
-// configuration snippets and setup instructions
-// specific to that tool.
+// codex, cursor, copilot, kiro, cline, aider,
+// windsurf, copilot-cli, opencode, pi, agents). It
+// outputs configuration
+// snippets and setup instructions specific to that
+// tool.
 //
 // Without --write, the command prints the integration
 // instructions and configuration content to stdout
@@ -46,7 +47,9 @@
 // # Delegation
 //
 // Each supported tool has a dedicated core package
-// (e.g., core/cursor, core/copilot) that handles
-// deployment logic. Output formatting is routed
+// (e.g., core/cursor, core/copilot, core/codex) that
+// handles deployment logic. Without --write,
+// `ctx setup codex` also prints the detected Codex /
+// ctx-plugin state. Output formatting is routed
 // through the [writeSetup] package.
 package root

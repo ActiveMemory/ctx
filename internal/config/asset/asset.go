@@ -13,6 +13,10 @@ const (
 	DirClaude                     = "claude"
 	DirClaudePlugin               = "claude/.claude-plugin"
 	DirClaudeSkills               = "claude/skills"
+	DirCodex                      = "codex"
+	DirCodexPlugin                = "codex/.codex-plugin"
+	DirCodexHooks                 = "codex/hooks"
+	DirCodexSkills                = "codex/skills"
 	DirCommands                   = "commands"
 	DirCommandsText               = "commands/text"
 	DirContext                    = "context"
@@ -20,7 +24,6 @@ const (
 	DirIntegrations               = "integrations"
 	DirIntegrationsCopilot        = "integrations/copilot"
 	DirIntegrationsCopilotCLI     = "integrations/copilot-cli"
-	DirIntegrationsCopilotScrp    = "integrations/copilot-cli/scripts"
 	DirIntegrationsCopilotSkill   = "integrations/copilot-cli/skills"
 	DirIntegrationsOpenCodePlugin = "integrations/opencode/plugin"
 	DirIntegrationsOpenCodeSkill  = "integrations/opencode/skills"
@@ -59,9 +62,11 @@ const (
 	FileCopilotInstructionsMd = "copilot-instructions.md"
 	FileCtxrcSchemaJSON       = "ctxrc.schema.json"
 	FileDenyTxt               = "deny.txt"
+	FileDotMCPJSON            = ".mcp.json"
 	FileExamplesYAML          = "examples.yaml"
 	FileExtraCSS              = "extra.css"
 	FileFlagsYAML             = "flags.yaml"
+	FileHooksJSON             = "hooks.json"
 	FileMakefileCtx           = "Makefile.ctx"
 	FilePluginJSON            = "plugin.json"
 	FileRegistryYAML          = "registry.yaml"
@@ -86,6 +91,9 @@ const (
 var (
 	PathCLAUDEMd            = path.Join(DirClaude, FileCLAUDEMd)
 	PathPluginJSON          = path.Join(DirClaudePlugin, FilePluginJSON)
+	PathCodexPluginJSON     = path.Join(DirCodexPlugin, FilePluginJSON)
+	PathCodexHooksJSON      = path.Join(DirCodexHooks, FileHooksJSON)
+	PathCodexMCPJSON        = path.Join(DirCodex, FileDotMCPJSON)
 	PathCommandsYAML        = path.Join(DirCommands, FileCommandsYAML)
 	PathFlagsYAML           = path.Join(DirCommands, FileFlagsYAML)
 	PathExamplesYAML        = path.Join(DirCommands, FileExamplesYAML)

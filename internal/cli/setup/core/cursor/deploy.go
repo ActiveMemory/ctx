@@ -28,6 +28,11 @@ func ensureMCPConfig(cmd *cobra.Command) error {
 	cfg := mcpConfig{
 		MCPServers: map[string]serverEntry{
 			mcpServer.Name: {
+				// Deliberately the bare binary name: this file is
+				// project-scoped (committable, shared across the
+				// team), so a machine-specific absolute path must
+				// not be embedded. Each machine resolves ctx from
+				// its own PATH.
 				Command: mcpServer.Command,
 				Args:    mcpServer.Args(),
 			},

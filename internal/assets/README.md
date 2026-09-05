@@ -117,8 +117,6 @@ subtree. Moving assets out of this tree without also moving
 | `integrations/agents.md`                     | Markdown               | ctx (`ctx setup` flows)       | written to consumer-tool paths            |
 | `integrations/copilot/*.md`                  | Markdown               | GitHub Copilot                | repo instructions                         |
 | `integrations/copilot-cli/*.{json,md}`       | JSON + Markdown        | Copilot CLI                   | hook config + instructions                |
-| `integrations/copilot-cli/scripts/*.sh`      | Bash                   | Copilot CLI (POSIX shells)    | hook scripts                              |
-| `integrations/copilot-cli/scripts/*.ps1`     | PowerShell             | Copilot CLI (Windows)         | hook scripts                              |
 | `integrations/copilot-cli/skills/*/SKILL.md` | Markdown + frontmatter | Copilot CLI skills            | skill registry                            |
 | `integrations/opencode/plugin/index.ts`      | TypeScript             | OpenCode (Bun)                | `.opencode/plugins/ctx.ts`                |
 | `integrations/opencode/skills/*/SKILL.md`    | Markdown + frontmatter | OpenCode skills               | skill registry                            |

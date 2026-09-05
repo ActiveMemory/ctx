@@ -18,30 +18,23 @@ ASSETS_DIR="$PROJECT_ROOT/internal/assets/claude"
 VERSION="$(cat "$PROJECT_ROOT/VERSION" | tr -d '[:space:]')"
 CACHE_DIR="$HOME/.claude/plugins/cache/activememory-ctx/ctx/$VERSION"
 
-# Clear old cache.
+# Stage the new cache first, then swap atomically: a failure while
+# staging must never destroy the existing cache (a half-built cache
+# breaks the next Claude Code session).
+STAGE="$(mktemp -d "${TMPDIR:-/tmp}/ctx-plugin-reload.XXXXXX")"
+trap 'rm -rf "$STAGE"' EXIT
+
+# Mirror the entire plugin root (plugin.json, hooks/, skills/ with
+# references/, .mcp.json, CLAUDE.md, dual-manifest files) so the dev
+# cache matches a marketplace install exactly.
+cp -R "$ASSETS_DIR/." "$STAGE/"
+
+# Swap.
 PARENT_DIR="$HOME/.claude/plugins/cache/activememory-ctx"
-if [ -d "$PARENT_DIR" ]; then
-    rm -rf "$PARENT_DIR"
-    echo "Cleared old cache: $PARENT_DIR"
-fi
-
-# Rebuild from source assets.
-mkdir -p "$CACHE_DIR/.claude-plugin"
-mkdir -p "$CACHE_DIR/hooks"
-mkdir -p "$CACHE_DIR/skills"
-
-cp "$ASSETS_DIR/.claude-plugin/plugin.json" "$CACHE_DIR/.claude-plugin/"
-cp "$ASSETS_DIR/hooks/hooks.json" "$CACHE_DIR/hooks/"
-
-# Copy all skills (SKILL.md + references/).
-for skill_dir in "$ASSETS_DIR"/skills/*/; do
-    skill_name="$(basename "$skill_dir")"
-    mkdir -p "$CACHE_DIR/skills/$skill_name"
-    cp "$skill_dir"SKILL.md "$CACHE_DIR/skills/$skill_name/"
-    if [ -d "$skill_dir"references ]; then
-        cp -r "$skill_dir"references "$CACHE_DIR/skills/$skill_name/"
-    fi
-done
+rm -rf "$PARENT_DIR"
+mkdir -p "$(dirname "$CACHE_DIR")"
+mv "$STAGE" "$CACHE_DIR"
+trap - EXIT
 
 echo "Rebuilt plugin cache at: $CACHE_DIR"
 echo "  .claude-plugin/plugin.json"

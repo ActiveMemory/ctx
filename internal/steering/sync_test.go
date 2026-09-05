@@ -241,6 +241,53 @@ func TestSyncTool_IdempotentSkipsUnchanged(t *testing.T) {
 	}
 }
 
+func TestConsumesDirectly(t *testing.T) {
+	tests := []struct {
+		tool string
+		want bool
+	}{
+		{"claude", true},
+		{"claude-code", true},
+		{"codex", true},
+		{"cursor", false},
+		{"cline", false},
+		{"kiro", false},
+		{"foo", false},
+		{"", false},
+	}
+	for _, tt := range tests {
+		if got := ConsumesDirectly(tt.tool); got != tt.want {
+			t.Errorf("ConsumesDirectly(%q) = %v; want %v", tt.tool, got, tt.want)
+		}
+	}
+}
+
+// TestConsumesDirectly_DisjointFromSyncable pins the contract the
+// sync command relies on: a tool is either synced or a direct
+// consumer, never both.
+func TestConsumesDirectly_DisjointFromSyncable(t *testing.T) {
+	for _, tool := range SyncableTools() {
+		if ConsumesDirectly(tool) {
+			t.Errorf("%q is both syncable and a direct consumer", tool)
+		}
+	}
+}
+
+// TestSyncTool_DirectConsumerStillErrors pins that SyncTool itself
+// keeps rejecting direct consumers; the polite skip is the
+// command's job via ConsumesDirectly, not a silent no-op here.
+func TestSyncTool_DirectConsumerStillErrors(t *testing.T) {
+	root := t.TempDir()
+	steeringDir := filepath.Join(root, ".context", "steering")
+	writeSteering(t, steeringDir, "api-rules", steeringAlways)
+
+	for _, tool := range []string{"claude", "codex"} {
+		if _, err := SyncTool(steeringDir, root, tool); err == nil {
+			t.Errorf("SyncTool(%q) = nil error; want unsupported", tool)
+		}
+	}
+}
+
 func TestSyncTool_UnsupportedToolReturnsError(t *testing.T) {
 	root := t.TempDir()
 	steeringDir := filepath.Join(root, ".context", "steering")

@@ -27,10 +27,9 @@
 //     manifest declaring which `ctx system` command
 //     fires on each lifecycle event (sessionStart,
 //     preToolUse, postToolUse, sessionEnd). Skipped
-//     if a non-ctx version already exists.
-//   - **`.github/hooks/scripts/`**: wrapper shell
-//     scripts for any non-stdin hooks Copilot CLI
-//     expects.
+//     if a non-ctx version already exists. Commands
+//     run with a repo-root cwd; no wrapper scripts
+//     are shipped.
 //   - **`.github/copilot/skills/`**: the same skills
 //     ctx ships under
 //     `internal/assets/integrations/copilot-cli/skills/`.

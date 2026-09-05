@@ -46,6 +46,13 @@ func launchCommand() []string {
 		if abs, absErr := filepath.Abs(resolved); absErr == nil {
 			bin = abs
 		}
+	} else if self, selfErr := os.Executable(); selfErr == nil {
+		// ctx is not on PATH (setup invoked as ./ctx or via an
+		// absolute path before installation). Writing the bare
+		// name would make OpenCode's spawn fail ENOENT under its
+		// non-interactive PATH, so fall back to the running
+		// binary's own path.
+		bin = self
 	}
 	return append([]string{bin}, mcpServer.Args()...)
 }

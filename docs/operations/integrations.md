@@ -339,6 +339,188 @@ Skills support partial matching where applicable (e.g., session slugs).
 
 ---
 
+## OpenAI Codex
+
+Codex CLI ships lifecycle hooks and plugins whose contract is a near
+clone of Claude Code's (same event names, same stdin JSON, same
+`decision: block` output). `ctx` reuses the same `ctx system` hook
+runtime and delivers it to Codex through a plugin, project-local
+files, and a rollout-transcript parser.
+
+!!! tip "Full guide: [`ctx` for Codex](../home/codex.md)"
+    The home-page guide covers both install routes step by step, the
+    trust step, skills, MCP tools, journal import, known limitations,
+    and troubleshooting. This section is the reference for the hook
+    manifest and the drift checks that keep it honest.
+
+### Setup
+
+Install the plugin once (every project gets hooks, skills, and the
+MCP server):
+
+```bash
+codex plugin marketplace add ActiveMemory/ctx
+codex plugin add ctx@activememory-ctx
+
+# Or, from a local checkout of the ctx repository
+make codex-plugin-install
+```
+
+Or deploy project-local files instead (teams, CI, `codex exec`):
+
+```bash
+ctx setup codex --write
+ctx init
+```
+
+Then start `codex`, run `/hooks`, and trust the `ctx` entries. Codex
+does not run untrusted hooks.
+
+!!! warning "One Route per Project"
+    Codex loads every matching hook from every source, so an enabled
+    plugin plus a project-local `.codex/hooks.json` runs each hook twice.
+    `ctx setup codex --write` skips hooks, MCP, and skills when it finds
+    the plugin enabled in `~/.codex/config.toml` and deploys `AGENTS.md`
+    only.
+
+### What Gets Created
+
+| Route | File | Purpose |
+|-------|------|---------|
+| Plugin | `$CODEX_HOME/plugins/cache/activememory-ctx/ctx/<version>/` | Installed copy of `internal/assets/codex/` (`.codex-plugin/plugin.json`, `hooks/hooks.json`, `.mcp.json`, `skills/`) |
+| Plugin | `~/.codex/config.toml` | `[plugins."ctx@activememory-ctx"] enabled = true`, written by Codex |
+| Project | `.codex/hooks.json` | Lifecycle hooks (same manifest the plugin ships) |
+| Project | `.codex/config.toml` | `[mcp_servers.ctx]` registering `ctx mcp serve` |
+| Project | `AGENTS.md` | Agent instructions, read natively by Codex; marker-merged |
+| Project | `.agents/skills/ctx-*/SKILL.md` | `ctx` skills, invoked as `$ctx-<name>` |
+
+Project-local files load only for **trusted** projects
+(`[projects."<abs path>"] trust_level = "trusted"` in
+`~/.codex/config.toml`). `CODEX_HOME` relocates `~/.codex` for both
+plugin detection and session discovery.
+
+### How It Works
+
+```mermaid
+graph TD
+    A[Session Start] --> B[SessionStart hook runs ctx agent]
+    B --> C[Codex reads AGENTS.md]
+    C --> D[Work happens: PreToolUse / PostToolUse / UserPromptSubmit nudges]
+    D --> E[Session End]
+    E --> F[SessionEnd hook runs ctx journal import]
+```
+
+1. **Session start**: the `SessionStart` hook prints `ctx agent --budget 8000`;
+   Codex injects plain stdout as developer context. It re-fires after
+   `compact`, so the packet survives compaction.
+2. **During the session**: the same gates and nudges as Claude Code, on
+   Codex's tool names (`update_plan` for planning, `apply_patch` for edits).
+3. **Session end**: `ctx journal import --all -y` captures the rollout
+   transcript into `.context/journal/` (incremental; Codex caps the hook
+   at 3 seconds).
+
+<!-- drift-check: grep -c '"type": "command"' internal/assets/codex/hooks/hooks.json -->
+<!-- drift-check: diff <(grep -oP 'ctx system \K[a-z-]+' internal/assets/codex/hooks/hooks.json | sort -u) <(sed -n '/### Codex Hooks/,/### Codex Skills/p' docs/operations/integrations.md | grep -oP '`ctx system \K[a-z-]+' | sort -u) -->
+### Codex Hooks
+
+Every command in `internal/assets/codex/hooks/hooks.json` is prefixed
+with `cd "$(git rev-parse --show-toplevel)" &&`: Codex runs hooks with
+the session cwd, and `ctx` reads `$PWD/.context/`, so the anchor keeps a
+subdirectory cwd from pointing `ctx` at the wrong project. A compliance
+test checks the anchor, the event names, and that each command resolves
+to a registered subcommand.
+
+| Hook                              | Event                                   | Purpose                                                    |
+|-----------------------------------|-----------------------------------------|------------------------------------------------------------|
+| `ctx agent --budget 8000`         | SessionStart (all sources)              | Inject the context packet as developer context             |
+| `ctx system context-load-gate`    | PreToolUse (`.*`)                       | Auto-inject context on first tool use                      |
+| `ctx system block-non-path-ctx`   | PreToolUse (`Bash`)                     | Block `./ctx` or `go run`: force `$PATH` install           |
+| `ctx system qa-reminder`          | PreToolUse (`Bash`)                     | Remind agent to lint/test before committing                |
+| `ctx system specs-nudge`          | PreToolUse (`update_plan`)              | Nudge agent to use project specs when planning             |
+| `ctx system post-commit`          | PostToolUse (`Bash`)                    | Nudge context capture and QA after git commits             |
+| `ctx system check-task-completion`| PostToolUse (`apply_patch\|Edit\|Write`) | Detect silently completed tasks after a file edit          |
+| `ctx system check-context-size`   | UserPromptSubmit                        | Nudge context assessment as sessions grow                  |
+| `ctx system check-ceremony`       | UserPromptSubmit                        | Nudge `$ctx-remember` and `$ctx-wrap-up` adoption          |
+| `ctx system check-persistence`    | UserPromptSubmit                        | Remind to persist learnings/decisions                      |
+| `ctx system check-journal`        | UserPromptSubmit                        | Remind to import/enrich journal entries                    |
+| `ctx system check-reminder`       | UserPromptSubmit                        | Relay pending reminders                                    |
+| `ctx system check-version`        | UserPromptSubmit                        | Warn when binary/plugin versions diverge                   |
+| `ctx system check-resource`       | UserPromptSubmit                        | Warn when memory/swap/disk/load hit DANGER level           |
+| `ctx system check-knowledge`      | UserPromptSubmit                        | Nudge when knowledge files grow large                      |
+| `ctx system check-map-staleness`  | UserPromptSubmit                        | Nudge when ARCHITECTURE.md is stale                        |
+| `ctx system check-memory-drift`   | UserPromptSubmit                        | Nudge when auto-memory drifts from `.context/`             |
+| `ctx system check-freshness`      | UserPromptSubmit                        | Warn when technology-dependent constants go unreviewed     |
+| `ctx system check-skill-discovery`| UserPromptSubmit                        | One-shot mid-session tip surfacing easy-to-forget skills   |
+| `ctx system heartbeat`            | UserPromptSubmit                        | Session-alive signal with prompt count metadata            |
+| `ctx journal import --all -y`     | SessionEnd (`timeout: 3`)               | Import the session transcript into `.context/journal/`     |
+
+Differences from the Claude Code manifest, and why:
+
+| Claude Code                          | Codex                               | Reason                                                        |
+|--------------------------------------|-------------------------------------|---------------------------------------------------------------|
+| `PreToolUse` `.*` runs `ctx agent`   | `SessionStart` runs `ctx agent`     | Codex ignores plain text on `PreToolUse`; `SessionStart` stdout becomes developer context and re-fires on `compact` |
+| `EnterPlanMode` matcher              | `update_plan` matcher               | Codex's planning tool is `update_plan`                        |
+| `Edit` / `Write` matchers            | `apply_patch\|Edit\|Write`          | Codex file edits are `apply_patch`; the aliases keep parity   |
+| `${CLAUDE_PROJECT_DIR}` anchor       | `$(git rev-parse --show-toplevel)`  | Codex exposes no project-dir variable to hooks                |
+| `SessionEnd` has no timeout          | `timeout: 3`                        | Codex caps `SessionEnd` hooks at 3 seconds                    |
+
+Not wired: `PermissionRequest`, `PreCompact`, `PostCompact`,
+`SubagentStart`, `SubagentStop`, `Stop`. None carries a `ctx` behavior
+today (`PreCompact`/`PostCompact` cannot return additional context;
+`Stop` requires JSON-only output).
+
+<!-- drift-check: ls internal/assets/codex/skills/ | wc -l -->
+<!-- drift-check: diff <(comm -13 <(ls internal/assets/codex/skills/ | sort) <(ls internal/assets/claude/skills/ | sort)) <(sed -n '/### Codex Skills/,/### Codex Journal Import/p' docs/operations/integrations.md | grep -oP '`\Kctx-[a-z-]+(?=`)' | sort -u) -->
+### Codex Skills
+
+`internal/assets/codex/skills/` is generated from the Claude Code skills
+by `hack/sync-codex-skills.sh`, which strips the Claude-only
+`allowed-tools:` frontmatter key and omits the skills whose body only
+makes sense inside Claude Code:
+
+| Excluded skill            | Why                                    |
+|---------------------------|----------------------------------------|
+| `ctx-permission-sanitize` | Audits `.claude/settings.local.json`   |
+| `ctx-plan-import`         | Imports `~/.claude/plans/`             |
+| `ctx-dream`               | Headless `claude -p` cron + guard script |
+| `ctx-skill-create`        | Authors Claude Code skills and plugins |
+
+Everything else in the [Agent Skills](#agent-skills) list above is
+available in Codex under the same name with a `$` prefix. `make
+check-codex-skills` fails when the generated tree is stale; `make
+sync-codex-skills` regenerates it (`make build` runs the sync).
+
+### Codex Journal Import
+
+`ctx journal import` scans `$CODEX_HOME/sessions/YYYY/MM/DD/rollout-*.jsonl`
+(default `~/.codex/sessions`), matches rollouts to the current project by
+the session's working directory, and imports them with the tool id
+`codex`. Codex-injected user items (`<environment_context>`,
+`<user_instructions>`, skill and permission preambles) are filtered out;
+a rollout with no real user message is skipped. Filter with
+`ctx journal source --tool codex`.
+
+### Local Plugin Development
+
+Codex caches plugins by version, like Claude Code. Bump `VERSION` and run
+`make sync-version`: it updates
+`internal/assets/codex/.codex-plugin/plugin.json` and
+`.agents/plugins/marketplace.json` together with the Claude manifests
+(`make check-version-sync` fails if any of them disagree). Then re-run
+`codex plugin add ctx@activememory-ctx` and start a new session.
+
+### Troubleshooting
+
+| Issue                              | Solution                                                                                                  |
+|------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| Nothing fires                      | Run `/hooks` in `codex` and trust the `ctx` entries                                                        |
+| Project-local hooks ignored        | Trust the project: `[projects."<abs path>"] trust_level = "trusted"` in `~/.codex/config.toml`            |
+| Every nudge appears twice          | Plugin and `.codex/hooks.json` both active; remove one (`codex plugin remove ctx@activememory-ctx`)       |
+| `SessionEnd` timeout               | First import of a large backlog; run `ctx journal import --all` once by hand, later runs are incremental  |
+| No Codex sessions in the journal   | Check `$CODEX_HOME`; rollouts match by working directory                                                  |
+
+---
+
 ## Cursor IDE
 
 Cursor can use context files through its system prompt or by reading 

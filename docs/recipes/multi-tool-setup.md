@@ -12,6 +12,7 @@ that context persists across sessions. Different tools have different
 integration depths. For example: 
 
 * Claude Code supports native hooks that load and save context automatically.
+* Codex has the same hook contract, delivered as a plugin or project-local files.
 * Cursor injects context via its system prompt.
 * Aider reads context files through its `--read` flag.
 
@@ -29,6 +30,11 @@ source <(ctx completion zsh)  # shell completion (or bash/fish)
 # ## Claude Code (automatic after plugin install) ##
 claude /plugin marketplace add ActiveMemory/ctx
 claude /plugin install ctx@activememory-ctx
+
+# ## Codex (plugin route; or: ctx setup codex --write) ##
+codex plugin marketplace add ActiveMemory/ctx
+codex plugin add ctx@activememory-ctx
+# then in codex: /hooks, trust the ctx entries
 
 # ## OpenCode ##
 ctx setup opencode --write && ctx init
@@ -145,6 +151,35 @@ as `ActiveMemory/ctx`.
     automatically. The `PreToolUse` hook runs
     `ctx agent --budget 4000` on every tool call
     (*with a 10-minute cooldown so it only fires once per window*).
+
+#### Codex
+
+Install the `ctx` plugin once (every project gets hooks, skills, and the
+MCP server):
+
+```bash
+codex plugin marketplace add ActiveMemory/ctx
+codex plugin add ctx@activememory-ctx
+```
+
+Or keep everything inside the repository (teams, CI, `codex exec`):
+
+```bash
+ctx setup codex --write && ctx init
+```
+
+Either way, start `codex`, run `/hooks`, and trust the `ctx` entries;
+Codex does not run untrusted hooks. Project-local files also require
+the project to be trusted in `~/.codex/config.toml`. See
+[`ctx` for Codex](../home/codex.md) for the full walkthrough.
+
+!!! tip "Codex Is a First-Class Citizen"
+    Codex gets the same `ctx system` hooks as Claude Code: the context
+    packet is injected at `SessionStart` (and again after `compact`),
+    the `UserPromptSubmit` nudges fire on every prompt, and the session
+    transcript is imported into the journal at `SessionEnd`. Pick one
+    route per project; the plugin and `.codex/hooks.json` together run
+    every hook twice.
 
 #### OpenCode
 
@@ -296,7 +331,8 @@ so we don't hit it again?
 
 If you see behavior like this, the setup is working end to end.
 
-In Claude Code, you can also invoke the `/ctx-status` skill:
+In Claude Code, you can also invoke the `/ctx-status` skill (in Codex,
+the same skill is `$ctx-status`):
 
 ```text
 /ctx-status
@@ -311,6 +347,7 @@ If context is not loading, check the basics:
 |---------------------------------|---------------------------------------------------------------|
 | `ctx: command not found`        | Ensure `ctx` is in your PATH: `which ctx`                       |
 | Hook errors                     | Verify plugin is installed: `claude /plugin list`             |
+| Codex hooks never fire          | Run `/hooks` in `codex` and trust the `ctx` entries           |
 | Context not refreshing          | Cooldown may be active; wait 10 minutes or set `--cooldown 0` |
 
 ### Step 5: Enable Watch Mode for Non-Native Tools
@@ -361,12 +398,14 @@ ctx journal import --all
 ```
 
 This converts raw session data into editable Markdown files in
-`.context/journal/`. You can then enrich them with metadata using
-`/ctx-journal-enrich-all` inside your AI assistant.
+`.context/journal/`. Claude Code and Codex transcripts are discovered
+automatically (`~/.claude/projects/` and `$CODEX_HOME/sessions/`). You
+can then enrich them with metadata using `/ctx-journal-enrich-all`
+inside your AI assistant.
 
 ## Putting It All Together
 
-Here is the condensed setup for all three tools:
+Here is the condensed setup for each tool:
 
 ```bash
 # ## Common (run once per project) ##
@@ -376,6 +415,10 @@ source <(ctx completion zsh)       # or bash/fish
 
 # ## Claude Code (automatic, just verify) ##
 # Start Claude Code, then ask: "Do you remember?"
+
+# ## Codex ##
+codex plugin marketplace add ActiveMemory/ctx && codex plugin add ctx@activememory-ctx
+# Start codex, run /hooks and trust the ctx entries, then ask: "Do you remember?"
 
 # ## OpenCode ##
 ctx setup opencode --write

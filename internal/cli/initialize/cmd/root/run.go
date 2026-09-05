@@ -28,6 +28,7 @@ import (
 	coreProject "github.com/ActiveMemory/ctx/internal/cli/initialize/core/project"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/validate"
 	steeringInit "github.com/ActiveMemory/ctx/internal/cli/steering/cmd/initcmd"
+	"github.com/ActiveMemory/ctx/internal/codex"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
@@ -310,6 +311,13 @@ func Run(
 	// suppressed, skip the hint too.
 	if !noPluginEnable {
 		coreCC.InitHint(cmd)
+	}
+
+	// Post-script: one-line Codex nudge when the binary is on
+	// PATH but neither the project hooks manifest nor the ctx
+	// Codex plugin is wired up.
+	if codex.Unwired() {
+		initialize.CodexHint(cmd)
 	}
 
 	return nil

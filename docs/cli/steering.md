@@ -142,12 +142,17 @@ ctx steering preview "create a REST API endpoint"
 Sync steering files to tool-native formats for tools that
 have a **built-in rules primitive**. Not every tool needs
 this; Claude Code and Codex use a different delivery
-mechanism (see below).
+mechanism (see below). For those two, `ctx steering sync`
+prints an info line saying the tool consumes steering via
+`ctx agent` and exits 0, whether the tool comes from
+`.ctxrc` (`tool: claude` / `tool: codex`) or from an
+explicit `--tool claude` / `--tool codex`.
 
 **Examples**:
 
 ```bash
 ctx steering sync
+ctx steering sync --tool codex   # info line, exit 0, nothing written
 ```
 
 **Which tools are sync targets?**
@@ -157,8 +162,8 @@ ctx steering sync
 | Cursor       | `.cursor/rules/`     | Cursor reads the directory natively     |
 | Cline        | `.clinerules/`       | Cline reads the directory natively      |
 | Kiro         | `.kiro/steering/`    | Kiro reads the directory natively       |
-| Claude Code  | *(no-op)*            | **Delivered via hook + MCP** (see next section) |
-| Codex        | *(no-op)*            | Same as Claude Code                     |
+| Claude Code  | *(info line, exit 0)* | **Delivered via hook + MCP** (see next section) |
+| Codex        | *(info line, exit 0)* | Same channels; packet arrives at `SessionStart` |
 
 For the three native-rules tools, `ctx steering sync` writes
 each matching steering file to the appropriate directory
@@ -168,7 +173,8 @@ are skipped (idempotent).
 ### How Claude Code and Codex Consume Steering
 
 Claude Code has no native "steering files" primitive, so
-`ctx steering sync` skips it entirely. Instead, steering
+`ctx steering sync` prints an info line and exits 0 for it
+(and for Codex) without writing anything. Instead, steering
 reaches Claude through **two non-sync channels**, both
 activated by `ctx setup claude-code` (which installs the
 plugin):
@@ -194,6 +200,17 @@ the **only** path that resolves `inclusion: auto` and
 `inclusion: manual` matches for Claude Code; Claude
 passes the prompt to the MCP tool, which runs the
 keyword match against each file's description.
+
+**Codex** uses the same two channels with one difference:
+the Codex manifest runs `ctx agent --budget 8000` from the
+`SessionStart` hook (Codex ignores plain text on
+`PreToolUse`), so `inclusion: always` files arrive once at
+session start and again after `compact`. The `ctx` MCP
+server is registered by the plugin's `.mcp.json` or by
+`[mcp_servers.ctx]` in `.codex/config.toml`
+(`ctx setup codex --write`), and `ctx_steering_get` resolves
+`auto`/`manual` files on demand exactly as it does for
+Claude. See [`ctx` for Codex](../home/codex.md).
 
 **Verify the MCP server is registered**:
 
@@ -228,7 +245,7 @@ file.
   session does **nothing** for Claude's benefit. Skip it.
 - `ctx steering preview` still works for validating your
   descriptions; it doesn't depend on sync.
-- If Claude Code is your only tool, the `ctx steering`
+- If Claude Code or Codex is your only tool, the `ctx steering`
   commands you care about are `add`, `list`, `preview`,
   `init` (never `sync`).
 - If you use both Claude Code **and** (say) Cursor,

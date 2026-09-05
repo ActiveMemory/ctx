@@ -26,6 +26,9 @@
 
 set -euo pipefail
 
+# Literal tab for grep -E patterns (BSD grep has no -P/PCRE).
+TAB=$(printf '\t')
+
 # Collect every violation first, then fail if any were found. Without
 # this the checks would print findings but still exit 0, letting
 # docstring regressions slip silently through `make audit`. The
@@ -83,7 +86,7 @@ find internal/ cmd/ -name '*.go' ! -name '*_test.go' ! -name 'doc.go' | sort | w
       continue
     fi
     returnpart=$(echo "$rest" | sed 's/^func [A-Za-z0-9_]*([^)]*) //')
-    # Guard: if sed didn't match (returnpart unchanged), skip
+    # Guard: if sed did not match (returnpart unchanged), skip
     if [ "$returnpart" = "$rest" ]; then
       continue
     fi
@@ -106,7 +109,7 @@ find internal/ cmd/ -name '*.go' ! -name '*_test.go' ! -name 'doc.go' | sort | w
       continue
     fi
     fieldcount=$(sed -n "$((lineno+1)),$((closing-1))p" "$file" \
-      | grep -cP '^\t[A-Z]' || true)
+      | grep -cE "^${TAB}[A-Z]" || true)
     if [ "$fieldcount" -lt 2 ]; then
       continue
     fi
@@ -138,7 +141,7 @@ find internal/ cmd/ -name '*.go' ! -name '*_test.go' ! -name 'doc.go' | sort | w
     # Accept inline field comments as alternative to Fields: section.
     # Count fields with a preceding or same-line comment.
     inlinecount=$(sed -n "$((lineno+1)),$((closing-1))p" "$file" \
-      | grep -cP '^\t// [A-Z]|^\t[A-Z].*//\s' || true)
+      | grep -cE "^${TAB}// [A-Z]|^${TAB}[A-Z].*//[[:space:]]" || true)
     if [ "$inlinecount" -ge "$fieldcount" ]; then
       continue
     fi

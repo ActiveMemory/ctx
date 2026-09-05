@@ -17,6 +17,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/bootstrap"
+	cfgCodex "github.com/ActiveMemory/ctx/internal/config/codex"
 )
 
 // ctxBinaryName is the command word a shipped hook uses to invoke
@@ -29,9 +30,10 @@ const ctxBinaryName = "ctx"
 // stopping at the first flag, redirection, or shell operator.
 var subcommandToken = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
 
-// shippedHookFile mirrors the structure of
-// internal/assets/claude/hooks/hooks.json: a top-level "hooks"
-// object keyed by Claude Code event name, each mapping to a list
+// shippedHookFile mirrors the structure shared by
+// internal/assets/claude/hooks/hooks.json and
+// internal/assets/codex/hooks/hooks.json: a top-level "hooks"
+// object keyed by lifecycle event name, each mapping to a list
 // of matcher groups that each carry a list of command hooks.
 type shippedHookFile struct {
 	Hooks map[string][]struct {
@@ -41,9 +43,34 @@ type shippedHookFile struct {
 	} `json:"hooks"`
 }
 
+// shippedHookManifests lists every hooks.json ctx ships (plugin
+// roots and `ctx setup` sources), as repo-relative path segments,
+// with the command prefix each one anchors its commands with. The
+// Claude manifest anchors on `${CLAUDE_PROJECT_DIR}`; the Codex one
+// on [cfgCodex.HookPrologue] (the ctx-absent guard plus the
+// git-root anchor). The prefix is stripped before the `ctx …` path is peeled
+// so the `$(…)` quoting never reaches the tokenizer.
+var shippedHookManifests = []struct {
+	segments []string
+	anchor   string
+}{
+	{
+		segments: []string{
+			"internal", "assets", "claude", "hooks", "hooks.json",
+		},
+	},
+	{
+		segments: []string{
+			"internal", "assets", "codex", "hooks", "hooks.json",
+		},
+		anchor: cfgCodex.HookPrologue,
+	},
+}
+
 // TestShippedHooksResolveToRegisteredCommands asserts that every
-// `ctx <…>` invocation wired into the shipped hooks.json resolves
-// to a registered subcommand on the assembled command tree.
+// `ctx <…>` invocation wired into each shipped hooks.json (Claude
+// Code and Codex) resolves to a registered subcommand on the
+// assembled command tree.
 //
 // This is the recurrence guard for the version-skew bug recorded
 // in specs/hooks-wiring-guard.md: a published plugin whose
@@ -53,48 +80,61 @@ type shippedHookFile struct {
 // A half-migrated package now fails here instead of in a session.
 func TestShippedHooksResolveToRegisteredCommands(t *testing.T) {
 	root := projectRoot(t)
-	hooksPath := filepath.Join(
-		root, "internal", "assets", "claude", "hooks", "hooks.json",
-	)
-
-	data, err := os.ReadFile(filepath.Clean(hooksPath))
-	if err != nil {
-		t.Fatalf("read shipped hooks.json: %v", err)
-	}
-
-	var hf shippedHookFile
-	if err := json.Unmarshal(data, &hf); err != nil {
-		t.Fatalf("decode shipped hooks.json: %v", err)
-	}
-
 	tree := bootstrap.Initialize(bootstrap.RootCmd())
 
-	checked := 0
-	for event, groups := range hf.Hooks {
-		for _, group := range groups {
-			for _, h := range group.Hooks {
-				for _, path := range ctxInvocationPaths(h.Command) {
-					checked++
-					if token, ok := pathResolved(tree, path); !ok {
-						t.Errorf(
-							"%s hook %q wires `ctx %s`, but %q is not a "+
-								"registered subcommand; shipped hooks must "+
-								"match the binary's command tree "+
-								"(see specs/hooks-wiring-guard.md)",
-							event, h.Command,
-							strings.Join(path, " "), token,
-						)
+	for _, manifest := range shippedHookManifests {
+		rel := filepath.Join(manifest.segments...)
+		t.Run(rel, func(t *testing.T) {
+			hooksPath := filepath.Join(root, rel)
+
+			data, err := os.ReadFile(filepath.Clean(hooksPath))
+			if err != nil {
+				t.Fatalf("read shipped hooks.json: %v", err)
+			}
+
+			var hf shippedHookFile
+			if err := json.Unmarshal(data, &hf); err != nil {
+				t.Fatalf("decode shipped hooks.json: %v", err)
+			}
+
+			checked := 0
+			for event, groups := range hf.Hooks {
+				for _, group := range groups {
+					for _, h := range group.Hooks {
+						command := h.Command
+						if manifest.anchor != "" {
+							if !strings.HasPrefix(command, manifest.anchor) {
+								t.Errorf(
+									"%s hook %q does not start with anchor %q",
+									event, command, manifest.anchor,
+								)
+							}
+							command = strings.TrimPrefix(command, manifest.anchor)
+						}
+						for _, path := range ctxInvocationPaths(command) {
+							checked++
+							if token, ok := pathResolved(tree, path); !ok {
+								t.Errorf(
+									"%s hook %q wires `ctx %s`, but %q is not a "+
+										"registered subcommand; shipped hooks must "+
+										"match the binary's command tree "+
+										"(see specs/hooks-wiring-guard.md)",
+									event, h.Command,
+									strings.Join(path, " "), token,
+								)
+							}
+						}
 					}
 				}
 			}
-		}
-	}
 
-	if checked == 0 {
-		t.Fatal(
-			"no `ctx` invocations found in shipped hooks.json; the " +
-				"guard parsed nothing — check the asset path and format",
-		)
+			if checked == 0 {
+				t.Fatal(
+					"no `ctx` invocations found in shipped hooks.json; the " +
+						"guard parsed nothing — check the asset path and format",
+				)
+			}
+		})
 	}
 }
 

@@ -97,7 +97,7 @@ A commented `.ctxrc` showing all options and their defaults:
 #     - nudge
 #     - relay
 #
-# tool: ""              # Active AI tool: claude, cursor, cline, kiro, codex
+# tool: ""              # Active AI tool: claude, cursor, cline, kiro, codex (claude/codex: steering sync is a no-op)
 #
 # steering:             # Steering layer configuration
 #   dir: .context/steering
@@ -150,7 +150,7 @@ A commented `.ctxrc` showing all options and their defaults:
 | `task_nudge_interval`   | `int`      | `5`           | Edit/Write calls between task completion nudges                                                                                           |
 | `notify.events`         | `[]string` | *(all)*       | Event filter for webhook notifications (empty = all)                                                                                      |
 | `priority_order`        | `[]string` | *(see below)* | Custom file loading priority for context assembly                                                                                         |
-| `tool`                  | `string`   | *(empty)*     | Active AI tool identifier (`claude`, `cursor`, `cline`, `kiro`, `codex`). Used by steering sync and hook dispatch                         |
+| `tool`                  | `string`   | *(empty)*     | Active AI tool identifier (`claude`, `cursor`, `cline`, `kiro`, `codex`). Used by steering sync and hook dispatch; for `claude` and `codex`, `ctx steering sync` prints an info line and exits 0 |
 | `steering.dir`          | `string`   | `.context/steering` | Steering files directory                                                                                                             |
 | `steering.default_inclusion` | `string` | `manual` | Default inclusion mode for new steering files (`always`, `auto`, `manual`)                                                                |
 | `steering.default_tools` | `[]string` | *(all)*  | Default tool filter for new steering files (empty = all tools)                                                                            |

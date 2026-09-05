@@ -19,7 +19,11 @@
 // [InfoCopilotCLICreated], [InfoCopilotCLISkipped],
 // and [InfoCopilotCLISummary]. AGENTS.md uses
 // [InfoAgentsCreated], [InfoAgentsMerged],
-// [InfoAgentsSkipped], and [InfoAgentsSummary].
+// [InfoAgentsSkipped], and [InfoAgentsSummary]. Codex
+// uses [InfoCodexCreated], [InfoCodexMerged],
+// [InfoCodexSkipped], [InfoCodexRejected],
+// [InfoCodexPluginActive], [InfoCodexSummary], and
+// [InfoCodexState].
 //
 // Generic deploy functions handle file creation
 // across tools: [DeployComplete], [DeployFileExists],

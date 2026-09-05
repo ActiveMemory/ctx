@@ -1,0 +1,24 @@
+{
+  "name": "activememory-ctx",
+  "interface": {
+    "displayName": "ctx"
+  },
+  "metadata": {
+    "description": "Official ctx plugins for Codex",
+    "version": "0.8.1"
+  },
+  "plugins": [
+    {
+      "name": "ctx",
+      "source": {
+        "source": "local",
+        "path": "./internal/assets/codex"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

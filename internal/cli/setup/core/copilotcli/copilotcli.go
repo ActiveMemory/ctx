@@ -21,12 +21,12 @@ import (
 	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
-// Deploy generates .github/hooks/ctx-hooks.json and the
-// accompanying hook scripts for GitHub Copilot CLI integration.
+// Deploy generates .github/hooks/ctx-hooks.json for GitHub
+// Copilot CLI integration.
 //
-// Creates the .github/hooks/ and .github/hooks/scripts/ directories if
-// needed and writes the JSON config plus bash and PowerShell scripts
-// from embedded assets. Also writes .github/agents/ctx.md and
+// The manifest invokes `ctx system ...` commands directly (with a
+// repo-root cwd), so no wrapper scripts are shipped. Also writes
+// .github/agents/ctx.md and
 // .github/instructions/context.instructions.md for Copilot CLI.
 // Skips if ctx-hooks.json already exists.
 //
@@ -37,7 +37,6 @@ import (
 //   - error: Non-nil if directory creation or file write fails
 func Deploy(cmd *cobra.Command) error {
 	hooksDir := filepath.Join(cfgHook.DirGitHub, cfgHook.DirGitHubHooks)
-	scriptsDir := filepath.Join(hooksDir, cfgHook.DirGitHubHooksScripts)
 	targetJSON := filepath.Join(hooksDir, cfgHook.FileCopilotCLIHooksJSON)
 
 	// Check if ctx-hooks.json already exists
@@ -47,8 +46,8 @@ func Deploy(cmd *cobra.Command) error {
 	}
 
 	// Create directories
-	if mkErr := ctxIo.SafeMkdirAll(scriptsDir, fs.PermExec); mkErr != nil {
-		return errFs.Mkdir(scriptsDir, mkErr)
+	if mkErr := ctxIo.SafeMkdirAll(hooksDir, fs.PermExec); mkErr != nil {
+		return errFs.Mkdir(hooksDir, mkErr)
 	}
 
 	// Write ctx-hooks.json
@@ -61,19 +60,6 @@ func Deploy(cmd *cobra.Command) error {
 		return errFs.FileWrite(targetJSON, wErr)
 	}
 	writeSetup.InfoCopilotCLICreated(cmd, targetJSON)
-
-	// Write all hook scripts
-	scripts, scrErr := agent.CopilotCLIScripts()
-	if scrErr != nil {
-		return scrErr
-	}
-	for name, content := range scripts {
-		target := filepath.Join(scriptsDir, name)
-		if wErr := ctxIo.SafeWriteFile(target, content, fs.PermExec); wErr != nil {
-			return errFs.FileWrite(target, wErr)
-		}
-		writeSetup.InfoCopilotCLICreated(cmd, target)
-	}
 
 	// Write .github/agents/ctx.md
 	if agentErr := deployGithubAsset(

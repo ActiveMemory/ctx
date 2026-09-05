@@ -219,9 +219,9 @@ func TestEnsureMCPConfig_RefreshesStaleCtxServer(t *testing.T) {
 
 // TestEnsureMCPConfig_DirectCommandShape covers the LookPath-failure
 // branch: with no `ctx` binary on PATH, launchCommand still emits the
-// three-element [bin, mcp, serve] argv (bin is the literal command
-// name as a best-effort placeholder; OpenCode's loader will resolve
-// it at spawn time). No shell wrapper is emitted under the
+// three-element [bin, mcp, serve] argv (bin falls back to the running
+// binary's own path via os.Executable, so OpenCode can spawn it even
+// under a reduced PATH). No shell wrapper is emitted under the
 // cwd-anchored resolution model.
 func TestEnsureMCPConfig_DirectCommandShape(t *testing.T) {
 	t.Setenv("PATH", t.TempDir())

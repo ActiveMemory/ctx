@@ -125,15 +125,16 @@ Single-file change.
 
 Registration: `internal/cli/setup/core/*` packages.
 
-8 deployer packages (verified 2026-06-09; was 5):
+9 deployer packages (verified 2026-08-23; was 8):
 1. `agents/` - AGENTS.md deployment
-2. `cline/` - Cline (new)
-3. `copilot/` - GitHub Copilot (instructions + VS Code MCP)
-4. `copilotcli/` - Copilot CLI (instructions, skills, agent, MCP)
-5. `cursor/` - Cursor (new)
-6. `kiro/` - Kiro (new)
-7. `mcp/` - generic MCP config deployment
-8. `opencode/` - OpenCode (skills + plugin) (new)
+2. `cline/` - Cline
+3. `codex/` - OpenAI Codex (hooks.json merge, config.toml MCP append, skills, AGENTS.md; plugin-enabled short-circuit) (new)
+4. `copilot/` - GitHub Copilot (instructions + VS Code MCP)
+5. `copilotcli/` - Copilot CLI (instructions, skills, agent, MCP)
+6. `cursor/` - Cursor
+7. `kiro/` - Kiro
+8. `mcp/` - generic MCP config deployment
+9. `opencode/` - OpenCode (skills + plugin)
 
 How to extend: create new `setup/core/<tool>/` package with
 Deploy() function. Add case in setup command's Run() handler.

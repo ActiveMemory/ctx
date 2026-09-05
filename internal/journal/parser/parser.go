@@ -23,6 +23,7 @@ var registeredParsers = []Session{
 	NewClaudeCode(),
 	NewCopilot(),
 	NewCopilotCLI(),
+	NewCodex(),
 	NewMarkdownSession(),
 }
 

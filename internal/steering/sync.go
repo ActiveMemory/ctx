@@ -25,6 +25,17 @@ var syncableTools = []string{
 	cfgHook.ToolKiro,
 }
 
+// directConsumers lists the tool identifiers that receive
+// steering through `ctx agent` (hook + MCP delivery) rather than
+// a synced rules directory. Syncing for them is a documented
+// no-op, not an error; see
+// specs/steering-sync-drift-respects-configured-tools.md.
+var directConsumers = []string{
+	cfgHook.ToolClaude,
+	cfgHook.ToolClaudeCode,
+	cfgHook.ToolCodex,
+}
+
 // SyncableTools returns the tool identifiers that support
 // native-format steering sync (cursor, cline, kiro). Claude and
 // Codex consume steering via ctx agent directly and are excluded.
@@ -33,6 +44,21 @@ var syncableTools = []string{
 //   - []string: a copy of the syncable tool identifiers
 func SyncableTools() []string {
 	return slices.Clone(syncableTools)
+}
+
+// ConsumesDirectly reports whether tool receives steering through
+// `ctx agent` instead of a synced rules directory (claude,
+// claude-code, codex). Callers use it to skip sync politely
+// before [SyncTool], which treats every non-syncable tool —
+// direct consumers included — as unsupported.
+//
+// Parameters:
+//   - tool: tool identifier from --tool or .ctxrc
+//
+// Returns:
+//   - bool: true when sync is a no-op for the tool
+func ConsumesDirectly(tool string) bool {
+	return slices.Contains(directConsumers, tool)
 }
 
 // SyncTool writes steering files to the tool-native format directory.

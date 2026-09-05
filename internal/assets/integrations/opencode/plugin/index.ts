@@ -17,6 +17,12 @@
 // so it cannot force the agent's shell into the project root.
 // Users must launch OpenCode from the project root for the
 // agent-side ctx commands to resolve.
+// ctx also requires the project to be a git worktree
+// (specs/require-git.md): in a non-git directory `ctx system
+// bootstrap` exits 1, so the compaction-preservation branch and
+// the session.created bootstrap deliberately no-op there.
+// Stdin-reading ctx hooks are invoked with `< /dev/null` so a
+// host-held pipe can never cost the 2s stdin-read timeout per call.
 // All ctx.$ invocations use .nothrow().quiet(): nothrow swallows
 // non-zero exits, quiet keeps stdout/stderr in BunShell's buffer
 // instead of echoing to OpenCode's process stdout (which would
@@ -58,19 +64,19 @@ export default (async (ctx) => {
         await $`ctx system bootstrap`.nothrow().quiet()
         await $`ctx agent --budget 4000`.nothrow().quiet()
       } else if (event.type === "session.idle") {
-        await $`ctx system check-persistence`.nothrow().quiet()
-        await $`ctx system check-task-completion`.nothrow().quiet()
+        await $`ctx system check-persistence < /dev/null`.nothrow().quiet()
+        await $`ctx system check-task-completion < /dev/null`.nothrow().quiet()
       }
     },
     "tool.execute.after": async (input, _output) => {
       if (SHELL_TOOLS.has(input.tool)) {
         const cmd = extractCommand(input.args)
         if (GIT_COMMIT_RE.test(cmd)) {
-          await $`ctx system post-commit`.nothrow().quiet()
+          await $`ctx system post-commit < /dev/null`.nothrow().quiet()
         }
       }
       if (EDIT_TOOLS.has(input.tool)) {
-        await $`ctx system check-task-completion`.nothrow().quiet()
+        await $`ctx system check-task-completion < /dev/null`.nothrow().quiet()
       }
     },
     "experimental.session.compacting": async (_input, output) => {

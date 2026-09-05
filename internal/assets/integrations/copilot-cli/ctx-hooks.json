@@ -4,66 +4,79 @@
     "sessionStart": [
       {
         "description": "Bootstrap ctx context on session start",
-        "command": "ctx system bootstrap"
+        "command": "ctx system bootstrap",
+        "cwd": "."
       },
       {
         "description": "Load AI-optimized context packet",
-        "command": "ctx agent --budget 4000"
+        "command": "ctx agent --budget 4000",
+        "cwd": "."
       }
     ],
     "preToolUse": [
       {
-        "description": "Context load gate — ensure context is loaded before work",
-        "command": "ctx system context-load-gate"
+        "description": "Context load gate \u2014 ensure context is loaded before work",
+        "command": "ctx system context-load-gate",
+        "cwd": "."
       },
       {
         "description": "Block dangerous non-path ctx commands",
         "matcher": "bash",
-        "command": "ctx system block-non-path-ctx"
+        "command": "ctx system block-non-path-ctx",
+        "cwd": "."
       },
       {
         "description": "QA reminder nudge",
         "matcher": "bash",
-        "command": "ctx system qa-reminder"
+        "command": "ctx system qa-reminder",
+        "cwd": "."
       }
     ],
     "postToolUse": [
       {
         "description": "Post-commit context persistence check",
         "matcher": "bash",
-        "command": "ctx system post-commit"
+        "command": "ctx system post-commit",
+        "cwd": "."
       },
       {
         "description": "Check if a task was just completed",
         "matcher": "edit",
-        "command": "ctx system check-task-completion"
+        "command": "ctx system check-task-completion",
+        "cwd": "."
       },
       {
         "description": "Check if a task was just completed (write)",
         "matcher": "write",
-        "command": "ctx system check-task-completion"
+        "command": "ctx system check-task-completion",
+        "cwd": "."
       }
     ],
     "sessionEnd": [
       {
         "description": "Check context size for budget drift",
-        "command": "ctx system check-context-size"
+        "command": "ctx system check-context-size",
+        "cwd": "."
       },
       {
-        "description": "Persistence check — unsaved decisions/learnings",
-        "command": "ctx system check-persistence"
+        "description": "Persistence check \u2014 unsaved decisions/learnings",
+        "command": "ctx system check-persistence",
+        "cwd": "."
       },
       {
         "description": "Journal export check",
-        "command": "ctx system check-journal"
+        "command": "ctx system check-journal",
+        "cwd": "."
       },
       {
         "description": "Version freshness check",
-        "command": "ctx system check-version"
+        "command": "ctx system check-version",
+        "cwd": "."
       },
       {
-        "description": "Heartbeat — record session activity",
-        "command": "ctx system heartbeat"
+        "description": "Heartbeat \u2014 record session activity",
+        "command": "ctx system heartbeat",
+        "cwd": "."
       }
     ]
   }

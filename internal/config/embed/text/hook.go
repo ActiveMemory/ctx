@@ -12,6 +12,8 @@ const (
 	DescKeyHookAider = "hook.aider"
 	// DescKeyHookAgents is the text key for hook agents messages.
 	DescKeyHookAgents = "hook.agents"
+	// DescKeyHookCodex is the text key for hook codex messages.
+	DescKeyHookCodex = "hook.codex"
 	// DescKeyHookCopilot is the text key for hook copilot messages.
 	DescKeyHookCopilot = "hook.copilot"
 	// DescKeyHookCopilotCLI is the text key for hook copilot cli messages.
@@ -40,6 +42,53 @@ const (
 	// DescKeyWriteHookAgentsSummary is the text key for write hook agents summary
 	// messages.
 	DescKeyWriteHookAgentsSummary = "write.hook-agents-summary"
+	// DescKeyWriteHookCodexCreated is the text key for write hook codex
+	// created messages.
+	DescKeyWriteHookCodexCreated = "write.hook-codex-created"
+	// DescKeyWriteHookCodexMerged is the text key for write hook codex
+	// merged messages.
+	DescKeyWriteHookCodexMerged = "write.hook-codex-merged"
+	// DescKeyWriteHookCodexSkipped is the text key for write hook codex
+	// skipped messages.
+	DescKeyWriteHookCodexSkipped = "write.hook-codex-skipped"
+	// DescKeyWriteHookCodexRejected is the text key for write hook codex
+	// rejected (foreign file) messages.
+	DescKeyWriteHookCodexRejected = "write.hook-codex-rejected"
+	// DescKeyWriteHookCodexPluginActive is the text key for the notice
+	// printed when the ctx Codex plugin already provides hooks/skills/MCP.
+	DescKeyWriteHookCodexPluginActive = "write.hook-codex-plugin-active"
+	// DescKeyWriteHookCodexProjectAlso is the text key for the warning
+	// that project-local hooks coexist with the enabled plugin.
+	DescKeyWriteHookCodexProjectAlso = "write.hook-codex-project-also"
+	// DescKeyWriteHookCodexPluginWrongVariant is the text key for the
+	// warning printed when the enabled plugin is the legacy Claude
+	// Code variant and the project-local route is deployed instead.
+	DescKeyWriteHookCodexPluginWrongVariant = "write.hook-codex-plugin-wrong-variant"
+	// DescKeyWriteHookCodexSummary is the text key for write hook codex
+	// summary messages.
+	DescKeyWriteHookCodexSummary = "write.hook-codex-summary"
+	// DescKeyWriteHookCodexSummaryPlugin is the text key for the
+	// summary printed when the ctx Codex plugin provides
+	// hooks/MCP/skills and only AGENTS.md was deployed.
+	DescKeyWriteHookCodexSummaryPlugin = "write.hook-codex-summary-plugin"
+	// DescKeyWriteHookCodexState is the text key for the detection state
+	// line printed by `ctx setup codex`.
+	DescKeyWriteHookCodexState = "write.hook-codex-state"
+	// DescKeyWriteHookCodexStateConfigured is the state label used when
+	// the project-local Codex integration is already deployed.
+	DescKeyWriteHookCodexStateConfigured = "write.hook-codex-state-configured"
+	// DescKeyWriteHookCodexStateAbsent labels the state where the codex
+	// binary is not on PATH.
+	DescKeyWriteHookCodexStateAbsent = "write.hook-codex-state-absent"
+	// DescKeyWriteHookCodexStateNotInstalled labels the state where codex
+	// is present but the ctx plugin is not in its plugin cache.
+	DescKeyWriteHookCodexStateNotInstalled = "write.hook-codex-state-not-installed"
+	// DescKeyWriteHookCodexStateNotEnabled labels the state where the ctx
+	// plugin is cached but not enabled in config.toml.
+	DescKeyWriteHookCodexStateNotEnabled = "write.hook-codex-state-not-enabled"
+	// DescKeyWriteHookCodexStateReady labels the state where codex and the
+	// ctx plugin are both present and enabled.
+	DescKeyWriteHookCodexStateReady = "write.hook-codex-state-ready"
 	// DescKeyWriteHookCopilotCLICreated is the text key for write hook copilot
 	// cli created messages.
 	DescKeyWriteHookCopilotCLICreated = "write.hook-copilot-cli-created"

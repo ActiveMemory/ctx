@@ -23,6 +23,7 @@ import (
 // immediate subdirectory is a skill containing a SKILL.md.
 var skillTrees = []string{
 	asset.DirClaudeSkills,
+	asset.DirCodexSkills,
 	asset.DirIntegrationsOpenCodeSkill,
 	asset.DirIntegrationsCopilotSkill,
 	asset.DirIntegrationsPiSkill,
@@ -39,7 +40,7 @@ type skillFrontmatter struct {
 }
 
 // TestSkillFrontmatter walks every embedded SKILL.md across
-// the four tool trees and asserts the minimum frontmatter
+// every tool tree and asserts the minimum frontmatter
 // contract: `name` matches the containing directory's
 // basename, and `description` is a non-empty string. All
 // violations are reported in a single pass.

@@ -250,6 +250,16 @@ func ClaudePluginMissing(cmd *cobra.Command) {
 		text.DescKeyWriteInitClaudePluginMissing))
 }
 
+// CodexHint prints the one-line post-init nudge shown when
+// the `codex` binary is on PATH but the project has no
+// `.codex/hooks.json` and the ctx Codex plugin is not enabled.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func CodexHint(cmd *cobra.Command) {
+	cmd.Println(desc.Text(text.DescKeyWriteInitCodexHint))
+}
+
 // ClaudeReady prints the multi-line confirmation for the
 // init post-script when Claude Code and the ctx plugin are
 // both detected and enabled. Displays scope, version,

@@ -39,6 +39,7 @@ nav = [
     ]},
     { "Get Started" = [
       "home/getting-started.md",
+      "home/codex.md",
       "home/opencode.md",
       "home/pi.md",
       "home/vscode.md",

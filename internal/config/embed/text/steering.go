@@ -44,6 +44,9 @@ const (
 	// DescKeyWriteSteeringSyncSummary is the text key for write steering sync
 	// summary messages.
 	DescKeyWriteSteeringSyncSummary = "write.steering-sync-summary"
+	// DescKeyWriteSteeringSyncDirect is the info line printed when the
+	// resolved tool consumes steering via ctx agent and sync is a no-op.
+	DescKeyWriteSteeringSyncDirect = "write.steering-sync-direct"
 	// DescKeyWriteSteeringNoFiles is the message when no steering
 	// files exist.
 	DescKeyWriteSteeringNoFiles = "write.steering-no-files"

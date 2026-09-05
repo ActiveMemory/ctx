@@ -72,7 +72,9 @@ func (p *ClaudeCode) buildSession(
 				// Truncate preview
 				preview := msg.Text
 				if len(preview) > session.PreviewMaxLen {
-					preview = preview[:session.PreviewMaxLen] + token.Ellipsis
+					preview = truncateRunes(
+						preview, session.PreviewMaxLen,
+					) + token.Ellipsis
 				}
 				s.FirstUserMsg = preview
 			}

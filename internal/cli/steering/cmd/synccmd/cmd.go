@@ -20,6 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/steering"
+	writeSteering "github.com/ActiveMemory/ctx/internal/write/steering"
 )
 
 // Cmd returns the "ctx steering sync" subcommand.
@@ -77,6 +78,13 @@ func Run(c *cobra.Command, syncAll bool) error {
 	tool, resolveErr := resolve.Tool(c)
 	if resolveErr != nil {
 		return errSteering.NoTool()
+	}
+
+	// Claude Code and Codex get steering through ctx agent; a sync
+	// request for them is a documented no-op, not an error.
+	if steering.ConsumesDirectly(tool) {
+		writeSteering.SyncDirect(c, tool)
+		return nil
 	}
 
 	report, syncErr := steering.SyncTool(

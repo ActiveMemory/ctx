@@ -175,6 +175,18 @@ func SyncError(cmd *cobra.Command, errMsg string) {
 		errMsg))
 }
 
+// SyncDirect prints the polite-skip line for a tool that consumes
+// steering via ctx agent (claude, codex) and needs no synced files.
+//
+// Parameters:
+//   - cmd: The cobra command for output
+//   - tool: The resolved tool identifier
+func SyncDirect(cmd *cobra.Command, tool string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSteeringSyncDirect),
+		tool))
+}
+
 // SyncSummary prints the sync summary with counts.
 //
 // Parameters:

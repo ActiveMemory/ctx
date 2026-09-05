@@ -81,7 +81,6 @@ const (
 	DirGitHub               = ".github"
 	DirGitHubAgents         = "agents"
 	DirGitHubHooks          = "hooks"
-	DirGitHubHooksScripts   = "scripts"
 	DirGitHubInstructions   = "instructions"
 	DirGitHubSkills         = "skills"
 	FileAgentsMd            = "AGENTS.md"

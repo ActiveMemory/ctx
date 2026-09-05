@@ -7,6 +7,7 @@
 package schema
 
 import (
+	cfgSession "github.com/ActiveMemory/ctx/internal/config/session"
 	"os"
 	"path/filepath"
 	"sort"
@@ -98,6 +99,12 @@ func CheckSessions(
 
 	seen := make(map[string]bool)
 	for _, sess := range sessions {
+		// The schema describes the Claude Code JSONL format only;
+		// transcripts from other tools (Codex rollouts, Copilot)
+		// have their own shapes and would always read as drift.
+		if sess.Tool != cfgSession.ToolClaudeCode {
+			continue
+		}
 		if sess.SourceFile == "" || seen[sess.SourceFile] {
 			continue
 		}

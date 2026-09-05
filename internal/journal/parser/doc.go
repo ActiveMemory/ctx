@@ -21,6 +21,13 @@
 //     the workspace state directory.
 //   - **Copilot CLI** writes a different, JSON-with-metadata layout
 //     under its own home tree.
+//   - **Codex** writes one rollout per session under
+//     `$CODEX_HOME/sessions/YYYY/MM/DD/rollout-<ISO>-<uuid>.jsonl`
+//     (default `~/.codex/sessions`): a `session_meta` envelope
+//     followed by `response_item` lines (messages, tool calls, tool
+//     outputs), `event_msg` lines (token counts, UI mirrors), and
+//     `turn_context` lines (model). Codex-injected developer and
+//     `<environment_context>`-style user items are filtered out.
 //   - **MarkdownSession** is the round-trip format ctx itself
 //     produces when an enriched journal entry is *re-imported*; it
 //     parses the YAML frontmatter + body that
@@ -46,7 +53,7 @@
 //     so callers can surface them to the user.
 //
 // Tool-specific constructors ([NewClaudeCode], [NewCopilot],
-// [NewCopilotCLI], [NewMarkdownSession]) are exported for callers
+// [NewCopilotCLI], [NewCodex], [NewMarkdownSession]) are exported for callers
 // that need to operate on a known format directly (tests, format
 // converters, the schema validator).
 //
@@ -59,11 +66,16 @@
 // parser whether it `Matches(path)`. Implementations may check
 // extension, directory shape, or peek at the first line; order in
 // the slice matters when a file could plausibly match more than one
-// (in practice, the four formats are disjoint).
+// (in practice, the five formats are disjoint: Codex rollouts are
+// claimed by the `rollout-` basename prefix or a leading
+// `session_meta` line, which no other format produces).
 //
 // **Adding a new tool**: implement the four interface methods on a
 // new type, then append a constructor call to `registeredParsers`
-// in `parser.go`. No other changes are required.
+// in `parser.go`. If the tool keeps sessions in its own home tree,
+// also add a `<Tool>SessionDirs()` helper and scan it in
+// `findSessionsWithFilter` (query.go), as [CodexSessionDirs] and
+// [CopilotCLISessionDirs] do.
 //
 // # Output Shape
 //

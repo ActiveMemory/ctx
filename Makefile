@@ -6,7 +6,7 @@
 clean all release build-all help \
 test-coverage smoke site site-guard site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall check-tools \
-sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills sync-steering check-steering gemini-search \
+sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills sync-codex-skills check-codex-skills codex-plugin-install sync-steering check-steering gemini-search \
 gitnexus-version gitnexus-update gitnexus-index gitnexus-mcp strip-gitnexus install-ctxctl reinstall-ctxctl
 
 # Default binary name and output
@@ -33,10 +33,16 @@ sync-version:
 	@V=$$(cat VERSION | tr -d '[:space:]'); \
 	jq --arg v "$$V" '.version = $$v' internal/assets/claude/.claude-plugin/plugin.json > internal/assets/claude/.claude-plugin/plugin.json.tmp && \
 	mv internal/assets/claude/.claude-plugin/plugin.json.tmp internal/assets/claude/.claude-plugin/plugin.json; \
+	jq --arg v "$$V" '.version = $$v' internal/assets/codex/.codex-plugin/plugin.json > internal/assets/codex/.codex-plugin/plugin.json.tmp && \
+	mv internal/assets/codex/.codex-plugin/plugin.json.tmp internal/assets/codex/.codex-plugin/plugin.json; \
+	jq --arg v "$$V" '.version = $$v' internal/assets/claude/.codex-plugin/plugin.json > internal/assets/claude/.codex-plugin/plugin.json.tmp && \
+	mv internal/assets/claude/.codex-plugin/plugin.json.tmp internal/assets/claude/.codex-plugin/plugin.json; \
+	jq --arg v "$$V" '.metadata.version = $$v' .agents/plugins/marketplace.json > .agents/plugins/marketplace.json.tmp && \
+	mv .agents/plugins/marketplace.json.tmp .agents/plugins/marketplace.json; \
 	echo "Plugin version synced to $$V"
 
 ## build: Build for current platform (syncs version + embedded docs + copilot skills first)
-build: sync-version sync-why sync-copilot-skills
+build: sync-version sync-why sync-copilot-skills sync-codex-skills
 	CGO_ENABLED=0 go build -ldflags="-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$$(cat VERSION | tr -d '[:space:]')" -o $(OUTPUT) ./cmd/ctx
 
 ## ctxctl: Build the maintainer-only ctxctl binary (audit channel) into dist/
@@ -173,6 +179,8 @@ audit:
 	@$(MAKE) --no-print-directory check-why
 	@echo "==> Checking Copilot skills freshness..."
 	@$(MAKE) --no-print-directory check-copilot-skills
+	@echo "==> Checking Codex skills freshness..."
+	@$(MAKE) --no-print-directory check-codex-skills
 	@echo "==> Checking steering outputs freshness..."
 	@$(MAKE) --no-print-directory check-steering
 	@echo "==> Running tests..."
@@ -369,6 +377,21 @@ check-version-sync:
 		echo "FAIL: VERSION ($$V) != plugin.json ($$PV) — run 'make sync-version'"; \
 		exit 1; \
 	fi; \
+	CV=$$(jq -r '.version' internal/assets/codex/.codex-plugin/plugin.json); \
+	if [ "$$V" != "$$CV" ]; then \
+		echo "FAIL: VERSION ($$V) != codex plugin.json ($$CV) — run 'make sync-version'"; \
+		exit 1; \
+	fi; \
+	DV=$$(jq -r '.version' internal/assets/claude/.codex-plugin/plugin.json); \
+	if [ "$$V" != "$$DV" ]; then \
+		echo "FAIL: VERSION ($$V) != claude-root codex plugin.json ($$DV) — run 'make sync-version'"; \
+		exit 1; \
+	fi; \
+	MV=$$(jq -r '.metadata.version' .agents/plugins/marketplace.json); \
+	if [ "$$V" != "$$MV" ]; then \
+		echo "FAIL: VERSION ($$V) != .agents/plugins/marketplace.json ($$MV) — run 'make sync-version'"; \
+		exit 1; \
+	fi; \
 	echo "Version sync OK ($$V)."
 
 ## sync-copilot-skills: Sync Copilot CLI skills from canonical ctx skills
@@ -403,6 +426,38 @@ check-copilot-skills:
 	fi; \
 	rm -rf "$$TMPDIR"; \
 	echo "Copilot CLI skills are in sync."
+
+## sync-codex-skills: Sync Codex plugin skills from canonical ctx skills
+sync-codex-skills:
+	@./hack/sync-codex-skills.sh
+
+## check-codex-skills: Verify Codex plugin skills match ctx source skills
+check-codex-skills:
+	@TMPDIR=$$(mktemp -d) && \
+	cp -r internal/assets/codex/skills/ "$$TMPDIR/before" && \
+	cp internal/assets/claude/hooks/codex.json "$$TMPDIR/codex.json" && \
+	cp internal/assets/claude/.codex-plugin/plugin.json "$$TMPDIR/plugin.json" && \
+	./hack/sync-codex-skills.sh > /dev/null && \
+	if ! diff -rq "$$TMPDIR/before" internal/assets/codex/skills/ > /dev/null 2>&1 || \
+	   ! diff -q "$$TMPDIR/codex.json" internal/assets/claude/hooks/codex.json > /dev/null 2>&1 || \
+	   ! diff -q "$$TMPDIR/plugin.json" internal/assets/claude/.codex-plugin/plugin.json > /dev/null 2>&1; then \
+		echo "FAIL: Codex skills or dual-manifest files are stale — run 'make sync-codex-skills'"; \
+		diff -rq "$$TMPDIR/before" internal/assets/codex/skills/ || true; \
+		diff -q "$$TMPDIR/codex.json" internal/assets/claude/hooks/codex.json || true; \
+		diff -q "$$TMPDIR/plugin.json" internal/assets/claude/.codex-plugin/plugin.json || true; \
+		rm -rf internal/assets/codex/skills && cp -r "$$TMPDIR/before" internal/assets/codex/skills; \
+		cp "$$TMPDIR/codex.json" internal/assets/claude/hooks/codex.json; \
+		cp "$$TMPDIR/plugin.json" internal/assets/claude/.codex-plugin/plugin.json; \
+		rm -rf "$$TMPDIR"; \
+		exit 1; \
+	fi; \
+	rm -rf "$$TMPDIR"; \
+	echo "Codex skills are in sync."
+
+## codex-plugin-install: Register this checkout as a Codex marketplace and install the ctx plugin
+codex-plugin-install:
+	@codex plugin marketplace add "$$(pwd)" && codex plugin add ctx@activememory-ctx
+	@echo "Open codex and run /hooks to review and trust the ctx hooks."
 
 ## check-why: Verify embedded why docs match source docs
 check-why:

@@ -128,6 +128,71 @@ write.hook-agents-summary:
     AGENTS.md is now available for all AI coding tools.
     Tools that read AGENTS.md natively: Codex, Gemini CLI, OpenCode,
     Claude Code, GitHub Copilot CLI.
+write.hook-codex-created:
+  short: '  ✓ %s'
+write.hook-codex-merged:
+  short: '  ✓ %s (merged)'
+write.hook-codex-skipped:
+  short: '  ○ %s (up to date, skipped)'
+write.hook-codex-rejected:
+  short: '  ✗ %s (not ctx-managed, skipped)'
+write.hook-codex-plugin-active:
+  short: |-
+    The ctx Codex plugin is enabled in ~/.codex/config.toml, so hooks,
+    MCP, and skills already reach every project. Skipping .codex/ and
+    .agents/skills/ (Codex would run each hook twice); deploying AGENTS.md only.
+write.hook-codex-project-also:
+  short: |-
+    warning: this project also has a deployed .codex/hooks.json, so
+    Codex will run every ctx hook twice (plugin + project layers).
+    Keep one route: delete .codex/hooks.json and .agents/skills/ to
+    rely on the plugin, or disable the plugin to keep the project files.
+write.hook-codex-plugin-wrong-variant:
+  short: |-
+    warning: a ctx plugin is enabled in ~/.codex/config.toml but its
+    installed cache is not the Codex variant (no .codex-plugin/ —
+    typically the legacy Claude Code variant from a marketplace
+    source without .agents/plugins/marketplace.json). Its hooks
+    cannot run under Codex, so the project-local integration is
+    deployed instead. To fix the plugin:
+      codex plugin remove ctx@activememory-ctx
+      codex plugin marketplace remove activememory-ctx
+      codex plugin marketplace add <source with .agents/plugins/marketplace.json>
+      codex plugin add ctx@activememory-ctx
+write.hook-codex-summary:
+  short: |-
+    Codex will now:
+      1. Load the ctx context packet on session start (and after compaction)
+      2. Nudge persistence on every prompt (tasks, decisions, learnings, journal)
+      3. Gate tool use until context is loaded; block non-PATH ctx binaries
+      4. Track task completion after edits and capture commits
+      5. Import the session journal on session end
+
+    Hooks:  .codex/hooks.json
+    MCP:    .codex/config.toml ([mcp_servers.ctx])
+    AGENTS: AGENTS.md
+    Skills: .agents/skills/
+
+    Open codex and run /hooks to review and trust the ctx hooks.
+write.hook-codex-summary-plugin:
+  short: |-
+    The ctx Codex plugin is enabled, so hooks, the MCP server, and
+    skills come from the installed plugin (nothing project-local to
+    trust). Deployed here:
+
+    AGENTS: AGENTS.md
+write.hook-codex-state:
+  short: 'Codex: %s'
+write.hook-codex-state-configured:
+  short: 'project-local integration configured (.codex/hooks.json present)'
+write.hook-codex-state-absent:
+  short: codex binary not found on PATH (install from https://github.com/openai/codex)
+write.hook-codex-state-not-installed:
+  short: codex detected; ctx plugin not installed
+write.hook-codex-state-not-enabled:
+  short: codex detected; ctx plugin installed but not enabled in ~/.codex/config.toml
+write.hook-codex-state-ready:
+  short: codex detected; ctx plugin installed and enabled
 write.hook-copilot-cli-created:
   short: '  ✓ %s'
 write.hook-copilot-cli-skipped:
@@ -387,6 +452,10 @@ write.init-claude-absent:
     If you don't use Claude Code, ignore this. ctx works
     with Cursor, Kiro, Cline, Aider, Copilot, and Windsurf
     as well (see `ctx setup --help`).
+write.init-codex-hint:
+  short: |
+
+    Codex detected: run 'ctx setup codex --write' to wire hooks, MCP, and skills.
 write.init-claude-plugin-missing:
   short: |
 

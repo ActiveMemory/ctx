@@ -60,3 +60,14 @@ const (
 	// for Cline.
 	SteeringPathCline = ".clinerules/"
 )
+
+// Codex configuration paths (project-local route).
+const (
+	// HooksPathCodex is the deployed hooks manifest path.
+	HooksPathCodex = ".codex/hooks.json"
+	// MCPConfigPathCodex is the deployed project config path
+	// that receives the [mcp_servers.ctx] table.
+	MCPConfigPathCodex = ".codex/config.toml"
+	// SkillsPathCodex is the deployed skills directory.
+	SkillsPathCodex = ".agents/skills/"
+)

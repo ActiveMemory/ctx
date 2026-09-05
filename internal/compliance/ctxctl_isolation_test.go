@@ -53,26 +53,31 @@ func TestCtxBinaryExcludesCtxctl(t *testing.T) {
 	}
 }
 
-// TestShippedHooksExcludeCheckAudit asserts the shipped
-// hooks.json (installed by `ctx setup`) wires no check-audit
-// hook. The audit channel is maintainer-only; taxing every
-// end user's every prompt with an audit relay they have no
-// producer for is exactly what the ctxctl migration removed.
+// TestShippedHooksExcludeCheckAudit asserts that no shipped
+// hooks.json (Claude Code plugin, Codex plugin — both installed
+// by `ctx setup`) wires a check-audit hook. The audit channel is
+// maintainer-only; taxing every end user's every prompt with an
+// audit relay they have no producer for is exactly what the
+// ctxctl migration removed.
 func TestShippedHooksExcludeCheckAudit(t *testing.T) {
 	root := projectRoot(t)
-	hooksPath := filepath.Join(
-		root, "internal", "assets", "claude", "hooks", "hooks.json",
-	)
 
-	data, err := os.ReadFile(filepath.Clean(hooksPath))
-	if err != nil {
-		t.Fatalf("read shipped hooks.json: %v", err)
-	}
+	for _, manifest := range shippedHookManifests {
+		rel := filepath.Join(manifest.segments...)
+		t.Run(rel, func(t *testing.T) {
+			hooksPath := filepath.Join(root, rel)
 
-	if strings.Contains(string(data), "check-audit") {
-		t.Errorf(
-			"shipped hooks.json contains \"check-audit\"; the " +
-				"audit relay must not ship to end users",
-		)
+			data, err := os.ReadFile(filepath.Clean(hooksPath))
+			if err != nil {
+				t.Fatalf("read shipped hooks.json: %v", err)
+			}
+
+			if strings.Contains(string(data), "check-audit") {
+				t.Errorf(
+					"shipped hooks.json contains \"check-audit\"; the " +
+						"audit relay must not ship to end users",
+				)
+			}
+		})
 	}
 }

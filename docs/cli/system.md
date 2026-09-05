@@ -13,9 +13,9 @@ icon: lucide/settings
 
 ### `ctx system`
 
-Hidden parent command that hosts Claude Code hook plumbing and a small
-set of session-lifecycle plumbing subcommands used by skills and editor
-integrations. The parent is registered without a visible group in
+Hidden parent command that hosts Claude Code and Codex hook plumbing
+and a small set of session-lifecycle plumbing subcommands used by skills
+and editor integrations. The parent is registered without a visible group in
 `ctx --help`; run `ctx system --help` to see its subcommands.
 
 ```bash
@@ -136,21 +136,26 @@ is restored/removed the next time the init merge runs.
 
 ## Hook Subcommands
 
-Hidden Claude Code hook handlers implementing the hook contract: read
+Hidden hook handlers implementing the Claude Code hook contract: read
 JSON from stdin, perform logic, emit output on stdout, exit 0. Block
-commands output JSON with a `decision` field.
+commands output JSON with a `decision` field. Codex uses the same
+contract, so the same handlers serve both tools; only the manifest that
+registers them differs.
 
-UserPromptSubmit hooks: `context-load-gate`, `check-context-size`,
+UserPromptSubmit hooks: `check-context-size`,
 `check-persistence`, `check-ceremony`, `check-journal`, `check-version`,
 `check-resource`, `check-knowledge`, `check-map-staleness`,
 `check-memory-drift`, `check-reminder`, `check-freshness`,
 `check-hub-sync`, `check-skill-discovery`,
 `heartbeat`.
 
-PreToolUse hooks: `block-non-path-ctx`, `block-dangerous-command`,
+PreToolUse hooks: `context-load-gate`, `block-non-path-ctx`,
 `qa-reminder`, `specs-nudge`.
 
 PostToolUse hooks: `post-commit`, `check-task-completion`.
 
-See [AI Tools](../operations/integrations.md#plugin-hooks) for
-registration details and the Claude Code plugin integration.
+See [AI Tools](../operations/integrations.md#plugin-hooks) for the
+Claude Code manifest and
+[OpenAI Codex](../operations/integrations.md#codex-hooks) for the Codex
+manifest (same handlers; `SessionStart` carries `ctx agent`, the
+planning matcher is `update_plan`, file edits match `apply_patch`).

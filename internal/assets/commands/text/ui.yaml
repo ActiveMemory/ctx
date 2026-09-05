@@ -560,6 +560,8 @@ write.steering-sync-error:
   short: 'Error: %s'
 write.steering-sync-summary:
   short: "\n%d written, %d skipped, %d errors"
+write.steering-sync-direct:
+  short: 'steering: %s consumes steering via ctx agent; nothing to sync'
 
 write.skill-installed:
   short: 'Installed %s → %s'

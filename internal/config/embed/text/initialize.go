@@ -198,6 +198,10 @@ const (
 	// through the dev-symlink install flow with user-scope
 	// guidance to avoid the local-install enablement gotcha.
 	DescKeyWriteInitClaudePluginMissing = "write.init-claude-plugin-missing"
+	// DescKeyWriteInitCodexHint is the one-line post-init hint shown
+	// when the codex binary is on PATH but neither the project-local
+	// hooks manifest nor the ctx Codex plugin is present.
+	DescKeyWriteInitCodexHint = "write.init-codex-hint"
 	// DescKeyWriteInitClaudeReady is shown when claude is
 	// present and the plugin is installed and enabled: a
 	// multi-line confirmation with plugin details (scope,

@@ -1,0 +1,14 @@
+{"timestamp":"2026-08-23T21:00:00.000Z","ordinal":0,"type":"session_meta","payload":{"session_id":"22222222-0000-4000-8000-000000000002","timestamp":"2026-08-23T21:00:00.000Z","cwd":"/home/user/projects/probe","originator":"codex_cli_rs","cli_version":"0.148.0","source":"cli","git":{"commit_hash":"e1a30a04db0c02edb1ae33f602349bb576fa46be","branch":"feat/codex","repository_url":"https://github.com/example/probe.git"}}}
+{"timestamp":"2026-08-23T21:00:01.000Z","ordinal":1,"type":"response_item","payload":{"type":"message","id":"msg_user_1","role":"user","content":[{"type":"input_text","text":"<environment_context>\n(trimmed)\n</environment_context>"},{"type":"input_text","text":"List the files in this directory"}]}}
+this line is not json at all
+{"timestamp":"2026-08-23T21:00:02.000Z","ordinal":3,"type":"turn_context","payload":{"turn_id":"t1","cwd":"/home/user/projects/probe","model":"gpt-5.5"}}
+{"timestamp":"2026-08-23T21:00:03.000Z","ordinal":4,"type":"response_item","payload":{"type":"function_call","id":"fc_1","call_id":"call_fc_1","name":"shell","arguments":"{\"command\":[\"ls\",\"-la\"],\"workdir\":\"/home/user/projects/probe\"}","status":"completed"}}
+{"timestamp":"2026-08-23T21:00:04.000Z","ordinal":5,"type":"response_item","payload":{"type":"function_call_output","id":"fco_1","call_id":"call_fc_1","output":"total 0\ndrwxr-xr-x  2 user user  64 Aug 23 21:00 .\n"}}
+{"timestamp":"2026-08-23T21:00:05.000Z","ordinal":6,"type":"response_item","payload":{"type":"local_shell_call","id":"lsc_1","call_id":"call_ls_1","status":"completed","action":{"type":"exec","command":["git","status","--short"],"timeout_ms":10000}}}
+{"timestamp":"2026-08-23T21:00:06.000Z","ordinal":7,"type":"response_item","payload":{"type":"function_call_output","id":"fco_2","call_id":"call_ls_1","output":"{\"output\":\"\",\"metadata\":{\"exit_code\":0,\"duration_seconds\":0.1}}"}}
+{"timestamp":"2026-08-23T21:00:07.000Z","ordinal":8,"type":"compacted","payload":{"message":"The user asked to list files; the directory is empty.","replacement_history":[]}}
+{"incomplete": true
+{"timestamp":"2026-08-23T21:00:08.000Z","ordinal":10,"type":"response_item","payload":{"type":"reasoning","id":"rs_1","summary":[],"encrypted_content":"gAAAAA"}}
+{"timestamp":"2026-08-23T21:00:09.000Z","ordinal":11,"type":"response_item","payload":{"type":"message","id":"msg_asst_1","role":"assistant","content":[{"type":"output_text","text":"The directory is empty."}],"phase":"final_answer"}}
+{"timestamp":"2026-08-23T21:00:10.000Z","ordinal":12,"type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":1000,"cached_input_tokens":200,"output_tokens":20,"total_tokens":1020},"last_token_usage":{"input_tokens":500,"cached_input_tokens":200,"output_tokens":10,"total_tokens":510}}}}
+{"timestamp":"2026-08-23T21:00:10.500Z","ordinal":13,"type":"event_msg","payload":{"type":"task_complete","turn_id":"t1","last_agent_message":"The directory is empty."}}

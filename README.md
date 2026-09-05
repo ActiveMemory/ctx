@@ -167,7 +167,7 @@ recipes are the right next stop.
 | [Recipes](https://ctx.ist/recipes/)             | Practical workflow guides              |
 | [CLI Reference](https://ctx.ist/cli/)           | All commands and options               |
 | [Context Files](https://ctx.ist/home/context-files/) | File formats and structure       |
-| [Integrations](https://ctx.ist/operations/integrations/) | Claude Code, Cursor, Aider setup |
+| [Integrations](https://ctx.ist/operations/integrations/) | Claude Code, Codex, OpenCode, Cursor, Aider setup |
 | [Operations](https://ctx.ist/operations/)       | Runbooks, day-to-day, hub deployment   |
 | [Security](https://ctx.ist/security/)           | Trust model, audit trail, permissions  |
 

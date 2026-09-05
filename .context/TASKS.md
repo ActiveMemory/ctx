@@ -3073,6 +3073,36 @@ E5[T15–20] E6[T21–23] = 23.
 
 - [ ] [E6] Sync + gates: copilot skill sync, measurement gate (T22), milestone gate (T21–T23). Plan: specs/plans/pd-m5.md #priority:medium #session:951e1535 #branch:design/pd-m5-triggers #added:2026-07-25
 
+### Codex integration (OpenAI Codex CLI as a full ctx peer of Claude Code)
+
+- [ ] [CX8] Windows parity for hook manifests: commandWindows overrides for the Codex manifest and a cross-shell ctx-absent guard for the Copilot CLI manifest command slot (command -v is POSIX-only; Windows runs PowerShell). Spec: specs/hook-surface-robustness.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:dcbade1d #added:2026-08-23-171002
+
+
+
+
+
+
+
+
+Spec: `specs/codex-integration.md`. Read it before starting any CX task.
+Codex 0.148 ships hooks + plugins as stable; its hook contract mirrors
+Claude Code's, so ctx's `ctx system` runtime is reused unchanged and the
+work is the delivery layer: plugin root, manifests, deployer, parser, docs.
+
+- [x] [CX1] Foundation: internal/config/codex constants, asset/setup/session/text keys, embed directives, plugin root internal/assets/codex (manifest, .mcp.json, hooks/hooks.json, generated skills), .agents/plugins/marketplace.json, hack/sync-codex-skills.sh + Makefile/version-sync targets. Spec: specs/codex-integration.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:ce5a8328 #added:2026-08-23-120739
+
+- [x] [CX2] Deployer: internal/codex (Home/Detect/MergeHooks/EnsureMCPTable) + internal/cli/setup/core/codex (hooks, config.toml MCP table, AGENTS.md, .agents/skills), ctx setup codex dispatch + text, ctx init hint, plugin-enabled short-circuit. Spec: specs/codex-integration.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:ce5a8328 #added:2026-08-23-120739
+
+- [x] [CX3] Journal parser: internal/journal/parser/codex*.go for $CODEX_HOME/sessions rollout-*.jsonl (session_meta, response_item, token_count), CodexSessionDirs in query.go, registry entry, fixture-backed tests. Spec: specs/codex-integration.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:ce5a8328 #added:2026-08-23-120739
+
+- [x] [CX4] Guards + steering fix: codex_test.go asset/parity guards, hooks-wiring guard over the Codex manifest, frontmatter skillTrees, version sync test; steering sync polite skip for claude/codex (closes the 'unsupported sync tool codex' bug). Spec: specs/codex-integration.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:ce5a8328 #added:2026-08-23-120739
+
+- [x] [CX5] Docs: docs/home/codex.md, setup/journal/system/steering CLI pages, integrations.md Codex section with drift-check comments, multi-tool recipe, getting-started tab, README, zensical nav, EXTENSION-POINTS. Spec: specs/codex-integration.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:ce5a8328 #added:2026-08-23-120739
+
+- [x] [CX6] Verification gate: make lint, make test, make audit green; live ctx setup codex --write + codex exec hook run (SessionStart context injection, UserPromptSubmit nudges, SessionEnd journal import) recorded in the PR; DECISIONS entries for plugin-root placement, TOML append strategy, skill generation, memories non-goal. Spec: specs/codex-integration.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:ce5a8328 #added:2026-08-23-120739
+
+- [ ] [CX7] Follow-up: Windows commandWindows overrides for the Codex hooks manifest (hooks currently require a POSIX shell with git on PATH). Spec: specs/codex-integration.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:ce5a8328 #added:2026-08-23-120739
+
 ## Phase PI — Pi CLI Integration
 
 Spec: `specs/pi-cli-integration.md`

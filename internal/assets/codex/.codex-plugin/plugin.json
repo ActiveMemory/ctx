@@ -1,0 +1,36 @@
+{
+  "name": "ctx",
+  "version": "0.8.1",
+  "description": "Persistent context for AI coding assistants",
+  "author": {
+    "name": "Context contributors",
+    "url": "https://ctx.ist"
+  },
+  "homepage": "https://ctx.ist",
+  "repository": "https://github.com/ActiveMemory/ctx",
+  "license": "Apache-2.0",
+  "keywords": [
+    "context",
+    "memory",
+    "persistence",
+    "decisions",
+    "learnings"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "ctx",
+    "shortDescription": "Persistent project memory for Codex",
+    "longDescription": "ctx keeps decisions, learnings, tasks, and conventions in a .context/ directory that travels with the repo. This plugin wires ctx into Codex: the context packet is injected at session start, lifecycle hooks nudge persistence and gate risky commands, the ctx MCP server exposes status/search/tasks, and the ctx-* skills (remember, wrap-up, commit, ...) are available as $ctx-<name>.",
+    "developerName": "Context contributors",
+    "category": "Developer Tools",
+    "websiteURL": "https://ctx.ist",
+    "defaultPrompt": [
+      "Do you remember what we were working on?",
+      "Let's wrap up: persist what we learned",
+      "What should we work on next?"
+    ],
+    "brandColor": "#1F6F8B"
+  }
+}

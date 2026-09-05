@@ -263,6 +263,11 @@ Shows context summary: files present, token estimate, and recent activity.
 With Claude Code (*and the `ctx` plugin installed*), context loads automatically
 via hooks.
 
+With **Codex**, install the `ctx` plugin (`codex plugin marketplace add
+ActiveMemory/ctx`, then `codex plugin add ctx@activememory-ctx`) or run
+`ctx setup codex --write`, then trust the hooks via `/hooks`. See
+[`ctx` for Codex](codex.md).
+
 With **VS Code Copilot Chat**, install the
 [`ctx` extension](../operations/integrations.md#vs-code-chat-extension-ctx) and use
 `@ctx /status`, `@ctx /agent`, and other slash commands directly in chat.
@@ -301,9 +306,20 @@ with `ctx setup`:
     # Creates .vscode/mcp.json and syncs steering files
     ```
 
-This registers the `ctx` MCP server and syncs any
-[steering files](../cli/steering.md) into the tool's
-native format. Re-run after adding or changing steering files.
+=== "Codex"
+
+    ```bash
+    ctx setup codex --write
+    # Creates .codex/hooks.json, .codex/config.toml ([mcp_servers.ctx]),
+    # AGENTS.md, and .agents/skills/ctx-*/ ; then run /hooks in codex
+    ```
+
+This registers the `ctx` MCP server and, for Kiro, Cursor, and Cline,
+syncs any [steering files](../cli/steering.md) into the tool's native
+format. Re-run after adding or changing steering files. Codex has no
+native rules format; it receives steering inside the `SessionStart`
+context packet instead (or use the [plugin route](codex.md#route-a-the-ctx-plugin)
+and skip the project-local files entirely).
 
 ### 6. Verify It Works
 

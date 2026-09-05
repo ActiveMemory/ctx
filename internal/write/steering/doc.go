@@ -29,9 +29,11 @@
 //     steering files and their inclusion-rule
 //     match results against a sample prompt.
 //   - **Sync**: [SyncWritten], [SyncSkipped],
-//     [SyncError], [SyncSummary]. Per-tool
-//     progress narration during
-//     `ctx steering sync`.
+//     [SyncError], [SyncSummary], [SyncDirect].
+//     Per-tool progress narration during
+//     `ctx steering sync`; [SyncDirect] is the
+//     polite no-op line for tools that consume
+//     steering via ctx agent (claude, codex).
 //
 // # Concurrency
 //

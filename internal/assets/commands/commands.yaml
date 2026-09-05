@@ -454,14 +454,21 @@ setup:
     for integrating Context with AI tools.
 
     Supported tools:
+      agents       - AGENTS.md (universal agent instructions)
       claude-code  - Anthropic's Claude Code CLI (use plugin instead)
+      codex        - OpenAI Codex CLI (hooks, MCP, skills)
       cursor       - Cursor IDE
+      kiro         - Kiro IDE
+      cline        - Cline (VS Code extension)
       aider        - Aider AI coding assistant
-      copilot      - GitHub Copilot
+      copilot      - GitHub Copilot (VS Code extension)
+      copilot-cli  - GitHub Copilot CLI (terminal agent)
+      opencode     - OpenCode terminal AI agent
       windsurf     - Windsurf IDE
 
     Use --write to generate the configuration file directly:
       ctx setup copilot --write    # Creates .github/copilot-instructions.md
+      ctx setup codex --write      # Creates .codex/, .agents/skills/, AGENTS.md
 
     Example:
       ctx setup cursor

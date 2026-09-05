@@ -38,6 +38,9 @@
 // flag. [Run] calls [steering.SyncAll] when --all is
 // set, or resolves the target tool via [resolve.Tool]
 // and calls [steering.SyncTool] for a single tool.
-// Both paths delegate to [cli/steering/core/sync] for
-// report formatting.
+// When the resolved tool consumes steering directly
+// ([steering.ConsumesDirectly]: claude, claude-code,
+// codex) [Run] prints an info line and exits 0
+// without syncing. Both sync paths delegate to
+// [cli/steering/core/sync] for report formatting.
 package synccmd

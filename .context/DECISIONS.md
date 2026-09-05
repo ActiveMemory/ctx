@@ -1,5 +1,18 @@
 # Decisions
 
+<!-- INDEX:START -->
+| Date | Decision |
+|----|--------|
+| 2026-08-23 | Codex memories are out of scope for the ctx memory bridge |
+| 2026-08-23 | ctx never parses Codex config.toml: it appends the [mcp_servers.ctx] table and scans header lines |
+| 2026-08-23 | Codex plugin root lives at internal/assets/codex with a repo marketplace at .agents/plugins/marketplace.json |
+| 2026-07-25 | Beyond a byte ceiling, knowledge content should become tooling, not more Markdown |
+| 2026-07-25 | M5 knowledge health is two suggest-only signals: foldable root (staging count) and heavy page (bytes) |
+| 2026-07-25 | Theme declaration via the Themes section keyword, on all three canonical kinds |
+| 2026-07-25 | ctx convention add requires --section; no default; placeholders rejected (strict) |
+| 2026-07-19 | M4 conventions digestion: curated ## -section taxonomy, unified into the entry-kind mover |
+<!-- INDEX:END -->
+
 <!-- DECISION FORMATS
 
 ## Quick Format (Y-Statement)
@@ -44,6 +57,48 @@ For significant decisions:
 ✗ No real alternatives existed
 
 -->
+
+## [2026-08-23-120839] Codex memories are out of scope for the ctx memory bridge
+
+**Status**: Accepted
+
+**Context**: ctx bridges Claude Code auto-memory (~/.claude/projects/<slug>/memory/MEMORY.md) into .context. Codex memories live under ~/.codex/memories as SQLite-backed generated state, are off by default (features.memories), and OpenAI documents them as not to be edited by hand.
+
+**Decision**: Codex memories are out of scope for the ctx memory bridge
+
+**Rationale**: There is no stable, documented file contract to mirror; mirroring opaque generated state would be fragile and the feature is opt-in and disabled by default.
+
+**Consequence**: ctx setup codex delivers hooks, MCP, skills, AGENTS.md, and journal import, but not a memory bridge. Revisit when OpenAI documents the memory file format.
+
+---
+
+## [2026-08-23-120839] ctx never parses Codex config.toml: it appends the [mcp_servers.ctx] table and scans header lines
+
+**Status**: Accepted
+
+**Context**: ctx setup codex --write must register the ctx MCP server in .codex/config.toml and detect whether the ctx plugin is enabled in ~/.codex/config.toml. ctx has no TOML dependency; both files are user-owned and carry comments and ordering.
+
+**Decision**: ctx never parses Codex config.toml: it appends the [mcp_servers.ctx] table and scans header lines
+
+**Rationale**: A read-modify-write through a TOML library would drop comments and reorder tables in a file the user edits by hand. Appending a table header at EOF is always valid TOML, and skipping when the exact header line already exists is sufficient for idempotency. Detection only needs the plugin table header and its enabled key. This keeps go.mod free of a new dependency for a narrow need.
+
+**Consequence**: ctx does not update an existing [mcp_servers.ctx] body (the user owns it). Detection is a line scan, so unusual TOML (the header inside a multi-line string) could misdetect; acceptable for config files Codex itself writes. If ctx ever needs to rewrite Codex config, revisit with a TOML library.
+
+---
+
+## [2026-08-23-120839] Codex plugin root lives at internal/assets/codex with a repo marketplace at .agents/plugins/marketplace.json
+
+**Status**: Accepted
+
+**Context**: Codex 0.148 ships plugins (.codex-plugin/plugin.json + hooks/hooks.json + skills/ + .mcp.json) and repo marketplaces (.agents/plugins/marketplace.json) as stable features, with a hook contract that mirrors Claude Code's. ctx already delivers Claude support as a plugin rooted at internal/assets/claude, referenced by .claude-plugin/marketplace.json.
+
+**Decision**: Codex plugin root lives at internal/assets/codex with a repo marketplace at .agents/plugins/marketplace.json
+
+**Rationale**: Mirroring the Claude layout (plugin root under internal/assets/<tool>, marketplace at the repo root) gives one-command install (codex plugin marketplace add ActiveMemory/ctx; codex plugin add ctx@activememory-ctx) and lets the same embedded hooks.json/skills serve the project-local route (ctx setup codex --write). Putting it under internal/assets/integrations/ like Copilot CLI would have broken the marketplace source path convention (./internal/assets/<plugin-root>) and split the Claude/Codex symmetry.
+
+**Consequence**: Two plugin roots must stay version-synced (make sync-version / check-version-sync cover both plus the Codex marketplace). Codex skills are generated from the Claude skills by hack/sync-codex-skills.sh (allowed-tools stripped; Claude-only skills excluded) and guarded by make check-codex-skills, the same way Copilot CLI skills are.
+
+---
 
 ## [2026-07-25-190410] Beyond a byte ceiling, knowledge content should become tooling, not more Markdown
 

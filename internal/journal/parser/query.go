@@ -20,9 +20,10 @@ import (
 // findSessionsWithFilter scans common locations and additional directories
 // for session files, applying an optional filter.
 //
-// It checks ~/.claude/projects/ (Claude Code default) and any additional
-// directories provided. Results are deduplicated by session ID and sorted
-// by start time (newest first).
+// It checks ~/.claude/projects/ (Claude Code default), the Copilot and
+// Codex session directories, and any additional directories provided.
+// Results are deduplicated by session ID and sorted by start time
+// (newest first).
 //
 // Parameters:
 //   - filter: Optional function to filter sessions (nil includes all)
@@ -69,6 +70,11 @@ func findSessionsWithFilter(
 
 	// Check Copilot CLI session directories (~/.copilot/ or $COPILOT_HOME)
 	for _, sessionDir := range CopilotCLISessionDirs() {
+		scanOnce(sessionDir)
+	}
+
+	// Check Codex rollout directory (~/.codex/sessions or $CODEX_HOME)
+	for _, sessionDir := range CodexSessionDirs() {
 		scanOnce(sessionDir)
 	}
 

@@ -115,7 +115,7 @@ ctx commit                           # works (git operations also from here)
 | `$PWD/.context/` exists but is a regular file (not a directory) | Refuse with the same `NoContextHere` error; the basename string is `.context` but the type is wrong. |
 | `$PWD/.context/` exists, `$PWD/.git/` absent | The git-required gate fires first (existing behavior). |
 | `ctx init` in a fresh `git init`'d directory with no `.context/` | Init creates `.context/` and succeeds. No env-var resolution gate. |
-| Hook subprocess with unreliable CWD | Hook script must `cd "${CLAUDE_PROJECT_DIR:?missing}"` (or equivalent for the host tool) before invoking `ctx`. Loud failure on empty `CLAUDE_PROJECT_DIR`. |
+| Hook subprocess with unreliable CWD | Hook command must anchor to the project root before invoking `ctx` (Claude: guard `[ -d "${CLAUDE_PROJECT_DIR:-}" ]` then `cd "$CLAUDE_PROJECT_DIR"`; Codex: `cd "$(git rev-parse --show-toplevel 2>/dev/null \|\| pwd)"`). Silent exit 0 when `CLAUDE_PROJECT_DIR` is unset — the manifest is not running under Claude Code (a Codex install of the same plugin root loads it), so it is not this hook's job; loud failure (deterministic exit 1 + remedy on stderr) when the variable is set but its directory is gone — never `${VAR:?}`, whose abort exit code is shell-dependent (2 under dash, which hosts treat as a block). |
 | CI replay (`CTX_TASK_COMMIT` / `GITHUB_SHA` set) | Unchanged. These env vars override the resolved git HEAD for handover provenance only; they do not influence context-dir resolution. |
 
 ### Validation Rules
