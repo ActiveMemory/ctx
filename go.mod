@@ -6,7 +6,7 @@ require (
 	github.com/hashicorp/raft v1.7.3
 	github.com/hashicorp/raft-boltdb/v2 v2.3.1
 	github.com/spf13/cobra v1.10.2
-	golang.org/x/text v0.40.0
+	golang.org/x/text v0.41.0
 	golang.org/x/tools v0.48.0
 	google.golang.org/grpc v1.83.1
 	gopkg.in/yaml.v3 v3.0.1
