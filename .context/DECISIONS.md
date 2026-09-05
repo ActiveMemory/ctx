@@ -58,6 +58,48 @@ For significant decisions:
 
 -->
 
+## [2026-09-05-195906] Pi extension deploys as a flat single file (.pi/extensions/ctx.ts) with no package.json
+
+**Status**: Accepted
+
+**Context**: Pi loads both flat .pi/extensions/*.ts and subdirectory .pi/extensions/<name>/index.ts extensions; only the subdirectory form can carry a package.json with runtime dependencies. Decided 2026-08-23.
+
+**Decision**: Pi extension deploys as a flat single file (.pi/extensions/ctx.ts) with no package.json
+
+**Rationale**: The shim needs only a type-only import of @earendil-works/pi-coding-agent plus node:child_process, so a flat file keeps exact symmetry with the OpenCode plugin deploy (one managed path, refresh in place, the same validate semantics) and no npm install step for users.
+
+**Consequence**: ctx setup pi manages exactly one extension path. A future extension that needs runtime dependencies must move to the subdirectory form. node:child_process stays mandatory because the Pi exec helper has no stdin pipe for the hook envelope.
+
+---
+
+## [2026-09-05-195906] Pi re-injection predicate scans the live context instead of a flag or a custom compaction summary
+
+**Status**: Accepted
+
+**Context**: After Pi compaction the injected packet is either folded into the lossy LLM summary or survives in the kept tail. Alternatives were a boolean injected flag in extension memory and a custom session_before_compact summary owned by ctx. Decided 2026-08-23; shipped in 694f6d37.
+
+**Decision**: Pi re-injection predicate scans the live context instead of a flag or a custom compaction summary
+
+**Rationale**: sessionManager.buildContextEntries() (summary + kept tail + post-compaction entries) is the ground truth for what the model can still see, so scanning it for the ctx customType re-injects exactly when the packet is gone and never duplicates one that survived. A flag is lost on extension teardown (/new /resume /fork /reload), and a custom summary would replace the Pi summary with undocumented cross-extension precedence.
+
+**Consequence**: No extension state decides injection; only the packet cache is in memory and is re-warmed on session_start. Known edge: an overflow compaction with willRetry skips before_agent_start, so re-injection waits for the next prompt.
+
+---
+
+## [2026-09-05-195906] Pi extension injects the ctx packet with display:true (visible in the TUI)
+
+**Status**: Accepted
+
+**Context**: Pi before_agent_start can inject a persistent custom_message with display true or false; the ctx packet could be hidden from the user like a system-prompt fragment. Decided 2026-08-23 during the Pi integration design (specs/pi-cli-integration.md, resolved open question 1).
+
+**Decision**: Pi extension injects the ctx packet with display:true (visible in the TUI)
+
+**Rationale**: Transparency: the user sees exactly what ctx put in front of the model, and an injection bug (duplicate, stale, missing) shows in the TUI instead of failing silently.
+
+**Consequence**: The packet appears in the Pi transcript on the first prompt and after every re-injection; any future nudge-to-LLM change (PI.8 c) keeps the same visibility rule.
+
+---
+
 ## [2026-08-23-120839] Codex memories are out of scope for the ctx memory bridge
 
 **Status**: Accepted

@@ -822,9 +822,10 @@ The extension wires Pi lifecycle events to `ctx system`:
 
 - **`session_start`**: warms the ctx agent packet off the prompt path.
 - **`before_agent_start`**: injects the packet as a persistent message
-  when no ctx-injected message exists after the most recent compaction
-  (fresh sessions inject on the first turn; re-injection after
-  compaction is a breadcrumb into `.context/`).
+  when no ctx message exists in the live context (summary + kept tail
+  + post-compaction entries): fresh sessions inject on the first turn,
+  and a packet folded into the compaction summary is re-injected as a
+  breadcrumb into `.context/`.
 - **`tool_result` (bash, on `git commit`, not `isError`)**: runs
   `ctx system post-commit`.
 - **`tool_result` (edit/write, not `isError`)**: runs

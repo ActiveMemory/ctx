@@ -28,6 +28,16 @@ DO NOT UPDATE FOR:
 -->
 
 
+## [2026-09-05-195906] golangci-lint exits 7 with 0 issues when tools/typecheck/*/node_modules exists on this Windows machine
+
+**Context**: After npm ci in tools/typecheck/pi (the CI typecheck gate run locally), golangci-lint run ./... printed 0 issues but exited 7 with: typechecking error: pattern ./...: open tools\typecheck\pi\node_modules\@earendil-works\pi-coding-agent\dist\extensions: The system cannot find the file specified. Deleting node_modules restored exit 0 with the tree otherwise unchanged.
+
+**Lesson**: The golangci-lint package loader walks ./... into node_modules and fails on a directory it cannot open on Windows; the exit code, not the printed issue count, is the gate signal. Upstream CI is unaffected because lint and typecheck run in separate jobs.
+
+**Application**: Run the local typecheck in tools/typecheck/<tool>, then delete its node_modules before golangci-lint (or lint first). Treat a non-zero golangci exit with 0 issues as an environment failure, not a clean run.
+
+---
+
 ## [2026-08-23-204632] Windows git over HTTPS fails with SEC_E_NO_CREDENTIALS unless the openssl backend is pinned
 
 **Context**: During the pi integration, every `git fetch`/`ls-remote` over an https remote on this Windows machine failed with `schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030e)` - git's default TLS (schannel) has no usable credential state here. `gh` (own TLS stack) worked fine, and SSH keys were rejected, so the failure looked like a credentials/remote problem.

@@ -13,7 +13,7 @@ Load the full context packet for AI consumption.
 
 ## When NOT to Use
 
-- The plugin hook already runs `ctx agent` on session start:
+- The tool integration already runs `ctx agent` on session start:
   you rarely need to invoke this manually
 - Don't run it just to "refresh" if you already have the context loaded in
   this session

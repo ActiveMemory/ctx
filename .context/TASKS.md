@@ -3116,7 +3116,7 @@ embedded TS shim + bundled skills + shared AGENTS.md template.
 - [ ] Read `specs/pi-cli-integration.md` before starting any PI task.
   #added:2026-08-23-151000
 - [x] PI.1: Embedded assets — `internal/assets/integrations/pi/extension/ctx.ts`
-  (thin shim: before_agent_start branch-scan packet injection,
+  (thin shim: before_agent_start live-context-scan packet injection,
   session_start warm-up cache, session_compact cache drop, tool_result
   post-commit / check-task-completion with isError gating, agent_settled
   check-persistence; hook-JSON envelope on piped stdin) and
@@ -3172,7 +3172,9 @@ embedded TS shim + bundled skills + shared AGENTS.md template.
   branch audit (2026-08-23, verdict ship-ready after MAJOR 1, which is
   fixed on-branch): (a) post-compaction re-warm runs `ctx agent` inline on
   the prompt path (up to 15s) — consider re-warming inside the
-  session_compact handler instead; (b) embedded assets are not EOL-pinned
+  session_compact handler instead, and cache the fetch promise rather than
+  the packet so a first prompt that outruns the warm-up cannot spawn a
+  second `ctx agent` (review 2026-09-05); (b) embedded assets are not EOL-pinned
   (no .gitattributes; Windows builds embed CRLF skills vs LF on CI —
   cross-binary refresh flapping; add `internal/assets/** text eol=lf`
   pin, repo-wide pre-existing hazard); (c) hook nudge stdout is discarded —
@@ -3180,5 +3182,19 @@ embedded TS shim + bundled skills + shared AGENTS.md template.
   tool result and reach the LLM (OpenCode parity chose .quiet(); design
   decision, not a bug); (d) tools/typecheck/pi/tsconfig.json could mirror
   the opencode twin's explicit `paths` mapping for @earendil-works/pi-coding-agent
-  (resolution works today via node_modules probing; hardening only)
+  (resolution works today via node_modules probing; hardening only);
+  (e) extract a shared deploy helper for the pi/opencode twins — skill.go
+  and validate.go differ only by package name and constants (review
+  round 2 suggestion, 2026-09-05)
   #priority:low #added:2026-08-23-221600
+- [x] PI.9: Review round 2 (maintainer nits on PR #161, 2026-09-05): docs
+  re-injection predicate reworded to the live-context scan (docs/home/pi.md,
+  docs/operations/integrations.md); spec latency claim softened (cache miss
+  runs the fetch on the prompt path, 15s bound); "plugin hook" -> "tool
+  integration" in ctx-agent SKILL.md (pi + opencode trees);
+  TestPiSkillsMirrorOpenCode byte-identity guard over the mirrored skill
+  trees; exact 0.84.2 pin in tools/typecheck/pi/package.json + lockfile
+  root. Preceded by the upstream main merge (9520e171): 7 shared-insertion
+  conflicts resolved, zero new test failures vs the main baseline (28
+  pre-existing Windows-environment packages on both). site/ rebuild still
+  deferred to the canonical build machine #added:2026-09-05-194204 #completed:2026-09-05

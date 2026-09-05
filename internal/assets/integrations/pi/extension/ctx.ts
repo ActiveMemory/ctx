@@ -22,17 +22,19 @@
 // (buildContextEntries: summary + kept tail + post-compaction entries),
 // so a packet that survived into the kept tail of a recent compaction
 // suppresses re-injection, a folded-away packet triggers it, and
-// extension-instance teardown on /new /resume /fork /reload (which resets
-// all in-memory state) can only cause an extra injection, never a missed
-// one. We deliberately do NOT take ownership of the Pi LLM summary via
+// extension-instance teardown on /new /resume /fork /reload resets only
+// the packet cache (re-warmed on session_start): the decision is derived
+// from live session state, so a reset never causes a missed or duplicate
+// injection. We deliberately do NOT take ownership of the Pi LLM summary via
 // session_before_compact: a custom summary replaces Pi's, and cross-
 // extension precedence is undocumented.
 //
-// The packet is produced once at session_start (warm-up, off the prompt
-// path) and cached; the cache is dropped on session_compact so the next
-// re-injection is fresh. All subprocess calls pass ctx.signal and a
-// timeout so Esc cancels cleanly; non-zero exits are swallowed (nothrow)
-// and an absent `ctx` binary makes the extension no-op silently.
+// The packet is produced at session_start (warm-up, off the prompt path)
+// and cached, with a fallback fetch on the prompt path on a cache miss;
+// the cache is dropped on session_compact so the next re-injection is
+// fresh. All subprocess calls pass ctx.signal and a timeout so Esc
+// cancels cleanly; non-zero exits are swallowed (nothrow) and an absent
+// `ctx` binary makes the extension no-op silently.
 //
 // Tool name strings target Pi's built-ins: `bash` (shell), `edit`,
 // `write`. A failed tool (isError: true) never triggers post-commit —

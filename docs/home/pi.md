@@ -82,16 +82,17 @@ do anything; it just works.
 | Event | What fires | What it does |
 |-------|-----------|--------------|
 | Session start | `session_start` | Warms the ctx agent packet off the prompt path |
-| First prompt / after compaction | `before_agent_start` | Injects the packet as a persistent message when no ctx-injected message exists after the most recent compaction |
+| First prompt / after compaction | `before_agent_start` | Injects the packet as a persistent message when no ctx message exists in the live context (summary + kept tail + post-compaction entries) |
 | After `git commit` | `tool_result` (bash) | Runs `ctx system post-commit` to capture context state (failed commits are ignored) |
 | After file edit | `tool_result` (edit/write) | Runs `ctx system check-task-completion` to detect silent task completions |
 | Agent settled | `agent_settled` | Runs `ctx system check-persistence` |
 
 The compaction behavior matters most. When Pi compresses your context
-window (`/compact` or auto-compaction), the injected packet ages past
-the kept window and is folded into the lossy summary. The extension
-re-injects a fresh packet on the next prompt so the agent keeps
-breadcrumbs back to your `.context/` directory and its file inventory.
+window (`/compact` or auto-compaction) and the injected packet ages
+past the kept window, it is folded into the lossy summary. The
+extension then re-injects a fresh packet on the next prompt so the
+agent keeps breadcrumbs back to your `.context/` directory and its
+file inventory.
 
 Pi intentionally has no built-in MCP, so there is no MCP server to
 register; the extension is the lifecycle channel.

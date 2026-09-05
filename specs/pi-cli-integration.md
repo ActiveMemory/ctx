@@ -23,8 +23,9 @@ bash**. Workflow behavior moves to four surfaces:
    - `agent_settled` — fired when Pi will not continue running automatically
    - On `/new`, `/resume`, `/fork`, and `/reload` Pi tears down the extension
      instance (`session_shutdown` → reload → `session_start`), so in-memory
-     extension state resets — flag loss can only cause an extra injection,
-     never a missed one
+     extension state resets — only the packet cache lives there (re-warmed
+     on `session_start`); the injection decision is derived from live
+     session state, so a reset never causes a missed or duplicate injection
    - `ExtensionContext` exposes `ctx.cwd`, `ctx.hasUI`,
      `ctx.isProjectTrusted()`, `ctx.sessionManager`, and `ctx.signal`
    - Available imports: `@earendil-works/pi-coding-agent` (types), `typebox`,
@@ -127,10 +128,13 @@ Design notes:
   does not pass through `before_agent_start`, so re-injection waits for the
   next user prompt — accepted.
 - **Latency:** the packet is produced once at `session_start` (warm-up) and
-  injected from cache on `before_agent_start`, so the prompt path never waits
-  on `ctx agent`. All subprocess calls receive `ctx.signal` and a timeout so
-  Esc cancels cleanly; swallowed non-zero exits (nothrow equivalent), bounded
-  output. If the `ctx` binary is absent, the extension no-ops silently.
+  injected from cache on `before_agent_start`, so the first prompt normally
+  injects from cache. On a cache miss (a first prompt that outruns the
+  warm-up, or the first prompt after `session_compact` drops the cache) the
+  fetch runs on the prompt path, bounded by the 15s subprocess timeout. All
+  subprocess calls receive `ctx.signal` and a timeout so Esc cancels cleanly;
+  swallowed non-zero exits (nothrow equivalent), bounded output. If the `ctx`
+  binary is absent, the extension no-ops silently.
 - Unrecognized tool names silently no-op. Tool-name sets are pinned to Pi's
   built-ins (`bash`; `edit`, `write`) — do **not** carry OpenCode's
   `shell`/`file_edit` names. Verify against Pi's docs when Pi bumps.
@@ -143,8 +147,8 @@ Design notes:
 ```
 internal/assets/integrations/pi/
 ├── extension/
-│   └── ctx.ts            # Thin shim extension (~150 lines with envelope +
-│                         # live-context scan + isError gating)
+│   └── ctx.ts            # Thin shim extension (envelope + live-context
+│                         # scan + isError gating)
 └── skills/               # Same bundled skill set as OpenCode (10 skills)
     ├── ctx-agent/SKILL.md
     ├── ctx-handover/SKILL.md
@@ -235,8 +239,11 @@ positional tool arg already exist):
   fresh deploy, refresh-in-place on drift (seed arbitrary content at the
   managed path, assert overwrite), refuse on symlink/non-regular target,
   deterministic skill ordering.
-- Asset linkage: embedded Pi extension + skills present; deploy constants match
-  embedded paths (extend the existing assets/embed linkage test pattern).
+- Asset guards: `deploy_test.go` asserts each deployed file is byte-equal to
+  its embedded source; `internal/assets/read/skill/frontmatter_test.go` covers
+  the Pi skill tree via `skillTrees`; `internal/assets/pi_test.go`
+  (`TestPiSkillsMirrorOpenCode`) freezes the Pi/OpenCode skill trees
+  byte-for-byte.
 - `TestDescKeyYAMLLinkage` green (YAML keys ↔ DescKey constants).
 - Full validation suite before declaring complete: `make build`, `make lint`,
   `go test ./...`.
