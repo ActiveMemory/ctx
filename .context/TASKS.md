@@ -3198,3 +3198,7 @@ embedded TS shim + bundled skills + shared AGENTS.md template.
   conflicts resolved, zero new test failures vs the main baseline (28
   pre-existing Windows-environment packages on both). site/ rebuild still
   deferred to the canonical build machine #added:2026-09-05-194204 #completed:2026-09-05
+
+### Phase PI
+
+- [ ] PI.10: Live Pi LLM round-trip on a working-provider machine (spec verification step 3): first prompt injects the packet with display:true; a successful git commit fires post-commit and a failed one does not; /compact then next prompt re-injects; /skill:ctx-status reachable. PI.6 records the block (gx10-spark provider unreachable here); record the result here when run. Spec: specs/pi-cli-integration.md #priority:medium #session:3c5a5cbe #branch:feat/pi-cli-integration #commit:6288c227 #added:2026-09-05-203004

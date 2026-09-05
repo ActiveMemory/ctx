@@ -28,6 +28,36 @@ DO NOT UPDATE FOR:
 -->
 
 
+## [2026-09-05-202947] Concurrent tool-integration branches collide at a fixed set of insertion points
+
+**Context**: The Pi and Codex branches conflicted in exactly seven files, every one a place where each ctx setup <tool> integration adds a line or block; git auto-merged the rest.
+
+**Lesson**: The tool surface has known shared insertion points: setup run.go imports and switch, setup doc.go tool list, write/setup/hook.go Info* helpers, hooks.yaml hook.supported-tools, docs/cli/setup.md table and examples, read/skill frontmatter_test.go skillTrees, zensical.toml nav, plus TASKS.md and LEARNINGS.md.
+
+**Application**: When two tool integrations are in flight, expect conflicts at these files and keep both sides with the newer tool after the older one; for interleaved hunks rebuild the file from git show :3: plus the branch block extracted from git show :2: instead of hand-editing markers.
+
+---
+
+## [2026-09-05-202947] Proving zero new test failures on this Windows machine means diffing FAIL sets against an upstream/main worktree baseline
+
+**Context**: go test ./... here has 28 pre-existing failing packages (CRLF render drift, .exe exec, audit path exemptions). internal/cli/notify failed once while npm ci and a review agent ran concurrently, then passed 4 of 4 in isolation.
+
+**Lesson**: A raw pass/fail count is meaningless on this machine; the branch is clean when its FAIL package set equals the FAIL set of a detached upstream/main worktree run with the same env, and internal/cli/notify is timing-flaky under CPU load.
+
+**Application**: git worktree add --detach <tmp> upstream/main, run CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./... in both trees, comm -13 the sorted FAIL package lists; re-run a lone flipped package with -count=1 in isolation before chasing it; git worktree remove the baseline afterwards.
+
+---
+
+## [2026-09-05-202947] go.work.sum drifts after a dependabot bump on main; commit the delta instead of reverting it
+
+**Context**: After merging upstream main (grpc 1.82.1 to 1.83.2, x/tools 0.49.0) the first go build appended two google.golang.org/grpc v1.83.1 sum lines to go.work.sum; a clean detached worktree of upstream/main did the same, and upstream history has periodic "chore: refresh go.work.sum" commits (aeefc3f1, 6feec5bf).
+
+**Lesson**: Workspace mode (go.work with tools/ctxctl) auto-appends missing module sums, so a dependabot bump that only touches go.mod and go.sum leaves the tree dirty after the next build, and the clean-tree commit gate then fails on every attempt.
+
+**Application**: After merging a dependency bump, build once and commit the go.work.sum delta, bundled into the next functional commit or as a chore commit citing specs/meta/chores.md; do not revert it before each commit.
+
+---
+
 ## [2026-09-05-195906] golangci-lint exits 7 with 0 issues when tools/typecheck/*/node_modules exists on this Windows machine
 
 **Context**: After npm ci in tools/typecheck/pi (the CI typecheck gate run locally), golangci-lint run ./... printed 0 issues but exited 7 with: typechecking error: pattern ./...: open tools\typecheck\pi\node_modules\@earendil-works\pi-coding-agent\dist\extensions: The system cannot find the file specified. Deleting node_modules restored exit 0 with the tree otherwise unchanged.
