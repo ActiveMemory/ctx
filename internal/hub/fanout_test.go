@@ -110,6 +110,37 @@ func TestFanOut_DisconnectsSlowListener(t *testing.T) {
 	}
 }
 
+// TestFanOut_UnsubscribeAfterDisconnect covers the collision
+// between the two paths that close a listener channel: broadcast
+// disconnecting a slow listener, and the Listen stream's deferred
+// unsubscribe on the way out. The second close must be a no-op —
+// closing an already-closed channel panics, and the gRPC server
+// has no recovery interceptor to catch it.
+func TestFanOut_UnsubscribeAfterDisconnect(t *testing.T) {
+	restore := logWarn.SetSink(io.Discard)
+	defer restore()
+
+	fo := newFanOut()
+	slow := fo.subscribe()
+
+	for i := 0; i <= fanOutBuffer; i++ {
+		fo.broadcast([]Entry{{ID: fmt.Sprintf("e%d", i)}})
+	}
+	if got := fo.count(); got != 0 {
+		t.Fatalf("count = %d, want 0 after disconnect", got)
+	}
+
+	// Would panic without the membership guard.
+	fo.unsubscribe(slow)
+	// Idempotent for any number of callers.
+	fo.unsubscribe(slow)
+
+	if got := fo.droppedCount(); got != 1 {
+		t.Errorf("droppedCount = %d, want 1 (unsubscribe must "+
+			"not count as a drop)", got)
+	}
+}
+
 func TestFanOut_DroppedCountStartsAtZero(t *testing.T) {
 	fo := newFanOut()
 	ch := fo.subscribe()

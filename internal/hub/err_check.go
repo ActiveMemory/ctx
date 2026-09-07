@@ -9,6 +9,18 @@ package hub
 import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+)
+
+// errSlowListener terminates a Listen stream whose fan-out
+// channel [fanOut.broadcast] closed for being too slow. It is a
+// package-level sentinel so [Server.listenEntries] returns the
+// same value every time and tests can match it with errors.Is,
+// while the ResourceExhausted code travels to the client: the
+// stream ends with a reason instead of a silent EOF.
+var errSlowListener = status.Error(
+	codes.ResourceExhausted, cfgHub.ErrSlowListener,
 )
 
 // authErr reports whether err is an authentication or

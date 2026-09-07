@@ -146,9 +146,11 @@ ctx hub start --daemon
 ```
 
 Clients that pushed sequences **above** the restored watermark
-will re-publish on the next `listen` reconnect, because the hub
-now reports a lower sequence than what clients have on disk. This
-is safe; the store deduplicates by entry ID.
+will re-publish, because the hub now reports a lower sequence
+than what clients have on disk. Nothing is lost, but the store is
+append-only and does not deduplicate by entry ID: those entries
+come back with new sequence numbers, so the shared feed shows
+them twice. Prune the duplicates offline if they matter.
 
 ## Log Rotation
 

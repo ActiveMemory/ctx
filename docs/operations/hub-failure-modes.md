@@ -27,32 +27,56 @@ should do. Complementary to
 
 ### Client Loses Connection Mid-Stream
 
-**What happens:** `ctx connection listen` detects the EOF, waits
-with exponential backoff, and reconnects. On reconnect it passes
-its last-seen sequence; the hub replays everything newer.
+**What happens:** the stream ends and `ctx connection listen`
+exits. There is no automatic reconnect: the command calls Listen
+once and returns when the stream ends.
 
-**What you should do:** nothing. If reconnects are looping, check
-firewall state on the hub and `ctx hub status` output.
+**What you should do:** re-run `ctx connection listen`. Nothing
+is lost on the hub — its log is append-only, and the replay
+covers every entry newer than the sequence the client asks for.
+If disconnects repeat, check firewall state on the hub and
+`ctx hub status` output.
+
+!!! warning "Reconnect Is Manual Today"
+    Two consequences until automatic reconnect lands:
+
+    - Keeping a listener up across disconnects is a supervisor's
+      job (systemd, a shell loop), not the command's.
+    - The re-run asks for sequence `0`, not the client's
+      last-seen sequence, so entries already written to
+      `.context/hub/` are appended a second time.
 
 ### Slow Listener Disconnected
 
 **What happens:** each `ctx connection listen` stream gets a
 buffered fan-out channel. A client that stops draining it (paused
 process, saturated link, a laptop that went to sleep) fills the
-buffer. Rather than block every publisher or silently discard the
-client's entries, the hub disconnects that one listener and closes
-its channel. The client sees an EOF and reconnects with its
-last-seen sequence, so the missed entries are replayed. Nothing is
-lost; the reconnect is the recovery.
+buffer. Rather than block every publisher, the hub disconnects
+that one listener: it drops the subscription and closes the
+channel. The stream then ends with a `ResourceExhausted` error
+(`listener disconnected: stream not drained, fan-out buffer
+full`), so `ctx connection listen` exits non-zero with that
+message instead of hanging on a stream that will never carry
+another entry.
+
+Only that one client is affected. Other listeners and every
+publisher keep going, and nothing is removed from the hub's log —
+the entries the disconnected client missed are still there, and a
+fresh `ctx connection listen` picks up from the sequence it asks
+for.
 
 Each disconnect writes a warning to the hub's stderr and increments
 a cumulative counter reported as `Dropped listeners:` in
 `ctx hub status`.
 
-**What you should do:** an occasional disconnect is normal and
-self-healing. A count that climbs steadily means listeners cannot
-keep up with the publish rate — check the listening client's health
-and the link to it before assuming the hub is at fault.
+**What you should do:** re-run `ctx connection listen` on the
+affected client. As with any lost stream, reconnect is manual
+today — see
+[Client Loses Connection Mid-Stream](#client-loses-connection-mid-stream)
+for the caveats. A count that climbs steadily means listeners
+cannot keep up with the publish rate: check the listening
+client's health and the link to it before assuming the hub is at
+fault.
 
 ### Partition: Majority Side Reachable
 
@@ -81,8 +105,9 @@ a warning and exits non-zero on the share leg only. `--share` is
 best-effort; it never blocks local context updates.
 
 **What you should do:** run `ctx connection publish` later to
-backfill, or rely on another `--share` for the same entry ID.
-The hub deduplicates by entry ID.
+backfill. Publish the entry once: the hub's log is append-only
+and does not deduplicate by entry ID, so re-sharing the same
+entry adds a second copy under a new sequence number.
 
 ## Storage
 
@@ -217,7 +242,7 @@ clock is the culprit.
 | "No leader" errors                | Cluster quorum; run `ctx hub status` on each peer |
 | Hub won't start after crash       | Last line of `entries.jsonl`      |
 | Entries missing after restore     | Check `clients.json` sequence vs local `.sync-state.json` |
-| Duplicate entries in shared feed  | Client replayed after restore, safe (dedup by ID) |
+| Duplicate entries in shared feed  | A client re-published; the hub never dedups by ID |
 | Followers lagging                 | Disk or network on the follower, not the leader |
 
 ## See Also
