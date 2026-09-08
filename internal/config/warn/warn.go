@@ -122,6 +122,14 @@ const (
 	HubFanOutSlowListener = "hub fanout: disconnected slow listener " +
 		"(buffer full); cumulative disconnects: %d"
 
+	// HubClusterPeers is the stderr format for a failed Raft
+	// configuration read inside the Status RPC. Takes the error.
+	// Status is a diagnostic: losing the peer count is not a
+	// reason to deny the operator the rest of the response, so
+	// the handler warns and reports zero peers instead of
+	// failing the call.
+	HubClusterPeers = "hub cluster: read raft configuration: %v"
+
 	// HubReplicateAppend is the stderr format for a failed
 	// [Store.Append] inside the follower replication stream. The
 	// loop is best-effort and has no return path, so a dropped

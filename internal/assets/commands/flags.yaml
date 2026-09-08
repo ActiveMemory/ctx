@@ -297,6 +297,8 @@ hub.start.data-dir:
   short: Hub data directory (default ~/.ctx/hub-data/)
 hub.start.peers:
   short: Comma-separated peer addresses for cluster mode
+hub.start.raft-bind:
+  short: Raft address this node binds and advertises to peers
 hub.start.port:
   short: Hub listen port (default 9900)
 hub.stop.data-dir:

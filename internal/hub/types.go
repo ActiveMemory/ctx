@@ -276,18 +276,32 @@ type EntryMsg struct {
 
 // StatusResponse is the output of the Status RPC.
 //
+// The cluster fields are zero values on a hub started without
+// peers, where no Raft node exists. ClusterEnabled is the
+// disambiguator: without it a standalone hub is indistinguishable
+// from a clustered node that has lost its leader, since both
+// report IsLeader false and an empty LeaderAddr.
+//
 // Fields:
 //   - TotalEntries: total number of entries
 //   - ConnectedClients: active listener count
 //   - DroppedListeners: cumulative slow-listener disconnects
 //   - EntriesByType: entry count per type
 //   - EntriesByProject: entry count per origin project
+//   - ClusterEnabled: a Raft node is attached to this hub
+//   - IsLeader: this node is the current Raft leader
+//   - LeaderAddr: Raft address of the leader, empty if unknown
+//   - ClusterPeers: Raft servers other than this node
 type StatusResponse struct {
 	TotalEntries     uint64            `json:"total_entries"`
 	ConnectedClients uint32            `json:"connected_clients"`
 	DroppedListeners uint64            `json:"dropped_listeners"`
 	EntriesByType    map[string]uint64 `json:"entries_by_type"`
 	EntriesByProject map[string]uint64 `json:"entries_by_project"`
+	ClusterEnabled   bool              `json:"cluster_enabled"`
+	IsLeader         bool              `json:"is_leader,omitempty"`
+	LeaderAddr       string            `json:"leader_addr,omitempty"`
+	ClusterPeers     uint32            `json:"cluster_peers,omitempty"`
 }
 
 // Client is a gRPC client for the ctx Hub.

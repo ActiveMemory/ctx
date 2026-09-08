@@ -98,6 +98,7 @@ const (
 	Project         = "project"
 	Prompt          = "prompt"
 	Quiet           = "quiet"
+	RaftBind        = "raft-bind"
 	Raw             = "raw"
 	Record          = "record"
 	Regenerate      = "regenerate"

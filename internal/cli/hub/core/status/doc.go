@@ -11,13 +11,15 @@
 //
 // This package queries a remote hub for its cluster
 // state and renders a summary showing the node role,
-// address, total entries, and project count.
+// the leader, the entry count and the peer count.
 //
 // # Behavior
 //
-// [Run] dials the hub via gRPC, retrieves cluster metrics
-// (connected clients, entry count, projects), and renders
-// a summary showing node role, address, and totals.
+// [Run] dials the hub via gRPC and renders what the
+// Status RPC reports. The role, the leader and the
+// peer count are the hub's answers, read from its
+// Raft node: a hub started without peers reports
+// Standalone and names no leader.
 //
 // # Data Flow
 //
@@ -26,13 +28,13 @@
 //  1. Loads connection config to obtain the hub
 //     address and authentication token.
 //  2. Dials the hub via gRPC using hub.NewClient.
-//  3. Calls the Status RPC to retrieve cluster
-//     metrics including connected clients, total
-//     entries, and per-project breakdowns.
-//  4. Determines the node role: if there are
-//     connected clients the node is marked active,
-//     otherwise it is a follower.
+//  3. Calls the Status RPC, whose response carries
+//     the entry count, the listener counts and the
+//     cluster leadership fields.
+//  4. Maps the response onto writeHub's render
+//     fields: Standalone when no Raft node is
+//     attached, otherwise Leader or Follower from
+//     the reported leadership state.
 //  5. Delegates to writeHub.ClusterStatus to render
-//     the role, address, entry count, and project
-//     count for the user.
+//     the result.
 package status

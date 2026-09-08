@@ -122,7 +122,8 @@ hub.start:
       ctx hub start                              # Foreground, port 9900
       ctx hub start --port 8080                  # Custom port
       ctx hub start --daemon                     # Background, writes hub.pid
-      ctx hub start --peers host2:9900,host3:9900  # Raft cluster member
+      ctx hub start --raft-bind host1:9901       # Single-node Raft
+      ctx hub start --raft-bind host1:9901 --peers host2:9901
 
 hub.stop:
   short: |2-

@@ -1844,11 +1844,15 @@ links back to the spec for detail.
   by the sysadmin. Precondition for any non-localhost
   multi-node deployment. #priority:critical
   #added:2026-04-11 #pr:60 #audit:H-10,H-11
-- [ ] **H-28** Decouple Raft bind port from gRPC port.
+- [x] **H-28** Decouple Raft bind port from gRPC port.
   Accept a dedicated `--raft-bind` flag; default to a
   random high port or refuse to start. Makes port
-  scanning less productive. #priority:low
-  #added:2026-04-11 #pr:60 #audit:H-28
+  scanning less productive. Done in Phase HL: the flag
+  is required for cluster mode and rejects wildcard,
+  bare-port and host-less addresses, so a hub refuses
+  to start rather than binding an address no peer can
+  dial. Spec: specs/hub-status-cluster-leadership.md
+  #priority:low #added:2026-04-11 #pr:60 #audit:H-28
 - [ ] Signed-entry mode: publishing clients sign their
   entries with a per-client signing key; followers
   verify on replication. Eliminates the "trust the
@@ -3112,14 +3116,18 @@ peers) are derived from listener counts, the dialed address and the project
 count. HL wires the real state through response → handler → render.
 Issue: https://github.com/ActiveMemory/ctx/issues/96
 
-- [ ] [HL1] Cluster: `LeaderAddr` returns the Raft address it is named for (not the ServerID), `Peers()` reads the committed configuration, and `BootstrapCluster`'s error is checked (tolerating `raft.ErrCantBootstrap` on restart). Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+- [x] [HL1] Cluster: `LeaderAddr` returns the Raft address it is named for (not the ServerID), `Peers()` reads the committed configuration, and `BootstrapCluster`'s error is checked (tolerating `raft.ErrCantBootstrap` on restart). Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
 
-- [ ] [HL2] Wire: `StatusResponse` gains `ClusterEnabled`, `IsLeader`, `LeaderAddr`, `ClusterPeers`; `hubStatus` populates them from `s.cluster`; `cfgWarn.HubClusterPeers` for a failed configuration read. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+- [x] [HL2] Wire: `StatusResponse` gains `ClusterEnabled`, `IsLeader`, `LeaderAddr`, `ClusterPeers`; `hubStatus` populates them from `s.cluster`; `cfgWarn.HubClusterPeers` for a failed configuration read. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
 
-- [ ] [HL3] Render: `ClusterStatus` takes `ClusterStatusInfo`; standalone prints role + entries only, cluster mode prints the real leader and peer count; `RoleLeader`/`RoleStandalone` replace the `RoleActive` listener-count heuristic. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+- [x] [HL3] Render: `ClusterStatus` takes `ClusterStatusInfo`; standalone prints role + entries only, cluster mode prints the real leader and peer count; `RoleLeader`/`RoleStandalone` replace the `RoleActive` listener-count heuristic. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
 
-- [ ] [HL4] Docs: hub-cluster recipe expected output, docs/cli/hub.md, commands.yaml description, docs/operations/hub.md monitoring section (drops the nonexistent `--exit-code` flag and the per-peer lag claim), internal/hub/doc.go. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+- [x] [HL4] Docs: hub-cluster recipe expected output, docs/cli/hub.md, commands.yaml description, docs/operations/hub.md monitoring section (drops the nonexistent `--exit-code` flag and the per-peer lag claim), internal/hub/doc.go. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
 
-- [ ] [HL5] Tests: standalone vs single-node-Raft Status contract, `Peers()` excludes self, three rendered shapes; `make lint` and `make test` green. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+- [x] [HL5] Tests: standalone vs single-node-Raft Status contract, `Peers()` excludes self, three rendered shapes; `make lint` and `make test` green. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
 
-- [ ] [HL6] Follow-up (not in the HL PR): `ctx hub stepdown` prints "Leadership transferred" without calling `Cluster.Stepdown()` — the same class of defect as issue #96 on a command that needs a new RPC to be honest. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:main #issue:96 #added:2026-09-08-134421
+- [ ] [HL6] Follow-up (not in the HL PR): `ctx hub stepdown` prints "Leadership transferred" and `ctx hub peer add|remove` print a peer confirmation, none of which reaches the Raft node (`Cluster.Stepdown()` has no caller and raft's AddVoter/RemoveServer are never called) — the same class of defect as issue #96 on commands that need new admin-gated RPCs to be honest. Documented as "Not Wired Yet" in docs/cli/hub.md and the HA recipe in the meantime. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:main #issue:96 #added:2026-09-08-134421
+
+- [x] [HL7] Daemon cluster flags: `RunDaemon` built the re-exec argv from --port and --data-dir only, so `ctx hub start --daemon --peers ...` started a standalone hub and reported success. argv extracted to a testable `daemonArgs` that forwards both cluster flags. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [x] [HL8] Raft bind address (closes H-28): `--raft-bind` binds and advertises the Raft transport, `--peers` becomes the other nodes' Raft addresses, wildcard/bare-port/host-less values are rejected with a message naming the flag, and --raft-bind alone runs a self-electing single node. Before this, `Run` advertised ":port+1" and every cluster start died on "local bind address is not advertisable". Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421

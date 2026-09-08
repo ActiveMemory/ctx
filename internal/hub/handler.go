@@ -14,7 +14,9 @@ import (
 	"google.golang.org/grpc/status"
 
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	errHub "github.com/ActiveMemory/ctx/internal/err/hub"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // register handles the Register RPC.
@@ -246,21 +248,41 @@ func (s *Server) listenEntries(
 
 // hubStatus handles the Status RPC.
 //
+// The cluster fields stay at their zero values when no Raft node
+// is attached; ClusterEnabled tells the caller which case it is
+// looking at. A failed configuration read warns to stderr and
+// reports zero peers rather than failing the call: Status is a
+// diagnostic, and the rest of the response is still worth having.
+//
 // Parameters:
 //   - ctx: request context (unused)
 //
 // Returns:
-//   - *StatusResponse: hub statistics
+//   - *StatusResponse: hub statistics and cluster leadership
 //   - error: always nil
 func (s *Server) hubStatus(
 	_ context.Context,
 ) (*StatusResponse, error) {
 	total, byType, byProject := s.store.Stats()
-	return &StatusResponse{
+	resp := &StatusResponse{
 		TotalEntries:     total,
 		ConnectedClients: s.listeners.count(),
 		DroppedListeners: s.listeners.droppedCount(),
 		EntriesByType:    byType,
 		EntriesByProject: byProject,
-	}, nil
+	}
+
+	if s.cluster != nil {
+		resp.ClusterEnabled = true
+		resp.IsLeader = s.cluster.IsLeader()
+		resp.LeaderAddr = s.cluster.LeaderAddr()
+
+		peers, peersErr := s.cluster.Peers()
+		if peersErr != nil {
+			logWarn.Warn(cfgWarn.HubClusterPeers, peersErr)
+		}
+		resp.ClusterPeers = peers
+	}
+
+	return resp, nil
 }

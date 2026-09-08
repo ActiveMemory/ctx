@@ -668,6 +668,10 @@ err.hub.admin-token-required:
   short: 'admin token required: pass --token or set $CTX_HUB_ADMIN_TOKEN'
 err.hub.invalid-peer-action:
   short: "action must be 'add' or 'remove', got %q"
+err.hub.raft-bind-required:
+  short: 'cluster mode needs --raft-bind: the address this node advertises to its peers, e.g. --raft-bind 10.0.0.5:9901'
+err.hub.raft-bind-unroutable:
+  short: '--raft-bind %q is not an address a peer can dial: give a concrete host and port, not a wildcard or bare port'
 err.serve.no-running-hub:
   short: 'no running hub: %w'
 err.serve.invalid-pid:

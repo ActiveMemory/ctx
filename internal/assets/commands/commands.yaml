@@ -384,9 +384,12 @@ hub.start:
     file to <data-dir>/hub.pid for later shutdown via
     `ctx hub stop`.
 
-    With --peers, joins a Raft cluster for leader election
-    across multiple nodes. Data replication happens via
-    sequence-based gRPC sync on the append-only JSONL log.
+    With --raft-bind, runs a Raft node for leader election.
+    The address is what this node advertises to its peers, so
+    it must name a host they can dial; --peers lists the
+    --raft-bind addresses of the other nodes. Data replication
+    happens via sequence-based gRPC sync on the append-only
+    JSONL log.
   short: Start the ctx Hub server
 hub.stop:
   long: |-
@@ -399,8 +402,10 @@ hub.stop:
   short: Stop a running ctx Hub daemon
 hub.status:
   long: |-
-    Show cluster status: role, peers, sync state, entry
-    count, and uptime.
+    Show what the hub reports about itself: node role,
+    current leader, entry count, and peer count. A hub
+    running without peers reports Standalone and names
+    no leader.
   short: Show cluster status
 hub.peer:
   long: |-

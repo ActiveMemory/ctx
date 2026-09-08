@@ -137,12 +137,18 @@ const (
 	FileAdminToken = "admin.token"
 )
 
-// Status role labels.
+// Status role labels. Reported from Raft state, so a hub
+// started without peers is Standalone rather than a follower
+// of nothing.
 const (
-	// RoleFollower is the role label for a follower node.
+	// RoleFollower is the role label for a clustered node that
+	// is not the current leader.
 	RoleFollower = "Follower"
-	// RoleActive is the role label for an active node.
-	RoleActive = "Active"
+	// RoleLeader is the role label for the current Raft leader.
+	RoleLeader = "Leader"
+	// RoleStandalone is the role label for a hub running with
+	// no Raft node attached.
+	RoleStandalone = "Standalone"
 )
 
 // Address formatting.

@@ -45,13 +45,20 @@ func DefaultPort() int { return defaultPort }
 // On first run, generates an admin token and prints it.
 // On subsequent runs, loads the existing token.
 // If dataDir is empty, uses ~/.ctx/hub-data/.
-// If peers is non-empty, starts Raft cluster for HA.
+//
+// A raftBind address starts the Raft node that makes
+// leadership queryable through the Status RPC; peers are the
+// raftBind addresses of the other nodes, so every node
+// bootstraps the same configuration. Without raftBind the hub
+// runs standalone, and asking for peers without it is an error
+// rather than a hub that quietly is not in a cluster.
 //
 // Parameters:
 //   - cmd: cobra command for output
 //   - port: TCP port to listen on
 //   - dataDir: hub data directory (empty = default)
-//   - peers: peer addresses for cluster mode (may be nil)
+//   - raftBind: address this node advertises to peers
+//   - peers: peer Raft addresses (may be nil)
 //
 // Returns:
 //   - error: non-nil if setup or server startup fails
@@ -59,6 +66,7 @@ func Run(
 	cmd *cobra.Command,
 	port int,
 	dataDir string,
+	raftBind string,
 	peers []string,
 ) error {
 	dataDir, resolveErr := resolveDataDir(dataDir)
@@ -80,12 +88,16 @@ func Run(
 
 	srv := hub.NewServer(store, adminToken)
 
-	// Start Raft cluster if peers are configured.
-	if len(peers) > 0 {
-		bindAddr := fmt.Sprintf(cfgHub.FmtPort, port+1)
+	// Start the Raft node when the operator named an address
+	// for it. The node registers under that address as both its
+	// ID and its transport address, which is the shape peers are
+	// given, so every node bootstraps the same configuration.
+	if raftBind != "" || len(peers) > 0 {
+		if bindErr := validateRaftBind(raftBind); bindErr != nil {
+			return bindErr
+		}
 		cluster, clusterErr := hub.NewCluster(
-			fmt.Sprintf(cfgHub.FmtPort, port),
-			bindAddr, dataDir, peers,
+			raftBind, raftBind, dataDir, peers,
 		)
 		if clusterErr != nil {
 			return clusterErr

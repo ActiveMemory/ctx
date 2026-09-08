@@ -23,6 +23,12 @@ const (
 	// DescKeyErrHubAdminRequired is the text key for an
 	// admin-gated command invoked with no admin token supplied.
 	DescKeyErrHubAdminRequired = "err.hub.admin-token-required"
+	// DescKeyErrHubRaftBindRequired is the text key for a
+	// cluster start with no --raft-bind address.
+	DescKeyErrHubRaftBindRequired = "err.hub.raft-bind-required"
+	// DescKeyErrHubRaftBindUnroutable is the text key for a
+	// --raft-bind address peers could not dial.
+	DescKeyErrHubRaftBindUnroutable = "err.hub.raft-bind-unroutable"
 	// DescKeyErrHubInvalidPeerAction is the text key for
 	// unrecognized peer action errors.
 	DescKeyErrHubInvalidPeerAction = "err.hub.invalid-peer-action"

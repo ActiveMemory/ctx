@@ -62,12 +62,26 @@ the daemon with `ctx hub stop` (see below).
 #### Cluster Mode
 
 For high availability, run multiple hubs with Raft-based
-leader election:
+leader election. `--raft-bind` is the address this node binds
+its Raft transport to and advertises to the others, and
+`--peers` lists the `--raft-bind` addresses of the other
+nodes — Raft addresses, not hub ports:
 
 ```bash
 ctx hub start --port 9900 \
+  --raft-bind host1:9901 \
   --peers host2:9901,host3:9901
 ```
+
+`--raft-bind` must name a host a peer can dial. A bare port
+(`:9901`) or a wildcard (`0.0.0.0:9901`) is rejected at
+startup, because Raft refuses to advertise an address that
+does not identify this node to anyone else.
+
+`--raft-bind` on its own — with no `--peers` — runs a
+single-node Raft cluster that elects itself. That is the
+cheapest way to see the leadership fields of
+[`ctx hub status`](#ctx-hub-status) before adding nodes.
 
 Raft is used **only** for leader election. Data replication
 uses sequence-based gRPC sync on the append-only JSONL log;
@@ -77,12 +91,13 @@ setup and the Raft-lite durability caveat.
 
 #### Flags
 
-| Flag         | Description                                      | Default          |
-|--------------|--------------------------------------------------|------------------|
-| `--port`     | Hub listen port                                  | `9900`           |
-| `--data-dir` | Hub data directory                               | `~/.ctx/hub-data/` |
-| `--daemon`   | Run the hub server in the background             | `false`          |
-| `--peers`    | Comma-separated peer addresses for cluster mode  | *(none)*         |
+| Flag          | Description                                       | Default          |
+|---------------|---------------------------------------------------|------------------|
+| `--port`      | Hub listen port                                   | `9900`           |
+| `--data-dir`  | Hub data directory                                | `~/.ctx/hub-data/` |
+| `--daemon`    | Run the hub server in the background              | `false`          |
+| `--raft-bind` | Raft address this node binds and advertises       | *(none)*         |
+| `--peers`     | Comma-separated peer Raft addresses               | *(none)*         |
 
 #### Validation
 
@@ -111,8 +126,34 @@ Safe to rerun: if no daemon is running, returns a
 
 ### `ctx hub status`
 
-Show cluster status: role, peers, sync state, entry count,
-and uptime.
+Show what the hub reports about itself: its role, the current
+leader, the entry count and the peer count.
+
+A hub started without `--peers` runs no Raft node, so it has no
+leader and no peers to name:
+
+```
+Role: Standalone
+Entries: 1248
+```
+
+A hub started with peers answers from its Raft node. The role is
+`Leader` or `Follower`, the leader is the address Raft holds for
+the current term, and the peer count is the committed cluster
+configuration minus the node answering:
+
+```
+Role: Leader
+Leader: 10.0.0.5:9901
+Entries: 1248  Peers: 2
+```
+
+While an election is in progress — or after quorum is lost —
+Raft knows no leader, and the line says so:
+
+```
+Leader: unknown (election in progress)
+```
 
 When the hub has disconnected any slow listeners, the output
 gains a `Dropped listeners:` line with the cumulative count.
@@ -132,6 +173,12 @@ Add or remove peers from the cluster at runtime. Useful for
 scaling up or replacing a decommissioned node without
 restarting the leader.
 
+!!! warning "Not Wired Yet"
+    The command prints a confirmation and returns without
+    touching the Raft node. Change membership by restarting the
+    affected nodes with new `--peers` lists, and confirm the
+    result with [`ctx hub status`](#ctx-hub-status).
+
 **Examples**:
 
 ```bash
@@ -145,6 +192,12 @@ Transfer leadership to another node gracefully. Triggers a
 new election among the remaining followers before the current
 leader steps down. Use before taking the leader offline for
 maintenance.
+
+!!! warning "Not Wired Yet"
+    The command prints "Leadership transferred" and returns
+    without asking the cluster for anything. To hand off today,
+    stop the leader and let the remaining nodes elect; the new
+    leader shows up in [`ctx hub status`](#ctx-hub-status).
 
 **Examples**:
 

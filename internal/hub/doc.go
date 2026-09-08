@@ -72,6 +72,17 @@
 // mutex) and bumps a cumulative counter reported as
 // DroppedListeners by the Status RPC.
 //
+// # Cluster Leadership
+//
+// [Cluster] runs Raft for leader election only. The
+// Status RPC reports that election: ClusterEnabled
+// says whether a Raft node is attached at all, and
+// IsLeader, LeaderAddr and ClusterPeers describe the
+// current term when one is. Without ClusterEnabled a
+// standalone hub could not be told apart from a
+// clustered node that has lost its leader, since both
+// report no leadership.
+//
 // # Encryption
 //
 // Client-side connection state is encrypted at rest
