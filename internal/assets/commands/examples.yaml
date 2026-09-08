@@ -124,6 +124,7 @@ hub.start:
       ctx hub start --daemon                     # Background, writes hub.pid
       ctx hub start --raft-bind host1:9901       # Single-node Raft
       ctx hub start --raft-bind host1:9901 --peers host2:9901
+      ctx hub start --raft-bind host4:9901 --join  # Wait to be added
 
 hub.stop:
   short: |2-
@@ -135,11 +136,11 @@ hub.status:
 
 hub.peer:
   short: |2-
-      ctx hub peer add host2:9900
-      ctx hub peer remove host2:9900
+      ctx hub peer add host2:9901 --token ctx_adm_...
+      ctx hub peer remove host2:9901 --token ctx_adm_...
 
 hub.stepdown:
-  short: '  ctx hub stepdown'
+  short: '  ctx hub stepdown --token ctx_adm_...'
 
 initialize:
   short: |2-

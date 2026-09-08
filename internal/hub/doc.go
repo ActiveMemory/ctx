@@ -17,7 +17,8 @@
 //   - Storage ([Store]): append-only JSONL with
 //     sequence numbers and per-client tokens.
 //   - Transport ([Server]): gRPC Register / Publish
-//     / Sync / Listen / Status RPCs.
+//     / Sync / Listen / Status / Revoke / Peer /
+//     Stepdown RPCs.
 //   - Cluster ([Cluster]): HashiCorp Raft for leader
 //     election only (see Raft-Lite below).
 //   - Client ([Client]): connection registration,
@@ -82,6 +83,19 @@
 // standalone hub could not be told apart from a
 // clustered node that has lost its leader, since both
 // report no leadership.
+//
+// Two admin-token-gated RPCs change that state rather
+// than report it. Peer adds or removes a server
+// ([Cluster.AddPeer], [Cluster.RemovePeer]) and
+// Stepdown hands leadership to a follower
+// ([Cluster.Stepdown]). Both are leader-only: raft
+// refuses a configuration change or a transfer on a
+// follower, and the handler turns that into a
+// FailedPrecondition naming ctx hub status. A node
+// being added starts with [ClusterConfig.Join] set,
+// bootstrapping nothing, because a node that
+// bootstraps its own configuration is a second
+// cluster of one rather than a member of the first.
 //
 // # Encryption
 //

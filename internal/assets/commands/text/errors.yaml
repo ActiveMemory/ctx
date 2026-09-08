@@ -670,6 +670,8 @@ err.hub.invalid-peer-action:
   short: "action must be 'add' or 'remove', got %q"
 err.hub.raft-bind-required:
   short: 'cluster mode needs --raft-bind: the address this node advertises to its peers, e.g. --raft-bind 10.0.0.5:9901'
+err.hub.join-with-peers:
+  short: '--join and --peers are mutually exclusive: a joining node gets its configuration from the leader that adds it, so run --join alone and then `ctx hub peer add <its --raft-bind address>` on the leader'
 err.hub.raft-bind-unroutable:
   short: '--raft-bind %q is not an address a peer can dial: give a concrete host and port, not a wildcard or bare port'
 err.serve.no-running-hub:

@@ -409,7 +409,15 @@ hub.status:
   short: Show cluster status
 hub.peer:
   long: |-
-    Add or remove peers from the cluster at runtime.
+    Add or remove peers in the cluster's Raft configuration
+    at runtime.
+
+    Admin-gated: pass --token or set CTX_HUB_ADMIN_TOKEN.
+    Only the leader can change the configuration, and the
+    address is the peer's --raft-bind address, not its hub
+    port. A node being added must already be running with
+    --join, so it is waiting for a configuration instead of
+    bootstrapping one of its own.
   short: Add or remove cluster peers
 hub.stepdown:
   long: |-
@@ -418,6 +426,11 @@ hub.stepdown:
     Triggers a new election among the remaining followers
     before the current leader steps down. Use before taking a
     node offline for maintenance.
+
+    Admin-gated: pass --token or set CTX_HUB_ADMIN_TOKEN. Run
+    it against the leader; a follower has no leadership to
+    hand over. The confirmation prints once the transfer
+    returns, and `ctx hub status` names the node that won.
   short: Transfer leadership
 hub.revoke:
   long: |-

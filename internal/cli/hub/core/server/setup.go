@@ -107,11 +107,13 @@ func loadOrCreateAdmin(
 //   - dataDir: resolved hub data directory
 //   - raftBind: Raft address (empty = standalone)
 //   - peers: comma-separated peer addresses (empty = none)
+//   - join: wait to be added instead of bootstrapping
 //
 // Returns:
 //   - []string: arguments for the re-executed binary
 func daemonArgs(
 	port int, dataDir, raftBind, peers string,
+	join bool,
 ) []string {
 	args := []string{
 		cfgHub.ArgHub, cfgHub.ArgStart,
@@ -129,6 +131,12 @@ func daemonArgs(
 	if peers != "" {
 		args = append(args,
 			cfgHub.FmtFlagPrefix+cfgFlag.Peers, peers,
+		)
+	}
+
+	if join {
+		args = append(args,
+			cfgHub.FmtFlagPrefix+cfgFlag.Join,
 		)
 	}
 
@@ -162,6 +170,46 @@ func validateRaftBind(addr string) error {
 		ip.IsUnspecified() {
 		return errHub.RaftBindUnroutable(addr)
 	}
+
+	return nil
+}
+
+// startCluster validates the cluster flags and attaches a Raft
+// node to the server.
+//
+// Parameters:
+//   - srv: hub server to attach the cluster to
+//   - dataDir: resolved hub data directory
+//   - raftBind: address this node advertises to peers
+//   - peers: peer Raft addresses (may be nil)
+//   - join: wait to be added instead of bootstrapping
+//
+// Returns:
+//   - error: non-nil if the flags or Raft setup are invalid
+func startCluster(
+	srv *hub.Server,
+	dataDir, raftBind string,
+	peers []string,
+	join bool,
+) error {
+	if bindErr := validateRaftBind(raftBind); bindErr != nil {
+		return bindErr
+	}
+	if join && len(peers) > 0 {
+		return errHub.JoinWithPeers()
+	}
+
+	cluster, clusterErr := hub.NewCluster(hub.ClusterConfig{
+		NodeID:   raftBind,
+		BindAddr: raftBind,
+		DataDir:  dataDir,
+		Peers:    peers,
+		Join:     join,
+	})
+	if clusterErr != nil {
+		return clusterErr
+	}
+	srv.SetCluster(cluster)
 
 	return nil
 }

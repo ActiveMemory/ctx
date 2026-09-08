@@ -1810,7 +1810,14 @@ links back to the spec for detail.
   `--bootstrap` node calls `BootstrapCluster`, others
   join via `AddVoter`. Persist a `bootstrapped` flag
   in the raft data dir to avoid double-bootstrapping
-  on restart. #priority:medium #added:2026-04-11 #pr:60
+  on restart. Partially done in Phase HL: `--join`
+  starts a node that bootstraps nothing and
+  `ctx hub peer add` calls `AddVoter`, and
+  `ErrCantBootstrap` is tolerated on restart. Still
+  open: making one node the designated bootstrapper
+  instead of every `--peers` node bootstrapping the
+  same list, and persisting the flag.
+  #priority:medium #added:2026-04-11 #pr:60
   #audit:H-12
 - [ ] **H-13** Follower-side replication validation:
   call `validateEntry` on every entry received from
@@ -3126,8 +3133,12 @@ Issue: https://github.com/ActiveMemory/ctx/issues/96
 
 - [x] [HL5] Tests: standalone vs single-node-Raft Status contract, `Peers()` excludes self, three rendered shapes; `make lint` and `make test` green. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
 
-- [ ] [HL6] Follow-up (not in the HL PR): `ctx hub stepdown` prints "Leadership transferred" and `ctx hub peer add|remove` print a peer confirmation, none of which reaches the Raft node (`Cluster.Stepdown()` has no caller and raft's AddVoter/RemoveServer are never called) — the same class of defect as issue #96 on commands that need new admin-gated RPCs to be honest. Documented as "Not Wired Yet" in docs/cli/hub.md and the HA recipe in the meantime. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:main #issue:96 #added:2026-09-08-134421
+- [x] [HL6] `ctx hub stepdown` printed "Leadership transferred" and `ctx hub peer add|remove` printed a peer confirmation, none of which reached the Raft node (`Cluster.Stepdown()` had no caller and raft's AddVoter/RemoveServer were never called). Wired in this PR as two admin-token-gated RPCs (Peer, Stepdown) with leader-only preconditions; see HL9. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
 
 - [x] [HL7] Daemon cluster flags: `RunDaemon` built the re-exec argv from --port and --data-dir only, so `ctx hub start --daemon --peers ...` started a standalone hub and reported success. argv extracted to a testable `daemonArgs` that forwards both cluster flags. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
 
 - [x] [HL8] Raft bind address (closes H-28): `--raft-bind` binds and advertises the Raft transport, `--peers` becomes the other nodes' Raft addresses, wildcard/bare-port/host-less values are rejected with a message naming the flag, and --raft-bind alone runs a self-electing single node. Before this, `Run` advertised ":port+1" and every cluster start died on "local bind address is not advertisable". Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [x] [HL9] Cluster commands wired: admin-gated Peer and Stepdown RPCs (`Cluster.AddPeer`/`RemovePeer` over raft AddVoter/RemoveServer, `Cluster.Stepdown` over LeadershipTransfer), `raft.ErrNotLeader` mapped to FailedPrecondition naming `ctx hub status`, `--token`/`CTX_HUB_ADMIN_TOKEN` resolution shared by revoke/peer/stepdown via core/admin. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-163000
+
+- [x] [HL10] Join mode: `ctx hub start --join` brings up the Raft transport without bootstrapping so a leader can add the node with `ctx hub peer add` (the AddVoter half of H-12; `peer add` is meaningless without it). `--join` with `--peers` is rejected. Verified live: peer add took the leader from Peers: 0 to Peers: 1 and the joiner reported Role: Follower. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-163000

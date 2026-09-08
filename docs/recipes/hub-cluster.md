@@ -162,40 +162,53 @@ always land on the right node.
 
 ## Runtime Membership Changes
 
-!!! warning "Not Wired Yet"
-    `ctx hub peer add`, `ctx hub peer remove` and
-    `ctx hub stepdown` print a confirmation and return: none of
-    them reaches the Raft node. Membership changes today mean
-    restarting the affected nodes with new `--peers` lists, and
-    a leader handoff means stopping the leader and letting the
-    remaining nodes elect. `ctx hub status` reports the outcome
-    either way, so you can see what the cluster actually did.
+Membership changes are admin-gated and leader-only: pass
+`--token` (or set `CTX_HUB_ADMIN_TOKEN`) and run them against
+the leader that `ctx hub status` names. A follower answers
+`not the leader` rather than pretending.
 
-Add a new peer without downtime:
+Adding a node is two steps, because a new node must not
+bootstrap a configuration of its own — it waits for one:
 
 ```bash
-ctx hub peer add hub-d.lan:9901
+# On hub-d.lan, the new node:
+ctx hub start --daemon \
+  --port 9900 \
+  --raft-bind hub-d.lan:9901 \
+  --join
+
+# On the leader:
+ctx hub peer add hub-d.lan:9901 --token ctx_adm_...
 ```
 
-Remove a decommissioned peer:
+`ctx hub status` on hub-d.lan then reports `Role: Follower`
+and names the leader; every node's `Peers:` count goes up by
+one.
+
+Remove a decommissioned peer, again on the leader:
 
 ```bash
-ctx hub peer remove hub-c.lan:9901
+ctx hub peer remove hub-c.lan:9901 --token ctx_adm_...
 ```
+
+Removal shrinks the quorum, which is the point: a node you
+have taken away should stop counting against liveness. Removing
+one of three leaves two, and a two-node cluster needs both to
+be up — plan the next addition accordingly.
 
 ## Planned Maintenance
 
 Before taking a leader offline, hand off leadership:
 
 ```bash
-ssh hub-a.lan 'ctx hub stepdown'
+ssh hub-a.lan 'ctx hub stepdown --token ctx_adm_...'
 ```
 
-`stepdown` is meant to trigger a new election among the
-remaining followers before the leader goes offline. Until it is
-wired to the cluster (see the warning above), stop the leader
-and let the survivors elect: with a quorum still up, the new
-leader appears in `ctx hub status` within a couple of seconds.
+`stepdown` asks Raft to transfer leadership to a follower that
+is caught up, and returns once the transfer completes. Run
+`ctx hub status` afterwards to see which node won. Then stop
+the old leader; the cluster keeps serving throughout, because
+the handoff happened before the process went away.
 
 ## Failure Modes at a Glance
 

@@ -81,6 +81,17 @@ Cluster mode has never started on any machine. The two defects
 hid each other: the daemon path silently dropped the flag that
 would have surfaced the crash.
 
+### The three commands that printed and returned — `internal/cli/hub`
+
+`ctx hub peer add`, `ctx hub peer remove` and `ctx hub
+stepdown` each called a `write` helper and returned nil.
+`Cluster.Stepdown()` had no caller anywhere in the tree, and
+raft's `AddVoter` / `RemoveServer` were never called at all.
+The HA recipe documented all three as working cluster
+operations, so an operator handing off leadership before
+maintenance got "Leadership transferred" from a process that
+had asked nobody anything.
+
 ### The bootstrap error nothing checks — `internal/hub/cluster.go`
 
 `NewCluster` calls `r.BootstrapCluster(config)` in both branches
@@ -135,9 +146,34 @@ with no error and no log line.
    from `RunDaemon` so it can be tested without forking)
    forwards both cluster flags.
 
+### Make the cluster commands do what they print
+
+8. `internal/hub` — two admin-token-gated RPCs, `Peer` and
+   `Stepdown`, gated the way `Register` and `Revoke` are:
+   reshaping a cluster is an operator action, not a client
+   one. `Cluster.AddPeer` / `RemovePeer` wrap raft's
+   `AddVoter` / `RemoveServer` keyed on the node's Raft
+   address, which is also its ID.
+9. `internal/hub/err_check.go` — `clusterOpErr` maps
+   `raft.ErrNotLeader` to `FailedPrecondition` with a message
+   naming `ctx hub status` as the way to find the leader. A
+   follower's refusal is something the operator can act on;
+   an opaque `Internal` is not.
+10. `internal/cli/hub/core/{peer,stepdown}` — both dial the
+    hub from the saved connection config and call the RPC.
+    `internal/cli/hub/core/admin.Token` resolves `--token`
+    then `CTX_HUB_ADMIN_TOKEN` for all three admin commands,
+    including `revoke`, whose inline copy it replaces.
+11. `--join` (`internal/cli/hub`, `internal/hub.ClusterConfig`)
+    — a node that bootstraps its own configuration is a second
+    cluster of one, not a member of the first, so a node being
+    added has to start with no configuration and wait. `--join`
+    with `--peers` is an error: a node either bootstraps or
+    joins.
+
 ### Carry it on the wire
 
-8. `internal/hub/types.go` — `StatusResponse` gains
+12. `internal/hub/types.go` — `StatusResponse` gains
    `ClusterEnabled`, `IsLeader`, `LeaderAddr` and
    `ClusterPeers`. All four are additive and JSON-omitempty
    where a zero value is meaningless, so an older client
@@ -146,22 +182,22 @@ with no error and no log line.
    standalone hub is indistinguishable from a clustered node
    that has lost its leader — both report `IsLeader: false`,
    `LeaderAddr: ""`.
-9. `internal/hub/handler.go` — `hubStatus` fills those fields
+13. `internal/hub/handler.go` — `hubStatus` fills those fields
    from `s.cluster` when one is attached, and warns to stderr
    (`cfgWarn.HubClusterPeers`) if the configuration read fails
    rather than failing the RPC: a Status call is a diagnostic,
    and losing the peer count is not a reason to deny the
    operator the rest of it.
-10. `internal/config/warn/warn.go` — `HubClusterPeers`, the
+14. `internal/config/warn/warn.go` — `HubClusterPeers`, the
    stderr format for that read.
 
 ### Render what the hub actually said
 
-11. `internal/config/hub/hub.go` — `RoleLeader` and
+15. `internal/config/hub/hub.go` — `RoleLeader` and
    `RoleStandalone` join `RoleFollower`. `RoleActive` is
    deleted: it labelled the listener-count heuristic and has no
    meaning once the role comes from Raft.
-12. `internal/write/hub` — `ClusterStatus` takes a
+16. `internal/write/hub` — `ClusterStatus` takes a
    `ClusterStatusInfo` struct rather than growing a seventh
    positional parameter, and renders two shapes:
 
@@ -177,37 +213,37 @@ with no error and no log line.
    where the combined `Entries: %d  Peers: %d` line would be
    printing a peer count that does not exist. The
    `Dropped listeners:` line keeps its non-zero condition.
-13. `internal/cli/hub/core/status/status.go` — the role,
+17. `internal/cli/hub/core/status/status.go` — the role,
    the leader and the peer count all come from the response.
    Standalone hubs print no leader and no peer count instead
    of inventing both.
 
 ### Correct the docs the change falsifies
 
-14. `docs/recipes/hub-cluster.md` — the "expected output" block
+18. `docs/recipes/hub-cluster.md` — the "expected output" block
     is replaced with what the command prints. It currently
     shows a per-peer table with sync state and uptime that no
     version of this code has ever produced.
-15. `docs/cli/hub.md`, `internal/assets/commands/commands.yaml`
+19. `docs/cli/hub.md`, `internal/assets/commands/commands.yaml`
     — `ctx hub status` is described as role, leader, entries,
     peers and dropped listeners; "sync state" and "uptime" are
     dropped because neither is reported.
-16. `docs/operations/hub.md` — the monitoring section drops
+20. `docs/operations/hub.md` — the monitoring section drops
     `ctx hub status --exit-code` (no such flag exists; the
     command exits non-zero only on RPC failure) and the
     per-peer replication-lag claim (the response carries no
     per-peer sequence). Role flaps stay: with a truthful
     `Role:` line they are now actually observable.
-17. `internal/hub/doc.go` — the Status paragraph names the
+21. `internal/hub/doc.go` — the Status paragraph names the
     leadership fields.
-18. `docs/cli/hub.md`, `docs/recipes/hub-cluster.md` —
-    `--raft-bind` in the start reference, the cluster recipe's
-    three start commands, and its topology diagram, which
-    showed one port per node where there are two. Both files
-    also gain a warning that `ctx hub peer add|remove` and
-    `ctx hub stepdown` print a confirmation and reach nothing:
-    the recipe documented all three as working cluster
-    operations, which they are not.
+22. `docs/cli/hub.md`, `docs/recipes/hub-cluster.md` —
+    `--raft-bind` and `--join` in the start reference, the
+    cluster recipe's start commands, and its topology diagram,
+    which showed one port per node where there are two. The
+    membership and maintenance sections document what the
+    commands now do: admin-gated, leader-only, addressed by
+    Raft address, and — for an addition — preceded by starting
+    the new node with `--join`.
 
 ## Tests
 
@@ -251,6 +287,26 @@ with no error and no log line.
   rendered strings catches it. `TestClusterStatus_*Dropped*`
   keep their existing contract under the new struct argument.
 
+- `TestCluster_PeerAddJoinsNode` /
+  `TestCluster_PeerRemoveShrinksCluster` — a node started in
+  join mode holds no configuration until the leader adds it,
+  then follows that leader and counts as a peer; removing it
+  shrinks the configuration again. Real Raft nodes, not mocks.
+- `TestCluster_StepdownHandsOffLeadership` — after a transfer
+  the old leader is not leading and the other node is.
+- `TestPeer_RejectsBadAdminToken` /
+  `TestStepdown_RejectsBadAdminToken` — the admin gate.
+- `TestPeer_NoClusterIsPrecondition` /
+  `TestStepdown_NoClusterIsPrecondition` /
+  `TestPeer_FollowerIsPrecondition` — the three refusals that
+  used to be confirmations: no Raft node at all, and a
+  configuration change asked of a follower (the
+  `raft.ErrNotLeader` mapping).
+- `TestPeer_ValidatesRequest` — unknown action and empty
+  address.
+- `TestDaemonArgs_ForwardsJoin` — the boolean flag, which
+  carries no value and is the easiest one to drop.
+
 ## Out of Scope
 
 - **A `Leadership` streaming RPC** and a `ctx hub leader`
@@ -259,20 +315,20 @@ with no error and no log line.
   are sugar until a caller asks for them.
 - **Raft term, commit index, log position.** Useful for
   debugging quorum, a different question from "who leads now".
-- **Deterministic bootstrap (H-12).** Every node still calls
-  `BootstrapCluster` with the full server list, which works
-  because each node is now given the same list and
-  `ErrCantBootstrap` is tolerated on restart. The `--bootstrap`
-  / `AddVoter` join flow, and persisting a bootstrapped flag,
-  stay with H-12.
-- **`ctx hub stepdown` and `ctx hub peer add|remove` are
-  no-ops.** All three print a confirmation and never reach the
-  Raft node — `Cluster.Stepdown()` has no caller, and neither
-  has raft's `AddVoter`/`RemoveServer`. Wiring them means new
-  admin-gated RPCs on the hub service, which is a surface of
-  its own; this change documents what they do instead of
-  leaving the recipe claiming they work, and files them in
-  TASKS.md.
+- **Deterministic bootstrap (H-12).** A node with `--peers`
+  still bootstraps the full server list, which works because
+  every node is given the same list and `ErrCantBootstrap` is
+  tolerated on restart. `--join` + `ctx hub peer add` is the
+  `AddVoter` half of H-12 and lands here because `peer add`
+  is meaningless without it; the single-`--bootstrap`-node
+  flow and the persisted bootstrapped flag stay with H-12.
+- **Client-side failover to the new leader.** `ctx hub
+  stepdown` now moves leadership, and a client whose stream
+  was on the old leader still has to be re-run: `Listen` is
+  called once with `sinceSequence` hardcoded to `0`, the same
+  latent full-refetch `fix-hub-silent-error-suppression.md`
+  parked. Reconnect stays manual and the failure-modes doc
+  says so.
 - **Authenticated Raft transport (H-10/H-11).** `--raft-bind`
   now makes a real cluster possible on a LAN, and the Raft
   transport is still unauthenticated and unencrypted. The

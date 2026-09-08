@@ -53,12 +53,18 @@ func DefaultPort() int { return defaultPort }
 // runs standalone, and asking for peers without it is an error
 // rather than a hub that quietly is not in a cluster.
 //
+// A joining node bootstraps nothing and waits for a leader to
+// add it with ctx hub peer add. That is the only way into an
+// existing cluster: a node that bootstrapped its own
+// configuration would be a second cluster of one.
+//
 // Parameters:
 //   - cmd: cobra command for output
 //   - port: TCP port to listen on
 //   - dataDir: hub data directory (empty = default)
 //   - raftBind: address this node advertises to peers
 //   - peers: peer Raft addresses (may be nil)
+//   - join: wait to be added instead of bootstrapping
 //
 // Returns:
 //   - error: non-nil if setup or server startup fails
@@ -68,6 +74,7 @@ func Run(
 	dataDir string,
 	raftBind string,
 	peers []string,
+	join bool,
 ) error {
 	dataDir, resolveErr := resolveDataDir(dataDir)
 	if resolveErr != nil {
@@ -92,17 +99,12 @@ func Run(
 	// for it. The node registers under that address as both its
 	// ID and its transport address, which is the shape peers are
 	// given, so every node bootstraps the same configuration.
-	if raftBind != "" || len(peers) > 0 {
-		if bindErr := validateRaftBind(raftBind); bindErr != nil {
-			return bindErr
-		}
-		cluster, clusterErr := hub.NewCluster(
-			raftBind, raftBind, dataDir, peers,
-		)
-		if clusterErr != nil {
+	if raftBind != "" || len(peers) > 0 || join {
+		if clusterErr := startCluster(
+			srv, dataDir, raftBind, peers, join,
+		); clusterErr != nil {
 			return clusterErr
 		}
-		srv.SetCluster(cluster)
 	}
 
 	addr := fmt.Sprintf(cfgHub.FmtPort, port)

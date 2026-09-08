@@ -108,6 +108,106 @@ func (s *Server) revoke(
 	return &RevokeResponse{}, nil
 }
 
+// peer handles the Peer RPC.
+//
+// Admin-token-gated (mirrors register): changing cluster
+// membership is an operator action, not a client one. Only the
+// leader can commit a configuration change, so a follower
+// answers FailedPrecondition rather than silently doing
+// nothing -- which is what the CLI did before this RPC existed.
+//
+// Parameters:
+//   - ctx: request context (unused)
+//   - req: peer request with admin token, action and address
+//
+// Returns:
+//   - *PeerResponse: empty on success
+//   - error: PermissionDenied on bad admin token,
+//     FailedPrecondition with no cluster or on a follower,
+//     InvalidArgument on a bad action or empty address
+func (s *Server) peer(
+	_ context.Context, req *PeerRequest,
+) (*PeerResponse, error) {
+	if req.AdminToken != s.adminToken {
+		return nil, status.Error(
+			codes.PermissionDenied,
+			cfgHub.ErrInvalidAdminToken,
+		)
+	}
+	if s.cluster == nil {
+		return nil, status.Error(
+			codes.FailedPrecondition,
+			cfgHub.ErrClusterDisabled,
+		)
+	}
+	if req.Address == "" {
+		return nil, status.Error(
+			codes.InvalidArgument,
+			cfgHub.ErrPeerAddressRequired,
+		)
+	}
+
+	var changeErr error
+	switch req.Action {
+	case cfgHub.ActionAdd:
+		changeErr = s.cluster.AddPeer(req.Address)
+	case cfgHub.ActionRemove:
+		changeErr = s.cluster.RemovePeer(req.Address)
+	default:
+		return nil, status.Error(
+			codes.InvalidArgument,
+			errHub.InvalidPeerAction(req.Action).Error(),
+		)
+	}
+	if changeErr != nil {
+		return nil, clusterOpErr(changeErr)
+	}
+
+	return &PeerResponse{}, nil
+}
+
+// stepdown handles the Stepdown RPC.
+//
+// Admin-token-gated (mirrors register). Leadership transfer is
+// a leader-only operation; asking a follower is a precondition
+// failure, not a no-op.
+//
+// Parameters:
+//   - ctx: request context (unused)
+//   - req: stepdown request with admin token
+//
+// Returns:
+//   - *StepdownResponse: empty once the transfer completes
+//   - error: PermissionDenied on bad admin token,
+//     FailedPrecondition with no cluster or on a follower
+func (s *Server) stepdown(
+	_ context.Context, req *StepdownRequest,
+) (*StepdownResponse, error) {
+	if req.AdminToken != s.adminToken {
+		return nil, status.Error(
+			codes.PermissionDenied,
+			cfgHub.ErrInvalidAdminToken,
+		)
+	}
+	if s.cluster == nil {
+		return nil, status.Error(
+			codes.FailedPrecondition,
+			cfgHub.ErrClusterDisabled,
+		)
+	}
+	if !s.cluster.IsLeader() {
+		return nil, status.Error(
+			codes.FailedPrecondition, cfgHub.ErrNotLeader,
+		)
+	}
+
+	if transferErr := s.cluster.Stepdown(); transferErr != nil {
+		return nil, clusterOpErr(transferErr)
+	}
+
+	return &StepdownResponse{}, nil
+}
+
 // publish handles the Publish RPC.
 //
 // Parameters:

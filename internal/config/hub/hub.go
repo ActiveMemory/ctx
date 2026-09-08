@@ -29,6 +29,10 @@ const (
 	MethodStatus = "Status"
 	// MethodRevoke is the Revoke RPC method name.
 	MethodRevoke = "Revoke"
+	// MethodPeer is the Peer RPC method name.
+	MethodPeer = "Peer"
+	// MethodStepdown is the Stepdown RPC method name.
+	MethodStepdown = "Stepdown"
 )
 
 // Full gRPC method paths (ServicePath + MethodName).
@@ -45,6 +49,10 @@ const (
 	PathStatus = ServicePath + MethodStatus
 	// PathRevoke is the full gRPC path for Revoke.
 	PathRevoke = ServicePath + MethodRevoke
+	// PathPeer is the full method path for Peer.
+	PathPeer = ServicePath + MethodPeer
+	// PathStepdown is the full method path for Stepdown.
+	PathStepdown = ServicePath + MethodStepdown
 )
 
 // Authorization header.
@@ -220,6 +228,18 @@ const (
 	ErrInvalidAdminToken = "invalid admin token"
 	// ErrProjectNameRequired is the gRPC error for missing project name.
 	ErrProjectNameRequired = "project_name required"
+	// ErrClusterDisabled is the gRPC error for a cluster command
+	// sent to a hub running without a Raft node.
+	ErrClusterDisabled = "cluster not enabled: " +
+		"hub started without --raft-bind"
+	// ErrNotLeader is the gRPC error for a configuration change
+	// or leadership transfer asked of a node that is not the
+	// leader.
+	ErrNotLeader = "not the leader: run this against the " +
+		"leader named by ctx hub status"
+	// ErrPeerAddressRequired is the gRPC error for a peer change
+	// with no address.
+	ErrPeerAddressRequired = "address required"
 	// ErrClientIDRequired is the gRPC error for a missing client ID
 	// on the Revoke RPC.
 	ErrClientIDRequired = "client_id required"

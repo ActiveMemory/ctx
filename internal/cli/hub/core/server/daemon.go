@@ -36,6 +36,7 @@ import (
 //   - dataDir: hub data directory (empty = default)
 //   - raftBind: Raft address advertised to peers (empty = none)
 //   - peers: comma-separated peer addresses (empty = no cluster)
+//   - join: wait to be added instead of bootstrapping
 //
 // Returns:
 //   - error: non-nil if fork or PID file write fails
@@ -43,6 +44,7 @@ func RunDaemon(
 	cmd *cobra.Command,
 	port int,
 	dataDir, raftBind, peers string,
+	join bool,
 ) error {
 	if dataDir == "" {
 		defaultDir, dirErr := defaultDataDir()
@@ -59,7 +61,7 @@ func RunDaemon(
 
 	pid, startErr := execDaemon.Start(
 		binPath,
-		daemonArgs(port, dataDir, raftBind, peers),
+		daemonArgs(port, dataDir, raftBind, peers, join),
 	)
 	if startErr != nil {
 		return startErr

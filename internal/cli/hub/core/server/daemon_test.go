@@ -19,7 +19,8 @@ import (
 // said otherwise.
 func TestDaemonArgs_ForwardsClusterFlags(t *testing.T) {
 	args := daemonArgs(
-		9900, "/tmp/hub", "10.0.0.5:9901", "h2:9901,h3:9901",
+		9900, "/tmp/hub", "10.0.0.5:9901",
+		"h2:9901,h3:9901", false,
 	)
 
 	for flag, want := range map[string]string{
@@ -36,11 +37,25 @@ func TestDaemonArgs_ForwardsClusterFlags(t *testing.T) {
 	}
 }
 
+// TestDaemonArgs_ForwardsJoin pins the boolean flag, which has
+// no value to carry and so is the easiest one to drop. A
+// daemonized joiner that lost it would bootstrap a cluster of
+// one instead of waiting to be added.
+func TestDaemonArgs_ForwardsJoin(t *testing.T) {
+	args := daemonArgs(
+		9900, "/tmp/hub", "10.0.0.5:9901", "", true,
+	)
+
+	if !slices.Contains(args, "--join") {
+		t.Errorf("--join not forwarded: %v", args)
+	}
+}
+
 // TestDaemonArgs_OmitsClusterFlags keeps a standalone daemon's
 // argv as it was: an empty --raft-bind would put the hub into
 // cluster mode with no address to advertise.
 func TestDaemonArgs_OmitsClusterFlags(t *testing.T) {
-	args := daemonArgs(9900, "/tmp/hub", "", "")
+	args := daemonArgs(9900, "/tmp/hub", "", "", false)
 
 	want := []string{
 		"hub", "start", "--port", "9900",

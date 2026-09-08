@@ -9,6 +9,11 @@ package hub
 import (
 	"testing"
 	"time"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 )
 
 // clusterNodeID is the Raft ServerID the test node registers
@@ -28,15 +33,32 @@ const clusterNodeID = "test-node"
 func singleNodeCluster(t *testing.T) (*Cluster, string) {
 	t.Helper()
 
-	lis := listenRandom(t)
-	addr := lis.Addr().String()
-	if closeErr := lis.Close(); closeErr != nil {
-		t.Fatal(closeErr)
-	}
+	return newSingleNode(t, clusterNodeID, freeAddrs(t, 1)[0])
+}
 
-	cluster, clusterErr := NewCluster(
-		clusterNodeID, addr, t.TempDir(), nil,
-	)
+// singleNodeClusterAt is singleNodeCluster on a caller-chosen
+// address, registered under that address the way
+// ctx hub start --raft-bind registers a node.
+func singleNodeClusterAt(
+	t *testing.T, addr string,
+) (*Cluster, string) {
+	t.Helper()
+
+	return newSingleNode(t, addr, addr)
+}
+
+// newSingleNode boots one self-electing Raft node and blocks
+// until it has elected itself.
+func newSingleNode(
+	t *testing.T, nodeID, addr string,
+) (*Cluster, string) {
+	t.Helper()
+
+	cluster, clusterErr := NewCluster(ClusterConfig{
+		NodeID:   nodeID,
+		BindAddr: addr,
+		DataDir:  t.TempDir(),
+	})
 	if clusterErr != nil {
 		t.Fatal(clusterErr)
 	}
@@ -182,9 +204,12 @@ func startCluster(t *testing.T, addrs []string) []*Cluster {
 			}
 		}
 
-		cluster, clusterErr := NewCluster(
-			addr, addr, t.TempDir(), peers,
-		)
+		cluster, clusterErr := NewCluster(ClusterConfig{
+			NodeID:   addr,
+			BindAddr: addr,
+			DataDir:  t.TempDir(),
+			Peers:    peers,
+		})
 		if clusterErr != nil {
 			t.Fatal(clusterErr)
 		}
@@ -269,4 +294,151 @@ func waitForLeader(
 	t.Fatal("cluster never settled on a single leader")
 
 	return ""
+}
+
+// joinCluster starts a Raft node that bootstraps nothing and
+// waits to be added by a leader, which is what
+// ctx hub start --join does.
+func joinCluster(t *testing.T, addr string) *Cluster {
+	t.Helper()
+
+	cluster, clusterErr := NewCluster(ClusterConfig{
+		NodeID:   addr,
+		BindAddr: addr,
+		DataDir:  t.TempDir(),
+		Join:     true,
+	})
+	if clusterErr != nil {
+		t.Fatal(clusterErr)
+	}
+	t.Cleanup(func() {
+		if shutErr := cluster.Shutdown(); shutErr != nil {
+			t.Log(shutErr)
+		}
+	})
+
+	return cluster
+}
+
+// waitFor polls cond until it holds or the deadline passes.
+func waitFor(t *testing.T, what string, cond func() bool) {
+	t.Helper()
+
+	deadline := time.Now().Add(20 * time.Second)
+	for time.Now().Before(deadline) {
+		if cond() {
+			return
+		}
+		time.Sleep(50 * time.Millisecond)
+	}
+
+	t.Fatalf("timed out waiting for %s", what)
+}
+
+// TestCluster_PeerAddJoinsNode is what ctx hub peer add has to
+// mean: a node started in join mode holds no configuration
+// until the leader adds it, and then it is a member -- it
+// counts as a peer and it names the same leader. Before this
+// change the command printed "Added peer" and reached nothing.
+func TestCluster_PeerAddJoinsNode(t *testing.T) {
+	addrs := freeAddrs(t, 2)
+	leader, leaderAddr := singleNodeClusterAt(t, addrs[0])
+	joiner := joinCluster(t, addrs[1])
+
+	if addErr := leader.AddPeer(addrs[1]); addErr != nil {
+		t.Fatal(addErr)
+	}
+
+	waitFor(t, "the joiner to follow the leader", func() bool {
+		return joiner.LeaderAddr() == leaderAddr
+	})
+
+	peers, peersErr := leader.Peers()
+	if peersErr != nil {
+		t.Fatal(peersErr)
+	}
+	if peers != 1 {
+		t.Errorf("leader reports %d peers, want 1", peers)
+	}
+	if joiner.IsLeader() {
+		t.Error("the joiner elected itself instead of joining")
+	}
+}
+
+// TestCluster_PeerRemoveShrinksCluster pins the other half:
+// removing a decommissioned node takes it back out of the
+// committed configuration, so it stops counting toward quorum.
+func TestCluster_PeerRemoveShrinksCluster(t *testing.T) {
+	addrs := freeAddrs(t, 2)
+	leader, leaderAddr := singleNodeClusterAt(t, addrs[0])
+	joiner := joinCluster(t, addrs[1])
+
+	if addErr := leader.AddPeer(addrs[1]); addErr != nil {
+		t.Fatal(addErr)
+	}
+	waitFor(t, "the joiner to follow the leader", func() bool {
+		return joiner.LeaderAddr() == leaderAddr
+	})
+
+	if remErr := leader.RemovePeer(addrs[1]); remErr != nil {
+		t.Fatal(remErr)
+	}
+
+	waitFor(t, "the peer count to drop", func() bool {
+		peers, peersErr := leader.Peers()
+		return peersErr == nil && peers == 0
+	})
+}
+
+// TestCluster_StepdownHandsOffLeadership pins ctx hub stepdown:
+// the node that was leading is not leading afterwards, and the
+// other node is. The command used to print "Leadership
+// transferred" without asking anyone.
+func TestCluster_StepdownHandsOffLeadership(t *testing.T) {
+	addrs := freeAddrs(t, 2)
+	clusters := startCluster(t, addrs)
+	waitForLeader(t, clusters)
+
+	var leader, other *Cluster
+	if clusters[0].IsLeader() {
+		leader, other = clusters[0], clusters[1]
+	} else {
+		leader, other = clusters[1], clusters[0]
+	}
+
+	if stepErr := leader.Stepdown(); stepErr != nil {
+		t.Fatal(stepErr)
+	}
+
+	waitFor(t, "leadership to move", func() bool {
+		return !leader.IsLeader() && other.IsLeader()
+	})
+}
+
+// TestPeer_FollowerIsPrecondition pins the error mapping that
+// makes a follower's refusal actionable: raft.ErrNotLeader
+// becomes FailedPrecondition with a message pointing at
+// ctx hub status, not an opaque Internal.
+func TestPeer_FollowerIsPrecondition(t *testing.T) {
+	addrs := freeAddrs(t, 2)
+	clusters := startCluster(t, addrs)
+	waitForLeader(t, clusters)
+
+	follower := clusters[0]
+	if follower.IsLeader() {
+		follower = clusters[1]
+	}
+
+	srv := listenTestServer(t)
+	srv.SetCluster(follower)
+
+	_, peerErr := srv.peer(testCtx(), &PeerRequest{
+		AdminToken: srv.adminToken,
+		Action:     cfgHub.ActionRemove,
+		Address:    addrs[0],
+	})
+
+	if got := status.Code(peerErr); got != codes.FailedPrecondition {
+		t.Errorf("code = %v, want FailedPrecondition", got)
+	}
 }

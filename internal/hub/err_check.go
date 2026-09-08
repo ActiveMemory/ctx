@@ -7,6 +7,9 @@
 package hub
 
 import (
+	"errors"
+
+	"github.com/hashicorp/raft"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -22,6 +25,30 @@ import (
 var errSlowListener = status.Error(
 	codes.ResourceExhausted, cfgHub.ErrSlowListener,
 )
+
+// clusterOpErr maps a Raft configuration or leadership error
+// onto a gRPC status.
+//
+// raft.ErrNotLeader is a precondition the operator can act on
+// -- ask the leader instead -- so it travels as
+// FailedPrecondition with an answer, rather than as an opaque
+// internal error. Everything else is the hub's problem, not
+// the caller's.
+//
+// Parameters:
+//   - err: error from a Cluster configuration or transfer call
+//
+// Returns:
+//   - error: gRPC status carrying the right code
+func clusterOpErr(err error) error {
+	if errors.Is(err, raft.ErrNotLeader) {
+		return status.Error(
+			codes.FailedPrecondition, cfgHub.ErrNotLeader,
+		)
+	}
+
+	return status.Error(codes.Internal, err.Error())
+}
 
 // authErr reports whether err is an authentication or
 // authorization failure.

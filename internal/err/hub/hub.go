@@ -94,6 +94,18 @@ func RaftBindRequired() error {
 	)
 }
 
+// JoinWithPeers returns an error when a start asks both to
+// join an existing cluster and to bootstrap one. A joining
+// node has no configuration of its own by design.
+//
+// Returns:
+//   - error: guidance on the join flow
+func JoinWithPeers() error {
+	return errors.New(
+		desc.Text(text.DescKeyErrHubJoinWithPeers),
+	)
+}
+
 // RaftBindUnroutable returns an error for a Raft bind address
 // no peer could dial: a bare port, an empty host, or a
 // wildcard such as 0.0.0.0 or [::].

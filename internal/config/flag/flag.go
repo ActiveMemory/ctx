@@ -76,6 +76,7 @@ const (
 	Hook            = "hook"
 	JSON            = "json"
 	JSONFile        = "json-file"
+	Join            = "join"
 	KeepFrontmatter = "keep-frontmatter"
 	Key             = "key"
 	Label           = "label"

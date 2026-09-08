@@ -83,6 +83,13 @@ single-node Raft cluster that elects itself. That is the
 cheapest way to see the leadership fields of
 [`ctx hub status`](#ctx-hub-status) before adding nodes.
 
+To add a node to a cluster that is already running, start it
+with `--join` instead of `--peers`: it brings up its Raft
+transport, bootstraps nothing, and waits for
+[`ctx hub peer add`](#ctx-hub-peer) on the leader to hand it a
+configuration. `--join` and `--peers` together are an error —
+a node either bootstraps a cluster or joins one.
+
 Raft is used **only** for leader election. Data replication
 uses sequence-based gRPC sync on the append-only JSONL log;
 there is no multi-node consensus on writes. See the
@@ -98,6 +105,7 @@ setup and the Raft-lite durability caveat.
 | `--daemon`    | Run the hub server in the background              | `false`          |
 | `--raft-bind` | Raft address this node binds and advertises       | *(none)*         |
 | `--peers`     | Comma-separated peer Raft addresses               | *(none)*         |
+| `--join`      | Wait to be added by a leader (no bootstrap)       | `false`          |
 
 #### Validation
 
@@ -169,21 +177,33 @@ ctx hub status
 
 ### `ctx hub peer`
 
-Add or remove peers from the cluster at runtime. Useful for
-scaling up or replacing a decommissioned node without
-restarting the leader.
+Add or remove peers in the cluster's Raft configuration at
+runtime. Useful for scaling up or replacing a decommissioned
+node without restarting the leader.
 
-!!! warning "Not Wired Yet"
-    The command prints a confirmation and returns without
-    touching the Raft node. Change membership by restarting the
-    affected nodes with new `--peers` lists, and confirm the
-    result with [`ctx hub status`](#ctx-hub-status).
+The address is the peer's **Raft** address (its `--raft-bind`),
+not its hub port. Membership changes are admin-gated, like
+[`ctx hub revoke`](#ctx-hub-revoke): pass `--token` or set
+`CTX_HUB_ADMIN_TOKEN`.
+
+Only the leader can change the configuration. Run the command
+against the leader — [`ctx hub status`](#ctx-hub-status) names
+it — or the hub answers `not the leader`.
+
+A node being added must already be running with
+`--raft-bind <its address> --join`, so that it is waiting for a
+configuration instead of bootstrapping one of its own.
 
 **Examples**:
 
 ```bash
-ctx hub peer add host2:9901
-ctx hub peer remove host2:9901
+# On the new node:
+ctx hub start --daemon --port 9900 \
+  --raft-bind host4:9901 --join
+
+# On the leader:
+ctx hub peer add host4:9901 --token ctx_adm_...
+ctx hub peer remove host3:9901 --token ctx_adm_...
 ```
 
 ### `ctx hub stepdown`
@@ -193,16 +213,17 @@ new election among the remaining followers before the current
 leader steps down. Use before taking the leader offline for
 maintenance.
 
-!!! warning "Not Wired Yet"
-    The command prints "Leadership transferred" and returns
-    without asking the cluster for anything. To hand off today,
-    stop the leader and let the remaining nodes elect; the new
-    leader shows up in [`ctx hub status`](#ctx-hub-status).
+Admin-gated like [`ctx hub peer`](#ctx-hub-peer), and
+leader-only: a follower answers `not the leader` instead of
+reporting a transfer that did not happen. The confirmation
+prints after the transfer returns;
+[`ctx hub status`](#ctx-hub-status) names the node that won.
 
 **Examples**:
 
 ```bash
-ctx hub stepdown
+ctx hub stepdown --token ctx_adm_...
+CTX_HUB_ADMIN_TOKEN=ctx_adm_... ctx hub stepdown
 ```
 
 ### See Also
