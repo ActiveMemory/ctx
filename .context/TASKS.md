@@ -3102,3 +3102,24 @@ work is the delivery layer: plugin root, manifests, deployer, parser, docs.
 - [x] [CX6] Verification gate: make lint, make test, make audit green; live ctx setup codex --write + codex exec hook run (SessionStart context injection, UserPromptSubmit nudges, SessionEnd journal import) recorded in the PR; DECISIONS entries for plugin-root placement, TOML append strategy, skill generation, memories non-goal. Spec: specs/codex-integration.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:ce5a8328 #added:2026-08-23-120739
 
 - [ ] [CX7] Follow-up: Windows commandWindows overrides for the Codex hooks manifest (hooks currently require a POSIX shell with git on PATH). Spec: specs/codex-integration.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:ce5a8328 #added:2026-08-23-120739
+
+### Phase HL: Hub Status Cluster Leadership (issue #96)
+
+Spec: `specs/hub-status-cluster-leadership.md`. Read it before starting any
+HL task. The Raft `Cluster` on `Server` is never read by the Status RPC, and
+the three cluster-ish lines `ctx hub status` prints today (role, leader,
+peers) are derived from listener counts, the dialed address and the project
+count. HL wires the real state through response → handler → render.
+Issue: https://github.com/ActiveMemory/ctx/issues/96
+
+- [ ] [HL1] Cluster: `LeaderAddr` returns the Raft address it is named for (not the ServerID), `Peers()` reads the committed configuration, and `BootstrapCluster`'s error is checked (tolerating `raft.ErrCantBootstrap` on restart). Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [ ] [HL2] Wire: `StatusResponse` gains `ClusterEnabled`, `IsLeader`, `LeaderAddr`, `ClusterPeers`; `hubStatus` populates them from `s.cluster`; `cfgWarn.HubClusterPeers` for a failed configuration read. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [ ] [HL3] Render: `ClusterStatus` takes `ClusterStatusInfo`; standalone prints role + entries only, cluster mode prints the real leader and peer count; `RoleLeader`/`RoleStandalone` replace the `RoleActive` listener-count heuristic. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [ ] [HL4] Docs: hub-cluster recipe expected output, docs/cli/hub.md, commands.yaml description, docs/operations/hub.md monitoring section (drops the nonexistent `--exit-code` flag and the per-peer lag claim), internal/hub/doc.go. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [ ] [HL5] Tests: standalone vs single-node-Raft Status contract, `Peers()` excludes self, three rendered shapes; `make lint` and `make test` green. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [ ] [HL6] Follow-up (not in the HL PR): `ctx hub stepdown` prints "Leadership transferred" without calling `Cluster.Stepdown()` — the same class of defect as issue #96 on a command that needs a new RPC to be honest. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:main #issue:96 #added:2026-09-08-134421
