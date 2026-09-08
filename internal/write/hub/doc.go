@@ -12,6 +12,9 @@
 // [ClusterStatus] prints the full cluster dashboard:
 // the current node role (Leader or Follower), the
 // leader address, total entry count, and peer count.
+// It also prints the cumulative slow-listener
+// disconnect count, but only when that count is
+// non-zero, so a healthy hub keeps its former output.
 //
 // # Peer Management
 //
@@ -32,7 +35,9 @@
 //
 // # Usage
 //
-//	hub.ClusterStatus(cmd, role, leader, entries, peers)
+//	hub.ClusterStatus(
+//		cmd, role, leader, entries, peers, dropped,
+//	)
 //	hub.PeerAdded(cmd, peerAddr)
 //	hub.SteppedDown(cmd)
 package hub

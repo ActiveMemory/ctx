@@ -9,6 +9,7 @@ package hub
 import (
 	"encoding/json"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
@@ -144,12 +145,17 @@ type Server struct {
 //
 // Fields:
 //   - mu: serializes subscribe/unsubscribe/broadcast
-//   - subs: active listener channels
-//   - dropped: count of disconnected slow listeners
+//   - subs: active listener channels. Membership is also the
+//     open/closed record for each channel: a channel absent
+//     from the map has already been closed, so unsubscribe
+//     knows not to close it twice
+//   - dropped: count of disconnected slow listeners. Atomic so
+//     readers on other goroutines (the Status RPC handler)
+//     never take the broadcast mutex
 type fanOut struct {
 	mu      sync.Mutex
 	subs    map[chan []Entry]struct{}
-	dropped uint64
+	dropped atomic.Uint64
 }
 
 // RegisterRequest is the input for the Register RPC.
@@ -273,11 +279,13 @@ type EntryMsg struct {
 // Fields:
 //   - TotalEntries: total number of entries
 //   - ConnectedClients: active listener count
+//   - DroppedListeners: cumulative slow-listener disconnects
 //   - EntriesByType: entry count per type
 //   - EntriesByProject: entry count per origin project
 type StatusResponse struct {
 	TotalEntries     uint64            `json:"total_entries"`
 	ConnectedClients uint32            `json:"connected_clients"`
+	DroppedListeners uint64            `json:"dropped_listeners"`
 	EntriesByType    map[string]uint64 `json:"entries_by_type"`
 	EntriesByProject map[string]uint64 `json:"entries_by_project"`
 }

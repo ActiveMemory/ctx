@@ -26,6 +26,10 @@ const (
 	// DescKeyWriteHubClusterStats is the text key for hub
 	// cluster statistics.
 	DescKeyWriteHubClusterStats = "write.hub-cluster-stats"
+	// DescKeyWriteHubDroppedListeners is the text key for the
+	// cumulative slow-listener disconnect count. Printed only
+	// when the count is non-zero.
+	DescKeyWriteHubDroppedListeners = "write.hub-dropped-listeners"
 	// DescKeyWriteHubRevoked is the text key for the hub client
 	// revocation confirmation.
 	DescKeyWriteHubRevoked = "write.hub-revoked"

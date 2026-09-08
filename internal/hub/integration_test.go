@@ -8,11 +8,17 @@ package hub
 
 import (
 	"context"
+	"io"
 	"net"
+	"strings"
 	"testing"
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // TestIntegration_PublishAndSync spins up a hub, registers
@@ -298,3 +304,115 @@ func TestIntegration_ClientLib(t *testing.T) {
 // server on a random port, and returns a connected client.
 
 // authedCtx and callRegister are also in server_test.go.
+
+// slowListenerPayload is large enough that a handful of entries
+// saturate the gRPC stream window once the client stops reading,
+// which is what stalls the server's send and lets the fan-out
+// buffer fill.
+const slowListenerPayload = 128 << 10
+
+// slowListenerBroadcastCap bounds the publish loop in
+// [TestIntegration_SlowListenerReachesClient] so a regression
+// fails the test instead of broadcasting forever.
+const slowListenerBroadcastCap = 512
+
+// TestIntegration_SlowListenerReachesClient is the client-visible
+// half of the disconnect contract, over a real gRPC stream. A
+// listener that stops draining is cut loose server-side; the
+// client must learn that from a ResourceExhausted error, not from
+// a stream that stays open forever while entries pass it by. This
+// is what makes `ctx connection listen` exit non-zero rather than
+// report success on a stream it is no longer receiving.
+func TestIntegration_SlowListenerReachesClient(t *testing.T) {
+	restore := logWarn.SetSink(io.Discard)
+	defer restore()
+
+	_, _, adminTok := startTestServer(t)
+
+	store, storeErr := NewStore(t.TempDir())
+	if storeErr != nil {
+		t.Fatal(storeErr)
+	}
+	srv := NewServer(store, adminTok)
+	lis, lisErr := net.Listen("tcp", "127.0.0.1:0")
+	if lisErr != nil {
+		t.Fatal(lisErr)
+	}
+	go func() { _ = srv.Serve(lis) }()
+	t.Cleanup(func() { srv.GracefulStop() })
+
+	addr := lis.Addr().String()
+	admin, adminDialErr := NewClient(addr, "")
+	if adminDialErr != nil {
+		t.Fatal(adminDialErr)
+	}
+	regResp, regErr := admin.Register(
+		context.Background(), adminTok, "slow-proj",
+	)
+	if closeErr := admin.Close(); closeErr != nil {
+		t.Log(closeErr)
+	}
+	if regErr != nil {
+		t.Fatal(regErr)
+	}
+
+	client, dialErr := NewClient(addr, regResp.ClientToken)
+	if dialErr != nil {
+		t.Fatal(dialErr)
+	}
+	defer func() { _ = client.Close() }()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// The handler stalls on release, so the client stops calling
+	// Recv: the stream window fills, the server's send blocks,
+	// and the fan-out channel behind it has nowhere to drain.
+	release := make(chan struct{})
+	listenErrCh := make(chan error, 1)
+	go func() {
+		listenErrCh <- client.Listen(
+			ctx, nil, 0,
+			func(EntryMsg) error {
+				<-release
+				return nil
+			},
+		)
+	}()
+
+	waitForListeners(t, srv, 1)
+
+	entries := []Entry{{
+		ID:      "slow",
+		Type:    "learning",
+		Content: strings.Repeat("x", slowListenerPayload),
+	}}
+	var broadcasts int
+	for srv.listeners.count() != 0 {
+		if broadcasts == slowListenerBroadcastCap {
+			t.Fatalf("listener still subscribed after %d "+
+				"broadcasts to a client that never reads",
+				broadcasts)
+		}
+		srv.listeners.broadcast(entries)
+		broadcasts++
+	}
+
+	close(release)
+
+	select {
+	case listenErr := <-listenErrCh:
+		if listenErr == nil {
+			t.Fatal("Listen returned nil: the client cannot " +
+				"tell a disconnect from a clean end of stream")
+		}
+		if code := status.Code(listenErr); code !=
+			codes.ResourceExhausted {
+			t.Errorf("Listen error code = %v (%v), want %v",
+				code, listenErr, codes.ResourceExhausted)
+		}
+	case <-time.After(30 * time.Second):
+		t.Fatal("Listen never returned after the server " +
+			"disconnected its listener")
+	}
+}

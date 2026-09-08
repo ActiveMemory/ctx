@@ -1125,6 +1125,8 @@ write.connect-hub-stats:
   short: 'Entries: %d  Clients: %d'
 write.hub-cluster-stats:
   short: 'Entries: %d  Peers: %d'
+write.hub-dropped-listeners:
+  short: 'Dropped listeners: %d (slow subscribers disconnected)'
 write.agent-section-hub:
   short: "## ctx Hub"
 write.connect-hub-sync:

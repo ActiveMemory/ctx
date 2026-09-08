@@ -61,6 +61,7 @@ func Run(cmd *cobra.Command, _ []string) error {
 		cmd, role, cfg.HubAddr,
 		resp.TotalEntries,
 		len(resp.EntriesByProject),
+		resp.DroppedListeners,
 	)
 	return nil
 }

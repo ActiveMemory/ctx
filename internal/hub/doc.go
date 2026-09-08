@@ -62,8 +62,15 @@
 //
 // [Store] guards its indexes and appender with a
 // single mutex. Listen streams subscribe to a
-// fan-out channel; slow subscribers are dropped
-// rather than blocking publishers.
+// fan-out channel; a subscriber that lets its buffer
+// fill is disconnected rather than blocking every
+// publisher. The disconnect ends that client's
+// stream with a ResourceExhausted error, so it
+// learns the stream is over instead of waiting on
+// one that will never carry another entry. Each
+// disconnect warns on stderr (outside the fan-out
+// mutex) and bumps a cumulative counter reported as
+// DroppedListeners by the Status RPC.
 //
 // # Encryption
 //

@@ -15,7 +15,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// ClusterStatus prints cluster role and stats.
+// ClusterStatus prints cluster role and stats. The dropped-listener
+// line is omitted when the count is zero so a healthy hub keeps its
+// current output.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -23,11 +25,13 @@ import (
 //   - leader: leader address
 //   - entries: total entry count
 //   - peers: number of peers
+//   - dropped: cumulative slow-listener disconnects
 func ClusterStatus(
 	cmd *cobra.Command,
 	role, leader string,
 	entries uint64,
 	peers int,
+	dropped uint64,
 ) {
 	cmd.Println(fmt.Sprintf(
 		desc.Text(text.DescKeyWriteHubRole), role,
@@ -39,6 +43,12 @@ func ClusterStatus(
 		desc.Text(text.DescKeyWriteHubClusterStats),
 		entries, peers,
 	))
+	if dropped > 0 {
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteHubDroppedListeners),
+			dropped,
+		))
+	}
 }
 
 // PeerAdded confirms a peer was added.

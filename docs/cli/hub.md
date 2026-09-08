@@ -114,6 +114,12 @@ Safe to rerun: if no daemon is running, returns a
 Show cluster status: role, peers, sync state, entry count,
 and uptime.
 
+When the hub has disconnected any slow listeners, the output
+gains a `Dropped listeners:` line with the cumulative count.
+The line is omitted while that count is zero, so a healthy hub
+looks exactly as it did before. See
+[Slow Listener Disconnected](../operations/hub-failure-modes.md#slow-listener-disconnected).
+
 **Examples**:
 
 ```bash

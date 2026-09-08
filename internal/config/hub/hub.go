@@ -223,6 +223,12 @@ const (
 	ErrMissingToken = "missing token"
 	// ErrInvalidToken is the gRPC error for invalid auth token.
 	ErrInvalidToken = "invalid token"
+	// ErrSlowListener is the gRPC error ending a Listen stream
+	// whose fan-out channel the broadcaster closed because the
+	// client stopped draining it. The stream is over; the client
+	// must open a new one from its last-seen sequence.
+	ErrSlowListener = "listener disconnected: " +
+		"stream not drained, fan-out buffer full"
 )
 
 // StructTagJSON is the struct tag key used by types.go for

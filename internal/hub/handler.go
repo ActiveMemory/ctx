@@ -179,13 +179,24 @@ func (s *Server) syncEntries(
 
 // listenEntries handles the Listen RPC (long-lived stream).
 //
+// The fan-out channel doubles as the disconnect signal: when
+// [fanOut.broadcast] cuts a slow listener loose it closes the
+// channel, so a receive that reports !ok means this stream was
+// disconnected. Ending the RPC with [errSlowListener] is what
+// makes that visible — a closed channel is always receivable,
+// so a receive that ignored ok would spin on nil forever at
+// full CPU while the client waited on a stream that would never
+// carry another entry.
+//
 // Parameters:
 //   - req: listen request with type filter and sequence
 //   - send: callback to send each entry to the client
 //   - ctx: context for cancellation
 //
 // Returns:
-//   - error: non-nil if send fails
+//   - error: [errSlowListener] if this listener was
+//     disconnected for not draining, otherwise non-nil if send
+//     fails
 func (s *Server) listenEntries(
 	req *ListenRequest,
 	send func(*EntryMsg) error,
@@ -214,7 +225,10 @@ func (s *Server) listenEntries(
 		select {
 		case <-ctx.Done():
 			return nil
-		case entries := <-ch:
+		case entries, live := <-ch:
+			if !live {
+				return errSlowListener
+			}
 			for i := range entries {
 				if len(typeSet) > 0 &&
 					!typeSet[entries[i].Type] {
@@ -245,6 +259,7 @@ func (s *Server) hubStatus(
 	return &StatusResponse{
 		TotalEntries:     total,
 		ConnectedClients: s.listeners.count(),
+		DroppedListeners: s.listeners.droppedCount(),
 		EntriesByType:    byType,
 		EntriesByProject: byProject,
 	}, nil

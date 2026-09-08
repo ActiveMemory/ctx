@@ -113,6 +113,15 @@ const (
 	// not vanish.
 	CloseHubClient = "close hub client: %v"
 
+	// HubFanOutSlowListener is the stderr format for a listener
+	// disconnected because its fan-out buffer was full. Takes the
+	// cumulative disconnect count. The broadcaster cannot block on
+	// a slow subscriber and will not drop entries silently, so the
+	// listener is cut loose instead; without this warning the only
+	// record of it was a counter nothing read.
+	HubFanOutSlowListener = "hub fanout: disconnected slow listener " +
+		"(buffer full); cumulative disconnects: %d"
+
 	// HubReplicateAppend is the stderr format for a failed
 	// [Store.Append] inside the follower replication stream. The
 	// loop is best-effort and has no return path, so a dropped
