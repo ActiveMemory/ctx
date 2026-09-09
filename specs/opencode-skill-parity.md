@@ -64,6 +64,18 @@ and `deploySkills()` all walk whatever directories exist.
 - **The five planning-arc skills carry no `allowed-tools:` key**, so
   their sync transform is a byte-identical copy. Their `/ctx-*`
   cross-references are closed within the enrolled set.
+- **`ctx-learning-add` and `ctx-convention-add` are enrolled** (review
+  finding): synced `ctx-wrap-up`, `ctx-handover`, and `ctx-kb-note`
+  route capture through them, and the capture-pair rationale that
+  enrolled `ctx-task-add`/`ctx-decision-add` applies verbatim.
+- **Five dangling `/ctx-*` references are an accepted gap**: the
+  canonical bodies of `ctx-wrap-up` and `ctx-remember` mention
+  `/ctx-commit`, `/ctx-reflect`, `/ctx-digest`, `/ctx-history`, and
+  `/ctx-journal-enrich-all`, which are not enrolled here. Accepted
+  because the follow-up mirror-sync branch
+  (`specs/opencode-mirror-sync.md`) ships the full canonical tree and
+  closes all of them; enrolling piecemeal now would churn the tree
+  twice.
 
 ## Acceptance Criteria
 

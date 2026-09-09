@@ -76,6 +76,62 @@ func TestSyncedSkillParity(t *testing.T) {
 		checked, exempt, len(syncedSkillTrees))
 }
 
+// TestAllowedToolsConfinedToFrontmatter guards the sync transform's
+// over-reach: `sed '/^allowed-tools:/d'` deletes every column-0
+// `allowed-tools:` line anywhere in a file, so a canonical body that
+// ever gains one (most plausibly a fenced frontmatter example in a
+// skill about writing skills) would be silently corrupted in every
+// generated tree — and TestSyncedSkillParity would still pass,
+// because stripAllowedTools replicates the same transform. Assert
+// every canonical skill carries at most one such line and that it
+// sits inside the leading `---` frontmatter block.
+func TestAllowedToolsConfinedToFrontmatter(t *testing.T) {
+	fence := []byte("---")
+	entries, dirErr := fs.ReadDir(assets.FS, asset.DirClaudeSkills)
+	if dirErr != nil {
+		t.Fatalf("read canonical skill tree: %v", dirErr)
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		p := path.Join(asset.DirClaudeSkills, entry.Name(), asset.FileSKILLMd)
+		src, readErr := fs.ReadFile(assets.FS, p)
+		if readErr != nil {
+			t.Errorf("%s: read: %v", p, readErr)
+			continue
+		}
+		lines := bytes.Split(src, []byte("\n"))
+		fmEnd := -1
+		if len(lines) > 0 && bytes.Equal(lines[0], fence) {
+			for i := 1; i < len(lines); i++ {
+				if bytes.Equal(lines[i], fence) {
+					fmEnd = i
+					break
+				}
+			}
+		}
+		count := 0
+		for i, line := range lines {
+			if !bytes.HasPrefix(line, []byte("allowed-tools:")) {
+				continue
+			}
+			count++
+			if fmEnd == -1 || i > fmEnd {
+				t.Errorf(
+					"%s:%d: allowed-tools: line outside the leading "+
+						"frontmatter block — the sync transform would strip "+
+						"it from generated bodies while parity still passes",
+					p, i+1,
+				)
+			}
+		}
+		if count > 1 {
+			t.Errorf("%s: %d allowed-tools: lines (want at most 1)", p, count)
+		}
+	}
+}
+
 // stripAllowedTools removes every line starting with
 // `allowed-tools:`, mirroring the sync scripts'
 // `sed '/^allowed-tools:/d'` transform exactly.

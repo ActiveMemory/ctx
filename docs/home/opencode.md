@@ -144,6 +144,8 @@ Capture:
 |---------|-------------|
 | `/ctx-task-add` | Add a task when follow-up work is identified. |
 | `/ctx-decision-add` | Record an architectural decision with rationale. |
+| `/ctx-learning-add` | Record a gotcha or lesson future sessions should know. |
+| `/ctx-convention-add` | Codify a repeated pattern as a project convention. |
 
 Knowledge-base editorial pipeline (active when `.context/kb/` exists):
 
