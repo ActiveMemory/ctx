@@ -89,6 +89,91 @@ func TestDeploySkills_RefreshesStaleSkill(t *testing.T) {
 	}
 }
 
+func TestDeploySkills_DeploysReferences(t *testing.T) {
+	withTempProjectDir(t)
+
+	var buf bytes.Buffer
+	if err := deploySkills(testCmd(&buf)); err != nil {
+		t.Fatalf("deploySkills: %v", err)
+	}
+
+	refs, err := agent.OpenCodeSkillReferences()
+	if err != nil {
+		t.Fatalf("OpenCodeSkillReferences: %v", err)
+	}
+	if len(refs) == 0 {
+		t.Fatal("no embedded reference files — embed glob regressed")
+	}
+	for name, files := range refs {
+		for refName, want := range files {
+			target := filepath.Join(
+				".opencode", "skills", name, "references", refName,
+			)
+			got, readErr := os.ReadFile(target)
+			if readErr != nil {
+				t.Errorf("%s: not deployed: %v", target, readErr)
+				continue
+			}
+			if !bytes.Equal(got, want) {
+				t.Errorf("%s: deployed content differs from embedded", target)
+			}
+		}
+	}
+}
+
+func TestDeploySkills_RefreshesStaleReferenceWhenSkillUnchanged(t *testing.T) {
+	withTempProjectDir(t)
+
+	skills, err := agent.OpenCodeSkills()
+	if err != nil {
+		t.Fatalf("OpenCodeSkills: %v", err)
+	}
+	refs, err := agent.OpenCodeSkillReferences()
+	if err != nil {
+		t.Fatalf("OpenCodeSkillReferences: %v", err)
+	}
+	const skill = "ctx-humanize"
+	if refs[skill] == nil {
+		t.Fatalf("%s has no embedded references — pick another fixture", skill)
+	}
+
+	// Seed the skill's SKILL.md with current content (deploy will skip
+	// it) and one stale reference: the skip path must still refresh
+	// references, or a re-run after a reference-only upstream change
+	// would leave deployed skills citing stale files.
+	skillDir := filepath.Join(".opencode", "skills", skill)
+	refDir := filepath.Join(skillDir, "references")
+	if mkErr := os.MkdirAll(refDir, 0o755); mkErr != nil {
+		t.Fatalf("mkdir: %v", mkErr)
+	}
+	target := filepath.Join(skillDir, "SKILL.md")
+	if seedErr := os.WriteFile(target, skills[skill], 0o644); seedErr != nil {
+		t.Fatalf("seed skill: %v", seedErr)
+	}
+	var refName string
+	for n := range refs[skill] {
+		refName = n
+		break
+	}
+	refTarget := filepath.Join(refDir, refName)
+	if seedRefErr := os.WriteFile(refTarget, []byte("stale reference"), 0o644); seedRefErr != nil {
+		t.Fatalf("seed reference: %v", seedRefErr)
+	}
+
+	var buf bytes.Buffer
+	if deployErr := deploySkills(testCmd(&buf)); deployErr != nil {
+		t.Fatalf("deploySkills: %v", deployErr)
+	}
+
+	got, readErr := os.ReadFile(refTarget)
+	if readErr != nil {
+		t.Fatalf("read reference: %v", readErr)
+	}
+	if !bytes.Equal(got, refs[skill][refName]) {
+		t.Fatalf("reference not refreshed on the skill-skipped path")
+	}
+}
+
 func TestDeployPlugin_RejectsSymlinkTarget(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("symlink behavior varies on Windows in this environment")

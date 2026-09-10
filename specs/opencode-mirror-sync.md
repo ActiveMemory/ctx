@@ -54,6 +54,17 @@ strength:
   (`rm -rf` + `cp -r`), since a mirror sync can add and remove
   directories.
 
+## Decisions
+
+- **`ctx-serendipity` ships despite its companion `ctx-dream` being
+  excluded.** Its single `/ctx-dream` reference is a passing
+  provenance mention ("the pass that produces the proposals you
+  review here"), not an instruction to invoke it — and the
+  cross-tool workflow is real: the dream runs headless under Claude
+  Code, the dreams/ notebook lives in the repo, so the review walk
+  can happen from any tool. The Codex mirror ships it under the
+  same reasoning.
+
 ## Non-Goals
 
 - Changing the Copilot CLI model (its tree carries tool-only wrapper
