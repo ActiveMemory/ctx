@@ -6,7 +6,7 @@
 clean all release build-all help \
 test-coverage smoke site site-guard site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall check-tools \
-sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills sync-codex-skills check-codex-skills codex-plugin-install sync-steering check-steering gemini-search \
+sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills sync-codex-skills check-codex-skills codex-plugin-install sync-opencode-skills check-opencode-skills sync-steering check-steering gemini-search \
 gitnexus-version gitnexus-update gitnexus-index gitnexus-mcp strip-gitnexus install-ctxctl reinstall-ctxctl
 
 # Default binary name and output
@@ -41,8 +41,8 @@ sync-version:
 	mv .agents/plugins/marketplace.json.tmp .agents/plugins/marketplace.json; \
 	echo "Plugin version synced to $$V"
 
-## build: Build for current platform (syncs version + embedded docs + copilot skills first)
-build: sync-version sync-why sync-copilot-skills sync-codex-skills
+## build: Build for current platform (syncs version + embedded docs + copilot/codex/opencode skills first)
+build: sync-version sync-why sync-copilot-skills sync-codex-skills sync-opencode-skills
 	CGO_ENABLED=0 go build -ldflags="-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$$(cat VERSION | tr -d '[:space:]')" -o $(OUTPUT) ./cmd/ctx
 
 ## ctxctl: Build the maintainer-only ctxctl binary (audit channel) into dist/
@@ -181,6 +181,8 @@ audit:
 	@$(MAKE) --no-print-directory check-copilot-skills
 	@echo "==> Checking Codex skills freshness..."
 	@$(MAKE) --no-print-directory check-codex-skills
+	@echo "==> Checking OpenCode skills freshness..."
+	@$(MAKE) --no-print-directory check-opencode-skills
 	@echo "==> Checking steering outputs freshness..."
 	@$(MAKE) --no-print-directory check-steering
 	@echo "==> Running tests..."
@@ -398,6 +400,10 @@ check-version-sync:
 sync-copilot-skills:
 	@./hack/sync-copilot-skills.sh
 
+## sync-opencode-skills: Sync OpenCode skills from canonical ctx skills
+sync-opencode-skills:
+	@./hack/sync-opencode-skills.sh
+
 ## sync-steering: Regenerate tool-native steering outputs from .context/steering
 sync-steering:
 	@CGO_ENABLED=0 go run ./cmd/ctx steering sync --all
@@ -458,6 +464,21 @@ check-codex-skills:
 codex-plugin-install:
 	@codex plugin marketplace add "$$(pwd)" && codex plugin add ctx@activememory-ctx
 	@echo "Open codex and run /hooks to review and trust the ctx hooks."
+
+## check-opencode-skills: Verify OpenCode skills match ctx source skills
+check-opencode-skills:
+	@TMPDIR=$$(mktemp -d) && \
+	cp -r internal/assets/integrations/opencode/skills/ "$$TMPDIR/before" && \
+	./hack/sync-opencode-skills.sh > /dev/null && \
+	if ! diff -rq "$$TMPDIR/before" internal/assets/integrations/opencode/skills/ > /dev/null 2>&1; then \
+		echo "FAIL: OpenCode skills are stale — run 'make sync-opencode-skills'"; \
+		diff -rq "$$TMPDIR/before" internal/assets/integrations/opencode/skills/ || true; \
+		cp -r "$$TMPDIR/before/"* internal/assets/integrations/opencode/skills/; \
+		rm -rf "$$TMPDIR"; \
+		exit 1; \
+	fi; \
+	rm -rf "$$TMPDIR"; \
+	echo "OpenCode skills are in sync."
 
 ## check-why: Verify embedded why docs match source docs
 check-why:

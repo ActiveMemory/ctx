@@ -17,20 +17,23 @@
 //
 // # Behavior
 //
-// [Run] signals the current hub node to relinquish its
-// leader role and prints a confirmation once the transfer
-// is initiated.
+// [Run] asks the hub to hand leadership to a follower and
+// prints a confirmation once the transfer returns. Only a
+// leader can transfer leadership: a follower answers
+// FailedPrecondition rather than reporting a handoff that
+// did not happen.
 //
 // # Data Flow
 //
 // The stepdown pipeline works as follows:
 //
-//  1. The cmd layer invokes [Run] with the cobra
-//     command and unused args.
-//  2. [Run] calls writeHub.SteppedDown to print a
-//     confirmation message indicating the node has
-//     initiated leadership transfer.
-//  3. The function returns nil on success. Future
-//     implementations may add gRPC calls to
-//     coordinate the transfer with the cluster.
+//  1. The cmd layer resolves the admin token and invokes
+//     [Run].
+//  2. The connection config supplies the hub address; the
+//     client dials without a bearer token, since the RPC is
+//     authenticated by the admin credential.
+//  3. The hub calls raft LeadershipTransfer and returns
+//     when it completes or fails.
+//  4. writeHub.SteppedDown reports the handoff. Which node
+//     won is answered by ctx hub status.
 package stepdown

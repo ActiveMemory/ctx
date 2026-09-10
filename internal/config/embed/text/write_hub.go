@@ -23,9 +23,21 @@ const (
 	// DescKeyWriteHubRole is the text key for hub role
 	// messages.
 	DescKeyWriteHubRole = "write.hub-role"
+	// DescKeyWriteHubLeaderUnknown is the text key for the
+	// leader line while no leader is known: an election is in
+	// progress, or quorum was lost.
+	DescKeyWriteHubLeaderUnknown = "write.hub-leader-unknown"
 	// DescKeyWriteHubClusterStats is the text key for hub
 	// cluster statistics.
 	DescKeyWriteHubClusterStats = "write.hub-cluster-stats"
+	// DescKeyWriteHubEntries is the text key for the entry
+	// count on a standalone hub, where the cluster-stats line
+	// would report a peer count that does not exist.
+	DescKeyWriteHubEntries = "write.hub-entries"
+	// DescKeyWriteHubDroppedListeners is the text key for the
+	// cumulative slow-listener disconnect count. Printed only
+	// when the count is non-zero.
+	DescKeyWriteHubDroppedListeners = "write.hub-dropped-listeners"
 	// DescKeyWriteHubRevoked is the text key for the hub client
 	// revocation confirmation.
 	DescKeyWriteHubRevoked = "write.hub-revoked"

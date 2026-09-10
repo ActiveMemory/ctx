@@ -7,18 +7,15 @@
 package revoke
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreAdmin "github.com/ActiveMemory/ctx/internal/cli/hub/core/admin"
 	coreRevoke "github.com/ActiveMemory/ctx/internal/cli/hub/core/revoke"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
-	"github.com/ActiveMemory/ctx/internal/config/env"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
-	errHub "github.com/ActiveMemory/ctx/internal/err/hub"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 )
 
@@ -43,15 +40,10 @@ func Cmd() *cobra.Command {
 		RunE: func(
 			cobraCmd *cobra.Command, args []string,
 		) error {
-			// Admin token: --token flag takes precedence, then
-			// the CTX_HUB_ADMIN_TOKEN environment variable.
-			token := adminToken
-			if token == "" {
-				token = os.Getenv(env.HubAdmin)
-			}
-			if token == "" {
+			token, tokenErr := coreAdmin.Token(adminToken)
+			if tokenErr != nil {
 				cobraCmd.SilenceUsage = true
-				return errHub.AdminTokenRequired()
+				return tokenErr
 			}
 			return coreRevoke.Run(cobraCmd, args[0], token)
 		},

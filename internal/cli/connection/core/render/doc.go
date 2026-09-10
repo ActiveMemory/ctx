@@ -18,15 +18,21 @@
 //
 // # Public Surface
 //
-//   - **[WriteEntries](dir, entries)**: appends
-//     each entry to the matching per-type file
+//   - **[WriteEntries](entries)**: appends each
+//     entry to the matching per-type file
 //     (`decisions.md`, `learnings.md`,
-//     `conventions.md`, `tasks.md`) under `dir`,
-//     formatting via [HubEntryMarkdown]. Idempotent
-//     by entry sequence number; re-running with
-//     the same sequence range produces no
-//     duplicates because the importer tracks last-
-//     seen sequence per file.
+//     `conventions.md`, `tasks.md`) under
+//     `.context/hub/`, formatting via
+//     [HubEntryMarkdown]. It appends
+//     unconditionally: it is not idempotent and does
+//     not deduplicate, so handing it the same entry
+//     twice writes it twice. Skipping what has
+//     already landed is the caller's job —
+//     `ctx connection sync` does it by passing the
+//     hub only the sequences above its last-seen
+//     watermark, while `ctx connection listen` asks
+//     for sequence 0 on every run and therefore
+//     re-appends its backlog.
 //
 // # File Layout
 //
@@ -34,8 +40,11 @@
 //   - `.context/hub/learnings.md`
 //   - `.context/hub/conventions.md`
 //   - `.context/hub/tasks.md`
-//   - `.context/hub/.sync-state.json`: last-seen
-//     sequence per type so resume is exact.
+//   - `.context/hub/.sync-state.json`: the single
+//     last-seen hub sequence, written by
+//     `ctx connection sync` so its resume is exact.
+//     `ctx connection listen` neither reads nor
+//     writes it.
 //
 // # Concurrency
 //

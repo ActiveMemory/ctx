@@ -6,6 +6,8 @@
 | 2026-08-23 | Codex trust and hook wiring facts verified against codex 0.148 |
 | 2026-08-23 | hack scripts must survive macOS /bin/bash 3.2 and BSD grep |
 | 2026-08-23 | make lint SA5011 false positives mean a corrupted golangci-lint cache |
+| 2026-08-19 | Empty-array expansion under set -u kills lint-drift.sh on stock macOS bash 3.2 |
+| 2026-08-19 | Exact zensical pin does not prevent site/ churn: underlying libs drift |
 | 2026-07-25 | Using the proprietary sibling repo as design evidence leaks its internals into tracked files |
 | 2026-07-25 | Skill and doc examples of a serialized structure must round-trip through the real parser |
 | 2026-07-25 | A guard derived from a capability accessor silently lifts when the accessor is extended |
@@ -27,6 +29,16 @@ DO NOT UPDATE FOR:
 - Opinions without evidence
 -->
 
+
+## [2026-09-08-153411] Hub cluster mode never started: two defects hid each other
+
+**Context**: Wiring issue #96's leadership fields through the Status RPC looked like plumbing until the built binary was exercised live: ctx hub start --daemon --peers started a standalone hub (RunDaemon built its re-exec argv from --port and --data-dir only, so --peers was parsed and never forwarded), and in the foreground Run advertised fmt.Sprintf(':%d', port+1) to raft.NewTCPTransport, which refuses an unspecified advertise address.
+
+**Lesson**: A daemon re-exec argv is a second, silent flag surface: a flag missing there is a flag the process never sees, while the parent still reports success. The daemon path was also hiding the startup crash the foreground path would have shown, so neither bug was visible from the other side alone. Package tests passed throughout.
+
+**Application**: For any fork/re-exec path, extract the argv into a testable function and pin every flag it must carry (daemonArgs + TestDaemonArgs_ForwardsClusterFlags). Before claiming a CLI feature works, run the built binary through the documented flow, not just the package tests.
+
+---
 
 ## [2026-09-05-202947] Concurrent tool-integration branches collide at a fixed set of insertion points
 
@@ -145,6 +157,23 @@ DO NOT UPDATE FOR:
 **Lesson**: Nondeterministic staticcheck SA5011 on the guarded nil-check pattern is a corrupted golangci-lint build cache, not real findings. 'golangci-lint cache clean && make lint' returned 0 issues.
 
 **Application**: Before chasing staticcheck findings in files a branch never touched, check whether the finding set is stable across two runs; if it varies, clean the golangci-lint cache first.
+
+---
+
+## [2026-08-19-211547] Empty-array expansion under set -u kills lint-drift.sh on stock macOS bash 3.2
+
+**Context**: make audit had never passed on this stock macOS machine: lint-drift.sh died with "exclude_args[@]: unbound variable" because bash 3.2 treats expanding an empty array as an unset-variable error under set -u. (The sibling lint-docstrings.sh gotchas — apostrophe in a $( ) comment, grep -P on BSD grep — are covered by the 2026-08-23 "hack scripts must survive macOS /bin/bash 3.2 and BSD grep" learning.)
+
+**Lesson**: Bash 3.2 under set -u aborts on ${arr[@]} when the array is empty; bash 4.4+ made this legal, so Linux CI never sees it.
+
+**Application**: In hack/ scripts guard every possibly-empty array expansion with ${arr[@]+"${arr[@]}"}. Per specs/hack-script-portability.md.
+## [2026-08-19-221024] Exact zensical pin does not prevent site/ churn: underlying libs drift
+
+**Context**: make site with the exactly-pinned zensical 0.0.51 (fresh pipx install) still churned 100+ committed site/ pages with HTML-entity encoding differences (&#39; vs ') untouched by the docs change — the pin fixes the generator version, not its Python dependency tree.
+
+**Lesson**: The generator pin is necessary but not sufficient for reproducible site builds; markdown-renderer deps under zensical encode entities differently across environments, and CI never rebuilds the site to catch it.
+
+**Application**: After make site, review git status -- site/ and commit ONLY pages your docs change affects (plus search.json); restore the rest. If full-site churn is ever intended, do it as its own chore commit.
 
 ---
 

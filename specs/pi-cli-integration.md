@@ -149,16 +149,25 @@ internal/assets/integrations/pi/
 ├── extension/
 │   └── ctx.ts            # Thin shim extension (envelope + live-context
 │                         # scan + isError gating)
-└── skills/               # Same bundled skill set as OpenCode (10 skills)
+└── skills/               # Same bundled skill set as OpenCode (19 skills)
     ├── ctx-agent/SKILL.md
+    ├── ctx-brainstorm/SKILL.md
+    ├── ctx-convention-add/SKILL.md
+    ├── ctx-decision-add/SKILL.md
     ├── ctx-handover/SKILL.md
+    ├── ctx-implement/SKILL.md
     ├── ctx-kb-ask/SKILL.md
     ├── ctx-kb-ground/SKILL.md
     ├── ctx-kb-ingest/SKILL.md
     ├── ctx-kb-note/SKILL.md
     ├── ctx-kb-site-review/SKILL.md
+    ├── ctx-learning-add/SKILL.md
+    ├── ctx-plan/SKILL.md
     ├── ctx-remember/SKILL.md
+    ├── ctx-spec/SKILL.md
     ├── ctx-status/SKILL.md
+    ├── ctx-task-add/SKILL.md
+    ├── ctx-task-out/SKILL.md
     └── ctx-wrap-up/SKILL.md
 
 internal/cli/setup/core/pi/
@@ -198,6 +207,17 @@ tools/typecheck/pi/                               # tsconfig.json + package.json
 ```
 
 `internal/config/setup` needs no Pi entry (Pi has no MCP/global-config leg).
+
+## Upstream skill-parity merge (2026-09-10)
+
+OpenCode now generates 19 skills from the canonical Claude tree, stripping
+`allowed-tools:` (see `specs/opencode-skill-parity.md`). Pi mirrors that
+complete generated set; retain both `TestPiSkillsMirrorOpenCode` and the
+upstream canonical parity guard unchanged. Keep `ctx-agent`'s automatic-load
+wording tool-neutral in the canonical source and its generated copies, so
+regeneration does not restore a Claude-only `PreToolUse` claim in Pi/OpenCode.
+Preserve both branches' task and learning entries. No extension or deployment
+runtime changes are needed for this merge.
 
 ## CLI surface
 

@@ -14,7 +14,7 @@ Load the full context packet for AI consumption.
 
 ## When NOT to Use
 
-- The PreToolUse hook already runs `ctx agent` automatically with a cooldown:
+- The tool integration already runs `ctx agent` automatically:
   you rarely need to invoke this manually
 - Don't run it just to "refresh" if you already have the context loaded in
   this session
@@ -54,7 +54,7 @@ ctx agent
 ctx agent --budget 4000
 ```
 
-**Example: with cooldown (how the PreToolUse hook invokes it):**
+**Example: with cooldown for repeated loads:**
 ```bash
 ctx agent --budget 4000 --session $PPID
 ```

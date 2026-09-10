@@ -1810,7 +1810,14 @@ links back to the spec for detail.
   `--bootstrap` node calls `BootstrapCluster`, others
   join via `AddVoter`. Persist a `bootstrapped` flag
   in the raft data dir to avoid double-bootstrapping
-  on restart. #priority:medium #added:2026-04-11 #pr:60
+  on restart. Partially done in Phase HL: `--join`
+  starts a node that bootstraps nothing and
+  `ctx hub peer add` calls `AddVoter`, and
+  `ErrCantBootstrap` is tolerated on restart. Still
+  open: making one node the designated bootstrapper
+  instead of every `--peers` node bootstrapping the
+  same list, and persisting the flag.
+  #priority:medium #added:2026-04-11 #pr:60
   #audit:H-12
 - [ ] **H-13** Follower-side replication validation:
   call `validateEntry` on every entry received from
@@ -1844,11 +1851,15 @@ links back to the spec for detail.
   by the sysadmin. Precondition for any non-localhost
   multi-node deployment. #priority:critical
   #added:2026-04-11 #pr:60 #audit:H-10,H-11
-- [ ] **H-28** Decouple Raft bind port from gRPC port.
+- [x] **H-28** Decouple Raft bind port from gRPC port.
   Accept a dedicated `--raft-bind` flag; default to a
   random high port or refuse to start. Makes port
-  scanning less productive. #priority:low
-  #added:2026-04-11 #pr:60 #audit:H-28
+  scanning less productive. Done in Phase HL: the flag
+  is required for cluster mode and rejects wildcard,
+  bare-port and host-less addresses, so a hub refuses
+  to start rather than binding an address no peer can
+  dial. Spec: specs/hub-status-cluster-leadership.md
+  #priority:low #added:2026-04-11 #pr:60 #audit:H-28
 - [ ] Signed-entry mode: publishing clients sign their
   entries with a per-client signing key; followers
   verify on replication. Eliminates the "trust the
@@ -2617,6 +2628,10 @@ shipped.
 
 ### Misc
 
+- [ ] Full-site regen as standalone chore: make site with pinned zensical 0.0.51 rewrites 100+ pages with HTML-entity encoding differences (lib drift beneath the pin). Decide the canonical encoding, regenerate the whole site/ in one chore commit, and consider pinning zensical's dep tree (pipx runpip freeze) so future builds are reproducible. See LEARNINGS 2026-08-19 zensical-pin entry. #priority:medium #session:45d47165 #branch:feat/158-opencode-skill-parity #commit:f3f73875 #added:2026-08-19-221230
+
+- [x] Regenerate site/ for docs/home/opencode.md (OpenCode skill parity, issue #158): zensical not installed on this machine, so make site could not run; run make site on a machine with the pinned zensical and commit the site/ churn #priority:medium #session:45d47165 #branch:feat/158-opencode-skill-parity #commit:ce5a8328 #added:2026-08-19-211552
+
 - [x] [Epic F] ctx index: docs (remove reindex, add ctx index) + final build/lint/test gate (T23-T24). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
 
 - [x] [Epic E] ctx index: strip INDEX blocks from .context files, remove marker constants, add guards (T19-T22). Plan: specs/plans/computed-index-projection.md #session:75be038e #branch:main #commit:f382bee7 #added:2026-07-14-054851
@@ -3202,3 +3217,49 @@ embedded TS shim + bundled skills + shared AGENTS.md template.
 ### Phase PI
 
 - [ ] PI.10: Live Pi LLM round-trip on a working-provider machine (spec verification step 3): first prompt injects the packet with display:true; a successful git commit fires post-commit and a failed one does not; /compact then next prompt re-injects; /skill:ctx-status reachable. PI.6 records the block (gx10-spark provider unreachable here); record the result here when run. Spec: specs/pi-cli-integration.md #priority:medium #session:3c5a5cbe #branch:feat/pi-cli-integration #commit:6288c227 #added:2026-09-05-203004
+
+- [x] PI.11: Merge upstream/main at 43d0ba7c into PR #161 without rewriting
+  branch history. Preserve both branches' task and learning blocks, mirror
+  the expanded 19-skill OpenCode tree into Pi, and retain tool-neutral
+  ctx-agent wording through canonical generation. Keep both parity guards
+  unchanged. Source conflicts are resolved; go build, asset/Pi deployment
+  tests, canonical skill parity and the full-suite compliance/lint gate
+  pass. Full Windows suite: 30 failing packages also fail on clean
+  upstream/main; two additional packages (cli/notify and core/hubsync)
+  pass when rerun separately. Independent final review accepted with no
+  merge-specific blocker. GitNexus pre-commit checking is unavailable;
+  the user explicitly approved using the verified diff, targeted tests and
+  baseline comparison for this merge, and authorized commit/push plus a
+  PR verification comment. Evidence and publication receipts:
+  .git/pr161-merge-20260910/ (local only). Spec:
+  specs/pi-cli-integration.md #added:2026-09-10-123500
+  #started:2026-09-10-123500 #completed:2026-09-10
+
+### Phase HL: Hub Status Cluster Leadership (issue #96)
+
+Spec: `specs/hub-status-cluster-leadership.md`. Read it before starting any
+HL task. The Raft `Cluster` on `Server` is never read by the Status RPC, and
+the three cluster-ish lines `ctx hub status` prints today (role, leader,
+peers) are derived from listener counts, the dialed address and the project
+count. HL wires the real state through response → handler → render.
+Issue: https://github.com/ActiveMemory/ctx/issues/96
+
+- [x] [HL1] Cluster: `LeaderAddr` returns the Raft address it is named for (not the ServerID), `Peers()` reads the committed configuration, and `BootstrapCluster`'s error is checked (tolerating `raft.ErrCantBootstrap` on restart). Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [x] [HL2] Wire: `StatusResponse` gains `ClusterEnabled`, `IsLeader`, `LeaderAddr`, `ClusterPeers`; `hubStatus` populates them from `s.cluster`; `cfgWarn.HubClusterPeers` for a failed configuration read. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [x] [HL3] Render: `ClusterStatus` takes `ClusterStatusInfo`; standalone prints role + entries only, cluster mode prints the real leader and peer count; `RoleLeader`/`RoleStandalone` replace the `RoleActive` listener-count heuristic. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [x] [HL4] Docs: hub-cluster recipe expected output, docs/cli/hub.md, commands.yaml description, docs/operations/hub.md monitoring section (drops the nonexistent `--exit-code` flag and the per-peer lag claim), internal/hub/doc.go. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [x] [HL5] Tests: standalone vs single-node-Raft Status contract, `Peers()` excludes self, three rendered shapes; `make lint` and `make test` green. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [x] [HL6] `ctx hub stepdown` printed "Leadership transferred" and `ctx hub peer add|remove` printed a peer confirmation, none of which reached the Raft node (`Cluster.Stepdown()` had no caller and raft's AddVoter/RemoveServer were never called). Wired in this PR as two admin-token-gated RPCs (Peer, Stepdown) with leader-only preconditions; see HL9. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [x] [HL7] Daemon cluster flags: `RunDaemon` built the re-exec argv from --port and --data-dir only, so `ctx hub start --daemon --peers ...` started a standalone hub and reported success. argv extracted to a testable `daemonArgs` that forwards both cluster flags. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [x] [HL8] Raft bind address (closes H-28): `--raft-bind` binds and advertises the Raft transport, `--peers` becomes the other nodes' Raft addresses, wildcard/bare-port/host-less values are rejected with a message naming the flag, and --raft-bind alone runs a self-electing single node. Before this, `Run` advertised ":port+1" and every cluster start died on "local bind address is not advertisable". Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-134421
+
+- [x] [HL9] Cluster commands wired: admin-gated Peer and Stepdown RPCs (`Cluster.AddPeer`/`RemovePeer` over raft AddVoter/RemoveServer, `Cluster.Stepdown` over LeadershipTransfer), `raft.ErrNotLeader` mapped to FailedPrecondition naming `ctx hub status`, `--token`/`CTX_HUB_ADMIN_TOKEN` resolution shared by revoke/peer/stepdown via core/admin. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-163000
+
+- [x] [HL10] Join mode: `ctx hub start --join` brings up the Raft transport without bootstrapping so a leader can add the node with `ctx hub peer add` (the AddVoter half of H-12; `peer add` is meaningless without it). `--join` with `--peers` is rejected. Verified live: peer add took the leader from Peers: 0 to Peers: 1 and the joiner reported Role: Follower. Spec: specs/hub-status-cluster-leadership.md #priority:medium #branch:fix/hub-status-cluster-leadership #issue:96 #added:2026-09-08-163000

@@ -555,6 +555,6 @@ Raft-based leader election across three or more nodes for
 redundancy. Covers bootstrap, runtime peer management, graceful
 stepdown, and the Raft-lite durability caveat.
 
-**Uses**: `ctx hub start --peers`, `ctx hub status`,
+**Uses**: `ctx hub start --raft-bind --peers`, `ctx hub status`,
 `ctx hub peer add/remove`, `ctx hub stepdown`
 

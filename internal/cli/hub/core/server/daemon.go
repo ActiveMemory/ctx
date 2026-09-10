@@ -15,7 +15,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cfgFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
@@ -35,11 +34,17 @@ import (
 //   - cmd: cobra command for output
 //   - port: TCP port to listen on
 //   - dataDir: hub data directory (empty = default)
+//   - raftBind: Raft address advertised to peers (empty = none)
+//   - peers: comma-separated peer addresses (empty = no cluster)
+//   - join: wait to be added instead of bootstrapping
 //
 // Returns:
 //   - error: non-nil if fork or PID file write fails
 func RunDaemon(
-	cmd *cobra.Command, port int, dataDir string,
+	cmd *cobra.Command,
+	port int,
+	dataDir, raftBind, peers string,
+	join bool,
 ) error {
 	if dataDir == "" {
 		defaultDir, dirErr := defaultDataDir()
@@ -54,13 +59,10 @@ func RunDaemon(
 		return lookErr
 	}
 
-	args := []string{
-		cfgHub.ArgHub, cfgHub.ArgStart,
-		cfgHub.FmtFlagPrefix + cfgFlag.Port, strconv.Itoa(port),
-		cfgHub.FmtFlagPrefix + cfgFlag.DataDir, dataDir,
-	}
-
-	pid, startErr := execDaemon.Start(binPath, args)
+	pid, startErr := execDaemon.Start(
+		binPath,
+		daemonArgs(port, dataDir, raftBind, peers, join),
+	)
 	if startErr != nil {
 		return startErr
 	}
