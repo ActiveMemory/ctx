@@ -81,6 +81,47 @@ func AdminTokenRequired() error {
 	)
 }
 
+// RaftBindRequired returns an error when cluster mode is
+// requested without a Raft bind address. Raft refuses to
+// advertise a wildcard address, so there is no address to
+// derive: the operator has to name the one their peers dial.
+//
+// Returns:
+//   - error: guidance on supplying --raft-bind
+func RaftBindRequired() error {
+	return errors.New(
+		desc.Text(text.DescKeyErrHubRaftBindRequired),
+	)
+}
+
+// JoinWithPeers returns an error when a start asks both to
+// join an existing cluster and to bootstrap one. A joining
+// node has no configuration of its own by design.
+//
+// Returns:
+//   - error: guidance on the join flow
+func JoinWithPeers() error {
+	return errors.New(
+		desc.Text(text.DescKeyErrHubJoinWithPeers),
+	)
+}
+
+// RaftBindUnroutable returns an error for a Raft bind address
+// no peer could dial: a bare port, an empty host, or a
+// wildcard such as 0.0.0.0 or [::].
+//
+// Parameters:
+//   - addr: the rejected address
+//
+// Returns:
+//   - error: "--raft-bind <addr> is not an address a peer can
+//     dial: ..."
+func RaftBindUnroutable(addr string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrHubRaftBindUnroutable), addr,
+	)
+}
+
 // InvalidPeerAction returns an error for an unrecognized
 // peer action.
 //

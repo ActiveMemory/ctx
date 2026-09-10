@@ -88,7 +88,8 @@
 //
 //   - ArgHub, ArgStart: re-exec argument tokens
 //   - ActionAdd, ActionRemove: peer action names
-//   - RoleFollower, RoleActive: status role labels
+//   - RoleFollower, RoleLeader, RoleStandalone: status
+//     role labels, reported from Raft state
 //   - ReplicateInterval (5s): follower retry
 //     interval
 //   - HubSyncTimeout (10s): session-start pull

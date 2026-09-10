@@ -21,8 +21,9 @@ import (
 // Cmd returns the hub start subcommand.
 //
 // Starts the ctx Hub gRPC server either in the foreground or
-// as a detached daemon. When --peers is set, joins a Raft
-// cluster for leader election.
+// as a detached daemon. When --raft-bind is set, runs a Raft
+// node for leader election, bootstrapped with the nodes named
+// by --peers, or waiting to be added by a leader with --join.
 //
 // Returns:
 //   - *cobra.Command: The start subcommand
@@ -32,6 +33,8 @@ func Cmd() *cobra.Command {
 		port     int
 		dataDir  string
 		peersStr string
+		raftBind string
+		join     bool
 	)
 
 	short, long := desc.Command(cmd.DescKeyHubStart)
@@ -51,11 +54,13 @@ func Cmd() *cobra.Command {
 			if isDaemon {
 				return server.RunDaemon(
 					cobraCmd, port, dataDir,
+					raftBind, peersStr, join,
 				)
 			}
 			peers := server.ParsePeers(peersStr)
 			return server.Run(
-				cobraCmd, port, dataDir, peers,
+				cobraCmd, port, dataDir,
+				raftBind, peers, join,
 			)
 		},
 	}
@@ -76,6 +81,14 @@ func Cmd() *cobra.Command {
 	flagbind.StringFlag(
 		c, &peersStr,
 		cFlag.Peers, flag.DescKeyHubStartPeers,
+	)
+	flagbind.StringFlag(
+		c, &raftBind,
+		cFlag.RaftBind, flag.DescKeyHubStartRaftBind,
+	)
+	flagbind.BoolFlag(
+		c, &join,
+		cFlag.Join, flag.DescKeyHubStartJoin,
 	)
 
 	return c

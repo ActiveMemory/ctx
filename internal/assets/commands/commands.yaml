@@ -384,9 +384,12 @@ hub.start:
     file to <data-dir>/hub.pid for later shutdown via
     `ctx hub stop`.
 
-    With --peers, joins a Raft cluster for leader election
-    across multiple nodes. Data replication happens via
-    sequence-based gRPC sync on the append-only JSONL log.
+    With --raft-bind, runs a Raft node for leader election.
+    The address is what this node advertises to its peers, so
+    it must name a host they can dial; --peers lists the
+    --raft-bind addresses of the other nodes. Data replication
+    happens via sequence-based gRPC sync on the append-only
+    JSONL log.
   short: Start the ctx Hub server
 hub.stop:
   long: |-
@@ -399,12 +402,22 @@ hub.stop:
   short: Stop a running ctx Hub daemon
 hub.status:
   long: |-
-    Show cluster status: role, peers, sync state, entry
-    count, and uptime.
+    Show what the hub reports about itself: node role,
+    current leader, entry count, and peer count. A hub
+    running without peers reports Standalone and names
+    no leader.
   short: Show cluster status
 hub.peer:
   long: |-
-    Add or remove peers from the cluster at runtime.
+    Add or remove peers in the cluster's Raft configuration
+    at runtime.
+
+    Admin-gated: pass --token or set CTX_HUB_ADMIN_TOKEN.
+    Only the leader can change the configuration, and the
+    address is the peer's --raft-bind address, not its hub
+    port. A node being added must already be running with
+    --join, so it is waiting for a configuration instead of
+    bootstrapping one of its own.
   short: Add or remove cluster peers
 hub.stepdown:
   long: |-
@@ -413,6 +426,11 @@ hub.stepdown:
     Triggers a new election among the remaining followers
     before the current leader steps down. Use before taking a
     node offline for maintenance.
+
+    Admin-gated: pass --token or set CTX_HUB_ADMIN_TOKEN. Run
+    it against the leader; a follower has no leadership to
+    hand over. The confirmation prints once the transfer
+    returns, and `ctx hub status` names the node that won.
   short: Transfer leadership
 hub.revoke:
   long: |-

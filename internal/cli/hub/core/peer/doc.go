@@ -17,22 +17,27 @@
 //
 // # Behavior
 //
-// [Run] dispatches on the action argument ("add" or "remove")
-// to register or deregister a peer address in the cluster.
+// [Run] validates the action, dials the hub named by the
+// saved connection config, and calls the admin-gated Peer
+// RPC. The confirmation prints only after the hub has
+// committed the configuration change; a follower answers
+// FailedPrecondition, because only the leader can change
+// cluster membership.
 //
 // # Data Flow
 //
 // The peer management pipeline works as follows:
 //
-//  1. The cmd layer invokes [Run] with cobra args
-//     containing [action, address].
-//  2. [Run] switches on the action string, matching
-//     against the configured add and remove constants
-//     from the hub config package.
-//  3. For "add", a confirmation message is printed
-//     via writeHub.PeerAdded.
-//  4. For "remove", a confirmation message is printed
-//     via writeHub.PeerRemoved.
-//  5. An invalid action returns an error from the
-//     hub error package.
+//  1. The cmd layer resolves the admin token and invokes
+//     [Run] with the action and the peer's Raft address.
+//  2. [Run] rejects an action that is neither add nor
+//     remove, using the configured constants from the hub
+//     config package.
+//  3. The connection config supplies the hub address; the
+//     client dials without a bearer token, since the RPC is
+//     authenticated by the admin credential.
+//  4. The hub applies the change through raft AddVoter or
+//     RemoveServer and returns.
+//  5. writeHub.PeerAdded or writeHub.PeerRemoved reports
+//     what the cluster accepted.
 package peer

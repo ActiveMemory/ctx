@@ -9,9 +9,15 @@
 //
 // # Cluster Status
 //
-// [ClusterStatus] prints the full cluster dashboard:
-// the current node role (Leader or Follower), the
-// leader address, total entry count, and peer count.
+// [ClusterStatus] prints the status dashboard from a
+// [ClusterStatusInfo], whose fields all come from the
+// hub's Status RPC. A standalone hub prints its role
+// (Standalone) and entry count; a clustered one adds
+// the leader address -- or an election-in-progress
+// note while Raft has no leader -- and the peer count.
+// It also prints the cumulative slow-listener
+// disconnect count, but only when that count is
+// non-zero, so a healthy hub keeps its former output.
 //
 // # Peer Management
 //
@@ -32,7 +38,13 @@
 //
 // # Usage
 //
-//	hub.ClusterStatus(cmd, role, leader, entries, peers)
+//	hub.ClusterStatus(cmd, hub.ClusterStatusInfo{
+//		Role:      role,
+//		Clustered: true,
+//		Leader:    leaderAddr,
+//		Entries:   entries,
+//		Peers:     peers,
+//	})
 //	hub.PeerAdded(cmd, peerAddr)
 //	hub.SteppedDown(cmd)
 package hub

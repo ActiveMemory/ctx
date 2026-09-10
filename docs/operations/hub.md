@@ -146,9 +146,11 @@ ctx hub start --daemon
 ```
 
 Clients that pushed sequences **above** the restored watermark
-will re-publish on the next `listen` reconnect, because the hub
-now reports a lower sequence than what clients have on disk. This
-is safe; the store deduplicates by entry ID.
+will re-publish, because the hub now reports a lower sequence
+than what clients have on disk. Nothing is lost, but the store is
+append-only and does not deduplicate by entry ID: those entries
+come back with new sequence numbers, so the shared feed shows
+them twice. Prune the duplicates offline if they matter.
 
 ## Log Rotation
 
@@ -172,20 +174,31 @@ the sequence counter and loses writes.
 Liveness probe:
 
 ```bash
-ctx hub status --exit-code
+ctx hub status
 ```
 
-Exit code `0` means the node is healthy (leader or in-sync
-follower); non-zero means degraded. Wire this into your monitoring
-of choice.
+The command exits non-zero when the RPC fails — hub unreachable,
+token rejected — so a wrapper can treat that as the liveness
+signal. On a reachable node it prints what the node knows about
+itself, and the grading is yours to do from those lines:
+
+```
+Role: Leader
+Leader: 10.0.0.5:9901
+Entries: 1248  Peers: 2
+```
 
 For cluster deployments, watch for:
 
-- **Role flaps**: the leader changing more than once per hour
-  suggests network instability or disk contention.
-- **Replication lag**: `ctx hub status` shows per-peer sequence
-  offsets. Sustained lag > 100 sequences on a follower is worth
-  investigating.
+- **Role flaps**: the `Role:` line changing more than once per
+  hour suggests network instability or disk contention.
+- **A leader nobody can name**: `Leader: unknown (election in
+  progress)` is normal for a second or two after a node starts
+  or a leader dies. Persisting past that, on a node that is
+  itself reachable, means it cannot see a quorum.
+- **A peer count that disagrees between nodes**: each node
+  reports its own committed Raft configuration, so two nodes
+  disagreeing on `Peers:` means they never agreed on membership.
 - **`entries.jsonl` growth rate**: sudden spikes often indicate a
   misbehaving `ctx connection listen` reconnect loop.
 

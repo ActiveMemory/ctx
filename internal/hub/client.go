@@ -96,6 +96,63 @@ func (c *Client) Revoke(
 	)
 }
 
+// Peer calls the Peer RPC to change cluster membership.
+//
+// Authenticated with the admin token, like Revoke: the client
+// is dialed without a bearer token.
+//
+// Parameters:
+//   - ctx: context for the call
+//   - adminToken: hub admin credential
+//   - action: "add" or "remove"
+//   - addr: Raft address of the peer
+//
+// Returns:
+//   - error: non-nil if the configuration change fails
+func (c *Client) Peer(
+	ctx context.Context,
+	adminToken string,
+	action string,
+	addr string,
+) error {
+	resp := &PeerResponse{}
+	return c.conn.Invoke(
+		ctx,
+		cfgHub.PathPeer,
+		&PeerRequest{
+			AdminToken: adminToken,
+			Action:     action,
+			Address:    addr,
+		},
+		resp,
+	)
+}
+
+// Stepdown calls the Stepdown RPC, asking the leader to hand
+// leadership to another node.
+//
+// Authenticated with the admin token, like Revoke.
+//
+// Parameters:
+//   - ctx: context for the call
+//   - adminToken: hub admin credential
+//
+// Returns:
+//   - error: non-nil if the transfer fails or the node is not
+//     the leader
+func (c *Client) Stepdown(
+	ctx context.Context,
+	adminToken string,
+) error {
+	resp := &StepdownResponse{}
+	return c.conn.Invoke(
+		ctx,
+		cfgHub.PathStepdown,
+		&StepdownRequest{AdminToken: adminToken},
+		resp,
+	)
+}
+
 // Publish calls the Publish RPC.
 //
 // Parameters:

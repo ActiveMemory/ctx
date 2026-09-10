@@ -14,7 +14,9 @@ import (
 	"google.golang.org/grpc/status"
 
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
+	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	errHub "github.com/ActiveMemory/ctx/internal/err/hub"
+	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
 // register handles the Register RPC.
@@ -106,6 +108,106 @@ func (s *Server) revoke(
 	return &RevokeResponse{}, nil
 }
 
+// peer handles the Peer RPC.
+//
+// Admin-token-gated (mirrors register): changing cluster
+// membership is an operator action, not a client one. Only the
+// leader can commit a configuration change, so a follower
+// answers FailedPrecondition rather than silently doing
+// nothing -- which is what the CLI did before this RPC existed.
+//
+// Parameters:
+//   - ctx: request context (unused)
+//   - req: peer request with admin token, action and address
+//
+// Returns:
+//   - *PeerResponse: empty on success
+//   - error: PermissionDenied on bad admin token,
+//     FailedPrecondition with no cluster or on a follower,
+//     InvalidArgument on a bad action or empty address
+func (s *Server) peer(
+	_ context.Context, req *PeerRequest,
+) (*PeerResponse, error) {
+	if req.AdminToken != s.adminToken {
+		return nil, status.Error(
+			codes.PermissionDenied,
+			cfgHub.ErrInvalidAdminToken,
+		)
+	}
+	if s.cluster == nil {
+		return nil, status.Error(
+			codes.FailedPrecondition,
+			cfgHub.ErrClusterDisabled,
+		)
+	}
+	if req.Address == "" {
+		return nil, status.Error(
+			codes.InvalidArgument,
+			cfgHub.ErrPeerAddressRequired,
+		)
+	}
+
+	var changeErr error
+	switch req.Action {
+	case cfgHub.ActionAdd:
+		changeErr = s.cluster.AddPeer(req.Address)
+	case cfgHub.ActionRemove:
+		changeErr = s.cluster.RemovePeer(req.Address)
+	default:
+		return nil, status.Error(
+			codes.InvalidArgument,
+			errHub.InvalidPeerAction(req.Action).Error(),
+		)
+	}
+	if changeErr != nil {
+		return nil, clusterOpErr(changeErr)
+	}
+
+	return &PeerResponse{}, nil
+}
+
+// stepdown handles the Stepdown RPC.
+//
+// Admin-token-gated (mirrors register). Leadership transfer is
+// a leader-only operation; asking a follower is a precondition
+// failure, not a no-op.
+//
+// Parameters:
+//   - ctx: request context (unused)
+//   - req: stepdown request with admin token
+//
+// Returns:
+//   - *StepdownResponse: empty once the transfer completes
+//   - error: PermissionDenied on bad admin token,
+//     FailedPrecondition with no cluster or on a follower
+func (s *Server) stepdown(
+	_ context.Context, req *StepdownRequest,
+) (*StepdownResponse, error) {
+	if req.AdminToken != s.adminToken {
+		return nil, status.Error(
+			codes.PermissionDenied,
+			cfgHub.ErrInvalidAdminToken,
+		)
+	}
+	if s.cluster == nil {
+		return nil, status.Error(
+			codes.FailedPrecondition,
+			cfgHub.ErrClusterDisabled,
+		)
+	}
+	if !s.cluster.IsLeader() {
+		return nil, status.Error(
+			codes.FailedPrecondition, cfgHub.ErrNotLeader,
+		)
+	}
+
+	if transferErr := s.cluster.Stepdown(); transferErr != nil {
+		return nil, clusterOpErr(transferErr)
+	}
+
+	return &StepdownResponse{}, nil
+}
+
 // publish handles the Publish RPC.
 //
 // Parameters:
@@ -179,13 +281,24 @@ func (s *Server) syncEntries(
 
 // listenEntries handles the Listen RPC (long-lived stream).
 //
+// The fan-out channel doubles as the disconnect signal: when
+// [fanOut.broadcast] cuts a slow listener loose it closes the
+// channel, so a receive that reports !ok means this stream was
+// disconnected. Ending the RPC with [errSlowListener] is what
+// makes that visible — a closed channel is always receivable,
+// so a receive that ignored ok would spin on nil forever at
+// full CPU while the client waited on a stream that would never
+// carry another entry.
+//
 // Parameters:
 //   - req: listen request with type filter and sequence
 //   - send: callback to send each entry to the client
 //   - ctx: context for cancellation
 //
 // Returns:
-//   - error: non-nil if send fails
+//   - error: [errSlowListener] if this listener was
+//     disconnected for not draining, otherwise non-nil if send
+//     fails
 func (s *Server) listenEntries(
 	req *ListenRequest,
 	send func(*EntryMsg) error,
@@ -214,7 +327,10 @@ func (s *Server) listenEntries(
 		select {
 		case <-ctx.Done():
 			return nil
-		case entries := <-ch:
+		case entries, live := <-ch:
+			if !live {
+				return errSlowListener
+			}
 			for i := range entries {
 				if len(typeSet) > 0 &&
 					!typeSet[entries[i].Type] {
@@ -232,20 +348,41 @@ func (s *Server) listenEntries(
 
 // hubStatus handles the Status RPC.
 //
+// The cluster fields stay at their zero values when no Raft node
+// is attached; ClusterEnabled tells the caller which case it is
+// looking at. A failed configuration read warns to stderr and
+// reports zero peers rather than failing the call: Status is a
+// diagnostic, and the rest of the response is still worth having.
+//
 // Parameters:
 //   - ctx: request context (unused)
 //
 // Returns:
-//   - *StatusResponse: hub statistics
+//   - *StatusResponse: hub statistics and cluster leadership
 //   - error: always nil
 func (s *Server) hubStatus(
 	_ context.Context,
 ) (*StatusResponse, error) {
 	total, byType, byProject := s.store.Stats()
-	return &StatusResponse{
+	resp := &StatusResponse{
 		TotalEntries:     total,
 		ConnectedClients: s.listeners.count(),
+		DroppedListeners: s.listeners.droppedCount(),
 		EntriesByType:    byType,
 		EntriesByProject: byProject,
-	}, nil
+	}
+
+	if s.cluster != nil {
+		resp.ClusterEnabled = true
+		resp.IsLeader = s.cluster.IsLeader()
+		resp.LeaderAddr = s.cluster.LeaderAddr()
+
+		peers, peersErr := s.cluster.Peers()
+		if peersErr != nil {
+			logWarn.Warn(cfgWarn.HubClusterPeers, peersErr)
+		}
+		resp.ClusterPeers = peers
+	}
+
+	return resp, nil
 }
