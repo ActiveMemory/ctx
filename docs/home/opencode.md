@@ -112,7 +112,11 @@ unnecessary.
 
 ## Slash Commands
 
-Four skills are available as slash commands:
+The skills are generated from the canonical ctx skill tree at build
+time, so their names and behavior match the Claude Code integration
+one-to-one.
+
+Session lifecycle:
 
 | Command | When to use |
 |---------|-------------|
@@ -120,6 +124,38 @@ Four skills are available as slash commands:
 | `/ctx-remember` | "Do you remember?"; reads tasks, decisions, learnings, and recent journal entries. Returns a structured readback. |
 | `/ctx-status` | Context summary at a glance: file count, token estimate, recent activity. |
 | `/ctx-wrap-up` | End-of-session ceremony. Captures learnings, decisions, conventions, and outstanding tasks to `.context/` files. |
+| `/ctx-handover` | Write a per-session handover note for the next agent (invoked by `/ctx-wrap-up`). |
+
+The planning arc from the
+[Design Before Coding](../recipes/design-before-coding.md)
+recipe:
+
+| Command | When to use |
+|---------|-------------|
+| `/ctx-brainstorm` | Design before implementation: turn a vague idea into a validated design. |
+| `/ctx-plan` | Stress-test a plan through adversarial interview; produces a debated brief. |
+| `/ctx-spec` | Scaffold a feature spec from the project template. |
+| `/ctx-task-out` | Decompose a committed spec into a per-milestone implementation plan. |
+| `/ctx-implement` | Execute a plan step-by-step with verification. |
+
+Capture:
+
+| Command | When to use |
+|---------|-------------|
+| `/ctx-task-add` | Add a task when follow-up work is identified. |
+| `/ctx-decision-add` | Record an architectural decision with rationale. |
+| `/ctx-learning-add` | Record a gotcha or lesson future sessions should know. |
+| `/ctx-convention-add` | Codify a repeated pattern as a project convention. |
+
+Knowledge-base editorial pipeline (active when `.context/kb/` exists):
+
+| Command | When to use |
+|---------|-------------|
+| `/ctx-kb-ingest` | Editorial knowledge-ingestion pass over supplied sources. |
+| `/ctx-kb-ask` | Q&A grounded in the existing kb. |
+| `/ctx-kb-note` | Park a finding for the next ingest pass. |
+| `/ctx-kb-site-review` | Mechanical structural audit of the kb. |
+| `/ctx-kb-ground` | Read-only freshness audit over the kb's tracked sources. |
 
 You don't need to use these often. The plugin handles most context loading
 automatically. These are for when you want explicit control.
