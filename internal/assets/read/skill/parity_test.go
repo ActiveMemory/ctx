@@ -231,6 +231,15 @@ func TestAllowedToolsConfinedToFrontmatter(t *testing.T) {
 				continue
 			}
 			count++
+			if len(bytes.TrimSpace(line)) == len("allowed-tools:") {
+				t.Errorf(
+					"%s:%d: block-form allowed-tools: — the sync "+
+						"transform strips only the key line and would "+
+						"orphan its sequence items in every generated "+
+						"tree; use the inline form",
+					p, i+1,
+				)
+			}
 			if fmEnd == -1 || i > fmEnd {
 				t.Errorf(
 					"%s:%d: allowed-tools: line outside the leading "+
