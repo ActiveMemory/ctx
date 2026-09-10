@@ -29,6 +29,16 @@ DO NOT UPDATE FOR:
 -->
 
 
+## [2026-09-08-153411] Hub cluster mode never started: two defects hid each other
+
+**Context**: Wiring issue #96's leadership fields through the Status RPC looked like plumbing until the built binary was exercised live: ctx hub start --daemon --peers started a standalone hub (RunDaemon built its re-exec argv from --port and --data-dir only, so --peers was parsed and never forwarded), and in the foreground Run advertised fmt.Sprintf(':%d', port+1) to raft.NewTCPTransport, which refuses an unspecified advertise address.
+
+**Lesson**: A daemon re-exec argv is a second, silent flag surface: a flag missing there is a flag the process never sees, while the parent still reports success. The daemon path was also hiding the startup crash the foreground path would have shown, so neither bug was visible from the other side alone. Package tests passed throughout.
+
+**Application**: For any fork/re-exec path, extract the argv into a testable function and pin every flag it must carry (daemonArgs + TestDaemonArgs_ForwardsClusterFlags). Before claiming a CLI feature works, run the built binary through the documented flow, not just the package tests.
+
+---
+
 ## [2026-08-23-170949] Hook commands must survive four shells and hostile cwds; hosts punish pre-ctx aborts
 
 **Context**: Adversarial audit of every ctx hook surface (Claude/Codex/Copilot manifests, 16 Copilot wrapper scripts, OpenCode plugin, trace hook, plugin-reload) after the Codex non-repo-cwd anchor bug: 20 confirmed defects in 7 classes.

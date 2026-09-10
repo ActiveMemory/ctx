@@ -48,7 +48,8 @@ it doubles failure probability without providing quorum.
     |           |           |
 +---v---+   +---v---+   +---v---+
 | hub A |   | hub B |   | hub C |
-| :9900 |   | :9900 |   | :9900 |
+| :9900 |   | :9900 |   | :9900 |  gRPC (clients, data sync)
+| :9901 |   | :9901 |   | :9901 |  Raft (leader election)
 +-------+   +-------+   +-------+
     ^           ^           ^
     +-----------+-----------+
@@ -56,15 +57,30 @@ it doubles failure probability without providing quorum.
         gRPC (data sync)
 ```
 
+Each node runs two listeners: the hub's gRPC port that clients
+dial (`--port`), and the Raft port the other nodes dial
+(`--raft-bind`). They are separate addresses; the peer list is
+made of **Raft** addresses.
+
 ## Step 1: Bootstrap the First Node
 
 ```bash
 ctx hub start --daemon \
   --port 9900 \
-  --peers hub-b.lan:9900,hub-c.lan:9900
+  --raft-bind hub-a.lan:9901 \
+  --peers hub-b.lan:9901,hub-c.lan:9901
 ```
 
+`--raft-bind` is the address this node advertises to the other
+two, so it has to be a host they can dial: a bare port
+(`:9901`) or a wildcard (`0.0.0.0:9901`) is rejected at
+startup. Every node's `--raft-bind` appears in the other nodes'
+`--peers` lists, and each node bootstraps that same set.
+
 The node starts a Raft election as soon as it sees its peers.
+Until a quorum answers, `ctx hub status` reports
+`Leader: unknown (election in progress)` — expected while the
+other nodes are still coming up.
 
 ## Step 2: Start the Other Nodes
 
@@ -73,7 +89,8 @@ On `hub-b.lan`:
 ```bash
 ctx hub start --daemon \
   --port 9900 \
-  --peers hub-a.lan:9900,hub-c.lan:9900
+  --raft-bind hub-b.lan:9901 \
+  --peers hub-a.lan:9901,hub-c.lan:9901
 ```
 
 On `hub-c.lan`:
@@ -81,7 +98,8 @@ On `hub-c.lan`:
 ```bash
 ctx hub start --daemon \
   --port 9900 \
-  --peers hub-a.lan:9900,hub-b.lan:9900
+  --raft-bind hub-c.lan:9901 \
+  --peers hub-a.lan:9901,hub-b.lan:9901
 ```
 
 After a few seconds, one node wins the election and becomes the
@@ -95,16 +113,31 @@ From any node:
 ctx hub status
 ```
 
-Expected output:
+Expected output on the node that won the election:
 
 ```
-role:       leader
-peers:      hub-a.lan:9900 (leader)
-            hub-b.lan:9900 (follower, in-sync)
-            hub-c.lan:9900 (follower, in-sync)
-entries:    1248
-uptime:     3h42m
+Role: Leader
+Leader: hub-a.lan:9901
+Entries: 1248  Peers: 2
 ```
+
+and on either of the others:
+
+```
+Role: Follower
+Leader: hub-a.lan:9901
+Entries: 1248  Peers: 2
+```
+
+The leader is named by its Raft address, which is what the
+cluster agrees on. Clients still dial the hub port.
+
+`Peers:` counts the servers in the committed Raft configuration
+other than the one answering, so a three-node cluster reports
+two from every node. If the line reads
+`Leader: unknown (election in progress)`, Raft has no leader for
+the current term: either the election is still running, or the
+node you asked cannot see a quorum.
 
 ## Step 4: Register Clients with Failover Peers
 
@@ -129,29 +162,53 @@ always land on the right node.
 
 ## Runtime Membership Changes
 
-Add a new peer without downtime:
+Membership changes are admin-gated and leader-only: pass
+`--token` (or set `CTX_HUB_ADMIN_TOKEN`) and run them against
+the leader that `ctx hub status` names. A follower answers
+`not the leader` rather than pretending.
+
+Adding a node is two steps, because a new node must not
+bootstrap a configuration of its own — it waits for one:
 
 ```bash
-ctx hub peer add hub-d.lan:9900
+# On hub-d.lan, the new node:
+ctx hub start --daemon \
+  --port 9900 \
+  --raft-bind hub-d.lan:9901 \
+  --join
+
+# On the leader:
+ctx hub peer add hub-d.lan:9901 --token ctx_adm_...
 ```
 
-Remove a decommissioned peer:
+`ctx hub status` on hub-d.lan then reports `Role: Follower`
+and names the leader; every node's `Peers:` count goes up by
+one.
+
+Remove a decommissioned peer, again on the leader:
 
 ```bash
-ctx hub peer remove hub-c.lan:9900
+ctx hub peer remove hub-c.lan:9901 --token ctx_adm_...
 ```
+
+Removal shrinks the quorum, which is the point: a node you
+have taken away should stop counting against liveness. Removing
+one of three leaves two, and a two-node cluster needs both to
+be up — plan the next addition accordingly.
 
 ## Planned Maintenance
 
 Before taking a leader offline, hand off leadership:
 
 ```bash
-ssh hub-a.lan 'ctx hub stepdown'
+ssh hub-a.lan 'ctx hub stepdown --token ctx_adm_...'
 ```
 
-`stepdown` triggers a new election among the remaining followers
-before the leader goes offline. In-flight clients briefly pause,
-then reconnect to the new leader.
+`stepdown` asks Raft to transfer leadership to a follower that
+is caught up, and returns once the transfer completes. Run
+`ctx hub status` afterwards to see which node won. Then stop
+the old leader; the cluster keeps serving throughout, because
+the handoff happened before the process went away.
 
 ## Failure Modes at a Glance
 

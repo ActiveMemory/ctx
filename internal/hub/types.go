@@ -274,7 +274,42 @@ type EntryMsg struct {
 	Meta      EntryMeta `json:"meta"`
 }
 
+// PeerRequest is the input for the Peer RPC.
+//
+// Fields:
+//   - AdminToken: admin credential (same gate as Register)
+//   - Action: "add" or "remove"
+//   - Address: Raft address of the peer to add or remove
+type PeerRequest struct {
+	AdminToken string `json:"admin_token"`
+	Action     string `json:"action"`
+	Address    string `json:"address"`
+}
+
+// PeerResponse is the output of the Peer RPC. Empty: the
+// configuration change either committed or returned an error.
+type PeerResponse struct{}
+
+// StepdownRequest is the input for the Stepdown RPC.
+//
+// Fields:
+//   - AdminToken: admin credential (same gate as Register)
+type StepdownRequest struct {
+	AdminToken string `json:"admin_token"`
+}
+
+// StepdownResponse is the output of the Stepdown RPC. Empty:
+// the transfer either completed or returned an error, and the
+// node that won is reported by the next Status call.
+type StepdownResponse struct{}
+
 // StatusResponse is the output of the Status RPC.
+//
+// The cluster fields are zero values on a hub started without
+// peers, where no Raft node exists. ClusterEnabled is the
+// disambiguator: without it a standalone hub is indistinguishable
+// from a clustered node that has lost its leader, since both
+// report IsLeader false and an empty LeaderAddr.
 //
 // Fields:
 //   - TotalEntries: total number of entries
@@ -282,12 +317,20 @@ type EntryMsg struct {
 //   - DroppedListeners: cumulative slow-listener disconnects
 //   - EntriesByType: entry count per type
 //   - EntriesByProject: entry count per origin project
+//   - ClusterEnabled: a Raft node is attached to this hub
+//   - IsLeader: this node is the current Raft leader
+//   - LeaderAddr: Raft address of the leader, empty if unknown
+//   - ClusterPeers: Raft servers other than this node
 type StatusResponse struct {
 	TotalEntries     uint64            `json:"total_entries"`
 	ConnectedClients uint32            `json:"connected_clients"`
 	DroppedListeners uint64            `json:"dropped_listeners"`
 	EntriesByType    map[string]uint64 `json:"entries_by_type"`
 	EntriesByProject map[string]uint64 `json:"entries_by_project"`
+	ClusterEnabled   bool              `json:"cluster_enabled"`
+	IsLeader         bool              `json:"is_leader,omitempty"`
+	LeaderAddr       string            `json:"leader_addr,omitempty"`
+	ClusterPeers     uint32            `json:"cluster_peers,omitempty"`
 }
 
 // Client is a gRPC client for the ctx Hub.
@@ -298,6 +341,26 @@ type StatusResponse struct {
 type Client struct {
 	conn  *grpc.ClientConn
 	token string
+}
+
+// ClusterConfig is the input for [NewCluster].
+//
+// Join and Peers are mutually exclusive: a node either
+// bootstraps a configuration (itself, plus Peers) or waits for
+// a leader to send it one.
+//
+// Fields:
+//   - NodeID: Raft ServerID for this node
+//   - BindAddr: address the Raft transport binds and advertises
+//   - DataDir: hub data directory holding the Raft state
+//   - Peers: other servers to bootstrap with (empty = alone)
+//   - Join: skip bootstrap and wait to be added by a leader
+type ClusterConfig struct {
+	NodeID   string
+	BindAddr string
+	DataDir  string
+	Peers    []string
+	Join     bool
 }
 
 // Cluster wraps a Raft node for leader election only.

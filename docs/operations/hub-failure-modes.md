@@ -146,9 +146,24 @@ or accept the higher sequence by regenerating `meta.json` from
 
 ### Leader Crash, Clean Shutdown
 
-**What happens:** `ctx hub stop` triggers `stepdown` first, so
-a new leader is elected before the old one exits. In-flight
-writes drain. Clients reconnect to the new leader transparently.
+**What happens:** `ctx hub stop` sends SIGTERM; the hub shuts
+its Raft node down and drains in-flight RPCs. It does **not**
+hand off leadership on its own — the survivors notice the
+missing heartbeat and elect a new leader a couple of seconds
+later, and clients whose streams were on the old leader have
+to be re-run (reconnect is manual, see
+[Client Loses Connection Mid-Stream](#client-loses-connection-mid-stream)).
+
+**What you should do:** for a planned restart, hand off first:
+
+```bash
+ctx hub stepdown --token ctx_adm_...   # on the leader
+ctx hub status                         # confirm the new leader
+ctx hub stop
+```
+
+That way the election happens while the old leader is still
+serving, instead of after it is gone.
 
 ### Leader Crash, Hard Fail (Kill -9, Power Loss)
 

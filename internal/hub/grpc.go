@@ -58,6 +58,14 @@ func serviceDesc(s *Server) *grpc.ServiceDesc {
 				MethodName: cfgHub.MethodRevoke,
 				Handler:    makeRevokeHandler(s),
 			},
+			{
+				MethodName: cfgHub.MethodPeer,
+				Handler:    makePeerHandler(s),
+			},
+			{
+				MethodName: cfgHub.MethodStepdown,
+				Handler:    makeStepdownHandler(s),
+			},
 		},
 		Streams: []grpc.StreamDesc{
 			{
@@ -125,6 +133,52 @@ func makeRevokeHandler(s *Server) grpc.MethodHandler {
 			return nil, decErr
 		}
 		return s.revoke(ctx, req)
+	}
+}
+
+// makePeerHandler creates the Peer handler.
+// Peer uses admin token auth, not bearer (matches Register):
+// cluster membership is an operator action.
+//
+// Parameters:
+//   - s: hub server for request dispatch
+//
+// Returns:
+//   - grpc.MethodHandler: unary handler for Peer RPC
+func makePeerHandler(s *Server) grpc.MethodHandler {
+	return func(
+		_ any, ctx context.Context,
+		dec func(any) error,
+		_ grpc.UnaryServerInterceptor,
+	) (any, error) {
+		req := &PeerRequest{}
+		if decErr := dec(req); decErr != nil {
+			return nil, decErr
+		}
+		return s.peer(ctx, req)
+	}
+}
+
+// makeStepdownHandler creates the Stepdown handler.
+// Stepdown uses admin token auth, not bearer (matches
+// Register): handing off leadership is an operator action.
+//
+// Parameters:
+//   - s: hub server for request dispatch
+//
+// Returns:
+//   - grpc.MethodHandler: unary handler for Stepdown RPC
+func makeStepdownHandler(s *Server) grpc.MethodHandler {
+	return func(
+		_ any, ctx context.Context,
+		dec func(any) error,
+		_ grpc.UnaryServerInterceptor,
+	) (any, error) {
+		req := &StepdownRequest{}
+		if decErr := dec(req); decErr != nil {
+			return nil, decErr
+		}
+		return s.stepdown(ctx, req)
 	}
 }
 

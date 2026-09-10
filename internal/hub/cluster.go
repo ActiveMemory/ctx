@@ -7,6 +7,7 @@
 package hub
 
 import (
+	"errors"
 	"net"
 	"os"
 	"path/filepath"
@@ -27,21 +28,26 @@ import (
 // replicated via sequence-based gRPC sync. Raft only
 // determines which node is the current master.
 //
+// A joining node ([ClusterConfig.Join]) skips bootstrap and
+// waits to be added by a leader, which is the only way a new
+// node can enter an existing cluster: a node that bootstraps
+// its own configuration would be a second cluster of one, not
+// a member of the first.
+//
 // Parameters:
-//   - nodeID: unique identifier for this node
-//   - bindAddr: address for Raft communication
-//   - dataDir: directory for Raft state
-//   - peers: other cluster nodes (empty = single node)
+//   - cfg: node identity, transport address, state directory
+//     and the servers to bootstrap with
 //
 // Returns:
 //   - *Cluster: initialized Raft cluster node
 //   - error: non-nil if setup fails
 func NewCluster(
-	nodeID string,
-	bindAddr string,
-	dataDir string,
-	peers []string,
+	clusterCfg ClusterConfig,
 ) (*Cluster, error) {
+	nodeID := clusterCfg.NodeID
+	bindAddr := clusterCfg.BindAddr
+	dataDir := clusterCfg.DataDir
+	peers := clusterCfg.Peers
 	raftDir := filepath.Join(dataDir, cfgHub.RaftDir)
 	if mkErr := io.SafeMkdirAll(
 		raftDir, fs.PermKeyDir,
@@ -87,35 +93,41 @@ func NewCluster(
 		return nil, raftErr
 	}
 
-	// Bootstrap if single node or first startup.
-	if len(peers) == 0 {
-		config := raft.Configuration{
-			Servers: []raft.Server{
-				{
-					ID:      raft.ServerID(nodeID),
-					Address: raft.ServerAddress(bindAddr),
-				},
-			},
-		}
-		r.BootstrapCluster(config)
-	} else {
-		servers := make(
-			[]raft.Server, 0, len(peers)+1,
-		)
+	// A joining node has no configuration of its own: the
+	// leader that adds it sends one.
+	if clusterCfg.Join {
+		return &Cluster{
+			raftNode:  r,
+			transport: transport,
+		}, nil
+	}
+
+	// Bootstrap this node plus any configured peers. A single
+	// node bootstraps a one-server cluster and elects itself.
+	servers := make([]raft.Server, 0, len(peers)+1)
+	servers = append(servers, raft.Server{
+		ID:      raft.ServerID(nodeID),
+		Address: raft.ServerAddress(bindAddr),
+	})
+	for _, p := range peers {
 		servers = append(servers, raft.Server{
-			ID:      raft.ServerID(nodeID),
-			Address: raft.ServerAddress(bindAddr),
+			ID:      raft.ServerID(p),
+			Address: raft.ServerAddress(p),
 		})
-		for _, p := range peers {
-			servers = append(servers, raft.Server{
-				ID:      raft.ServerID(p),
-				Address: raft.ServerAddress(p),
-			})
-		}
-		config := raft.Configuration{
-			Servers: servers,
-		}
-		r.BootstrapCluster(config)
+	}
+
+	// ErrCantBootstrap is what a restart against existing Raft
+	// state returns: that node is already bootstrapped and the
+	// on-disk configuration wins. Any other error leaves a node
+	// that never elects anyone, which is precisely the state the
+	// Status RPC's leadership fields exist to make visible -- so
+	// it surfaces here instead of being discarded.
+	bootErr := r.BootstrapCluster(raft.Configuration{
+		Servers: servers,
+	}).Error()
+	if bootErr != nil &&
+		!errors.Is(bootErr, raft.ErrCantBootstrap) {
+		return nil, bootErr
 	}
 
 	return &Cluster{
@@ -132,13 +144,82 @@ func (c *Cluster) IsLeader() bool {
 	return c.raftNode.State() == raft.Leader
 }
 
-// LeaderAddr returns the address of the current leader.
+// LeaderAddr returns the Raft address of the current leader.
+//
+// Empty while no leader is known: during an election, or once
+// quorum is lost.
 //
 // Returns:
 //   - string: leader address, or empty if unknown
 func (c *Cluster) LeaderAddr() string {
-	_, id := c.raftNode.LeaderWithID()
-	return string(id)
+	addr, _ := c.raftNode.LeaderWithID()
+	return string(addr)
+}
+
+// Peers reports how many servers other than this node the
+// committed Raft configuration holds. A single-node cluster
+// reports zero.
+//
+// Returns:
+//   - uint32: server count excluding this node
+//   - error: non-nil if the configuration read fails
+func (c *Cluster) Peers() (uint32, error) {
+	future := c.raftNode.GetConfiguration()
+	if cfgErr := future.Error(); cfgErr != nil {
+		return 0, cfgErr
+	}
+
+	// Counted rather than converted from len() so the wire type
+	// needs no int-to-uint32 narrowing.
+	var peers uint32
+	for range future.Configuration().Servers {
+		peers++
+	}
+	if peers > 0 {
+		peers--
+	}
+
+	return peers, nil
+}
+
+// AddPeer adds a voting server to the cluster configuration.
+//
+// The address is both the new server's ID and its transport
+// address, matching how every node registers itself. Only the
+// leader can change the configuration; a follower returns
+// [raft.ErrNotLeader]. The added node must be running in join
+// mode ([ClusterConfig.Join]), or it is already a cluster of
+// its own and will not accept this one's configuration.
+//
+// Parameters:
+//   - addr: Raft address of the server to add
+//
+// Returns:
+//   - error: non-nil if the configuration change fails
+func (c *Cluster) AddPeer(addr string) error {
+	return c.raftNode.AddVoter(
+		raft.ServerID(addr),
+		raft.ServerAddress(addr),
+		0, 0,
+	).Error()
+}
+
+// RemovePeer removes a server from the cluster configuration.
+//
+// Only the leader can change the configuration; a follower
+// returns [raft.ErrNotLeader]. Removing a server shrinks the
+// quorum, which is what makes a decommissioned node stop
+// counting against liveness.
+//
+// Parameters:
+//   - addr: Raft address of the server to remove
+//
+// Returns:
+//   - error: non-nil if the configuration change fails
+func (c *Cluster) RemovePeer(addr string) error {
+	return c.raftNode.RemoveServer(
+		raft.ServerID(addr), 0, 0,
+	).Error()
 }
 
 // Stepdown transfers leadership to another node.

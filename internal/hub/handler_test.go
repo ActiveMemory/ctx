@@ -18,6 +18,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 )
 
@@ -163,5 +164,94 @@ func TestListenEntries_ContextCancelEndsStream(t *testing.T) {
 	waitForListeners(t, srv, 0)
 	if got := srv.listeners.droppedCount(); got != 0 {
 		t.Errorf("droppedCount = %d, want 0 for a clean exit", got)
+	}
+}
+
+// TestPeer_RejectsBadAdminToken keeps membership an operator
+// action: the Peer RPC is gated the way Register is, so a
+// client token cannot reshape the cluster.
+func TestPeer_RejectsBadAdminToken(t *testing.T) {
+	srv := listenTestServer(t)
+
+	_, peerErr := srv.peer(testCtx(), &PeerRequest{
+		AdminToken: "not-the-admin-token",
+		Action:     cfgHub.ActionAdd,
+		Address:    "10.0.0.6:9901",
+	})
+
+	if got := status.Code(peerErr); got != codes.PermissionDenied {
+		t.Errorf("code = %v, want PermissionDenied", got)
+	}
+}
+
+// TestPeer_NoClusterIsPrecondition answers the standalone hub
+// honestly. Printing "Added peer" against a hub with no Raft
+// node is what the command did before it had an RPC.
+func TestPeer_NoClusterIsPrecondition(t *testing.T) {
+	srv := listenTestServer(t)
+
+	_, peerErr := srv.peer(testCtx(), &PeerRequest{
+		AdminToken: srv.adminToken,
+		Action:     cfgHub.ActionAdd,
+		Address:    "10.0.0.6:9901",
+	})
+
+	if got := status.Code(peerErr); got != codes.FailedPrecondition {
+		t.Errorf("code = %v, want FailedPrecondition", got)
+	}
+}
+
+// TestPeer_ValidatesRequest covers the two malformed shapes:
+// an action that is neither add nor remove, and an empty
+// address.
+func TestPeer_ValidatesRequest(t *testing.T) {
+	srv := listenTestServer(t)
+	cluster, _ := singleNodeCluster(t)
+	srv.SetCluster(cluster)
+
+	for name, req := range map[string]*PeerRequest{
+		"unknown action": {
+			AdminToken: srv.adminToken,
+			Action:     "promote",
+			Address:    "10.0.0.6:9901",
+		},
+		"empty address": {
+			AdminToken: srv.adminToken,
+			Action:     cfgHub.ActionAdd,
+		},
+	} {
+		_, peerErr := srv.peer(testCtx(), req)
+		if got := status.Code(peerErr); got != codes.InvalidArgument {
+			t.Errorf("%s: code = %v, want InvalidArgument",
+				name, got)
+		}
+	}
+}
+
+// TestStepdown_RejectsBadAdminToken gates leadership transfer
+// the same way.
+func TestStepdown_RejectsBadAdminToken(t *testing.T) {
+	srv := listenTestServer(t)
+
+	_, stepErr := srv.stepdown(testCtx(), &StepdownRequest{
+		AdminToken: "not-the-admin-token",
+	})
+
+	if got := status.Code(stepErr); got != codes.PermissionDenied {
+		t.Errorf("code = %v, want PermissionDenied", got)
+	}
+}
+
+// TestStepdown_NoClusterIsPrecondition pins the standalone
+// answer: there is no leadership to hand over.
+func TestStepdown_NoClusterIsPrecondition(t *testing.T) {
+	srv := listenTestServer(t)
+
+	_, stepErr := srv.stepdown(testCtx(), &StepdownRequest{
+		AdminToken: srv.adminToken,
+	})
+
+	if got := status.Code(stepErr); got != codes.FailedPrecondition {
+		t.Errorf("code = %v, want FailedPrecondition", got)
 	}
 }

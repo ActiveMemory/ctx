@@ -297,11 +297,19 @@ hub.start.data-dir:
   short: Hub data directory (default ~/.ctx/hub-data/)
 hub.start.peers:
   short: Comma-separated peer addresses for cluster mode
+hub.start.raft-bind:
+  short: Raft address this node binds and advertises to peers
+hub.start.join:
+  short: Wait to be added by a leader instead of bootstrapping
 hub.start.port:
   short: Hub listen port (default 9900)
 hub.stop.data-dir:
   short: Hub data directory (default ~/.ctx/hub-data/)
 hub.revoke.token:
+  short: Admin credential from hub startup (or $CTX_HUB_ADMIN_TOKEN)
+hub.peer.token:
+  short: Admin credential from hub startup (or $CTX_HUB_ADMIN_TOKEN)
+hub.stepdown.token:
   short: Admin credential from hub startup (or $CTX_HUB_ADMIN_TOKEN)
 watch.dry-run:
   short: Show updates without applying

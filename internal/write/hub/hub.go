@@ -15,38 +15,38 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
-// ClusterStatus prints cluster role and stats. The dropped-listener
-// line is omitted when the count is zero so a healthy hub keeps its
-// current output.
+// ClusterStatus prints the node role and hub statistics.
+//
+// A standalone hub prints its role and entry count and stops
+// there: it has no leader and no peers to report. A clustered
+// hub adds the leader address -- or a note that an election is
+// in progress when Raft has no leader yet -- and the peer
+// count. The dropped-listener line is omitted when the count is
+// zero, so a healthy hub keeps its current output.
 //
 // Parameters:
 //   - cmd: Cobra command for output
-//   - role: current node role (Leader/Follower)
-//   - leader: leader address
-//   - entries: total entry count
-//   - peers: number of peers
-//   - dropped: cumulative slow-listener disconnects
+//   - info: status fields as reported by the Status RPC
 func ClusterStatus(
-	cmd *cobra.Command,
-	role, leader string,
-	entries uint64,
-	peers int,
-	dropped uint64,
+	cmd *cobra.Command, info ClusterStatusInfo,
 ) {
 	cmd.Println(fmt.Sprintf(
-		desc.Text(text.DescKeyWriteHubRole), role,
+		desc.Text(text.DescKeyWriteHubRole), info.Role,
 	))
-	cmd.Println(fmt.Sprintf(
-		desc.Text(text.DescKeyWriteHubLeader), leader,
-	))
-	cmd.Println(fmt.Sprintf(
-		desc.Text(text.DescKeyWriteHubClusterStats),
-		entries, peers,
-	))
-	if dropped > 0 {
+
+	if info.Clustered {
+		clusterLines(cmd, info)
+	} else {
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteHubEntries),
+			info.Entries,
+		))
+	}
+
+	if info.Dropped > 0 {
 		cmd.Println(fmt.Sprintf(
 			desc.Text(text.DescKeyWriteHubDroppedListeners),
-			dropped,
+			info.Dropped,
 		))
 	}
 }

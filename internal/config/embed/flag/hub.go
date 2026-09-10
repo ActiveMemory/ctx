@@ -16,8 +16,18 @@ const (
 	DescKeyHubStartDaemon = "hub.start.daemon"
 	// DescKeyHubStartPeers is the text key for hub start --peers.
 	DescKeyHubStartPeers = "hub.start.peers"
+	// DescKeyHubStartRaftBind is the text key for hub start
+	// --raft-bind.
+	DescKeyHubStartRaftBind = "hub.start.raft-bind"
+	// DescKeyHubStartJoin is the text key for hub start --join.
+	DescKeyHubStartJoin = "hub.start.join"
 	// DescKeyHubStopDataDir is the text key for hub stop --data-dir.
 	DescKeyHubStopDataDir = "hub.stop.data-dir"
 	// DescKeyHubRevokeAuth is the text key for hub revoke --token.
 	DescKeyHubRevokeAuth = "hub.revoke.token"
+	// DescKeyHubPeerAuth is the text key for hub peer --token.
+	DescKeyHubPeerAuth = "hub.peer.token"
+	// DescKeyHubStepdownAuth is the text key for hub stepdown
+	// --token.
+	DescKeyHubStepdownAuth = "hub.stepdown.token"
 )
