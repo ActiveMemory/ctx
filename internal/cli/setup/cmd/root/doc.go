@@ -12,7 +12,7 @@
 // The command accepts exactly one positional argument:
 // the name of an AI coding tool (e.g., claude,
 // codex, cursor, copilot, kiro, cline, aider,
-// windsurf, copilot-cli, opencode, agents). It
+// windsurf, copilot-cli, opencode, pi, agents). It
 // outputs configuration
 // snippets and setup instructions specific to that
 // tool.

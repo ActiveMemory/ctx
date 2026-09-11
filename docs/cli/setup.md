@@ -39,6 +39,7 @@ ctx setup <tool> [flags]
 | `copilot`     | GitHub Copilot                                                     |
 | `copilot-cli` | GitHub Copilot CLI (instructions, skills, agent, MCP)              |
 | `opencode`    | OpenCode (terminal-first AI coding agent)                          |
+| `pi`          | Pi coding-agent CLI (pi.dev)                                       |
 | `windsurf`    | Windsurf IDE                                                       |
 
 !!! note "Claude Code Uses the Plugin System"
@@ -84,4 +85,7 @@ ctx setup opencode --write
 # .codex/config.toml, AGENTS.md, and .agents/skills/
 ctx setup codex
 ctx setup codex --write
+
+# Generate Pi extension, skills, and AGENTS.md
+ctx setup pi --write
 ```

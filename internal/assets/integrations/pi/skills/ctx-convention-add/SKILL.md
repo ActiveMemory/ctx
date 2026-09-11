@@ -1,0 +1,84 @@
+---
+name: ctx-convention-add
+description: "Record a coding convention. Use when a repeated pattern should be codified so all sessions follow it consistently."
+---
+
+Record a coding convention in CONVENTIONS.md.
+
+## When to Use
+
+- When a pattern has been used 2-3 times and should be standardized
+- When establishing a naming, formatting, or structural rule
+- When a new contributor would need to know "how we do things here"
+- When the user says "codify that" or "make that a convention"
+
+## When NOT to Use
+
+- One-off implementation details (use code comments instead)
+- Architectural decisions with trade-offs (use `/ctx-decision-add`)
+- Debugging insights or gotchas (use `/ctx-learning-add`)
+- Rules that are already enforced by linters or formatters
+
+## Gathering Information
+
+Conventions are simpler than decisions or learnings. You need:
+
+1. **Name**: What is the convention called? (e.g., "kebab-case CLI flags")
+2. **Rule**: What is the rule? One clear sentence.
+3. **Section**: Where does it belong in CONVENTIONS.md? (e.g., "Naming",
+   "Output", "Testing")
+
+If the user provides only a description, infer the section from the
+topic. Check existing sections in CONVENTIONS.md first to place it
+correctly: don't create a new section if an existing one fits.
+
+If the convention overlaps with an existing one, mention it:
+*"There's already a naming convention for functions. Want me to add
+this alongside it or update the existing one?"*
+
+## Execution
+
+```bash
+ctx convention add "Use kebab-case for all CLI flag names" --section "Naming"
+```
+
+```bash
+ctx convention add "Use cmd.Printf/cmd.Println for CLI output, never fmt.Printf/fmt.Println" --section "Output"
+```
+
+```bash
+ctx convention add "Colocate test files with implementation (*_test.go next to *.go)" --section "Testing"
+```
+
+If no `--section` is provided, the convention is appended to the end
+of the file. Prefer specifying a section for organization.
+
+## Authority boundary (vs other skills)
+
+This skill records standardized patterns the project follows. It
+does not unilaterally promote material from adjacent skills:
+
+- **Do not promote a one-off choice into a convention.** A single
+  decision with rationale is `/ctx-decision-add`'s territory; a
+  convention requires the pattern to recur and warrant codifying.
+  Ask before generalizing.
+- **Do not promote a learning into a convention.** "Always do X
+  going forward" is a convention; "we got bitten by Y" is a
+  learning. The user must explicitly say "codify that" before
+  the cross-promotion happens.
+- **Do not duplicate.** If a similar rule already exists, surface
+  it and ask whether to update or add alongside.
+
+Light compression for clarity is allowed; new facts are not.
+
+## Quality Checklist
+
+Before recording, verify:
+- [ ] The rule is clear enough that someone unfamiliar could follow it
+- [ ] It is specific to this project (not a general Go/JS/etc. rule)
+- [ ] It is not already in CONVENTIONS.md (check first)
+- [ ] The section matches an existing section, or a new section is
+      genuinely needed
+- [ ] It describes a pattern, not a one-time choice (that's a decision)
+
+Confirm the convention was added.

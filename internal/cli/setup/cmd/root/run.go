@@ -20,6 +20,7 @@ import (
 	coreCursor "github.com/ActiveMemory/ctx/internal/cli/setup/core/cursor"
 	coreKiro "github.com/ActiveMemory/ctx/internal/cli/setup/core/kiro"
 	coreOpenCode "github.com/ActiveMemory/ctx/internal/cli/setup/core/opencode"
+	corePi "github.com/ActiveMemory/ctx/internal/cli/setup/core/pi"
 	"github.com/ActiveMemory/ctx/internal/codex"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
@@ -122,6 +123,12 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 			return coreOpenCode.Deploy(cmd)
 		}
 		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookOpenCode))
+
+	case cfgHook.ToolPi:
+		if writeFile {
+			return corePi.Deploy(cmd)
+		}
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookPi))
 
 	case cfgHook.ToolWindsurf:
 		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookWindsurf))

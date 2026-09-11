@@ -40,6 +40,66 @@ DO NOT UPDATE FOR:
 
 ---
 
+## [2026-09-05-202947] Concurrent tool-integration branches collide at a fixed set of insertion points
+
+**Context**: The Pi and Codex branches conflicted in exactly seven files, every one a place where each ctx setup <tool> integration adds a line or block; git auto-merged the rest.
+
+**Lesson**: The tool surface has known shared insertion points: setup run.go imports and switch, setup doc.go tool list, write/setup/hook.go Info* helpers, hooks.yaml hook.supported-tools, docs/cli/setup.md table and examples, read/skill frontmatter_test.go skillTrees, zensical.toml nav, plus TASKS.md and LEARNINGS.md.
+
+**Application**: When two tool integrations are in flight, expect conflicts at these files and keep both sides with the newer tool after the older one; for interleaved hunks rebuild the file from git show :3: plus the branch block extracted from git show :2: instead of hand-editing markers.
+
+---
+
+## [2026-09-05-202947] Proving zero new test failures on this Windows machine means diffing FAIL sets against an upstream/main worktree baseline
+
+**Context**: go test ./... here has 28 pre-existing failing packages (CRLF render drift, .exe exec, audit path exemptions). internal/cli/notify failed once while npm ci and a review agent ran concurrently, then passed 4 of 4 in isolation.
+
+**Lesson**: A raw pass/fail count is meaningless on this machine; the branch is clean when its FAIL package set equals the FAIL set of a detached upstream/main worktree run with the same env, and internal/cli/notify is timing-flaky under CPU load.
+
+**Application**: git worktree add --detach <tmp> upstream/main, run CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./... in both trees, comm -13 the sorted FAIL package lists; re-run a lone flipped package with -count=1 in isolation before chasing it; git worktree remove the baseline afterwards.
+
+---
+
+## [2026-09-05-202947] go.work.sum drifts after a dependabot bump on main; commit the delta instead of reverting it
+
+**Context**: After merging upstream main (grpc 1.82.1 to 1.83.2, x/tools 0.49.0) the first go build appended two google.golang.org/grpc v1.83.1 sum lines to go.work.sum; a clean detached worktree of upstream/main did the same, and upstream history has periodic "chore: refresh go.work.sum" commits (aeefc3f1, 6feec5bf).
+
+**Lesson**: Workspace mode (go.work with tools/ctxctl) auto-appends missing module sums, so a dependabot bump that only touches go.mod and go.sum leaves the tree dirty after the next build, and the clean-tree commit gate then fails on every attempt.
+
+**Application**: After merging a dependency bump, build once and commit the go.work.sum delta, bundled into the next functional commit or as a chore commit citing specs/meta/chores.md; do not revert it before each commit.
+
+---
+
+## [2026-09-05-195906] golangci-lint exits 7 with 0 issues when tools/typecheck/*/node_modules exists on this Windows machine
+
+**Context**: After npm ci in tools/typecheck/pi (the CI typecheck gate run locally), golangci-lint run ./... printed 0 issues but exited 7 with: typechecking error: pattern ./...: open tools\typecheck\pi\node_modules\@earendil-works\pi-coding-agent\dist\extensions: The system cannot find the file specified. Deleting node_modules restored exit 0 with the tree otherwise unchanged.
+
+**Lesson**: The golangci-lint package loader walks ./... into node_modules and fails on a directory it cannot open on Windows; the exit code, not the printed issue count, is the gate signal. Upstream CI is unaffected because lint and typecheck run in separate jobs.
+
+**Application**: Run the local typecheck in tools/typecheck/<tool>, then delete its node_modules before golangci-lint (or lint first). Treat a non-zero golangci exit with 0 issues as an environment failure, not a clean run.
+
+---
+
+## [2026-08-23-204632] Windows git over HTTPS fails with SEC_E_NO_CREDENTIALS unless the openssl backend is pinned
+
+**Context**: During the pi integration, every `git fetch`/`ls-remote` over an https remote on this Windows machine failed with `schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030e)` - git's default TLS (schannel) has no usable credential state here. `gh` (own TLS stack) worked fine, and SSH keys were rejected, so the failure looked like a credentials/remote problem.
+
+**Lesson**: git's schannel backend and the Windows credential manager can be broken independently of the remote; the fix is a per-invocation backend override, not key/credential surgery.
+
+**Application**: On this machine, run every git https remote operation as `git -c http.sslBackend=openssl <cmd>` (git 2.51 supports it). Diagnose with `gh api` first to rule out remote-side auth before touching keys.
+
+---
+
+## [2026-08-23-204632] zensical site rebuilds are non-reproducible off the canonical toolchain (entity-escape drift)
+
+**Context**: Rebuilding site/ locally with the pinned zensical 0.0.51 (fresh venv, Python 3.10) produced 120 files of pure escape drift (`&#39;` vs literal `'` inside highlighted code blocks) against the committed artifacts; pinning pygments older did not help.
+
+**Lesson**: The zensical pin only pins the generator, not its transitive deps (markdown/pygments/jinja resolution drifts), so committed site/ output is not reproducible on arbitrary machines; the drift is user-invisible (entities render identically) but is pure diff churn that flips back on the next canonical build.
+
+**Application**: After a local `zensical build`, run `git diff --ignore-cr-at-eol --numstat site/` and inspect representative hunks BEFORE committing; if the delta is escape drift rather than real content, revert site/ (`git checkout -- site/`, remove new untracked pages) and defer the rebuild to the canonical build machine; record the deferral in the task notes.
+
+---
+
 ## [2026-08-23-170949] Hook commands must survive four shells and hostile cwds; hosts punish pre-ctx aborts
 
 **Context**: Adversarial audit of every ctx hook surface (Claude/Codex/Copilot manifests, 16 Copilot wrapper scripts, OpenCode plugin, trace hook, plugin-reload) after the Codex non-repo-cwd anchor bug: 20 confirmed defects in 7 classes.

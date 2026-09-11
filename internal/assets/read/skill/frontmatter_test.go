@@ -26,6 +26,7 @@ var skillTrees = []string{
 	asset.DirCodexSkills,
 	asset.DirIntegrationsOpenCodeSkill,
 	asset.DirIntegrationsCopilotSkill,
+	asset.DirIntegrationsPiSkill,
 }
 
 // skillFrontmatter is the minimum frontmatter contract every

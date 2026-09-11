@@ -72,6 +72,7 @@ const (
 	ToolCline      = "cline"
 	ToolCodex      = "codex"
 	ToolOpenCode   = "opencode"
+	ToolPi         = "pi"
 	ToolWindsurf   = "windsurf"
 )
 
@@ -147,6 +148,22 @@ const (
 	// .ts/.js file directly under the plugins directory; see
 	// FileIndexTs for the auto-load discovery rule.
 	FileOpenCodePluginDeploy = "ctx.ts"
+)
+
+// Pi integration paths.
+const (
+	// DirPi is the Pi project config directory.
+	DirPi = ".pi"
+	// DirPiExtensions is the Pi extensions subdirectory.
+	DirPiExtensions = "extensions"
+	// DirPiSkills is the Pi skills subdirectory.
+	DirPiSkills = "skills"
+	// FilePiExtensionDeploy is the deployment filename for the Pi
+	// extension under .pi/extensions/. Pi auto-loads flat top-level
+	// files in .pi/extensions/ (subdirectory form
+	// .pi/extensions/<name>/index.ts is also supported, but v1 ships
+	// a flat file for OpenCode symmetry).
+	FilePiExtensionDeploy = "ctx.ts"
 )
 
 // Prefixes

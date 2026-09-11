@@ -3118,6 +3118,123 @@ work is the delivery layer: plugin root, manifests, deployer, parser, docs.
 
 - [ ] [CX7] Follow-up: Windows commandWindows overrides for the Codex hooks manifest (hooks currently require a POSIX shell with git on PATH). Spec: specs/codex-integration.md #priority:medium #session:581183bc #branch:feat/codex-integration #commit:ce5a8328 #added:2026-08-23-120739
 
+## Phase PI — Pi CLI Integration
+
+Spec: `specs/pi-cli-integration.md`
+Branch: `feat/pi-cli-integration` (based on upstream main ce5a8328, 2026-08-23)
+
+Pi (earendil-works/pi, pi.dev) is a self-extensible coding-agent CLI with a
+TypeScript extension system, Agent Skills support, native AGENTS.md, and — by
+design — no MCP. Integration follows the OpenCode blueprint: Go setup package +
+embedded TS shim + bundled skills + shared AGENTS.md template.
+
+- [ ] Read `specs/pi-cli-integration.md` before starting any PI task.
+  #added:2026-08-23-151000
+- [x] PI.1: Embedded assets — `internal/assets/integrations/pi/extension/ctx.ts`
+  (thin shim: before_agent_start live-context-scan packet injection,
+  session_start warm-up cache, session_compact cache drop, tool_result
+  post-commit / check-task-completion with isError gating, agent_settled
+  check-persistence; hook-JSON envelope on piped stdin) and
+  `internal/assets/integrations/pi/skills/` (same 10-skill set as
+  OpenCode; embed.go directives added) #added:2026-08-23-151000
+  #completed:2026-08-23
+- [x] PI.2: Accessors + constants — `internal/assets/read/agent/pi.go`
+  (PiExtension, PiSkills) and `internal/config/hook` pi path constants
+  (+ asset.go DirIntegrationsPi*) #added:2026-08-23-151000
+  #completed:2026-08-23
+- [x] PI.3: `internal/cli/setup/core/pi/` package — pi.go, extension.go,
+  skill.go, validate.go + deploy_test.go/testmain_test.go modeled on the
+  opencode suite (all 4 tests green) #added:2026-08-23-151000
+  #completed:2026-08-23
+- [x] PI.4: CLI wiring — `case cfgHook.ToolPi` branch in setup root.Run()
+  (run.go + doc.go); supporting text: hooks.yaml hook.pi + supported-tools line,
+  write.yaml write.hook-pi-*, config/embed/text DescKeys, write/setup InfoPi*
+  (TestDescKeyYAMLLinkage green; no new Use* constant, no new subcommand)
+  #added:2026-08-23-151000 #completed:2026-08-23
+- [x] PI.5: Docs — pi entry in supported-tools reference (integrations.md +
+  setup.md + multi-tool-setup.md) + pi quickstart guide (docs/home/pi.md +
+  zensical nav). NOTE: site/ HTML rebuild deferred — this machine's zensical
+  0.0.51 venv renders entity-escape drift (120 files, &#39; vs ') vs the
+  committed artifacts (unpinned zensical transitive deps); rebuild on the
+  canonical build machine and stage site/ with a follow-up commit
+  #added:2026-08-23-151000 #completed:2026-08-23
+- [x] PI.6: Validation — go build ./... + golangci-lint (0 issues) + targeted
+  go test green; full-suite delta vs clean main verified: zero new failures
+  (20 failing packages, all pre-existing Windows-environment: CRLF render
+  drift, .exe exec, audit path exemptions). Scratch project: init +
+  dry-run + --write + idempotent re-run + tamper-refresh (byte-identical to
+  embedded) + unknown-tool list all verified with a freshly built binary.
+  Live pi: extension loads clean (A/B run with/without .pi identical);
+  full LLM round-trip blocked by local pi provider config (gx10-spark/*
+  unreachable from this environment) — left for a working-provider machine
+  #added:2026-08-23-151000 #completed:2026-08-23
+- [x] PI.7: CI type-check for the pi extension — tools/typecheck/pi/
+  (tsconfig + package.json + lockfile with @earendil-works/pi-coding-agent
+  0.84.2 types, tsc --noEmit PASSING locally) + typecheck-pi-extension job in
+  .github/workflows/ci.yml (mirrors tools/typecheck/opencode/). Decisions
+  locked 2026-08-23: display:true, CI typecheck in scope
+  #added:2026-08-23-151000 #completed:2026-08-23
+- [ ] Bug (review finding, pre-existing): OpenCode plugin lifecycle legs lack
+  the hook-JSON stdin envelope — `ctx system post-commit` from
+  internal/assets/integrations/opencode/plugin/index.ts bails silently in
+  FullPreamble (no envelope fed via BunShell), so the post-commit nudge is
+  likely dead; check-task-completion/check-persistence run but key per-session
+  state to IDUnknown. Spec: specs/pi-cli-integration.md "Hook envelope
+  requirement" section documents the correct envelope shape; fix the opencode
+  plugin the same way (or add envelope flags on the Go side) #priority:medium
+  #added:2026-08-23-151000
+- [ ] PI.8 (audit follow-ups, non-blocking): from the fable-5 effort-max
+  branch audit (2026-08-23, verdict ship-ready after MAJOR 1, which is
+  fixed on-branch): (a) post-compaction re-warm runs `ctx agent` inline on
+  the prompt path (up to 15s) — consider re-warming inside the
+  session_compact handler instead, and cache the fetch promise rather than
+  the packet so a first prompt that outruns the warm-up cannot spawn a
+  second `ctx agent` (review 2026-09-05); (b) embedded assets are not EOL-pinned
+  (no .gitattributes; Windows builds embed CRLF skills vs LF on CI —
+  cross-binary refresh flapping; add `internal/assets/** text eol=lf`
+  pin, repo-wide pre-existing hazard); (c) hook nudge stdout is discarded —
+  Pi's tool_result handlers can return {content} to append the nudge to the
+  tool result and reach the LLM (OpenCode parity chose .quiet(); design
+  decision, not a bug); (d) tools/typecheck/pi/tsconfig.json could mirror
+  the opencode twin's explicit `paths` mapping for @earendil-works/pi-coding-agent
+  (resolution works today via node_modules probing; hardening only);
+  (e) extract a shared deploy helper for the pi/opencode twins — skill.go
+  and validate.go differ only by package name and constants (review
+  round 2 suggestion, 2026-09-05)
+  #priority:low #added:2026-08-23-221600
+- [x] PI.9: Review round 2 (maintainer nits on PR #161, 2026-09-05): docs
+  re-injection predicate reworded to the live-context scan (docs/home/pi.md,
+  docs/operations/integrations.md); spec latency claim softened (cache miss
+  runs the fetch on the prompt path, 15s bound); "plugin hook" -> "tool
+  integration" in ctx-agent SKILL.md (pi + opencode trees);
+  TestPiSkillsMirrorOpenCode byte-identity guard over the mirrored skill
+  trees; exact 0.84.2 pin in tools/typecheck/pi/package.json + lockfile
+  root. Preceded by the upstream main merge (9520e171): 7 shared-insertion
+  conflicts resolved, zero new test failures vs the main baseline (28
+  pre-existing Windows-environment packages on both). site/ rebuild still
+  deferred to the canonical build machine #added:2026-09-05-194204 #completed:2026-09-05
+
+### Phase PI
+
+- [ ] PI.10: Live Pi LLM round-trip on a working-provider machine (spec verification step 3): first prompt injects the packet with display:true; a successful git commit fires post-commit and a failed one does not; /compact then next prompt re-injects; /skill:ctx-status reachable. PI.6 records the block (gx10-spark provider unreachable here); record the result here when run. Spec: specs/pi-cli-integration.md #priority:medium #session:3c5a5cbe #branch:feat/pi-cli-integration #commit:6288c227 #added:2026-09-05-203004
+
+- [x] PI.11: Merge upstream/main at 43d0ba7c into PR #161 without rewriting
+  branch history. Preserve both branches' task and learning blocks, mirror
+  the expanded 19-skill OpenCode tree into Pi, and retain tool-neutral
+  ctx-agent wording through canonical generation. Keep both parity guards
+  unchanged. Source conflicts are resolved; go build, asset/Pi deployment
+  tests, canonical skill parity and the full-suite compliance/lint gate
+  pass. Full Windows suite: 30 failing packages also fail on clean
+  upstream/main; two additional packages (cli/notify and core/hubsync)
+  pass when rerun separately. Independent final review accepted with no
+  merge-specific blocker. GitNexus pre-commit checking is unavailable;
+  the user explicitly approved using the verified diff, targeted tests and
+  baseline comparison for this merge, and authorized commit/push plus a
+  PR verification comment. Evidence and publication receipts:
+  .git/pr161-merge-20260910/ (local only). Spec:
+  specs/pi-cli-integration.md #added:2026-09-10-123500
+  #started:2026-09-10-123500 #completed:2026-09-10
+
 ### Phase HL: Hub Status Cluster Leadership (issue #96)
 
 Spec: `specs/hub-status-cluster-leadership.md`. Read it before starting any

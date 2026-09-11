@@ -1,0 +1,13 @@
+{
+  "name": "ctx-pi-extension-typecheck",
+  "private": true,
+  "description": "Type-check gate for the embedded Pi extension at internal/assets/integrations/pi/extension/ctx.ts. Not published; not embedded; CI-only dev tooling.",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "0.84.2",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.6.0"
+  }
+}

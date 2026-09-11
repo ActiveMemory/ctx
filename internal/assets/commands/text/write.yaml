@@ -224,6 +224,22 @@ write.hook-opencode-summary:
     MCP:    ~/.config/opencode/opencode.json (or $OPENCODE_HOME/opencode.json)
     AGENTS: AGENTS.md
     Skills: .opencode/skills/
+write.hook-pi-created:
+  short: '  ✓ %s'
+write.hook-pi-skipped:
+  short: '  ○ %s (already present, skipped)'
+write.hook-pi-summary:
+  short: |-
+    Pi will now:
+      1. Warm up and inject the ctx context packet on the first prompt
+      2. Re-inject the packet after compaction (breadcrumb interop)
+      3. Track task completion after edits
+      4. Run post-commit capture after `git commit`
+      5. Nudge persistence when the agent settles
+
+    Extension: .pi/extensions/ctx.ts
+    AGENTS:    AGENTS.md
+    Skills:    .pi/skills/
 write.hook-copilot-created:
   short: '  ✓ %s'
 write.hook-copilot-force-hint:

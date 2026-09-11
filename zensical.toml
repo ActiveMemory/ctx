@@ -41,6 +41,7 @@ nav = [
       "home/getting-started.md",
       "home/codex.md",
       "home/opencode.md",
+      "home/pi.md",
       "home/vscode.md",
       "home/first-session.md",
       "home/common-workflows.md",

@@ -86,6 +86,7 @@ editors/vscode/*.vsix
 
 # Type-check tooling for embedded plugins
 tools/typecheck/opencode/node_modules/
+tools/typecheck/pi/node_modules/
 
 # Some ideas are best kept hidden.
 ideas
