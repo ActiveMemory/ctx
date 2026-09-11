@@ -104,7 +104,16 @@ the Pi integration.
 
 ## Skills
 
-The bundled skills are available as `/skill:*` commands:
+Pi ships the same bundled skill set as OpenCode, generated at build time
+from the canonical ctx skills (`hack/sync-pi-skills.sh` copies the
+generated OpenCode tree). Four skills are Claude Code-only and are not
+shipped: `ctx-permission-sanitize` (audits
+`.claude/settings.local.json`), `ctx-plan-import` (reads
+`~/.claude/plans/`), `ctx-dream` (headless `claude -p` cron), and
+`ctx-skill-create` (authors Claude Code skills). Skills that cite
+`references/` files ship those files alongside `SKILL.md`.
+
+The ones you'll reach for most, available as `/skill:*` commands:
 
 | Command | When to use |
 |---------|-------------|

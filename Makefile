@@ -407,7 +407,9 @@ sync-opencode-skills:
 	@./hack/sync-opencode-skills.sh
 
 ## sync-pi-skills: Mirror Pi skills from the generated OpenCode tree
-sync-pi-skills:
+# Depends on its producer: the Pi tree is a copy of the generated
+# OpenCode tree, so the generator must finish first (make -j).
+sync-pi-skills: sync-opencode-skills
 	@./hack/sync-pi-skills.sh
 
 ## check-pi-skills: Verify Pi skills mirror the OpenCode tree
@@ -421,8 +423,8 @@ check-pi-skills:
 		rm -rf internal/assets/integrations/pi/skills && cp -r "$$TMPDIR/before" internal/assets/integrations/pi/skills; \
 		rm -rf "$$TMPDIR"; \
 		exit 1; \
-	fi; \
-	rm -rf "$$TMPDIR"; \
+	fi && \
+	rm -rf "$$TMPDIR" && \
 	echo "Pi skills are in sync."
 
 ## sync-steering: Regenerate tool-native steering outputs from .context/steering
@@ -450,8 +452,8 @@ check-copilot-skills:
 		cp -r "$$TMPDIR/before/"* internal/assets/integrations/copilot-cli/skills/; \
 		rm -rf "$$TMPDIR"; \
 		exit 1; \
-	fi; \
-	rm -rf "$$TMPDIR"; \
+	fi && \
+	rm -rf "$$TMPDIR" && \
 	echo "Copilot CLI skills are in sync."
 
 ## sync-codex-skills: Sync Codex plugin skills from canonical ctx skills
@@ -477,8 +479,8 @@ check-codex-skills:
 		cp "$$TMPDIR/plugin.json" internal/assets/claude/.codex-plugin/plugin.json; \
 		rm -rf "$$TMPDIR"; \
 		exit 1; \
-	fi; \
-	rm -rf "$$TMPDIR"; \
+	fi && \
+	rm -rf "$$TMPDIR" && \
 	echo "Codex skills are in sync."
 
 ## codex-plugin-install: Register this checkout as a Codex marketplace and install the ctx plugin
@@ -497,8 +499,8 @@ check-opencode-skills:
 		rm -rf internal/assets/integrations/opencode/skills && cp -r "$$TMPDIR/before" internal/assets/integrations/opencode/skills; \
 		rm -rf "$$TMPDIR"; \
 		exit 1; \
-	fi; \
-	rm -rf "$$TMPDIR"; \
+	fi && \
+	rm -rf "$$TMPDIR" && \
 	echo "OpenCode skills are in sync."
 
 ## check-why: Verify embedded why docs match source docs

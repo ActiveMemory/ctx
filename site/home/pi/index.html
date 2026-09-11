@@ -2247,7 +2247,15 @@ register; the extension is the lifecycle channel.</p>
 <p>Dangerous-command blocking is Claude Code-specific and is not part of
 the Pi integration.</p>
 <h2 id="skills">Skills<a class="headerlink" href="#skills" title="Permanent link">&para;</a></h2>
-<p>The bundled skills are available as <code>/skill:*</code> commands:</p>
+<p>Pi ships the same bundled skill set as OpenCode, generated at build time
+from the canonical ctx skills (<code>hack/sync-pi-skills.sh</code> copies the
+generated OpenCode tree). Four skills are Claude Code-only and are not
+shipped: <code>ctx-permission-sanitize</code> (audits
+<code>.claude/settings.local.json</code>), <code>ctx-plan-import</code> (reads
+<code>~/.claude/plans/</code>), <code>ctx-dream</code> (headless <code>claude -p</code> cron), and
+<code>ctx-skill-create</code> (authors Claude Code skills). Skills that cite
+<code>references/</code> files ship those files alongside <code>SKILL.md</code>.</p>
+<p>The ones you'll reach for most, available as <code>/skill:*</code> commands:</p>
 <table>
 <thead>
 <tr>
