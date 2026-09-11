@@ -166,14 +166,16 @@ func TestDeploySkills_DeterministicOrdering(t *testing.T) {
 		t.Fatalf("deploySkills: %v", err)
 	}
 
-	// Per-skill output lines are emitted in deploy order,
-	// so their sequence must be lexicographic.
+	// Per-skill output lines are emitted in deploy order, so their
+	// sequence must be lexicographic. Match the SKILL.md line
+	// specifically: a skill's reference files are deployed right
+	// after it and share its directory prefix.
 	var got []string
 	for _, line := range strings.Split(buf.String(), "\n") {
 		trimmed := strings.TrimSpace(line)
 		for _, name := range names {
 			if strings.Contains(trimmed,
-				filepath.Join(".pi", "skills", name)) {
+				filepath.Join(".pi", "skills", name, "SKILL.md")) {
 				got = append(got, name)
 				break
 			}
