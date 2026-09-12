@@ -741,9 +741,9 @@ I would spend this much review effort on ambiguous requirements or a
 design that would be expensive to get wrong. A small, easily tested fix
 probably needs less. 
 
-That said, **three reviewers** provides the "*sweet spot*" for classes of 
-work that a skilled senior engineer can spend *about a week* to implement 
-end-to-end.
+That said, based on our work so far, **three reviewers** happens to provide 
+the "*sweet spot*" for classes of work that a skilled senior engineer can spend 
+*about a week* to implement end-to-end.
 
 ## How Do We Test Whether the Approach Is Better
 
