@@ -2185,11 +2185,10 @@ went wrong before deciding whether a reset would help.</p>
 </table>
 <p>An uninterrupted conversation does not guarantee that every original
 token reaches the model. Harnesses can manage long conversations
-through compaction; Anthropic documents this explicitly. Record
-relevant compaction events when evaluating the process, and keep
-important decisions in files even when no manual reset
-occurs.
-<a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">Claude context-window documentation</a></p>
+through compaction; [Anthropic documents this explicitly][ctx-window]. </p>
+<p>Thus,record relevant compaction events when evaluating the process, and keep
+important decisions in files even when no manual reset occurs.</p>
+<p>[ctx-window]: "Claude Context Window" <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">https://platform.claude.com/docs/en/build-with-claude/context-windows</a></p>
 <p>A handoff should include the approved spec, reasons for key decisions,
 abandoned assumptions, current code version, completed checks, open
 findings, and the next task. A fresh session with that information may
