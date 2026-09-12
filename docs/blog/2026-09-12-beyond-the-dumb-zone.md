@@ -31,11 +31,11 @@ topics:
 review, and explicit human approval.*
 
 !!! question "Should You Reset Before Writing Code?"
-    An agent and a developer spend hours debating a feature. They
-    clarify the problem, reject plausible alternatives, discover that
-    an early assumption was wrong, and agree on the intended
-    experience. They turn that discussion into a specification intent,
-    then a complete specification and implementation plan.
+An agent and a developer spend hours debating a feature. They
+clarify the problem, reject plausible alternatives, discover that
+an early assumption was wrong, and agree on the intended
+experience. They turn that discussion into a specification intent,
+then a complete specification and implementation plan.
 
     The session now contains 250,000 tokens in a million-token context
     window.
@@ -56,10 +56,10 @@ is documented, but its shape and severity depend on the model, task, and
 input. The threshold shown is illustrative, not an established restart
 boundary.*
 
-But consider what the reset removes: 
+But consider what the reset removes:
 
-The history explains why the obvious design was rejected. It records which 
-constraint actually matters, which requirement was deliberately narrowed, 
+The history explains why the obvious design was rejected. It records which
+constraint actually matters, which requirement was deliberately narrowed,
 and why a seemingly unnecessary exception exists. The agent has access to the
 reasoning that produced the specification, including details the final
 document may not fully express.
@@ -266,12 +266,12 @@ The strongest process preserves both forms of information: an explicit
 current contract and access to the reasoning behind it.
 
 !!! warning "Continuity Is Not Authority"
-    There is a corresponding danger. If the persistent agent silently
-    implements a remembered promise that never reached the approved
-    spec, the code can diverge from the review baseline. Continuity
-    helps identify the gap; it does not authorize bypassing it. The gap
-    should become a proposed amendment, approved before it changes
-    scope.
+There is a corresponding danger. If the persistent agent silently
+implements a remembered promise that never reached the approved
+spec, the code can diverge from the review baseline. Continuity
+helps identify the gap; it does not authorize bypassing it. The gap
+should become a proposed amendment, approved before it changes
+scope.
 
 Think of a specification as the agreed design and the conversation as
 the design notebook. The notebook can explain the design. It can also
@@ -309,6 +309,46 @@ assumptions, unresolved questions, and the next permitted activity. Its
 purpose is navigation and reconciliation. It need not replace the
 history or summarize every turn.
 
+## A Practical Run, Still in Progress
+
+This workflow is also how we are developing a real skill-registry
+feature. At the time of writing, we have taken it through a debated
+brief, specification intent, and a full specification bundle, with
+repeated reviews and revisions at each checkpoint. Implementation is
+still gated on the bundle review. The `ctx` examples below are a public
+adaptation of that process, not a report of measured results from
+developing `ctx` itself.
+
+So far, we have not deliberately reset any of the participating agent
+conversations. I have kept the two external frontier-model review
+sessions across the brief, intent, and bundle reviews. The steering
+reviewer has kept its conversation too, even while we worked on side
+questions and this article. The agent responsible for authoring the
+artifacts and eventually implementing the feature has also remained in
+the same session.
+
+That is an observation about how we have operated the sessions, not a
+claim that every earlier token is still present in every model input.
+The tools may compact or summarize history automatically. Nor does this
+run establish that persistence outperforms a well-prepared fresh
+session: we have no controlled comparison, and the implementation and
+code-review stages have not happened yet.
+
+My intention is to keep those sessions through implementation and the
+subsequent code-review loop as well. The working hypothesis is that the
+implementer does not need to produce its best possible answer unaided
+on every turn. It needs to retain useful rationale, respond to specific,
+well-supported feedback, and produce changes we can verify. Review can
+supply corrections without first discarding the history that explains
+the design.
+
+That does not make feedback a cure for degraded reasoning. Reviewers can
+miss problems, and an implementer can misapply a valid finding. If the
+session stops using current decisions reliably, a prepared handoff
+remains an option. But so far, neither a phase transition nor the
+presence of side conversations has, by itself, given us a reason to
+start over.
+
 ## Roles in the Persistent Review Workflow
 
 The workflow presented here for `ctx` adapts an existing practitioner
@@ -322,8 +362,8 @@ The proposed setup uses one **implementation agent**, three
 The policy is to keep the same agent conversations across stages rather
 than reset them at an arbitrary token threshold. Harnesses may compact
 their inputs; consequential decisions remain in durable artifacts.
-Persistence is the intended review setup, not a verified account of every
-external reviewer's session history.
+The practical account above reflects my use of those conversations;
+it does not expose or verify each tool's internal context management.
 
 | Role                         | Responsibility                                                                                                                             | Boundary                                                        |
 |------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
@@ -484,7 +524,7 @@ erasing prior project context.
 
 ## Independence Without Amnesia
 
-Independent review is often conflated with a fresh session. 
+Independent review is often conflated with a fresh session.
 
 They are not: They are different properties.
 
@@ -513,10 +553,10 @@ review itself. Do not force every problem into "the implementer failed
 to follow the plan." Sometimes the plan is wrong.
 
 !!! tip "Evidence Outweighs Votes"
-    Avoid majority voting as the primary resolution method. One
-    reviewer with a reproducible counterexample can outweigh two
-    reviewers who found no issue. Three reviewers repeating the same
-    unsupported concern do not turn it into evidence.
+Avoid majority voting as the primary resolution method. One
+reviewer with a reproducible counterexample can outweigh two
+reviewers who found no issue. Three reviewers repeating the same
+unsupported concern do not turn it into evidence.
 
 The purpose of multiple perspectives is to improve the search for
 defects and alternative interpretations. Resolution still depends on
@@ -540,10 +580,10 @@ explicit. A lightweight checkpoint package should include:
 - The action currently authorized and the action that still requires
   approval.
 
-**Keep the package proportional to the work**: 
+**Keep the package proportional to the work**:
 
-A small change can use a single Markdown file plus a commit. A large 
-specification bundle may need an index. There is no benefit in generating 
+A small change can use a single Markdown file plus a commit. A large
+specification bundle may need an index. There is no benefit in generating
 elaborate tracking material that nobody reads.
 
 The history remains available as supporting context. The package tells
@@ -896,10 +936,10 @@ worthwhile depends on the work and should ultimately be measured
 through accepted outcomes, defects, rework, time, and cost.
 
 !!! quote "**If You Remember One Thing from This Post...**"
-    Keep the context when it helps. Repair its organization when
-    authority becomes unclear. Prepare a handoff when a fresh session
-    serves the task better. Let observed behavior and verified results
-    determine the intervention.
+Keep the context when it helps. Repair its organization when
+authority becomes unclear. Prepare a handoff when a fresh session
+serves the task better. Let observed behavior and verified results
+determine the intervention.
 
 ## Where This Connects
 
@@ -966,8 +1006,8 @@ living source consulted for this article on September 12, 2026.
 
 5. **Anthropic (2026). [Introducing Claude Opus
    4.6](https://www.anthropic.com/news/claude-opus-4-6).** February 5,
-   2026. Primary vendor source for the cited MRCR v2 comparison. Read
-   its benchmark claims as model- and evaluation-specific evidence.
+    2026. Primary vendor source for the cited MRCR v2 comparison. Read
+          its benchmark claims as model- and evaluation-specific evidence.
 
 6. **Anthropic (2025). [Effective Context Engineering for AI
    Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents).**
