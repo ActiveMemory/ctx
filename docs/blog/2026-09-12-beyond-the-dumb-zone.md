@@ -742,7 +742,7 @@ That said, **three reviewers** provides the "*sweet spot*" for classes of
 work that a skilled senior engineer can spend *about a week* to implement 
 end-to-end.
 
-## How to Test Whether the Approach Is Better
+## How Do We Test Whether the Approach Is Better
 
 To find out whether keeping context actually helps, we need to separate
 its effect from the quality of the handoff and the amount of review.
