@@ -358,13 +358,13 @@ flowchart TD
     brief["1. Debate the problem<br/>Debated brief"]
     reviewBrief{"STOP · Review the brief<br/>Human approves?"}
     intent["2. Establish specification intent<br/>Requirements, proposals, open questions"]
-    reviewIntent{"STOP · Review the intent<br/>Human approves?"}
+    reviewIntent["STOP · Review the intent<br/>Human approves?"]
     bundle["3. Prepare the full spec bundle<br/>Spec, plan, contracts, tasks, checks"]
-    reviewBundle{"STOP · Review the bundle<br/>Human approves implementation?"}
+    reviewBundle["STOP · Review the bundle<br/>Human approves implementation?"]
     code["4. Implement the approved bundle<br/>Code, tests, docs, results"]
     reviewCode["STOP · Review the implementation"]
     repair["5. Fix, check, repeat<br/>Correct findings and verify changes"]
-    accept{"Human accepts the implementation?"}
+    accept["Human accepts the implementation?"]
     done["Implementation complete<br/>Publishing and deployment are separate"]
 
     brief --> reviewBrief
