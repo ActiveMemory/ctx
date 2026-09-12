@@ -284,7 +284,7 @@ So far, **we have not deliberately reset any of the participating agent
 conversations**. 
 
 I have kept the two external frontier-model review
-sessions ***across the brief, intent, and bundle reviews**. 
+sessions **across the brief, intent, and bundle reviews**. 
 
 The steering reviewer has kept its conversation too, even while we worked 
 on side questions and this article. 
