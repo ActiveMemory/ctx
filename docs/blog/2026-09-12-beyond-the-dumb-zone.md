@@ -507,7 +507,9 @@ to follow the plan." Sometimes the plan is wrong.
 !!! tip "Evidence Outweighs Votes"
     Avoid majority voting as the primary resolution method. One
     reviewer with a reproducible counterexample can outweigh two
-    reviewers who found no issue. Three reviewers repeating the same
+    reviewers who found no issue. 
+
+    Three reviewers repeating the same
     unsupported concern do not turn it into evidence.
 
 * Reviewers help find problems. 
