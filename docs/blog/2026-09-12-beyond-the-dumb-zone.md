@@ -27,8 +27,7 @@ topics:
 
 *Volkan Özçelik / September 12, 2026*
 
-*A research-informed workflow for persistent implementation, independent
-review, and explicit human approval.*
+*How we keep the conversation, review the work, and decide when to move on.*
 
 !!! question "Should You Reset Before Writing Code?"
 An agent and a developer spend hours debating a feature. They
@@ -45,16 +44,20 @@ then a complete specification and implementation plan.
 A familiar answer is yes: the conversation is approaching the model's
 "*dumb zone*".
 
-Start clean, load the specification, and implement with an  uncluttered context.
+Start clean, load the specification, and implement with an uncluttered context.
+
+The chart below captures that advice: as the context fills, output
+quality falls, eventually crossing from a "smart zone" into a "dumb
+zone." If coding sessions followed this curve, resetting before that
+boundary would make sense. But does a token count tell us enough to
+make that call?
 
 ![Output quality plotted against context window occupancy: a curve that
 declines steadily, labeled "smart zone" before a vertical line at roughly
 150K tokens and "dumb zone" after it](../images/smart-vs-dumb-zone.png)
 
-*The folk model: schematic, not measured data. Context-related degradation
-is documented, but its shape and severity depend on the model, task, and
-input. The threshold shown is illustrative, not an established restart
-boundary.*
+*This drawing illustrates the claim. It is not benchmark data, and
+150K is not a proven cutoff.*
 
 But consider what the reset removes:
 
@@ -67,45 +70,33 @@ document may not fully express.
 **A fresh session may have less interference. It may also have less
 understanding**.
 
-This article argues for a different default for substantial, closely
-related work: retain the informed implementer and persistent reviewers,
-establish explicit authority for current decisions, and use independent
-evidence-based review at defined stages. Resetting remains an available
-intervention. Context occupancy alone is insufficient grounds for
-invoking it.
+For a feature that takes hours of discussion, I prefer to keep the
+agents that took part in that discussion. We write down what we agreed,
+review the work at each stage, and correct mistakes as we find them. A
+fuller context window, on its own, is not a reason to start over.
 
-The distinction matters. Long-context degradation is a real research
-finding. A universal token count at which every software-development
-session should restart is not established by the research discussed
-here.
+Long conversations can cause problems. The research below shows several
+ways that happens. It does not give us a token count at which every
+coding session should restart. Nor have we proved our approach is
+better: that would require comparing it with a fresh session given a
+good handoff.
 
-The workflow below is an engineering proposal grounded in that research
-and in an existing practitioner process. It is not a controlled
-experimental demonstration that persistent sessions outperform every
-alternative. Its central hypothesis is testable: when decision history
-remains valuable, preserving it while independently checking the
-resulting artifacts can produce better accepted work than discarding it
-at an arbitrary threshold.
-
-## What Does "Attention Degradation" Cover In Reality?
+## What Goes Wrong in a Long Conversation?
 
 People use "*context rot*", "*attention degradation*", and "*smart zone /
-dumb zone*" to describe several different problems. Those labels are
-convenient, but they can obscure which intervention would help.
+dumb zone*" to describe several different problems. The fix depends on which problem you actually have.
 
 | Failure mode        | What it looks like in development                                          | Why the distinction matters                                              |
 |---------------------|----------------------------------------------------------------------------|--------------------------------------------------------------------------|
 | Retrieval failure   | The agent overlooks a constraint that remains in the conversation.         | The information exists, but is not used reliably.                        |
-| Conflicting history | An abandoned proposal competes with its approved replacement.              | The agent needs to resolve authority and supersession.                   |
+| Conflicting history | An abandoned proposal competes with its approved replacement.              | The agent needs to know which decision replaced which.                   |
 | Anchoring           | The agent keeps repairing a design built on a disproven assumption.        | More repetition of the same reasoning may preserve the mistake.          |
-| Handoff loss        | A replacement agent follows the spec but misses a consequential rationale. | Resetting can introduce a new failure.                                   |
+| Handoff loss        | A replacement agent follows the spec but misses why a decision was made. | Resetting can introduce a new failure.                                   |
 | Version confusion   | A reviewer evaluates code against an obsolete contract.                    | Correct recall of old information is still the wrong basis for judgment. |
 | Evidence failure    | Everyone accepts an implementation claim without inspecting behavior.      | A shorter context does not supply missing verification.                  |
 
-These are behavioral categories for operating the workflow, not
-diagnoses of a model's internal mechanism. A missed requirement does
-not, by itself, prove that a particular attention head failed or that a
-context-length threshold was crossed.
+These are things we can observe. A missed requirement does not tell us
+what happened inside the model.
 
 Three concepts also need separation. The **model** processes the input
 it receives. The **harness** assembles that input, manages tools, and
@@ -118,42 +109,35 @@ its likely quality. We also need to know what the input contains, how
 current instructions are distinguished from history, what evidence is
 available, and what the agent must do next.
 
-## What the Research Establishes, and What It Leaves Open
+## What the Research Says
 
 ### Position and Task Structure Matter
 
 Liu and colleagues' *Lost in the Middle* studied multi-document question
 answering and key-value retrieval. Performance often depended on where
 relevant information appeared, with stronger results near the beginning
-or end than in the middle. The study establishes a limitation in
-reliable use of available context for the tested models and tasks. It
-does not identify a universal software-development restart threshold.
+or end than in the middle. Having the information in context did not mean the model would use it.
 [Liu et al., 2023](https://arxiv.org/abs/2307.03172)
 
 RULER broadened evaluation beyond finding a single hidden item. Its
 tasks include multiple needles, multi-hop tracing, and aggregation.
 Models that performed well on a simple retrieval test could still
-degrade on more demanding long-context tasks. The implication is
-methodological: advertised capacity and one successful retrieval
-benchmark are insufficient descriptions of effective context use.
+degrade on more demanding long-context tasks. A model's advertised window size and a successful retrieval test tell
+us little about how it will handle those harder tasks.
 [Hsieh et al., 2024](https://arxiv.org/abs/2404.06654)
 
 Chroma's *Context Rot* report evaluated 18 models using controlled
 tasks, including retrieval variations, conversational memory
 evaluation, and repeated-word reproduction. It found nonuniform
 performance as input length increased and examined the effects of
-distractors, semantic similarity, and input structure. This is stronger
-evidence than anecdotes that longer input can create problems, even
-when the task remains simple. It is still not an experiment comparing
-the complete development workflows proposed here.
+distractors, semantic similarity, and input structure. Longer input caused problems even on simple tasks. The report did not
+compare the development workflows discussed here.
 [Hong, Troynikov, and Huber, 2025](https://www.trychroma.com/research/context-rot)
 
-The practical consequence is that "all of this history is relevant" is
-an argument for its potential value, not proof that the model will use
-it correctly. Relevant but obsolete proposals can be particularly
-difficult to distinguish from current ones.
+Even useful history can be misread. An old proposal may still look
+relevant after the team has rejected it.
 
-### Multi-Turn Problems Include Premature Commitments
+### Early Mistakes Can Stick
 
 Laban and colleagues compared single-turn and multi-turn settings across
 six generation tasks, analyzing more than 200,000 simulated
@@ -164,27 +148,22 @@ describes their experimental setup; it is not a prediction that a long
 coding session loses 39% of its quality.
 [Laban et al., 2025](https://arxiv.org/abs/2505.06120)
 
-For the workflow in this article, the relevant concern is whether
-incorrect premises remain active after correction. A staged process
-that explicitly ratifies decisions and reviews artifacts is materially
-different from simply accumulating turns, although the cited study does
-not measure how much those controls help.
+That is a failure I want our reviews to catch: the agent continuing to
+build on an assumption we already corrected. The study does not tell us
+how well our checkpoints prevent it.
 
 ### Long-Context Capability Has Improved
 
 Historical findings should not be converted into permanent numerical
 ceilings. In its February 2026 Opus 4.6 announcement, Anthropic
 reported 76% on the eight-needle, million-token MRCR v2 evaluation,
-compared with 18.5% for Sonnet 4.5. This is a vendor-reported
-comparison between particular models on a particular evaluation. It
-supports improvement in long-context retrieval, not a claim that
-extended implementation is solved.
+compared with 18.5% for Sonnet 4.5. Those are Anthropic's retrieval benchmark results, not a test of a
+long-running coding session.
 [Anthropic, 2026](https://www.anthropic.com/news/claude-opus-4-6)
 
-Claims that the "dumb zone" moved from 100K to 200K tokens need similar
-qualification. Which model? Which harness? Which task? Which failure
-criterion? Was the history a coherent design discussion, a repository
-dump, or thousands of lines of repetitive logs?
+If someone says the "dumb zone" moved from 100K to 200K tokens, I want
+to know what they tested. A design discussion, a repository dump, and
+thousands of lines of repetitive logs are very different inputs.
 
 Neither number is established here as a general cutoff. Conversely,
 using only 25% of a million-token window does not certify reliability.
@@ -196,13 +175,11 @@ sufficient, high-signal information. That guidance is compatible with
 preserving substantial useful history; "minimal" need not mean short.
 [Anthropic, 2025](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
 
-### Independent Feedback Is Promising, but Agreement Is Not Proof
+### Reviewers Can Help—and Be Wrong
 
 Du and colleagues found benefits from multiagent debate on the
-factuality and reasoning tasks they studied. This supports
-investigating multiple perspectives as a technique; it does not
-validate this exact three-reviewer software process or establish three
-as an optimal number.
+factuality and reasoning tasks they studied. That is a reason to try multiple reviewers. It does not tell us that
+three is the right number for software development.
 [Du et al., 2023](https://arxiv.org/abs/2305.14325)
 
 Research on LLM judges also identifies position, verbosity, and
@@ -213,15 +190,13 @@ favorable judgment as an objective measurement of correctness.
 
 Finally, research on intrinsic self-correction found that models could
 struggle to improve reasoning without external feedback, sometimes
-making it worse. This is not a timeless claim about every newer model
-or about tool-assisted repair. It does support distinguishing a request
-to "think again" from feedback grounded in additional evidence.
+making it worse. The study examined self-correction without external feedback. Asking
+an agent to "think again" gives it less to work with than a failing test
+or a specific counterexample.
 [Huang et al., 2024](https://arxiv.org/abs/2310.01798)
 
-Taken together, these sources motivate a process that preserves useful
-information, resolves conflicting authority, and introduces independent
-checks. They do not demonstrate that any one context-management policy
-is universally best.
+These findings inform the process below: keep useful history, make
+changed decisions clear, and check the output.
 
 ## Resetting Context Can Lower Quality, Too
 
@@ -262,8 +237,7 @@ approved artifacts. The point is that documents can be incomplete, and
 implementation frequently reveals questions that were not obvious
 during drafting.
 
-The strongest process preserves both forms of information: an explicit
-current contract and access to the reasoning behind it.
+Keep the approved spec and the reasoning behind it available together.
 
 !!! warning "Continuity Is Not Authority"
 There is a corresponding danger. If the persistent agent silently
@@ -280,44 +254,29 @@ team knows which drawing it has approved.
 
 ## Continuity Matters More than Context Window Size
 
-The proposed policy is simple:
+Keep the implementation and review sessions while their history helps.
+The implementer should not have to forget the design discussion just
+because it is time to write code.
 
-> Keep the implementation and review sessions while their history
-> remains useful. Establish the approved artifact versions at each
-> stage. Use evidence-based review to correct mistakes. Restructure or
-> reset context in response to a concrete need.
+The approved spec still governs the work. If an earlier conversation
+contradicts it, the agent should point out the conflict. It should not
+quietly choose whichever version it remembers best.
 
-This policy makes three separate commitments.
+The agent that writes the work also does not decide when we move to the
+next stage. It finishes, we review, and the human approves the next step.
 
-First, continuity is allowed across planning, specification,
-implementation, and repair. The implementer does not have to forget the
-design discussion when the task changes phase.
-
-Second, conversational recency is not the project's authority system.
-Approved specifications and explicit amendments govern the work.
-Earlier discussion informs interpretation. Conflicts are surfaced, not
-silently settled by whichever sentence happens to attract the model's
-attention.
-
-Third, implementation ownership and review judgment are separated. The
-agent that writes the work responds to findings, but does not
-unilaterally declare the next stage open.
-
-A short baseline note at each transition makes this operational. It
-identifies the approved artifact, current decisions, superseded
-assumptions, unresolved questions, and the next permitted activity. Its
-purpose is navigation and reconciliation. It need not replace the
-history or summarize every turn.
+At each transition, a short note identifies the approved version, changed
+decisions, open questions, and what the agent may do next. That saves us
+from having to reconstruct the current state from the conversation.
 
 ## A Practical Run, Still in Progress
 
 This workflow is also how we are developing a real skill-registry
 feature. At the time of writing, we have taken it through a debated
 brief, specification intent, and a full specification bundle, with
-repeated reviews and revisions at each checkpoint. Implementation is
-still gated on the bundle review. The `ctx` examples below are a public
-adaptation of that process, not a report of measured results from
-developing `ctx` itself.
+repeated reviews and revisions at each checkpoint. We have not approved implementation yet. The `ctx` examples below
+adapt this process for the public tool; the feature in this account is
+being developed elsewhere.
 
 So far, we have not deliberately reset any of the participating agent
 conversations. I have kept the two external frontier-model review
@@ -327,73 +286,49 @@ questions and this article. The agent responsible for authoring the
 artifacts and eventually implementing the feature has also remained in
 the same session.
 
-That is an observation about how we have operated the sessions, not a
-claim that every earlier token is still present in every model input.
-The tools may compact or summarize history automatically. Nor does this
-run establish that persistence outperforms a well-prepared fresh
-session: we have no controlled comparison, and the implementation and
-code-review stages have not happened yet.
+The tools may have compacted or summarized history automatically. We
+have kept the conversations; that does not mean every original token
+still reaches the models.
 
 My intention is to keep those sessions through implementation and the
-subsequent code-review loop as well. The working hypothesis is that the
-implementer does not need to produce its best possible answer unaided
-on every turn. It needs to retain useful rationale, respond to specific,
-well-supported feedback, and produce changes we can verify. Review can
-supply corrections without first discarding the history that explains
-the design.
+subsequent code-review loop as well. I do not need the implementer to get everything right on its first
+attempt. I need it to understand the design, respond to useful feedback,
+and make changes we can check. We can correct its work without first
+throwing away the discussion that led to it.
 
-That does not make feedback a cure for degraded reasoning. Reviewers can
-miss problems, and an implementer can misapply a valid finding. If the
-session stops using current decisions reliably, a prepared handoff
-remains an option. But so far, neither a phase transition nor the
-presence of side conversations has, by itself, given us a reason to
-start over.
+We may still need a fresh session if repeated corrections stop helping.
+So far, neither changing stages nor discussing side topics has given us
+a reason to start over.
 
-## Roles in the Persistent Review Workflow
+## Who Does What
 
-The workflow presented here for `ctx` adapts an existing practitioner
-process that prioritizes "*continuity*" over rule-of-thumb context cutoffs.
-This is a public adaptation, not a claim that its benefits were measured
-while developing `ctx`.
-
-The proposed setup uses one **implementation agent**, three
-**reviewer perspectives**, and a **human decision-maker**.
-
-The policy is to keep the same agent conversations across stages rather
-than reset them at an arbitrary token threshold. Harnesses may compact
-their inputs; consequential decisions remain in durable artifacts.
-The practical account above reflects my use of those conversations;
-it does not expose or verify each tool's internal context management.
+We use one **implementation agent**, three **reviewers**, and a **human
+who makes the product decisions**. We keep their conversations across
+stages and save the agreed decisions in files.
 
 | Role                         | Responsibility                                                                                                                             | Boundary                                                        |
 |------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
-| Human product owner          | Decide product tradeoffs, coordinate artifact transfers, approve each stage, accept residual findings.                                     | Model agreement does not replace approval.                      |
-| Implementation agent         | Inspect its checkout, author planning and specification artifacts, implement approved work, validate it, and record responses to findings. | Stop at every agreed gate; do not silently expand scope.        |
-| External reviewer A          | Independently critique the stage artifact using its retained history and available evidence.                                               | Report evidence and uncertainty; do not assume access it lacks. |
-| External reviewer B          | Provide another model perspective under the same review contract.                                                                          | Do not defer to A's conclusions.                                |
-| Persistent steering reviewer | Preserve product intent, inspect revised artifacts and code, reconcile findings with decisions, and steer further correction.              | Reconsider its own prior advice when evidence contradicts it.   |
+| Human product owner | Make product decisions, transfer the files, and approve each stage. | Decide whether remaining issues are acceptable. |
+| Implementation agent | Write the brief, spec, and code; run checks; respond to reviews. | Stop at each checkpoint. Ask before changing scope. |
+| External reviewer A | Review the current files using the project history and available evidence. | Say what it checked and what it could not check. |
+| External reviewer B | Review the same files and explain its findings. | Reach its own conclusions before reading A’s. |
+| Steering reviewer | Check the revised work against the user’s decisions and send further corrections. | Be willing to withdraw its own earlier advice. |
 
-"Oracle" is a convenient role name, not a claim of infallibility. These
-reviewers generate hypotheses, identify contradictions, inspect
-evidence, and suggest corrections. Their claims remain reviewable.
+We sometimes call the steering reviewer an "oracle." It can be wrong
+too. Its findings need the same scrutiny as anyone else’s.
 
-Different frontier models are intended to broaden perspective. That
-choice does not establish statistical independence: they may share
-training influences, conventional assumptions, or blind spots.
-
-Persistent reviewers also acquire a shared project history over time.
-The safeguards below focus on how judgments are formed and tested.
+Different models can catch different mistakes. They can also share
+blind spots, especially after several rounds of working on the same
+design. Each still needs to explain and support its findings.
 
 ## The Five Stages and Their Hard Stops
 
 The workflow can use any suitable specification tools. In this public
 adaptation, [`/ctx-plan`][scrutinize-recipe] produces a debated brief,
 [`/ctx-spec`][design-recipe] produces a specification intent, and a
-specification engine produces the full bundle. These command names
-describe the adaptation. GitHub Spec Kit is one available toolkit for
-specification-driven development; this
-article's complete review protocol is an additional operating
-procedure. [GitHub Spec Kit](https://github.com/github/spec-kit)
+specification engine such as [GitHub Spec Kit](https://github.com/github/spec-kit)
+produces the full bundle. The review loop described here is something we add around
+those tools.
 
 ### Stage 1: Debate the Problem
 
@@ -417,11 +352,10 @@ The agent converts the approved debate into a document that separates
 settled requirements from proposals, assumptions, and unresolved
 choices.
 
-Review concentrates on information preservation. Did a conditional
+Check what survived the rewrite. Did a conditional
 preference become a mandatory requirement? Did a rejected approach
 return through different wording? Did an important exclusion
-disappear? Does every consequential ambiguity have an owner and a path
-to resolution?
+disappear? Is it clear who needs to answer each remaining question?
 
 The intent should be structured enough to guide a specification engine
 without pretending that open decisions are settled. The agent stops
@@ -437,8 +371,8 @@ list can contradict a contract. A design can satisfy the feature
 description while violating an operational constraint. A test plan can
 verify examples without covering the required failure behavior.
 
-Reviewers should trace consequential requirements through the proposed
-design and validation approach. The human approves the bundle version
+For each important requirement, reviewers should find the design that
+implements it and the check that would show it works. The human approves the bundle version
 before implementation begins.
 
 This stage is particularly important because three reviewers examining
@@ -463,11 +397,9 @@ Reviewers inspect actual source and behavior where their tools permit;
 an author's summary is only a starting point.
 
 For work with an expensive architectural uncertainty, insert an
-optional review after the first meaningful implementation slice. This
-is a risk-based checkpoint, not a context reset. It is unnecessary for
-every bounded change.
+optional review after the first meaningful implementation slice. Review it before building the rest.
 
-### Stage 5: Converge Through Verified Corrections
+### Stage 5: Fix, Check, Repeat
 
 The agent evaluates findings, makes justified corrections, updates
 evidence, and stops again. Reviewers verify those corrections and
@@ -491,30 +423,26 @@ At each checkpoint, use the following sequence.
    to external reviewers A and B. Each records its findings before
    seeing the other's current conclusions.
 3. **Evaluate the feedback.** The implementation agent assesses each
-   finding, revises where justified, and records dispositions. Feedback
+   finding, revises where justified, and records what it accepted or rejected and why. Feedback
    is not automatically a requirement.
 4. **Synchronize the revision.** The human transfers the exact revised
    artifact and relevant evidence into the steering reviewer's
    workspace.
 5. **Review the revised candidate.** The steering reviewer inspects it
    against requirements, prior decisions, source, and evidence. Where
-   practical, provide a clean copy of the revised artifact, with review
-   dispositions available separately. It forms its initial findings
-   before reading those conclusions, then performs reconciliation.
+   practical, provide a clean copy of the revised artifact, with the earlier reviews kept separately. It writes its own findings
+   first, then compares them with the earlier reviews.
 6. **Correct and verify.** The agent addresses findings and stops.
    Material revisions may return to the external reviewers. Repeat
    until the completion criteria are met.
 7. **Approve the next stage.** The human explicitly authorizes
    advancement. A favorable review never opens the gate automatically.
 
-This deliberately combines two early critiques with a later review of
-the revised work. It should be described accurately: it provides three
-perspectives, but the third perspective is examining a later candidate.
-If prior reviewers' verdicts or their dispositions remain inline, the
-third reviewer sees those conclusions during its initial read. Its
-reasoning can still add value, but that read is not blind to the earlier
-reviews. Separating dispositions where feasible reduces this exposure;
-the revisions themselves still reflect earlier feedback.
+The third reviewer sees a revised version, so this is not three models
+independently reviewing identical work. If the earlier verdicts are
+inside the document, it sees those too. Keeping review notes separate
+helps it form its own judgment, although the revisions already reflect
+the earlier feedback.
 
 For an experiment that measures reviewer agreement, give all three
 reviewers the same frozen artifact before any revisions. For day-to-day
@@ -524,9 +452,7 @@ erasing prior project context.
 
 ## Independence Without Amnesia
 
-Independent review is often conflated with a fresh session.
-
-They are not: They are different properties.
+A reviewer does not have to forget the project to review it independently.
 
 A reviewer can remember the entire product discussion and still derive
 its current findings without copying another reviewer's conclusions.
@@ -558,11 +484,10 @@ reviewer with a reproducible counterexample can outweigh two
 reviewers who found no issue. Three reviewers repeating the same
 unsupported concern do not turn it into evidence.
 
-The purpose of multiple perspectives is to improve the search for
-defects and alternative interpretations. Resolution still depends on
-reasoning, evidence, and product authority.
+Reviewers help find problems. Evidence settles technical claims; the
+human settles product choices.
 
-## The Reviewable Package
+## What to Hand the Reviewer
 
 Long conversations become easier to use when the current state is
 explicit. A lightweight checkpoint package should include:
@@ -575,8 +500,7 @@ explicit. A lightweight checkpoint package should include:
 - A change summary relative to the previous reviewed version.
 - Validation commands, relevant environment information, outcomes, and
   known gaps.
-- Findings and dispositions from earlier rounds, available for
-  reconciliation.
+- Earlier findings, what was done about them, and why.
 - The action currently authorized and the action that still requires
   approval.
 
@@ -586,8 +510,8 @@ A small change can use a single Markdown file plus a commit. A large
 specification bundle may need an index. There is no benefit in generating
 elaborate tracking material that nobody reads.
 
-The history remains available as supporting context. The package tells
-participants where current authority resides.
+The conversation explains how we got here. This package tells everyone
+which version to work from.
 
 ### Example Checkpoint Record
 
@@ -606,8 +530,7 @@ known_gaps:
   - <behavior-not-yet-verified>
 ```
 
-These are illustrative fields, not a tool-specific schema. Fill them
-with actual evidence. A command that the agent suggests running is
+Adapt these fields to your tools and fill them with actual results. A command that the agent suggests running is
 different from a command it ran, and both are different from a command
 a reviewer reproduced independently.
 
@@ -633,8 +556,8 @@ A useful finding explains an observable problem. It does not need to
 prescribe the entire implementation. Allow the author to choose a sound
 correction within the approved constraints.
 
-Use dispositions such as accepted, rejected with evidence, duplicate,
-deferred with approval, or awaiting a product decision. "Fixed" should
+Mark findings as accepted, rejected with evidence, duplicate, deferred
+with approval, or awaiting a product decision. "Fixed" should
 identify a correction. "Verified" should identify the evidence that the
 correction works.
 
@@ -666,21 +589,20 @@ reusable:
 
 Tests authored alongside an implementation may reproduce the same
 interpretation error. Reviewers should derive at least the
-consequential checks from requirements and failure scenarios rather
+important checks from requirements and failure scenarios rather
 than merely read test names. Where appropriate, they can add a
 counterexample, exercise an integration boundary, or inspect an
 invariant directly.
 
 A reviewer without execution access should say that its review is
 static. A reviewer that receives only a diff should state what
-repository context is missing. Review coverage is a fact to report, not
-something to imply through confident language.
+repository context is missing. Say what you checked and what you could not check.
 
-## Preventing Drift and Endless Convergence
+## When Reviews Stop Helping
 
-Repeated review can improve an artifact. It can also produce
-unnecessary churn or normalize an incorrect design. The workflow needs
-explicit stopping and reopening rules.
+Another review is useful if it finds a problem or checks a correction.
+It is less useful if it keeps reopening settled questions without new
+evidence. Agree on when to stop.
 
 Classify comments before acting on them. A defect violates an approved
 expectation or exposes an actual failure. A scope question requires a
@@ -691,9 +613,9 @@ Finish a stage when blocking findings are resolved or explicitly
 accepted, the relevant acceptance criteria have supporting evidence,
 corrections have been checked for affected regressions, and the human
 approves the candidate. Reviewers may retain documented reservations;
-universal enthusiasm is not required.
+everyone does not have to like every choice.
 
-Reopen affected approvals after material changes. If a correction
+Review the affected decisions again when a fix changes them. If a correction
 alters a public contract, it may require renewed specification review.
 If it only repairs an implementation branch to meet the existing
 contract, targeted verification may suffice. Judge the affected
@@ -713,16 +635,13 @@ may only generate more prose.
 
 ## When to Keep, Restructure, or Reset Context
 
-The policy is conditional:
-
-**Persistent context is useful while it supports reliable work**. \
-
-It is **NOT** a commitment to retain every token under all circumstances.
+Keep the session while it works. When it stops working, identify what
+went wrong before deciding whether a reset would help.
 
 | Observed situation                                                                    | First response                                                       | When a reset or handoff becomes reasonable                                          |
 |---------------------------------------------------------------------------------------|----------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | The agent uses current decisions correctly and produces verifiable progress.          | Continue. Keep current artifacts identifiable.                       | No reset is justified solely by occupancy.                                          |
-| An obsolete proposal reappears.                                                       | Point to the current decision and explicitly mark supersession.      | The agent repeatedly returns to the obsolete premise despite correction.            |
+| An obsolete proposal reappears.                                                       | Show the decision that replaced it.      | The agent repeatedly returns to the obsolete premise despite correction.            |
 | The session contains large amounts of reproducible logs or obsolete source snapshots. | Use targeted retrieval and available pruning or compaction controls. | The harness cannot maintain a usable input and a prepared handoff is more reliable. |
 | Reviewers disagree because they examined different versions.                          | Synchronize the exact candidate.                                     | Resetting is unnecessary unless other problems remain.                              |
 | Implementation repeatedly fails the same clear invariant.                             | Inspect the failed assumption and require a concrete reproduction.   | A fresh implementer or focused diagnostic session can test another interpretation.  |
@@ -733,30 +652,28 @@ An uninterrupted conversation does not guarantee that every original
 token reaches the model. Harnesses can manage long conversations
 through compaction; Anthropic documents this explicitly. Record
 relevant compaction events when evaluating the process, and keep
-consequential decisions in durable artifacts even when no manual reset
+important decisions in files even when no manual reset
 occurs.
 [Claude context-window documentation](https://platform.claude.com/docs/en/build-with-claude/context-windows)
 
-A prepared handoff should contain the approved baseline, decision
-rationale, superseded assumptions, current code version, verification
-state, open findings, and next authorized action. If that handoff is
-sufficiently complete, a fresh session may work very well. The argument
-against arbitrary resets is not an argument against good handoffs.
+A handoff should include the approved spec, reasons for key decisions,
+abandoned assumptions, current code version, completed checks, open
+findings, and the next task. A fresh session with that information may
+work very well.
 
 An optional fresh reviewer can also be useful for a narrow question:
 "Does this contract make sense on its own?" or "Can a developer follow
-this installation guide without the debate?" That tests artifact
-self-sufficiency while persistent reviewers continue checking
-historical fidelity.
+this installation guide without the debate?" That checks whether the document works for someone who was not in the
+design discussion.
 
-## The Economics: Accepted Work Is the Unit That Matters
+## What Does It Cost to Finish?
 
 Three persistent reviewers, repeated revisions, and human coordination
 consume time and money. The relevant question is whether they prevent
 enough defects, misunderstanding, and rework to justify that cost for
 the task.
 
-A useful accounting boundary is:
+Count the whole job:
 
 ```text
 Total cost = implementation
@@ -766,33 +683,29 @@ Total cost = implementation
            + later rework
 ```
 
-This is an accounting structure, not a measured result. The final term
-is often hardest to estimate. Report what is observed and avoid
-inventing savings for hypothetical defects.
+Later rework is hard to estimate. Count what you can observe; do not
+claim savings for bugs that might never have happened.
 
 Track model charges across all participants, tool and infrastructure
-costs when material, elapsed time, and active human minutes. Track
+costs when significant, elapsed time, and active human minutes. Track
 accepted results and failures, not only tokens per successful response.
 A workflow that creates cheaper drafts but requires repeated
 reconstruction of intent may cost more to finish. A workflow that
 spends heavily on reviews of a trivial change may simply be wasteful.
 
-Caching can change billing without establishing semantic reliability.
+Caching can reduce the bill. It does not tell you whether the answer is right.
 Likewise, a shorter context can lower input cost without improving the
 final result. Read actual usage records and pricing for the environment
 in use rather than infer cost from the visible conversation length.
 
-The full process is most defensible when requirements are ambiguous,
-design mistakes are expensive, or the feature crosses important
-contracts. Mechanical edits and isolated, readily testable fixes may
-justify fewer checkpoints. Three reviewers are a concrete configuration
-of this workflow, not a universal minimum for responsible development.
+I would spend this much review effort on ambiguous requirements or a
+design that would be expensive to get wrong. A small, easily tested fix
+probably needs less. Three reviewers are our choice for this work.
 
 ## How to Test Whether the Approach Is Better
 
-A practitioner can reasonably prefer this process before running a
-formal study. A claim that it is broadly superior needs a comparison
-that separates continuity from handoff quality and review effort.
+To find out whether keeping context actually helps, we need to separate
+its effect from the quality of the handoff and the amount of review.
 
 Start from the same repository state and approved specification
 checkpoint. Compare at least these implementation conditions:
@@ -823,7 +736,7 @@ for human learning across runs: a coordinator who sees the first
 solution may unintentionally steer the second more effectively.
 
 Useful outcome measures include acceptance rate within budget,
-consequential defects remaining at evaluation, requirements omitted or
+serious defects left at evaluation, requirements omitted or
 misinterpreted, accepted review findings, false-positive review burden,
 revision rounds, human effort, total cost, and elapsed time. Include
 unsuccessful runs; reporting only the cost of successful tasks hides an
@@ -835,13 +748,11 @@ versus three reviewers. These isolate whether gains come from retained
 context, review diversity, extra inference effort, or the human's
 coordination.
 
-The strongest result may be conditional: persistence helps most when
-unresolved implementation choices depend on accumulated rationale,
-while a complete handoff works just as well for stable, explicit
-contracts. That would be a useful finding rather than a failure to
-discover a universal winner.
+We might find that history helps with unresolved design questions, while
+a good handoff works just as well when the spec is complete. That would
+tell us when keeping the session is worth it.
 
-## A Reusable Operating Contract
+## Instructions You Can Reuse
 
 The following instructions condense the procedure into something a
 team can adopt. The baseline and candidate placeholders must be filled
@@ -865,7 +776,7 @@ requirements; do not silently resolve them by changing product scope.
 
 At each checkpoint, produce the artifact and supporting evidence, then stop.
 Evaluate feedback rather than accepting it automatically. Record each
-material finding's disposition and the evidence supporting that decision.
+significant finding’s outcome and the evidence supporting that decision.
 
 After corrections, identify the new candidate and update validation evidence.
 Do not treat artifact completion or favorable review as approval to advance.
@@ -879,7 +790,7 @@ decisions, intended user experience, and available source and evidence.
 Retain useful history, including reasons for rejected alternatives.
 
 Form your initial current-round findings before reading other reviewers'
-current conclusions where the review sequence permits. Then reconcile.
+current conclusions where the review sequence permits. Then compare findings.
 
 Report concrete defects, scope questions, and optional improvements
 separately. For a defect, identify impact, evidence, the violated expectation,
@@ -899,70 +810,45 @@ behavior for regressions. Leave unresolved findings explicit.
 Maintain one identifiable current candidate per checkpoint. Transfer
 exact versions, preserve the review record, decide product questions,
 and approve stage transitions explicitly. Require evidence for
-consequential claims, including claims made by reviewers. When a
+important claims, including claims made by reviewers. When a
 concern remains unresolved, accept it consciously or keep the gate
 closed.
 
-These instructions do not eliminate judgment. They give that judgment a
-stable structure.
+## Before You Reset
 
-## Conclusion
+Before clearing a coding session, ask what you are trying to fix. If the
+agent is following current decisions and its work holds up under review,
+I would keep going. If it repeatedly returns to a rejected design or
+cannot apply a clear correction, I would consider a fresh session with a
+careful handoff.
 
-Long-context degradation is a legitimate engineering concern. The
-research shows that models can struggle with information placement,
-increasing input length, competing details, and assumptions accumulated
-across turns. Newer results also show that capability can improve
-substantially. Neither observation establishes a universal token count
-at which a coherent development session should restart.
+The token count alone does not answer that question. The conversation
+may contain mistakes and abandoned ideas. It may also contain the reason
+you rejected the design a fresh agent is about to propose again.
 
-A design conversation contains potentially valuable information:
-reasons, exclusions, failed alternatives, and the conditions behind
-decisions. Resetting can reduce interference, but it can also discard
-that information. The right comparison is between the reliability of
-retained history and the completeness of a prepared replacement
-context.
-
-For substantial specification-driven work, a defensible approach is to
-preserve the informed implementer and persistent reviewers, make
-current authority explicit, review exact artifact versions, require
-concrete evidence, and retain human control over stage transitions.
-Multiple models broaden the search for problems; their agreement does
-not prove correctness. Tests and code inspection provide evidence;
-their coverage still needs examination.
-
-The proposed workflow pays for continuity and repeated scrutiny with
-additional model use and human coordination. Whether that investment is
-worthwhile depends on the work and should ultimately be measured
-through accepted outcomes, defects, rework, time, and cost.
-
-!!! quote "**If You Remember One Thing from This Post...**"
-Keep the context when it helps. Repair its organization when
-authority becomes unclear. Prepare a handoff when a fresh session
-serves the task better. Let observed behavior and verified results
-determine the intervention.
+For our current feature, we are keeping that history and checking the
+work at each stage. The implementation review is still ahead of us. We
+will judge the process by the code we accept, the bugs we find, and what
+it costs to get there.
 
 ## Where This Connects
 
-This post argues against one reflex; earlier field notes covered the
-surrounding terrain.
+A few earlier field notes cover related parts of this process.
 
 * [The Attention Budget][attention-post] explained why more context is
   not automatically better. This post is the other half of that
   argument: less context is not automatically safer, and the token
   count alone does not tell you which situation you are in.
 * [The Cheapest Patch Was the Most Expensive][cheapest-post] measured
-  accepted-patch cost across seven runs. The accounting boundary in
-  [The Economics: Accepted Work Is the Unit That Matters](#the-economics-accepted-work-is-the-unit-that-matters)
-  is the same lens, applied to the reset decision instead of the model
-  choice.
+  accepted-patch cost across seven runs. [What Does It Cost to Finish?](#what-does-it-cost-to-finish)
+  applies that same accounting to the reset decision.
 * [Context as Infrastructure][infra-post] made the case that decision
-  history should be durable rather than conversational. The baseline
-  note and checkpoint package here are that idea at checkpoint
-  granularity.
+  history should be durable rather than conversational. The checkpoint notes here keep those decisions in files that
+  anyone on the project can read.
 * [Code Is Cheap. Judgment Is Not.][judgment-post] separated production
   from judgment. [The Review Loop, Step by Step](#the-review-loop-step-by-step)
   is a structure for that judgment: the reviewers search for defects,
-  but the human still opens the gate.
+  but the human still decides when to proceed.
 
 In tool form, `ctx` ships the first two stages: [Scrutinizing a
 Plan][scrutinize-recipe] is the debated brief, and [Design Before
@@ -1050,9 +936,7 @@ living source consulted for this article on September 12, 2026.
 
 *This post is part of the [`ctx` field notes][blog] series,
 documenting what we learn building persistent context infrastructure
-for AI coding sessions. The workflow described here is an engineering
-proposal grounded in published research and an existing practitioner
-process, not a controlled experimental result.*
+for AI coding sessions. This post describes a process we are using and how we would test it.*
 
 [attention-post]: 2026-02-03-the-attention-budget.md
 [cheapest-post]: 2026-06-21-the-cheapest-patch-was-the-most-expensive.md
