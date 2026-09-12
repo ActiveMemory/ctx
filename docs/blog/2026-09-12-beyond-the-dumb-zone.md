@@ -389,8 +389,9 @@ flowchart TD
 ```
 
 For every **STOP** checkpoint above, the resulting artifacts are reviewed by
-**three independent frontier models** with a human acting as a **coordinator**
-and the **final decision-maker**.
+**three independent frontier models**, and a human acting as a **coordinator**
+and the **final decision-maker**. Further implementation details are covered
+in the following sections.
 
 ### Stage 1: Debate the Problem
 
