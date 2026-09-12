@@ -30,11 +30,11 @@ topics:
 *How we keep the conversation, review the work, and decide when to move on.*
 
 !!! question "Should You Reset Before Writing Code?"
-An agent and a developer spend hours debating a feature. They
-clarify the problem, reject plausible alternatives, discover that
-an early assumption was wrong, and agree on the intended
-experience. They turn that discussion into a specification intent,
-then a complete specification and implementation plan.
+    An agent and a developer spend hours debating a feature. They
+    clarify the problem, reject plausible alternatives, discover that
+    an early assumption was wrong, and agree on the intended
+    experience. They turn that discussion into a specification intent,
+    then a complete specification and implementation plan.
 
     The session now contains 250,000 tokens in a million-token context
     window.
@@ -47,8 +47,10 @@ A familiar answer is yes: the conversation is approaching the model's
 Start clean, load the specification, and implement with an uncluttered context.
 
 The chart below captures that advice: as the context fills, output
-quality falls, eventually crossing from a "smart zone" into a "dumb
-zone." If coding sessions followed this curve, resetting before that
+quality falls, eventually crossing from a "*smart zone*" into a "*dumb
+zone*". 
+
+If coding sessions followed this curve, resetting before that
 boundary would make sense. But does a token count tell us enough to
 make that call?
 
@@ -59,7 +61,7 @@ declines steadily, labeled "smart zone" before a vertical line at roughly
 *This drawing illustrates the claim. It is not benchmark data, and
 150K is not a proven cutoff.*
 
-But consider what the reset removes:
+But consider **what the reset removes**:
 
 The history explains why the obvious design was rejected. It records which
 constraint actually matters, which requirement was deliberately narrowed,
