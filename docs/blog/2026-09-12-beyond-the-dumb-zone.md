@@ -879,7 +879,7 @@ work at each stage. The implementation review is still ahead of us. We
 will judge the process by the code we accept, the bugs we find, and what
 it costs to get there.
 
-## Where This Connects
+## Into the Rabbit Hole 🐇
 
 A few earlier field notes cover related parts of this process.
 
