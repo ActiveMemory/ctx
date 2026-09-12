@@ -883,6 +883,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -962,6 +966,35 @@
   
   
     <li class="md-nav__item">
+      <a href="../codex/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-terminal" viewBox="0 0 24 24"><path d="M12 19h8M4 17l6-6-6-6"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  ctx for Codex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../opencode/" class="md-nav__link">
         
   
@@ -972,6 +1005,35 @@
     
   
   ctx for OpenCode
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pi/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-terminal" viewBox="0 0 24 24"><path d="M12 19h8M4 17l6-6-6-6"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  ctx for Pi
 
     
   </span>
@@ -1944,6 +2006,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -2004,22 +2070,22 @@ the moment your AI cites your project context back to you.</p>
 </span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
 </span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Next steps:
 </span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  1. Edit .context/TASKS.md to add your current tasks
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  2. Run &#39;ctx status&#39; to see context summary
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  3. Run &#39;ctx agent&#39; to get AI-ready context packet
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  2. Run 'ctx status' to see context summary
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  3. Run 'ctx agent' to get AI-ready context packet
 </span></code></pre></div>
 <p>This created your <code>.context/</code> directory with template files. </p>
 <p>For Claude Code, <a href="../getting-started/#installation">install the <code>ctx</code> plugin</a> to get automatic hooks and skills.</p>
 <h2 id="step-2-populate-your-context">Step 2: Populate Your Context<a class="headerlink" href="#step-2-populate-your-context" title="Permanent link">&para;</a></h2>
 <p>Add a <strong>task</strong> and a <strong>decision</strong>: These are the entries your AI will remember:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>task<span class="w"> </span>add<span class="w"> </span><span class="s2">"Implement user authentication"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Output: ✓ Added to TASKS.md</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Use PostgreSQL for primary database&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a reliable database for production&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;PostgreSQL offers ACID compliance and JSON support&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">&quot;Team needs PostgreSQL training&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span><span class="s2">"Use PostgreSQL for primary database"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">"Need a reliable database for production"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">"PostgreSQL offers ACID compliance and JSON support"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">"Team needs PostgreSQL training"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
 </span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Output: ✓ Added to DECISIONS.md</span>
@@ -2128,7 +2194,7 @@ to generate <code>.github/copilot-instructions.md</code> for automatic context l
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>- **Implement user authentication** (pending)
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>There&#39;s also a recent architectural decision to **use PostgreSQL for
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>There's also a recent architectural decision to **use PostgreSQL for
 </span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>the primary database**, chosen for its ACID compliance and JSON support.
 </span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
 </span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Want me to start on the authentication task?

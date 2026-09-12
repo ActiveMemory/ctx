@@ -2562,7 +2562,7 @@ invisibility</strong> (<em>silent side effect</em>). </p>
 <h2 id="pattern-1-hard-gate">Pattern 1: Hard Gate<a class="headerlink" href="#pattern-1-hard-gate" title="Permanent link">&para;</a></h2>
 <p><strong>Block the tool call entirely</strong>. The agent cannot proceed: it must find
 another approach or tell the user.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;decision&quot;: &quot;block&quot;, &quot;reason&quot;: &quot;Use ctx from PATH, not ./ctx&quot;}&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'{"decision": "block", "reason": "Use ctx from PATH, not ./ctx"}'</span>
 </span></code></pre></div>
 <p><strong>When to use</strong>: Enforcing invariants that must never be violated:
 Constitution rules, security boundaries, destructive command prevention.</p>
@@ -2579,11 +2579,11 @@ help the agent recover ("<em>use X instead</em>"); bad reasons leave it stuck.</
 <h2 id="pattern-2-verbatim-relay">Pattern 2: VERBATIM Relay<a class="headerlink" href="#pattern-2-verbatim-relay" title="Permanent link">&para;</a></h2>
 <p><strong>Force the agent to show this to the user as-is</strong>. The explicit instruction
 overcomes the agent's tendency to silently absorb context.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;IMPORTANT: Relay this warning to the user VERBATIM before answering their question.&quot;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Journal Reminder ─────────────────────────────&quot;</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ You have 12 sessions not yet exported.&quot;</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└────────────────────────────────────────────────&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"IMPORTANT: Relay this warning to the user VERBATIM before answering their question."</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"┌─ Journal Reminder ─────────────────────────────"</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"│ You have 12 sessions not yet exported."</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"└────────────────────────────────────────────────"</span>
 </span></code></pre></div>
 <p><strong>When to use</strong>: Actionable reminders the user needs to see regardless of
 what they asked: Stale backups, unimported sessions, resource warnings.</p>
@@ -2606,11 +2606,11 @@ the box-drawing is just fancy formatting.</p>
 <h2 id="pattern-3-agent-directive">Pattern 3: Agent Directive<a class="headerlink" href="#pattern-3-agent-directive" title="Permanent link">&para;</a></h2>
 <p><strong>Tell the agent to do something, not the user</strong>. The agent decides whether
 and how to involve the user.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Persistence Checkpoint (prompt #25) ───────────&quot;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ No context files updated in 15+ prompts.&quot;</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ Have you discovered learnings, decisions,&quot;</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ or completed tasks worth persisting?&quot;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└──────────────────────────────────────────────────&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"┌─ Persistence Checkpoint (prompt #25) ───────────"</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"│ No context files updated in 15+ prompts."</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"│ Have you discovered learnings, decisions,"</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"│ or completed tasks worth persisting?"</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"└──────────────────────────────────────────────────"</span>
 </span></code></pre></div>
 <p><strong>When to use</strong>: Behavioral nudges. The hook detects a condition and
 asks the agent to consider an action. The user may never need to know.</p>
@@ -2641,7 +2641,7 @@ small and fast to generate.</p>
 <hr />
 <h2 id="pattern-5-silent-side-effect">Pattern 5: Silent Side-Effect<a class="headerlink" href="#pattern-5-silent-side-effect" title="Permanent link">&para;</a></h2>
 <p><strong>Do work, produce no output</strong>: Housekeeping that needs no acknowledgment.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CTX_TMPDIR</span><span class="s2">&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+15<span class="w"> </span>-delete
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>find<span class="w"> </span><span class="s2">"</span><span class="nv">$CTX_TMPDIR</span><span class="s2">"</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+15<span class="w"> </span>-delete
 </span></code></pre></div>
 <p><strong>When to use</strong>: Cleanup, log rotation, temp file management. Anything
 where the action is the point and nobody needs to know it happened.</p>
@@ -2654,14 +2654,14 @@ where the action is the point and nobody needs to know it happened.</p>
 a way that matters, consider logging.</p>
 <h3 id="pattern-6-conditional-relay">Pattern 6: Conditional Relay<a class="headerlink" href="#pattern-6-conditional-relay" title="Permanent link">&para;</a></h3>
 <p><strong>Tell the agent to relay only if a condition holds in context.</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;If the user&#39;s question involves modifying .context/ files,&quot;</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;relay this warning VERBATIM:&quot;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Context Integrity ─────────────────────────────&quot;</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ CONSTITUTION.md has not been verified in 7 days.&quot;</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└────────────────────────────────────────────────&quot;</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Otherwise, proceed normally.&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"If the user's question involves modifying .context/ files,"</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"relay this warning VERBATIM:"</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"┌─ Context Integrity ─────────────────────────────"</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"│ CONSTITUTION.md has not been verified in 7 days."</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"└────────────────────────────────────────────────"</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Otherwise, proceed normally."</span>
 </span></code></pre></div>
 <p><strong>When to use</strong>: Warnings that only matter in certain contexts. Avoids
 noise when the user is doing unrelated work.</p>
@@ -2669,11 +2669,11 @@ noise when the user is doing unrelated work.</p>
 holds. More fragile than VERBATIM relay, but less noisy.</p>
 <h3 id="pattern-7-suggested-action">Pattern 7: Suggested Action<a class="headerlink" href="#pattern-7-suggested-action" title="Permanent link">&para;</a></h3>
 <p><strong>Give the agent a specific command to propose to the user.</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Stale Dependencies ──────────────────────────&quot;</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ go.sum is 30+ days newer than go.mod.&quot;</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ Suggested: run \`go mod tidy\`&quot;</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ Ask the user before proceeding.&quot;</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└───────────────────────────────────────────────&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"┌─ Stale Dependencies ──────────────────────────"</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"│ go.sum is 30+ days newer than go.mod."</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"│ Suggested: run \`go mod tidy\`"</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"│ Ask the user before proceeding."</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"└───────────────────────────────────────────────"</span>
 </span></code></pre></div>
 <p><strong>When to use:</strong> The hook detects a fixable condition and knows the fix.
 Goes beyond a nudge: Gives the agent <strong>a concrete next step</strong>. The agent
@@ -2683,13 +2683,13 @@ user before proceeding</em>" part is critical.</p>
 <h3 id="pattern-8-escalating-severity">Pattern 8: Escalating Severity<a class="headerlink" href="#pattern-8-escalating-severity" title="Permanent link">&para;</a></h3>
 <p><strong>Different urgency tiers with different relay expectations.</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># INFO: agent processes silently, mentions if relevant</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;INFO: Last test run was 3 days ago.&quot;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"INFO: Last test run was 3 days ago."</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># WARN: agent should mention to user at next natural pause</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARN: 12 uncommitted changes across 3 branches.&quot;</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"WARN: 12 uncommitted changes across 3 branches."</span>
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
 </span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># CRITICAL: agent must relay immediately, before any other work</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;CRITICAL: Relay VERBATIM before answering. Disk usage at 95%.&quot;</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"CRITICAL: Relay VERBATIM before answering. Disk usage at 95%."</span>
 </span></code></pre></div>
 <p><strong>When to use:</strong> When you have multiple hooks producing output and need
 to avoid overwhelming the user. <code>INFO</code> gets absorbed, <code>WARN</code> gets mentioned,
@@ -2738,7 +2738,7 @@ condition isn't met</em>). Make sure the common case is fast and silent.</p>
 <p>Lessons from 19 days of hook debugging in <code>ctx</code>. Every one of these was
 encountered, debugged, and fixed in production.</p>
 <h3 id="silent-misfire-wrong-key-name">Silent Misfire: Wrong Key Name<a class="headerlink" href="#silent-misfire-wrong-key-name" title="Permanent link">&para;</a></h3>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;PreToolUseHooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">"PreToolUseHooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
 </span></code></pre></div>
 <p>The key is <code>PreToolUse</code>, not <code>PreToolUseHooks</code>. Claude Code validates
 silently: A misspelled key means the hook is ignored with no error.
@@ -2747,18 +2747,18 @@ before adding real logic.</p>
 <h3 id="json-escaping-breaks-shell-commands">JSON Escaping Breaks Shell Commands<a class="headerlink" href="#json-escaping-breaks-shell-commands" title="Permanent link">&para;</a></h3>
 <p>Go's <code>json.Marshal</code> escapes <code>&gt;</code>, <code>&lt;</code>, and <code>&amp;</code> as Unicode sequences
 (<code>\u003e</code>) by default. This breaks shell commands in generated config:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ctx agent 2\u003e/dev/null&quot;</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ctx agent 2\u003e/dev/null"</span>
 </span></code></pre></div>
 <p>Fix: use <code>json.Encoder</code> with <code>SetEscapeHTML(false)</code> when generating
 hook configuration.</p>
 <h3 id="stdin-not-environment-variables"><code>stdin</code>, Not Environment Variables<a class="headerlink" href="#stdin-not-environment-variables" title="Permanent link">&para;</a></h3>
 <p>Hook input arrives as <strong>JSON via <code>stdin</code></strong>, not environment variables:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Wrong:</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">COMMAND</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$CLAUDE_TOOL_INPUT</span><span class="s2">&quot;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">COMMAND</span><span class="o">=</span><span class="s2">"</span><span class="nv">$CLAUDE_TOOL_INPUT</span><span class="s2">"</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Right:</span>
 </span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nv">HOOK_INPUT</span><span class="o">=</span><span class="k">$(</span>cat<span class="k">)</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">COMMAND</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOOK_INPUT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.tool_input.command // empty&#39;</span><span class="k">)</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">COMMAND</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$HOOK_INPUT</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.tool_input.command // empty'</span><span class="k">)</span>
 </span></code></pre></div>
 <h3 id="regex-overfitting">Regex Overfitting<a class="headerlink" href="#regex-overfitting" title="Permanent link">&para;</a></h3>
 <p>A regex meant to catch <code>ctx</code> as a binary will also match <code>ctx</code> as a
@@ -2785,7 +2785,7 @@ it wasted.</p>
 <h3 id="hardcoded-paths">Hardcoded Paths<a class="headerlink" href="#hardcoded-paths" title="Permanent link">&para;</a></h3>
 <p>A username rename (<code>parallels</code> to <code>jose</code>) broke every hook at once.
 Use <code>$CLAUDE_PROJECT_DIR</code> instead of absolute paths:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\&quot;$CLAUDE_PROJECT_DIR\&quot;/.claude/hooks/block-git-push.sh&quot;</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-git-push.sh"</span>
 </span></code></pre></div>
 <p>If the platform provides a runtime variable for paths, always use it.</p>
 <hr />

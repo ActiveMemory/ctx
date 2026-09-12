@@ -2235,21 +2235,21 @@ times, weekly hygiene (pair with <code>ctx drift</code>), or before committing
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cp<span class="w"> </span>.claude/settings.local.json<span class="w"> </span>/tmp/settings-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
 </span></code></pre></div>
 <h2 id="step-2-extract-the-allow-list">Step 2: Extract the Allow List<a class="headerlink" href="#step-2-extract-the-allow-list" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>jq<span class="w"> </span><span class="s1">&#39;.permissions.allow[]&#39;</span><span class="w"> </span>.claude/settings.local.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>jq<span class="w"> </span><span class="s1">'.permissions.allow[]'</span><span class="w"> </span>.claude/settings.local.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
 </span></code></pre></div>
 <p>Eyeball it. You're looking for four categories:</p>
 <h2 id="step-3-identify-problems">Step 3: Identify Problems<a class="headerlink" href="#step-3-identify-problems" title="Permanent link">&para;</a></h2>
 <h3 id="a-garbage-nonsense">A. Garbage / Nonsense<a class="headerlink" href="#a-garbage-nonsense" title="Permanent link">&para;</a></h3>
 <p>Entries that are clearly broken or meaningless:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Bash(done)
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Bash(__NEW_LINE_aa838494a90279c4__ echo &quot;&quot;)
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Bash(__NEW_LINE_aa838494a90279c4__ echo "")
 </span></code></pre></div>
 <p><strong>Action</strong>: Delete.</p>
 <h3 id="b-one-off-commands-session-debris">B. One-Off Commands (Session Debris)<a class="headerlink" href="#b-one-off-commands-session-debris" title="Permanent link">&para;</a></h3>
 <p>Entries with hardcoded paths, literal arguments, or exact commands
 that were accepted during a specific debugging session:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Bash(git -C /home/jose/WORKSPACE/ctx log --oneline --all -20)
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Bash(/home/jose/WORKSPACE/ctx/ctx decision add &quot;Use PostgreSQL&quot; --context ...)
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Bash(/home/jose/WORKSPACE/ctx/ctx decision add "Use PostgreSQL" --context ...)
 </span></code></pre></div>
 <p>Signs of a one-off:</p>
 <ul>
@@ -2319,7 +2319,7 @@ would match an existing wildcard entry.</p>
 <p>Edit <code>.claude/settings.local.json</code> directly in your editor.
 Remove flagged entries. Keep the JSON valid.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Validate JSON after editing</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>jq<span class="w"> </span>.<span class="w"> </span>.claude/settings.local.json<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;valid&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;BROKEN&quot;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>jq<span class="w"> </span>.<span class="w"> </span>.claude/settings.local.json<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"valid"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"BROKEN"</span>
 </span></code></pre></div>
 <h2 id="step-6-verify">Step 6: Verify<a class="headerlink" href="#step-6-verify" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Compare before/after</span>
@@ -2327,7 +2327,7 @@ Remove flagged entries. Keep the JSON valid.</p>
 </span></code></pre></div>
 <h2 id="step-7-optionally-commit">Step 7: Optionally Commit<a class="headerlink" href="#step-7-optionally-commit" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>git<span class="w"> </span>add<span class="w"> </span>.claude/settings.local.json
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: sanitize agent permissions&quot;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"chore: sanitize agent permissions"</span>
 </span></code></pre></div>
 <h2 id="asking-the-agent-for-help">Asking the Agent for Help<a class="headerlink" href="#asking-the-agent-for-help" title="Permanent link">&para;</a></h2>
 <p>You can safely ask the agent to <em>analyze</em> the file:</p>

@@ -2525,8 +2525,8 @@ branch, and commit hash from its context, so no manual flags are needed.</p>
 </div>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-reflect               # surface items worth persisting
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-decision-add &quot;Title&quot;  # record with context/rationale/consequence
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-learning-add &quot;Title&quot;  # record with context/lesson/application
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-decision-add "Title"  # record with context/rationale/consequence
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-learning-add "Title"  # record with context/lesson/application
 </span></code></pre></div>
 <p>Or just tell your agent: <em>"What have we learned this session?"</em></p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -2610,16 +2610,16 @@ a rule, and an example. Conventions keep code consistent across sessions.</p>
 <li>and <strong>consequences</strong>.</li>
 </ul>
 <p>The easiest way to record one is to tell your agent:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: &quot;Save that as a decision: we picked file-based cooldown
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>      tokens over env vars.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: "Save that as a decision: we picked file-based cooldown
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>      tokens over env vars."
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Agent: &quot;Recorded in DECISIONS.md:
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Agent: "Recorded in DECISIONS.md:
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  - Decision: Use file-based cooldown tokens instead of env vars
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  - Context: Hook subprocesses cannot persist env vars to parent shell
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  - Rationale: File tokens survive across processes. Simpler than
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    IPC. Cleanup is automatic via TTL.
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  - Consequence: Tombstone files accumulate in /tmp. Cannot share
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    state across machines.&quot;
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    state across machines."
 </span></code></pre></div>
 <p>The agent was present for the trade-off discussion. It fills in the structured
 fields from what it observed, which is hard to reconstruct later as a terminal
@@ -2634,10 +2634,10 @@ and against [alternatives], to achieve [benefit], accepting that [trade-off].</e
 <summary>CLI Command for Scripting and Automation</summary>
 <p>When no agent is in the loop (<em>CI pipelines, shell scripts, hooks</em>),
 use the CLI directly with structured flags:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Use file-based cooldown tokens instead of env vars&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Hook subprocesses cannot persist env vars to parent shell&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;File tokens survive across processes. Simpler than IPC. Cleanup is automatic via TTL.&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">&quot;Tombstone files accumulate in /tmp. Cannot share state across machines.&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span><span class="s2">"Use file-based cooldown tokens instead of env vars"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">"Hook subprocesses cannot persist env vars to parent shell"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">"File tokens survive across processes. Simpler than IPC. Cleanup is automatic via TTL."</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">"Tombstone files accumulate in /tmp. Cannot share state across machines."</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span></code></pre></div>
 </details>
@@ -2646,16 +2646,16 @@ use the CLI directly with structured flags:</p>
 <p>Again, your agent is the best tool for this. It was there when you discovered
 the gotcha and can express it more completely than a backslash-escaped terminal
 command:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>You: &quot;That subprocess thing was painful. Save it as a learning.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>You: "That subprocess thing was painful. Save it as a learning."
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Agent: &quot;Added to LEARNINGS.md:
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Agent: "Added to LEARNINGS.md:
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  - Learning: Claude Code hooks run in a subprocess
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  - Context: Set env var in PreToolUse hook, but it was not visible
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    in the main session
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  - Lesson: Hook scripts execute in a child process. Env changes do
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    not propagate to parent.
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  - Application: Use tombstone files for hook-to-session
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    communication. Never rely on hook env vars.&quot;
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    communication. Never rely on hook env vars."
 </span></code></pre></div>
 <p>You said one sentence. The agent produced a structured entry with all three
 fields filled from the session context.</p>
@@ -2672,23 +2672,23 @@ expressive than what you would type at a command prompt.</p>
 <details class="note">
 <summary>CLI Command for Scripting and Automation</summary>
 <p>When no agent is in the loop:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Claude Code hooks run in a subprocess&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Set env var in PreToolUse hook, but it was not visible in the main session&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;Hook scripts execute in a child process. Env changes do not propagate to parent.&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Use tombstone files for hook-to-session communication. Never rely on hook env vars.&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>learning<span class="w"> </span>add<span class="w"> </span><span class="s2">"Claude Code hooks run in a subprocess"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">"Set env var in PreToolUse hook, but it was not visible in the main session"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">"Hook scripts execute in a child process. Env changes do not propagate to parent."</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">"Use tombstone files for hook-to-session communication. Never rely on hook env vars."</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span></code></pre></div>
 </details>
 <h3 id="step-4-record-conventions">Step 4: Record Conventions<a class="headerlink" href="#step-4-record-conventions" title="Permanent link">&para;</a></h3>
 <p><strong>Conventions</strong> are simpler: just a name, a rule, and optionally a section.</p>
 <p>These are short enough that either approach works:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You: &quot;We&#39;ve been using kebab-case for every CLI flag. Codify that.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You: "We've been using kebab-case for every CLI flag. Codify that."
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Agent: &quot;Added to CONVENTIONS.md under Naming:
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &#39;Use kebab-case for all CLI flag names.&#39;&quot;
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Agent: "Added to CONVENTIONS.md under Naming:
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  'Use kebab-case for all CLI flag names.'"
 </span></code></pre></div>
 <p>Or from the terminal:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>convention<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Use kebab-case for all CLI flag names&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;Naming&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>convention<span class="w"> </span>add<span class="w"> </span><span class="s2">"Use kebab-case for all CLI flag names"</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">"Naming"</span>
 </span></code></pre></div>
 <p>Conventions work best for rules that come up repeatedly. Codify a pattern the
 third time you see it, not the first.</p>
@@ -2724,11 +2724,11 @@ each suggested persist:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>This session implemented file-based cooldown for `ctx agent` and
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>discovered that hook subprocesses cannot set env vars in the parent.
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>I&#39;d suggest persisting:
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>I'd suggest persisting:
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>- **Learning**: Hook subprocesses cannot propagate env vars
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  `ctx learning add &quot;...&quot; --context &quot;...&quot; --lesson &quot;...&quot; --application &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  `ctx learning add "..." --context "..." --lesson "..." --application "..." --session-id abc12345 --branch main --commit 68fbc00a`
 </span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>- **Decision**: File-based cooldown tokens over env vars
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  `ctx decision add &quot;...&quot; --context &quot;...&quot; --rationale &quot;...&quot; --consequence &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  `ctx decision add "..." --context "..." --rationale "..." --consequence "..." --session-id abc12345 --branch main --commit 68fbc00a`
 </span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
 </span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Want me to persist any of these?
 </span></code></pre></div>
@@ -2769,18 +2769,18 @@ natural language triggers the same operations.</p>
 </tbody>
 </table>
 <p>Example exchange:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>You: &quot;What did we learn from that debugging session?&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>You: "What did we learn from that debugging session?"
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Agent: &quot;We discovered three things worth persisting:
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  1. Hook subprocesses can&#39;t propagate env vars to the parent. We
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Agent: "We discovered three things worth persisting:
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  1. Hook subprocesses can't propagate env vars to the parent. We
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>     spent 20 minutes on this before switching to tombstone files.
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  2. Tombstone files need a TTL or they accumulate in /tmp.
 </span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  3. The cooldown logic must check file mtime, not just existence.
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  Want me to save these as learnings?&quot;
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  Want me to save these as learnings?"
 </span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>You: &quot;Yes, all of them.&quot;
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>You: "Yes, all of them."
 </span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Agent: &quot;Done. Added all three to LEARNINGS.md with structured fields.&quot;
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Agent: "Done. Added all three to LEARNINGS.md with structured fields."
 </span></code></pre></div>
 <p>The agent can also be proactive without being asked. The playbook encourages
 agents to persist context at natural milestones.</p>
@@ -2806,21 +2806,21 @@ rather than waiting for explicit instructions.</p>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <h3 id="command-line-approach-scripting-and-automation">Command-Line Approach (<em>Scripting and Automation</em>)<a class="headerlink" href="#command-line-approach-scripting-and-automation" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Decision: record the trade-off</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Use PostgreSQL over SQLite&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need concurrent multi-user access&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;SQLite locks on writes; Postgres handles concurrency&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">&quot;Requires a database server; team needs Postgres training&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span><span class="s2">"Use PostgreSQL over SQLite"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">"Need concurrent multi-user access"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">"SQLite locks on writes; Postgres handles concurrency"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">"Requires a database server; team needs Postgres training"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
 </span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Learning: record the gotcha</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>ctx<span class="w"> </span>learning<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;SQL migrations must be idempotent&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Deploy failed when migration ran twice after rollback&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;CREATE TABLE without IF NOT EXISTS fails on retry&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Always use IF NOT EXISTS guards in migrations&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>ctx<span class="w"> </span>learning<span class="w"> </span>add<span class="w"> </span><span class="s2">"SQL migrations must be idempotent"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">"Deploy failed when migration ran twice after rollback"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">"CREATE TABLE without IF NOT EXISTS fails on retry"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">"Always use IF NOT EXISTS guards in migrations"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
 </span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Convention: record the pattern</span>
-</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>ctx<span class="w"> </span>convention<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;API handlers return structured errors&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;API&quot;</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>ctx<span class="w"> </span>convention<span class="w"> </span>add<span class="w"> </span><span class="s2">"API handlers return structured errors"</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">"API"</span>
 </span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
 </span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># Project a table of contents on demand</span>
 </span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>ctx<span class="w"> </span>index<span class="w"> </span>.context/DECISIONS.md
@@ -2829,33 +2829,33 @@ rather than waiting for explicit instructions.</p>
 </span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="c1"># /ctx-reflect</span>
 </span></code></pre></div>
 <h3 id="conversational-approach-interactive-sessions">Conversational Approach (<em>Interactive Sessions</em>)<a class="headerlink" href="#conversational-approach-interactive-sessions" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>You: &quot;We just picked Postgres over SQLite for the concurrency
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>      reasons. Save that?&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>You: "We just picked Postgres over SQLite for the concurrency
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>      reasons. Save that?"
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Agent: &quot;Recorded. Added to DECISIONS.md:
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Agent: "Recorded. Added to DECISIONS.md:
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  - Decision: Use PostgreSQL over SQLite
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  - Context: Need concurrent multi-user access
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  - Rationale: SQLite locks on writes; Postgres handles concurrency
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>  - Consequence: Requires a database server; team needs Postgres
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    training&quot;
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    training"
 </span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>You: &quot;Also that migration thing. The deploy blew up when the
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>      migration ran twice.&quot;
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>You: "Also that migration thing. The deploy blew up when the
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>      migration ran twice."
 </span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
-</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>Agent: &quot;Got it. Added to LEARNINGS.md:
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>Agent: "Got it. Added to LEARNINGS.md:
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>  - Learning: SQL migrations must be idempotent
 </span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>  - Lesson: CREATE TABLE without IF NOT EXISTS fails on retry
-</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>  - Application: Always use IF NOT EXISTS guards in migrations&quot;
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>  - Application: Always use IF NOT EXISTS guards in migrations"
 </span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
-</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>You: &quot;Good. Anything else worth saving before we wrap up?&quot;
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>You: "Good. Anything else worth saving before we wrap up?"
 </span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
-</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>Agent: &quot;We&#39;ve been using structured error returns in every API
-</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>  handler this session. Want me to codify that as a convention?&quot;
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>Agent: "We've been using structured error returns in every API
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>  handler this session. Want me to codify that as a convention?"
 </span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>
-</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>You: &quot;Do it.&quot;
+</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>You: "Do it."
 </span><span id="__span-12-25"><a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>
-</span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>Agent: &quot;Done. Added &#39;API handlers return structured errors&#39; to
-</span><span id="__span-12-27"><a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>  CONVENTIONS.md under the API section.&quot;
+</span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>Agent: "Done. Added 'API handlers return structured errors' to
+</span><span id="__span-12-27"><a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>  CONVENTIONS.md under the API section."
 </span></code></pre></div>
 <p>Both approaches produce the same structured entries in the same context files.</p>
 <ul>

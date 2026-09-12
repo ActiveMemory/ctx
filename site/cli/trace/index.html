@@ -2053,7 +2053,7 @@ decisions, tasks, learnings, and sessions that motivated them.</p>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ctx<span class="w"> </span>trace<span class="w"> </span>abc123<span class="w"> </span>--json
 </span></code></pre></div>
 <p><strong>Output</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Commit: abc123 &quot;Fix auth token expiry&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Commit: abc123 "Fix auth token expiry"
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Date:   2026-03-14 10:00:00 -0700
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Context:
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  [Decision] #12: Use short-lived tokens with server-side refresh
@@ -2102,11 +2102,11 @@ hook, or to add extra context after the fact.</p>
 <p>Tags are stored in <code>.context/trace/overrides.jsonl</code> since git
 trailers cannot be added to existing commits without rewriting
 history.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>trace<span class="w"> </span>tag<span class="w"> </span>&lt;commit&gt;<span class="w"> </span>--note<span class="w"> </span><span class="s2">&quot;&lt;text&gt;&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>trace<span class="w"> </span>tag<span class="w"> </span>&lt;commit&gt;<span class="w"> </span>--note<span class="w"> </span><span class="s2">"&lt;text&gt;"</span>
 </span></code></pre></div>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>trace<span class="w"> </span>tag<span class="w"> </span>HEAD<span class="w"> </span>--note<span class="w"> </span><span class="s2">&quot;Hotfix for production outage&quot;</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>trace<span class="w"> </span>tag<span class="w"> </span>abc123<span class="w"> </span>--note<span class="w"> </span><span class="s2">&quot;Part of Q1 compliance initiative&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>trace<span class="w"> </span>tag<span class="w"> </span>HEAD<span class="w"> </span>--note<span class="w"> </span><span class="s2">"Hotfix for production outage"</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>trace<span class="w"> </span>tag<span class="w"> </span>abc123<span class="w"> </span>--note<span class="w"> </span><span class="s2">"Part of Q1 compliance initiative"</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-trace-hook"><code>ctx trace hook</code><a class="headerlink" href="#ctx-trace-hook" title="Permanent link">&para;</a></h3>

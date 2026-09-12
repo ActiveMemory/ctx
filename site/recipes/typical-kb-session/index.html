@@ -2232,9 +2232,9 @@ question to answer against existing evidence, a finding to
 capture for later. What's the actual flow?</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-remember                                    # session-start recall
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-kb-ingest ./inputs/transcript.md &quot;topic&quot;    # editorial pass
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-kb-ask &quot;does the kb say X?&quot;                 # grounded Q&amp;A
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>/ctx-kb-note &quot;follow-up: chase the v1.1 link&quot;    # park a finding
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-kb-ingest ./inputs/transcript.md "topic"    # editorial pass
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-kb-ask "does the kb say X?"                 # grounded Q&amp;A
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>/ctx-kb-note "follow-up: chase the v1.1 link"    # park a finding
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>/ctx-wrap-up                                     # ceremony → /ctx-handover
 </span></code></pre></div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -2296,7 +2296,7 @@ last handover did not yet consume).</p>
 <p><code>SESSION_LOG.md</code> is <strong>not</strong> read at session start; it is
 mid-flight working memory, not a recall surface.</p>
 <h2 id="step-2-ingest-the-sources-you-brought">Step 2: Ingest the Sources You Brought<a class="headerlink" href="#step-2-ingest-the-sources-you-brought" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ctx-kb-ingest ./inputs/2026-05-15-call.md &quot;cursor hooks&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ctx-kb-ingest ./inputs/2026-05-15-call.md "cursor hooks"
 </span></code></pre></div>
 <p>The skill declares its mode up front (most often
 <code>topic-page</code>), resolves sources, scans the
@@ -2312,21 +2312,21 @@ cites ≥ 1 <code>EV-###</code>, site builds clean, cold-reader rubric at
 <code>produced</code>, look at the closeout's <code>Next pass hint</code>. It
 names the exact resumption invocation.</p>
 <h2 id="step-3-ask-grounded-questions">Step 3: Ask Grounded Questions<a class="headerlink" href="#step-3-ask-grounded-questions" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/ctx-kb-ask &quot;does the kb say hooks block until they exit?&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/ctx-kb-ask "does the kb say hooks block until they exit?"
 </span></code></pre></div>
 <p><code>/ctx-kb-ask</code> reads the kb's prose and answers with <code>EV-###</code>
 citations. If the kb cannot answer, it opens a <code>Q-###</code> row
 in <code>outstanding-questions.md</code> and reports the gap rather than
 inventing.</p>
 <h2 id="step-4-park-findings-for-later">Step 4: Park Findings for Later<a class="headerlink" href="#step-4-park-findings-for-later" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/ctx-kb-note &quot;check whether SIGTERM behavior changed in v1.2&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/ctx-kb-note "check whether SIGTERM behavior changed in v1.2"
 </span></code></pre></div>
 <p><code>/ctx-kb-note</code> appends one-liners to
 <code>.context/ingest/findings.md</code>, a lightweight surface for
 parking ideas that don't earn a full ingest pass right now.
 The next <code>/ctx-kb-ingest</code> can choose to absorb them.</p>
 <h2 id="step-5-wrap-up">Step 5: Wrap Up<a class="headerlink" href="#step-5-wrap-up" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/ctx-wrap-up &quot;Cursor Hooks: lifecycle deep dive&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/ctx-wrap-up "Cursor Hooks: lifecycle deep dive"
 </span></code></pre></div>
 <p><code>/ctx-wrap-up</code> runs the standard capture checklist (learnings,
 decisions, conventions, tasks) and delegates to
@@ -2350,8 +2350,8 @@ start.</p>
 <p>Run <code>/ctx-kb-ingest</code> once per topic. Each pass writes its own
 closeout; the handover folds all of them at the end.</p>
 <h3 id="mid-session-checkpoint">Mid-Session Checkpoint<a class="headerlink" href="#mid-session-checkpoint" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>handover<span class="w"> </span>write<span class="w"> </span><span class="s2">&quot;Mid-day checkpoint&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--summary<span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"> </span>--next<span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"> </span>--no-fold
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>handover<span class="w"> </span>write<span class="w"> </span><span class="s2">"Mid-day checkpoint"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--summary<span class="w"> </span><span class="s2">"..."</span><span class="w"> </span>--next<span class="w"> </span><span class="s2">"..."</span><span class="w"> </span>--no-fold
 </span></code></pre></div>
 <p><code>--no-fold</code> writes the handover without consuming closeouts,
 useful when you want a recall anchor mid-session without

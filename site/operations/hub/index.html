@@ -1914,9 +1914,11 @@ ZFS, Btrfs).</p>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--daemon
 </span></code></pre></div>
 <p>Clients that pushed sequences <strong>above</strong> the restored watermark
-will re-publish on the next <code>listen</code> reconnect, because the hub
-now reports a lower sequence than what clients have on disk. This
-is safe; the store deduplicates by entry ID.</p>
+will re-publish, because the hub now reports a lower sequence
+than what clients have on disk. Nothing is lost, but the store is
+append-only and does not deduplicate by entry ID: those entries
+come back with new sequence numbers, so the shared feed shows
+them twice. Prune the duplicates offline if they matter.</p>
 <h2 id="log-rotation">Log Rotation<a class="headerlink" href="#log-rotation" title="Permanent link">&para;</a></h2>
 <p><code>entries.jsonl</code> grows unbounded. For long-lived hubs, rotate it
 offline:</p>
@@ -1931,18 +1933,27 @@ The hub holds an open file handle; an in-place truncation confuses
 the sequence counter and loses writes.</p>
 <h2 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">&para;</a></h2>
 <p>Liveness probe:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>status<span class="w"> </span>--exit-code
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>status
 </span></code></pre></div>
-<p>Exit code <code>0</code> means the node is healthy (leader or in-sync
-follower); non-zero means degraded. Wire this into your monitoring
-of choice.</p>
+<p>The command exits non-zero when the RPC fails — hub unreachable,
+token rejected — so a wrapper can treat that as the liveness
+signal. On a reachable node it prints what the node knows about
+itself, and the grading is yours to do from those lines:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Role: Leader
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Leader: 10.0.0.5:9901
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Entries: 1248  Peers: 2
+</span></code></pre></div>
 <p>For cluster deployments, watch for:</p>
 <ul>
-<li><strong>Role flaps</strong>: the leader changing more than once per hour
-  suggests network instability or disk contention.</li>
-<li><strong>Replication lag</strong>: <code>ctx hub status</code> shows per-peer sequence
-  offsets. Sustained lag &gt; 100 sequences on a follower is worth
-  investigating.</li>
+<li><strong>Role flaps</strong>: the <code>Role:</code> line changing more than once per
+  hour suggests network instability or disk contention.</li>
+<li><strong>A leader nobody can name</strong>: <code>Leader: unknown (election in
+  progress)</code> is normal for a second or two after a node starts
+  or a leader dies. Persisting past that, on a node that is
+  itself reachable, means it cannot see a quorum.</li>
+<li><strong>A peer count that disagrees between nodes</strong>: each node
+  reports its own committed Raft configuration, so two nodes
+  disagreeing on <code>Peers:</code> means they never agreed on membership.</li>
 <li><strong><code>entries.jsonl</code> growth rate</strong>: sudden spikes often indicate a
   misbehaving <code>ctx connection listen</code> reconnect loop.</li>
 </ul>

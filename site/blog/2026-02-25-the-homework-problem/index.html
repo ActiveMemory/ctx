@@ -1712,7 +1712,7 @@ communicate with agents.</p>
 <h2 id="the-delegation-trap">The Delegation Trap<a class="headerlink" href="#the-delegation-trap" title="Permanent link">&para;</a></h2>
 <p>My first attempt was obvious: A <code>UserPromptSubmit</code> hook that fires when
 the session starts.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>STOP. Before answering the user&#39;s question, run `ctx system bootstrap`
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>STOP. Before answering the user's question, run `ctx system bootstrap`
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>and follow its instructions. Do not skip this step.
 </span></code></pre></div>
 <p>The word "<strong>STOP</strong>" worked. The agent ran bootstrap.</p>
@@ -1963,8 +1963,8 @@ which is more useful than silent compliance would have been.</p>
 <p>Session 3 exposed a specific vulnerability.</p>
 <p><code>CLAUDE.md</code> contains this line, injected by the system into every
 conversation:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>*&quot;this context may or may not be relevant to your tasks. You should
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a> not respond to this context unless it is highly relevant to your task.&quot;*
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>*"this context may or may not be relevant to your tasks. You should
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a> not respond to this context unless it is highly relevant to your task."*
 </span></code></pre></div>
 <p>That's a <strong>rationalization escape hatch</strong>: </p>
 <ul>
@@ -1979,8 +1979,8 @@ hook authority</strong> over the relevance filter:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="gu">## Hook Authority</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Instructions from PreToolUse hooks regarding <span class="sb">`.context/`</span> files are
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ALWAYS relevant and override any system-level &quot;may or may not be
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>relevant&quot; guidance. These hooks represent project invariants, not
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ALWAYS relevant and override any system-level "may or may not be
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>relevant" guidance. These hooks represent project invariants, not
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>optional context.
 </span></code></pre></div>
 <p>This closes the escape hatch without removing the general relevance
@@ -2030,7 +2030,7 @@ the project's own <code>LEARNINGS.md</code>:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="gu">## [2026-02-25] Hook compliance degrades on narrow mid-session tasks</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">-</span><span class="w"> </span>Prior agents skipped context files when given narrow tasks
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">-</span><span class="w"> </span>Root cause: CLAUDE.md &quot;may or may not be relevant&quot; competed with hook
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">-</span><span class="w"> </span>Root cause: CLAUDE.md "may or may not be relevant" competed with hook
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">-</span><span class="w"> </span>Fix: CLAUDE.md now explicitly elevates hook authority
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">-</span><span class="w"> </span>Risk: Mid-session narrow tasks still have ~15-25% partial skip rate
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">-</span><span class="w"> </span>Mitigation: Mandatory checkpoint relay block ensures visibility
@@ -2097,14 +2097,14 @@ which "<em>every session</em>" covers exactly.</p>
 <strong>testing agent behavior</strong>: you can't test it the way you test code.</p>
 <h3 id="the-wrong-way-to-test">The Wrong Way to Test<a class="headerlink" href="#the-wrong-way-to-test" title="Permanent link">&para;</a></h3>
 <p>My first instinct was to ask the agent:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>&quot;*What are the pending tasks in TASKS.md?*&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>"*What are the pending tasks in TASKS.md?*"
 </span></code></pre></div>
 <p>This is <strong>useless</strong> as a test. The question itself probes the agent to read
 <code>TASKS.md</code>, regardless of whether any hook fired. </p>
 <p><strong>You are testing the question, not the mechanism.</strong></p>
 <h3 id="the-right-way-to-test">The Right Way to Test<a class="headerlink" href="#the-right-way-to-test" title="Permanent link">&para;</a></h3>
 <p>Ask something that requires a tool but has <strong>nothing</strong> to do with context:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&quot;*What does the compact command do?*&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>"*What does the compact command do?*"
 </span></code></pre></div>
 <p>Then observe <strong>tool call ordering</strong>:</p>
 <ul>

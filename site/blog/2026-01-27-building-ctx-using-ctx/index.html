@@ -1404,9 +1404,9 @@ was lost.</p>
 <p>Here is the first session file we recorded:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gu">## Key Discussion Points</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gu">### 1. amem vs Ralph Loop - They&#39;re Separate Systems</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gu">### 1. amem vs Ralph Loop - They're Separate Systems</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="gs">**User&#39;s question**</span>: &quot;How do I use the binary to recreate this project?&quot;
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="gs">**User's question**</span>: "How do I use the binary to recreate this project?"
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="gs">**Answer discovered**</span>: <span class="sb">`amem`</span> is for context management, Ralph Loop is for 
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>development workflow. They are complementary but separate.
@@ -1474,7 +1474,7 @@ type system catching any misses.</p>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>YOLO Mode (Pre-040ce99)
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Feature-first: Added slash commands, tests, templates rapidly
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>- Scattered magic strings: &quot;TASKS.md&quot;, &quot;decision&quot;, &quot;.context&quot; spread across files
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>- Scattered magic strings: "TASKS.md", "decision", ".context" spread across files
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>- Quick file creation: New files without organizational patterns
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>- Working but inconsistent: Code functioned but lacked systematic structure
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
@@ -1482,7 +1482,7 @@ type system catching any misses.</p>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>- Consolidation focus: Centralized constants in config package
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>- Consistent naming: Dir, File, Filename, UpdateType prefixes
 </span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>- Self-referential constants: FileType map uses constants as keys, not literals
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>- Proper path construction: filepath.Join() instead of +&quot;/&quot;+
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>- Proper path construction: filepath.Join() instead of +"/"+
 </span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>- Colocated tests: Tests next to implementations
 </span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>- Canonical naming: Package name = folder name
 </span></code></pre></div>
@@ -1490,11 +1490,11 @@ type system catching any misses.</p>
 that before every major release, from that point on.</p>
 <p>We introduced <code>internal/config/config.go</code> with semantic prefixes:</p>
 <div class="language-go highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nx">DirContext</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;.context&quot;</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nx">DirArchive</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;archive&quot;</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nx">DirSessions</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;sessions&quot;</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nx">FilenameTask</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;TASKS.md&quot;</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nx">UpdateTypeTask</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;task&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nx">DirContext</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">".context"</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nx">DirArchive</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">"archive"</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nx">DirSessions</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">"sessions"</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nx">FilenameTask</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">"TASKS.md"</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nx">UpdateTypeTask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"task"</span>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">)</span>
 </span></code></pre></div>
 <p>What I begrudgingly learned was: 
@@ -1512,9 +1512,9 @@ that before every major release, from that point on.</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="gu">## Key Findings</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="gu">### Dogfooding Binary Is Broken</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">-</span><span class="w"> </span>Commands don&#39;t execute: they just print root help text
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">-</span><span class="w"> </span>All tasks were marked complete but binary doesn&#39;t work
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">-</span><span class="w"> </span>Lesson: &quot;tasks checked off&quot; ≠ &quot;implementation works&quot;
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">-</span><span class="w"> </span>Commands don't execute: they just print root help text
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">-</span><span class="w"> </span>All tasks were marked complete but binary doesn't work
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">-</span><span class="w"> </span>Lesson: "tasks checked off" ≠ "implementation works"
 </span></code></pre></div>
 <p>This was humbling; to say the least.</p>
 <p>I realized I had the same blind spot in my own codebase:
@@ -1550,18 +1550,18 @@ conventions...</em>) should go in to <code>CONVENTIONS.md</code>. </p>
 <p>Claude Code hooks seemed simple: Run a script before/after certain events. </p>
 <p>But I hit <strong>multiple</strong> gotchas:</p>
 <p><strong>1. Key names matter</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>// WRONG - &quot;Invalid key in record&quot; error
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>&quot;PreToolUseHooks&quot;: [...]
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>// WRONG - "Invalid key in record" error
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>"PreToolUseHooks": [...]
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>// RIGHT
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>&quot;PreToolUse&quot;: [...]
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>"PreToolUse": [...]
 </span></code></pre></div>
 <p><strong>2. Blocking requires specific output</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># WRONG - just exits, doesn&#39;t block</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># WRONG - just exits, doesn't block</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># RIGHT - JSON output + exit 0</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;decision&quot;: &quot;block&quot;, &quot;reason&quot;: &quot;Use ctx from PATH&quot;}&#39;</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'{"decision": "block", "reason": "Use ctx from PATH"}'</span>
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
 </span></code></pre></div>
 <p><strong>3. Go's JSON escaping</strong></p>
@@ -1646,7 +1646,7 @@ Even <code>Ctrl+C</code> was caught.</p>
 forgotten. Each has Context, Lesson, and Application sections:</p>
 <p><strong>CGO on ARM64</strong></p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="gs">**Context**</span>: <span class="sb">`go test`</span> failed with 
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="sb">`gcc: error: unrecognized command-line option &#39;-m64&#39;`</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="sb">`gcc: error: unrecognized command-line option '-m64'`</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="gs">**Lesson**</span>: On ARM64 Linux, CGO causes cross-compilation issues. 
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>Always use <span class="sb">`CGO_ENABLED=0`</span>.
@@ -1656,9 +1656,9 @@ forgotten. Each has Context, Lesson, and Application sections:</p>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>frontmatter (<span class="ge">*description, argument-hint, allowed-tools*</span>). Body is the prompt.
 </span></code></pre></div>
 <p><strong>"Do you remember?" handling</strong></p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="gs">**Lesson**</span>: In a <span class="sb">`ctx`</span>-enabled project, &quot;<span class="ge">*do you remember?*</span>&quot; 
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="gs">**Lesson**</span>: In a <span class="sb">`ctx`</span>-enabled project, "<span class="ge">*do you remember?*</span>" 
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>has an obvious meaning:
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>check the <span class="sb">`.context/`</span> files. Don&#39;t ask for clarification. Just do it.
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>check the <span class="sb">`.context/`</span> files. Don't ask for clarification. Just do it.
 </span></code></pre></div>
 <h2 id="task-archives-the-completed-work">Task Archives: The Completed Work<a class="headerlink" href="#task-archives-the-completed-work" title="Permanent link">&para;</a></h2>
 <p>Completed tasks are archived to <code>.context/archive/</code> with timestamps. </p>

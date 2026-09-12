@@ -1300,7 +1300,7 @@ patterns that make a skill actually work.</p>
 <p>Here is what a typical skill looked like before the rewrite:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>name: ctx-save
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gu">description: &quot;Save session snapshot.&quot;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gu">description: "Save session snapshot."</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gu">---</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Save the current context state to <span class="sb">`.context/sessions/`</span>.
@@ -1448,14 +1448,14 @@ has to guess.</p>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">&gt; </span><span class="ge">`ctx agent`. We discovered that `$PPID` in hook context</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">&gt; </span><span class="ge">resolves to the Claude Code PID.</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">&gt;</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="ge">&gt; I&#39;d suggest persisting:</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="ge">&gt; I'd suggest persisting:</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">&gt; </span><span class="ge">- **Learning**: `$PPID` resolves to Claude Code PID</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">&gt; </span><span class="ge">  `ctx add learning --context &quot;...&quot; --lesson &quot;...&quot;`</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">&gt; </span><span class="ge">- **Task**: mark &quot;Add cooldown&quot; as done</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">&gt; </span><span class="ge">  `ctx add learning --context "..." --lesson "..."`</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">&gt; </span><span class="ge">- **Task**: mark "Add cooldown" as done</span>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
 </span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="gu">### Bad Examples</span>
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">*</span><span class="w"> </span>&quot;<span class="ge">*We did some stuff. Want me to save it?*</span>&quot;
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">*</span><span class="w"> </span>"<span class="ge">*We did some stuff. Want me to save it?*</span>"
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">*</span><span class="w"> </span>Listing 10 trivial learnings that are general knowledge
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">*</span><span class="w"> </span>Persisting without asking the user first
 </span></code></pre></div>
@@ -1490,11 +1490,11 @@ external tools, it does not belong in a skill.</p>
 but the rewrite reinforced it with data. Several skills had good
 bodies but vague descriptions:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Before: vague, activates too broadly or not at all</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Show</span><span class="nv"> </span><span class="s">context</span><span class="nv"> </span><span class="s">summary.&quot;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"Show</span><span class="nv"> </span><span class="s">context</span><span class="nv"> </span><span class="s">summary."</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># After: specific, activates at the right time</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Show</span><span class="nv"> </span><span class="s">context</span><span class="nv"> </span><span class="s">summary.</span><span class="nv"> </span><span class="s">Use</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">session</span><span class="nv"> </span><span class="s">start</span><span class="nv"> </span><span class="s">or</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="s">when</span><span class="nv"> </span><span class="s">unclear</span><span class="nv"> </span><span class="s">about</span><span class="nv"> </span><span class="s">current</span><span class="nv"> </span><span class="s">project</span><span class="nv"> </span><span class="s">state.&quot;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"Show</span><span class="nv"> </span><span class="s">context</span><span class="nv"> </span><span class="s">summary.</span><span class="nv"> </span><span class="s">Use</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">session</span><span class="nv"> </span><span class="s">start</span><span class="nv"> </span><span class="s">or</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="s">when</span><span class="nv"> </span><span class="s">unclear</span><span class="nv"> </span><span class="s">about</span><span class="nv"> </span><span class="s">current</span><span class="nv"> </span><span class="s">project</span><span class="nv"> </span><span class="s">state."</span>
 </span></code></pre></div>
 <p>The description is not a title. It is the <strong>activation condition</strong>.</p>
 <p>The platform's skill matching reads this field to decide whether
@@ -1506,7 +1506,7 @@ prose, if at all. The rewritten versions use tables:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>| Flag        | Short | Default | Purpose                  |
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>|-------------|-------|---------|--------------------------|
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>| <span class="sb">`--limit`</span>   | <span class="sb">`-n`</span>  | 20      | Maximum sessions to show |
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>| <span class="sb">`--project`</span> | <span class="sb">`-p`</span>  | &quot;&quot;      | Filter by project name   |
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>| <span class="sb">`--project`</span> | <span class="sb">`-p`</span>  | ""      | Filter by project name   |
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>| <span class="sb">`--full`</span>    |       | false   | Show complete content    |
 </span></code></pre></div>
 <p>Tables are <strong>scannable</strong>, <strong>complete</strong>, and <strong>unambiguous</strong>. </p>

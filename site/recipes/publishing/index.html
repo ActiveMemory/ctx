@@ -2432,7 +2432,7 @@
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve<span class="w">            </span><span class="c1"># 3. build and serve the journal</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>/ctx-blog<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>caching<span class="w"> </span>layer<span class="w">   </span><span class="c1"># 4. draft a blog post</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">&quot;v0.2&quot;</span><span class="w">   </span><span class="c1"># 5. write a changelog post</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">"v0.2"</span><span class="w">   </span><span class="c1"># 5. write a changelog post</span>
 </span></code></pre></div>
 <p>Read on for details on each stage.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -2537,7 +2537,7 @@ parallel.</p>
 </span></code></pre></div>
 <p>After enrichment, an entry gains YAML frontmatter:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nn">---</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Implement</span><span class="nv"> </span><span class="s">Redis</span><span class="nv"> </span><span class="s">caching</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">endpoints&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">"Implement</span><span class="nv"> </span><span class="s">Redis</span><span class="nv"> </span><span class="s">caching</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">endpoints"</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2026-01-24</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">outcome</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">completed</span>
@@ -2598,7 +2598,7 @@ can coexist: The static site goes to <code>.context/journal-site/</code>, the va
 post from recent activity. The skill gathers context from multiple sources:
 <code>git log</code>, <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, completed tasks, and journal entries.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-blog about the caching layer we just built
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/ctx-blog last week&#39;s refactoring work
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/ctx-blog last week's refactoring work
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>/ctx-blog lessons learned from the migration
 </span></code></pre></div>
 <p>The skill gathers recent commits, decisions, and learnings; identifies a
@@ -2619,9 +2619,9 @@ project structure.</p>
 <h3 id="step-5-write-changelog-posts-from-commit-ranges">Step 5: Write Changelog Posts from Commit Ranges<a class="headerlink" href="#step-5-write-changelog-posts-from-commit-ranges" title="Permanent link">&para;</a></h3>
 <p>For release notes or "<em>what changed</em>" posts, <code>/ctx-blog-changelog</code> takes a
 starting commit and a theme, then analyzes everything that changed:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/ctx-blog-changelog 040ce99 &quot;building the journal system&quot;
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/ctx-blog-changelog HEAD~30 &quot;what&#39;s new in v0.2.0&quot;
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>/ctx-blog-changelog v0.1.0 &quot;the road to v0.2.0&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/ctx-blog-changelog 040ce99 "building the journal system"
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/ctx-blog-changelog HEAD~30 "what's new in v0.2.0"
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>/ctx-blog-changelog v0.1.0 "the road to v0.2.0"
 </span></code></pre></div>
 <p>The skill diffs the commit range, identifies the most-changed files, and
 constructs a narrative organized by theme rather than chronology, including a
@@ -2638,10 +2638,10 @@ as part of <code>make site</code>.</p>
 <p>The feed is available at <a href="https://ctx.ist/feed.xml">ctx.ist/feed.xml</a>.</p>
 <h2 id="the-conversational-approach">The Conversational Approach<a class="headerlink" href="#the-conversational-approach" title="Permanent link">&para;</a></h2>
 <p>You can also drive your publishing anytime with <strong>natural language</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>&quot;write about what we did this week&quot;
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>&quot;turn today&#39;s session into a blog post&quot;
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>&quot;make a changelog post covering everything since the last release&quot;
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>&quot;enrich the last few journal entries&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>"write about what we did this week"
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>"turn today's session into a blog post"
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>"make a changelog post covering everything since the last release"
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>"enrich the last few journal entries"
 </span></code></pre></div>
 <p>The agent has full visibility into your <code>.context/</code> state (<em>tasks completed,
 decisions recorded, learnings captured</em>), so its suggestions are grounded in what
@@ -2665,7 +2665,7 @@ actually happened.</p>
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>/ctx-blog<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>features<span class="w"> </span>we<span class="w"> </span>shipped<span class="w"> </span>this<span class="w"> </span>week
 </span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
 </span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># 5. In Claude Code: write a changelog post</span>
-</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">&quot;what&#39;s new in v0.2.0&quot;</span>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">"what's new in v0.2.0"</span>
 </span></code></pre></div>
 <p>The journal pipeline is idempotent at every stage. You can rerun <code>ctx journal
 import --all</code> without losing enrichment. You can rebuild the site as many times

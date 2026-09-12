@@ -2182,7 +2182,7 @@
 <h2 id="ctx-hook-notify"><code>ctx hook notify</code><a class="headerlink" href="#ctx-hook-notify" title="Permanent link">&para;</a></h2>
 <p>Send fire-and-forget webhook notifications from skills, loops,
 and hooks.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--session-id<span class="w"> </span>&lt;id&gt;<span class="o">]</span><span class="w"> </span><span class="s2">&quot;message&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--session-id<span class="w"> </span>&lt;id&gt;<span class="o">]</span><span class="w"> </span><span class="s2">"message"</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -2214,8 +2214,8 @@ and hooks.</p>
 <li>HTTP errors silently ignored (no retry)</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>loop<span class="w"> </span><span class="s2">&quot;Loop completed after 5 iterations&quot;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>-e<span class="w"> </span>nudge<span class="w"> </span>-s<span class="w"> </span>session-abc<span class="w"> </span><span class="s2">&quot;Context checkpoint at prompt #20&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>--event<span class="w"> </span>loop<span class="w"> </span><span class="s2">"Loop completed after 5 iterations"</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>notify<span class="w"> </span>-e<span class="w"> </span>nudge<span class="w"> </span>-s<span class="w"> </span>session-abc<span class="w"> </span><span class="s2">"Context checkpoint at prompt #20"</span>
 </span></code></pre></div>
 <h3 id="ctx-hook-notify-setup"><code>ctx hook notify setup</code><a class="headerlink" href="#ctx-hook-notify-setup" title="Permanent link">&para;</a></h3>
 <p>Configure the webhook URL interactively. The URL is encrypted
@@ -2233,11 +2233,11 @@ lives outside the project and is never committed.</p>
 </span></code></pre></div>
 <p><strong>Payload format</strong> (JSON POST):</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;loop&quot;</span><span class="p">,</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Loop completed after 5 iterations&quot;</span><span class="p">,</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123-...&quot;</span><span class="p">,</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-22T14:30:00Z&quot;</span><span class="p">,</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ctx&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"loop"</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Loop completed after 5 iterations"</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">"session_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc123-..."</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-22T14:30:00Z"</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">"project"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ctx"</span>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
 </span></code></pre></div>
 <table>

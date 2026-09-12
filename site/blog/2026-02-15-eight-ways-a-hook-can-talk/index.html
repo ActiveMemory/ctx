@@ -1282,7 +1282,7 @@ side-effect: nobody knows it ran</em>). In between, there is a range of
 negotiation between hook, agent, and the user.</p>
 <p>Here's the full spectrum:</p>
 <h3 id="1-hard-gate">1. Hard Gate<a class="headerlink" href="#1-hard-gate" title="Permanent link">&para;</a></h3>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="nt">&quot;decision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;block&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Use ctx from PATH, not ./ctx&quot;</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="nt">"decision"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w"> </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Use ctx from PATH, not ./ctx"</span><span class="p">}</span>
 </span></code></pre></div>
 <p>The nuclear option: The agent's tool call is rejected before it executes.</p>
 <p>This is Claude Code's first-class <code>PreToolUse</code> mechanism: The hook returns
@@ -1326,7 +1326,7 @@ information injected on every tool call, with no visible output. Neither
 the agent nor the user sees the hook fire, but the agent makes <strong>better
 decisions</strong> because of the <strong>context</strong>.</p>
 <h3 id="5-silent-side-effect">5. Silent Side-Effect<a class="headerlink" href="#5-silent-side-effect" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CTX_TMPDIR</span><span class="s2">&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+15<span class="w"> </span>-delete
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>find<span class="w"> </span><span class="s2">"</span><span class="nv">$CTX_TMPDIR</span><span class="s2">"</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+15<span class="w"> </span>-delete
 </span></code></pre></div>
 <p>Do work, say nothing. Temp file cleanup on session end. Logging. Marker
 file management. The action is the entire point; no one needs to know.</p>

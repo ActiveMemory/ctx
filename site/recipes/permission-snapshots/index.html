@@ -2404,7 +2404,7 @@ recommended defaults.</p>
 <p>This creates a byte-for-byte copy. No re-encoding, no indent changes.</p>
 <h3 id="3-commit-the-golden-file">3. Commit the Golden File<a class="headerlink" href="#3-commit-the-golden-file" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>add<span class="w"> </span>.claude/settings.golden.json
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add permission golden image&quot;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Add permission golden image"</span>
 </span></code></pre></div>
 <p>The golden file is <strong>not</strong> gitignored (unlike <code>settings.local.json</code>). This
 is intentional: it becomes a team-shared baseline.</p>
@@ -2422,7 +2422,7 @@ automatically dropping any permissions accumulated during previous sessions.</p>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Then update the golden image:</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ctx<span class="w"> </span>permission<span class="w"> </span>snapshot
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>git<span class="w"> </span>add<span class="w"> </span>.claude/settings.golden.json
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update permission golden image: add cargo test&quot;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update permission golden image: add cargo test"</span>
 </span></code></pre></div>
 <h2 id="conversational-approach">Conversational Approach<a class="headerlink" href="#conversational-approach" title="Permanent link">&para;</a></h2>
 <p>You don't need to remember exact commands. These natural-language prompts

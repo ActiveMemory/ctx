@@ -2261,8 +2261,8 @@ the project.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;DATABASE_URL=postgres://user:pass@host/db&quot;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">"DATABASE_URL=postgres://user:pass@host/db"</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">"deploy config"</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
 </span></code></pre></div>
 <h3 id="ctx-pad-show"><code>ctx pad show</code><a class="headerlink" href="#ctx-pad-show" title="Permanent link">&para;</a></h3>
 <p>Output the raw text of an entry by number. For blob entries,
@@ -2351,11 +2351,11 @@ gaps left by deletions.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;new text&quot;</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot; suffix&quot;</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--prepend<span class="w"> </span><span class="s2">&quot;prefix &quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">"new text"</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--append<span class="w"> </span><span class="s2">" suffix"</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--prepend<span class="w"> </span><span class="s2">"prefix "</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--file<span class="w"> </span>./v2.yaml
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--label<span class="w"> </span><span class="s2">&quot;new name&quot;</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--label<span class="w"> </span><span class="s2">"new name"</span>
 </span></code></pre></div>
 <h3 id="ctx-pad-mv"><code>ctx pad mv</code><a class="headerlink" href="#ctx-pad-mv" title="Permanent link">&para;</a></h3>
 <p>Move an entry from one position to another.</p>

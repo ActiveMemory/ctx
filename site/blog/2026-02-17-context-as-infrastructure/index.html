@@ -1513,13 +1513,13 @@ from that day.</p>
 <p>One of the patterns that emerged from <code>ctx</code>'s own development is
 the power of <strong>structured decision records</strong>.</p>
 <p><code>v0.1.0</code> allowed adding decisions as one-liners:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">"Use PostgreSQL"</span>
 </span></code></pre></div>
 <p><code>v0.2.0</code> enforced <strong>structure</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a reliable database for user data&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;ACID compliance, team familiarity&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">&quot;Need connection pooling, team training&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">"Use PostgreSQL"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">"Need a reliable database for user data"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">"ACID compliance, team familiarity"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">"Need connection pooling, team training"</span>
 </span></code></pre></div>
 <p>The difference is <strong>not</strong> cosmetic:</p>
 <ul>
@@ -1540,7 +1540,7 @@ when it is not.</p>
 UI: a web dashboard for browsing sessions, editing context, viewing
 analytics.</p>
 <p>The decision was <strong>no</strong>. The IDE is the interface.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># This is the ctx &quot;UI&quot;:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># This is the ctx "UI":
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>code .context/
 </span></code></pre></div>
 <p>This decision was not about minimalism for its own sake. It was about

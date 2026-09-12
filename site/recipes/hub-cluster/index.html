@@ -2255,29 +2255,45 @@ it doubles failure probability without providing quorum.</p>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    |           |           |
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>+---v---+   +---v---+   +---v---+
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| hub A |   | hub B |   | hub C |
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| :9900 |   | :9900 |   | :9900 |
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>+-------+   +-------+   +-------+
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    ^           ^           ^
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    +-----------+-----------+
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        Raft (leader election)
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        gRPC (data sync)
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| :9900 |   | :9900 |   | :9900 |  gRPC (clients, data sync)
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| :9901 |   | :9901 |   | :9901 |  Raft (leader election)
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>+-------+   +-------+   +-------+
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    ^           ^           ^
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    +-----------+-----------+
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        Raft (leader election)
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        gRPC (data sync)
 </span></code></pre></div>
+<p>Each node runs two listeners: the hub's gRPC port that clients
+dial (<code>--port</code>), and the Raft port the other nodes dial
+(<code>--raft-bind</code>). They are separate addresses; the peer list is
+made of <strong>Raft</strong> addresses.</p>
 <h2 id="step-1-bootstrap-the-first-node">Step 1: Bootstrap the First Node<a class="headerlink" href="#step-1-bootstrap-the-first-node" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--daemon<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--port<span class="w"> </span><span class="m">9900</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--peers<span class="w"> </span>hub-b.lan:9900,hub-c.lan:9900
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--raft-bind<span class="w"> </span>hub-a.lan:9901<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--peers<span class="w"> </span>hub-b.lan:9901,hub-c.lan:9901
 </span></code></pre></div>
-<p>The node starts a Raft election as soon as it sees its peers.</p>
+<p><code>--raft-bind</code> is the address this node advertises to the other
+two, so it has to be a host they can dial: a bare port
+(<code>:9901</code>) or a wildcard (<code>0.0.0.0:9901</code>) is rejected at
+startup. Every node's <code>--raft-bind</code> appears in the other nodes'
+<code>--peers</code> lists, and each node bootstraps that same set.</p>
+<p>The node starts a Raft election as soon as it sees its peers.
+Until a quorum answers, <code>ctx hub status</code> reports
+<code>Leader: unknown (election in progress)</code> — expected while the
+other nodes are still coming up.</p>
 <h2 id="step-2-start-the-other-nodes">Step 2: Start the Other Nodes<a class="headerlink" href="#step-2-start-the-other-nodes" title="Permanent link">&para;</a></h2>
 <p>On <code>hub-b.lan</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--daemon<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--port<span class="w"> </span><span class="m">9900</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--peers<span class="w"> </span>hub-a.lan:9900,hub-c.lan:9900
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--raft-bind<span class="w"> </span>hub-b.lan:9901<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--peers<span class="w"> </span>hub-a.lan:9901,hub-c.lan:9901
 </span></code></pre></div>
 <p>On <code>hub-c.lan</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--daemon<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--port<span class="w"> </span><span class="m">9900</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--peers<span class="w"> </span>hub-a.lan:9900,hub-b.lan:9900
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--raft-bind<span class="w"> </span>hub-c.lan:9901<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--peers<span class="w"> </span>hub-a.lan:9901,hub-b.lan:9901
 </span></code></pre></div>
 <p>After a few seconds, one node wins the election and becomes the
 <strong>leader</strong>. The other two are followers.</p>
@@ -2285,14 +2301,24 @@ it doubles failure probability without providing quorum.</p>
 <p>From any node:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>status
 </span></code></pre></div>
-<p>Expected output:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>role:       leader
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>peers:      hub-a.lan:9900 (leader)
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>            hub-b.lan:9900 (follower, in-sync)
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>            hub-c.lan:9900 (follower, in-sync)
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>entries:    1248
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>uptime:     3h42m
+<p>Expected output on the node that won the election:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Role: Leader
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Leader: hub-a.lan:9901
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Entries: 1248  Peers: 2
 </span></code></pre></div>
+<p>and on either of the others:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Role: Follower
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Leader: hub-a.lan:9901
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Entries: 1248  Peers: 2
+</span></code></pre></div>
+<p>The leader is named by its Raft address, which is what the
+cluster agrees on. Clients still dial the hub port.</p>
+<p><code>Peers:</code> counts the servers in the committed Raft configuration
+other than the one answering, so a three-node cluster reports
+two from every node. If the line reads
+<code>Leader: unknown (election in progress)</code>, Raft has no leader for
+the current term: either the election is still running, or the
+node you asked cannot see a quorum.</p>
 <h2 id="step-4-register-clients-with-failover-peers">Step 4: Register Clients with Failover Peers<a class="headerlink" href="#step-4-register-clients-with-failover-peers" title="Permanent link">&para;</a></h2>
 <p>The <code>ctx hub *</code> commands above run on the hub nodes themselves and
 don't need a project. The <code>ctx connection *</code> commands below are
@@ -2300,28 +2326,49 @@ different: they live inside a project (the encrypted hub config is
 stored at <code>.context/.connect.enc</code>), so you have to tell <code>ctx</code> which
 project first.</p>
 <p>When registering a client, give it the <strong>full peer list</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># In the project directory on the client:</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>hub-a.lan:9900<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--token<span class="w"> </span>ctx_adm_...<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--peers<span class="w"> </span>hub-b.lan:9900,hub-c.lan:9900
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># In the project directory on the client:</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>connection<span class="w"> </span>register<span class="w"> </span>hub-a.lan:9900<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--token<span class="w"> </span>ctx_adm_...<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--peers<span class="w"> </span>hub-b.lan:9900,hub-c.lan:9900
 </span></code></pre></div>
 <p>If the leader becomes unreachable, the client reconnects to the
 next peer. Followers redirect to the current leader, so writes
 always land on the right node.</p>
 <h2 id="runtime-membership-changes">Runtime Membership Changes<a class="headerlink" href="#runtime-membership-changes" title="Permanent link">&para;</a></h2>
-<p>Add a new peer without downtime:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>peer<span class="w"> </span>add<span class="w"> </span>hub-d.lan:9900
+<p>Membership changes are admin-gated and leader-only: pass
+<code>--token</code> (or set <code>CTX_HUB_ADMIN_TOKEN</code>) and run them against
+the leader that <code>ctx hub status</code> names. A follower answers
+<code>not the leader</code> rather than pretending.</p>
+<p>Adding a node is two steps, because a new node must not
+bootstrap a configuration of its own — it waits for one:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On hub-d.lan, the new node:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>hub<span class="w"> </span>start<span class="w"> </span>--daemon<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--port<span class="w"> </span><span class="m">9900</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--raft-bind<span class="w"> </span>hub-d.lan:9901<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--join
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># On the leader:</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ctx<span class="w"> </span>hub<span class="w"> </span>peer<span class="w"> </span>add<span class="w"> </span>hub-d.lan:9901<span class="w"> </span>--token<span class="w"> </span>ctx_adm_...
 </span></code></pre></div>
-<p>Remove a decommissioned peer:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>peer<span class="w"> </span>remove<span class="w"> </span>hub-c.lan:9900
+<p><code>ctx hub status</code> on hub-d.lan then reports <code>Role: Follower</code>
+and names the leader; every node's <code>Peers:</code> count goes up by
+one.</p>
+<p>Remove a decommissioned peer, again on the leader:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>peer<span class="w"> </span>remove<span class="w"> </span>hub-c.lan:9901<span class="w"> </span>--token<span class="w"> </span>ctx_adm_...
 </span></code></pre></div>
+<p>Removal shrinks the quorum, which is the point: a node you
+have taken away should stop counting against liveness. Removing
+one of three leaves two, and a two-node cluster needs both to
+be up — plan the next addition accordingly.</p>
 <h2 id="planned-maintenance">Planned Maintenance<a class="headerlink" href="#planned-maintenance" title="Permanent link">&para;</a></h2>
 <p>Before taking a leader offline, hand off leadership:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ssh<span class="w"> </span>hub-a.lan<span class="w"> </span><span class="s1">&#39;ctx hub stepdown&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ssh<span class="w"> </span>hub-a.lan<span class="w"> </span><span class="s1">'ctx hub stepdown --token ctx_adm_...'</span>
 </span></code></pre></div>
-<p><code>stepdown</code> triggers a new election among the remaining followers
-before the leader goes offline. In-flight clients briefly pause,
-then reconnect to the new leader.</p>
+<p><code>stepdown</code> asks Raft to transfer leadership to a follower that
+is caught up, and returns once the transfer completes. Run
+<code>ctx hub status</code> afterwards to see which node won. Then stop
+the old leader; the cluster keeps serving throughout, because
+the handoff happened before the process went away.</p>
 <h2 id="failure-modes-at-a-glance">Failure Modes at a Glance<a class="headerlink" href="#failure-modes-at-a-glance" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

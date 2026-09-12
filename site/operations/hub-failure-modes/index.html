@@ -1403,6 +1403,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#slow-listener-disconnected" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Slow Listener Disconnected
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#partition-majority-side-reachable" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1788,6 +1799,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#slow-listener-disconnected" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Slow Listener Disconnected
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#partition-majority-side-reachable" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2146,11 +2168,52 @@ informs every failure-mode decision below.</p>
 </div>
 <h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
 <h3 id="client-loses-connection-mid-stream">Client Loses Connection Mid-Stream<a class="headerlink" href="#client-loses-connection-mid-stream" title="Permanent link">&para;</a></h3>
-<p><strong>What happens:</strong> <code>ctx connection listen</code> detects the EOF, waits
-with exponential backoff, and reconnects. On reconnect it passes
-its last-seen sequence; the hub replays everything newer.</p>
-<p><strong>What you should do:</strong> nothing. If reconnects are looping, check
-firewall state on the hub and <code>ctx hub status</code> output.</p>
+<p><strong>What happens:</strong> the stream ends and <code>ctx connection listen</code>
+exits. There is no automatic reconnect: the command calls Listen
+once and returns when the stream ends.</p>
+<p><strong>What you should do:</strong> re-run <code>ctx connection listen</code>. Nothing
+is lost on the hub — its log is append-only, and the replay
+covers every entry newer than the sequence the client asks for.
+If disconnects repeat, check firewall state on the hub and
+<code>ctx hub status</code> output.</p>
+<div class="admonition warning">
+<p class="admonition-title">Reconnect Is Manual Today</p>
+<p>Two consequences until automatic reconnect lands:</p>
+<ul>
+<li>Keeping a listener up across disconnects is a supervisor's
+  job (systemd, a shell loop), not the command's.</li>
+<li>The re-run asks for sequence <code>0</code>, not the client's
+  last-seen sequence, so entries already written to
+  <code>.context/hub/</code> are appended a second time.</li>
+</ul>
+</div>
+<h3 id="slow-listener-disconnected">Slow Listener Disconnected<a class="headerlink" href="#slow-listener-disconnected" title="Permanent link">&para;</a></h3>
+<p><strong>What happens:</strong> each <code>ctx connection listen</code> stream gets a
+buffered fan-out channel. A client that stops draining it (paused
+process, saturated link, a laptop that went to sleep) fills the
+buffer. Rather than block every publisher, the hub disconnects
+that one listener: it drops the subscription and closes the
+channel. The stream then ends with a <code>ResourceExhausted</code> error
+(<code>listener disconnected: stream not drained, fan-out buffer
+full</code>), so <code>ctx connection listen</code> exits non-zero with that
+message instead of hanging on a stream that will never carry
+another entry.</p>
+<p>Only that one client is affected. Other listeners and every
+publisher keep going, and nothing is removed from the hub's log —
+the entries the disconnected client missed are still there, and a
+fresh <code>ctx connection listen</code> picks up from the sequence it asks
+for.</p>
+<p>Each disconnect writes a warning to the hub's stderr and increments
+a cumulative counter reported as <code>Dropped listeners:</code> in
+<code>ctx hub status</code>.</p>
+<p><strong>What you should do:</strong> re-run <code>ctx connection listen</code> on the
+affected client. As with any lost stream, reconnect is manual
+today — see
+<a href="#client-loses-connection-mid-stream">Client Loses Connection Mid-Stream</a>
+for the caveats. A count that climbs steadily means listeners
+cannot keep up with the publish rate: check the listening
+client's health and the link to it before assuming the hub is at
+fault.</p>
 <h3 id="partition-majority-side-reachable">Partition: Majority Side Reachable<a class="headerlink" href="#partition-majority-side-reachable" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> clients routed to the majority side continue to
 publish and listen. The minority nodes step down to followers
@@ -2170,8 +2233,9 @@ from the survivors with <code>ctx hub peer remove</code> for the dead nodes.</p>
 a warning and exits non-zero on the share leg only. <code>--share</code> is
 best-effort; it never blocks local context updates.</p>
 <p><strong>What you should do:</strong> run <code>ctx connection publish</code> later to
-backfill, or rely on another <code>--share</code> for the same entry ID.
-The hub deduplicates by entry ID.</p>
+backfill. Publish the entry once: the hub's log is append-only
+and does not deduplicate by entry ID, so re-sharing the same
+entry adds a second copy under a new sequence number.</p>
 <h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
 <h3 id="disk-full-on-the-leader">Disk Full on the Leader<a class="headerlink" href="#disk-full-on-the-leader" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> <code>entries.jsonl</code> append fails. The hub rejects
@@ -2197,9 +2261,20 @@ or accept the higher sequence by regenerating <code>meta.json</code> from
 <code>entries.jsonl</code> (manual for now; file a bug).</p>
 <h2 id="cluster">Cluster<a class="headerlink" href="#cluster" title="Permanent link">&para;</a></h2>
 <h3 id="leader-crash-clean-shutdown">Leader Crash, Clean Shutdown<a class="headerlink" href="#leader-crash-clean-shutdown" title="Permanent link">&para;</a></h3>
-<p><strong>What happens:</strong> <code>ctx hub stop</code> triggers <code>stepdown</code> first, so
-a new leader is elected before the old one exits. In-flight
-writes drain. Clients reconnect to the new leader transparently.</p>
+<p><strong>What happens:</strong> <code>ctx hub stop</code> sends SIGTERM; the hub shuts
+its Raft node down and drains in-flight RPCs. It does <strong>not</strong>
+hand off leadership on its own — the survivors notice the
+missing heartbeat and elect a new leader a couple of seconds
+later, and clients whose streams were on the old leader have
+to be re-run (reconnect is manual, see
+<a href="#client-loses-connection-mid-stream">Client Loses Connection Mid-Stream</a>).</p>
+<p><strong>What you should do:</strong> for a planned restart, hand off first:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>stepdown<span class="w"> </span>--token<span class="w"> </span>ctx_adm_...<span class="w">   </span><span class="c1"># on the leader</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>hub<span class="w"> </span>status<span class="w">                         </span><span class="c1"># confirm the new leader</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>hub<span class="w"> </span>stop
+</span></code></pre></div>
+<p>That way the election happens while the old leader is still
+serving, instead of after it is gone.</p>
 <h3 id="leader-crash-hard-fail-kill-9-power-loss">Leader Crash, Hard Fail (Kill -9, Power Loss)<a class="headerlink" href="#leader-crash-hard-fail-kill-9-power-loss" title="Permanent link">&para;</a></h3>
 <p><strong>What happens:</strong> Raft detects the missing heartbeat and elects
 a new leader within a few seconds. Writes the old leader accepted
@@ -2289,7 +2364,7 @@ clock is the culprit.</p>
 </tr>
 <tr>
 <td>Duplicate entries in shared feed</td>
-<td>Client replayed after restore, safe (dedup by ID)</td>
+<td>A client re-published; the hub never dedups by ID</td>
 </tr>
 <tr>
 <td>Followers lagging</td>

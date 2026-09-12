@@ -2471,7 +2471,7 @@ personal or sensitive and should <strong>not</strong> be committed.</p>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Commit context files (journals and keys are already gitignored)</span>
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>git<span class="w"> </span>add<span class="w"> </span>.context/<span class="w"> </span>CLAUDE.md
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add ctx context management&quot;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Add ctx context management"</span>
 </span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>git<span class="w"> </span>push
 </span></code></pre></div>
 <p>Teammates pull and immediately have context. No per-developer setup needed.</p>
@@ -2547,8 +2547,8 @@ your PATH (<code>which ctx</code>) and that hooks are configured
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>cat<span class="w"> </span>CLAUDE.md
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># The ctx block should be between markers</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ctx:context&quot;</span><span class="w"> </span>CLAUDE.md<span class="w">  </span><span class="c1"># Should print 1</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ctx:end&quot;</span><span class="w"> </span>CLAUDE.md<span class="w">      </span><span class="c1"># Should print 1</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"ctx:context"</span><span class="w"> </span>CLAUDE.md<span class="w">  </span><span class="c1"># Should print 1</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"ctx:end"</span><span class="w"> </span>CLAUDE.md<span class="w">      </span><span class="c1"># Should print 1</span>
 </span></code></pre></div>
 <hr />
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>

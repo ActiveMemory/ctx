@@ -2215,7 +2215,7 @@ a searchable knowledge base.</p>
 <h3 id="the-frontmatter-schema">The Frontmatter Schema<a class="headerlink" href="#the-frontmatter-schema" title="Permanent link">&para;</a></h3>
 <p>Enriched entries begin with YAML frontmatter:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nn">---</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Implement</span><span class="nv"> </span><span class="s">caching</span><span class="nv"> </span><span class="s">layer&quot;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">"Implement</span><span class="nv"> </span><span class="s">caching</span><span class="nv"> </span><span class="s">layer"</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2026-01-27</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature</span>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nt">outcome</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">completed</span>
@@ -2382,7 +2382,7 @@ content and proposing metadata.</p>
 </span></code></pre></div>
 <p><strong>After enrichment:</strong></p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>---
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>title: &quot;Add Redis caching to API endpoints&quot;
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>title: "Add Redis caching to API endpoints"
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>date: 2026-01-24
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>type: feature
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>outcome: completed
@@ -2435,7 +2435,7 @@ the generated site.</p>
 <h3 id="batch-enrichment">Batch Enrichment<a class="headerlink" href="#batch-enrichment" title="Permanent link">&para;</a></h3>
 <p>To enrich multiple sessions, process them one at a time:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List unenriched sessions (those without frontmatter)</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>grep<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;^---</span>$<span class="s2">&quot;</span><span class="w"> </span>.context/journal/*.md<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>grep<span class="w"> </span>-L<span class="w"> </span><span class="s2">"^---</span>$<span class="s2">"</span><span class="w"> </span>.context/journal/*.md<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
 </span></code></pre></div>
 <p>Then run <code>/ctx-journal-enrich</code> on each. Enrichment is intentionally interactive
 to ensure accuracy.</p>
@@ -2544,7 +2544,7 @@ Most cases are handled automatically during <code>ctx journal import</code>.</p>
 </span></code></pre></div></p>
 <p><strong>Searching across all sessions:</strong>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Use grep on the journal directory</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;authentication&quot;</span><span class="w"> </span>.context/journal/
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">"authentication"</span><span class="w"> </span>.context/journal/
 </span></code></pre></div></p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <details class="warning">

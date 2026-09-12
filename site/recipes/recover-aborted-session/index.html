@@ -2137,7 +2137,7 @@ handles it and how to close the loop manually.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-remember                                       # picks up the unfolded 
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                                                    # closeouts automatically
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-handover &quot;recovery: fold the orphan closeouts&quot; # direct invocation is 
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-handover "recovery: fold the orphan closeouts" # direct invocation is 
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                                                    # appropriate for recovery
 </span></code></pre></div>
 <p>The recovery path is the one legitimate place to invoke
@@ -2204,12 +2204,12 @@ shapes are on the Phase-7 backlog.)</p>
 <code>/ctx-wrap-up</code>; here the prior session aborted, so you reach
 for the handover step directly to retire the orphan
 closeouts:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/ctx-handover &quot;recovery: fold orphan closeouts from yesterday&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/ctx-handover "recovery: fold orphan closeouts from yesterday"
 </span></code></pre></div>
 <p>Or via the CLI:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>handover<span class="w"> </span>write<span class="w"> </span><span class="s2">&quot;recovery: fold orphan closeouts from yesterday&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--summary<span class="w"> </span><span class="s2">&quot;Folded N orphan closeouts from the aborted session.&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--next<span class="w"> </span><span class="s2">&quot;Resume &lt;topic&gt; per the closeout&#39;s Next pass hint.&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>handover<span class="w"> </span>write<span class="w"> </span><span class="s2">"recovery: fold orphan closeouts from yesterday"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--summary<span class="w"> </span><span class="s2">"Folded N orphan closeouts from the aborted session."</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--next<span class="w"> </span><span class="s2">"Resume &lt;topic&gt; per the closeout's Next pass hint."</span>
 </span></code></pre></div>
 <p>The handover:</p>
 <ul>

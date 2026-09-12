@@ -2219,7 +2219,7 @@ directory (default <code>~/.ctx/hub-data/</code>):</p>
 <h2 id="step-3-register-clients">Step 3: Register Clients<a class="headerlink" href="#step-3-register-clients" title="Permanent link">&para;</a></h2>
 <p>For each client (person or machine) that will connect:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the hub machine</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>hub<span class="w"> </span>register<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;volkan-laptop&quot;</span><span class="w"> </span>--admin-token<span class="w"> </span>&lt;admin-token&gt;
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>hub<span class="w"> </span>register<span class="w"> </span>--name<span class="w"> </span><span class="s2">"volkan-laptop"</span><span class="w"> </span>--admin-token<span class="w"> </span>&lt;admin-token&gt;
 </span></code></pre></div>
 <p>This returns a client token. Distribute it securely to the client.</p>
 <h2 id="step-4-connect-clients">Step 4: Connect Clients<a class="headerlink" href="#step-4-connect-clients" title="Permanent link">&para;</a></h2>
@@ -2242,7 +2242,7 @@ the project root.</p>
 command on the client from inside the project directory; <code>ctx</code>
 reads <code>$PWD/.context/</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Client A (in its project directory, after activating):</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>learning<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Hub sync test&quot;</span><span class="w"> </span>--context<span class="w"> </span><span class="s2">&quot;Verifying hub setup&quot;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>learning<span class="w"> </span>add<span class="w"> </span><span class="s2">"Hub sync test"</span><span class="w"> </span>--context<span class="w"> </span><span class="s2">"Verifying hub setup"</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Client B (in its project directory, after activating):</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ctx<span class="w"> </span>status<span class="w">   </span><span class="c1"># should show the new learning</span>
@@ -2279,7 +2279,7 @@ termination.</p>
 </span></code></pre></div>
 <h3 id="authentication-failed">"Authentication Failed"<a class="headerlink" href="#authentication-failed" title="Permanent link">&para;</a></h3>
 <p>The client token is wrong or was never registered. Re-register:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>register<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;&lt;name&gt;&quot;</span><span class="w"> </span>--admin-token<span class="w"> </span>&lt;admin-token&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>hub<span class="w"> </span>register<span class="w"> </span>--name<span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="w"> </span>--admin-token<span class="w"> </span>&lt;admin-token&gt;
 </span></code></pre></div>
 <h3 id="entries-not-syncing">Entries Not Syncing<a class="headerlink" href="#entries-not-syncing" title="Permanent link">&para;</a></h3>
 <p>Check that the client is listening:</p>

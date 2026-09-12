@@ -2024,7 +2024,7 @@ The agent does the analysis; you triage the findings.</p>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>Output: ranked list of automation opportunities with frequency data.
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>### 2. Documentation Drift (godoc + inline)
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>Compare every doc.go against its package&#39;s actual exports and behavior. Check
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>Compare every doc.go against its package's actual exports and behavior. Check
 </span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>inline godoc comments on exported functions against their implementations.
 </span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>Scan for stale TODO/FIXME/HACK comments. Check package-level comments match
 </span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>package names. Output: drift items ranked by severity with exact file:line refs.
@@ -2032,7 +2032,7 @@ The agent does the analysis; you triage the findings.</p>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>### 3. Maintainability
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>Look for: functions &gt;80 lines that have logical split points; switch blocks
 </span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>with &gt;5 cases that could be table-driven or extracted; inline comments that
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>say &quot;step 1&quot;, &quot;step 2&quot; or similar (sign the block wants to be a function);
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>say "step 1", "step 2" or similar (sign the block wants to be a function);
 </span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>files with &gt;400 lines; packages with flat structure that could benefit from
 </span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>sub-packages; functions that seem misplaced in their file. Do NOT flag
 </span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>things that are fine as-is just because they could theoretically be different.

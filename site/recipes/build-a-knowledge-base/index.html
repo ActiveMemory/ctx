@@ -2259,9 +2259,9 @@ skill is the natural surface.</p>
 </div>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>init<span class="w">                    </span><span class="c1"># lays down the kb + ingest tree</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>kb<span class="w"> </span>topic<span class="w"> </span>new<span class="w"> </span><span class="s2">&quot;Cursor Hooks&quot;</span><span class="w">         </span><span class="c1"># scaffold a topic folder</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-kb-ingest<span class="w"> </span>./docs/cursor-hooks.md<span class="w"> </span><span class="s2">&quot;cursor hooks&quot;</span><span class="w"> </span><span class="c1"># editorial pass</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>/ctx-kb-ask<span class="w"> </span><span class="s2">&quot;does the kb say hooks fire async?&quot;</span><span class="w">      </span><span class="c1"># grounded Q&amp;A</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>kb<span class="w"> </span>topic<span class="w"> </span>new<span class="w"> </span><span class="s2">"Cursor Hooks"</span><span class="w">         </span><span class="c1"># scaffold a topic folder</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-kb-ingest<span class="w"> </span>./docs/cursor-hooks.md<span class="w"> </span><span class="s2">"cursor hooks"</span><span class="w"> </span><span class="c1"># editorial pass</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>/ctx-kb-ask<span class="w"> </span><span class="s2">"does the kb say hooks fire async?"</span><span class="w">      </span><span class="c1"># grounded Q&amp;A</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>/ctx-wrap-up<span class="w">                            </span><span class="c1"># ceremony; delegates to /ctx-handover</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">                                        </span><span class="c1"># for the per-session handover</span>
 </span></code></pre></div>
@@ -2367,7 +2367,7 @@ evidence-index in-repo SHA pins) depends on it. Run
 </div>
 <h2 id="step-1-scaffold-a-topic">Step 1: Scaffold a Topic<a class="headerlink" href="#step-1-scaffold-a-topic" title="Permanent link">&para;</a></h2>
 <p>Topic pages live in folders, not flat files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>kb<span class="w"> </span>topic<span class="w"> </span>new<span class="w"> </span><span class="s2">&quot;Cursor Hooks&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>kb<span class="w"> </span>topic<span class="w"> </span>new<span class="w"> </span><span class="s2">"Cursor Hooks"</span>
 </span></code></pre></div>
 <p>This creates <code>.context/kb/topics/cursor-hooks/index.md</code> from the
 embedded template. The slug is computed by lowercasing + kebab-
@@ -2379,7 +2379,7 @@ preserved so you can grow into nested topology
 Skills invoke this command rather than synthesize a scaffold by
 hand; the embedded template is the single source of truth.</p>
 <h2 id="step-2-run-an-editorial-pass">Step 2: Run an Editorial Pass<a class="headerlink" href="#step-2-run-an-editorial-pass" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/ctx-kb-ingest ./inputs/2026-04-12-call.md &quot;cursor hooks&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/ctx-kb-ingest ./inputs/2026-04-12-call.md "cursor hooks"
 </span></code></pre></div>
 <p>The skill begins with a <strong>pass-mode declaration</strong>:</p>
 <blockquote>
@@ -2416,7 +2416,7 @@ cite EV rows, run <code>ctx kb site build</code>, record cold-reader orientation
 <p><strong>Mid-pass mode-switching is forbidden</strong>: the skill commits to
 one mode and aborts cleanly if the work no longer fits.</p>
 <h2 id="step-3-qa-grounded-in-the-kb">Step 3: Q&amp;A Grounded in the KB<a class="headerlink" href="#step-3-qa-grounded-in-the-kb" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/ctx-kb-ask &quot;does the kb say hooks fire async?&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/ctx-kb-ask "does the kb say hooks fire async?"
 </span></code></pre></div>
 <p><code>/ctx-kb-ask</code> reads the kb's prose, cites <code>EV-###</code> rows, and
 <strong>refuses to web-jump</strong>. If the kb cannot answer, it opens a
@@ -2458,7 +2458,7 @@ build is read-only: no skill or CLI writes through it.</p>
 <p>Run <code>/ctx-wrap-up</code> at session end; it owns the ceremony and
 delegates to the handover step (<code>/ctx-handover</code>) as its final
 action:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-wrap-up &quot;Cursor Hooks deep dive&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-wrap-up "Cursor Hooks deep dive"
 </span></code></pre></div>
 <p>The handover artifact lands at
 <code>.context/handovers/&lt;TS&gt;-&lt;slug&gt;.md</code> (timestamped so concurrent

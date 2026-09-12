@@ -2435,8 +2435,8 @@ against realistic prompts.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="o">[</span>prompt<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="s2">&quot;create a REST API endpoint&quot;</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Steering files matching prompt &quot;create a REST API endpoint&quot;:</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="s2">"create a REST API endpoint"</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Steering files matching prompt "create a REST API endpoint":</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">#   api-standards        inclusion=auto     priority=20  tools=all</span>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">#   security             inclusion=always   priority=10  tools=all</span>
 </span></code></pre></div>
@@ -2444,9 +2444,14 @@ against realistic prompts.</p>
 <p>Sync steering files to tool-native formats for tools that
 have a <strong>built-in rules primitive</strong>. Not every tool needs
 this; Claude Code and Codex use a different delivery
-mechanism (see below).</p>
+mechanism (see below). For those two, <code>ctx steering sync</code>
+prints an info line saying the tool consumes steering via
+<code>ctx agent</code> and exits 0, whether the tool comes from
+<code>.ctxrc</code> (<code>tool: claude</code> / <code>tool: codex</code>) or from an
+explicit <code>--tool claude</code> / <code>--tool codex</code>.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>sync
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>steering<span class="w"> </span>sync<span class="w"> </span>--tool<span class="w"> </span>codex<span class="w">   </span><span class="c1"># info line, exit 0, nothing written</span>
 </span></code></pre></div>
 <p><strong>Which tools are sync targets?</strong></p>
 <table>
@@ -2475,13 +2480,13 @@ mechanism (see below).</p>
 </tr>
 <tr>
 <td>Claude Code</td>
-<td><em>(no-op)</em></td>
+<td><em>(info line, exit 0)</em></td>
 <td><strong>Delivered via hook + MCP</strong> (see next section)</td>
 </tr>
 <tr>
 <td>Codex</td>
-<td><em>(no-op)</em></td>
-<td>Same as Claude Code</td>
+<td><em>(info line, exit 0)</em></td>
+<td>Same channels; packet arrives at <code>SessionStart</code></td>
 </tr>
 </tbody>
 </table>
@@ -2491,7 +2496,8 @@ with tool-specific frontmatter transforms. Unchanged files
 are skipped (idempotent).</p>
 <h3 id="how-claude-code-and-codex-consume-steering">How Claude Code and Codex Consume Steering<a class="headerlink" href="#how-claude-code-and-codex-consume-steering" title="Permanent link">&para;</a></h3>
 <p>Claude Code has no native "steering files" primitive, so
-<code>ctx steering sync</code> skips it entirely. Instead, steering
+<code>ctx steering sync</code> prints an info line and exits 0 for it
+(and for Codex) without writing anything. Instead, steering
 reaches Claude through <strong>two non-sync channels</strong>, both
 activated by <code>ctx setup claude-code</code> (which installs the
 plugin):</p>
@@ -2515,6 +2521,16 @@ the <strong>only</strong> path that resolves <code>inclusion: auto</code> and
 <code>inclusion: manual</code> matches for Claude Code; Claude
 passes the prompt to the MCP tool, which runs the
 keyword match against each file's description.</p>
+<p><strong>Codex</strong> uses the same two channels with one difference:
+the Codex manifest runs <code>ctx agent --budget 8000</code> from the
+<code>SessionStart</code> hook (Codex ignores plain text on
+<code>PreToolUse</code>), so <code>inclusion: always</code> files arrive once at
+session start and again after <code>compact</code>. The <code>ctx</code> MCP
+server is registered by the plugin's <code>.mcp.json</code> or by
+<code>[mcp_servers.ctx]</code> in <code>.codex/config.toml</code>
+(<code>ctx setup codex --write</code>), and <code>ctx_steering_get</code> resolves
+<code>auto</code>/<code>manual</code> files on demand exactly as it does for
+Claude. See <a href="../../home/codex/"><code>ctx</code> for Codex</a>.</p>
 <p><strong>Verify the MCP server is registered</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>claude<span class="w"> </span>mcp<span class="w"> </span>list
 </span></code></pre></div>
@@ -2544,7 +2560,7 @@ default to <code>inclusion: always</code> for this reason.</p>
   session does <strong>nothing</strong> for Claude's benefit. Skip it.</li>
 <li><code>ctx steering preview</code> still works for validating your
   descriptions; it doesn't depend on sync.</li>
-<li>If Claude Code is your only tool, the <code>ctx steering</code>
+<li>If Claude Code or Codex is your only tool, the <code>ctx steering</code>
   commands you care about are <code>add</code>, <code>list</code>, <code>preview</code>,
   <code>init</code> (never <code>sync</code>).</li>
 <li>If you use both Claude Code <strong>and</strong> (say) Cursor,

@@ -881,6 +881,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -2023,7 +2027,7 @@ the second time.</p>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="gs">**Discovered**</span>: 2026-01-20
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="gs">**Context**</span>: Docker build failed silently with &quot;no such table&quot; at runtime.
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="gs">**Context**</span>: Docker build failed silently with "no such table" at runtime.
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="gs">**Lesson**</span>: The go-sqlite3 driver requires CGO_ENABLED=1 and gcc
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>installed in the build stage. Alpine needs apk add build-base.
@@ -2055,15 +2059,15 @@ layer that makes every future session faster.</strong></p>
 team changes, and model upgrades. The context outlives any single session.</p>
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <p>Capture your first decision or learning right now:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a relational database for the project&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;Team expertise, JSONB support, mature ecosystem&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>decision<span class="w"> </span>add<span class="w"> </span><span class="s2">"Use PostgreSQL"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">"Need a relational database for the project"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">"Team expertise, JSONB support, mature ecosystem"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ctx<span class="w"> </span>learning<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;Vitest mock hoisting&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Tests failing intermittently&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;vi.mock() must be at file top level&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Use vi.doMock() for dynamic mocks&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ctx<span class="w"> </span>learning<span class="w"> </span>add<span class="w"> </span><span class="s2">"Vitest mock hoisting"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">"Tests failing intermittently"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">"vi.mock() must be at file top level"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">"Use vi.doMock() for dynamic mocks"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--session-id<span class="w"> </span>abc12345<span class="w"> </span>--branch<span class="w"> </span>main<span class="w"> </span>--commit<span class="w"> </span>68fbc00a
 </span></code></pre></div>
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>

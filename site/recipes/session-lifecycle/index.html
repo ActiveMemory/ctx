@@ -2540,7 +2540,7 @@ completed work, and presents 1-3 ranked recommendations <strong>with rationale</
 starting</em>), respects explicit priority tags, and favors momentum:
 continuing a thread from a recent session is cheaper than context-switching.</p>
 <p>If you already know what you want to work on, state it directly:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Let&#39;s work on the session enrichment feature.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Let's work on the session enrichment feature.
 </span></code></pre></div>
 <hr />
 <h3 id="step-4-do-the-work">Step 4: Do the Work<a class="headerlink" href="#step-4-do-the-work" title="Permanent link">&para;</a></h3>
@@ -2618,10 +2618,10 @@ to run:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>I would suggest persisting:
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>- **Learning**: `$PPID` in PreToolUse hooks resolves to the Claude Code PID
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  `ctx learning add --context &quot;...&quot; --lesson &quot;...&quot; --application &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>- **Task**: mark &quot;Add cooldown to ctx agent&quot; as done
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  `ctx learning add --context "..." --lesson "..." --application "..." --session-id abc12345 --branch main --commit 68fbc00a`
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>- **Task**: mark "Add cooldown to ctx agent" as done
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>- **Decision**: tombstone-based cooldown with 10m default
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  `ctx decision add &quot;...&quot; --session-id abc12345 --branch main --commit 68fbc00a`
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  `ctx decision add "..." --session-id abc12345 --branch main --commit 68fbc00a`
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
 </span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Want me to persist any of these?
 </span></code></pre></div>
@@ -2679,7 +2679,7 @@ explicit invocation. Here is a realistic example:</p>
 </span></code></pre></div>
 <p><strong>You</strong>: Let's work on the Redis caching backend.</p>
 <p><strong>Agent</strong> <em>(picks up the task, begins implementation)</em>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Got it. I see the task in TASKS.md: &quot;Add Redis backend for cache layer.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Got it. I see the task in TASKS.md: "Add Redis backend for cache layer."
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>I will start with the connection pool setup. Only touching
 </span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>`internal/cache/redis/` for now.
@@ -2694,8 +2694,8 @@ explicit invocation. Here is a realistic example:</p>
 </span></code></pre></div>
 <p><strong>You</strong>: Yes, go ahead.</p>
 <p><strong>Agent</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Done. Added to DECISIONS.md: &quot;Exponential backoff with jitter for Redis
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>reconnection, to avoid thundering herd on pool recovery.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Done. Added to DECISIONS.md: "Exponential backoff with jitter for Redis
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>reconnection, to avoid thundering herd on pool recovery."
 </span></code></pre></div>
 <p><em>(More work happens... the agent implements the cache read/write paths.)</em></p>
 <p><strong>You</strong>: What else did we learn during this session?</p>
@@ -2705,7 +2705,7 @@ explicit invocation. Here is a realistic example:</p>
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>* **Learning**: Redis `SET` with `NX` and `PX` flags handles atomic
 </span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  set-if-not-exists with TTL in a single call. No need for a separate
 </span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  `EXPIRE` command. We initially did it in two calls and hit a race condition.
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>* **Learning**: The `go-redis` library&#39;s `PoolSize` default is 10 per CPU.
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>* **Learning**: The `go-redis` library's `PoolSize` default is 10 per CPU.
 </span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  For our workload, explicit sizing at 20 was more predictable.
 </span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>* **Task update**: The connection pool subtask is done; the read/write path
 </span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  is implemented but needs integration tests.
@@ -2717,8 +2717,8 @@ explicit invocation. Here is a realistic example:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Persisted:
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>* 2 learnings added to LEARNINGS.md
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>* Marked &quot;connection pool setup&quot; done in TASKS.md
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>* Added &quot;write integration tests for Redis cache&quot; as a new task
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>* Marked "connection pool setup" done in TASKS.md
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>* Added "write integration tests for Redis cache" as a new task
 </span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
 </span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Context is up to date. You are good to close.
 </span></code></pre></div>

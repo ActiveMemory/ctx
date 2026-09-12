@@ -31,7 +31,13 @@
         <loc>https://ctx.ist/home/getting-started/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/home/codex/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/home/opencode/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/home/pi/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/home/vscode/</loc>

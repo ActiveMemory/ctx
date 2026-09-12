@@ -2620,15 +2620,15 @@ after parallel implementation.</p>
 <p>This is the critical decision point. Before choosing multi-agent, list the
 files each subtask would touch. If two subtasks modify the same file, they
 belong in the same track (<em>or the same single-agent session</em>).</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: &quot;I want to parallelize these tasks. Which files would each one touch?&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: "I want to parallelize these tasks. Which files would each one touch?"
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Agent: [reads `TASKS.md`, analyzes codebase]
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>       &quot;Task A touches internal/config/ and internal/cli/initialize/
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>       "Task A touches internal/config/ and internal/cli/initialize/
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        Task B touches docs/ and site/
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        Task C touches internal/config/ and internal/cli/status/
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        Tasks A and C overlap on internal/config/ # they should be
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        in the same track. Task B is independent.&quot;
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        in the same track. Task B is independent."
 </span></code></pre></div>
 <p>When in doubt, keep things in one track. A merge conflict in a critical
 file costs more time than the parallelism saves.</p>

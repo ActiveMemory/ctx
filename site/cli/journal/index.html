@@ -2288,7 +2288,8 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h3 id="ctx-journal"><code>ctx journal</code><a class="headerlink" href="#ctx-journal" title="Permanent link">&para;</a></h3>
-<p>Browse and search AI session history from Claude Code and other tools.</p>
+<p>Browse and search AI session history from Claude Code, Codex, and other
+tools.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-journal-source"><code>ctx journal source</code><a class="headerlink" href="#ctx-journal-source" title="Permanent link">&para;</a></h4>
@@ -2318,7 +2319,7 @@
 <tr>
 <td><code>--tool</code></td>
 <td><code>-t</code></td>
-<td>Filter by tool (e.g., <code>claude-code</code>)</td>
+<td>Filter by tool (e.g., <code>claude-code</code>, <code>codex</code>)</td>
 </tr>
 <tr>
 <td><code>--since</code></td>
@@ -2344,6 +2345,7 @@ start time, duration, turn count, and token usage.</p>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--project<span class="w"> </span>ctx
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--tool<span class="w"> </span>claude-code
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--tool<span class="w"> </span>codex
 </span></code></pre></div>
 <h4 id="ctx-journal-source-show"><code>ctx journal source --show</code><a class="headerlink" href="#ctx-journal-source-show" title="Permanent link">&para;</a></h4>
 <p>Show details of a specific session.</p>
@@ -2448,6 +2450,45 @@ re-renders it from the full transcript. <code>--keep-frontmatter=false</code> ad
 discards enriched frontmatter during that re-render.</p>
 <p>Single-session import (<code>ctx journal import &lt;id&gt;</code>) always re-renders the targeted
 session without prompting, since you are explicitly targeting it.</p>
+<p><strong>Session sources.</strong> Import discovers transcripts from every registered
+parser:</p>
+<table>
+<thead>
+<tr>
+<th>Tool id</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>claude-code</code></td>
+<td><code>~/.claude/projects/&lt;project&gt;/*.jsonl</code></td>
+</tr>
+<tr>
+<td><code>codex</code></td>
+<td><code>$CODEX_HOME/sessions/YYYY/MM/DD/rollout-*.jsonl</code> (default <code>~/.codex/sessions</code>)</td>
+</tr>
+<tr>
+<td><code>copilot</code></td>
+<td>VS Code Copilot Chat <code>workspaceStorage/&lt;hash&gt;/chatSessions/*.jsonl</code> (Code and Code Insiders)</td>
+</tr>
+<tr>
+<td><code>copilot-cli</code></td>
+<td><code>~/.copilot/sessions/*.jsonl</code> (or <code>$COPILOT_HOME/sessions/</code>)</td>
+</tr>
+<tr>
+<td><code>markdown</code></td>
+<td><code>.context/sessions/*.md</code> (hand-written or tool-exported Markdown)</td>
+</tr>
+</tbody>
+</table>
+<p>Codex rollouts are matched to the current project by the session's
+working directory. Codex-injected user items (<code>&lt;environment_context&gt;</code>,
+<code>&lt;user_instructions&gt;</code>, skill and permission preambles) are dropped, and
+a rollout with no real user message is skipped. The Codex <code>SessionEnd</code>
+hook runs <code>ctx journal import --all -y</code> with a 3-second cap (Codex's
+limit); because the sweep is incremental, a timeout only defers the
+import to the next sweep.</p>
 <p>The <code>journal/</code> directory should be gitignored (like <code>sessions/</code>) since it
 contains raw conversation data.</p>
 <p><strong>Example</strong>:</p>

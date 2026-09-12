@@ -18,7 +18,7 @@
         <link rel="prev" href="../contributing/">
       
       
-        <link rel="next" href="../opencode/">
+        <link rel="next" href="../codex/">
       
       
         
@@ -883,6 +883,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1168,6 +1172,35 @@
   
   
     <li class="md-nav__item">
+      <a href="../codex/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-terminal" viewBox="0 0 24 24"><path d="M12 19h8M4 17l6-6-6-6"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  ctx for Codex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../opencode/" class="md-nav__link">
         
   
@@ -1178,6 +1211,35 @@
     
   
   ctx for OpenCode
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pi/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-terminal" viewBox="0 0 24 24"><path d="M12 19h8M4 17l6-6-6-6"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  ctx for Pi
 
     
   </span>
@@ -2112,6 +2174,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -2189,7 +2255,7 @@ to hooks or skills take effect immediately: No reinstall is needed.</p>
 auto-enabled globally. The plugin will only work in projects that
 explicitly enable it. Run <code>ctx init</code> in each project (it auto-enables
 the plugin), or add the entry to <code>~/.claude/settings.json</code> manually:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;enabledPlugins&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;ctx@activememory-ctx&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">"enabledPlugins"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"ctx@activememory-ctx"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 </span></code></pre></div>
 </div>
 <p><strong>Verify:</strong></p>
@@ -2254,7 +2320,7 @@ tool-specific setup (Cursor, Copilot, Aider, Windsurf, etc.).</p>
 <code>~/.claude/settings.json</code> for an <code>enabledPlugins</code> entry. If missing,
 run <code>ctx init</code> in your project (it auto-enables the plugin), or add
 it manually:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;enabledPlugins&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;ctx@activememory-ctx&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">"enabledPlugins"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"ctx@activememory-ctx"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 </span></code></pre></div>
 </div>
 <p><strong>Verify:</strong></p>
@@ -2361,6 +2427,10 @@ tool scoping are covered in
 <h3 id="4-start-using-with-ai">4. Start Using with AI<a class="headerlink" href="#4-start-using-with-ai" title="Permanent link">&para;</a></h3>
 <p>With Claude Code (<em>and the <code>ctx</code> plugin installed</em>), context loads automatically
 via hooks.</p>
+<p>With <strong>Codex</strong>, install the <code>ctx</code> plugin (<code>codex plugin marketplace add
+ActiveMemory/ctx</code>, then <code>codex plugin add ctx@activememory-ctx</code>) or run
+<code>ctx setup codex --write</code>, then trust the hooks via <code>/hooks</code>. See
+<a href="../codex/"><code>ctx</code> for Codex</a>.</p>
 <p>With <strong>VS Code Copilot Chat</strong>, install the
 <a href="../../operations/integrations/#vs-code-chat-extension-ctx"><code>ctx</code> extension</a> and use
 <code>@ctx /status</code>, <code>@ctx /agent</code>, and other slash commands directly in chat.
@@ -2372,7 +2442,7 @@ for automatic context loading.</p>
 <h3 id="5-set-up-for-your-ai-tool">5. Set Up for Your AI Tool<a class="headerlink" href="#5-set-up-for-your-ai-tool" title="Permanent link">&para;</a></h3>
 <p>If you use an MCP-compatible tool, generate the integration config
 with <code>ctx setup</code>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kiro</label><label for="__tabbed_2_2">Cursor</label><label for="__tabbed_2_3">Cline</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kiro</label><label for="__tabbed_2_2">Cursor</label><label for="__tabbed_2_3">Cline</label><label for="__tabbed_2_4">Codex</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>kiro<span class="w"> </span>--write
@@ -2389,11 +2459,20 @@ with <code>ctx setup</code>:</p>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Creates .vscode/mcp.json and syncs steering files</span>
 </span></code></pre></div>
 </div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>setup<span class="w"> </span>codex<span class="w"> </span>--write
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Creates .codex/hooks.json, .codex/config.toml ([mcp_servers.ctx]),</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># AGENTS.md, and .agents/skills/ctx-*/ ; then run /hooks in codex</span>
+</span></code></pre></div>
 </div>
 </div>
-<p>This registers the <code>ctx</code> MCP server and syncs any
-<a href="../../cli/steering/">steering files</a> into the tool's
-native format. Re-run after adding or changing steering files.</p>
+</div>
+<p>This registers the <code>ctx</code> MCP server and, for Kiro, Cursor, and Cline,
+syncs any <a href="../../cli/steering/">steering files</a> into the tool's native
+format. Re-run after adding or changing steering files. Codex has no
+native rules format; it receives steering inside the <code>SessionStart</code>
+context packet instead (or use the <a href="../codex/#route-a-the-ctx-plugin">plugin route</a>
+and skip the project-local files entirely).</p>
 <h3 id="6-verify-it-works">6. Verify It Works<a class="headerlink" href="#6-verify-it-works" title="Permanent link">&para;</a></h3>
 <p>Ask your AI: <strong>"Do you remember?"</strong></p>
 <p>It should cite specific context: current tasks, recent decisions,
@@ -2420,8 +2499,8 @@ The investment is small and the benefits compound over sessions:</p>
   use it for impact analysis and dependency awareness.</p>
 </li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Index your project for GitNexus (run once, then after major changes)</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gitnexus<span class="w"> </span>analyze
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Index your project for GitNexus (run once, then after major changes)</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gitnexus<span class="w"> </span>analyze
 </span></code></pre></div>
 <p>(For non-GitNexus code-intelligence MCPs, apply that tool's own
 indexing step instead.)</p>
@@ -2496,13 +2575,13 @@ for setup details and verification.</p>
         
         
           
-          <a href="../opencode/" class="md-footer__link md-footer__link--next" aria-label="Next: ctx for OpenCode">
+          <a href="../codex/" class="md-footer__link md-footer__link--next" aria-label="Next: ctx for Codex">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                ctx for OpenCode
+                ctx for Codex
               </div>
             </div>
             <div class="md-footer__button md-icon">

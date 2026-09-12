@@ -2344,7 +2344,7 @@ it's a note to future-you. You could jot it on the scratchpad, but
 scratchpad entries don't announce themselves.</p>
 <p><strong>How do you leave a message that your next session opens with?</strong></p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;refactor the swagger definitions&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">"refactor the swagger definitions"</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>list
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>remind<span class="w"> </span>dismiss<span class="w"> </span><span class="m">1</span><span class="w">       </span><span class="c1"># or batch: ctx remind dismiss 1 3-5</span>
 </span></code></pre></div>
@@ -2385,22 +2385,22 @@ session, until you dismiss them.</p>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-leave-a-reminder">Step 1: Leave a Reminder<a class="headerlink" href="#step-1-leave-a-reminder" title="Permanent link">&para;</a></h3>
 <p>Tell your agent what to remember, or run it directly:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: &quot;remind me to refactor the swagger definitions&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: "remind me to refactor the swagger definitions"
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Agent: [runs ctx remind &quot;refactor the swagger definitions&quot;]
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>       &quot;Reminder set:
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>         + [1] refactor the swagger definitions&quot;
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Agent: [runs ctx remind "refactor the swagger definitions"]
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>       "Reminder set:
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>         + [1] refactor the swagger definitions"
 </span></code></pre></div>
 <p>Or from the terminal:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;refactor the swagger definitions&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">"refactor the swagger definitions"</span>
 </span></code></pre></div>
 <h3 id="step-2-set-a-date-gate-optional">Step 2: Set a Date Gate (Optional)<a class="headerlink" href="#step-2-set-a-date-gate-optional" title="Permanent link">&para;</a></h3>
 <p>If the reminder shouldn't fire until a specific date:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>You: &quot;remind me to check the deploy logs after Tuesday&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>You: "remind me to check the deploy logs after Tuesday"
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Agent: [runs ctx remind &quot;check the deploy logs&quot; --after 2026-02-25]
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>       &quot;Reminder set:
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>         + [2] check the deploy logs  (after 2026-02-25)&quot;
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Agent: [runs ctx remind "check the deploy logs" --after 2026-02-25]
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>       "Reminder set:
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>         + [2] check the deploy logs  (after 2026-02-25)"
 </span></code></pre></div>
 <p>The reminder stays silent until that date, then fires every session.</p>
 <p>The agent converts natural language dates ("<em>tomorrow</em>", "<em>next week</em>",
@@ -2419,14 +2419,14 @@ it asks.</p>
 <code>UserPromptSubmit</code> and the agent relays the box verbatim.</p>
 <h3 id="step-4-dismiss-when-done">Step 4: Dismiss When Done<a class="headerlink" href="#step-4-dismiss-when-done" title="Permanent link">&para;</a></h3>
 <p>After you've acted on a reminder (<em>or decided to skip it</em>):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You: &quot;dismiss reminder 1&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You: "dismiss reminder 1"
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Agent: [runs ctx remind dismiss 1]
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       &quot;Dismissed:
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>         - [1] refactor the swagger definitions&quot;
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       "Dismissed:
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>         - [1] refactor the swagger definitions"
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a># Batch dismiss also works:
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a># &quot;dismiss reminders 3, 5 through 7&quot;
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a># "dismiss reminders 3, 5 through 7"
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a># → ctx remind dismiss 3 5-7
 </span></code></pre></div>
 <p>Or clear everything:</p>

@@ -1369,10 +1369,10 @@ a product decision nobody asked it to change.</p>
 <p>The bug was boring, which made it useful.</p>
 <p>A command accepted a comma-separated list of secret versions. This
 worked:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>--versions &quot;1,2,3&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>--versions "1,2,3"
 </span></code></pre></div>
 <p>This looked like it worked:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>--versions &quot;1, 2, 3&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>--versions "1, 2, 3"
 </span></code></pre></div>
 <p>But one command silently sent only the first version.</p>
 <p>The validation path handled whitespace. The conversion path did not.</p>
@@ -1425,7 +1425,7 @@ priori.</p>
 <p>That is where the whole experiment became interesting.</p>
 <h2 id="the-task-at-hand">The Task at Hand<a class="headerlink" href="#the-task-at-hand" title="Permanent link">&para;</a></h2>
 <p>The accepted behavior was:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>&quot;1, 2, 3&quot; -&gt; [1, 2, 3]
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>"1, 2, 3" -&gt; [1, 2, 3]
 </span></code></pre></div>
 <p>Other decisions mattered too:</p>
 <ul>

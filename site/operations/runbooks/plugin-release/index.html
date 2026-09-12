@@ -2243,7 +2243,7 @@ the <code>ctx</code> repo:</p>
 <p>The plugin manifest declares all user-invocable skills. Verify
 the count matches:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Count skills in plugin.json</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>jq<span class="w"> </span><span class="s1">&#39;.skills | length&#39;</span><span class="w"> </span>internal/assets/claude/.claude-plugin/plugin.json
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>jq<span class="w"> </span><span class="s1">'.skills | length'</span><span class="w"> </span>internal/assets/claude/.claude-plugin/plugin.json
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Count skill directories</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ls<span class="w"> </span>-d<span class="w"> </span>internal/assets/claude/skills/ctx-*/<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
@@ -2253,7 +2253,7 @@ and won't appear in both counts).</p>
 <h2 id="step-6-commit-and-tag">Step 6: Commit and Tag<a class="headerlink" href="#step-6-commit-and-tag" title="Permanent link">&para;</a></h2>
 <p>If releasing independently of a binary release:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>add<span class="w"> </span>internal/assets/claude/<span class="w"> </span>.claude-plugin/
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: release plugin v0.X.Y&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"chore: release plugin v0.X.Y"</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>git<span class="w"> </span>tag<span class="w"> </span>plugin-v0.X.Y
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main<span class="w"> </span>--tags
 </span></code></pre></div>
@@ -2269,7 +2269,7 @@ and won't appear in both counts).</p>
 <h3 id="hooks-dont-fire">Hooks Don't Fire<a class="headerlink" href="#hooks-dont-fire" title="Permanent link">&para;</a></h3>
 <p>Check that the hook is registered in <code>plugin.json</code> and that
 the command it calls exists:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>jq<span class="w"> </span><span class="s1">&#39;.hooks&#39;</span><span class="w"> </span>internal/assets/claude/.claude-plugin/plugin.json
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>jq<span class="w"> </span><span class="s1">'.hooks'</span><span class="w"> </span>internal/assets/claude/.claude-plugin/plugin.json
 </span></code></pre></div>
 <h3 id="version-mismatch">Version Mismatch<a class="headerlink" href="#version-mismatch" title="Permanent link">&para;</a></h3>
 <p>If <code>claude /plugin list</code> shows an old version after updating:</p>

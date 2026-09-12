@@ -1,0 +1,2607 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ctx provides temporal continuity across sessions">
+      
+      
+        <meta name="author" content="Volkan Özçelik">
+      
+      
+        <link rel="canonical" href="https://ctx.ist/blog/2026-09-12-beyond-the-dumb-zone/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../images/favicon-32.png">
+      <meta name="generator" content="zensical-0.0.51">
+    
+    
+      
+        <title>Beyond the Dumb Zone: Keeping Decision History While Independently Reviewing AI-Assisted Software Development - ctx: do you remember?</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.62c9b9cc.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#beyond-the-dumb-zone" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+      
+  <img src="../../images/ctx-favicon-32.png" alt="ctx: do you remember?">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ctx: do you remember?
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Beyond the Dumb Zone: Keeping Decision History While Independently Reviewing AI-Assisted Software Development
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to Dark Mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to Dark Mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to Light Mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to Light Mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/ActiveMemory/ctx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ActiveMemory/ctx
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  Manifesto
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../thesis/" class="md-tabs__link">
+        
+  
+  The Thesis
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../home/" class="md-tabs__link">
+          
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../recipes/" class="md-tabs__link">
+          
+  
+  Recipes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cli/" class="md-tabs__link">
+          
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../operations/" class="md-tabs__link">
+          
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../security/" class="md-tabs__link">
+          
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+      
+  <img src="../../images/ctx-favicon-32.png" alt="ctx: do you remember?">
+
+    </a>
+    ctx: do you remember?
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ActiveMemory/ctx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ActiveMemory/ctx
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-flame" viewBox="0 0 24 24"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Manifesto
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../thesis/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-scroll-text" viewBox="0 0 24 24"><path d="M15 12h-5M15 8h-5M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  The Thesis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-newspaper" viewBox="0 0 24 24"><path d="M15 18h-5M18 14h-8M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="10" y="6" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Blog
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../home/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../recipes/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-chef-hat" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1ZM6 17h12"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Recipes
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../cli/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-terminal" viewBox="0 0 24 24"><path d="M12 19h8M4 17l6-6-6-6"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  CLI
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../reference/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Reference
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../operations/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Operations
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../security/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Security
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#keeping-decision-history-while-independently-reviewing-ai-assisted-software-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Keeping Decision History While Independently Reviewing AI-Assisted Software Development
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-does-attention-degradation-cover-in-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What Does "Attention Degradation" Cover In Reality?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-research-establishes-and-what-it-leaves-open" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What the Research Establishes, and What It Leaves Open
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What the Research Establishes, and What It Leaves Open">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#position-and-task-structure-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Position and Task Structure Matter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-turn-problems-include-premature-commitments" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Multi-Turn Problems Include Premature Commitments
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-context-capability-has-improved" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Long-Context Capability Has Improved
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#independent-feedback-is-promising-but-agreement-is-not-proof" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Independent Feedback Is Promising, but Agreement Is Not Proof
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resetting-context-can-lower-quality-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Resetting Context Can Lower Quality, Too
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#continuity-matters-more-than-context-window-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Continuity Matters More than Context Window Size
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roles-in-the-persistent-review-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Roles in the Persistent Review Workflow
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-five-stages-and-their-hard-stops" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The Five Stages and Their Hard Stops
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Five Stages and Their Hard Stops">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stage-1-debate-the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Stage 1: Debate the Problem
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-2-establish-the-specification-intent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Stage 2: Establish the Specification Intent
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-3-review-the-full-specification-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Stage 3: Review the Full Specification Bundle
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-4-implement-the-approved-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Stage 4: Implement the Approved Bundle
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-5-converge-through-verified-corrections" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Stage 5: Converge Through Verified Corrections
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-review-loop-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The Review Loop, Step by Step
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#independence-without-amnesia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Independence Without Amnesia
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-reviewable-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The Reviewable Package
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Reviewable Package">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-checkpoint-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Example Checkpoint Record
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-finding-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Example Finding Record
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review-the-behavior-not-just-the-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Review the Behavior, Not Just the Documents
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preventing-drift-and-endless-convergence" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Preventing Drift and Endless Convergence
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-keep-restructure-or-reset-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        When to Keep, Restructure, or Reset Context
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-economics-accepted-work-is-the-unit-that-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The Economics: Accepted Work Is the Unit That Matters
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-test-whether-the-approach-is-better" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        How to Test Whether the Approach Is Better
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-reusable-operating-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A Reusable Operating Contract
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="A Reusable Operating Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-the-implementation-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        For the Implementation Agent
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-each-reviewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        For Each Reviewer
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-the-human-coordinator" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        For the Human Coordinator
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conclusion
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-connects" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Where This Connects
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-and-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        References and Further Reading
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="beyond-the-dumb-zone">Beyond the Dumb Zone<a class="headerlink" href="#beyond-the-dumb-zone" title="Permanent link">&para;</a></h1>
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
+<h2 id="keeping-decision-history-while-independently-reviewing-ai-assisted-software-development">Keeping Decision History While Independently Reviewing AI-Assisted Software Development<a class="headerlink" href="#keeping-decision-history-while-independently-reviewing-ai-assisted-software-development" title="Permanent link">&para;</a></h2>
+<p><em>Volkan Özçelik / September 12, 2026</em></p>
+<p><em>A research-informed workflow for persistent implementation, independent
+review, and explicit human approval.</em></p>
+<div class="admonition question">
+<p class="admonition-title">Should You Reset Before Writing Code?</p>
+<p>An agent and a developer spend hours debating a feature. They
+clarify the problem, reject plausible alternatives, discover that
+an early assumption was wrong, and agree on the intended
+experience. They turn that discussion into a specification intent,
+then a complete specification and implementation plan.</p>
+<p>The session now contains 250,000 tokens in a million-token context
+window.</p>
+<p>Should they reset it before writing code?</p>
+</div>
+<p>A familiar answer is yes: the conversation is approaching the model's
+"<em>dumb zone</em>".</p>
+<p>Start clean, load the specification, and implement with an  uncluttered context.</p>
+<p><img alt="Output quality plotted against context window occupancy: a curve that
+declines steadily, labeled &quot;smart zone&quot; before a vertical line at roughly
+150K tokens and &quot;dumb zone&quot; after it" src="../../images/smart-vs-dumb-zone.png" /></p>
+<p><em>The folk model: schematic, not measured data. Context-related degradation
+is documented, but its shape and severity depend on the model, task, and
+input. The threshold shown is illustrative, not an established restart
+boundary.</em></p>
+<p>But consider what the reset removes: </p>
+<p>The history explains why the obvious design was rejected. It records which 
+constraint actually matters, which requirement was deliberately narrowed, 
+and why a seemingly unnecessary exception exists. The agent has access to the
+reasoning that produced the specification, including details the final
+document may not fully express.</p>
+<p><strong>A fresh session may have less interference. It may also have less
+understanding</strong>.</p>
+<p>This article argues for a different default for substantial, closely
+related work: retain the informed implementer and persistent reviewers,
+establish explicit authority for current decisions, and use independent
+evidence-based review at defined stages. Resetting remains an available
+intervention. Context occupancy alone is insufficient grounds for
+invoking it.</p>
+<p>The distinction matters. Long-context degradation is a real research
+finding. A universal token count at which every software-development
+session should restart is not established by the research discussed
+here.</p>
+<p>The workflow below is an engineering proposal grounded in that research
+and in an existing practitioner process. It is not a controlled
+experimental demonstration that persistent sessions outperform every
+alternative. Its central hypothesis is testable: when decision history
+remains valuable, preserving it while independently checking the
+resulting artifacts can produce better accepted work than discarding it
+at an arbitrary threshold.</p>
+<h2 id="what-does-attention-degradation-cover-in-reality">What Does "Attention Degradation" Cover In Reality?<a class="headerlink" href="#what-does-attention-degradation-cover-in-reality" title="Permanent link">&para;</a></h2>
+<p>People use "<em>context rot</em>", "<em>attention degradation</em>", and "<em>smart zone /
+dumb zone</em>" to describe several different problems. Those labels are
+convenient, but they can obscure which intervention would help.</p>
+<table>
+<thead>
+<tr>
+<th>Failure mode</th>
+<th>What it looks like in development</th>
+<th>Why the distinction matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Retrieval failure</td>
+<td>The agent overlooks a constraint that remains in the conversation.</td>
+<td>The information exists, but is not used reliably.</td>
+</tr>
+<tr>
+<td>Conflicting history</td>
+<td>An abandoned proposal competes with its approved replacement.</td>
+<td>The agent needs to resolve authority and supersession.</td>
+</tr>
+<tr>
+<td>Anchoring</td>
+<td>The agent keeps repairing a design built on a disproven assumption.</td>
+<td>More repetition of the same reasoning may preserve the mistake.</td>
+</tr>
+<tr>
+<td>Handoff loss</td>
+<td>A replacement agent follows the spec but misses a consequential rationale.</td>
+<td>Resetting can introduce a new failure.</td>
+</tr>
+<tr>
+<td>Version confusion</td>
+<td>A reviewer evaluates code against an obsolete contract.</td>
+<td>Correct recall of old information is still the wrong basis for judgment.</td>
+</tr>
+<tr>
+<td>Evidence failure</td>
+<td>Everyone accepts an implementation claim without inspecting behavior.</td>
+<td>A shorter context does not supply missing verification.</td>
+</tr>
+</tbody>
+</table>
+<p>These are behavioral categories for operating the workflow, not
+diagnoses of a model's internal mechanism. A missed requirement does
+not, by itself, prove that a particular attention head failed or that a
+context-length threshold was crossed.</p>
+<p>Three concepts also need separation. The <strong>model</strong> processes the input
+it receives. The <strong>harness</strong> assembles that input, manages tools, and
+may summarize or remove material. The <strong>agent</strong> is the resulting system
+carrying out the task. Improved behavior can come from any combination
+of those layers.</p>
+<p>That is why a session's visible length is a weak standalone measure of
+its likely quality. We also need to know what the input contains, how
+current instructions are distinguished from history, what evidence is
+available, and what the agent must do next.</p>
+<h2 id="what-the-research-establishes-and-what-it-leaves-open">What the Research Establishes, and What It Leaves Open<a class="headerlink" href="#what-the-research-establishes-and-what-it-leaves-open" title="Permanent link">&para;</a></h2>
+<h3 id="position-and-task-structure-matter">Position and Task Structure Matter<a class="headerlink" href="#position-and-task-structure-matter" title="Permanent link">&para;</a></h3>
+<p>Liu and colleagues' <em>Lost in the Middle</em> studied multi-document question
+answering and key-value retrieval. Performance often depended on where
+relevant information appeared, with stronger results near the beginning
+or end than in the middle. The study establishes a limitation in
+reliable use of available context for the tested models and tasks. It
+does not identify a universal software-development restart threshold.
+<a href="https://arxiv.org/abs/2307.03172">Liu et al., 2023</a></p>
+<p>RULER broadened evaluation beyond finding a single hidden item. Its
+tasks include multiple needles, multi-hop tracing, and aggregation.
+Models that performed well on a simple retrieval test could still
+degrade on more demanding long-context tasks. The implication is
+methodological: advertised capacity and one successful retrieval
+benchmark are insufficient descriptions of effective context use.
+<a href="https://arxiv.org/abs/2404.06654">Hsieh et al., 2024</a></p>
+<p>Chroma's <em>Context Rot</em> report evaluated 18 models using controlled
+tasks, including retrieval variations, conversational memory
+evaluation, and repeated-word reproduction. It found nonuniform
+performance as input length increased and examined the effects of
+distractors, semantic similarity, and input structure. This is stronger
+evidence than anecdotes that longer input can create problems, even
+when the task remains simple. It is still not an experiment comparing
+the complete development workflows proposed here.
+<a href="https://www.trychroma.com/research/context-rot">Hong, Troynikov, and Huber, 2025</a></p>
+<p>The practical consequence is that "all of this history is relevant" is
+an argument for its potential value, not proof that the model will use
+it correctly. Relevant but obsolete proposals can be particularly
+difficult to distinguish from current ones.</p>
+<h3 id="multi-turn-problems-include-premature-commitments">Multi-Turn Problems Include Premature Commitments<a class="headerlink" href="#multi-turn-problems-include-premature-commitments" title="Permanent link">&para;</a></h3>
+<p>Laban and colleagues compared single-turn and multi-turn settings across
+six generation tasks, analyzing more than 200,000 simulated
+conversations. They reported an average performance drop of 39% in the
+multi-turn setting and identified reliance on early assumptions and
+premature solutions as an important failure pattern. That number
+describes their experimental setup; it is not a prediction that a long
+coding session loses 39% of its quality.
+<a href="https://arxiv.org/abs/2505.06120">Laban et al., 2025</a></p>
+<p>For the workflow in this article, the relevant concern is whether
+incorrect premises remain active after correction. A staged process
+that explicitly ratifies decisions and reviews artifacts is materially
+different from simply accumulating turns, although the cited study does
+not measure how much those controls help.</p>
+<h3 id="long-context-capability-has-improved">Long-Context Capability Has Improved<a class="headerlink" href="#long-context-capability-has-improved" title="Permanent link">&para;</a></h3>
+<p>Historical findings should not be converted into permanent numerical
+ceilings. In its February 2026 Opus 4.6 announcement, Anthropic
+reported 76% on the eight-needle, million-token MRCR v2 evaluation,
+compared with 18.5% for Sonnet 4.5. This is a vendor-reported
+comparison between particular models on a particular evaluation. It
+supports improvement in long-context retrieval, not a claim that
+extended implementation is solved.
+<a href="https://www.anthropic.com/news/claude-opus-4-6">Anthropic, 2026</a></p>
+<p>Claims that the "dumb zone" moved from 100K to 200K tokens need similar
+qualification. Which model? Which harness? Which task? Which failure
+criterion? Was the history a coherent design discussion, a repository
+dump, or thousands of lines of repetitive logs?</p>
+<p>Neither number is established here as a general cutoff. Conversely,
+using only 25% of a million-token window does not certify reliability.
+Capacity and useful performance are different measurements.</p>
+<p>Anthropic's context-engineering guidance itself describes degradation
+as a gradient rather than a hard cliff and recommends selecting
+sufficient, high-signal information. That guidance is compatible with
+preserving substantial useful history; "minimal" need not mean short.
+<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic, 2025</a></p>
+<h3 id="independent-feedback-is-promising-but-agreement-is-not-proof">Independent Feedback Is Promising, but Agreement Is Not Proof<a class="headerlink" href="#independent-feedback-is-promising-but-agreement-is-not-proof" title="Permanent link">&para;</a></h3>
+<p>Du and colleagues found benefits from multiagent debate on the
+factuality and reasoning tasks they studied. This supports
+investigating multiple perspectives as a technique; it does not
+validate this exact three-reviewer software process or establish three
+as an optimal number.
+<a href="https://arxiv.org/abs/2305.14325">Du et al., 2023</a></p>
+<p>Research on LLM judges also identifies position, verbosity, and
+self-enhancement biases. Its preference-evaluation setting differs from
+code review, but it gives a concrete reason to avoid treating a model's
+favorable judgment as an objective measurement of correctness.
+<a href="https://arxiv.org/abs/2306.05685">Zheng et al., 2023</a></p>
+<p>Finally, research on intrinsic self-correction found that models could
+struggle to improve reasoning without external feedback, sometimes
+making it worse. This is not a timeless claim about every newer model
+or about tool-assisted repair. It does support distinguishing a request
+to "think again" from feedback grounded in additional evidence.
+<a href="https://arxiv.org/abs/2310.01798">Huang et al., 2024</a></p>
+<p>Taken together, these sources motivate a process that preserves useful
+information, resolves conflicting authority, and introduces independent
+checks. They do not demonstrate that any one context-management policy
+is universally best.</p>
+<h2 id="resetting-context-can-lower-quality-too">Resetting Context Can Lower Quality, Too<a class="headerlink" href="#resetting-context-can-lower-quality-too" title="Permanent link">&para;</a></h2>
+<p>A specification is a deliberate selection of information. It states
+what should be built and the constraints governing that work. The
+preceding conversation often contains more: counterexamples, rejected
+approaches, conditional reasoning, and the circumstances under which a
+decision should be reconsidered.</p>
+<p>Consider a fictional command-line tool that installs reusable
+workflows.</p>
+<p>The first proposal says installations should update automatically.
+During debate, the developer explains that a selected version must
+remain reproducible. The team rejects automatic updates, decides that
+checking for updates is allowed, and requires explicit selection before
+the installed version changes.</p>
+<p>The final specification says:</p>
+<blockquote>
+<p>Installation versions are pinned. Updates require explicit user
+action.</p>
+</blockquote>
+<p>That is a useful requirement. But the history also clarifies why an
+"update available" notice is acceptable while changing the executable
+payload is not. It may explain what happens when a registry is
+unreachable and whether a failed update can disturb the current
+installation.</p>
+<p>A persistent implementer can use that rationale when encountering an
+unanticipated edge case. A fresh implementer may have to rediscover it,
+ask the developer again, or choose an interpretation that is locally
+plausible but inconsistent with the original intent.</p>
+<p>This does not justify keeping binding requirements only in
+conversation. If an edge case affects acceptance, it belongs in the
+approved artifacts. The point is that documents can be incomplete, and
+implementation frequently reveals questions that were not obvious
+during drafting.</p>
+<p>The strongest process preserves both forms of information: an explicit
+current contract and access to the reasoning behind it.</p>
+<div class="admonition warning">
+<p class="admonition-title">Continuity Is Not Authority</p>
+<p>There is a corresponding danger. If the persistent agent silently
+implements a remembered promise that never reached the approved
+spec, the code can diverge from the review baseline. Continuity
+helps identify the gap; it does not authorize bypassing it. The gap
+should become a proposed amendment, approved before it changes
+scope.</p>
+</div>
+<p>Think of a specification as the agreed design and the conversation as
+the design notebook. The notebook can explain the design. It can also
+contain crossed-out designs. Keeping the notebook is useful only if the
+team knows which drawing it has approved.</p>
+<h2 id="continuity-matters-more-than-context-window-size">Continuity Matters More than Context Window Size<a class="headerlink" href="#continuity-matters-more-than-context-window-size" title="Permanent link">&para;</a></h2>
+<p>The proposed policy is simple:</p>
+<blockquote>
+<p>Keep the implementation and review sessions while their history
+remains useful. Establish the approved artifact versions at each
+stage. Use evidence-based review to correct mistakes. Restructure or
+reset context in response to a concrete need.</p>
+</blockquote>
+<p>This policy makes three separate commitments.</p>
+<p>First, continuity is allowed across planning, specification,
+implementation, and repair. The implementer does not have to forget the
+design discussion when the task changes phase.</p>
+<p>Second, conversational recency is not the project's authority system.
+Approved specifications and explicit amendments govern the work.
+Earlier discussion informs interpretation. Conflicts are surfaced, not
+silently settled by whichever sentence happens to attract the model's
+attention.</p>
+<p>Third, implementation ownership and review judgment are separated. The
+agent that writes the work responds to findings, but does not
+unilaterally declare the next stage open.</p>
+<p>A short baseline note at each transition makes this operational. It
+identifies the approved artifact, current decisions, superseded
+assumptions, unresolved questions, and the next permitted activity. Its
+purpose is navigation and reconciliation. It need not replace the
+history or summarize every turn.</p>
+<h2 id="roles-in-the-persistent-review-workflow">Roles in the Persistent Review Workflow<a class="headerlink" href="#roles-in-the-persistent-review-workflow" title="Permanent link">&para;</a></h2>
+<p>The workflow presented here for <code>ctx</code> adapts an existing practitioner
+process that prioritizes "<em>continuity</em>" over rule-of-thumb context cutoffs.
+This is a public adaptation, not a claim that its benefits were measured
+while developing <code>ctx</code>.</p>
+<p>The proposed setup uses one <strong>implementation agent</strong>, three
+<strong>reviewer perspectives</strong>, and a <strong>human decision-maker</strong>.</p>
+<p>The policy is to keep the same agent conversations across stages rather
+than reset them at an arbitrary token threshold. Harnesses may compact
+their inputs; consequential decisions remain in durable artifacts.
+Persistence is the intended review setup, not a verified account of every
+external reviewer's session history.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Responsibility</th>
+<th>Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Human product owner</td>
+<td>Decide product tradeoffs, coordinate artifact transfers, approve each stage, accept residual findings.</td>
+<td>Model agreement does not replace approval.</td>
+</tr>
+<tr>
+<td>Implementation agent</td>
+<td>Inspect its checkout, author planning and specification artifacts, implement approved work, validate it, and record responses to findings.</td>
+<td>Stop at every agreed gate; do not silently expand scope.</td>
+</tr>
+<tr>
+<td>External reviewer A</td>
+<td>Independently critique the stage artifact using its retained history and available evidence.</td>
+<td>Report evidence and uncertainty; do not assume access it lacks.</td>
+</tr>
+<tr>
+<td>External reviewer B</td>
+<td>Provide another model perspective under the same review contract.</td>
+<td>Do not defer to A's conclusions.</td>
+</tr>
+<tr>
+<td>Persistent steering reviewer</td>
+<td>Preserve product intent, inspect revised artifacts and code, reconcile findings with decisions, and steer further correction.</td>
+<td>Reconsider its own prior advice when evidence contradicts it.</td>
+</tr>
+</tbody>
+</table>
+<p>"Oracle" is a convenient role name, not a claim of infallibility. These
+reviewers generate hypotheses, identify contradictions, inspect
+evidence, and suggest corrections. Their claims remain reviewable.</p>
+<p>Different frontier models are intended to broaden perspective. That
+choice does not establish statistical independence: they may share
+training influences, conventional assumptions, or blind spots.</p>
+<p>Persistent reviewers also acquire a shared project history over time.
+The safeguards below focus on how judgments are formed and tested.</p>
+<h2 id="the-five-stages-and-their-hard-stops">The Five Stages and Their Hard Stops<a class="headerlink" href="#the-five-stages-and-their-hard-stops" title="Permanent link">&para;</a></h2>
+<p>The workflow can use any suitable specification tools. In this public
+adaptation, <a href="../../recipes/scrutinizing-a-plan/"><code>/ctx-plan</code></a> produces a debated brief,
+<a href="../../recipes/design-before-coding/"><code>/ctx-spec</code></a> produces a specification intent, and a
+specification engine produces the full bundle. These command names
+describe the adaptation. GitHub Spec Kit is one available toolkit for
+specification-driven development; this
+article's complete review protocol is an additional operating
+procedure. <a href="https://github.com/github/spec-kit">GitHub Spec Kit</a></p>
+<h3 id="stage-1-debate-the-problem">Stage 1: Debate the Problem<a class="headerlink" href="#stage-1-debate-the-problem" title="Permanent link">&para;</a></h3>
+<p>The developer and implementation agent examine the problem before
+committing to a design. The resulting brief explains the intended
+experience, constraints, alternatives, failure modes, validation
+approach, and open decisions.</p>
+<p>Reviewers should ask whether the problem is correctly framed, whether
+proposed complexity follows from actual needs, and whether an
+attractive option was dismissed without sufficient evidence. They
+should identify hidden assumptions and ask what would disprove them.</p>
+<p>The agent stops before creating the specification intent. A finished
+brief is not permission to proceed. The human approves advancement
+after findings have been addressed or explicitly accepted.</p>
+<h3 id="stage-2-establish-the-specification-intent">Stage 2: Establish the Specification Intent<a class="headerlink" href="#stage-2-establish-the-specification-intent" title="Permanent link">&para;</a></h3>
+<p>The agent converts the approved debate into a document that separates
+settled requirements from proposals, assumptions, and unresolved
+choices.</p>
+<p>Review concentrates on information preservation. Did a conditional
+preference become a mandatory requirement? Did a rejected approach
+return through different wording? Did an important exclusion
+disappear? Does every consequential ambiguity have an owner and a path
+to resolution?</p>
+<p>The intent should be structured enough to guide a specification engine
+without pretending that open decisions are settled. The agent stops
+before that handoff.</p>
+<h3 id="stage-3-review-the-full-specification-bundle">Stage 3: Review the Full Specification Bundle<a class="headerlink" href="#stage-3-review-the-full-specification-bundle" title="Permanent link">&para;</a></h3>
+<p>The next artifact includes the specification, design or plan,
+contracts, tasks, and consistency analysis appropriate to the project.</p>
+<p>Review the complete bundle together. An individually reasonable task
+list can contradict a contract. A design can satisfy the feature
+description while violating an operational constraint. A test plan can
+verify examples without covering the required failure behavior.</p>
+<p>Reviewers should trace consequential requirements through the proposed
+design and validation approach. The human approves the bundle version
+before implementation begins.</p>
+<p>This stage is particularly important because three reviewers examining
+code against an incomplete specification can all miss the same lost
+requirement. Reviewing the transformation from intent to bundle helps
+expose that loss earlier.</p>
+<h3 id="stage-4-implement-the-approved-bundle">Stage 4: Implement the Approved Bundle<a class="headerlink" href="#stage-4-implement-the-approved-bundle" title="Permanent link">&para;</a></h3>
+<p>The implementation agent continues in its established session. It
+writes code, tests, documentation, and validation evidence against the
+approved baseline.</p>
+<p>When implementation exposes an ambiguity, the agent records it. A local
+implementation choice within the approved design can be resolved
+normally. A change to product behavior, a binding constraint, or an
+approved contract returns for explicit decision.</p>
+<p>The agent stops with a complete implementation package. Review checks
+both specification compliance and the intended developer experience.
+Reviewers inspect actual source and behavior where their tools permit;
+an author's summary is only a starting point.</p>
+<p>For work with an expensive architectural uncertainty, insert an
+optional review after the first meaningful implementation slice. This
+is a risk-based checkpoint, not a context reset. It is unnecessary for
+every bounded change.</p>
+<h3 id="stage-5-converge-through-verified-corrections">Stage 5: Converge Through Verified Corrections<a class="headerlink" href="#stage-5-converge-through-verified-corrections" title="Permanent link">&para;</a></h3>
+<p>The agent evaluates findings, makes justified corrections, updates
+evidence, and stops again. Reviewers verify those corrections and
+inspect affected behavior for regressions.</p>
+<p>Completion requires explicit human acceptance. Unresolved findings
+remain visible, including their impact and the reason they are accepted
+or deferred. Copying work to another environment, opening a pull
+request, publishing, or deploying remain separate actions governed by
+the permissions of the project. Acceptance of an implementation does
+not implicitly authorize every downstream action.</p>
+<h2 id="the-review-loop-step-by-step">The Review Loop, Step by Step<a class="headerlink" href="#the-review-loop-step-by-step" title="Permanent link">&para;</a></h2>
+<p>At each checkpoint, use the following sequence.</p>
+<ol>
+<li><strong>Freeze the candidate.</strong> The implementation agent identifies the
+   artifact version or commit, supplies the supporting evidence, and
+   stops.</li>
+<li><strong>Obtain two separate critiques.</strong> The human submits that candidate
+   to external reviewers A and B. Each records its findings before
+   seeing the other's current conclusions.</li>
+<li><strong>Evaluate the feedback.</strong> The implementation agent assesses each
+   finding, revises where justified, and records dispositions. Feedback
+   is not automatically a requirement.</li>
+<li><strong>Synchronize the revision.</strong> The human transfers the exact revised
+   artifact and relevant evidence into the steering reviewer's
+   workspace.</li>
+<li><strong>Review the revised candidate.</strong> The steering reviewer inspects it
+   against requirements, prior decisions, source, and evidence. Where
+   practical, provide a clean copy of the revised artifact, with review
+   dispositions available separately. It forms its initial findings
+   before reading those conclusions, then performs reconciliation.</li>
+<li><strong>Correct and verify.</strong> The agent addresses findings and stops.
+   Material revisions may return to the external reviewers. Repeat
+   until the completion criteria are met.</li>
+<li><strong>Approve the next stage.</strong> The human explicitly authorizes
+   advancement. A favorable review never opens the gate automatically.</li>
+</ol>
+<p>This deliberately combines two early critiques with a later review of
+the revised work. It should be described accurately: it provides three
+perspectives, but the third perspective is examining a later candidate.
+If prior reviewers' verdicts or their dispositions remain inline, the
+third reviewer sees those conclusions during its initial read. Its
+reasoning can still add value, but that read is not blind to the earlier
+reviews. Separating dispositions where feasible reduces this exposure;
+the revisions themselves still reflect earlier feedback.</p>
+<p>For an experiment that measures reviewer agreement, give all three
+reviewers the same frozen artifact before any revisions. For day-to-day
+engineering, sequential review can be preferable because the later
+reviewer checks what actually changed. Neither arrangement requires
+erasing prior project context.</p>
+<h2 id="independence-without-amnesia">Independence Without Amnesia<a class="headerlink" href="#independence-without-amnesia" title="Permanent link">&para;</a></h2>
+<p>Independent review is often conflated with a fresh session. </p>
+<p>They are not: They are different properties.</p>
+<p>A reviewer can remember the entire product discussion and still derive
+its current findings without copying another reviewer's conclusions.
+Conversely, a fresh reviewer can be strongly anchored by an
+implementation summary that explains why the code is supposedly
+correct.</p>
+<p>The useful separation is between <strong>shared facts</strong> and <strong>shared
+verdicts</strong>. Reviewers should receive the same authoritative
+requirements, current decisions, and candidate version. They should
+first reach their own conclusions about the current candidate. After
+that, sharing findings is desirable: it allows errors to be challenged
+and omissions to be discovered.</p>
+<p>Persistent reviewers can contribute a form of continuity that fresh
+reviewers lack. They can recognize that a newly proposed
+"simplification" reintroduces a previously rejected failure mode. They
+can also become attached to recommendations they helped create.</p>
+<p>Make that vulnerability explicit in their instructions: earlier advice
+is revisable. When a defect is found, classify whether it belongs to
+the implementation, the specification, a prior assumption, or the
+review itself. Do not force every problem into "the implementer failed
+to follow the plan." Sometimes the plan is wrong.</p>
+<div class="admonition tip">
+<p class="admonition-title">Evidence Outweighs Votes</p>
+<p>Avoid majority voting as the primary resolution method. One
+reviewer with a reproducible counterexample can outweigh two
+reviewers who found no issue. Three reviewers repeating the same
+unsupported concern do not turn it into evidence.</p>
+</div>
+<p>The purpose of multiple perspectives is to improve the search for
+defects and alternative interpretations. Resolution still depends on
+reasoning, evidence, and product authority.</p>
+<h2 id="the-reviewable-package">The Reviewable Package<a class="headerlink" href="#the-reviewable-package" title="Permanent link">&para;</a></h2>
+<p>Long conversations become easier to use when the current state is
+explicit. A lightweight checkpoint package should include:</p>
+<ul>
+<li>The stage, candidate identifier, and approved baseline it derives
+  from.</li>
+<li>The artifacts under review, including exact code revision where
+  applicable.</li>
+<li>Current decisions, superseded assumptions, and unresolved questions.</li>
+<li>A change summary relative to the previous reviewed version.</li>
+<li>Validation commands, relevant environment information, outcomes, and
+  known gaps.</li>
+<li>Findings and dispositions from earlier rounds, available for
+  reconciliation.</li>
+<li>The action currently authorized and the action that still requires
+  approval.</li>
+</ul>
+<p><strong>Keep the package proportional to the work</strong>: </p>
+<p>A small change can use a single Markdown file plus a commit. A large 
+specification bundle may need an index. There is no benefit in generating 
+elaborate tracking material that nobody reads.</p>
+<p>The history remains available as supporting context. The package tells
+participants where current authority resides.</p>
+<h3 id="example-checkpoint-record">Example Checkpoint Record<a class="headerlink" href="#example-checkpoint-record" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">implementation-review</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">candidate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;exact-commit-sha&gt;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">approved_spec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;spec-bundle-version&gt;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">decision_record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;decision-record-version&gt;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">authorized_action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">address findings within approved scope</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">next_gate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">human acceptance of implementation</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">validation</span><span class="p">:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;exact-command&gt;</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;relevant-runtime-and-platform&gt;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">result</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;pass-fail-or-blocked&gt;</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nt">known_gaps</span><span class="p">:</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;behavior-not-yet-verified&gt;</span>
+</span></code></pre></div>
+<p>These are illustrative fields, not a tool-specific schema. Fill them
+with actual evidence. A command that the agent suggests running is
+different from a command it ran, and both are different from a command
+a reviewer reproduced independently.</p>
+<h3 id="example-finding-record">Example Finding Record<a class="headerlink" href="#example-finding-record" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ID: R-017
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Candidate: &lt;exact-commit-sha&gt;
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Category: defect
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Impact: failed update can remove the working installation
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Requirement: REQ-12; approved decision D-04
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Evidence: &lt;code location and failing reproduction&gt;
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Expected: prior installation remains usable after update failure
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Observed: prior installation is removed before replacement succeeds
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Requested action: preserve the prior installation through failure
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Disposition: accepted
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Correction: &lt;correcting-commit-sha&gt;
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Verification: &lt;reproduction now passes; affected checks and results&gt;
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Status: verified
+</span></code></pre></div>
+<p>A useful finding explains an observable problem. It does not need to
+prescribe the entire implementation. Allow the author to choose a sound
+correction within the approved constraints.</p>
+<p>Use dispositions such as accepted, rejected with evidence, duplicate,
+deferred with approval, or awaiting a product decision. "Fixed" should
+identify a correction. "Verified" should identify the evidence that the
+correction works.</p>
+<h2 id="review-the-behavior-not-just-the-documents">Review the Behavior, Not Just the Documents<a class="headerlink" href="#review-the-behavior-not-just-the-documents" title="Permanent link">&para;</a></h2>
+<p>The fictional pinned-version installer illustrates the difference
+between compliance language and observable behavior.</p>
+<p>The implementation may contain a confirmation prompt and therefore
+appear to satisfy "updates require explicit action." But perhaps
+invoking a read-only listing command refreshes a cache that replaces
+the installed payload. The prompt exists, tests pass, and the intended
+guarantee is still broken.</p>
+<p>A reviewer should inspect the paths that can change the installation,
+then exercise the relevant scenario. It should ask whether an update
+failure preserves the previous working state, whether an offline
+operation behaves as intended, and whether a normal user can tell which
+version will execute.</p>
+<p>The exact tests depend on the feature. The general review questions are
+reusable:</p>
+<ol>
+<li>Does the behavior satisfy the approved requirement?</li>
+<li>Does it preserve the constraint that motivated that requirement?</li>
+<li>Does it behave correctly on the failure paths that matter?</li>
+<li>Can the intended user complete the task without hidden assumptions?</li>
+<li>Is the available evidence sufficient to answer those questions?</li>
+</ol>
+<p>Tests authored alongside an implementation may reproduce the same
+interpretation error. Reviewers should derive at least the
+consequential checks from requirements and failure scenarios rather
+than merely read test names. Where appropriate, they can add a
+counterexample, exercise an integration boundary, or inspect an
+invariant directly.</p>
+<p>A reviewer without execution access should say that its review is
+static. A reviewer that receives only a diff should state what
+repository context is missing. Review coverage is a fact to report, not
+something to imply through confident language.</p>
+<h2 id="preventing-drift-and-endless-convergence">Preventing Drift and Endless Convergence<a class="headerlink" href="#preventing-drift-and-endless-convergence" title="Permanent link">&para;</a></h2>
+<p>Repeated review can improve an artifact. It can also produce
+unnecessary churn or normalize an incorrect design. The workflow needs
+explicit stopping and reopening rules.</p>
+<p>Classify comments before acting on them. A defect violates an approved
+expectation or exposes an actual failure. A scope question requires a
+product decision. An optional improvement may be worthwhile later. A
+style preference is not automatically a blocker.</p>
+<p>Finish a stage when blocking findings are resolved or explicitly
+accepted, the relevant acceptance criteria have supporting evidence,
+corrections have been checked for affected regressions, and the human
+approves the candidate. Reviewers may retain documented reservations;
+universal enthusiasm is not required.</p>
+<p>Reopen affected approvals after material changes. If a correction
+alters a public contract, it may require renewed specification review.
+If it only repairs an implementation branch to meet the existing
+contract, targeted verification may suffice. Judge the affected
+behavior and assumptions rather than mechanically rerunning every
+review.</p>
+<p>Record important rejected findings, too. Otherwise a later reviewer may
+reopen the same concern without recognizing the evidence that settled
+it. Preserve the possibility of reconsideration when new evidence
+appears.</p>
+<p>If review rounds produce contradictory requests, repeatedly change the
+same decision, or stop yielding meaningful evidence, pause the loop.
+Identify the disputed assumption and ask what observation or product
+decision would resolve it. Another general request to "review again"
+may only generate more prose.</p>
+<h2 id="when-to-keep-restructure-or-reset-context">When to Keep, Restructure, or Reset Context<a class="headerlink" href="#when-to-keep-restructure-or-reset-context" title="Permanent link">&para;</a></h2>
+<p>The policy is conditional:</p>
+<p><strong>Persistent context is useful while it supports reliable work</strong>. \</p>
+<p>It is <strong>NOT</strong> a commitment to retain every token under all circumstances.</p>
+<table>
+<thead>
+<tr>
+<th>Observed situation</th>
+<th>First response</th>
+<th>When a reset or handoff becomes reasonable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The agent uses current decisions correctly and produces verifiable progress.</td>
+<td>Continue. Keep current artifacts identifiable.</td>
+<td>No reset is justified solely by occupancy.</td>
+</tr>
+<tr>
+<td>An obsolete proposal reappears.</td>
+<td>Point to the current decision and explicitly mark supersession.</td>
+<td>The agent repeatedly returns to the obsolete premise despite correction.</td>
+</tr>
+<tr>
+<td>The session contains large amounts of reproducible logs or obsolete source snapshots.</td>
+<td>Use targeted retrieval and available pruning or compaction controls.</td>
+<td>The harness cannot maintain a usable input and a prepared handoff is more reliable.</td>
+</tr>
+<tr>
+<td>Reviewers disagree because they examined different versions.</td>
+<td>Synchronize the exact candidate.</td>
+<td>Resetting is unnecessary unless other problems remain.</td>
+</tr>
+<tr>
+<td>Implementation repeatedly fails the same clear invariant.</td>
+<td>Inspect the failed assumption and require a concrete reproduction.</td>
+<td>A fresh implementer or focused diagnostic session can test another interpretation.</td>
+</tr>
+<tr>
+<td>The project moves to an unrelated task.</td>
+<td>Prepare the relevant state for that task.</td>
+<td>Historical detail adds little useful information.</td>
+</tr>
+<tr>
+<td>Context limits or compaction threaten necessary history.</td>
+<td>Preserve decisions, evidence, and retrieval pointers explicitly.</td>
+<td>Continue from a verified handoff if needed.</td>
+</tr>
+</tbody>
+</table>
+<p>An uninterrupted conversation does not guarantee that every original
+token reaches the model. Harnesses can manage long conversations
+through compaction; Anthropic documents this explicitly. Record
+relevant compaction events when evaluating the process, and keep
+consequential decisions in durable artifacts even when no manual reset
+occurs.
+<a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">Claude context-window documentation</a></p>
+<p>A prepared handoff should contain the approved baseline, decision
+rationale, superseded assumptions, current code version, verification
+state, open findings, and next authorized action. If that handoff is
+sufficiently complete, a fresh session may work very well. The argument
+against arbitrary resets is not an argument against good handoffs.</p>
+<p>An optional fresh reviewer can also be useful for a narrow question:
+"Does this contract make sense on its own?" or "Can a developer follow
+this installation guide without the debate?" That tests artifact
+self-sufficiency while persistent reviewers continue checking
+historical fidelity.</p>
+<h2 id="the-economics-accepted-work-is-the-unit-that-matters">The Economics: Accepted Work Is the Unit That Matters<a class="headerlink" href="#the-economics-accepted-work-is-the-unit-that-matters" title="Permanent link">&para;</a></h2>
+<p>Three persistent reviewers, repeated revisions, and human coordination
+consume time and money. The relevant question is whether they prevent
+enough defects, misunderstanding, and rework to justify that cost for
+the task.</p>
+<p>A useful accounting boundary is:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Total cost = implementation
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>           + review
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>           + correction
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>           + human coordination
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>           + later rework
+</span></code></pre></div>
+<p>This is an accounting structure, not a measured result. The final term
+is often hardest to estimate. Report what is observed and avoid
+inventing savings for hypothetical defects.</p>
+<p>Track model charges across all participants, tool and infrastructure
+costs when material, elapsed time, and active human minutes. Track
+accepted results and failures, not only tokens per successful response.
+A workflow that creates cheaper drafts but requires repeated
+reconstruction of intent may cost more to finish. A workflow that
+spends heavily on reviews of a trivial change may simply be wasteful.</p>
+<p>Caching can change billing without establishing semantic reliability.
+Likewise, a shorter context can lower input cost without improving the
+final result. Read actual usage records and pricing for the environment
+in use rather than infer cost from the visible conversation length.</p>
+<p>The full process is most defensible when requirements are ambiguous,
+design mistakes are expensive, or the feature crosses important
+contracts. Mechanical edits and isolated, readily testable fixes may
+justify fewer checkpoints. Three reviewers are a concrete configuration
+of this workflow, not a universal minimum for responsible development.</p>
+<h2 id="how-to-test-whether-the-approach-is-better">How to Test Whether the Approach Is Better<a class="headerlink" href="#how-to-test-whether-the-approach-is-better" title="Permanent link">&para;</a></h2>
+<p>A practitioner can reasonably prefer this process before running a
+formal study. A claim that it is broadly superior needs a comparison
+that separates continuity from handoff quality and review effort.</p>
+<p>Start from the same repository state and approved specification
+checkpoint. Compare at least these implementation conditions:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Implementer input</th>
+<th>What it helps measure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Persistent session</td>
+<td>Existing debate, decisions, artifacts, and current implementation instructions.</td>
+<td>Value and cost of accumulated history.</td>
+</tr>
+<tr>
+<td>Fresh session with full handoff</td>
+<td>Spec, decision rationale, exclusions, superseded assumptions, and relevant repository access.</td>
+<td>Whether curated state can preserve the useful information.</td>
+</tr>
+<tr>
+<td>Fresh session with spec only</td>
+<td>Approved specification and normal repository access.</td>
+<td>Practical loss when relying on the spec alone.</td>
+</tr>
+</tbody>
+</table>
+<p>Hold the downstream review procedure constant for the primary
+comparison. Otherwise, a persistent implementer with three reviewers
+versus a fresh implementer without review measures several changes at
+once.</p>
+<p>Use multiple tasks and repeated runs where affordable. Include both
+decisions that depend on historical rationale and tasks whose
+specification is self-sufficient. Fix model versions and record harness
+configuration, reasoning settings, tool permissions, context
+construction, and compaction behavior. When those cannot be fixed,
+report the variation.</p>
+<p>Predefine acceptance criteria and evaluation checks before examining
+the results. Where practical, have a final evaluator inspect anonymized
+artifacts without knowing which condition produced them. Keep those
+evaluation checks separate from the implementer's own tests. Account
+for human learning across runs: a coordinator who sees the first
+solution may unintentionally steer the second more effectively.</p>
+<p>Useful outcome measures include acceptance rate within budget,
+consequential defects remaining at evaluation, requirements omitted or
+misinterpreted, accepted review findings, false-positive review burden,
+revision rounds, human effort, total cost, and elapsed time. Include
+unsuccessful runs; reporting only the cost of successful tasks hides an
+important part of the tradeoff.</p>
+<p>A second experiment can compare persistent and fresh reviewers while
+holding implementation artifacts constant. A third can compare one
+versus three reviewers. These isolate whether gains come from retained
+context, review diversity, extra inference effort, or the human's
+coordination.</p>
+<p>The strongest result may be conditional: persistence helps most when
+unresolved implementation choices depend on accumulated rationale,
+while a complete handoff works just as well for stable, explicit
+contracts. That would be a useful finding rather than a failure to
+discover a universal winner.</p>
+<h2 id="a-reusable-operating-contract">A Reusable Operating Contract<a class="headerlink" href="#a-reusable-operating-contract" title="Permanent link">&para;</a></h2>
+<p>The following instructions condense the procedure into something a
+team can adopt. The baseline and candidate placeholders must be filled
+at each checkpoint.</p>
+<h3 id="for-the-implementation-agent">For the Implementation Agent<a class="headerlink" href="#for-the-implementation-agent" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Own the planning artifacts, specification, implementation, and validation.
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Retain the useful project history across stages.
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Current stage: &lt;stage&gt;
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Approved baseline: &lt;artifact version or commit&gt;
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Candidate under review: &lt;artifact version or commit&gt;
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Authorized action: &lt;specific activity&gt;
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Next approval gate: &lt;gate&gt;
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Use the approved baseline and approved amendments as the current contract.
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Use earlier discussion as rationale. Surface conflicts or missing binding
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>requirements; do not silently resolve them by changing product scope.
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>At each checkpoint, produce the artifact and supporting evidence, then stop.
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Evaluate feedback rather than accepting it automatically. Record each
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>material finding's disposition and the evidence supporting that decision.
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>After corrections, identify the new candidate and update validation evidence.
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Do not treat artifact completion or favorable review as approval to advance.
+</span></code></pre></div>
+<h3 id="for-each-reviewer">For Each Reviewer<a class="headerlink" href="#for-each-reviewer" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Review the exact candidate against the approved requirements, current
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>decisions, intended user experience, and available source and evidence.
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Retain useful history, including reasons for rejected alternatives.
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Form your initial current-round findings before reading other reviewers'
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>current conclusions where the review sequence permits. Then reconcile.
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Report concrete defects, scope questions, and optional improvements
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>separately. For a defect, identify impact, evidence, the violated expectation,
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>and a reproduction or verification method where possible.
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Reconsider your own earlier recommendations when evidence contradicts them.
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>Distinguish implementation defects from specification defects and invalid
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>assumptions. Do not invent new scope as a review fix.
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>State review coverage and limitations. Do not claim checks you did not run.
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Verify corrections against the revised candidate and inspect affected
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>behavior for regressions. Leave unresolved findings explicit.
+</span></code></pre></div>
+<h3 id="for-the-human-coordinator">For the Human Coordinator<a class="headerlink" href="#for-the-human-coordinator" title="Permanent link">&para;</a></h3>
+<p>Maintain one identifiable current candidate per checkpoint. Transfer
+exact versions, preserve the review record, decide product questions,
+and approve stage transitions explicitly. Require evidence for
+consequential claims, including claims made by reviewers. When a
+concern remains unresolved, accept it consciously or keep the gate
+closed.</p>
+<p>These instructions do not eliminate judgment. They give that judgment a
+stable structure.</p>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>Long-context degradation is a legitimate engineering concern. The
+research shows that models can struggle with information placement,
+increasing input length, competing details, and assumptions accumulated
+across turns. Newer results also show that capability can improve
+substantially. Neither observation establishes a universal token count
+at which a coherent development session should restart.</p>
+<p>A design conversation contains potentially valuable information:
+reasons, exclusions, failed alternatives, and the conditions behind
+decisions. Resetting can reduce interference, but it can also discard
+that information. The right comparison is between the reliability of
+retained history and the completeness of a prepared replacement
+context.</p>
+<p>For substantial specification-driven work, a defensible approach is to
+preserve the informed implementer and persistent reviewers, make
+current authority explicit, review exact artifact versions, require
+concrete evidence, and retain human control over stage transitions.
+Multiple models broaden the search for problems; their agreement does
+not prove correctness. Tests and code inspection provide evidence;
+their coverage still needs examination.</p>
+<p>The proposed workflow pays for continuity and repeated scrutiny with
+additional model use and human coordination. Whether that investment is
+worthwhile depends on the work and should ultimately be measured
+through accepted outcomes, defects, rework, time, and cost.</p>
+<div class="admonition quote">
+<p class="admonition-title"><strong>If You Remember One Thing from This Post...</strong></p>
+<p>Keep the context when it helps. Repair its organization when
+authority becomes unclear. Prepare a handoff when a fresh session
+serves the task better. Let observed behavior and verified results
+determine the intervention.</p>
+</div>
+<h2 id="where-this-connects">Where This Connects<a class="headerlink" href="#where-this-connects" title="Permanent link">&para;</a></h2>
+<p>This post argues against one reflex; earlier field notes covered the
+surrounding terrain.</p>
+<ul>
+<li><a href="../2026-02-03-the-attention-budget/">The Attention Budget</a> explained why more context is
+  not automatically better. This post is the other half of that
+  argument: less context is not automatically safer, and the token
+  count alone does not tell you which situation you are in.</li>
+<li><a href="../2026-06-21-the-cheapest-patch-was-the-most-expensive/">The Cheapest Patch Was the Most Expensive</a> measured
+  accepted-patch cost across seven runs. The accounting boundary in
+  <a href="#the-economics-accepted-work-is-the-unit-that-matters">The Economics: Accepted Work Is the Unit That Matters</a>
+  is the same lens, applied to the reset decision instead of the model
+  choice.</li>
+<li><a href="../2026-02-17-context-as-infrastructure/">Context as Infrastructure</a> made the case that decision
+  history should be durable rather than conversational. The baseline
+  note and checkpoint package here are that idea at checkpoint
+  granularity.</li>
+<li><a href="../2026-02-17-code-is-cheap-judgment-is-not/">Code Is Cheap. Judgment Is Not.</a> separated production
+  from judgment. <a href="#the-review-loop-step-by-step">The Review Loop, Step by Step</a>
+  is a structure for that judgment: the reviewers search for defects,
+  but the human still opens the gate.</li>
+</ul>
+<p>In tool form, <code>ctx</code> ships the first two stages: <a href="../../recipes/scrutinizing-a-plan/">Scrutinizing a
+Plan</a> is the debated brief, and <a href="../../recipes/design-before-coding/">Design Before
+Coding</a> walks the brief through spec and implementation.
+The review protocol above is what wraps around them.</p>
+<h2 id="references-and-further-reading">References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permanent link">&para;</a></h2>
+<p>The sources below support specific parts of the argument. None
+evaluates the complete workflow in this article. Publication years
+refer to the cited research or release; product documentation is a
+living source consulted for this article on September 12, 2026.</p>
+<ol>
+<li>
+<p><strong>Nelson F. Liu et al. (2023). <a href="https://arxiv.org/abs/2307.03172">Lost in the Middle: How Language
+   Models Use Long Contexts</a>.</strong>
+   Research on the effect of relevant-information placement in
+   long-context question answering and retrieval. Useful for
+   understanding why presence in context does not guarantee reliable
+   use.</p>
+</li>
+<li>
+<p><strong>Cheng-Ping Hsieh et al. (2024). <a href="https://arxiv.org/abs/2404.06654">RULER: What's the Real Context
+   Size of Your Long-Context Language
+   Models?</a>.</strong> COLM 2024. A broader
+   synthetic evaluation covering retrieval variations, tracing, and
+   aggregation. Useful for distinguishing nominal window size from
+   performance on demanding tasks.</p>
+</li>
+<li>
+<p><strong>Kelly Hong, Anton Troynikov, and Jeff Huber (2025). <a href="https://www.trychroma.com/research/context-rot">Context Rot:
+   How Increasing Input Tokens Impacts LLM
+   Performance</a>.</strong>
+   Chroma technical report, July 14, 2025. Controlled experiments on
+   input length and context composition. The authors provide
+   <a href="https://github.com/chroma-core/context-rot">replication code and experiment
+   materials</a>.</p>
+</li>
+<li>
+<p><strong>Philippe Laban et al. (2025). <a href="https://arxiv.org/abs/2505.06120">LLMs Get Lost In Multi-Turn
+   Conversation</a>.</strong> A simulated
+   comparison of single-turn and multi-turn task specification.
+   Relevant to premature assumptions and difficulty recovering from
+   earlier solutions; not a direct coding-session threshold study.</p>
+</li>
+<li>
+<p><strong>Anthropic (2026). <a href="https://www.anthropic.com/news/claude-opus-4-6">Introducing Claude Opus
+   4.6</a>.</strong> February 5,</p>
+</li>
+<li>
+<p>Primary vendor source for the cited MRCR v2 comparison. Read
+   its benchmark claims as model- and evaluation-specific evidence.</p>
+</li>
+<li>
+<p><strong>Anthropic (2025). <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective Context Engineering for AI
+   Agents</a>.</strong>
+   September 29, 2025. Engineering guidance on context selection,
+   retrieval, compaction, and structured memory. Guidance rather than a
+   controlled test of this article's process.</p>
+</li>
+<li>
+<p><strong>Yilun Du et al. (2023). <a href="https://arxiv.org/abs/2305.14325">Improving Factuality and Reasoning in
+   Language Models through Multiagent
+   Debate</a>.</strong> Research supporting
+   investigation of multiple model perspectives, with different tasks
+   and procedures from the workflow described here.</p>
+</li>
+<li>
+<p><strong>Lianmin Zheng et al. (2023). <a href="https://arxiv.org/abs/2306.05685">Judging LLM-as-a-Judge with MT-Bench
+   and Chatbot Arena</a>.</strong> NeurIPS 2023
+   Datasets and Benchmarks. Discusses model judges and biases relevant
+   to interpreting automated judgments. Human-preference agreement
+   should not be equated with software correctness.</p>
+</li>
+<li>
+<p><strong>Jie Huang et al. (2024). <a href="https://arxiv.org/abs/2310.01798">Large Language Models Cannot
+   Self-Correct Reasoning Yet</a>.</strong>
+   ICLR 2024; initially posted in 2023. Examines intrinsic
+   self-correction without external feedback. Useful for distinguishing
+   unsupported reconsideration from correction informed by additional
+   evidence.</p>
+</li>
+<li>
+<p><strong>Anthropic. <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">Context
+    Windows</a>.</strong>
+    Living platform documentation. Relevant to the difference between a
+    continuing conversation and the actual context supplied to a model,
+    including compaction.</p>
+</li>
+<li>
+<p><strong>GitHub. <a href="https://github.com/github/spec-kit">Spec Kit</a>.</strong> Official
+    repository and documentation for a specification-driven development
+    toolkit. A possible tool for producing and implementing
+    specification artifacts; the persistent multi-reviewer protocol in
+    this article is an additional process.</p>
+</li>
+</ol>
+<hr />
+<p><em>This post is part of the <a href="../"><code>ctx</code> field notes</a> series,
+documenting what we learn building persistent context infrastructure
+for AI coding sessions. The workflow described here is an engineering
+proposal grounded in published research and an existing practitioner
+process, not a controlled experimental result.</em></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026&ndash;present Context contributors.<br>
+<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code>'s code</a> is distributed under
+<a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
+The documentation on this website is distributed under
+<a href="https://creativecommons.org/licenses/by/4.0/deed.en"><strong>CC-BY-4.0</strong></a>.
+
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/ActiveMemory/ctx" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://ctx.ist/discord" target="_blank" rel="noopener" title="ctx.ist" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M492.5 69.8c-.2-.3-.4-.6-.8-.7-38.1-17.5-78.4-30-119.7-37.1-.4-.1-.8 0-1.1.1s-.6.4-.8.8c-5.5 9.9-10.5 20.2-14.9 30.6-44.6-6.8-89.9-6.8-134.4 0-4.5-10.5-9.5-20.7-15.1-30.6-.2-.3-.5-.6-.8-.8s-.7-.2-1.1-.2C162.5 39 122.2 51.5 84.1 69c-.3.1-.6.4-.8.7C7.1 183.5-13.8 294.6-3.6 404.2c0 .3.1.5.2.8s.3.4.5.6c44.4 32.9 94 58 146.8 74.2.4.1.8.1 1.1 0s.7-.4.9-.7c11.3-15.4 21.4-31.8 30-48.8.1-.2.2-.5.2-.8s0-.5-.1-.8-.2-.5-.4-.6-.4-.3-.7-.4c-15.8-6.1-31.2-13.4-45.9-21.9-.3-.2-.5-.4-.7-.6s-.3-.6-.3-.9 0-.6.2-.9.3-.5.6-.7c3.1-2.3 6.2-4.7 9.1-7.1.3-.2.6-.4.9-.4s.7 0 1 .1c96.2 43.9 200.4 43.9 295.5 0 .3-.1.7-.2 1-.2s.7.2.9.4c2.9 2.4 6 4.9 9.1 7.2.2.2.4.4.6.7s.2.6.2.9-.1.6-.3.9-.4.5-.6.6c-14.7 8.6-30 15.9-45.9 21.8-.2.1-.5.2-.7.4s-.3.4-.4.7-.1.5-.1.8.1.5.2.8c8.8 17 18.8 33.3 30 48.8.2.3.6.6.9.7s.8.1 1.1 0c52.9-16.2 102.6-41.3 147.1-74.2.2-.2.4-.4.5-.6s.2-.5.2-.8c12.3-126.8-20.5-236.9-86.9-334.5zm-302 267.7c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.4 59.2-52.8 59.2m195.4 0c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.2 59.2-52.8 59.2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://ctx.ist/feed.xml" target="_blank" rel="noopener" title="ctx.ist" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32 229.8 0 416 186.2 416 416 0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96 14.3 96 0 81.7 0 64m0 352a64 64 0 1 1 128 0 64 64 0 1 1-128 0m32-256c159.1 0 288 128.9 288 288 0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224-17.7 0-32-14.3-32-32s14.3-32 32-32"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7f30b55.min.js"></script>
+      
+    
+  </body>
+</html>

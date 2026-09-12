@@ -2480,9 +2480,9 @@ If your team has a different workflow and finds these noisy:</p>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>check-ceremonies<span class="w"> </span>wrapup
 </span></code></pre></div>
 <p>Then empty each file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.context/hooks/messages/check-ceremonies/both.txt
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.context/hooks/messages/check-ceremonies/remember.txt
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.context/hooks/messages/check-ceremonies/wrapup.txt
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">""</span><span class="w"> </span>&gt;<span class="w"> </span>.context/hooks/messages/check-ceremonies/both.txt
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">""</span><span class="w"> </span>&gt;<span class="w"> </span>.context/hooks/messages/check-ceremonies/remember.txt
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">""</span><span class="w"> </span>&gt;<span class="w"> </span>.context/hooks/messages/check-ceremonies/wrapup.txt
 </span></code></pre></div>
 <p>The hooks still track ceremony usage internally, but they no longer emit
 any visible output.</p>
@@ -2494,8 +2494,8 @@ JavaScript project:</p>
 </span></code></pre></div>
 <p>Replace with:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Commit succeeded. 1. Offer context capture to the user: Decision (design
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>choice?), Learning (gotcha?), or Neither. 2. Ask the user: &quot;Want me to
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>run npm test and eslint before you push?&quot; Do NOT push. The user pushes
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>choice?), Learning (gotcha?), or Neither. 2. Ask the user: "Want me to
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>run npm test and eslint before you push?" Do NOT push. The user pushes
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>manually.
 </span></code></pre></div>
 <hr />

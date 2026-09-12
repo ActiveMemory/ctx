@@ -2178,9 +2178,9 @@ backup.</p>
 <h3 id="1-cron-rsync-to-nas-or-external-drive">1. cron + rsync to NAS or External Drive<a class="headerlink" href="#1-cron-rsync-to-nas-or-external-drive" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Daily at 03:00, mirror ~/WORKSPACE and ~/.ctx to NAS
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>0 3 * * * rsync -a --delete \
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    --exclude=&#39;node_modules&#39; \
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    --exclude=&#39;dist&#39; \
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    --exclude=&#39;.context/state&#39; \
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    --exclude='node_modules' \
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    --exclude='dist' \
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    --exclude='.context/state' \
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    ~/WORKSPACE/ /mnt/nas/backup/workspace/
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>0 3 * * * rsync -a --delete ~/.ctx/ /mnt/nas/backup/ctx-global/
 </span></code></pre></div>
@@ -2202,10 +2202,10 @@ you get point-in-time recovery for free.</p>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>borg<span class="w"> </span>init<span class="w"> </span>--encryption<span class="o">=</span>repokey<span class="w"> </span>/mnt/nas/borg-ctx
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Daily backup</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>borg<span class="w"> </span>create<span class="w"> </span>/mnt/nas/borg-ctx::<span class="s1">&#39;ctx-{now}&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>borg<span class="w"> </span>create<span class="w"> </span>/mnt/nas/borg-ctx::<span class="s1">'ctx-{now}'</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>~/WORKSPACE<span class="w"> </span>~/.ctx<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--exclude<span class="w"> </span><span class="s1">&#39;*/node_modules&#39;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>--exclude<span class="w"> </span><span class="s1">&#39;*/.context/state&#39;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--exclude<span class="w"> </span><span class="s1">'*/node_modules'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>--exclude<span class="w"> </span><span class="s1">'*/.context/state'</span>
 </span></code></pre></div>
 <p>Use <code>restic</code> if you prefer S3-compatible targets.</p>
 <h2 id="when-you-still-need-file-level-backup-even-with-hub">When You Still Need File-Level Backup Even With Hub<a class="headerlink" href="#when-you-still-need-file-level-backup-even-with-hub" title="Permanent link">&para;</a></h2>

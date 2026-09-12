@@ -2154,8 +2154,16 @@
 </thead>
 <tbody>
 <tr>
+<td><code>agents</code></td>
+<td>Generic <code>AGENTS.md</code> (read natively by Codex, OpenCode, and others)</td>
+</tr>
+<tr>
 <td><code>claude-code</code></td>
 <td>Redirects to plugin install instructions</td>
+</tr>
+<tr>
+<td><code>codex</code></td>
+<td>OpenAI Codex CLI (hooks, MCP, skills, <code>AGENTS.md</code>)</td>
 </tr>
 <tr>
 <td><code>cursor</code></td>
@@ -2178,8 +2186,16 @@
 <td>GitHub Copilot</td>
 </tr>
 <tr>
+<td><code>copilot-cli</code></td>
+<td>GitHub Copilot CLI (instructions, skills, agent, MCP)</td>
+</tr>
+<tr>
 <td><code>opencode</code></td>
 <td>OpenCode (terminal-first AI coding agent)</td>
+</tr>
+<tr>
+<td><code>pi</code></td>
+<td>Pi coding-agent CLI (pi.dev)</td>
 </tr>
 <tr>
 <td><code>windsurf</code></td>
@@ -2192,6 +2208,40 @@
 <p>Claude Code integration is now provided via the <code>ctx</code> plugin.
 Running <code>ctx setup claude-code</code> prints plugin install instructions.</p>
 </div>
+<p><strong><code>ctx setup codex</code></strong> without <code>--write</code> prints the integration overview
+and what it detected (Codex binary on PATH, plugin installed, plugin
+enabled). With <code>--write</code> it deploys the project-local integration:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.codex/hooks.json</code></td>
+<td>Create, or merge: foreign hook groups preserved, <code>ctx</code>-managed groups replaced; an unparseable file is left untouched with a warning</td>
+</tr>
+<tr>
+<td><code>.codex/config.toml</code></td>
+<td>Append a <code>[mcp_servers.ctx]</code> table when the header is absent; skip when present</td>
+</tr>
+<tr>
+<td><code>AGENTS.md</code></td>
+<td>Marker-merged (same deployer as <code>ctx setup agents --write</code>)</td>
+</tr>
+<tr>
+<td><code>.agents/skills/ctx-*/SKILL.md</code></td>
+<td>Create, refresh when stale, skip with a warning when not <code>ctx</code>-managed</td>
+</tr>
+</tbody>
+</table>
+<p>When the <code>ctx</code> plugin is enabled in <code>~/.codex/config.toml</code>, the
+deployer skips hooks, MCP, and skills (Codex would run them twice) and
+deploys <code>AGENTS.md</code> only. Either way, the hooks do not run until you
+trust them: start <code>codex</code>, run <code>/hooks</code>, and trust the <code>ctx</code> entries.
+See <a href="../../home/codex/"><code>ctx</code> for Codex</a>.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Print hook instructions to stdout</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>setup<span class="w"> </span>cursor
@@ -2207,6 +2257,14 @@ Running <code>ctx setup claude-code</code> prints plugin install instructions.</
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Generate OpenCode plugin, skills, AGENTS.md, and global MCP config</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ctx<span class="w"> </span>setup<span class="w"> </span>opencode<span class="w"> </span>--write
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Show Codex integration state; then deploy .codex/hooks.json,</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># .codex/config.toml, AGENTS.md, and .agents/skills/</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ctx<span class="w"> </span>setup<span class="w"> </span>codex
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>ctx<span class="w"> </span>setup<span class="w"> </span>codex<span class="w"> </span>--write
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Generate Pi extension, skills, and AGENTS.md</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>ctx<span class="w"> </span>setup<span class="w"> </span>pi<span class="w"> </span>--write
 </span></code></pre></div>
 
 

@@ -2547,14 +2547,14 @@ against later.</p>
 <h2 id="step-3-preview-which-prompts-match">Step 3: Preview Which Prompts Match<a class="headerlink" href="#step-3-preview-which-prompts-match" title="Permanent link">&para;</a></h2>
 <p>Before committing the file, validate your description catches
 the prompts you care about:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="s2">&quot;add an endpoint for updating user email&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="s2">"add an endpoint for updating user email"</span>
 </span></code></pre></div>
 <p>Expected output:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Steering files matching prompt &quot;add an endpoint for updating user email&quot;:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Steering files matching prompt "add an endpoint for updating user email":
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  api-validation       inclusion=auto     priority=20  tools=all
 </span></code></pre></div>
 <p>Good, the prompt matches. Try a negative case:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="s2">&quot;fix a bug in the JSON renderer&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>steering<span class="w"> </span>preview<span class="w"> </span><span class="s2">"fix a bug in the JSON renderer"</span>
 </span></code></pre></div>
 <p>Expected: empty match (or whatever else is currently <code>auto</code>).
 If <code>api-validation</code> incorrectly fires for unrelated prompts,

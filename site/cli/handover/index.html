@@ -2085,9 +2085,9 @@ session start by <code>/ctx-remember</code>. When <code>.context/kb/</code> exis
 the writer additionally folds postdated closeouts into the
 handover's <code>## Folded Closeouts</code> section and archives them.</p>
 <h3 id="ctx-handover-write-title"><code>ctx handover write &lt;title&gt;</code><a class="headerlink" href="#ctx-handover-write-title" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>handover<span class="w"> </span>write<span class="w"> </span><span class="s2">&quot;Cursor Hooks deep dive&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--summary<span class="w"> </span><span class="s2">&quot;Drafted topic-page; minted EV-018..EV-024; cold-reader passed.&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--next<span class="w"> </span><span class="s2">&quot;Re-ingest the v1.1 release notes URL once you have it.&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>handover<span class="w"> </span>write<span class="w"> </span><span class="s2">"Cursor Hooks deep dive"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--summary<span class="w"> </span><span class="s2">"Drafted topic-page; minted EV-018..EV-024; cold-reader passed."</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--next<span class="w"> </span><span class="s2">"Re-ingest the v1.1 release notes URL once you have it."</span>
 </span></code></pre></div>
 <p><strong>Required flags</strong>:</p>
 <table>
@@ -2148,7 +2148,7 @@ folded into the new handover and <strong>physically archived</strong> under
 <h3 id="how-to-trigger">How to Trigger<a class="headerlink" href="#how-to-trigger" title="Permanent link">&para;</a></h3>
 <p>In ordinary sessions you do not invoke <code>ctx handover write</code>
 directly. The user-facing trigger is <code>/ctx-wrap-up</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/ctx-wrap-up &quot;session title&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/ctx-wrap-up "session title"
 </span></code></pre></div>
 <p><code>/ctx-wrap-up</code> owns session-end and always delegates to
 <code>/ctx-handover</code> as its final step. Direct invocation of

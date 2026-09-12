@@ -2166,9 +2166,9 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h3 id="ctx-system"><code>ctx system</code><a class="headerlink" href="#ctx-system" title="Permanent link">&para;</a></h3>
-<p>Hidden parent command that hosts Claude Code hook plumbing and a small
-set of session-lifecycle plumbing subcommands used by skills and editor
-integrations. The parent is registered without a visible group in
+<p>Hidden parent command that hosts Claude Code and Codex hook plumbing
+and a small set of session-lifecycle plumbing subcommands used by skills
+and editor integrations. The parent is registered without a visible group in
 <code>ctx --help</code>; run <code>ctx system --help</code> to see its subcommands.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
@@ -2264,20 +2264,25 @@ disable for screen-sharing or demos). Setting <code>enabled: false</code>
 blanks the rendered line immediately; the settings entry itself
 is restored/removed the next time the init merge runs.</p>
 <h2 id="hook-subcommands">Hook Subcommands<a class="headerlink" href="#hook-subcommands" title="Permanent link">&para;</a></h2>
-<p>Hidden Claude Code hook handlers implementing the hook contract: read
+<p>Hidden hook handlers implementing the Claude Code hook contract: read
 JSON from stdin, perform logic, emit output on stdout, exit 0. Block
-commands output JSON with a <code>decision</code> field.</p>
-<p>UserPromptSubmit hooks: <code>context-load-gate</code>, <code>check-context-size</code>,
+commands output JSON with a <code>decision</code> field. Codex uses the same
+contract, so the same handlers serve both tools; only the manifest that
+registers them differs.</p>
+<p>UserPromptSubmit hooks: <code>check-context-size</code>,
 <code>check-persistence</code>, <code>check-ceremony</code>, <code>check-journal</code>, <code>check-version</code>,
 <code>check-resource</code>, <code>check-knowledge</code>, <code>check-map-staleness</code>,
 <code>check-memory-drift</code>, <code>check-reminder</code>, <code>check-freshness</code>,
 <code>check-hub-sync</code>, <code>check-skill-discovery</code>,
 <code>heartbeat</code>.</p>
-<p>PreToolUse hooks: <code>block-non-path-ctx</code>, <code>block-dangerous-command</code>,
+<p>PreToolUse hooks: <code>context-load-gate</code>, <code>block-non-path-ctx</code>,
 <code>qa-reminder</code>, <code>specs-nudge</code>.</p>
 <p>PostToolUse hooks: <code>post-commit</code>, <code>check-task-completion</code>.</p>
-<p>See <a href="../../operations/integrations/#plugin-hooks">AI Tools</a> for
-registration details and the Claude Code plugin integration.</p>
+<p>See <a href="../../operations/integrations/#plugin-hooks">AI Tools</a> for the
+Claude Code manifest and
+<a href="../../operations/integrations/#codex-hooks">OpenAI Codex</a> for the Codex
+manifest (same handlers; <code>SessionStart</code> carries <code>ctx agent</code>, the
+planning matcher is <code>update_plan</code>, file edits match <code>apply_patch</code>).</p>
 
 
 

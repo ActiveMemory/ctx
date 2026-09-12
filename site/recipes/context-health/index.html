@@ -2685,21 +2685,21 @@ and offers to fix what it can.</p>
 <p>Checking context health at the session start, offering to persist learnings 
 before you quit, and flagging drift when it matters. The agent stays 
 proactive without you having to prompt it:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Agent: Good morning. I&#39;ve loaded the context files. A few things
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Agent: Good morning. I've loaded the context files. A few things
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>       before we start:
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>       - ARCHITECTURE.md references `pkg/auth/` which is now empty
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>       - DECISIONS.md hasn&#39;t been updated in 40 days
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>       - DECISIONS.md hasn't been updated in 40 days
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>       - There are 18 completed tasks ready for archival
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>       Want me to run a quick maintenance pass, or should we jump
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>       straight into today&#39;s work?
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>       straight into today's work?
 </span></code></pre></div>
 <p>☝️️ this is what persistent, initiative-driven sessions feel like when context is 
 treated as a system instead of a prompt.</p>
 <p>If the agent does not offer this on its own, a gentle nudge is enough:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Anything stale before we start?
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>How&#39;s the context looking?
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>How's the context looking?
 </span></code></pre></div>
 <p>This turns maintenance from a scheduled chore into a conversation that happens
 <strong>when</strong> it matters.</p>
@@ -2709,7 +2709,7 @@ path of their current task. If an agent reads <code>ARCHITECTURE.md</code> to fi
 to add a handler and <code>internal/handlers/</code> doesn't exist, it will notice because
 the stale reference blocks its work:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Agent: ARCHITECTURE.md references `internal/handlers/` but that directory
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>       doesn&#39;t exist. I&#39;ll look at the actual source tree to find where
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>       doesn't exist. I'll look at the actual source tree to find where
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>       handlers live now.
 </span></code></pre></div>
 <p>This happens reliably when the drift intersects the task. What is <em>less</em>
@@ -2778,9 +2778,9 @@ need direct control, use the commands directly.</p>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>============
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Warnings (3):
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  ARCHITECTURE.md:14  path &quot;internal/api/router.go&quot; does not exist
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  ARCHITECTURE.md:28  path &quot;pkg/auth/&quot; directory is empty
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  CONVENTIONS.md:9    path &quot;internal/handlers/&quot; not found
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  ARCHITECTURE.md:14  path "internal/api/router.go" does not exist
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  ARCHITECTURE.md:28  path "pkg/auth/" directory is empty
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  CONVENTIONS.md:9    path "internal/handlers/" not found
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
 </span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Violations (1):
 </span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  TASKS.md            31 completed tasks (recommend archival)
@@ -2819,7 +2819,7 @@ need direct control, use the commands directly.</p>
 </table>
 <p>Exit codes: <code>0</code> equals clean, <code>1</code> equals warnings, <code>3</code> equals violations.</p>
 <p>For CI integration:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.warnings | length&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.warnings | length'</span>
 </span></code></pre></div>
 <h3 id="ctx-drift-fix"><code>ctx drift --fix</code><a class="headerlink" href="#ctx-drift-fix" title="Permanent link">&para;</a></h3>
 <p>Auto-fix mechanical issues:</p>
@@ -2876,7 +2876,7 @@ token-efficient for the model.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Is our context clean?  -&gt; agent runs structural plus semantic checks
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Fix what you can       -&gt; agent auto-fixes and proposes edits
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Archive the done tasks -&gt; agent runs ctx compact --archive
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>How&#39;s token usage?     -&gt; agent checks ctx status
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>How's token usage?     -&gt; agent checks ctx status
 </span></code></pre></div>
 <p>CLI approach (<em>for CI, scripts, or direct control</em>):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>drift<span class="w">                      </span><span class="c1"># 1. Detect problems</span>

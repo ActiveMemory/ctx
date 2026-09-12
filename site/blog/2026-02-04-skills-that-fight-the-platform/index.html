@@ -1436,9 +1436,9 @@ action is appropriate.</p>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Excuse                 | Reality                    |
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|------------------------|----------------------------|
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| &quot;<span class="ge">*This seems overkill*</span>&quot;| If a skill exists, use it  |
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| &quot;<span class="ge">*I need context*</span>&quot;     | Skills come BEFORE context |
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| &quot;<span class="ge">*Just this once*</span>&quot;     | No exceptions              |
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| "<span class="ge">*This seems overkill*</span>"| If a skill exists, use it  |
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| "<span class="ge">*I need context*</span>"     | Skills come BEFORE context |
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| "<span class="ge">*Just this once*</span>"     | No exceptions              |
 </span></code></pre></div>
 <div class="admonition danger">
 <p class="admonition-title">Judgment Suppression Is Dangerous</p>
@@ -1466,7 +1466,7 @@ one internal, one external.</p>
 <p>When thresholds or wording differ, the AI has to choose.</p>
 <p><strong>Example (bad):</strong></p>
 <p>A skill that says...</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ge">*Count lines before and after: if after &gt; before, reject the change*</span>&quot;
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ge">*Count lines before and after: if after &gt; before, reject the change*</span>"
 </span></code></pre></div>
 <p>...will conflict with the system prompt's more nuanced guidance, because 
 sometimes adding lines is correct (<em>tests, boundary validation, migrations</em>).</p>
@@ -1493,10 +1493,10 @@ sometimes adding lines is correct (<em>tests, boundary validation, migrations</e
 <p>The AI becomes <em>less</em> useful, not more careful.</p>
 <p>Instead, frame guidance as a <strong>process</strong>, <em>not</em> morality:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gh"># Bad</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>&quot;Claiming work is complete without verification is dishonesty&quot;
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>"Claiming work is complete without verification is dishonesty"
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="gh"># Good</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>&quot;Run the verification command before reporting results&quot;
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>"Run the verification command before reporting results"
 </span></code></pre></div>
 <p>Same outcome. No guilt. Better compliance.</p>
 <h2 id="conflict-pattern-4-phantom-dependencies">Conflict Pattern 4: Phantom Dependencies<a class="headerlink" href="#conflict-pattern-4-phantom-dependencies" title="Permanent link">&para;</a></h2>
@@ -1534,11 +1534,11 @@ task-specific state.</p>
 <p>Write specific trigger conditions in the skill's <code>description</code> field:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Bad</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s">&quot;Use</span><span class="nv"> </span><span class="s">when</span><span class="nv"> </span><span class="s">starting</span><span class="nv"> </span><span class="s">any</span><span class="nv"> </span><span class="s">conversation&quot;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s">"Use</span><span class="nv"> </span><span class="s">when</span><span class="nv"> </span><span class="s">starting</span><span class="nv"> </span><span class="s">any</span><span class="nv"> </span><span class="s">conversation"</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Good</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="s">&quot;Use</span><span class="nv"> </span><span class="s">after</span><span class="nv"> </span><span class="s">writing</span><span class="nv"> </span><span class="s">code,</span><span class="nv"> </span><span class="s">before</span><span class="nv"> </span><span class="s">commits,</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">when</span><span class="nv"> </span><span class="s">CI</span><span class="nv"> </span><span class="s">might</span><span class="nv"> </span><span class="s">fail&quot;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="s">"Use</span><span class="nv"> </span><span class="s">after</span><span class="nv"> </span><span class="s">writing</span><span class="nv"> </span><span class="s">code,</span><span class="nv"> </span><span class="s">before</span><span class="nv"> </span><span class="s">commits,</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">when</span><span class="nv"> </span><span class="s">CI</span><span class="nv"> </span><span class="s">might</span><span class="nv"> </span><span class="s">fail"</span>
 </span></code></pre></div>
 <h2 id="the-litmus-test">The Litmus Test<a class="headerlink" href="#the-litmus-test" title="Permanent link">&para;</a></h2>
 <p>Before adding a skill, ask:</p>

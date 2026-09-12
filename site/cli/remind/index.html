@@ -2105,14 +2105,14 @@ Reminders are stored verbatim and relayed verbatim: no
 summarization, no categories.</p>
 <p>When invoked with a text argument and no subcommand, adds a
 reminder.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;text&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">"text"</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h3 id="ctx-remind-add"><code>ctx remind add</code><a class="headerlink" href="#ctx-remind-add" title="Permanent link">&para;</a></h3>
 <p>Add a reminder. This is the default action: <code>ctx remind "text"</code>
 and <code>ctx remind add "text"</code> are equivalent.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;refactor the swagger definitions&quot;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;check CI after the deploy&quot;</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2026</span>-02-25
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">"refactor the swagger definitions"</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>add<span class="w"> </span><span class="s2">"check CI after the deploy"</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2026</span>-02-25
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -2136,8 +2136,8 @@ and <code>ctx remind add "text"</code> are equivalent.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;refactor the swagger definitions&quot;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;check CI after the deploy&quot;</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2026</span>-02-25
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">"refactor the swagger definitions"</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">"check CI after the deploy"</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2026</span>-02-25
 </span></code></pre></div>
 <h3 id="ctx-remind-list"><code>ctx remind list</code><a class="headerlink" href="#ctx-remind-list" title="Permanent link">&para;</a></h3>
 <p>List all pending reminders. Date-gated reminders that aren't

@@ -25,6 +25,22 @@ auto-memory to `.context/`.
 
 ## Field Notes
 
+### [Beyond the Dumb Zone: Keeping Decision History While Independently Reviewing AI-Assisted Software Development](2026-09-12-beyond-the-dumb-zone.md)
+
+*September 12, 2026*: A session hits 250K tokens after hours of design
+debate. The reflex says reset before coding. But the reset discards the
+reasons, the rejected alternatives, and the exceptions the spec never
+fully captured. This post reads the long-context research for what it
+actually establishes, then proposes a different default: **keep the
+informed implementer and persistent reviewers**, make authority
+explicit at every stage, and let evidence-based review, not token
+count, decide when a reset is warranted.
+
+**Topics**: context engineering, long-context degradation, independent
+review, spec-driven development, field notes
+
+---
+
 ### [The Cheapest Patch Was the Most Expensive: What Seven AI Coding Runs Taught Me About Cost](2026-06-21-the-cheapest-patch-was-the-most-expensive.md)
 
 *June 21, 2026*: One boring CLI bug, seven runs, three model tiers,

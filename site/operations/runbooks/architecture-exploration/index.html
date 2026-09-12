@@ -2097,9 +2097,9 @@ plateau, or all lenses are exhausted.</p>
 </span></code></pre></div>
 <p>Create <code>.arch-explorer/manifest.json</code> listing your repos:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;repos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ctx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;portal&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;infra&quot;</span><span class="p">],</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;current_repo_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;progress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">"repos"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ctx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"portal"</span><span class="p">,</span><span class="w"> </span><span class="s2">"infra"</span><span class="p">],</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">"current_repo_index"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">"progress"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>Create <code>.arch-explorer/run-log.md</code> (empty, the agent appends to it).</p>
@@ -2163,8 +2163,8 @@ the next unit of work, executes it, updates tracking, and stops.</p>
 </span><span id="__span-2-53"><a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a>For lens runs, prepend the lens context as an explicit instruction to
 </span><span id="__span-2-54"><a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a>the skill invocation:
 </span><span id="__span-2-55"><a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a>
-</span><span id="__span-2-56"><a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a>&gt; &quot;Focus exploration on security: auth flows, input validation, secrets,
-</span><span id="__span-2-57"><a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a>&gt; attack surfaces, trust boundaries.&quot;
+</span><span id="__span-2-56"><a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a>&gt; "Focus exploration on security: auth flows, input validation, secrets,
+</span><span id="__span-2-57"><a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a>&gt; attack surfaces, trust boundaries."
 </span><span id="__span-2-58"><a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a>
 </span><span id="__span-2-59"><a id="__codelineno-2-59" name="__codelineno-2-59" href="#__codelineno-2-59"></a>Do NOT wait for the skill to ask what to explore. Provide the lens
 </span><span id="__span-2-60"><a id="__codelineno-2-60" name="__codelineno-2-60" href="#__codelineno-2-60"></a>focus as input upfront.
@@ -2176,10 +2176,10 @@ the next unit of work, executes it, updates tracking, and stops.</p>
 </span><span id="__span-2-66"><a id="__codelineno-2-66" name="__codelineno-2-66" href="#__codelineno-2-66"></a>2. Verify `$PWD/.context/` exists for THIS sub-repo:
 </span><span id="__span-2-67"><a id="__codelineno-2-67" name="__codelineno-2-67" href="#__codelineno-2-67"></a>
 </span><span id="__span-2-68"><a id="__codelineno-2-68" name="__codelineno-2-68" href="#__codelineno-2-68"></a>    ```bash
-</span><span id="__span-2-69"><a id="__codelineno-2-69" name="__codelineno-2-69" href="#__codelineno-2-69"></a>    test -d &quot;$PWD/.context&quot; || {
-</span><span id="__span-2-70"><a id="__codelineno-2-70" name="__codelineno-2-70" href="#__codelineno-2-70"></a>      echo &quot;STOP: no .context/ at $PWD. Re-launch the agent from&quot;
-</span><span id="__span-2-71"><a id="__codelineno-2-71" name="__codelineno-2-71" href="#__codelineno-2-71"></a>      echo &quot;this sub-repo&#39;s root:&quot;
-</span><span id="__span-2-72"><a id="__codelineno-2-72" name="__codelineno-2-72" href="#__codelineno-2-72"></a>      echo &quot;  cd $PWD &amp;&amp; claude --print &#39;Follow .arch-explorer/PROMPT.md&#39; --allowedTools &#39;*&#39;&quot;
+</span><span id="__span-2-69"><a id="__codelineno-2-69" name="__codelineno-2-69" href="#__codelineno-2-69"></a>    test -d "$PWD/.context" || {
+</span><span id="__span-2-70"><a id="__codelineno-2-70" name="__codelineno-2-70" href="#__codelineno-2-70"></a>      echo "STOP: no .context/ at $PWD. Re-launch the agent from"
+</span><span id="__span-2-71"><a id="__codelineno-2-71" name="__codelineno-2-71" href="#__codelineno-2-71"></a>      echo "this sub-repo's root:"
+</span><span id="__span-2-72"><a id="__codelineno-2-72" name="__codelineno-2-72" href="#__codelineno-2-72"></a>      echo "  cd $PWD &amp;&amp; claude --print 'Follow .arch-explorer/PROMPT.md' --allowedTools '*'"
 </span><span id="__span-2-73"><a id="__codelineno-2-73" name="__codelineno-2-73" href="#__codelineno-2-73"></a>      exit 1
 </span><span id="__span-2-74"><a id="__codelineno-2-74" name="__codelineno-2-74" href="#__codelineno-2-74"></a>    }
 </span><span id="__span-2-75"><a id="__codelineno-2-75" name="__codelineno-2-75" href="#__codelineno-2-75"></a>    ```
@@ -2217,7 +2217,7 @@ the next unit of work, executes it, updates tracking, and stops.</p>
 </span><span id="__span-2-107"><a id="__codelineno-2-107" name="__codelineno-2-107" href="#__codelineno-2-107"></a>- **Frontier count**: from CONVERGENCE-REPORT.md, count the number
 </span><span id="__span-2-108"><a id="__codelineno-2-108" name="__codelineno-2-108" href="#__codelineno-2-108"></a>  of listed unexplored areas. If CONVERGENCE-REPORT.md is missing,
 </span><span id="__span-2-109"><a id="__codelineno-2-109" name="__codelineno-2-109" href="#__codelineno-2-109"></a>  record `frontier_count: null` and log a warning. Treat missing
-</span><span id="__span-2-110"><a id="__codelineno-2-110" name="__codelineno-2-110" href="#__codelineno-2-110"></a>  as &quot;exploration should continue&quot; (do not stall).
+</span><span id="__span-2-110"><a id="__codelineno-2-110" name="__codelineno-2-110" href="#__codelineno-2-110"></a>  as "exploration should continue" (do not stall).
 </span><span id="__span-2-111"><a id="__codelineno-2-111" name="__codelineno-2-111" href="#__codelineno-2-111"></a>- **Key findings**: 2-3 bullet points of what was discovered or
 </span><span id="__span-2-112"><a id="__codelineno-2-112" name="__codelineno-2-112" href="#__codelineno-2-112"></a>  changed in this run (new modules mapped, danger zones found, etc.)
 </span><span id="__span-2-113"><a id="__codelineno-2-113" name="__codelineno-2-113" href="#__codelineno-2-113"></a>- **New artifacts**: list any new files created in `.context/`
@@ -2228,16 +2228,16 @@ the next unit of work, executes it, updates tracking, and stops.</p>
 </span><span id="__span-2-118"><a id="__codelineno-2-118" name="__codelineno-2-118" href="#__codelineno-2-118"></a>
 </span><span id="__span-2-119"><a id="__codelineno-2-119" name="__codelineno-2-119" href="#__codelineno-2-119"></a>```json
 </span><span id="__span-2-120"><a id="__codelineno-2-120" name="__codelineno-2-120" href="#__codelineno-2-120"></a>{
-</span><span id="__span-2-121"><a id="__codelineno-2-121" name="__codelineno-2-121" href="#__codelineno-2-121"></a>  &quot;progress&quot;: {
-</span><span id="__span-2-122"><a id="__codelineno-2-122" name="__codelineno-2-122" href="#__codelineno-2-122"></a>    &quot;ctx&quot;: {
-</span><span id="__span-2-123"><a id="__codelineno-2-123" name="__codelineno-2-123" href="#__codelineno-2-123"></a>      &quot;phases_completed&quot;: [&quot;bootstrap&quot;, &quot;principal&quot;],
-</span><span id="__span-2-124"><a id="__codelineno-2-124" name="__codelineno-2-124" href="#__codelineno-2-124"></a>      &quot;current_phase&quot;: &quot;enriched&quot;,
-</span><span id="__span-2-125"><a id="__codelineno-2-125" name="__codelineno-2-125" href="#__codelineno-2-125"></a>      &quot;lenses_explored&quot;: [],
-</span><span id="__span-2-126"><a id="__codelineno-2-126" name="__codelineno-2-126" href="#__codelineno-2-126"></a>      &quot;last_run&quot;: &quot;2026-04-07T14:00:00Z&quot;,
-</span><span id="__span-2-127"><a id="__codelineno-2-127" name="__codelineno-2-127" href="#__codelineno-2-127"></a>      &quot;convergence_score&quot;: 0.72,
-</span><span id="__span-2-128"><a id="__codelineno-2-128" name="__codelineno-2-128" href="#__codelineno-2-128"></a>      &quot;frontier_count&quot;: 3,
-</span><span id="__span-2-129"><a id="__codelineno-2-129" name="__codelineno-2-129" href="#__codelineno-2-129"></a>      &quot;total_runs&quot;: 2,
-</span><span id="__span-2-130"><a id="__codelineno-2-130" name="__codelineno-2-130" href="#__codelineno-2-130"></a>      &quot;findings_summary&quot;: &quot;14 modules mapped, 3 danger zones, 2 extension points&quot;
+</span><span id="__span-2-121"><a id="__codelineno-2-121" name="__codelineno-2-121" href="#__codelineno-2-121"></a>  "progress": {
+</span><span id="__span-2-122"><a id="__codelineno-2-122" name="__codelineno-2-122" href="#__codelineno-2-122"></a>    "ctx": {
+</span><span id="__span-2-123"><a id="__codelineno-2-123" name="__codelineno-2-123" href="#__codelineno-2-123"></a>      "phases_completed": ["bootstrap", "principal"],
+</span><span id="__span-2-124"><a id="__codelineno-2-124" name="__codelineno-2-124" href="#__codelineno-2-124"></a>      "current_phase": "enriched",
+</span><span id="__span-2-125"><a id="__codelineno-2-125" name="__codelineno-2-125" href="#__codelineno-2-125"></a>      "lenses_explored": [],
+</span><span id="__span-2-126"><a id="__codelineno-2-126" name="__codelineno-2-126" href="#__codelineno-2-126"></a>      "last_run": "2026-04-07T14:00:00Z",
+</span><span id="__span-2-127"><a id="__codelineno-2-127" name="__codelineno-2-127" href="#__codelineno-2-127"></a>      "convergence_score": 0.72,
+</span><span id="__span-2-128"><a id="__codelineno-2-128" name="__codelineno-2-128" href="#__codelineno-2-128"></a>      "frontier_count": 3,
+</span><span id="__span-2-129"><a id="__codelineno-2-129" name="__codelineno-2-129" href="#__codelineno-2-129"></a>      "total_runs": 2,
+</span><span id="__span-2-130"><a id="__codelineno-2-130" name="__codelineno-2-130" href="#__codelineno-2-130"></a>      "findings_summary": "14 modules mapped, 3 danger zones, 2 extension points"
 </span><span id="__span-2-131"><a id="__codelineno-2-131" name="__codelineno-2-131" href="#__codelineno-2-131"></a>    }
 </span><span id="__span-2-132"><a id="__codelineno-2-132" name="__codelineno-2-132" href="#__codelineno-2-132"></a>  }
 </span><span id="__span-2-133"><a id="__codelineno-2-133" name="__codelineno-2-133" href="#__codelineno-2-133"></a>}
@@ -2289,18 +2289,18 @@ the next unit of work, executes it, updates tracking, and stops.</p>
 </span><span id="__span-2-179"><a id="__codelineno-2-179" name="__codelineno-2-179" href="#__codelineno-2-179"></a>5. **Fail gracefully.** If a skill fails (no code-intelligence MCP
 </span><span id="__span-2-180"><a id="__codelineno-2-180" name="__codelineno-2-180" href="#__codelineno-2-180"></a>   connected, broken repo, etc.), log the failure with reason and
 </span><span id="__span-2-181"><a id="__codelineno-2-181" name="__codelineno-2-181" href="#__codelineno-2-181"></a>   advance to the next phase or
-</span><span id="__span-2-182"><a id="__codelineno-2-182" name="__codelineno-2-182" href="#__codelineno-2-182"></a>   repo. Don&#39;t retry in the same invocation.
+</span><span id="__span-2-182"><a id="__codelineno-2-182" name="__codelineno-2-182" href="#__codelineno-2-182"></a>   repo. Don't retry in the same invocation.
 </span><span id="__span-2-183"><a id="__codelineno-2-183" name="__codelineno-2-183" href="#__codelineno-2-183"></a>6. **Respect `ctx` conventions.** Each repo gets its own `.context/`
 </span><span id="__span-2-184"><a id="__codelineno-2-184" name="__codelineno-2-184" href="#__codelineno-2-184"></a>   directory. Never write architecture artifacts outside `.context/`.
 </span><span id="__span-2-185"><a id="__codelineno-2-185" name="__codelineno-2-185" href="#__codelineno-2-185"></a>
 </span><span id="__span-2-186"><a id="__codelineno-2-186" name="__codelineno-2-186" href="#__codelineno-2-186"></a>## Stopping Logic
 </span><span id="__span-2-187"><a id="__codelineno-2-187" name="__codelineno-2-187" href="#__codelineno-2-187"></a>
-</span><span id="__span-2-188"><a id="__codelineno-2-188" name="__codelineno-2-188" href="#__codelineno-2-188"></a>A repo is considered &quot;explored&quot; when ANY of these is true:
+</span><span id="__span-2-188"><a id="__codelineno-2-188" name="__codelineno-2-188" href="#__codelineno-2-188"></a>A repo is considered "explored" when ANY of these is true:
 </span><span id="__span-2-189"><a id="__codelineno-2-189" name="__codelineno-2-189" href="#__codelineno-2-189"></a>- Convergence score &gt;= 0.85 (from map-tracking.json)
 </span><span id="__span-2-190"><a id="__codelineno-2-190" name="__codelineno-2-190" href="#__codelineno-2-190"></a>- 3+ frontier runs produced no new findings (frontier_count unchanged
 </span><span id="__span-2-191"><a id="__codelineno-2-191" name="__codelineno-2-191" href="#__codelineno-2-191"></a>  across consecutive runs)
 </span><span id="__span-2-192"><a id="__codelineno-2-192" name="__codelineno-2-192" href="#__codelineno-2-192"></a>- All 5 lenses have been applied
-</span><span id="__span-2-193"><a id="__codelineno-2-193" name="__codelineno-2-193" href="#__codelineno-2-193"></a>- Convergence score is `null` after 3 attempts (artifacts aren&#39;t being
+</span><span id="__span-2-193"><a id="__codelineno-2-193" name="__codelineno-2-193" href="#__codelineno-2-193"></a>- Convergence score is `null` after 3 attempts (artifacts aren't being
 </span><span id="__span-2-194"><a id="__codelineno-2-194" name="__codelineno-2-194" href="#__codelineno-2-194"></a>  generated properly; log warning and move on)
 </span><span id="__span-2-195"><a id="__codelineno-2-195" name="__codelineno-2-195" href="#__codelineno-2-195"></a>
 </span><span id="__span-2-196"><a id="__codelineno-2-196" name="__codelineno-2-196" href="#__codelineno-2-196"></a>When a repo is explored, advance `current_repo_index` in the manifest.
@@ -2324,17 +2324,17 @@ to the sub-repo. The agent verifies this at Step 3.2 and stops if
 pick the current sub-repo, <code>cd</code>s into it, then launches <code>claude</code>.</p>
 <p><strong>Single run (safest for quota):</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>~/WORKSPACE
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">REPO</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.repos[.current_repo_index]&#39;</span><span class="w"> </span>.arch-explorer/manifest.json<span class="k">)</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>claude<span class="w"> </span>--print<span class="w"> </span><span class="s2">&quot;Follow .arch-explorer/PROMPT.md&quot;</span><span class="w"> </span>--allowedTools<span class="w"> </span><span class="s1">&#39;*&#39;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">REPO</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.repos[.current_repo_index]'</span><span class="w"> </span>.arch-explorer/manifest.json<span class="k">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$REPO</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>claude<span class="w"> </span>--print<span class="w"> </span><span class="s2">"Follow .arch-explorer/PROMPT.md"</span><span class="w"> </span>--allowedTools<span class="w"> </span><span class="s1">'*'</span>
 </span></code></pre></div>
 <p><strong>Batch of N runs:</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>~/WORKSPACE
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nv">REPO</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.repos[.current_repo_index]&#39;</span><span class="w"> </span>.arch-explorer/manifest.json<span class="k">)</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="o">(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>claude<span class="w"> </span>--print<span class="w"> </span><span class="s2">&quot;Follow .arch-explorer/PROMPT.md&quot;</span><span class="w"> </span>--allowedTools<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="o">)</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Run </span><span class="nv">$i</span><span class="s2"> complete (repo: </span><span class="nv">$REPO</span><span class="s2">) ---&quot;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nv">REPO</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.repos[.current_repo_index]'</span><span class="w"> </span>.arch-explorer/manifest.json<span class="k">)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="o">(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$REPO</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>claude<span class="w"> </span>--print<span class="w"> </span><span class="s2">"Follow .arch-explorer/PROMPT.md"</span><span class="w"> </span>--allowedTools<span class="w"> </span><span class="s1">'*'</span><span class="o">)</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"--- Run </span><span class="nv">$i</span><span class="s2"> complete (repo: </span><span class="nv">$REPO</span><span class="s2">) ---"</span>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">done</span>
 </span></code></pre></div>
 <p><strong>Resume after interruption:</strong></p>

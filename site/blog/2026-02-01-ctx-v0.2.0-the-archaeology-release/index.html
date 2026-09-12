@@ -1538,7 +1538,7 @@ refactoring was drafted the same way.</p>
 <p>It is <strong>participating</strong> in its <strong>interpretation</strong>.</p>
 <h2 id="the-structure-decisions-as-first-class-citizens">The Structure: Decisions as First-Class Citizens<a class="headerlink" href="#the-structure-decisions-as-first-class-citizens" title="Permanent link">&para;</a></h2>
 <p><code>v0.1.0</code> let you add decisions with a simple command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">"Use PostgreSQL"</span>
 </span></code></pre></div>
 <p>But sessions showed a pattern: decisions added this way were <strong>incomplete</strong>:</p>
 <ul>
@@ -1550,19 +1550,19 @@ refactoring was drafted the same way.</p>
 to ignore: </p>
 <p>Structure stopped being optional.</p>
 <p><code>v0.2.0</code> <strong>enforces</strong> structure:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a reliable database for user data&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;ACID compliance, team familiarity, strong ecosystem&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">&quot;Need to set up connection pooling, team training&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">"Use PostgreSQL"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">"Need a reliable database for user data"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">"ACID compliance, team familiarity, strong ecosystem"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--consequence<span class="w"> </span><span class="s2">"Need to set up connection pooling, team training"</span>
 </span></code></pre></div>
 <p>All three flags are <strong>required</strong>. No more placeholder text. </p>
 <p>Every decision is now a proper Architecture Decision Record (*ADR),
 not a note.</p>
 <p>The same enforcement applies to <strong>learnings</strong> too:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;CGO breaks ARM64 builds&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;go test failed with gcc errors on ARM64&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;Always use CGO_ENABLED=0 for cross-platform builds&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Added to Makefile and CI config&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">"CGO breaks ARM64 builds"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">"go test failed with gcc errors on ARM64"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">"Always use CGO_ENABLED=0 for cross-platform builds"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">"Added to Makefile and CI config"</span>
 </span></code></pre></div>
 <div class="admonition quote">
 <p class="admonition-title">Structured Entries Are Prompts to the AI</p>

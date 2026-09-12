@@ -2804,15 +2804,15 @@ operations, which stops the loop and waits for a human who is not there.</p>
 <h4 id="option-a-explicit-allowlist-recommended">Option A: Explicit Allowlist (<em>Recommended</em>)<a class="headerlink" href="#option-a-explicit-allowlist-recommended" title="Permanent link">&para;</a></h4>
 <p>Grant only the permissions the agent needs. In <code>.claude/settings.local.json</code>:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;allow&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="s2">&quot;Bash(make:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="s2">&quot;Bash(go:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="s2">&quot;Bash(git:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="s2">&quot;Bash(ctx:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="s2">&quot;Read&quot;</span><span class="p">,</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="s2">&quot;Write&quot;</span><span class="p">,</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="s2">&quot;Edit&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">"allow"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="s2">"Bash(make:*)"</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="s2">"Bash(go:*)"</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="s2">"Bash(git:*)"</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="s2">"Bash(ctx:*)"</span><span class="p">,</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="s2">"Read"</span><span class="p">,</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="s2">"Write"</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="s2">"Edit"</span>
 </span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="p">]</span>
 </span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">}</span>
@@ -2824,7 +2824,7 @@ radius.</p>
 <h4 id="option-b-skip-all-permission-checks">Option B: Skip All Permission Checks<a class="headerlink" href="#option-b-skip-all-permission-checks" title="Permanent link">&para;</a></h4>
 <p>Claude Code supports a <code>--dangerously-skip-permissions</code> flag that disables all
 permission prompts:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>claude<span class="w"> </span>--dangerously-skip-permissions<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>.context/loop.md<span class="k">)</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>claude<span class="w"> </span>--dangerously-skip-permissions<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>cat<span class="w"> </span>.context/loop.md<span class="k">)</span><span class="s2">"</span>
 </span></code></pre></div>
 <div class="admonition danger">
 <p class="admonition-title">This Flag Means What It Says</p>
@@ -2943,11 +2943,11 @@ to process context updates from the AI output.</p>
 </span></code></pre></div>
 <p>The watch command parses XML context-update commands from the AI output and
 applies them:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>user<span class="w"> </span>registration<span class="nt">&lt;/context-update&gt;</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="na">context=</span><span class="s">&quot;Setting up user registration&quot;</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="na">lesson=</span><span class="s">&quot;Email verification needs SMTP configured&quot;</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="na">application=</span><span class="s">&quot;Add SMTP setup to deployment checklist&quot;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">"complete"</span><span class="nt">&gt;</span>user<span class="w"> </span>registration<span class="nt">&lt;/context-update&gt;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">"learning"</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="na">context=</span><span class="s">"Setting up user registration"</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="na">lesson=</span><span class="s">"Email verification needs SMTP configured"</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="na">application=</span><span class="s">"Add SMTP setup to deployment checklist"</span>
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nt">&gt;</span>SMTP<span class="w"> </span>Requirement<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
 <h3 id="step-7-completion-signals-end-the-loop">Step 7: Completion Signals End the Loop<a class="headerlink" href="#step-7-completion-signals-end-the-loop" title="Permanent link">&para;</a></h3>
@@ -3029,7 +3029,7 @@ cannot rely on a human to prompt it. It must treat context updates as part of
 every task, not as a separate step.</p>
 <h3 id="the-agent-playbook-self-check-drives-autonomy">The Agent Playbook Self-Check Drives Autonomy<a class="headerlink" href="#the-agent-playbook-self-check-drives-autonomy" title="Permanent link">&para;</a></h3>
 <p>The Agent Playbook defines a self-check prompt the agent applies continuously:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>&quot;If this session ended right now, would the next session know what happened?&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>"If this session ended right now, would the next session know what happened?"
 </span></code></pre></div>
 <p>In interactive sessions, a human might remind the agent to save context. When
 the agent runs unattended, nobody is there to remind it.</p>
@@ -3072,13 +3072,13 @@ instructions:</p>
 <h3 id="example-what-proactive-persistence-looks-like">Example: What Proactive Persistence Looks Like<a class="headerlink" href="#example-what-proactive-persistence-looks-like" title="Permanent link">&para;</a></h3>
 <p>Here is what the agent does during a single iteration beyond writing code:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Iteration 4:
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  1. Read TASKS.md -&gt; pick &quot;Add email verification&quot; (#priority:high)
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  1. Read TASKS.md -&gt; pick "Add email verification" (#priority:high)
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  2. Add #started:2026-01-25-030012 to the task
 </span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  3. Implement the feature (code, tests, docs if needed)
 </span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  4. Tests pass -&gt; mark task [x]
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  5. Add learning: &quot;SMTP config must be set before verification handler registers. Order matters in init().&quot;
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  6. Add decision: &quot;Use token-based verification links (not codes) because links work better in automated tests.&quot;
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>  7. Create follow-up task: &quot;Add rate limiting to verification endpoint&quot; #added:...
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  5. Add learning: "SMTP config must be set before verification handler registers. Order matters in init()."
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  6. Add decision: "Use token-based verification links (not codes) because links work better in automated tests."
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>  7. Create follow-up task: "Add rate limiting to verification endpoint" #added:...
 </span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  8. Commit all changes including `.context/`
 </span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  9. No signal emitted -&gt; loop continues to iteration 5
 </span></code></pre></div>

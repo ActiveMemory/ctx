@@ -1465,6 +1465,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -2788,7 +2792,7 @@ relocated <code>internal/ctxctl/</code> packages.</p>
 </span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>├── examples/           # Example configurations
 </span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>├── hack/               # Build scripts
 </span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>├── specs/              # Feature specifications
-</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>└── .context/           # ctx&#39;s own context (dogfooding)
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>└── .context/           # ctx's own context (dogfooding)
 </span></code></pre></div>
 <h3 id="skills-two-directories-one-rule">Skills: Two Directories, One Rule<a class="headerlink" href="#skills-two-directories-one-rule" title="Permanent link">&para;</a></h3>
 <!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
@@ -2914,7 +2918,7 @@ Each package mirrors the write structure. Constructor functions return
 <code>error</code> and load messages from YAML via <code>desc.Text(text.DescKey*)</code>.</p>
 <p>Identity sentinels (matched at the call site with <code>errors.Is</code>) are
 declared as <code>entity.Sentinel</code> consts:</p>
-<div class="language-go highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">ErrMissingFoo</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">entity</span><span class="p">.</span><span class="nx">Sentinel</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">DescKeyErrPkgMissingFoo</span><span class="p">)</span>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">ErrMissingFoo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">entity</span><span class="p">.</span><span class="nx">Sentinel</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">DescKeyErrPkgMissingFoo</span><span class="p">)</span>
 </span></code></pre></div>
 <p><code>entity.Sentinel</code> is a typed string whose <code>Error()</code> resolves the key
 through <code>desc.Text</code> at call time, so the user-facing text stays in
@@ -3157,7 +3161,7 @@ doc consistency, and tests in one pass.</p>
 <p>By contributing, you agree to the
 <a href="https://github.com/ActiveMemory/ctx/blob/main/CONTRIBUTING_DCO.md">Developer Certificate of Origin</a>.</p>
 <p>All commits must be signed off:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">"feat: add new feature"</span>
 </span></code></pre></div>
 <h3 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h3>
 <p>Contributions are licensed under the
