@@ -388,6 +388,10 @@ flowchart TD
     class done complete;
 ```
 
+For every **STOP** checkpoint above, the resulting artifacts are reviewed by
+**three independent frontier models** with a human acting as a **coordinator**
+and the **final decision-maker**.
+
 ### Stage 1: Debate the Problem
 
 The developer and implementation agent examine the problem before
