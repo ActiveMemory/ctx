@@ -354,7 +354,7 @@ produces the full bundle. The review loop described here is something we add aro
 those tools.
 
 ```mermaid
-%%{init: {"themeCSS": ".node.work .nodeLabel p { color: #172b4d !important; } .node.stop .nodeLabel p { color: #493200 !important; } .node.complete .nodeLabel p { color: #174223 !important; }"}}%%
+%%{init: {"themeCSS": ".node.work .nodeLabel p { color: #172b4d !important; } .node.stop .nodeLabel p { color: #493200 !important; } .node.complete .nodeLabel p { color: #174223 !important; } .edgeLabel, .edgeLabel p { color: #172b4d !important; background-color: #eef4ff !important; } .labelBkg { fill: #eef4ff !important; opacity: 1 !important; } marker path { fill: #7c8799 !important; stroke: #7c8799 !important; }"}}%%
 flowchart TD
     brief["1. Debate the problem<br/>Debated brief"]
     reviewBrief["STOP · Review the brief<br/>Human approves?"]
@@ -380,6 +380,8 @@ flowchart TD
     code --> reviewCode --> repair --> accept
     accept -->|More corrections| repair
     accept -->|Accept| done
+
+    linkStyle default stroke:#7c8799,stroke-width:1.5px;
 
     classDef work fill:#eef4ff,stroke:#3561a7,color:#172b4d;
     classDef stop fill:#fff4dc,stroke:#9a6700,color:#493200;
