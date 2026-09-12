@@ -63,11 +63,12 @@ declines steadily, labeled "smart zone" before a vertical line at roughly
 
 But consider **what the reset removes**:
 
-The history explains why the obvious design was rejected. It records which
+The **history** explains why the obvious design was rejected. It records **which
 constraint actually matters, which requirement was deliberately narrowed,
-and why a seemingly unnecessary exception exists. The agent has access to the
-reasoning that produced the specification, including details the final
-document may not fully express.
+and why a seemingly unnecessary exception exists**. 
+
+The agent has access to the reasoning that produced the specification, 
+including details the final document may not fully express.
 
 **A fresh session may have less interference. It may also have less
 understanding**.
@@ -88,14 +89,14 @@ good handoff.
 People use "*context rot*", "*attention degradation*", and "*smart zone /
 dumb zone*" to describe several different problems. The fix depends on which problem you actually have.
 
-| Failure mode        | What it looks like in development                                          | Why the distinction matters                                              |
-|---------------------|----------------------------------------------------------------------------|--------------------------------------------------------------------------|
-| Retrieval failure   | The agent overlooks a constraint that remains in the conversation.         | The information exists, but is not used reliably.                        |
-| Conflicting history | An abandoned proposal competes with its approved replacement.              | The agent needs to know which decision replaced which.                   |
-| Anchoring           | The agent keeps repairing a design built on a disproven assumption.        | More repetition of the same reasoning may preserve the mistake.          |
+| Failure mode        | What it looks like in development                                        | Why the distinction matters                                              |
+|---------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| Retrieval failure   | The agent overlooks a constraint that remains in the conversation.       | The information exists, but is not used reliably.                        |
+| Conflicting history | An abandoned proposal competes with its approved replacement.            | The agent needs to know which decision replaced which.                   |
+| Anchoring           | The agent keeps repairing a design built on a disproven assumption.      | More repetition of the same reasoning may preserve the mistake.          |
 | Handoff loss        | A replacement agent follows the spec but misses why a decision was made. | Resetting can introduce a new failure.                                   |
-| Version confusion   | A reviewer evaluates code against an obsolete contract.                    | Correct recall of old information is still the wrong basis for judgment. |
-| Evidence failure    | Everyone accepts an implementation claim without inspecting behavior.      | A shorter context does not supply missing verification.                  |
+| Version confusion   | A reviewer evaluates code against an obsolete contract.                  | Correct recall of old information is still the wrong basis for judgment. |
+| Evidence failure    | Everyone accepts an implementation claim without inspecting behavior.    | A shorter context does not supply missing verification.                  |
 
 These are things we can observe. A missed requirement does not tell us
 what happened inside the model.
