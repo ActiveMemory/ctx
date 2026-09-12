@@ -308,7 +308,10 @@ exception rather than the norm.
 This is not the first time we are following this workflow and so far
 we haven't gotten into a situation where the Oracle model proposes
 changes and the implementer agent wasn't able to implement them sufficiently,
-hence converging to a desired quality and product behavior.
+hence diverging from a desired quality and product behavior.
+
+In short, every single feature we have implemented using the proposed methodology
+in this article **successfully converged** into a **desired outcome**.
 
 In short, so far, we haven't needed to `/clear` any session anywhere.
 
