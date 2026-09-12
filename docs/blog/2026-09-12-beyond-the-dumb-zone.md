@@ -313,7 +313,7 @@ hence diverging from a desired quality and product behavior.
 In short, every single feature we have implemented using the proposed methodology
 in this article **successfully converged** into a **desired outcome**.
 
-In short, so far, we haven't needed to `/clear` any session anywhere.
+So far, we haven't needed to `/clear` any session anywhere.
 
 Moreover, neither changing stages nor discussing side topics has given us
 a reason to start over.
