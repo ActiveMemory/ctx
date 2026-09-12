@@ -355,31 +355,40 @@ those tools.
 
 ```mermaid
 %%{init: {"themeCSS": ".node.work .nodeLabel p { color: #172b4d !important; } .node.stop .nodeLabel p { color: #493200 !important; } .node.complete .nodeLabel p { color: #174223 !important; } .edgeLabel, .edgeLabel p { color: #172b4d !important; background-color: #eef4ff !important; } .labelBkg { fill: #eef4ff !important; opacity: 1 !important; } marker path { fill: #7c8799 !important; stroke: #7c8799 !important; }"}}%%
-flowchart TD
-    brief["1. Debate the problem<br/>Debated brief"]
-    reviewBrief["STOP · Review the brief<br/>Human approves?"]
-    intent["2. Establish specification intent<br/>Requirements, proposals, open questions"]
-    reviewIntent["STOP · Review the intent<br/>Human approves?"]
-    bundle["3. Prepare the full spec bundle<br/>Spec, plan, contracts, tasks, checks"]
-    reviewBundle["STOP · Review the bundle<br/>Human approves implementation?"]
-    code["4. Implement the approved bundle<br/>Code, tests, docs, results"]
-    reviewCode["STOP · Review the implementation"]
-    repair["5. Fix, check, repeat<br/>Correct findings and verify changes"]
-    accept["Human accepts the implementation?"]
-    done["Implementation complete<br/>Publishing and deployment are separate"]
+flowchart LR
+    subgraph planning["Planning and specification"]
+        direction TB
+        brief["1. Debate the problem<br/>Debated brief"]
+        reviewBrief["STOP · Review the brief<br/>Human approves?"]
+        intent["2. Establish specification intent<br/>Requirements, proposals,<br/>open questions"]
+        reviewIntent["STOP · Review the intent<br/>Human approves?"]
+        bundle["3. Prepare the full spec bundle<br/>Spec, plan, contracts,<br/>tasks, checks"]
+        reviewBundle["STOP · Review the bundle<br/>Human approves implementation?"]
 
-    brief --> reviewBrief
-    reviewBrief -->|Revise| brief
-    reviewBrief -->|Approve| intent
-    intent --> reviewIntent
-    reviewIntent -->|Revise| intent
-    reviewIntent -->|Approve| bundle
-    bundle --> reviewBundle
-    reviewBundle -->|Revise| bundle
-    reviewBundle -->|Approve| code
-    code --> reviewCode --> repair --> accept
-    accept -->|More corrections| repair
-    accept -->|Accept| done
+        brief --> reviewBrief
+        reviewBrief -->|Revise| brief
+        reviewBrief -->|Approve| intent
+        intent --> reviewIntent
+        reviewIntent -->|Revise| intent
+        reviewIntent -->|Approve| bundle
+        bundle --> reviewBundle
+        reviewBundle -->|Revise| bundle
+    end
+
+    subgraph implementation["Implementation and verification"]
+        direction TB
+        code["4. Implement the approved bundle<br/>Code, tests, docs, results"]
+        reviewCode["STOP · Review the implementation"]
+        repair["5. Fix, check, repeat<br/>Correct findings and verify changes"]
+        accept["Human accepts the implementation?"]
+        done["Implementation complete<br/>Publishing and deployment<br/>are separate"]
+
+        code --> reviewCode --> repair --> accept
+        accept -->|More corrections| repair
+        accept -->|Accept| done
+    end
+
+    planning -->|After bundle approval| implementation
 
     linkStyle default stroke:#7c8799,stroke-width:1.5px;
 
