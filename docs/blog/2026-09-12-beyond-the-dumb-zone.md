@@ -796,7 +796,9 @@ coordination.
 So far, based on our active production work in `ctx` we have found that:
 
 * **history helps with unresolved design questions**,
-* while **a good handoff works just as well when the spec is complete**. 
+* while a good handoff works just as well when the spec is a "*bounded task*"
+  that is *well-defined* and there is not much room for ambiguity
+  (*for, i.e., add a new flag to the CLI*).
 
 This is important in telling us **when keeping the session is worth it**.
 
