@@ -385,7 +385,7 @@ flowchart TD
     classDef complete fill:#e8f5eb,stroke:#347544,color:#174223 !important;
     class brief,intent,bundle,code,repair work;
     class reviewBrief,reviewIntent,reviewBundle,reviewCode,accept stop;
-    class done complete;
+    class done complete;;
 ```
 
 For every **STOP** checkpoint above, the resulting artifacts are reviewed by
