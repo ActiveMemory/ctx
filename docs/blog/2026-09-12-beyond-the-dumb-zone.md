@@ -356,7 +356,7 @@ those tools.
 ```mermaid
 flowchart TD
     brief["1. Debate the problem<br/>Debated brief"]
-    reviewBrief{"STOP · Review the brief<br/>Human approves?"}
+    reviewBrief["STOP · Review the brief<br/>Human approves?"]
     intent["2. Establish specification intent<br/>Requirements, proposals, open questions"]
     reviewIntent["STOP · Review the intent<br/>Human approves?"]
     bundle["3. Prepare the full spec bundle<br/>Spec, plan, contracts, tasks, checks"]
