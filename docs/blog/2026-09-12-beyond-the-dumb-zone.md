@@ -427,7 +427,7 @@ The agent converts the approved debate into a document that separates
 settled requirements from proposals, assumptions, and unresolved
 choices.
 
-Check what survived the rewrite. Did a conditional
+**Check what survived the rewrite**. Did a conditional
 preference become a mandatory requirement? Did a rejected approach
 return through different wording? Did an important exclusion
 disappear? Is it clear who needs to answer each remaining question?
@@ -441,7 +441,7 @@ before that handoff.
 The next artifact includes the specification, design or plan,
 contracts, tasks, and consistency analysis appropriate to the project.
 
-Review the complete bundle together. An individually reasonable task
+**Review the complete bundle together**. An individually reasonable task
 list can contradict a contract. A design can satisfy the feature
 description while violating an operational constraint. A test plan can
 verify examples without covering the required failure behavior.
@@ -481,7 +481,7 @@ The agent evaluates findings, makes justified corrections, updates
 evidence, and stops again. Reviewers verify those corrections and
 inspect affected behavior for regressions.
 
-Completion requires explicit human acceptance. Unresolved findings
+**Completion requires explicit human acceptance**. Unresolved findings
 remain visible, including their impact and the reason they are accepted
 or deferred. Copying work to another environment, opening a pull
 request, publishing, or deploying remain separate actions governed by
