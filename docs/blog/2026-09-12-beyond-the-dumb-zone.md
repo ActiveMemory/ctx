@@ -291,10 +291,10 @@ on side questions and this article.
 The agent responsible for authoring the artifacts and eventually implementing 
 the feature has also remained in the same session.
 
-My intention is to keep those sessions through implementation and the
+Our intention is to keep those sessions through implementation and the
 subsequent code-review loop as well. 
 
-I do not need the implementer to get everything right on its first
+We do not need the implementer to get everything right on its first
 attempt: I need it to understand the design, respond to useful feedback,
 and make changes we can check. **We can correct its work without first
 throwing away the discussion that led to it**.
