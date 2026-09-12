@@ -1,0 +1,1749 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ctx provides temporal continuity across sessions">
+      
+      
+        <meta name="author" content="Volkan Özçelik">
+      
+      
+        <link rel="canonical" href="https://ctx.ist/blog/2026-03-04-agent-memory-is-infrastructure/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../images/favicon-32.png">
+      <meta name="generator" content="zensical-0.0.51">
+    
+    
+      
+        <title>Agent Memory Is Infrastructure - ctx: do you remember?</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.62c9b9cc.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#agent-memory-is-infrastructure" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+      
+  <img src="../../images/ctx-favicon-32.png" alt="ctx: do you remember?">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ctx: do you remember?
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Agent Memory Is Infrastructure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to Dark Mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to Dark Mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to Light Mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to Light Mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/ActiveMemory/ctx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ActiveMemory/ctx
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  Manifesto
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../thesis/" class="md-tabs__link">
+        
+  
+  The Thesis
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../home/" class="md-tabs__link">
+          
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../recipes/" class="md-tabs__link">
+          
+  
+  Recipes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cli/" class="md-tabs__link">
+          
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../operations/" class="md-tabs__link">
+          
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../security/" class="md-tabs__link">
+          
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+      
+  <img src="../../images/ctx-favicon-32.png" alt="ctx: do you remember?">
+
+    </a>
+    ctx: do you remember?
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ActiveMemory/ctx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ActiveMemory/ctx
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-flame" viewBox="0 0 24 24"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Manifesto
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../thesis/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-scroll-text" viewBox="0 0 24 24"><path d="M15 12h-5M15 8h-5M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  The Thesis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-newspaper" viewBox="0 0 24 24"><path d="M15 18h-5M18 14h-8M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="10" y="6" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Blog
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../home/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../recipes/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-chef-hat" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1ZM6 17h12"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Recipes
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../cli/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-terminal" viewBox="0 0 24 24"><path d="M12 19h8M4 17l6-6-6-6"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  CLI
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../reference/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Reference
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../operations/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Operations
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../security/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Security
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem-isnt-forgetting-its-not-building-anything-that-lasts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The Problem Isn't Forgetting: It's Not Building Anything That Lasts.
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-notepad-isnt-the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The Notepad Isn't the Problem
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-memory-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The Memory Stack
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-systems-accumulate-knowledge" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Software Systems Accumulate Knowledge
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-infrastructure-means" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What Infrastructure Means
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-git-clone-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The <code>git clone</code> Test
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-gets-lost-without-infrastructure-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What Gets Lost without Infrastructure Memory
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-is-boring-thats-the-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Infrastructure Is Boring. That's the Point.
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-cooperative-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The Cooperative Layer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-layer-that-doesnt-exist-yet" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A Layer That Doesn't Exist Yet
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-arc" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The Arc
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="agent-memory-is-infrastructure">Agent Memory Is Infrastructure<a class="headerlink" href="#agent-memory-is-infrastructure" title="Permanent link">&para;</a></h1>
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
+<h2 id="the-problem-isnt-forgetting-its-not-building-anything-that-lasts">The Problem Isn't Forgetting: It's Not Building Anything That Lasts.<a class="headerlink" href="#the-problem-isnt-forgetting-its-not-building-anything-that-lasts" title="Permanent link">&para;</a></h2>
+<p><em>Volkan Özçelik / March 4, 2026</em></p>
+<div class="admonition question">
+<p class="admonition-title">A New Developer Joins Your Team Tomorrow and Clones the Repo: What Do They Know?</p>
+<p>If the answer depends on which machine they're using, which
+agent they're running, or whether someone remembered to paste
+the right prompt: <strong>that's not memory</strong>. </p>
+<p>That's <strong>an accident waiting to be forgotten</strong>.</p>
+</div>
+<p>Every AI coding agent today has the same fundamental design: it
+starts fresh.</p>
+<p>You open a session, load context, do some work, close the session.
+Whatever the agent learned (<em>about your codebase, your decisions,
+your constraints, your preferences</em>) <strong>evaporates</strong>.</p>
+<p>The obvious fix seems to be "memory":</p>
+<ul>
+<li>Give the agent a "<em>notepad</em>";</li>
+<li>Let it write things down;</li>
+<li>Next session, hand it the notepad.</li>
+</ul>
+<p>Problem solved...</p>
+<p>...except it isn't.</p>
+<hr />
+<h2 id="the-notepad-isnt-the-problem">The Notepad Isn't the Problem<a class="headerlink" href="#the-notepad-isnt-the-problem" title="Permanent link">&para;</a></h2>
+<p>Memory is a <strong>runtime concern</strong>. It answers a legitimate question:</p>
+<p><em>How do I give this stateless process useful state?</em></p>
+<p>That's a real problem. Worth solving. And it's being solved: Agent
+memory systems are shipping. Agents can now write things down and
+read them back from the next session: That's genuine progress.</p>
+<p>But there's a different problem that memory <strong>doesn't</strong> touch:</p>
+<p><strong>The project itself accumulates knowledge that has nothing to do
+with any single session.</strong></p>
+<ul>
+<li><strong>Why</strong> was the auth system rewritten? Ask the developer who did it
+  (<em>if they're still here</em>).</li>
+<li><strong>Why</strong> does the deployment script have that strange environment
+  flag? There was a reason... once.</li>
+<li><strong>What</strong> did the team decide about error handling when they hit that
+  edge case two months ago?</li>
+</ul>
+<p><strong>Gone!</strong></p>
+<p>Not because the agent forgot.</p>
+<p>Because <strong>the project</strong> has no memory at all.</p>
+<hr />
+<h2 id="the-memory-stack">The Memory Stack<a class="headerlink" href="#the-memory-stack" title="Permanent link">&para;</a></h2>
+<p>Agent memory is not a single thing. Like any computing system,
+it forms a hierarchy of persistence, scope, and reliability:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Analogy</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>L1: Ephemeral context</strong></td>
+<td>CPU registers</td>
+<td>Current prompt, conversation</td>
+</tr>
+<tr>
+<td><strong>L2: Tool-managed memory</strong></td>
+<td>CPU cache</td>
+<td>Agent memory files</td>
+</tr>
+<tr>
+<td><strong>L3: System memory</strong></td>
+<td>RAM/filesystem</td>
+<td>Project knowledge base</td>
+</tr>
+</tbody>
+</table>
+<p><strong>L1 is what the agent sees right now</strong>: the prompt, the conversation
+history, the files it has open. It's fast, it's rich, and it
+vanishes when the session ends.</p>
+<p><strong>L2 is what agent memory systems provide</strong>: a per-machine notebook
+that survives across sessions. It's a cache: useful, but local.
+And like any cache, it has limits:</p>
+<ul>
+<li><strong>Per-machine</strong>: it doesn't travel with the repository.</li>
+<li><strong>Unstructured</strong>: decisions, learnings, and tasks are
+  undifferentiated notes.</li>
+<li><strong>Ungoverned</strong>: the agent self-curates with no quality controls,
+  no drift detection, no consolidation.</li>
+<li><strong>Invisible to the team</strong>: a new developer cloning the repo gets
+  none of it.</li>
+</ul>
+<p>The problem is that most current systems stop here.</p>
+<p>They give the agent a notebook.</p>
+<p>But they never give the project a memory.</p>
+<p>The result is predictable: every new session begins with partial
+amnesia, and every new developer begins with partial archaeology.</p>
+<p><strong>L3 is system memory</strong>: structured, versioned knowledge that lives
+<em>in the repository</em> and travels wherever the code travels.</p>
+<p>The layers are <strong>complementary</strong>, not competitive.</p>
+<p>But the relationship between them needs to be <strong>designed</strong>, not
+assumed.</p>
+<hr />
+<h2 id="software-systems-accumulate-knowledge">Software Systems Accumulate Knowledge<a class="headerlink" href="#software-systems-accumulate-knowledge" title="Permanent link">&para;</a></h2>
+<p>Software projects quietly accumulate knowledge over time.</p>
+<p>Some of it lives in code. <strong>Much of it does not</strong>:</p>
+<ul>
+<li>Architectural tradeoffs. </li>
+<li>Debugging discoveries. </li>
+<li>Conventions that emerged after painful incidents. </li>
+<li>Constraints that aren't visible in the source but shape every 
+  line written afterward.</li>
+</ul>
+<p>Organizations accumulate this kind of knowledge too:</p>
+<p><strong>Slowly</strong>, <strong>implicitly</strong>, often <strong>invisibly</strong>.</p>
+<p>When there is no durable place for it to live, it <strong>leaks away</strong>.
+And the next person rediscovers the same lessons the hard way.</p>
+<p>This isn't a memory problem. <strong>It's an infrastructure problem</strong>.</p>
+<p>We wrote about this in <a href="../2026-02-17-context-as-infrastructure/">Context as Infrastructure</a>:
+context isn't a prompt you paste at the start of a session.</p>
+<p><strong>Context is a persistent layer</strong> you maintain like any other piece of
+infrastructure. </p>
+<p><a href="../2026-02-17-context-as-infrastructure/">Context as Infrastructure</a> made the argument <strong>structurally</strong>.
+This post makes it <strong>through time and team continuity</strong>:</p>
+<p><strong>The knowledge a team accumulates over months cannot fit in any single
+agent's notepad, no matter how large the notepad becomes.</strong></p>
+<hr />
+<h2 id="what-infrastructure-means">What Infrastructure Means<a class="headerlink" href="#what-infrastructure-means" title="Permanent link">&para;</a></h2>
+<p>Infrastructure isn't about the present. It's about <strong>continuity
+across time, people, and machines</strong>.</p>
+<p><code>git</code> didn't solve the problem of "<em>what am I editing right now?</em>"; it
+solved the problem of "<em>how does collaborative work persist, travel,
+and remain coherent across everyone who touches it?</em>"</p>
+<ul>
+<li>Your editor's undo history is <em>runtime state</em>.</li>
+<li>Your <code>git</code> history is <strong>infrastructure</strong>.</li>
+</ul>
+<p>Runtime state and infrastructure have completely different
+properties:</p>
+<table>
+<thead>
+<tr>
+<th>Runtime state</th>
+<th>Infrastructure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lives in the session</td>
+<td>Lives in the repository</td>
+</tr>
+<tr>
+<td>Per-machine</td>
+<td>Travels with <code>git clone</code></td>
+</tr>
+<tr>
+<td>Serves the individual</td>
+<td>Serves the team</td>
+</tr>
+<tr>
+<td>Managed by the runtime</td>
+<td>Managed by the project</td>
+</tr>
+<tr>
+<td>Disappears</td>
+<td>Accumulates</td>
+</tr>
+</tbody>
+</table>
+<p>You wouldn't store your architecture decisions in your editor's
+undo history.</p>
+<p><strong>You'd commit them.</strong></p>
+<p>The same logic applies to the knowledge your team accumulates
+working with AI agents.</p>
+<hr />
+<h2 id="the-git-clone-test">The <code>git clone</code> Test<a class="headerlink" href="#the-git-clone-test" title="Permanent link">&para;</a></h2>
+<p>Here's a simple test for whether something is memory or
+infrastructure:</p>
+<p><em>If a new developer joins your team tomorrow and clones the
+repository, do they get it?</em></p>
+<p>If no: it's memory: It lives somewhere on someone's machine,
+scoped to their runtime, invisible to everyone else.</p>
+<p>If yes: it's <strong>infrastructure</strong>: It travels with the project. It's
+part of what the codebase <strong>is</strong>, not just what someone currently
+knows about it.</p>
+<p>Decisions. Conventions. Architectural rationale. Hard-won debugging
+discoveries. The constraints that aren't in the code but shape
+every line of it.</p>
+<p>None of these belong in someone's session notes.</p>
+<p>They belong in the repository:</p>
+<ul>
+<li><strong>Versioned</strong>;</li>
+<li><strong>Reviewable</strong>;</li>
+<li><strong>Accessible</strong> to every developer (<em>and every agent</em>) who works on
+  the project.</li>
+</ul>
+<p>The team onboarding story makes this concrete:</p>
+<ol>
+<li>New developer joins team. Clones repo. </li>
+<li>Gets all accumulated project decisions, learnings, conventions, architecture, 
+   and task state immediately. </li>
+<li><strong>There's no step 3</strong>.</li>
+</ol>
+<p><strong>No</strong> setup; <strong>No</strong> "<em>ask Sarah about the auth decision.</em>"; <strong>No</strong> 
+re-discovery of solved problems.</p>
+<ul>
+<li><em>Agent memory</em> gives that developer <strong>nothing</strong>. </li>
+<li><strong>Infrastructure</strong> gives them <strong>everything</strong> the team has learned.</li>
+</ul>
+<p><strong>Clone the repo. Get the knowledge.</strong></p>
+<p>That's the test. That's the difference.</p>
+<hr />
+<h2 id="what-gets-lost-without-infrastructure-memory">What Gets Lost without Infrastructure Memory<a class="headerlink" href="#what-gets-lost-without-infrastructure-memory" title="Permanent link">&para;</a></h2>
+<p>Consider the knowledge that accumulates around a non-trivial project:</p>
+<ul>
+<li>The decision to use library X over Y, and the three reasons the
+  team decided Y wasn't acceptable.</li>
+<li>The constraint that service A cannot call service B
+  synchronously, discovered after a production incident.</li>
+<li>The convention that all new modules implement a specific
+  interface, and <strong>why</strong> that convention exists.</li>
+<li>The tasks currently in progress, blocked, or waiting on a
+  dependency.</li>
+<li>The experiments that failed, so nobody runs them again.</li>
+</ul>
+<p><strong>None of this</strong> is in the code.</p>
+<p><strong>None of it</strong> fits neatly in a commit message.</p>
+<p><strong>None of it</strong> survives a developer leaving the team, a laptop dying,
+or a new agent session starting.</p>
+<p>Without structured project memory:</p>
+<ul>
+<li>Teams re-derive things they've already derived;</li>
+<li>Agents make decisions that contradict decisions already made;</li>
+<li>New developers ask questions that were answered months ago.</li>
+</ul>
+<p>The project accumulates knowledge that immediately begins to
+<strong>leak</strong>.</p>
+<p>The real problem <strong>isn't</strong> that agents forget.</p>
+<p>The real problem is that the project has <strong>no persistent cognitive structure</strong>.</p>
+<p>We explored this in <a href="../2026-02-28-the-last-question/">The Last Question</a>: Asimov's story
+about a question asked across millennia, where each new
+intelligence inherits the output but not the continuity. The same
+pattern plays out in software projects on a smaller timescale:</p>
+<ul>
+<li>Context disappears with the people who held it;</li>
+<li>The next session inherits the code but not the reasoning.</li>
+</ul>
+<hr />
+<h2 id="infrastructure-is-boring-thats-the-point">Infrastructure Is Boring. That's the Point.<a class="headerlink" href="#infrastructure-is-boring-thats-the-point" title="Permanent link">&para;</a></h2>
+<p>Good infrastructure is invisible:</p>
+<ul>
+<li>You don't think about the filesystem while writing code. </li>
+<li>You don't think about git's object model when you commit.</li>
+</ul>
+<p>The infrastructure is just there: reliable, consistent, quietly
+doing its job.</p>
+<p>Project memory infrastructure should work the same way.</p>
+<p><strong>It should live in the repository</strong>, committed alongside the code.
+It should be readable by any agent or human working on the project.
+It should have <strong>structure</strong>: not a pile of freeform notes, but
+typed knowledge:</p>
+<ul>
+<li><strong>Decisions</strong> with rationale.</li>
+<li><strong>Tasks</strong> with lifecycle.</li>
+<li><strong>Conventions</strong> with a <strong>purpose</strong>.</li>
+<li><strong>Learnings</strong> that can be referenced and consolidated.</li>
+</ul>
+<p>And it should be <strong>maintained</strong>, not merely accumulated: </p>
+<p>The <a href="../2026-02-03-the-attention-budget/">Attention Budget</a> applies here: unstructured notes grow
+until they overflow whatever container holds them. Structured,
+governed knowledge stays useful because it's curated, not just
+appended.</p>
+<p>Over time, it becomes part of the project itself: something
+developers rely on without thinking about it.</p>
+<hr />
+<h2 id="the-cooperative-layer">The Cooperative Layer<a class="headerlink" href="#the-cooperative-layer" title="Permanent link">&para;</a></h2>
+<p>Here's where it gets interesting.</p>
+<p>Agent memory systems and project infrastructure don't have to be
+separate worlds. </p>
+<ul>
+<li>The most powerful relationship isn't competition;</li>
+<li>It is not even "<em>coopetition</em>";</li>
+<li>The most powerful relationship is <strong>bidirectional cooperation</strong>.</li>
+</ul>
+<p>Agent memory is good at capturing things "<em>in the moment</em>": the quick
+observation, the session-scoped pattern, the "<em>I should remember
+this</em>" note. </p>
+<p><strong>That's valuable</strong>. That's <strong>L2</strong> doing its job.</p>
+<p>But those notes shouldn't <em>stay</em> in L2 forever. </p>
+<p>The ones worth keeping should flow into project infrastructure: </p>
+<ul>
+<li><strong>classified</strong>,</li>
+<li><strong>typed</strong>, </li>
+<li><strong>governed</strong>.</li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Agent memory (L2)  --&gt;  classify  --&gt;  Project knowledge (L3)
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                                        |
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Project knowledge  --&gt;  assemble  --&gt;  Agent memory (L2)
+</span></code></pre></div>
+<p><strong>This works in both directions</strong>: Project infrastructure can push
+curated knowledge <em>back into</em> agent memory, so the agent loads it
+through its native mechanism. </p>
+<p>No special tooling needed for basic knowledge delivery.</p>
+<p>The agent doesn't even need to know the infrastructure exists.
+It simply loads its memory and finds more knowledge than it wrote.</p>
+<p>This is cooperative, not adjacent: The infrastructure manages
+knowledge; the agent's native memory system delivers it. Each
+layer does what it's good at.</p>
+<p>The result: agent memory becomes a <strong>device driver</strong> for project
+infrastructure. Another input source. And the more agent memory
+systems exist (<em>across different tools, different models, different
+runtimes</em>), the more valuable a unified curation layer becomes.</p>
+<hr />
+<h2 id="a-layer-that-doesnt-exist-yet">A Layer That Doesn't Exist Yet<a class="headerlink" href="#a-layer-that-doesnt-exist-yet" title="Permanent link">&para;</a></h2>
+<p>Most projects today have no infrastructure for their accumulated
+knowledge:</p>
+<ul>
+<li>Agents keep notes. </li>
+<li>Developers keep notes. </li>
+<li><strong>Sometimes</strong> those notes survive.</li>
+</ul>
+<p>Often they <strong>don't</strong>.</p>
+<p>But the repository (<em>the place where the project actually lives</em>)
+has nowhere for that knowledge to go.</p>
+<p>That missing layer is what <a href="https://ctx.ist"><code>ctx</code></a> builds: a version-controlled, 
+structured knowledge layer that lives in <code>.context/</code> alongside your code and 
+travels wherever your repository travels.</p>
+<p>Not another memory feature.</p>
+<p>Not a wrapper around an agent's notepad.</p>
+<p><strong>Infrastructure.</strong> The kind that survives sessions, survives
+team changes, survives the agent runtime evolving underneath it.</p>
+<p>The agent's memory is the agent's problem.</p>
+<p>The project's memory is an infrastructure problem.</p>
+<p>And <strong>infrastructure belongs in the repository</strong>.</p>
+<div class="admonition quote">
+<p class="admonition-title">If You Remember One Thing from This Post...</p>
+<p><strong>Prompts are conversations: Infrastructure persists.</strong></p>
+<p>Your AI doesn't need a better notepad. It needs a filesystem:</p>
+<p><em>versioned, structured, budgeted, and maintained</em>.</p>
+<p><strong>The best context is the context that was there before
+you started the session.</strong></p>
+</div>
+<hr />
+<h2 id="the-arc">The Arc<a class="headerlink" href="#the-arc" title="Permanent link">&para;</a></h2>
+<p>This post extends the argument made in <a href="../2026-02-17-context-as-infrastructure/">Context as
+Infrastructure</a>. That post explained <em>how</em> to structure
+persistent context (<em>filesystem, separation of concerns,
+persistence tiers</em>). This one explains <em>why</em> that structure matters
+at the team level, and where agent memory fits in the stack.</p>
+<p>Together they sit in a sequence that has been building since the
+<a href="../2026-01-27-building-ctx-using-ctx/">origin story</a>:</p>
+<ul>
+<li><strong><a href="../2026-02-03-the-attention-budget/">The Attention Budget</a></strong>: the resource you're managing</li>
+<li><strong><a href="../2026-02-17-context-as-infrastructure/">Context as Infrastructure</a></strong>: the system you build
+  to manage it</li>
+<li><strong>Agent Memory Is Infrastructure</strong> (<em>this post</em>): why that system
+  must outlive the fabric </li>
+<li><strong><a href="../2026-02-28-the-last-question/">The Last Question</a></strong>: what happens when it does</li>
+</ul>
+<p>The thread running through all of them: <strong>persistence is not a
+feature. It's a design constraint.</strong> </p>
+<p>Systems that don't account for it eventually lose the knowledge they need to 
+function.</p>
+<hr />
+<p><em>See also: <a href="../2026-02-17-context-as-infrastructure/">Context as Infrastructure</a>:
+the architectural companion that explains how to structure the
+persistent layer this post argues for.</em></p>
+<p><em>See also: <a href="../2026-02-28-the-last-question/">The Last Question</a>:
+the same argument told through Asimov, substrate migration, and
+what it means to build systems where sessions don't reset.</em></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026&ndash;present Context contributors.<br>
+<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code>'s code</a> is distributed under
+<a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
+The documentation on this website is distributed under
+<a href="https://creativecommons.org/licenses/by/4.0/deed.en"><strong>CC-BY-4.0</strong></a>.
+
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/ActiveMemory/ctx" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://ctx.ist/discord" target="_blank" rel="noopener" title="ctx.ist" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M492.5 69.8c-.2-.3-.4-.6-.8-.7-38.1-17.5-78.4-30-119.7-37.1-.4-.1-.8 0-1.1.1s-.6.4-.8.8c-5.5 9.9-10.5 20.2-14.9 30.6-44.6-6.8-89.9-6.8-134.4 0-4.5-10.5-9.5-20.7-15.1-30.6-.2-.3-.5-.6-.8-.8s-.7-.2-1.1-.2C162.5 39 122.2 51.5 84.1 69c-.3.1-.6.4-.8.7C7.1 183.5-13.8 294.6-3.6 404.2c0 .3.1.5.2.8s.3.4.5.6c44.4 32.9 94 58 146.8 74.2.4.1.8.1 1.1 0s.7-.4.9-.7c11.3-15.4 21.4-31.8 30-48.8.1-.2.2-.5.2-.8s0-.5-.1-.8-.2-.5-.4-.6-.4-.3-.7-.4c-15.8-6.1-31.2-13.4-45.9-21.9-.3-.2-.5-.4-.7-.6s-.3-.6-.3-.9 0-.6.2-.9.3-.5.6-.7c3.1-2.3 6.2-4.7 9.1-7.1.3-.2.6-.4.9-.4s.7 0 1 .1c96.2 43.9 200.4 43.9 295.5 0 .3-.1.7-.2 1-.2s.7.2.9.4c2.9 2.4 6 4.9 9.1 7.2.2.2.4.4.6.7s.2.6.2.9-.1.6-.3.9-.4.5-.6.6c-14.7 8.6-30 15.9-45.9 21.8-.2.1-.5.2-.7.4s-.3.4-.4.7-.1.5-.1.8.1.5.2.8c8.8 17 18.8 33.3 30 48.8.2.3.6.6.9.7s.8.1 1.1 0c52.9-16.2 102.6-41.3 147.1-74.2.2-.2.4-.4.5-.6s.2-.5.2-.8c12.3-126.8-20.5-236.9-86.9-334.5zm-302 267.7c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.4 59.2-52.8 59.2m195.4 0c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.2 59.2-52.8 59.2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://ctx.ist/feed.xml" target="_blank" rel="noopener" title="ctx.ist" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32 229.8 0 416 186.2 416 416 0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96 14.3 96 0 81.7 0 64m0 352a64 64 0 1 1 128 0 64 64 0 1 1-128 0m32-256c159.1 0 288 128.9 288 288 0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224-17.7 0-32-14.3-32-32s14.3-32 32-32"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7f30b55.min.js"></script>
+      
+    
+  </body>
+</html>
