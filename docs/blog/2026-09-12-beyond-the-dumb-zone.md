@@ -82,8 +82,7 @@ and corrected mistakes as we found them.
 **A fuller context window, on its own, is not a reason to start over**.
 
 Long conversations can cause problems, though. The research below shows several
-ways that happens. It does not give us a token count at which every
-coding session should restart. 
+ways that happens. 
 
 ## What Goes Wrong in a Long Conversation?
 
