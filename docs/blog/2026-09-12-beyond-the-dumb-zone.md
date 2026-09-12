@@ -73,12 +73,15 @@ including details the final document may not fully express.
 **A fresh session may have less interference. It may also have less
 understanding**.
 
-For a feature that takes hours of discussion, I prefer to keep the
-agents that took part in that discussion. We write down what we agreed,
-review the work at each stage, and correct mistakes as we find them. A
-fuller context window, on its own, is not a reason to start over.
+For a feature that takes hours of discussion, keeping the
+agents that took part in that discussion would make sense. 
 
-Long conversations can cause problems. The research below shows several
+After all, we wrote down what we agreed, reviewed the work at each stage, 
+and corrected mistakes as we found them. 
+
+**A fuller context window, on its own, is not a reason to start over**.
+
+Long conversations can cause problems, though. The research below shows several
 ways that happens. It does not give us a token count at which every
 coding session should restart. 
 
