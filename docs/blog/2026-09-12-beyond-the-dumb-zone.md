@@ -176,7 +176,7 @@ sufficient, high-signal information. That guidance is compatible with
 preserving substantial useful history; "minimal" need not mean short.
 [Anthropic, 2025](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
 
-### Reviewers Can Help (*...and be wrong*)
+### Reviewers Can Help (*...and confidently be wrong*)
 
 Du and colleagues found benefits from multiagent debate on the
 factuality and reasoning tasks they studied. That is a reason to try multiple 
