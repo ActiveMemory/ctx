@@ -666,7 +666,7 @@ Identify the disputed assumption and ask what observation or product
 decision would resolve it. Another general request to "review again"
 may only generate more prose.
 
-## When to Keep, Restructure, or Reset Context
+## When to Keep, Restructure, or `/clear` Context
 
 Keep the session while it works. When it stops working, identify what
 went wrong before deciding whether a reset would help.
@@ -862,7 +862,7 @@ important claims, including claims made by reviewers. When a
 concern remains unresolved, accept it consciously or keep the gate
 closed.
 
-## Before You Reset
+## Before You `/clear`
 
 Before clearing a coding session, ask what you are trying to fix. If the
 agent is following current decisions and its work holds up under review,
