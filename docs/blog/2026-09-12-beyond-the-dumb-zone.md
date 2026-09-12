@@ -380,12 +380,12 @@ flowchart TD
     accept -->|More corrections| repair
     accept -->|Accept| done
 
-    classDef work fill:#eef4ff,stroke:#3561a7,color:#172b4d !important;
-    classDef stop fill:#fff4dc,stroke:#9a6700,color:#493200 !important;
-    classDef complete fill:#e8f5eb,stroke:#347544,color:#174223 !important;
+    classDef work fill:#eef4ff,stroke:#3561a7,color:#172b4d,--md-mermaid-label-fg-color:#172b4d;
+    classDef stop fill:#fff4dc,stroke:#9a6700,color:#493200,--md-mermaid-label-fg-color:#493200;
+    classDef complete fill:#e8f5eb,stroke:#347544,color:#174223,--md-mermaid-label-fg-color:#174223;
     class brief,intent,bundle,code,repair work;
     class reviewBrief,reviewIntent,reviewBundle,reviewCode,accept stop;
-    class done complete;;
+    class done complete;
 ```
 
 For every **STOP** checkpoint above, the resulting artifacts are reviewed by
