@@ -696,8 +696,9 @@ findings, and the next task. A fresh session with that information may
 work very well.
 
 An optional fresh reviewer can also be useful for a narrow question:
-"**Does this contract make sense on its own?**" or "**Can a developer follow
-this installation guide without the debate?**" 
+
+* "**Does this contract make sense on its own?**" 
+* or "**Can a developer follow this installation guide without the debate?**" 
 
 That checks whether the document works for someone who was not in the
 design discussion.
