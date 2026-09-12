@@ -306,7 +306,7 @@ exception rather than the norm.
 
 ## This Is Not Our First Rodeo
 
-This is not the first time we are following this workflow and so far, 
+This is not the first time we are following this workflow and so far
 we haven't gotten into a situation where the Oracle model proposes
 changes and the implementer agent wasn't able to implement them sufficiently,
 hence converging to a desired quality and product behavior.
@@ -326,13 +326,13 @@ We use one **implementation agent**, three **reviewers**, and a **human
 who makes the product decisions**. We keep their conversations across
 stages and save the agreed decisions in files.
 
-| Role                         | Responsibility                                                                                                                             | Boundary                                                        |
-|------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
-| Human product owner | Make product decisions, transfer the files, and approve each stage. | Decide whether remaining issues are acceptable. |
-| Implementation agent | Write the brief, spec, and code; run checks; respond to reviews. | Stop at each checkpoint. Ask before changing scope. |
-| External reviewer A | Review the current files using the project history and available evidence. | Say what it checked and what it could not check. |
-| External reviewer B | Review the same files and explain its findings. | Reach its own conclusions before reading A’s. |
-| Steering reviewer | Check the revised work against the user’s decisions and send further corrections. | Be willing to withdraw its own earlier advice. |
+| Role                                  | Responsibility                                                                    | Boundary                                            |
+|---------------------------------------|-----------------------------------------------------------------------------------|-----------------------------------------------------|
+| Human product owner                   | Make product decisions, transfer the files, and approve each stage.               | Decide whether remaining issues are acceptable.     |
+| Implementation agent (Frontier Model) | Write the brief, spec, and code; run checks; respond to reviews.                  | Stop at each checkpoint. Ask before changing scope. |
+| External reviewer A (Frontier Model)  | Review the current files using the project history and available evidence.        | Say what it checked and what it could not check.    |
+| External reviewer B (Frontier Model)  | Review the same files and explain its findings.                                   | Reach its own conclusions before reading A’s.       |
+| Steering reviewer (Frontier Model)    | Check the revised work against the user’s decisions and send further corrections. | Be willing to withdraw its own earlier advice.      |
 
 We sometimes call the steering reviewer an "oracle." It can be wrong
 too. Its findings need the same scrutiny as anyone else’s.
@@ -392,8 +392,8 @@ description while violating an operational constraint. A test plan can
 verify examples without covering the required failure behavior.
 
 For each important requirement, reviewers should find the design that
-implements it and the check that would show it works. The human approves the bundle version
-before implementation begins.
+implements it and the check that would show it works. The human approves 
+the bundle version before implementation begins.
 
 This stage is particularly important because three reviewers examining
 code against an incomplete specification can all miss the same lost
@@ -417,7 +417,8 @@ Reviewers inspect actual source and behavior where their tools permit;
 an author's summary is only a starting point.
 
 For work with an expensive architectural uncertainty, insert an
-optional review after the first meaningful implementation slice. Review it before building the rest.
+optional review after the first meaningful implementation slice. 
+Review it before building the rest.
 
 ### Stage 5: Fix, Check, Repeat
 
@@ -443,14 +444,15 @@ At each checkpoint, use the following sequence.
    to external reviewers A and B. Each records its findings before
    seeing the other's current conclusions.
 3. **Evaluate the feedback.** The implementation agent assesses each
-   finding, revises where justified, and records what it accepted or rejected and why. Feedback
-   is not automatically a requirement.
+   finding, revises where justified, and records what it accepted or 
+   rejected and why. Feedback is not automatically a requirement.
 4. **Synchronize the revision.** The human transfers the exact revised
    artifact and relevant evidence into the steering reviewer's
    workspace.
 5. **Review the revised candidate.** The steering reviewer inspects it
    against requirements, prior decisions, source, and evidence. Where
-   practical, provide a clean copy of the revised artifact, with the earlier reviews kept separately. It writes its own findings
+   practical, provide a clean copy of the revised artifact, with the earlier 
+   reviews kept separately. It writes its own findings
    first, then compares them with the earlier reviews.
 6. **Correct and verify.** The agent addresses findings and stops.
    Material revisions may return to the external reviewers. Repeat
@@ -465,30 +467,34 @@ helps it form its own judgment, although the revisions already reflect
 the earlier feedback.
 
 For an experiment that measures reviewer agreement, give all three
-reviewers the same frozen artifact before any revisions. For day-to-day
-engineering, sequential review can be preferable because the later
-reviewer checks what actually changed. Neither arrangement requires
+reviewers the same frozen artifact before any revisions. 
+
+For day-to-day engineering, sequential review can be preferable because 
+the later reviewer checks what actually changed. Neither arrangement requires
 erasing prior project context.
 
 ## Independence Without Amnesia
 
-A reviewer does not have to forget the project to review it independently.
+**A reviewer does not have to forget the project to review it independently**.
 
-A reviewer can remember the entire product discussion and still derive
+A reviewer can **remember** the entire product discussion and still derive
 its current findings without copying another reviewer's conclusions.
 Conversely, a fresh reviewer can be strongly anchored by an
 implementation summary that explains why the code is supposedly
 correct.
 
 The useful separation is between **shared facts** and **shared
-verdicts**. Reviewers should receive the same authoritative
-requirements, current decisions, and candidate version. They should
-first reach their own conclusions about the current candidate. After
-that, sharing findings is desirable: it allows errors to be challenged
-and omissions to be discovered.
+verdicts**:
 
-Persistent reviewers can contribute a form of continuity that fresh
-reviewers lack. They can recognize that a newly proposed
+Reviewers should receive the same **authoritative requirements, 
+current decisions, and candidate version**. They should
+first reach their own conclusions about the current candidate. 
+
+After that, sharing findings is **desirable**: 
+it allows errors to be challenged and omissions to be discovered.
+
+**Persistent reviewers can contribute a form of continuity that fresh
+reviewers lack**: They can recognize that a newly proposed
 "simplification" reintroduces a previously rejected failure mode. They
 can also become attached to recommendations they helped create.
 
@@ -499,32 +505,33 @@ review itself. Do not force every problem into "the implementer failed
 to follow the plan." Sometimes the plan is wrong.
 
 !!! tip "Evidence Outweighs Votes"
-Avoid majority voting as the primary resolution method. One
-reviewer with a reproducible counterexample can outweigh two
-reviewers who found no issue. Three reviewers repeating the same
-unsupported concern do not turn it into evidence.
+    Avoid majority voting as the primary resolution method. One
+    reviewer with a reproducible counterexample can outweigh two
+    reviewers who found no issue. Three reviewers repeating the same
+    unsupported concern do not turn it into evidence.
 
-Reviewers help find problems. Evidence settles technical claims; the
-human settles product choices.
+* Reviewers help find problems. 
+* Evidence settles technical claims; 
+* **the human settles product choices**.
 
 ## What to Hand the Reviewer
 
 Long conversations become easier to use when the current state is
 explicit. A lightweight checkpoint package should include:
 
-- The stage, candidate identifier, and approved baseline it derives
+* The stage, candidate identifier, and approved baseline it derives
   from.
-- The artifacts under review, including exact code revision where
+* The artifacts under review, including exact code revision where
   applicable.
-- Current decisions, superseded assumptions, and unresolved questions.
-- A change summary relative to the previous reviewed version.
-- Validation commands, relevant environment information, outcomes, and
+* Current decisions, superseded assumptions, and unresolved questions.
+* A change summary relative to the previous reviewed version.
+* Validation commands, relevant environment information, outcomes, and
   known gaps.
-- Earlier findings, what was done about them, and why.
-- The action currently authorized and the action that still requires
+* Earlier findings, what was done about them, and why.
+* The action currently authorized and the action that still requires
   approval.
 
-**Keep the package proportional to the work**:
+### Keep the Package Proportional to the Work
 
 A small change can use a single Markdown file plus a commit. A large
 specification bundle may need an index. There is no benefit in generating
@@ -550,9 +557,9 @@ known_gaps:
   - <behavior-not-yet-verified>
 ```
 
-Adapt these fields to your tools and fill them with actual results. A command that the agent suggests running is
-different from a command it ran, and both are different from a command
-a reviewer reproduced independently.
+Adapt these fields to your tools and fill them with actual results. A command 
+that the agent suggests running is different from a command it ran, and both 
+are different from a command a reviewer reproduced independently.
 
 ### Example Finding Record
 
@@ -616,7 +623,8 @@ invariant directly.
 
 A reviewer without execution access should say that its review is
 static. A reviewer that receives only a diff should state what
-repository context is missing. Say what you checked and what you could not check.
+repository context is missing. Say what you checked and what you 
+could not check.
 
 ## When Reviews Stop Helping
 
@@ -624,7 +632,7 @@ Another review is useful if it finds a problem or checks a correction.
 It is less useful if it keeps reopening settled questions without new
 evidence. Agree on when to stop.
 
-Classify comments before acting on them. A defect violates an approved
+**Classify** comments before acting on them. A defect violates an approved
 expectation or exposes an actual failure. A scope question requires a
 product decision. An optional improvement may be worthwhile later. A
 style preference is not automatically a blocker.
@@ -635,20 +643,21 @@ corrections have been checked for affected regressions, and the human
 approves the candidate. Reviewers may retain documented reservations;
 everyone does not have to like every choice.
 
-Review the affected decisions again when a fix changes them. If a correction
-alters a public contract, it may require renewed specification review.
-If it only repairs an implementation branch to meet the existing
-contract, targeted verification may suffice. Judge the affected
-behavior and assumptions rather than mechanically rerunning every
-review.
+**Review the affected decisions** again when a fix changes them. 
+If a correction alters a public contract, it may require renewed 
+specification review. If it only repairs an implementation branch 
+to meet the existing contract, targeted verification may suffice. 
 
-Record important rejected findings, too. Otherwise a later reviewer may
+**Judge the affected behavior and assumptions rather than mechanically 
+rerunning every review**.
+
+**Record important rejected findings**, too. Otherwise a later reviewer may
 reopen the same concern without recognizing the evidence that settled
 it. Preserve the possibility of reconsideration when new evidence
 appears.
 
-If review rounds produce contradictory requests, repeatedly change the
-same decision, or stop yielding meaningful evidence, pause the loop.
+**If review rounds produce contradictory requests, repeatedly change the
+same decision, or stop yielding meaningful evidence, pause the loop**.
 Identify the disputed assumption and ask what observation or product
 decision would resolve it. Another general request to "review again"
 may only generate more prose.
@@ -661,7 +670,7 @@ went wrong before deciding whether a reset would help.
 | Observed situation                                                                    | First response                                                       | When a reset or handoff becomes reasonable                                          |
 |---------------------------------------------------------------------------------------|----------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | The agent uses current decisions correctly and produces verifiable progress.          | Continue. Keep current artifacts identifiable.                       | No reset is justified solely by occupancy.                                          |
-| An obsolete proposal reappears.                                                       | Show the decision that replaced it.      | The agent repeatedly returns to the obsolete premise despite correction.            |
+| An obsolete proposal reappears.                                                       | Show the decision that replaced it.                                  | The agent repeatedly returns to the obsolete premise despite correction.            |
 | The session contains large amounts of reproducible logs or obsolete source snapshots. | Use targeted retrieval and available pruning or compaction controls. | The harness cannot maintain a usable input and a prepared handoff is more reliable. |
 | Reviewers disagree because they examined different versions.                          | Synchronize the exact candidate.                                     | Resetting is unnecessary unless other problems remain.                              |
 | Implementation repeatedly fails the same clear invariant.                             | Inspect the failed assumption and require a concrete reproduction.   | A fresh implementer or focused diagnostic session can test another interpretation.  |
@@ -682,16 +691,19 @@ findings, and the next task. A fresh session with that information may
 work very well.
 
 An optional fresh reviewer can also be useful for a narrow question:
-"Does this contract make sense on its own?" or "Can a developer follow
-this installation guide without the debate?" That checks whether the document works for someone who was not in the
+"**Does this contract make sense on its own?**" or "**Can a developer follow
+this installation guide without the debate?**" 
+
+That checks whether the document works for someone who was not in the
 design discussion.
 
 ## What Does It Cost to Finish?
 
 Three persistent reviewers, repeated revisions, and human coordination
-consume time and money. The relevant question is whether they prevent
-enough defects, misunderstanding, and rework to justify that cost for
-the task.
+consume **time and money**. 
+
+The relevant question is whether they prevent enough defects, 
+misunderstanding, and rework to justify that cost for the task.
 
 Count the whole job:
 
@@ -713,14 +725,20 @@ A workflow that creates cheaper drafts but requires repeated
 reconstruction of intent may cost more to finish. A workflow that
 spends heavily on reviews of a trivial change may simply be wasteful.
 
-Caching can reduce the bill. It does not tell you whether the answer is right.
-Likewise, a shorter context can lower input cost without improving the
-final result. Read actual usage records and pricing for the environment
+**Caching can reduce the bill**. 
+However, it does not tell you whether the answer is right.
+
+Likewise, **a shorter context can lower input cost without improving the
+final result**. Read actual usage records and pricing for the environment
 in use rather than infer cost from the visible conversation length.
 
 I would spend this much review effort on ambiguous requirements or a
 design that would be expensive to get wrong. A small, easily tested fix
-probably needs less. Three reviewers are our choice for this work.
+probably needs less. 
+
+That said, **three reviewers** provides the "*sweet spot*" for classes of 
+work that a skilled senior engineer can spend *about a week* to implement 
+end-to-end.
 
 ## How to Test Whether the Approach Is Better
 
@@ -743,10 +761,11 @@ once.
 
 Use multiple tasks and repeated runs where affordable. Include both
 decisions that depend on historical rationale and tasks whose
-specification is self-sufficient. Fix model versions and record harness
-configuration, reasoning settings, tool permissions, context
-construction, and compaction behavior. When those cannot be fixed,
-report the variation.
+specification is self-sufficient. 
+
+Fix model versions and record harness configuration, reasoning settings, 
+tool permissions, context construction, and compaction behavior. 
+When those cannot be fixed, report the variation.
 
 Predefine acceptance criteria and evaluation checks before examining
 the results. Where practical, have a final evaluator inspect anonymized
@@ -768,9 +787,10 @@ versus three reviewers. These isolate whether gains come from retained
 context, review diversity, extra inference effort, or the human's
 coordination.
 
-We might find that history helps with unresolved design questions, while
-a good handoff works just as well when the spec is complete. That would
-tell us when keeping the session is worth it.
+We might find that **history helps with unresolved design questions**, while
+**a good handoff works just as well when the spec is complete**. 
+
+That would tell us when keeping the session is worth it.
 
 ## Instructions You Can Reuse
 

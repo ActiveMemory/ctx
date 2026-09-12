@@ -1363,6 +1363,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#keep-the-package-proportional-to-the-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Keep the Package Proportional to the Work
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#example-checkpoint-record" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1806,7 +1817,7 @@ throwing away the discussion that led to it</strong>.</p>
 However, based on former similar implementations, that case will be an
 exception rather than the norm.</p>
 <h2 id="this-is-not-our-first-rodeo">This Is Not Our First Rodeo<a class="headerlink" href="#this-is-not-our-first-rodeo" title="Permanent link">&para;</a></h2>
-<p>This is not the first time we are following this workflow and so far, 
+<p>This is not the first time we are following this workflow and so far
 we haven't gotten into a situation where the Oracle model proposes
 changes and the implementer agent wasn't able to implement them sufficiently,
 hence converging to a desired quality and product behavior.</p>
@@ -1835,22 +1846,22 @@ stages and save the agreed decisions in files.</p>
 <td>Decide whether remaining issues are acceptable.</td>
 </tr>
 <tr>
-<td>Implementation agent</td>
+<td>Implementation agent (Frontier Model)</td>
 <td>Write the brief, spec, and code; run checks; respond to reviews.</td>
 <td>Stop at each checkpoint. Ask before changing scope.</td>
 </tr>
 <tr>
-<td>External reviewer A</td>
+<td>External reviewer A (Frontier Model)</td>
 <td>Review the current files using the project history and available evidence.</td>
 <td>Say what it checked and what it could not check.</td>
 </tr>
 <tr>
-<td>External reviewer B</td>
+<td>External reviewer B (Frontier Model)</td>
 <td>Review the same files and explain its findings.</td>
 <td>Reach its own conclusions before reading A’s.</td>
 </tr>
 <tr>
-<td>Steering reviewer</td>
+<td>Steering reviewer (Frontier Model)</td>
 <td>Check the revised work against the user’s decisions and send further corrections.</td>
 <td>Be willing to withdraw its own earlier advice.</td>
 </tr>
@@ -1899,8 +1910,8 @@ list can contradict a contract. A design can satisfy the feature
 description while violating an operational constraint. A test plan can
 verify examples without covering the required failure behavior.</p>
 <p>For each important requirement, reviewers should find the design that
-implements it and the check that would show it works. The human approves the bundle version
-before implementation begins.</p>
+implements it and the check that would show it works. The human approves 
+the bundle version before implementation begins.</p>
 <p>This stage is particularly important because three reviewers examining
 code against an incomplete specification can all miss the same lost
 requirement. Reviewing the transformation from intent to bundle helps
@@ -1918,7 +1929,8 @@ both specification compliance and the intended developer experience.
 Reviewers inspect actual source and behavior where their tools permit;
 an author's summary is only a starting point.</p>
 <p>For work with an expensive architectural uncertainty, insert an
-optional review after the first meaningful implementation slice. Review it before building the rest.</p>
+optional review after the first meaningful implementation slice. 
+Review it before building the rest.</p>
 <h3 id="stage-5-fix-check-repeat">Stage 5: Fix, Check, Repeat<a class="headerlink" href="#stage-5-fix-check-repeat" title="Permanent link">&para;</a></h3>
 <p>The agent evaluates findings, makes justified corrections, updates
 evidence, and stops again. Reviewers verify those corrections and
@@ -1939,14 +1951,15 @@ not implicitly authorize every downstream action.</p>
    to external reviewers A and B. Each records its findings before
    seeing the other's current conclusions.</li>
 <li><strong>Evaluate the feedback.</strong> The implementation agent assesses each
-   finding, revises where justified, and records what it accepted or rejected and why. Feedback
-   is not automatically a requirement.</li>
+   finding, revises where justified, and records what it accepted or 
+   rejected and why. Feedback is not automatically a requirement.</li>
 <li><strong>Synchronize the revision.</strong> The human transfers the exact revised
    artifact and relevant evidence into the steering reviewer's
    workspace.</li>
 <li><strong>Review the revised candidate.</strong> The steering reviewer inspects it
    against requirements, prior decisions, source, and evidence. Where
-   practical, provide a clean copy of the revised artifact, with the earlier reviews kept separately. It writes its own findings
+   practical, provide a clean copy of the revised artifact, with the earlier 
+   reviews kept separately. It writes its own findings
    first, then compares them with the earlier reviews.</li>
 <li><strong>Correct and verify.</strong> The agent addresses findings and stops.
    Material revisions may return to the external reviewers. Repeat
@@ -1960,25 +1973,26 @@ inside the document, it sees those too. Keeping review notes separate
 helps it form its own judgment, although the revisions already reflect
 the earlier feedback.</p>
 <p>For an experiment that measures reviewer agreement, give all three
-reviewers the same frozen artifact before any revisions. For day-to-day
-engineering, sequential review can be preferable because the later
-reviewer checks what actually changed. Neither arrangement requires
+reviewers the same frozen artifact before any revisions. </p>
+<p>For day-to-day engineering, sequential review can be preferable because 
+the later reviewer checks what actually changed. Neither arrangement requires
 erasing prior project context.</p>
 <h2 id="independence-without-amnesia">Independence Without Amnesia<a class="headerlink" href="#independence-without-amnesia" title="Permanent link">&para;</a></h2>
-<p>A reviewer does not have to forget the project to review it independently.</p>
-<p>A reviewer can remember the entire product discussion and still derive
+<p><strong>A reviewer does not have to forget the project to review it independently</strong>.</p>
+<p>A reviewer can <strong>remember</strong> the entire product discussion and still derive
 its current findings without copying another reviewer's conclusions.
 Conversely, a fresh reviewer can be strongly anchored by an
 implementation summary that explains why the code is supposedly
 correct.</p>
 <p>The useful separation is between <strong>shared facts</strong> and <strong>shared
-verdicts</strong>. Reviewers should receive the same authoritative
-requirements, current decisions, and candidate version. They should
-first reach their own conclusions about the current candidate. After
-that, sharing findings is desirable: it allows errors to be challenged
-and omissions to be discovered.</p>
-<p>Persistent reviewers can contribute a form of continuity that fresh
-reviewers lack. They can recognize that a newly proposed
+verdicts</strong>:</p>
+<p>Reviewers should receive the same <strong>authoritative requirements, 
+current decisions, and candidate version</strong>. They should
+first reach their own conclusions about the current candidate. </p>
+<p>After that, sharing findings is <strong>desirable</strong>: 
+it allows errors to be challenged and omissions to be discovered.</p>
+<p><strong>Persistent reviewers can contribute a form of continuity that fresh
+reviewers lack</strong>: They can recognize that a newly proposed
 "simplification" reintroduces a previously rejected failure mode. They
 can also become attached to recommendations they helped create.</p>
 <p>Make that vulnerability explicit in their instructions: earlier advice
@@ -1988,13 +2002,16 @@ review itself. Do not force every problem into "the implementer failed
 to follow the plan." Sometimes the plan is wrong.</p>
 <div class="admonition tip">
 <p class="admonition-title">Evidence Outweighs Votes</p>
-</div>
 <p>Avoid majority voting as the primary resolution method. One
 reviewer with a reproducible counterexample can outweigh two
 reviewers who found no issue. Three reviewers repeating the same
 unsupported concern do not turn it into evidence.</p>
-<p>Reviewers help find problems. Evidence settles technical claims; the
-human settles product choices.</p>
+</div>
+<ul>
+<li>Reviewers help find problems. </li>
+<li>Evidence settles technical claims; </li>
+<li><strong>the human settles product choices</strong>.</li>
+</ul>
 <h2 id="what-to-hand-the-reviewer">What to Hand the Reviewer<a class="headerlink" href="#what-to-hand-the-reviewer" title="Permanent link">&para;</a></h2>
 <p>Long conversations become easier to use when the current state is
 explicit. A lightweight checkpoint package should include:</p>
@@ -2011,7 +2028,7 @@ explicit. A lightweight checkpoint package should include:</p>
 <li>The action currently authorized and the action that still requires
   approval.</li>
 </ul>
-<p><strong>Keep the package proportional to the work</strong>:</p>
+<h3 id="keep-the-package-proportional-to-the-work">Keep the Package Proportional to the Work<a class="headerlink" href="#keep-the-package-proportional-to-the-work" title="Permanent link">&para;</a></h3>
 <p>A small change can use a single Markdown file plus a commit. A large
 specification bundle may need an index. There is no benefit in generating
 elaborate tracking material that nobody reads.</p>
@@ -2031,9 +2048,9 @@ which version to work from.</p>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nt">known_gaps</span><span class="p">:</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;behavior-not-yet-verified&gt;</span>
 </span></code></pre></div>
-<p>Adapt these fields to your tools and fill them with actual results. A command that the agent suggests running is
-different from a command it ran, and both are different from a command
-a reviewer reproduced independently.</p>
+<p>Adapt these fields to your tools and fill them with actual results. A command 
+that the agent suggests running is different from a command it ran, and both 
+are different from a command a reviewer reproduced independently.</p>
 <h3 id="example-finding-record">Example Finding Record<a class="headerlink" href="#example-finding-record" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ID: R-017
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Candidate: &lt;exact-commit-sha&gt;
@@ -2086,12 +2103,13 @@ counterexample, exercise an integration boundary, or inspect an
 invariant directly.</p>
 <p>A reviewer without execution access should say that its review is
 static. A reviewer that receives only a diff should state what
-repository context is missing. Say what you checked and what you could not check.</p>
+repository context is missing. Say what you checked and what you 
+could not check.</p>
 <h2 id="when-reviews-stop-helping">When Reviews Stop Helping<a class="headerlink" href="#when-reviews-stop-helping" title="Permanent link">&para;</a></h2>
 <p>Another review is useful if it finds a problem or checks a correction.
 It is less useful if it keeps reopening settled questions without new
 evidence. Agree on when to stop.</p>
-<p>Classify comments before acting on them. A defect violates an approved
+<p><strong>Classify</strong> comments before acting on them. A defect violates an approved
 expectation or exposes an actual failure. A scope question requires a
 product decision. An optional improvement may be worthwhile later. A
 style preference is not automatically a blocker.</p>
@@ -2100,18 +2118,18 @@ accepted, the relevant acceptance criteria have supporting evidence,
 corrections have been checked for affected regressions, and the human
 approves the candidate. Reviewers may retain documented reservations;
 everyone does not have to like every choice.</p>
-<p>Review the affected decisions again when a fix changes them. If a correction
-alters a public contract, it may require renewed specification review.
-If it only repairs an implementation branch to meet the existing
-contract, targeted verification may suffice. Judge the affected
-behavior and assumptions rather than mechanically rerunning every
-review.</p>
-<p>Record important rejected findings, too. Otherwise a later reviewer may
+<p><strong>Review the affected decisions</strong> again when a fix changes them. 
+If a correction alters a public contract, it may require renewed 
+specification review. If it only repairs an implementation branch 
+to meet the existing contract, targeted verification may suffice. </p>
+<p><strong>Judge the affected behavior and assumptions rather than mechanically 
+rerunning every review</strong>.</p>
+<p><strong>Record important rejected findings</strong>, too. Otherwise a later reviewer may
 reopen the same concern without recognizing the evidence that settled
 it. Preserve the possibility of reconsideration when new evidence
 appears.</p>
-<p>If review rounds produce contradictory requests, repeatedly change the
-same decision, or stop yielding meaningful evidence, pause the loop.
+<p><strong>If review rounds produce contradictory requests, repeatedly change the
+same decision, or stop yielding meaningful evidence, pause the loop</strong>.
 Identify the disputed assumption and ask what observation or product
 decision would resolve it. Another general request to "review again"
 may only generate more prose.</p>
@@ -2176,14 +2194,15 @@ abandoned assumptions, current code version, completed checks, open
 findings, and the next task. A fresh session with that information may
 work very well.</p>
 <p>An optional fresh reviewer can also be useful for a narrow question:
-"Does this contract make sense on its own?" or "Can a developer follow
-this installation guide without the debate?" That checks whether the document works for someone who was not in the
+"<strong>Does this contract make sense on its own?</strong>" or "<strong>Can a developer follow
+this installation guide without the debate?</strong>" </p>
+<p>That checks whether the document works for someone who was not in the
 design discussion.</p>
 <h2 id="what-does-it-cost-to-finish">What Does It Cost to Finish?<a class="headerlink" href="#what-does-it-cost-to-finish" title="Permanent link">&para;</a></h2>
 <p>Three persistent reviewers, repeated revisions, and human coordination
-consume time and money. The relevant question is whether they prevent
-enough defects, misunderstanding, and rework to justify that cost for
-the task.</p>
+consume <strong>time and money</strong>. </p>
+<p>The relevant question is whether they prevent enough defects, 
+misunderstanding, and rework to justify that cost for the task.</p>
 <p>Count the whole job:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Total cost = implementation
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>           + review
@@ -2199,13 +2218,17 @@ accepted results and failures, not only tokens per successful response.
 A workflow that creates cheaper drafts but requires repeated
 reconstruction of intent may cost more to finish. A workflow that
 spends heavily on reviews of a trivial change may simply be wasteful.</p>
-<p>Caching can reduce the bill. It does not tell you whether the answer is right.
-Likewise, a shorter context can lower input cost without improving the
-final result. Read actual usage records and pricing for the environment
+<p><strong>Caching can reduce the bill</strong>. 
+However, it does not tell you whether the answer is right.</p>
+<p>Likewise, <strong>a shorter context can lower input cost without improving the
+final result</strong>. Read actual usage records and pricing for the environment
 in use rather than infer cost from the visible conversation length.</p>
 <p>I would spend this much review effort on ambiguous requirements or a
 design that would be expensive to get wrong. A small, easily tested fix
-probably needs less. Three reviewers are our choice for this work.</p>
+probably needs less. </p>
+<p>That said, <strong>three reviewers</strong> provides the "<em>sweet spot</em>" for classes of 
+work that a skilled senior engineer can spend <em>about a week</em> to implement 
+end-to-end.</p>
 <h2 id="how-to-test-whether-the-approach-is-better">How to Test Whether the Approach Is Better<a class="headerlink" href="#how-to-test-whether-the-approach-is-better" title="Permanent link">&para;</a></h2>
 <p>To find out whether keeping context actually helps, we need to separate
 its effect from the quality of the handoff and the amount of review.</p>
@@ -2243,10 +2266,10 @@ versus a fresh implementer without review measures several changes at
 once.</p>
 <p>Use multiple tasks and repeated runs where affordable. Include both
 decisions that depend on historical rationale and tasks whose
-specification is self-sufficient. Fix model versions and record harness
-configuration, reasoning settings, tool permissions, context
-construction, and compaction behavior. When those cannot be fixed,
-report the variation.</p>
+specification is self-sufficient. </p>
+<p>Fix model versions and record harness configuration, reasoning settings, 
+tool permissions, context construction, and compaction behavior. 
+When those cannot be fixed, report the variation.</p>
 <p>Predefine acceptance criteria and evaluation checks before examining
 the results. Where practical, have a final evaluator inspect anonymized
 artifacts without knowing which condition produced them. Keep those
@@ -2264,9 +2287,9 @@ holding implementation artifacts constant. A third can compare one
 versus three reviewers. These isolate whether gains come from retained
 context, review diversity, extra inference effort, or the human's
 coordination.</p>
-<p>We might find that history helps with unresolved design questions, while
-a good handoff works just as well when the spec is complete. That would
-tell us when keeping the session is worth it.</p>
+<p>We might find that <strong>history helps with unresolved design questions</strong>, while
+<strong>a good handoff works just as well when the spec is complete</strong>. </p>
+<p>That would tell us when keeping the session is worth it.</p>
 <h2 id="instructions-you-can-reuse">Instructions You Can Reuse<a class="headerlink" href="#instructions-you-can-reuse" title="Permanent link">&para;</a></h2>
 <p>The following instructions condense the procedure into something a
 team can adopt. The baseline and candidate placeholders must be filled
