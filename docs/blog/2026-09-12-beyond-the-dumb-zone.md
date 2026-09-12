@@ -106,8 +106,8 @@ may summarize or remove material. The **agent** is the resulting system
 carrying out the task. Improved behavior can come from any combination
 of those layers.
 
-That is why a session's visible length is a weak standalone measure of
-its likely quality. We also need to know what the input contains, how
+That is why **a session's visible length is a weak standalone measure of
+its quality**. We also need to know what the input contains, how
 current instructions are distinguished from history, what evidence is
 available, and what the agent must do next.
 
