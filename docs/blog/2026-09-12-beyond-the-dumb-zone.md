@@ -666,7 +666,7 @@ Identify the disputed assumption and ask what observation or product
 decision would resolve it. Another general request to "review again"
 may only generate more prose.
 
-## When to Keep, Restructure, or `/clear` Context
+## When to Keep, Restructure, or `/clear` the Context
 
 Keep the session while it works. When it stops working, identify what
 went wrong before deciding whether a reset would help.
