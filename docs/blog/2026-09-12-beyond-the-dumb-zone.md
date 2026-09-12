@@ -311,7 +311,7 @@ we haven't gotten into a situation where the Oracle model proposes
 changes and the implementer agent wasn't able to implement them sufficiently,
 hence converging to a desired quality and product behavior.
 
-In short, so far, I haven't needed to `/clear` any session anywhere.
+In short, so far, we haven't needed to `/clear` any session anywhere.
 
 Moreover, neither changing stages nor discussing side topics has given us
 a reason to start over.
