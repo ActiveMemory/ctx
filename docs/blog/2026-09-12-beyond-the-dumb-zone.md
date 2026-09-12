@@ -164,12 +164,11 @@ compared with 18.5% for Sonnet 4.5. Those are Anthropic's retrieval benchmark re
 long-running coding session.
 [Anthropic, 2026](https://www.anthropic.com/news/claude-opus-4-6)
 
-If someone says the "dumb zone" moved from 100K to 200K tokens, I want
-to know what they tested. A design discussion, a repository dump, and
-thousands of lines of repetitive logs are very different inputs.
+A design discussion, a repository dump, and thousands of lines of repetitive 
+logs are very different inputs.
 
-Neither number is established here as a general cutoff. Conversely,
-using only 25% of a million-token window does not certify reliability.
+Using only 25% of a million-token window does not always certify reliability.
+
 Capacity and useful performance are different measurements.
 
 Anthropic's context-engineering guidance itself describes degradation
