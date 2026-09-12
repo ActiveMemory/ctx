@@ -180,8 +180,8 @@ preserving substantial useful history; "minimal" need not mean short.
 ### Reviewers Can Help (*...and be wrong*)
 
 Du and colleagues found benefits from multiagent debate on the
-factuality and reasoning tasks they studied. That is a reason to try multiple reviewers. It does not tell us that
-three is the right number for software development.
+factuality and reasoning tasks they studied. That is a reason to try multiple 
+reviewers. It does not tell us that three is the right number for software development.
 [Du et al., 2023](https://arxiv.org/abs/2305.14325)
 
 Research on LLM judges also identifies position, verbosity, and
@@ -242,12 +242,13 @@ during drafting.
 Keep the approved spec and the reasoning behind it available together.
 
 !!! warning "Continuity Is Not Authority"
-There is a corresponding danger. If the persistent agent silently
-implements a remembered promise that never reached the approved
-spec, the code can diverge from the review baseline. Continuity
-helps identify the gap; it does not authorize bypassing it. The gap
-should become a proposed amendment, approved before it changes
-scope.
+    There is a corresponding danger: If the persistent agent silently
+    implements a remembered promise that never reached the approved
+    spec, the code can diverge from the review baseline. 
+
+    **Continuity helps identify the gap; it does not authorize bypassing it**. 
+    The gap should become a proposed amendment, approved before it changes
+    scope.
 
 Think of a specification as the agreed design and the conversation as
 the design notebook. The notebook can explain the design. It can also
