@@ -80,9 +80,7 @@ fuller context window, on its own, is not a reason to start over.
 
 Long conversations can cause problems. The research below shows several
 ways that happens. It does not give us a token count at which every
-coding session should restart. Nor have we proved our approach is
-better: that would require comparing it with a fresh session given a
-good handoff.
+coding session should restart. 
 
 ## What Goes Wrong in a Long Conversation?
 
