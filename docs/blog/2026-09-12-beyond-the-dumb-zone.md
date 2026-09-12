@@ -435,7 +435,7 @@ request, publishing, or deploying remain separate actions governed by
 the permissions of the project. Acceptance of an implementation does
 not implicitly authorize every downstream action.
 
-## The Review Loop, Step by Step
+## The Review Loop
 
 At each checkpoint, use the following sequence.
 
