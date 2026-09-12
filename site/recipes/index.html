@@ -1,0 +1,2918 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ctx provides temporal continuity across sessions">
+      
+      
+        <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
+      
+      
+        <link rel="canonical" href="https://ctx.ist/recipes/">
+      
+      
+        <link rel="prev" href="../home/triggers/">
+      
+      
+        <link rel="next" href="./guide-your-agent/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../images/favicon-32.png">
+      <meta name="generator" content="zensical-0.0.51">
+    
+    
+      
+        <title>Recipes - ctx: do you remember?</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.62c9b9cc.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+      
+  <img src="../images/ctx-favicon-32.png" alt="ctx: do you remember?">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ctx: do you remember?
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Recipes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to Dark Mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to Dark Mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to Light Mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to Light Mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/ActiveMemory/ctx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ActiveMemory/ctx
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./.." class="md-tabs__link">
+        
+  
+  Manifesto
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../thesis/" class="md-tabs__link">
+        
+  
+  The Thesis
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../home/" class="md-tabs__link">
+          
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="././" class="md-tabs__link">
+          
+  
+  Recipes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cli/" class="md-tabs__link">
+          
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/" class="md-tabs__link">
+          
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../operations/" class="md-tabs__link">
+          
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../security/" class="md-tabs__link">
+          
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+      
+  <img src="../images/ctx-favicon-32.png" alt="ctx: do you remember?">
+
+    </a>
+    ctx: do you remember?
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ActiveMemory/ctx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ActiveMemory/ctx
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-flame" viewBox="0 0 24 24"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Manifesto
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../thesis/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-scroll-text" viewBox="0 0 24 24"><path d="M15 12h-5M15 8h-5M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  The Thesis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../blog/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-newspaper" viewBox="0 0 24 24"><path d="M15 18h-5M18 14h-8M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="10" y="6" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Blog
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../home/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="././" class="md-nav__link md-nav__link--active">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-chef-hat" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1ZM6 17h12"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Recipes
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Recipes
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="./guide-your-agent/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Getting Started
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="./session-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Sessions
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="./knowledge-capture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Knowledge and Tasks
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="./build-a-knowledge-base/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Knowledge Base
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="./hook-output-patterns/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Hooks and Notifications
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="./context-health/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Maintenance
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="./building-skills/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Agents and Automation
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="./hub-overview/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Hub
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../cli/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-terminal" viewBox="0 0 24 24"><path d="M12 19h8M4 17l6-6-6-6"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  CLI
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../reference/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Reference
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../operations/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Operations
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../security/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Security
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Getting Started
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#guide-your-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Guide Your Agent
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-across-ai-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Setup across AI Tools
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multilingual-session-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Multilingual Session Parsing
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowledge-base-phase-kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Knowledge Base (Phase KB)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Knowledge Base (Phase KB)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-a-knowledge-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Build a Knowledge Base
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typical-kb-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Typical KB Session
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recover-an-aborted-kb-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Recover an Aborted KB Session
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Sessions
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sessions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-complete-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The Complete Session
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-ceremonies" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Session Ceremonies
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#browsing-and-enriching-past-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Browsing and Enriching Past Sessions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-reminders" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Session Reminders
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reviewing-session-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Reviewing Session Changes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pausing-context-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pausing Context Hooks
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowledge-and-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Knowledge and Tasks
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Knowledge and Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#persisting-decisions-learnings-and-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Persisting Decisions, Learnings, and Conventions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tracking-work-across-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tracking Work across Sessions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-scratchpad" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Using the Scratchpad
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#syncing-scratchpad-notes-across-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Syncing Scratchpad Notes across Machines
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bridging-claude-code-auto-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Bridging Claude Code Auto Memory
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hooks-and-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Hooks and Notifications
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hooks and Notifications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hook-output-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Hook Output Patterns
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customizing-hook-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Customizing Hook Messages
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hook-sequence-diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Hook Sequence Diagrams
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auditing-system-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Auditing System Hooks
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webhook-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Webhook Notifications
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Configuration Profiles
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Maintenance
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#detecting-and-fixing-drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Detecting and Fixing Drift
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-directory-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        State Directory Maintenance
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Troubleshooting
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claude-code-permission-hygiene" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Claude Code Permission Hygiene
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permission-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Permission Snapshots
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#turning-activity-into-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Turning Activity into Content
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importing-claude-code-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Importing Claude Code Plans
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-before-coding" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Design Before Coding
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scrutinizing-a-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Scrutinizing a Plan
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spec-driven-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Spec-Driven Development
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agents-and-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Agents and Automation
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agents and Automation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-project-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Building Project Skills
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-an-unattended-ai-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Running an Unattended AI Agent
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-a-team-of-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        When to Use a Team of Agents
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-agent-development-with-git-worktrees" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parallel Agent Development with Git Worktrees
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Architecture Deep Dive
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-steering-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Writing Steering Files
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#out-of-band-audit-channel" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Out-of-Band Audit Channel
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authoring-lifecycle-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Authoring Lifecycle Triggers
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hub" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Hub
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hub">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hub-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Hub Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-hub-getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>ctx</code> Hub: Getting Started
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#personal-cross-project-brain" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Personal Cross-Project Brain
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#team-knowledge-bus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Team Knowledge Bus
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-hub-multi-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>ctx</code> Hub: Multi-Machine
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-hub-ha-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>ctx</code> Hub: HA Cluster
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="./.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Manifesto
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="././" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Recipes
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+  <h1 id="__skip">Recipes</h1>
+
+<p><img alt="ctx" src="../images/ctx-banner.png" /></p>
+<p>Workflow recipes <em>combining</em> <code>ctx</code> <strong>commands</strong> and <strong>skills</strong> to solve
+<em>specific</em> problems.</p>
+<hr />
+<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h3 id="guide-your-agent"><a href="guide-your-agent/">Guide Your Agent</a><a class="headerlink" href="#guide-your-agent" title="Permanent link">&para;</a></h3>
+<p>How commands, skills, and conversational patterns work together.
+Train your agent to be proactive through <strong>ask, guide, reinforce</strong>.</p>
+<hr />
+<h3 id="setup-across-ai-tools"><a href="multi-tool-setup/">Setup across AI Tools</a><a class="headerlink" href="#setup-across-ai-tools" title="Permanent link">&para;</a></h3>
+<p>Initialize <code>ctx</code> and configure hooks for Claude Code, OpenCode, Cursor,
+Aider, Copilot, or Windsurf. Includes <strong>shell completion</strong>,
+<strong>watch mode</strong> for non-native tools, and <strong>verification</strong>.</p>
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>ctx setup</code>, <code>ctx agent</code>, <code>ctx completion</code>,
+<code>ctx watch</code></p>
+<hr />
+<h3 id="multilingual-session-parsing"><a href="multilingual-sessions/">Multilingual Session Parsing</a><a class="headerlink" href="#multilingual-session-parsing" title="Permanent link">&para;</a></h3>
+<p>Parse session journal entries written in <strong>other languages</strong>.
+Configure recognized session-header prefixes so the journal
+pipeline works for Turkish, Japanese, and any other locale.</p>
+<p><strong>Uses</strong>: <code>ctx journal source</code>, <code>ctx journal import</code>,
+<code>session_prefixes</code> in <code>.ctxrc</code></p>
+<hr />
+<h2 id="knowledge-base-phase-kb">Knowledge Base (Phase KB)<a class="headerlink" href="#knowledge-base-phase-kb" title="Permanent link">&para;</a></h2>
+<h3 id="build-a-knowledge-base"><a href="build-a-knowledge-base/">Build a Knowledge Base</a><a class="headerlink" href="#build-a-knowledge-base" title="Permanent link">&para;</a></h3>
+<p>Stand up the editorial pipeline for knowledge-shaped work
+(research projects, vendor-spec analysis, post-incident reviews).
+Covers the pass-mode contract, source-coverage state-machine
+ledger, topic-adjacency pre-flight, cold-reader rubric,
+closeout/fold mechanism, and folder-shaped topic pages.</p>
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>ctx kb topic new</code>, <code>ctx kb note</code>,
+<code>ctx kb reindex</code>, <code>ctx handover write</code>,
+<code>/ctx-kb-ingest</code>, <code>/ctx-kb-ask</code>, <code>/ctx-kb-site-review</code>,
+<code>/ctx-kb-ground</code>, <code>/ctx-kb-note</code>, <code>/ctx-handover</code></p>
+<hr />
+<h3 id="typical-kb-session"><a href="typical-kb-session/">Typical KB Session</a><a class="headerlink" href="#typical-kb-session" title="Permanent link">&para;</a></h3>
+<p>The everyday flow once the pipeline is set up: session start
+recall, ingest a transcript, ask grounded questions, park
+findings, wrap up via the mandatory handover.</p>
+<p><strong>Uses</strong>: <code>/ctx-remember</code>, <code>/ctx-kb-ingest</code>, <code>/ctx-kb-ask</code>,
+<code>/ctx-kb-note</code>, <code>/ctx-wrap-up</code>, <code>/ctx-handover</code></p>
+<hr />
+<h3 id="recover-an-aborted-kb-session"><a href="recover-aborted-session/">Recover an Aborted KB Session</a><a class="headerlink" href="#recover-an-aborted-kb-session" title="Permanent link">&para;</a></h3>
+<p>What to do when the session ends after one or more editorial
+passes but before <code>/ctx-handover</code>. Closeouts survive the abort;
+the next session's <code>/ctx-remember</code> reads them as unfolded
+postdated artifacts; the next <code>/ctx-handover</code> folds them
+retroactively.</p>
+<p><strong>Uses</strong>: <code>/ctx-remember</code>, <code>/ctx-handover</code></p>
+<hr />
+<h2 id="sessions">Sessions<a class="headerlink" href="#sessions" title="Permanent link">&para;</a></h2>
+<h3 id="the-complete-session"><a href="session-lifecycle/">The Complete Session</a><a class="headerlink" href="#the-complete-session" title="Permanent link">&para;</a></h3>
+<p>Walk through a full <code>ctx</code> session from <strong>start to finish</strong>:</p>
+<ul>
+<li><strong>Loading</strong> context,</li>
+<li><strong>Picking</strong> what to work on,</li>
+<li><strong>Committing</strong> with context,</li>
+<li><strong>Capturing</strong>, reflecting, and saving a snapshot.</li>
+</ul>
+<p><strong>Uses</strong>: <code>ctx status</code>, <code>ctx agent</code>,
+<code>/ctx-remember</code>, <code>/ctx-next</code>, <code>/ctx-commit</code>, <code>/ctx-reflect</code></p>
+<hr />
+<h3 id="session-ceremonies"><a href="session-ceremonies/">Session Ceremonies</a><a class="headerlink" href="#session-ceremonies" title="Permanent link">&para;</a></h3>
+<p>The two bookend <strong>rituals</strong> for every session: <code>/ctx-remember</code> at the
+start to load and confirm context, <code>/ctx-wrap-up</code> at the end to
+review the session and persist <strong>learnings</strong>, <strong>decisions</strong>, and <strong>tasks</strong>.</p>
+<p><strong>Uses</strong>: <code>/ctx-remember</code>, <code>/ctx-wrap-up</code>, <code>/ctx-commit</code>, <code>ctx agent</code>,
+<code>ctx add</code></p>
+<hr />
+<h3 id="browsing-and-enriching-past-sessions"><a href="session-archaeology/">Browsing and Enriching Past Sessions</a><a class="headerlink" href="#browsing-and-enriching-past-sessions" title="Permanent link">&para;</a></h3>
+<p>Export your AI session history to a <strong>browsable journal site</strong>.
+<strong>Enrich</strong> entries with metadata and <strong>search</strong> across months of work.</p>
+<p><strong>Uses</strong>: <code>ctx journal source/import</code>, <code>ctx journal site</code>,
+<code>ctx journal obsidian</code>, <code>ctx serve</code>, <code>/ctx-history</code>,
+<code>/ctx-journal-enrich</code>, <code>/ctx-journal-enrich-all</code></p>
+<hr />
+<h3 id="session-reminders"><a href="session-reminders/">Session Reminders</a><a class="headerlink" href="#session-reminders" title="Permanent link">&para;</a></h3>
+<p>Leave a <strong>message for your next session</strong>. Reminders surface
+<strong>automatically at session start</strong> and repeat until dismissed.
+Date-gate reminders to surface only after a specific date.</p>
+<p><strong>Uses</strong>: <code>ctx remind</code>, <code>ctx remind list</code>, <code>ctx remind dismiss</code>,
+<code>ctx system check-reminders</code></p>
+<hr />
+<h3 id="reviewing-session-changes"><a href="session-changes/">Reviewing Session Changes</a><a class="headerlink" href="#reviewing-session-changes" title="Permanent link">&para;</a></h3>
+<p>See what moved since your last session: context file edits, code
+commits, directories touched. Auto-detects session boundaries from
+state markers.</p>
+<p><strong>Uses</strong>: <code>ctx change</code>, <code>ctx agent</code>, <code>ctx status</code></p>
+<hr />
+<h3 id="pausing-context-hooks"><a href="session-pause/">Pausing Context Hooks</a><a class="headerlink" href="#pausing-context-hooks" title="Permanent link">&para;</a></h3>
+<p>Silence all nudge hooks for a <strong>quick task</strong> that doesn't need ceremony
+overhead. Session-scoped: Other sessions are unaffected. Security
+hooks still fire.</p>
+<p><strong>Uses</strong>: <code>ctx hook pause</code>, <code>ctx hook resume</code>, <code>/ctx-pause</code>, <code>/ctx-resume</code></p>
+<hr />
+<h2 id="knowledge-and-tasks">Knowledge and Tasks<a class="headerlink" href="#knowledge-and-tasks" title="Permanent link">&para;</a></h2>
+<h3 id="persisting-decisions-learnings-and-conventions"><a href="knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a><a class="headerlink" href="#persisting-decisions-learnings-and-conventions" title="Permanent link">&para;</a></h3>
+<p>Record <strong>architectural decisions</strong> with <strong>rationale</strong>, capture <strong>gotchas</strong>
+and lessons learned, and <strong>codify</strong> conventions so they
+survive across sessions and team members.</p>
+<p><strong>Uses</strong>: <code>ctx decision add</code>, <code>ctx learning add</code>,
+<code>ctx convention add</code>, <code>ctx index</code>, <code>/ctx-decision-add</code>,
+<code>/ctx-learning-add</code>, <code>/ctx-convention-add</code>, <code>/ctx-reflect</code></p>
+<hr />
+<h3 id="tracking-work-across-sessions"><a href="task-management/">Tracking Work across Sessions</a><a class="headerlink" href="#tracking-work-across-sessions" title="Permanent link">&para;</a></h3>
+<p><strong>Add</strong>, <strong>prioritize</strong>, <strong>complete</strong>, <strong>snapshot</strong>, and <strong>archive</strong> tasks. Keep
+<code>TASKS.md</code> focused as your project evolves across dozens of
+sessions.</p>
+<p><strong>Uses</strong>: <code>ctx task add</code>, <code>ctx task complete</code>, <code>ctx task archive</code>,
+<code>ctx task snapshot</code>, <code>/ctx-task-add</code>, <code>/ctx-archive</code>, <code>/ctx-next</code></p>
+<hr />
+<h3 id="using-the-scratchpad"><a href="scratchpad-with-claude/">Using the Scratchpad</a><a class="headerlink" href="#using-the-scratchpad" title="Permanent link">&para;</a></h3>
+<p>Use the encrypted <strong>scratchpad</strong> for quick notes, working memory, and
+sensitive values during AI sessions. Natural language in, encrypted
+storage out.</p>
+<p><strong>Uses</strong>: <code>ctx pad</code>, <code>/ctx-pad</code>, <code>ctx pad show</code>, <code>ctx pad edit</code></p>
+<hr />
+<h3 id="syncing-scratchpad-notes-across-machines"><a href="scratchpad-sync/">Syncing Scratchpad Notes across Machines</a><a class="headerlink" href="#syncing-scratchpad-notes-across-machines" title="Permanent link">&para;</a></h3>
+<p>Distribute your <strong>scratchpad</strong> encryption key, push and pull encrypted
+notes via git, and resolve merge conflicts when two machines edit
+simultaneously.</p>
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>ctx pad</code>, <code>ctx pad resolve</code>, <code>scp</code></p>
+<hr />
+<h3 id="bridging-claude-code-auto-memory"><a href="memory-bridge/">Bridging Claude Code Auto Memory</a><a class="headerlink" href="#bridging-claude-code-auto-memory" title="Permanent link">&para;</a></h3>
+<p>Mirror Claude Code's <strong>auto memory</strong> (MEMORY.md) into <code>.context/</code> for
+<strong>version control</strong>, <strong>portability</strong>, and <strong>drift detection</strong>. Import
+entries into structured context files with heuristic classification.</p>
+<p><strong>Uses</strong>: <code>ctx memory sync</code>, <code>ctx memory status</code>, <code>ctx memory diff</code>,
+<code>ctx memory import</code>, <code>ctx memory publish</code>, <code>ctx system check-memory-drift</code></p>
+<hr />
+<h2 id="hooks-and-notifications">Hooks and Notifications<a class="headerlink" href="#hooks-and-notifications" title="Permanent link">&para;</a></h2>
+<h3 id="hook-output-patterns"><a href="hook-output-patterns/">Hook Output Patterns</a><a class="headerlink" href="#hook-output-patterns" title="Permanent link">&para;</a></h3>
+<p>Choose the right output pattern for your Claude Code hooks: <code>VERBATIM</code>
+relay for user-facing reminders, <strong>hard gates</strong> for invariants, agent
+directives for nudges, and five more patterns across the spectrum.</p>
+<p><strong>Uses</strong>: <code>ctx</code> plugin hooks, <code>settings.local.json</code></p>
+<hr />
+<h3 id="customizing-hook-messages"><a href="customizing-hook-messages/">Customizing Hook Messages</a><a class="headerlink" href="#customizing-hook-messages" title="Permanent link">&para;</a></h3>
+<p>Customize what hooks <strong>say</strong> without changing what they <strong>do</strong>. Override
+the QA gate for Python (<code>pytest</code> instead of <code>make lint</code>), silence noisy
+ceremony nudges, or tailor post-commit instructions for your stack.</p>
+<p><strong>Uses</strong>: <code>ctx hook message list</code>, <code>ctx hook message show</code>,
+<code>ctx hook message edit</code>, <code>ctx hook message reset</code></p>
+<hr />
+<h3 id="hook-sequence-diagrams"><a href="hook-sequence-diagrams/">Hook Sequence Diagrams</a><a class="headerlink" href="#hook-sequence-diagrams" title="Permanent link">&para;</a></h3>
+<p><strong>Mermaid sequence diagrams</strong> for every system hook: entry conditions,
+state reads, output, throttling, and exit points. Includes throttling
+summary table and state file reference.</p>
+<p><strong>Uses</strong>: All <code>ctx system</code> hooks</p>
+<hr />
+<h3 id="auditing-system-hooks"><a href="system-hooks-audit/">Auditing System Hooks</a><a class="headerlink" href="#auditing-system-hooks" title="Permanent link">&para;</a></h3>
+<p>The 12 system hooks that run <strong>invisibly</strong> during every session: what each
+one does, why it exists, and how to <strong>verify</strong> they're actually firing.
+Covers webhook-based audit trails, log inspection, and detecting silent
+hook failures.</p>
+<p><strong>Uses</strong>: <code>ctx system</code>, <code>ctx hook notify</code>, <code>.context/logs/</code>, <code>.ctxrc</code>
+<code>notify.events</code></p>
+<hr />
+<h3 id="webhook-notifications"><a href="webhook-notifications/">Webhook Notifications</a><a class="headerlink" href="#webhook-notifications" title="Permanent link">&para;</a></h3>
+<p>Get <strong>push notifications</strong> when loops complete, hooks fire, or agents hit
+milestones. Webhook URL is <strong>encrypted</strong>: never stored in plaintext.
+Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.</p>
+<p><strong>Uses</strong>: <code>ctx hook notify setup</code>, <code>ctx hook notify test</code>, <code>ctx hook notify --event</code>,
+<code>.ctxrc</code> <code>notify.events</code></p>
+<hr />
+<h3 id="configuration-profiles"><a href="configuration-profiles/">Configuration Profiles</a><a class="headerlink" href="#configuration-profiles" title="Permanent link">&para;</a></h3>
+<p>Switch between <strong>dev</strong> and <strong>base</strong> runtime configurations without
+editing <code>.ctxrc</code> by hand. Verbose logging and webhooks for debugging,
+clean defaults for normal sessions.</p>
+<p><strong>Uses</strong>: <code>ctx config switch</code>, <code>ctx config status</code>, <code>/ctx-config</code></p>
+<hr />
+<h2 id="maintenance">Maintenance<a class="headerlink" href="#maintenance" title="Permanent link">&para;</a></h2>
+<h3 id="detecting-and-fixing-drift"><a href="context-health/">Detecting and Fixing Drift</a><a class="headerlink" href="#detecting-and-fixing-drift" title="Permanent link">&para;</a></h3>
+<p>Keep context files accurate by detecting <strong>structural drift</strong>
+(<em>stale paths, missing files, stale file ages</em>) and task
+staleness.</p>
+<p><strong>Uses</strong>: <code>ctx drift</code>, <code>ctx sync</code>, <code>ctx compact</code>, <code>ctx status</code>,
+<code>/ctx-drift</code>, <code>/ctx-status</code>, <code>/ctx-prompt-audit</code></p>
+<hr />
+<h3 id="state-directory-maintenance"><a href="state-maintenance/">State Directory Maintenance</a><a class="headerlink" href="#state-directory-maintenance" title="Permanent link">&para;</a></h3>
+<p>Clean up session tombstones from <code>.context/state/</code>. Prune old
+per-session files, identify stale global markers, and keep the
+state directory lean.</p>
+<p><strong>Uses</strong>: <code>ctx prune</code></p>
+<hr />
+<h3 id="troubleshooting"><a href="troubleshooting/">Troubleshooting</a><a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h3>
+<p>Diagnose hook failures, noisy nudges, stale context, and configuration
+issues. Start with <code>ctx doctor</code> for a structural health check, then
+use <code>/ctx-doctor</code> for agent-driven analysis of event patterns.</p>
+<p><strong>Uses</strong>: <code>ctx doctor</code>, <code>ctx hook event</code>, <code>/ctx-doctor</code></p>
+<hr />
+<h3 id="claude-code-permission-hygiene"><a href="claude-code-permissions/">Claude Code Permission Hygiene</a><a class="headerlink" href="#claude-code-permission-hygiene" title="Permanent link">&para;</a></h3>
+<p>Keep <code>.claude/settings.local.json</code> clean: recommended <strong>safe defaults</strong>,
+what to <strong>never</strong> pre-approve, and a <strong>maintenance workflow</strong> for cleaning
+up session debris.</p>
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>/ctx-drift</code>, <code>/ctx-permission-sanitize</code>,
+<code>ctx permission snapshot</code>, <code>ctx permission restore</code></p>
+<hr />
+<h3 id="permission-snapshots"><a href="permission-snapshots/">Permission Snapshots</a><a class="headerlink" href="#permission-snapshots" title="Permanent link">&para;</a></h3>
+<p>Capture a known-good permission <strong>baseline</strong> as a <strong>golden image</strong>, then restore
+at session start to automatically drop session-accumulated permissions.</p>
+<p><strong>Uses</strong>: <code>ctx permission snapshot</code>, <code>ctx permission restore</code>,
+<code>/ctx-permission-sanitize</code></p>
+<hr />
+<h3 id="turning-activity-into-content"><a href="publishing/">Turning Activity into Content</a><a class="headerlink" href="#turning-activity-into-content" title="Permanent link">&para;</a></h3>
+<p>Generate <strong>blog posts</strong> from project activity, write <strong>changelog
+posts</strong> from commit ranges, and publish a browsable journal
+site from your <strong>session history</strong>.</p>
+<p>The output is generic Markdown, but the skills are tuned for the <code>ctx</code>-style
+blog artifacts you see on this website.</p>
+<p><strong>Uses</strong>: <code>ctx journal site</code>, <code>ctx journal obsidian</code>, <code>ctx serve</code>,
+<code>ctx journal import</code>, <code>/ctx-blog</code>, <code>/ctx-blog-changelog</code>,
+<code>/ctx-journal-enrich</code></p>
+<hr />
+<h3 id="importing-claude-code-plans"><a href="import-plans/">Importing Claude Code Plans</a><a class="headerlink" href="#importing-claude-code-plans" title="Permanent link">&para;</a></h3>
+<p>Import Claude Code <strong>plan files</strong> (<code>~/.claude/plans/*.md</code>) into <code>specs/</code>
+as permanent project specs. Filter by date, select interactively, and
+optionally create tasks referencing each imported spec.</p>
+<p><strong>Uses</strong>: <code>/ctx-plan-import</code>, <code>/ctx-task-add</code></p>
+<hr />
+<h3 id="design-before-coding"><a href="design-before-coding/">Design Before Coding</a><a class="headerlink" href="#design-before-coding" title="Permanent link">&para;</a></h3>
+<p>Front-load design with a four-skill chain: <strong>brainstorm</strong> the approach,
+<strong>spec</strong> the design, <strong>task out</strong> the work, <strong>implement</strong> step-by-step.
+Each step produces an artifact that feeds the next.</p>
+<p><strong>Uses</strong>: <code>/ctx-brainstorm</code>, <code>/ctx-spec</code>, <code>/ctx-task-out</code>,
+<code>/ctx-task-add</code>, <code>/ctx-implement</code>, <code>/ctx-decision-add</code></p>
+<hr />
+<h3 id="scrutinizing-a-plan"><a href="scrutinizing-a-plan/">Scrutinizing a Plan</a><a class="headerlink" href="#scrutinizing-a-plan" title="Permanent link">&para;</a></h3>
+<p>Once a plan exists, run an <strong>adversarial interview</strong> to surface what's
+weak, missing, or unexamined before you commit. Walks the plan
+depth-first: assumptions, failure modes, alternatives, sequencing,
+reversibility. The complement to brainstorm: brainstorm produces
+plans, this attacks them.</p>
+<p><strong>Uses</strong>: <code>/ctx-plan</code>, <code>/ctx-spec</code>, <code>/ctx-decision-add</code>,
+<code>/ctx-learning-add</code></p>
+<hr />
+<h3 id="spec-driven-development"><a href="spec-driven-development/">Spec-Driven Development</a><a class="headerlink" href="#spec-driven-development" title="Permanent link">&para;</a></h3>
+<p>The full design-to-implementation pipeline from the operator's seat:
+<strong>debate</strong> the bet into a brief, <strong>spec</strong> all milestones once, <strong>task
+out</strong> each milestone just-in-time behind the rolling-wave gate, then
+<strong>implement</strong>. Covers the load-bearing mechanics a newcomer has to
+reverse-engineer otherwise — altitude, blocking-TBD gates, and the
+plan-as-ledger vs. TASKS.md-as-projection split — with a worked
+multi-milestone example.</p>
+<p><strong>Uses</strong>: <code>/ctx-plan</code>, <code>/ctx-spec</code>, <code>/ctx-task-out</code>, <code>/ctx-implement</code>,
+<code>/ctx-decision-add</code></p>
+<hr />
+<h2 id="agents-and-automation">Agents and Automation<a class="headerlink" href="#agents-and-automation" title="Permanent link">&para;</a></h2>
+<h3 id="building-project-skills"><a href="building-skills/">Building Project Skills</a><a class="headerlink" href="#building-project-skills" title="Permanent link">&para;</a></h3>
+<p>Encode repeating workflows into reusable <strong>skills</strong> the agent loads
+automatically. Covers the full cycle: <strong>identify</strong> a pattern, <strong>create</strong>
+the skill, <strong>test</strong> with realistic prompts, and <strong>iterate</strong> until it
+triggers correctly.</p>
+<p><strong>Uses</strong>: <code>/ctx-skill-create</code>, <code>ctx init</code></p>
+<hr />
+<h3 id="running-an-unattended-ai-agent"><a href="autonomous-loops/">Running an Unattended AI Agent</a><a class="headerlink" href="#running-an-unattended-ai-agent" title="Permanent link">&para;</a></h3>
+<p>Set up a <strong>loop</strong> where an AI agent works through tasks overnight
+without you at the keyboard, using <code>ctx</code> for <strong>persistent memory</strong>
+between iterations.</p>
+<p>This recipe shows how <code>ctx</code> supports long-running agent loops
+without losing context or intent.</p>
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>ctx loop</code>, <code>ctx watch</code>, <code>ctx load</code>,
+<code>/ctx-loop</code>, <code>/ctx-implement</code></p>
+<hr />
+<h3 id="when-to-use-a-team-of-agents"><a href="when-to-use-agent-teams/">When to Use a Team of Agents</a><a class="headerlink" href="#when-to-use-a-team-of-agents" title="Permanent link">&para;</a></h3>
+<p><strong>Decision framework</strong> for choosing between a single agent, parallel
+worktrees, and a full agent team.</p>
+<p>This recipe covers the file overlap test, when teams make things worse, and
+what <code>ctx</code> provides at each level.</p>
+<p><strong>Uses</strong>: <code>/ctx-worktree</code>, <code>/ctx-next</code>, <code>ctx status</code></p>
+<hr />
+<h3 id="parallel-agent-development-with-git-worktrees"><a href="parallel-worktrees/">Parallel Agent Development with Git Worktrees</a><a class="headerlink" href="#parallel-agent-development-with-git-worktrees" title="Permanent link">&para;</a></h3>
+<p>Split a large backlog across 3-4 agents using <strong>git worktrees</strong>,
+each on its own branch and working directory. Group tasks by
+file overlap, work in parallel, merge back.</p>
+<p><strong>Uses</strong>: <code>/ctx-worktree</code>, <code>/ctx-next</code>, <code>git worktree</code>,
+<code>git merge</code></p>
+<hr />
+<h3 id="architecture-deep-dive"><a href="architecture-deep-dive/">Architecture Deep Dive</a><a class="headerlink" href="#architecture-deep-dive" title="Permanent link">&para;</a></h3>
+<p>Three-pass pipeline for understanding a codebase: <strong>map</strong> what
+exists, <strong>enrich</strong> with code intelligence, then <strong>hunt</strong> for
+where it will silently fail. Produces architecture docs,
+quantified dependency data, and ranked failure hypotheses.</p>
+<p><strong>Uses</strong>: <code>/ctx-architecture</code>, <code>/ctx-architecture-enrich</code>,
+<code>/ctx-architecture-failure-analysis</code></p>
+<hr />
+<h3 id="writing-steering-files"><a href="steering/">Writing Steering Files</a><a class="headerlink" href="#writing-steering-files" title="Permanent link">&para;</a></h3>
+<p>Tell your AI assistant <strong>how to behave</strong> with rule-based prompt
+injection that fires automatically when prompts match a
+description. Walks through scaffolding a steering file,
+previewing matches, and syncing to each AI tool's native
+format.</p>
+<p><strong>Uses</strong>: <code>ctx steering add</code>, <code>ctx steering preview</code>,
+<code>ctx steering list</code>, <code>ctx steering sync</code></p>
+<hr />
+<h3 id="out-of-band-audit-channel">Out-of-Band Audit Channel<a class="headerlink" href="#out-of-band-audit-channel" title="Permanent link">&para;</a></h3>
+<p>Maintainer-only tooling (the <code>ctxctl</code> binary, not the shipped <code>ctx</code>),
+so it moved out of these user recipes into the contributor docs. See
+<strong><a href="../operations/runbooks/audit-channel/">Operations → Runbooks → Out-of-Band Audit Channel</a></strong>.</p>
+<hr />
+<h3 id="authoring-lifecycle-triggers"><a href="triggers/">Authoring Lifecycle Triggers</a><a class="headerlink" href="#authoring-lifecycle-triggers" title="Permanent link">&para;</a></h3>
+<p>Run <strong>executable shell scripts</strong> at session-start,
+pre-tool-use, file-save, and other lifecycle events.
+Script-based automation (complementary to steering's
+rule-based prompts), with a security-first workflow: scaffold
+disabled, test with mock input, enable only after review.</p>
+<p><strong>Uses</strong>: <code>ctx trigger add</code>, <code>ctx trigger test</code>,
+<code>ctx trigger enable</code>, <code>ctx trigger disable</code>, <code>ctx trigger list</code></p>
+<hr />
+<h2 id="hub">Hub<a class="headerlink" href="#hub" title="Permanent link">&para;</a></h2>
+<h3 id="hub-overview"><a href="hub-overview/">Hub Overview</a><a class="headerlink" href="#hub-overview" title="Permanent link">&para;</a></h3>
+<p>Mental model and three user stories for the <code>ctx</code> Hub. What flows,
+what doesn't, and when not to use it. Read this before any of the
+other Hub recipes.</p>
+<p><strong>Uses</strong>: <code>ctx hub</code>, <code>ctx connection</code>, <code>ctx add --share</code></p>
+<hr />
+<h3 id="ctx-hub-getting-started"><a href="hub-getting-started/"><code>ctx</code> Hub: Getting Started</a><a class="headerlink" href="#ctx-hub-getting-started" title="Permanent link">&para;</a></h3>
+<p>Stand up a single-node hub on localhost, register two projects,
+publish a decision from one, and watch it appear in the other.
+End-to-end in under five minutes.</p>
+<p><strong>Uses</strong>: <code>ctx hub start</code>, <code>ctx connection register</code>,
+<code>ctx connection subscribe</code>, <code>ctx connection sync</code>, <code>ctx connection listen</code>,
+<code>ctx add --share</code>, <code>ctx agent --include-hub</code></p>
+<hr />
+<h3 id="personal-cross-project-brain"><a href="hub-personal/">Personal Cross-Project Brain</a><a class="headerlink" href="#personal-cross-project-brain" title="Permanent link">&para;</a></h3>
+<p><strong>Story 1</strong> day-to-day workflow: one developer, many
+projects, one hub on localhost. Records a learning in
+project A, watches it show up automatically in project B.
+Walks through a realistic day of using the hub as passive
+infrastructure (no manual <code>sync</code>, no <code>git push</code>, no
+ceremony).</p>
+<p><strong>Uses</strong>: <code>ctx add --share</code>, <code>ctx connection subscribe</code>,
+<code>ctx agent --include-hub</code></p>
+<hr />
+<h3 id="team-knowledge-bus"><a href="hub-team/">Team Knowledge Bus</a><a class="headerlink" href="#team-knowledge-bus" title="Permanent link">&para;</a></h3>
+<p><strong>Story 2</strong> day-to-day workflow: a small trusted team
+sharing decisions, learnings, and conventions via a hub on
+an internal server. Covers the team publishing culture,
+what belongs on the hub vs. local, token management, and
+the social rules that make a shared knowledge stream
+stay signal-rich.</p>
+<p><strong>Uses</strong>: <code>ctx add --share</code>, <code>ctx connection status</code>,
+<code>ctx connection subscribe</code>, <code>ctx hub status</code></p>
+<hr />
+<h3 id="ctx-hub-multi-machine"><a href="hub-multi-machine/"><code>ctx</code> Hub: Multi-Machine</a><a class="headerlink" href="#ctx-hub-multi-machine" title="Permanent link">&para;</a></h3>
+<p>Run the hub on a <strong>LAN host</strong> as a daemon and connect from project
+directories on other workstations. Firewall guidance, TLS via a
+reverse proxy, and safe daemon restart semantics.</p>
+<p><strong>Uses</strong>: <code>ctx hub start --daemon</code>, <code>ctx hub stop</code>,
+<code>ctx connection register</code>, <code>ctx connection status</code></p>
+<hr />
+<h3 id="ctx-hub-ha-cluster"><a href="hub-cluster/"><code>ctx</code> Hub: HA Cluster</a><a class="headerlink" href="#ctx-hub-ha-cluster" title="Permanent link">&para;</a></h3>
+<p>Raft-based leader election across three or more nodes for
+redundancy. Covers bootstrap, runtime peer management, graceful
+stepdown, and the Raft-lite durability caveat.</p>
+<p><strong>Uses</strong>: <code>ctx hub start --raft-bind --peers</code>, <code>ctx hub status</code>,
+<code>ctx hub peer add/remove</code>, <code>ctx hub stepdown</code></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../home/triggers/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lifecycle Triggers">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lifecycle Triggers
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="./guide-your-agent/" class="md-footer__link md-footer__link--next" aria-label="Next: Guide Your Agent">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Guide Your Agent
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026&ndash;present Context contributors.<br>
+<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code>'s code</a> is distributed under
+<a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
+The documentation on this website is distributed under
+<a href="https://creativecommons.org/licenses/by/4.0/deed.en"><strong>CC-BY-4.0</strong></a>.
+
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/ActiveMemory/ctx" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://ctx.ist/discord" target="_blank" rel="noopener" title="ctx.ist" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M492.5 69.8c-.2-.3-.4-.6-.8-.7-38.1-17.5-78.4-30-119.7-37.1-.4-.1-.8 0-1.1.1s-.6.4-.8.8c-5.5 9.9-10.5 20.2-14.9 30.6-44.6-6.8-89.9-6.8-134.4 0-4.5-10.5-9.5-20.7-15.1-30.6-.2-.3-.5-.6-.8-.8s-.7-.2-1.1-.2C162.5 39 122.2 51.5 84.1 69c-.3.1-.6.4-.8.7C7.1 183.5-13.8 294.6-3.6 404.2c0 .3.1.5.2.8s.3.4.5.6c44.4 32.9 94 58 146.8 74.2.4.1.8.1 1.1 0s.7-.4.9-.7c11.3-15.4 21.4-31.8 30-48.8.1-.2.2-.5.2-.8s0-.5-.1-.8-.2-.5-.4-.6-.4-.3-.7-.4c-15.8-6.1-31.2-13.4-45.9-21.9-.3-.2-.5-.4-.7-.6s-.3-.6-.3-.9 0-.6.2-.9.3-.5.6-.7c3.1-2.3 6.2-4.7 9.1-7.1.3-.2.6-.4.9-.4s.7 0 1 .1c96.2 43.9 200.4 43.9 295.5 0 .3-.1.7-.2 1-.2s.7.2.9.4c2.9 2.4 6 4.9 9.1 7.2.2.2.4.4.6.7s.2.6.2.9-.1.6-.3.9-.4.5-.6.6c-14.7 8.6-30 15.9-45.9 21.8-.2.1-.5.2-.7.4s-.3.4-.4.7-.1.5-.1.8.1.5.2.8c8.8 17 18.8 33.3 30 48.8.2.3.6.6.9.7s.8.1 1.1 0c52.9-16.2 102.6-41.3 147.1-74.2.2-.2.4-.4.5-.6s.2-.5.2-.8c12.3-126.8-20.5-236.9-86.9-334.5zm-302 267.7c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.4 59.2-52.8 59.2m195.4 0c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.2 59.2-52.8 59.2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://ctx.ist/feed.xml" target="_blank" rel="noopener" title="ctx.ist" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M0 64c0-17.7 14.3-32 32-32 229.8 0 416 186.2 416 416 0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96 14.3 96 0 81.7 0 64m0 352a64 64 0 1 1 128 0 64 64 0 1 1-128 0m32-256c159.1 0 288 128.9 288 288 0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224-17.7 0-32-14.3-32-32s14.3-32 32-32"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7f30b55.min.js"></script>
+      
+    
+  </body>
+</html>
