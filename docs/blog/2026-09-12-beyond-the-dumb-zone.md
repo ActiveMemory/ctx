@@ -688,7 +688,7 @@ through compaction; [Anthropic documents this explicitly][ctx-window].
 Thus,record relevant compaction events when evaluating the process, and keep
 important decisions in files even when no manual reset occurs.
 
-[ctx-window]: "Claude Context Window" https://platform.claude.com/docs/en/build-with-claude/context-windows
+[ctx-window]: https://platform.claude.com/docs/en/build-with-claude/context-windows "Claude Context Window"
 
 A handoff should include the approved spec, reasons for key decisions,
 abandoned assumptions, current code version, completed checks, open
