@@ -169,7 +169,7 @@ logs are very different inputs.
 
 Using only 25% of a million-token window does not necessarily certify reliability.
 
-Capacity and useful performance are different measurements.
+**Capacity and useful performance are different measurements**.
 
 Anthropic's context-engineering guidance itself describes degradation
 as a gradient rather than a hard cliff and recommends selecting
