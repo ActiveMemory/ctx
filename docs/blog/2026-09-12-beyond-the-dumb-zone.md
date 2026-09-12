@@ -789,10 +789,12 @@ versus three reviewers. These isolate whether gains come from retained
 context, review diversity, extra inference effort, or the human's
 coordination.
 
-We might find that **history helps with unresolved design questions**, while
-**a good handoff works just as well when the spec is complete**. 
+So far, based on our active production work in `ctx` we have found that:
 
-That would tell us when keeping the session is worth it.
+* **history helps with unresolved design questions**,
+* while **a good handoff works just as well when the spec is complete**. 
+
+This is important in telling us **when keeping the session is worth it**.
 
 ## Instructions You Can Reuse
 
