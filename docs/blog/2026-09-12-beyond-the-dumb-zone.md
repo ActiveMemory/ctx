@@ -274,34 +274,51 @@ from having to reconstruct the current state from the conversation.
 
 ## A Practical Run, Still in Progress
 
-This workflow is also how we are developing a real skill-registry
-feature. At the time of writing, we have taken it through a debated
-brief, specification intent, and a full specification bundle, with
-repeated reviews and revisions at each checkpoint. We have not approved implementation yet. The `ctx` examples below
-adapt this process for the public tool; the feature in this account is
-being developed elsewhere.
+This workflow is also how we are developing a real feature. 
 
-So far, we have not deliberately reset any of the participating agent
-conversations. I have kept the two external frontier-model review
-sessions across the brief, intent, and bundle reviews. The steering
-reviewer has kept its conversation too, even while we worked on side
-questions and this article. The agent responsible for authoring the
-artifacts and eventually implementing the feature has also remained in
-the same session.
+At the time of writing, we have taken it through a debated brief, 
+specification intent, and a full specification bundle, with repeated reviews 
+and revisions at each checkpoint. 
 
-The tools may have compacted or summarized history automatically. We
-have kept the conversations; that does not mean every original token
-still reaches the models.
+So far, **we have not deliberately reset any of the participating agent
+conversations**. 
+
+I have kept the two external frontier-model review
+sessions ***across the brief, intent, and bundle reviews**. 
+
+The steering reviewer has kept its conversation too, even while we worked 
+on side questions and this article. 
+
+The agent responsible for authoring the artifacts and eventually implementing 
+the feature has also remained in the same session.
 
 My intention is to keep those sessions through implementation and the
-subsequent code-review loop as well. I do not need the implementer to get everything right on its first
-attempt. I need it to understand the design, respond to useful feedback,
-and make changes we can check. We can correct its work without first
-throwing away the discussion that led to it.
+subsequent code-review loop as well. 
+
+I do not need the implementer to get everything right on its first
+attempt: I need it to understand the design, respond to useful feedback,
+and make changes we can check. **We can correct its work without first
+throwing away the discussion that led to it**.
 
 We may still need a fresh session if repeated corrections stop helping.
-So far, neither changing stages nor discussing side topics has given us
+However, based on former similar implementations, that case will be an
+exception rather than the norm.
+
+## This Is Not Our First Rodeo
+
+This is not the first time we are following this workflow and so far, 
+we haven't gotten into a situation where the Oracle model proposes
+changes and the implementer agent wasn't able to implement them sufficiently,
+hence converging to a desired quality and product behavior.
+
+In short, so far, I haven't needed to `/clear` any session anywhere.
+
+Moreover, neither changing stages nor discussing side topics has given us
 a reason to start over.
+
+So based on our anecdotal experience, in this particular workflow, 
+we can assume that needing to `/clear` **any** session is an *exception* rather 
+than the norm.
 
 ## Who Does What
 

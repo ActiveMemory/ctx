@@ -1235,6 +1235,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#this-is-not-our-first-rodeo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        This Is Not Our First Rodeo
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#who-does-what" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1773,30 +1784,38 @@ next stage. It finishes, we review, and the human approves the next step.</p>
 decisions, open questions, and what the agent may do next. That saves us
 from having to reconstruct the current state from the conversation.</p>
 <h2 id="a-practical-run-still-in-progress">A Practical Run, Still in Progress<a class="headerlink" href="#a-practical-run-still-in-progress" title="Permanent link">&para;</a></h2>
-<p>This workflow is also how we are developing a real skill-registry
-feature. At the time of writing, we have taken it through a debated
-brief, specification intent, and a full specification bundle, with
-repeated reviews and revisions at each checkpoint. We have not approved implementation yet. The <code>ctx</code> examples below
-adapt this process for the public tool; the feature in this account is
-being developed elsewhere.</p>
-<p>So far, we have not deliberately reset any of the participating agent
-conversations. I have kept the two external frontier-model review
-sessions across the brief, intent, and bundle reviews. The steering
-reviewer has kept its conversation too, even while we worked on side
-questions and this article. The agent responsible for authoring the
-artifacts and eventually implementing the feature has also remained in
-the same session.</p>
-<p>The tools may have compacted or summarized history automatically. We
-have kept the conversations; that does not mean every original token
-still reaches the models.</p>
+<p>This workflow is also how we are developing a real feature. </p>
+<p>At the time of writing, we have taken it through a debated brief, 
+specification intent, and a full specification bundle, with repeated reviews 
+and revisions at each checkpoint. </p>
+<p>So far, <strong>we have not deliberately reset any of the participating agent
+conversations</strong>. </p>
+<p>I have kept the two external frontier-model review
+sessions <em>*</em>across the brief, intent, and bundle reviews**. </p>
+<p>The steering reviewer has kept its conversation too, even while we worked 
+on side questions and this article. </p>
+<p>The agent responsible for authoring the artifacts and eventually implementing 
+the feature has also remained in the same session.</p>
 <p>My intention is to keep those sessions through implementation and the
-subsequent code-review loop as well. I do not need the implementer to get everything right on its first
-attempt. I need it to understand the design, respond to useful feedback,
-and make changes we can check. We can correct its work without first
-throwing away the discussion that led to it.</p>
+subsequent code-review loop as well. </p>
+<p>I do not need the implementer to get everything right on its first
+attempt: I need it to understand the design, respond to useful feedback,
+and make changes we can check. <strong>We can correct its work without first
+throwing away the discussion that led to it</strong>.</p>
 <p>We may still need a fresh session if repeated corrections stop helping.
-So far, neither changing stages nor discussing side topics has given us
+However, based on former similar implementations, that case will be an
+exception rather than the norm.</p>
+<h2 id="this-is-not-our-first-rodeo">This Is Not Our First Rodeo<a class="headerlink" href="#this-is-not-our-first-rodeo" title="Permanent link">&para;</a></h2>
+<p>This is not the first time we are following this workflow and so far, 
+we haven't gotten into a situation where the Oracle model proposes
+changes and the implementer agent wasn't able to implement them sufficiently,
+hence converging to a desired quality and product behavior.</p>
+<p>In short, so far, I haven't needed to <code>/clear</code> any session anywhere.</p>
+<p>Moreover, neither changing stages nor discussing side topics has given us
 a reason to start over.</p>
+<p>So based on our anecdotal experience, in this particular workflow, 
+we can assume that needing to <code>/clear</code> <strong>any</strong> session is an <em>exception</em> rather 
+than the norm.</p>
 <h2 id="who-does-what">Who Does What<a class="headerlink" href="#who-does-what" title="Permanent link">&para;</a></h2>
 <p>We use one <strong>implementation agent</strong>, three <strong>reviewers</strong>, and a <strong>human
 who makes the product decisions</strong>. We keep their conversations across
