@@ -167,7 +167,7 @@ long-running coding session.
 A design discussion, a repository dump, and thousands of lines of repetitive 
 logs are very different inputs.
 
-Using only 25% of a million-token window does not always certify reliability.
+Using only 25% of a million-token window does not necessarily certify reliability.
 
 Capacity and useful performance are different measurements.
 
