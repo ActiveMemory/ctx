@@ -353,6 +353,41 @@ specification engine such as [GitHub Spec Kit](https://github.com/github/spec-ki
 produces the full bundle. The review loop described here is something we add around
 those tools.
 
+```mermaid
+flowchart TD
+    brief["1. Debate the problem<br/>Debated brief"]
+    reviewBrief{"STOP · Review the brief<br/>Human approves?"}
+    intent["2. Establish specification intent<br/>Requirements, proposals, open questions"]
+    reviewIntent{"STOP · Review the intent<br/>Human approves?"}
+    bundle["3. Prepare the full spec bundle<br/>Spec, plan, contracts, tasks, checks"]
+    reviewBundle{"STOP · Review the bundle<br/>Human approves implementation?"}
+    code["4. Implement the approved bundle<br/>Code, tests, docs, results"]
+    reviewCode["STOP · Review the implementation"]
+    repair["5. Fix, check, repeat<br/>Correct findings and verify changes"]
+    accept{"Human accepts the implementation?"}
+    done["Implementation complete<br/>Publishing and deployment are separate"]
+
+    brief --> reviewBrief
+    reviewBrief -->|Revise| brief
+    reviewBrief -->|Approve| intent
+    intent --> reviewIntent
+    reviewIntent -->|Revise| intent
+    reviewIntent -->|Approve| bundle
+    bundle --> reviewBundle
+    reviewBundle -->|Revise| bundle
+    reviewBundle -->|Approve| code
+    code --> reviewCode --> repair --> accept
+    accept -->|More corrections| repair
+    accept -->|Accept| done
+
+    classDef work fill:#eef4ff,stroke:#3561a7,color:#172b4d;
+    classDef stop fill:#fff4dc,stroke:#9a6700,color:#493200;
+    classDef complete fill:#e8f5eb,stroke:#347544,color:#174223;
+    class brief,intent,bundle,code,repair work;
+    class reviewBrief,reviewIntent,reviewBundle,reviewCode,accept stop;
+    class done complete;
+```
+
 ### Stage 1: Debate the Problem
 
 The developer and implementation agent examine the problem before
