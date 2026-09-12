@@ -729,7 +729,7 @@ An uninterrupted conversation does not guarantee that every original
 token reaches the model. Harnesses can manage long conversations
 through compaction; [Anthropic documents this explicitly][ctx-window]. 
 
-Thus,record relevant compaction events when evaluating the process, and keep
+Thus, record relevant compaction events when evaluating the process, and keep
 important decisions in files even when no manual reset occurs.
 
 [ctx-window]: https://platform.claude.com/docs/en/build-with-claude/context-windows "Claude Context Window"
