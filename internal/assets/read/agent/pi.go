@@ -78,3 +78,47 @@ func PiSkills() (map[string][]byte, error) {
 	}
 	return skills, nil
 }
+
+// PiSkillReferences reads the embedded reference files of every Pi
+// skill. Keys are skill names; values map a reference file name to
+// its content. Skills without a references directory are absent
+// from the map.
+//
+// Returns:
+//   - map[string]map[string][]byte: Skill -> reference file -> content
+//   - error: Non-nil if a read fails
+func PiSkillReferences() (map[string]map[string][]byte, error) {
+	refs := make(map[string]map[string][]byte)
+	entries, dirErr := fs.ReadDir(assets.FS, asset.DirIntegrationsPiSkill)
+	if dirErr != nil {
+		return nil, dirErr
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		refDir := path.Join(
+			asset.DirIntegrationsPiSkill, name, asset.DirReferences)
+		refEntries, refErr := fs.ReadDir(assets.FS, refDir)
+		if refErr != nil {
+			// No references directory for this skill.
+			continue
+		}
+		for _, ref := range refEntries {
+			if ref.IsDir() {
+				continue
+			}
+			content, readErr := assets.FS.ReadFile(
+				path.Join(refDir, ref.Name()))
+			if readErr != nil {
+				return nil, readErr
+			}
+			if refs[name] == nil {
+				refs[name] = make(map[string][]byte)
+			}
+			refs[name][ref.Name()] = content
+		}
+	}
+	return refs, nil
+}

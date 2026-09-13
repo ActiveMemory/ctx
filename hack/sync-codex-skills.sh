@@ -21,6 +21,9 @@
 
 set -euo pipefail
 
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+
 CTX_SKILLS="internal/assets/claude/skills"
 CODEX_SKILLS="internal/assets/codex/skills"
 
@@ -34,7 +37,9 @@ EXCLUDE=(
 
 excluded() {
   local name="$1"
-  for x in "${EXCLUDE[@]}"; do
+  # Guard the expansion: bash 3.2 under set -u aborts on an empty
+  # array; see the lint-drift.sh guard and LEARNINGS 2026-08-19.
+  for x in ${EXCLUDE[@]+"${EXCLUDE[@]}"}; do
     [ "$x" = "$name" ] && return 0
   done
   return 1
