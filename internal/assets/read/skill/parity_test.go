@@ -53,9 +53,8 @@ var claudeOnlySkills = map[string]bool{
 // frontmatter key the sync scripts strip). Mirror trees are
 // additionally held to completeness (every canonical skill outside
 // claudeOnlySkills is present), no orphans, and reference parity
-// (every embedded canonical references/ file is a byte-copy;
-// non-.md references sit outside the canonical embed glob and are
-// covered by the sync scripts, not this test).
+// (every embedded canonical references/ file is a byte-copy,
+// including non-.md ones such as scripts a skill body invokes).
 func TestSyncedSkillParity(t *testing.T) {
 	var checked, exempt, refsChecked int
 	allTrees := make([]string, 0, len(mirrorSkillTrees)+len(presenceSkillTrees))

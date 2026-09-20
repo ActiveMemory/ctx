@@ -18,6 +18,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
+	asset "github.com/ActiveMemory/ctx/internal/config/asset"
 	"github.com/ActiveMemory/ctx/internal/config/marker"
 )
 
@@ -156,9 +157,9 @@ func TestDeploySkills_DeploysReferences(t *testing.T) {
 		t.Fatalf("deploySkills: %v", err)
 	}
 
-	refs, err := agent.PiSkillReferences()
+	refs, err := agent.SkillReferences(asset.DirIntegrationsPiSkill)
 	if err != nil {
-		t.Fatalf("PiSkillReferences: %v", err)
+		t.Fatalf("SkillReferences: %v", err)
 	}
 	if len(refs) == 0 {
 		t.Fatal("no embedded reference files — embed glob regressed")
@@ -187,9 +188,9 @@ func TestDeploySkills_RefreshesStaleReferenceWhenSkillUnchanged(t *testing.T) {
 	if err != nil {
 		t.Fatalf("PiSkills: %v", err)
 	}
-	refs, refsErr := agent.PiSkillReferences()
+	refs, refsErr := agent.SkillReferences(asset.DirIntegrationsPiSkill)
 	if refsErr != nil {
-		t.Fatalf("PiSkillReferences: %v", refsErr)
+		t.Fatalf("SkillReferences: %v", refsErr)
 	}
 	const skill = "ctx-humanize"
 	if refs[skill] == nil {

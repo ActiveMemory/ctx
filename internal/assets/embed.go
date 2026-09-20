@@ -11,7 +11,7 @@ import (
 )
 
 //go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md
-//go:embed claude/skills/*/references/*.md claude/skills/*/SKILL.md
+//go:embed claude/skills/*/references/* claude/skills/*/SKILL.md
 //go:embed codex/.codex-plugin/plugin.json codex/.mcp.json
 //go:embed codex/hooks/hooks.json codex/skills/*/SKILL.md
 //go:embed codex/skills/*/references/*

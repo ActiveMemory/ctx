@@ -47,9 +47,18 @@ strength:
   byte-parity check; for mirror trees (OpenCode, Codex) assert
   completeness (every canonical skill outside the exclusion list is
   present), no orphans, and reference parity (every embedded
-  canonical `references/*.md` byte-matches the generated copy;
-  non-`.md` references are outside the canonical embed glob and are
-  covered by the sync scripts, not the test).
+  canonical `references/` file byte-matches the generated copy).
+- Keep the reference plumbing single-copy: one
+  `agent.SkillReferences(treeDir)` reader and one
+  `coreAgents.DeployReferences` helper (the per-tool parts — the
+  managed-target check and the "created" notice — are passed in), so
+  the next tool to ship references adds a call site, not a fourth
+  copy.
+- Embed the canonical `references/` glob symmetrically with the
+  mirror trees (`*` rather than `*.md`), so every reference file a
+  skill body invokes is both shipped and covered by the parity
+  test — `ctx-journal-enrich-all` cites
+  `references/enrich-heuristic.py`.
 - Harden `check-opencode-skills` restore to full-replace
   (`rm -rf` + `cp -r`), since a mirror sync can add and remove
   directories.
@@ -69,8 +78,6 @@ strength:
 
 - Changing the Copilot CLI model (its tree carries tool-only wrapper
   skills; presence-based enrollment remains correct there).
-- Widening the canonical Claude embed glob beyond
-  `references/*.md`.
 - Any transform beyond stripping `allowed-tools:` (the "no terse
   transform" decision from `specs/opencode-skill-parity.md` stands).
 

@@ -120,51 +120,6 @@ func OpenCodeSkills() (map[string][]byte, error) {
 	return skills, nil
 }
 
-// OpenCodeSkillReferences reads the embedded reference files of
-// every OpenCode skill. Keys are skill names; values map a reference
-// file name to its content. Skills without a references directory
-// are absent from the map.
-//
-// Returns:
-//   - map[string]map[string][]byte: Skill -> reference file -> content
-//   - error: Non-nil if a read fails
-func OpenCodeSkillReferences() (map[string]map[string][]byte, error) {
-	refs := make(map[string]map[string][]byte)
-	entries, dirErr := fs.ReadDir(
-		assets.FS, asset.DirIntegrationsOpenCodeSkill)
-	if dirErr != nil {
-		return nil, dirErr
-	}
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			continue
-		}
-		name := entry.Name()
-		refDir := path.Join(
-			asset.DirIntegrationsOpenCodeSkill, name, asset.DirReferences)
-		refEntries, refErr := fs.ReadDir(assets.FS, refDir)
-		if refErr != nil {
-			// No references directory for this skill.
-			continue
-		}
-		for _, ref := range refEntries {
-			if ref.IsDir() {
-				continue
-			}
-			content, readErr := assets.FS.ReadFile(
-				path.Join(refDir, ref.Name()))
-			if readErr != nil {
-				return nil, readErr
-			}
-			if refs[name] == nil {
-				refs[name] = make(map[string][]byte)
-			}
-			refs[name][ref.Name()] = content
-		}
-	}
-	return refs, nil
-}
-
 // CopilotCLISkills reads all embedded Copilot CLI skill templates.
 // Returns a map of skill directory name to SKILL.md content for skills
 // in integrations/copilot-cli/skills/.
@@ -233,48 +188,4 @@ func CodexSkills() (map[string][]byte, error) {
 		skills[name] = content
 	}
 	return skills, nil
-}
-
-// CodexSkillReferences reads the embedded reference files of every
-// Codex skill. Keys are skill names; values map a reference file
-// name to its content. Skills without a references directory are
-// absent from the map.
-//
-// Returns:
-//   - map[string]map[string][]byte: Skill -> reference file -> content
-//   - error: Non-nil if a read fails
-func CodexSkillReferences() (map[string]map[string][]byte, error) {
-	refs := make(map[string]map[string][]byte)
-	entries, dirErr := fs.ReadDir(assets.FS, asset.DirCodexSkills)
-	if dirErr != nil {
-		return nil, dirErr
-	}
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			continue
-		}
-		name := entry.Name()
-		refDir := path.Join(
-			asset.DirCodexSkills, name, asset.DirReferences)
-		refEntries, refErr := fs.ReadDir(assets.FS, refDir)
-		if refErr != nil {
-			// No references directory for this skill.
-			continue
-		}
-		for _, ref := range refEntries {
-			if ref.IsDir() {
-				continue
-			}
-			content, readErr := assets.FS.ReadFile(
-				path.Join(refDir, ref.Name()))
-			if readErr != nil {
-				return nil, readErr
-			}
-			if refs[name] == nil {
-				refs[name] = make(map[string][]byte)
-			}
-			refs[name][ref.Name()] = content
-		}
-	}
-	return refs, nil
 }

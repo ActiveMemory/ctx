@@ -14,6 +14,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
+	asset "github.com/ActiveMemory/ctx/internal/config/asset"
 )
 
 func withTempProjectDir(t *testing.T) string {
@@ -97,9 +98,9 @@ func TestDeploySkills_DeploysReferences(t *testing.T) {
 		t.Fatalf("deploySkills: %v", err)
 	}
 
-	refs, err := agent.OpenCodeSkillReferences()
+	refs, err := agent.SkillReferences(asset.DirIntegrationsOpenCodeSkill)
 	if err != nil {
-		t.Fatalf("OpenCodeSkillReferences: %v", err)
+		t.Fatalf("SkillReferences: %v", err)
 	}
 	if len(refs) == 0 {
 		t.Fatal("no embedded reference files — embed glob regressed")
@@ -128,9 +129,9 @@ func TestDeploySkills_RefreshesStaleReferenceWhenSkillUnchanged(t *testing.T) {
 	if err != nil {
 		t.Fatalf("OpenCodeSkills: %v", err)
 	}
-	refs, err := agent.OpenCodeSkillReferences()
+	refs, err := agent.SkillReferences(asset.DirIntegrationsOpenCodeSkill)
 	if err != nil {
-		t.Fatalf("OpenCodeSkillReferences: %v", err)
+		t.Fatalf("SkillReferences: %v", err)
 	}
 	const skill = "ctx-humanize"
 	if refs[skill] == nil {
