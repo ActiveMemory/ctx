@@ -15,6 +15,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
+	coreAgents "github.com/ActiveMemory/ctx/internal/cli/setup/core/agents"
+	cfgAsset "github.com/ActiveMemory/ctx/internal/config/asset"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -35,6 +37,10 @@ func deploySkills(cmd *cobra.Command) error {
 	skills, readErr := agent.PiSkills()
 	if readErr != nil {
 		return readErr
+	}
+	refs, refErr := agent.SkillReferences(cfgAsset.DirIntegrationsPiSkill)
+	if refErr != nil {
+		return refErr
 	}
 
 	skillsBase := filepath.Join(
@@ -61,6 +67,12 @@ func deploySkills(cmd *cobra.Command) error {
 		if existing, statErr := ctxIo.SafeReadUserFile(target); statErr == nil {
 			if bytes.Equal(existing, content) {
 				writeSetup.InfoPiSkipped(cmd, target)
+				if refDeployErr := coreAgents.DeployReferences(
+					cmd, skillsBase, name, refs[name],
+					validateManagedTarget, writeSetup.InfoPiCreated,
+				); refDeployErr != nil {
+					return refDeployErr
+				}
 				continue
 			}
 		} else if !os.IsNotExist(statErr) {
@@ -79,6 +91,12 @@ func deploySkills(cmd *cobra.Command) error {
 			return errFs.FileWrite(target, wErr)
 		}
 		writeSetup.InfoPiCreated(cmd, target)
+		if refDeployErr := coreAgents.DeployReferences(
+			cmd, skillsBase, name, refs[name],
+			validateManagedTarget, writeSetup.InfoPiCreated,
+		); refDeployErr != nil {
+			return refDeployErr
+		}
 	}
 
 	return nil

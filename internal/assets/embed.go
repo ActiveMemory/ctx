@@ -11,7 +11,7 @@ import (
 )
 
 //go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md
-//go:embed claude/skills/*/references/*.md claude/skills/*/SKILL.md
+//go:embed claude/skills/*/references/* claude/skills/*/SKILL.md
 //go:embed codex/.codex-plugin/plugin.json codex/.mcp.json
 //go:embed codex/hooks/hooks.json codex/skills/*/SKILL.md
 //go:embed codex/skills/*/references/*
@@ -21,8 +21,10 @@ import (
 //go:embed integrations/copilot-cli/skills/*/SKILL.md
 //go:embed integrations/opencode/plugin/index.ts
 //go:embed integrations/opencode/skills/*/SKILL.md
+//go:embed integrations/opencode/skills/*/references/*
 //go:embed integrations/pi/extension/ctx.ts
 //go:embed integrations/pi/skills/*/SKILL.md
+//go:embed integrations/pi/skills/*/references/*
 //go:embed hooks/messages/*/*.txt hooks/messages/registry.yaml hooks/trace/*.sh
 //go:embed schema/*.json why/*.md
 //go:embed permissions/*.txt commands/*.yaml commands/text/*.yaml journal/*.css
