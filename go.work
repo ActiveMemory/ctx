@@ -1,4 +1,4 @@
-go 1.26.3
+go 1.27.1
 
 // ctx (the shipped user binary) and tools/ctxctl (maintainer-only)
 // are separate modules. ctx never requires tools/ctxctl, so it can

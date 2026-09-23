@@ -10,7 +10,9 @@
 # Version minimums live here so bumps are one-line diffs.
 
 # Build / lint core — the check fails without these.
-go               bin   required   1.26
+# The go minimum must match the go.mod directive's major.minor;
+# hack/check-go-version.sh (make check-go-version) enforces it.
+go               bin   required   1.27
 git              bin   required   -
 golangci-lint    bin   required   -
 

@@ -1,6 +1,6 @@
 module github.com/ActiveMemory/ctx/tools/ctxctl
 
-go 1.26.3
+go 1.27.1
 
 require (
 	github.com/ActiveMemory/ctx v0.0.0
@@ -9,6 +9,7 @@ require (
 
 require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect

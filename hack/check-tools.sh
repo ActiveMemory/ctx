@@ -76,7 +76,7 @@ with_timeout() {
     fi
 }
 
-# First dotted-number token in a version banner ("go1.26.3",
+# First dotted-number token in a version banner ("go1.27.1",
 # "v24.18.0", "jq-1.7.1" all yield the bare number).
 extract_version() {
     grep -oE '[0-9]+(\.[0-9]+)+' | head -1
