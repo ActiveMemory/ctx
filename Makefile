@@ -6,7 +6,7 @@
 clean all release build-all help \
 test-coverage smoke site site-guard site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall check-tools \
-sync-version check-version-sync sync-why check-why sync-copilot-skills check-copilot-skills sync-codex-skills check-codex-skills codex-plugin-install sync-opencode-skills check-opencode-skills sync-pi-skills check-pi-skills sync-steering check-steering gemini-search \
+sync-version check-version-sync check-go-version sync-why check-why sync-copilot-skills check-copilot-skills sync-codex-skills check-codex-skills codex-plugin-install sync-opencode-skills check-opencode-skills sync-steering check-steering gemini-search \
 gitnexus-version gitnexus-update gitnexus-index gitnexus-mcp strip-gitnexus install-ctxctl reinstall-ctxctl
 
 # Default binary name and output
@@ -175,6 +175,8 @@ audit:
 	fi
 	@echo "==> Checking version sync..."
 	@$(MAKE) --no-print-directory check-version-sync
+	@echo "==> Checking Go toolchain version sync..."
+	@$(MAKE) --no-print-directory check-go-version
 	@echo "==> Checking why docs freshness..."
 	@$(MAKE) --no-print-directory check-why
 	@echo "==> Checking Copilot skills freshness..."
@@ -398,6 +400,10 @@ check-version-sync:
 	fi; \
 	echo "Version sync OK ($$V)."
 
+## check-go-version: Verify every Go toolchain pin agrees with the go.mod directive
+check-go-version:
+	@./hack/check-go-version.sh
+
 ## sync-copilot-skills: Sync Copilot CLI skills from canonical ctx skills
 sync-copilot-skills:
 	@./hack/sync-copilot-skills.sh
@@ -432,14 +438,23 @@ sync-steering:
 	@CGO_ENABLED=0 go run ./cmd/ctx steering sync --all
 
 ## check-steering: Verify tracked steering outputs match .context/steering source
+# Snapshot-then-regenerate (same shape as check-copilot-skills): compares
+# the working-tree outputs against a fresh sync, not against HEAD, so an
+# uncommitted-but-consistent source/output pair passes locally.
 check-steering:
-	@CGO_ENABLED=0 go run ./cmd/ctx steering sync --all > /dev/null
-	@if ! git diff --quiet -- .cursor .clinerules .kiro/steering; then \
+	@TMPDIR=$$(mktemp -d) && \
+	mkdir -p "$$TMPDIR/before" "$$TMPDIR/after" && \
+	cp -r .cursor/rules .clinerules .kiro/steering "$$TMPDIR/before/" && \
+	CGO_ENABLED=0 go run ./cmd/ctx steering sync --all > /dev/null && \
+	cp -r .cursor/rules .clinerules .kiro/steering "$$TMPDIR/after/" && \
+	if ! diff -rq "$$TMPDIR/before" "$$TMPDIR/after" > /dev/null 2>&1; then \
 		echo "FAIL: steering outputs are stale — run 'make sync-steering' and commit"; \
-		git --no-pager diff --stat -- .cursor .clinerules .kiro/steering; \
+		diff -rq "$$TMPDIR/before" "$$TMPDIR/after" || true; \
+		rm -rf "$$TMPDIR"; \
 		exit 1; \
-	fi
-	@echo "Steering outputs are in sync."
+	fi; \
+	rm -rf "$$TMPDIR"; \
+	echo "Steering outputs are in sync."
 
 ## check-copilot-skills: Verify Copilot CLI skills match ctx source skills
 check-copilot-skills:

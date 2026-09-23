@@ -60,7 +60,7 @@ Three pieces:
 
 | Manifest value | Semantics | Below | Above    |
 |----------------|-----------|-------|----------|
-| `1.26`         | minimum   | `OUTDATED` | `OK`  |
+| `1.27`         | minimum   | `OUTDATED` | `OK`  |
 | `=0.0.51`      | exact pin | `OUTDATED` | `DRIFT` |
 | `-`            | presence  | —     | —        |
 

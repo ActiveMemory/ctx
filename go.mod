@@ -1,6 +1,6 @@
 module github.com/ActiveMemory/ctx
 
-go 1.26.3
+go 1.27.1
 
 require (
 	github.com/hashicorp/raft v1.8.0

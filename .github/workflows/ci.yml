@@ -20,7 +20,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
-          go-version: '1.26'
+          go-version: '1.27'
 
       - name: Build
         run: CGO_ENABLED=0 go build ./...
@@ -59,13 +59,19 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
-          go-version: '1.26'
+          go-version: '1.27'
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
-          version: v2.11.4
+          version: v2.13.2
           args: --timeout=5m
+
+      - name: Check Go toolchain version sync
+        run: make check-go-version
+
+      - name: Check steering outputs freshness
+        run: make check-steering
 
   typecheck-opencode-plugin:
     name: Typecheck OpenCode plugin

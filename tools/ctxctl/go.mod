@@ -1,6 +1,6 @@
 module github.com/ActiveMemory/ctx/tools/ctxctl
 
-go 1.26.3
+go 1.27.1
 
 require (
 	github.com/ActiveMemory/ctx v0.0.0

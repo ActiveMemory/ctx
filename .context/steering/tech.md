@@ -9,7 +9,7 @@ priority: 10
 
 ## Primary
 
-- **Go 1.26+**, statically linked (`CGO_ENABLED=0`). The `ctx`
+- **Go 1.27+**, statically linked (`CGO_ENABLED=0`). The `ctx`
   binary is the entire deliverable for the core; everything else
   ships as embedded bytes inside it.
 - **Cobra** for the CLI command surface.
