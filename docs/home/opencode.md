@@ -66,7 +66,7 @@ This does two things:
 | `.opencode/plugins/ctx.ts` | Lifecycle plugin (hooks into `ctx system` commands) |
 | `~/.config/opencode/opencode.json` | Global MCP server registration (or `$OPENCODE_HOME/opencode.json`) |
 | `AGENTS.md` | Agent instructions (OpenCode reads this natively) |
-| `.opencode/skills/ctx-*/SKILL.md` | Slash command skills |
+| `.opencode/skills/ctx-*/SKILL.md` | Slash command skills (plus each skill's `references/` files) |
 
 The plugin is a single file with no runtime dependencies; no `bun install`
 or `npm install` needed. OpenCode loads it automatically on launch.
@@ -112,11 +112,17 @@ unnecessary.
 
 ## Slash Commands
 
-The skills are generated from the canonical ctx skill tree at build
-time, so their names and behavior match the Claude Code integration
-one-to-one.
+The full canonical ctx skill tree ships as OpenCode skills, generated
+at build time (`hack/sync-opencode-skills.sh` strips the Claude-only
+`allowed-tools:` frontmatter), so skill names and behavior match the
+Claude Code integration one-to-one. Four skills are Claude Code-only
+and are not shipped: `ctx-permission-sanitize` (audits
+`.claude/settings.local.json`), `ctx-plan-import` (reads
+`~/.claude/plans/`), `ctx-dream` (headless `claude -p` cron), and
+`ctx-skill-create` (authors Claude Code skills). Skills that cite
+`references/` files ship those files alongside `SKILL.md`.
 
-Session lifecycle:
+The ones you'll reach for most, by workflow. Session lifecycle:
 
 | Command | When to use |
 |---------|-------------|

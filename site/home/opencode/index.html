@@ -2234,7 +2234,7 @@ then run from your project root:</p>
 </tr>
 <tr>
 <td><code>.opencode/skills/ctx-*/SKILL.md</code></td>
-<td>Slash command skills</td>
+<td>Slash command skills (plus each skill's <code>references/</code> files)</td>
 </tr>
 </tbody>
 </table>
@@ -2305,10 +2305,16 @@ the OpenCode integration. OpenCode's execution model (explicit user
 approval for every shell command) makes a pre-execution blocklist
 unnecessary.</p>
 <h2 id="slash-commands">Slash Commands<a class="headerlink" href="#slash-commands" title="Permanent link">&para;</a></h2>
-<p>The skills are generated from the canonical ctx skill tree at build
-time, so their names and behavior match the Claude Code integration
-one-to-one.</p>
-<p>Session lifecycle:</p>
+<p>The full canonical ctx skill tree ships as OpenCode skills, generated
+at build time (<code>hack/sync-opencode-skills.sh</code> strips the Claude-only
+<code>allowed-tools:</code> frontmatter), so skill names and behavior match the
+Claude Code integration one-to-one. Four skills are Claude Code-only
+and are not shipped: <code>ctx-permission-sanitize</code> (audits
+<code>.claude/settings.local.json</code>), <code>ctx-plan-import</code> (reads
+<code>~/.claude/plans/</code>), <code>ctx-dream</code> (headless <code>claude -p</code> cron), and
+<code>ctx-skill-create</code> (authors Claude Code skills). Skills that cite
+<code>references/</code> files ship those files alongside <code>SKILL.md</code>.</p>
+<p>The ones you'll reach for most, by workflow. Session lifecycle:</p>
 <table>
 <thead>
 <tr>
