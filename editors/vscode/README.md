@@ -11,9 +11,9 @@
 A VS Code Chat Participant that brings [ctx](https://ctx.ist) (persistent
 project context for AI coding sessions) directly into GitHub Copilot Chat.
 
-Type `@ctx` in the Chat view to access 45 slash commands, automatic context
-hooks, a reminder status bar, and natural language routing, all powered by
-the ctx CLI.
+Type `@ctx` in the Chat view for 36 slash commands: 27 run the ctx CLI,
+and 9 run a canonical ctx skill (brainstorm, spec, next, wrap-up, ...)
+through the chat model, grounded in live ctx output.
 
 ## Quick Start
 
@@ -25,121 +25,114 @@ The extension auto-downloads the ctx CLI binary if it isn't on your PATH.
 
 ## Slash Commands
 
-### Core Context
+### CLI-Backed
 
-| Command | Description |
-|---------|-------------|
-| `/init` | Initialize a `.context/` directory with template files |
-| `/status` | Show context summary with token estimate |
-| `/agent` | Print AI-ready context packet |
-| `/drift` | Detect stale or invalid context |
-| `/recall` | Browse and search AI session history |
-| `/hook` | Generate AI tool integration configs (copilot, claude) |
-| `/add` | Add a task, decision, learning, or convention |
-| `/load` | Output assembled context Markdown |
-| `/compact` | Archive completed tasks and clean up context |
-| `/sync` | Reconcile context with codebase |
+Each runs the `ctx` command shown and renders its output. A command that
+exits non-zero is shown as a failure with the CLI's own message, never
+as a normal result.
 
-### Tasks & Reminders
+| Command | Runs |
+|---------|------|
+| `/init` | `ctx init --caller vscode`, then `ctx setup copilot --write` |
+| `/status` | `ctx status` |
+| `/agent [--budget N]` | `ctx agent` |
+| `/drift` | `ctx drift` |
+| `/recall [--limit N]`, `/recall show <id>` | `ctx journal source` |
+| `/setup [tool] [preview]` | `ctx setup <tool> --write` (default tool: `copilot`) |
+| `/add <type> <text> [flags]` | `ctx task\|decision\|learning\|convention add` |
+| `/decision` | `ctx index .context/DECISIONS.md` |
+| `/learning` | `ctx index .context/LEARNINGS.md` |
+| `/load` | `ctx load` |
+| `/compact` | `ctx compact` |
+| `/sync` | `ctx sync` |
+| `/task complete <ref>\|archive\|snapshot [name]` | `ctx task ...` |
+| `/remind [add\|list\|dismiss]` | `ctx remind ...` |
+| `/pad [add\|show\|rm\|edit\|mv\|resolve\|import\|export\|merge]` | `ctx pad ...` |
+| `/notify test`, `/notify <message> --event <name>` | `ctx hook notify ...` |
+| `/system resources\|stats\|bootstrap\|message` | `ctx sysinfo`, `ctx usage`, `ctx system bootstrap`, `ctx hook message ...` |
+| `/memory sync\|status\|diff\|import\|publish\|unpublish` | `ctx memory ...` |
+| `/journal site\|obsidian` | `ctx journal ...` |
+| `/doctor` | `ctx doctor` |
+| `/config switch <profile>\|status\|schema` | `ctx config ...` |
+| `/why [document]` | `ctx why <document>` (default: `manifesto`) |
+| `/change [--since D]` | `ctx change` |
+| `/guide [--skills\|--commands]` | `ctx guide` |
+| `/permission snapshot\|restore` | `ctx permission ...` |
+| `/pause`, `/resume` | `ctx hook pause`, `ctx hook resume` |
 
-| Command | Description |
-|---------|-------------|
-| `/complete` | Mark a task as completed |
-| `/remind` | Manage session-scoped reminders (add, list, dismiss) |
-| `/tasks` | Archive or snapshot tasks |
-| `/next` | Show the next open task from TASKS.md |
-| `/implement` | Show the implementation plan with progress |
+`/add` fills in the provenance the CLI requires for tasks, decisions,
+and learnings (`--session-id` from the VS Code session, `--branch` and
+`--commit` from git). Everything else is passed through, so the
+CLI's own rules apply: tasks and conventions need `--section`, decisions
+need `--context`, `--rationale`, `--consequence`, and learnings need
+`--context`, `--lesson`, `--application`. Quote multi-word values:
 
-### Session Lifecycle
+```text
+@ctx /add decision Use PostgreSQL --context "Need a reliable DB" --rationale "ACID and JSON" --consequence "Ops training"
+```
 
-| Command | Description |
-|---------|-------------|
-| `/wrapup` | End-of-session wrap-up with status, drift, and journal audit |
-| `/remember` | Recall recent AI sessions for this project |
-| `/reflect` | Surface items worth persisting as decisions or learnings |
-| `/pause` | Save session state for later |
-| `/resume` | Restore a paused session |
+`/notify setup` points you at `ctx hook notify setup` in a terminal: the
+webhook URL is a secret and does not belong in the chat history.
 
-### Discovery & Planning
+### Skill-Backed
 
-| Command | Description |
-|---------|-------------|
-| `/brainstorm` | Browse and develop ideas from `ideas/` |
-| `/spec` | List or scaffold feature specs from templates |
-| `/verify` | Run verification checks (doctor + drift) |
-| `/map` | Show dependency map (go.mod, package.json) |
-| `/prompt` | Browse and view prompt templates |
-| `/blog` | Draft a blog post from recent context |
-| `/changelog` | Show recent commits for changelog |
+`/<name>` runs the canonical `ctx-<name>` skill. The skill text is bundled
+from `internal/assets/claude/skills/` at build time, and each request
+hands the chat model the skill, the output of `ctx agent` (plus any
+read-only ctx output the skill relies on), earlier turns of the same
+skill conversation, and files you attach with `#file`.
 
-### Maintenance & Audit
+| Command | Skill | Also reads |
+|---------|-------|------------|
+| `/brainstorm` | `ctx-brainstorm` | |
+| `/spec` | `ctx-spec` | |
+| `/implement` | `ctx-implement` | attach the plan with `#file` |
+| `/next` | `ctx-next` | `ctx journal source --limit 3` |
+| `/remember` | `ctx-remember` | `ctx journal source --limit 3` |
+| `/reflect` | `ctx-reflect` | |
+| `/wrap-up` | `ctx-wrap-up` | |
+| `/blog` | `ctx-blog` | `ctx journal source --limit 10` |
+| `/consolidate` | `ctx-consolidate` | `ctx drift --json` |
 
-| Command | Description |
-|---------|-------------|
-| `/check-links` | Audit local links in context files |
-| `/journal` | View or export journal entries |
-| `/consolidate` | Find duplicate entries across context files |
-| `/audit` | Alignment audit: drift + convention check |
-| `/worktree` | Git worktree management (list, add) |
+The model cannot run commands or edit files from here. Where a skill
+says to persist something, it gives you the exact `ctx` or `@ctx`
+command to run instead, and it never claims to have done it. A plain
+reply right after a skill answer continues that skill, so multi-turn
+workflows like `/brainstorm` keep their thread. Only skill exchanges
+are sent back to the model: output of CLI commands such as `/pad` never
+is.
 
-### Context Metadata
+Skills that must explore the repository or run commands on their own
+(`ctx-architecture`, `ctx-link-check`, `ctx-worktree`,
+`ctx-blog-changelog`) are left to agent integrations where ctx deploys
+its skills (Claude Code, `ctx setup copilot-cli`).
 
-| Command | Description |
-|---------|-------------|
-| `/memory` | Claude Code memory bridge (sync, status, diff, import, publish) |
-| `/decisions` | List or reindex project decisions |
-| `/learnings` | List or reindex project learnings |
-| `/config` | Manage config profiles (switch, status, schema) |
-| `/permissions` | Backup or restore Claude settings |
-| `/changes` | Show what changed since last session |
-| `/deps` | Show package dependency graph |
-| `/guide` | Quick-reference cheat sheet for ctx |
-| `/reindex` | Regenerate indices for DECISIONS.md and LEARNINGS.md |
-| `/why` | Read the philosophy behind ctx |
-
-### System & Diagnostics
-
-| Command | Description |
-|---------|-------------|
-| `/system` | System diagnostics and bootstrap |
-| `/pad` | Encrypted scratchpad for sensitive notes |
-| `/notify` | Send webhook notifications |
-
-Sub-routes for `/system`: `resources`, `doctor`, `bootstrap`, `stats`,
-`backup`, `message`.
-
-## Automatic Hooks
-
-The extension registers several VS Code event handlers that mirror
-Claude Code's hook system. These run in the background; no user action
-needed.
+## Background Behavior
 
 | Trigger | What Happens |
 |---------|--------------|
-| **File save** | Runs task-completion check on non-`.context/` files |
-| **Git commit** | Notification prompting to add a Decision, Learning, run Verify, or Skip |
-| **`.context/` file change** | Refreshes reminders and regenerates `.github/copilot-instructions.md` |
-| **Dependency file change** | Notification when `go.mod`, `package.json`, etc. change; offers `/map` |
-| **Every 5 minutes** | Updates reminder status bar and writes heartbeat timestamp |
-| **Extension activate** | Fires `session-event --type start` to ctx CLI |
-| **Extension deactivate** | Fires `session-event --type end` to ctx CLI |
+| **Extension activate** | Fires `ctx system session-event --type start` |
+| **`/init` succeeds** | Fires the same session start (activation had no `.context/` yet) |
+| **`.context/` file change, and every 5 minutes** | Refreshes the reminder status bar from `ctx remind list` (read-only) |
+| **Extension deactivate** | Fires `ctx system session-event --type end` |
 
 ## Status Bar
 
-A `$(bell) ctx` indicator appears in the status bar when you have pending
-reminders. It updates every 5 minutes. When no reminders are due, it hides
-automatically.
+A `$(bell) ctx` indicator appears in the status bar while `ctx remind
+list` has pending reminders, and hides when the list is empty.
 
 ## Natural Language
 
-You can also type plain English after `@ctx`: the extension routes
-common phrases to the correct handler:
+Plain English after `@ctx` routes to a read-only command:
 
+- "Do you remember?" → `/remember`
 - "What should I work on next?" → `/next`
-- "Time to wrap up" → `/wrapup`
+- "Time to wrap up" → `/wrap-up`
 - "Show me the status" → `/status`
-- "Add a decision" → `/add`
 - "Check for drift" → `/drift`
+
+A keyword match never changes context: it cannot add, complete, or
+dismiss anything. Unmatched text shows the command list.
 
 ## Auto-Bootstrap
 
@@ -157,13 +150,13 @@ set `ctx.executablePath` in your settings.
 
 ## Follow-Up Suggestions
 
-After each command, Copilot Chat shows context-aware follow-up buttons.
-For example:
+After a command, Copilot Chat offers context-aware follow-ups. For
+example:
 
-- After `/init` → "Show status" or "Generate copilot integration"
-- After `/drift` → "Sync context" or "Show status"
-- After `/reflect` → "Add decision", "Add learning", or "Wrap up"
-- After `/spec` → "Show implementation plan" or "Run verification"
+- After `/init` → "Show context status" or "What should I work on next?"
+- After `/drift` → "Sync context with codebase" or "Run health check"
+- After `/brainstorm` → "Turn this into a spec"
+- After `/reflect` → "Wrap up the session"
 
 ## Prerequisites
 
@@ -184,38 +177,46 @@ cd editors/vscode
 npm install
 npm run watch   # Watch mode
 npm run build   # Production build
-npm test        # Run tests (53 test cases via vitest)
+npm test        # vitest
+npm run lint    # eslint
 ```
 
 ### Architecture
 
-The extension is a single-file implementation
-(`src/extension.ts`, ~3 000 lines) that:
+The extension is a single-file implementation (`src/extension.ts`) that:
 
 - Registers a `ChatParticipant` with `@ctx` as the handle
-- Routes slash commands to dedicated `handleXxx()` functions
-- Each handler calls the ctx CLI via `execFile` and streams the output
-- On Windows, uses `shell: true` so PATH resolution works without `.exe`
-- Merges stdout/stderr with deduplication (Cobra prints errors to both)
-- A `handleFreeform()` function maps natural language to handlers
+- Dispatches slash commands through two tables: `CLI_COMMANDS` (handlers
+  that build a `ctx` argv) and `SKILLS` (command → canonical skill)
+- Runs the ctx CLI via `execFile` **without a shell**, so prompt text
+  reaches the binary as literal arguments, with stdin closed so no
+  command can wait on a prompt
+- Bundles the skill files with esbuild's text loader
+  (`--loader:.md=text`); `vitest.config.ts` mirrors the loader
 
 ### Testing
 
-Tests live in `src/extension.test.ts` and use vitest with a VS Code API
-mock. They verify:
+- `src/extension.test.ts`: handler behavior against a mocked
+  `execFile` and a VS Code API mock (`src/vscodeMock.ts`).
+- `src/commandParity.test.ts`: `package.json` commands == dispatched
+  commands; each skill-backed command bundles the skill it names; every
+  follow-up and natural-language route targets a real command. It then
+  drives a scenario per command branch through the chat handler and
+  records every `ctx` argv in `src/ctx-cli-surface.json` (a file
+  snapshot).
+- `internal/bootstrap/vscode_surface_test.go` (Go, runs with `go test
+  ./...`): parses every argv in that snapshot against the real cobra
+  command tree, runs the `add` invocations in a scratch project, and
+  checks every listed skill ships. A CLI rename that strands a chat
+  command fails there.
 
-- All 45 command handlers exist and are callable
-- `runCtx` invokes the correct binary with correct arguments
-- Platform detection returns valid GOOS/GOARCH values
-- Follow-up suggestions are returned after commands
-- Edge cases: missing workspace, cancellation, empty output
+After changing what a command runs, refresh the snapshot and review the
+diff:
 
-> **Note**: the test file currently has unresolved type errors
-> (handler imports that no longer exist on `extension.ts`, and
-> a `CancellationToken` mock with an out-of-date signature). The
-> tests still run under vitest's loose runtime, but `tsc` against
-> them fails. Tracked in TASKS.md; until fixed, the CI gate uses
-> `tsconfig.ci.json` which excludes `**/*.test.ts`.
+```bash
+npx vitest run -u
+git diff src/ctx-cli-surface.json
+```
 
 ## Release
 
@@ -229,22 +230,16 @@ job in `.github/workflows/ci.yml`) run on every PR and push to
 `main`:
 
 - `npm ci`: clean dependency install from the committed lockfile.
-- `npm run build`: esbuild bundles `src/extension.ts` to
-  `dist/extension.js`. Catches bundler errors and missing imports
-  at the JavaScript level.
-- `npx tsc --noEmit -p tsconfig.ci.json`: type-checks the
-  production source (`src/**/*.ts` minus test files). Catches type
-  errors that esbuild silently passes through.
+- `npm run build`: esbuild bundles `src/extension.ts` (and the skill
+  files it imports) to `dist/extension.js`.
+- `npx tsc --noEmit -p tsconfig.ci.json`: type-checks the source and
+  the tests.
+- `npm run lint`: eslint.
+- `npm test`: vitest, including the command-parity snapshot.
+- `npx vsce package --no-dependencies`: packaging dry-run.
 
-What CI does **not** gate yet (known gaps):
-
-- **Tests** (`npm test`, vitest). The suite has type errors
-  unrelated to the production code; until they're fixed, gating
-  on vitest would force resolving them before any merge.
-- **Lint** (`npm run lint`, eslint).
-- **Publish dry-run** (`vsce package` to produce the `.vsix`
-  artifact without uploading). Worth adding once the test gate
-  is back.
+The Go `test` job runs `vscode_surface_test.go` against the same
+snapshot.
 
 Release checklist for a maintainer:
 

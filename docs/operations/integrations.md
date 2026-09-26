@@ -647,10 +647,9 @@ to regenerate the instructions.
 ### VS Code Chat Extension (`@ctx`)
 
 The **`ctx` VS Code extension** adds a `@ctx` chat participant to
-GitHub Copilot Chat, giving you direct access to 45 context commands
-from within the editor, plus automatic hooks on file save / git commit /
-`.context/` changes / dependency-file edits, and a reminder status-bar
-indicator.
+GitHub Copilot Chat: 27 commands that run the `ctx` CLI, 9 that run a
+canonical `ctx` skill through the chat model (brainstorm, spec, next,
+wrap-up, ...), and a reminder status-bar indicator.
 
 !!! tip "Full guide: [`ctx` for VS Code](../home/vscode.md)"
     The home-page guide covers daily workflows, the full command list,
@@ -681,17 +680,18 @@ Reload VS Code. Type `@ctx` in Copilot Chat to verify.
 | File | Purpose |
 |------|---------|
 | `.context/` | Project-local context directory (created by `ctx init`, not by the extension) |
-| `.github/copilot-instructions.md` | Repository instructions Copilot reads natively; regenerated automatically when `.context/` files change |
+| `.github/copilot-instructions.md` | Repository instructions Copilot reads natively; written by `@ctx /init` (`ctx setup copilot --write`) |
 
 The extension itself lives in VS Code's extension storage; no project
 files beyond `.context/` and the Copilot instructions are added.
 
 #### How It Works
 
-- **Chat participant:** `@ctx` is registered with VS Code's Chat API; 45 slash commands route to dedicated handlers that shell out to the `ctx` CLI.
-- **Automatic hooks:** file save → task-completion check; git commit → decision/learning prompt; `.context/` change → regenerate Copilot instructions; dependency-file change → `/map` prompt.
-- **Status-bar reminder:** a `$(bell) ctx` indicator surfaces pending session reminders, refreshing every 5 minutes.
-- **Natural language:** plain English after `@ctx` is routed to the nearest matching command.
+- **CLI-backed commands** run the `ctx` CLI (no shell) and render its output; a non-zero exit is shown as a failure with the CLI's message.
+- **Skill-backed commands** hand the chat model the canonical `ctx-<name>` skill (bundled from `internal/assets/claude/skills/`), `ctx agent` output, and any `#file` attachments. The model proposes commands and edits; it cannot run them.
+- **Session events:** activation and deactivation fire `ctx system session-event`.
+- **Status-bar reminder:** a `$(bell) ctx` indicator shows while `ctx remind list` has entries, refreshed on `.context/` changes and every 5 minutes.
+- **Natural language:** plain English after `@ctx` is routed to a read-only command.
 - **Auto-bootstrap:** if the `ctx` CLI isn't on PATH, the extension downloads the correct platform binary from GitHub Releases and caches it.
 
 #### Configuration
