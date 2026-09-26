@@ -54,6 +54,21 @@ func TestParseEntryBlocks_Single(t *testing.T) {
 	}
 }
 
+// A CRLF file (core.autocrlf checkout on Windows) splits on "\n" and
+// leaves "\r" on every line; the title must not keep it.
+func TestParseEntryBlocks_CRLFTitle(t *testing.T) {
+	content := "# Decisions\r\n\r\n" +
+		"## [2026-01-15-120000] Use YAML for config\r\n\r\n" +
+		"**Context:** Need a config format\r\n"
+	blocks := ParseEntryBlocks(content)
+	if len(blocks) != 1 {
+		t.Fatalf("ParseEntryBlocks() = %d blocks, want 1", len(blocks))
+	}
+	if got := blocks[0].Entry.Title; got != "Use YAML for config" {
+		t.Errorf("Title = %q, want %q", got, "Use YAML for config")
+	}
+}
+
 func TestParseEntryBlocks_Multiple(t *testing.T) {
 	content := `# Decisions
 
