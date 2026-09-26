@@ -20,6 +20,9 @@
 //
 //   - **Structure** ([ErrMultipleThemes], [ErrEntryBelowThemes],
 //     [ErrStagingUnparsable]): the precondition refused a malformed root.
+//     [MalformedEntryHeaderError] is the located form of
+//     [ErrStagingUnparsable]: it names the line and heading of a "## ["
+//     line that is not a full timestamped entry header.
 //   - **Cross-file** ([ErrOrphanThemeFile], [ErrMissingThemeFile],
 //     [ErrDuplicateEntry], [ErrBrokenThemeLink]): the root ↔ theme-file
 //     link graph or the one-place-per-entry invariant is broken.

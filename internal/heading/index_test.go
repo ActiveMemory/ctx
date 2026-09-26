@@ -87,6 +87,21 @@ func TestParseHeaders(t *testing.T) {
 				},
 			},
 		},
+		{
+			// A CRLF file (core.autocrlf checkout on Windows): the
+			// title capture must not keep the carriage return.
+			name: "CRLF line endings",
+			content: "# Decisions\r\n\r\n" +
+				"## [2026-01-28-051426] First decision\r\n\r\n" +
+				"**Status**: Accepted\r\n",
+			expected: []entity.IndexEntry{
+				{
+					Timestamp: "2026-01-28-051426",
+					Date:      "2026-01-28",
+					Title:     "First decision",
+				},
+			},
+		},
 	}
 
 	for _, tt := range tests {

@@ -58,6 +58,10 @@ const (
 	// DescKeyErrDisclosureStagingUnparsable: the staging zone could not
 	// be parsed into discrete entries.
 	DescKeyErrDisclosureStagingUnparsable = "err.disclosure.staging-unparsable"
+	// DescKeyErrDisclosureMalformedEntryHeader: format for a "## [" line
+	// that is not a full timestamped entry header; takes the 1-based line
+	// number and the heading.
+	DescKeyErrDisclosureMalformedEntryHeader = "err.disclosure.malformed-entry-header"
 )
 
 // DescKeys for the milestone-3 mover (the digesting pass that writes

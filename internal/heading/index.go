@@ -7,6 +7,8 @@
 package heading
 
 import (
+	"strings"
+
 	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
@@ -32,7 +34,9 @@ func ParseHeaders(content string) []entity.IndexEntry {
 		if len(match) == regex.EntryHeaderGroups {
 			date := match[1]
 			time := match[2]
-			title := match[3]
+			// "(.+)" stops at LF but keeps a CRLF line's carriage
+			// return.
+			title := strings.TrimSpace(match[3])
 			entries = append(entries, entity.IndexEntry{
 				Timestamp: date + token.Dash + time,
 				Date:      date,
