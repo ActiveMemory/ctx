@@ -373,13 +373,18 @@ func checkMissingPackages(ctx *entity.Context, report *Report) {
 // extractFirstComment extracts the first HTML comment block from content.
 // Returns an empty string if no comment found.
 //
+// CRLF is normalized to LF first, so comparing two extracts is
+// line-ending-insensitive: a core.autocrlf checkout writes CRLF files,
+// and a binary built from one embeds CRLF templates.
+//
 // Parameters:
 //   - content: Raw file content to scan for an HTML comment
 //
 // Returns:
-//   - string: Trimmed comment including delimiters,
-//     or empty string if none found
+//   - string: Trimmed comment including delimiters, with LF line
+//     endings, or empty string if none found
 func extractFirstComment(content string) string {
+	content = strings.ReplaceAll(content, token.NewlineCRLF, token.NewlineLF)
 	start := strings.Index(content, marker.CommentOpen)
 	if start == -1 {
 		return ""
