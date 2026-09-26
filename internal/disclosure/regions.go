@@ -11,6 +11,7 @@ import (
 
 	cfgDisc "github.com/ActiveMemory/ctx/internal/config/disclosure"
 	cfgFile "github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
@@ -200,6 +201,37 @@ func entryBelowThemes(themesRaw string, k Kind) bool {
 		i = next
 	}
 	return false
+}
+
+// malformedEntryHeading finds the first line that opens like an entry
+// heading ("## [") but is not a full "## [YYYY-MM-DD-HHMMSS] Title"
+// entry header, e.g. a date-only "## [2026-09-26] Title". The block
+// parser does not start an entry at such a line, so it and its body
+// would be silently folded into the entry above. Lines inside an HTML
+// comment are skipped: DECISIONS.md's format guide ships a
+// "## [YYYY-MM-DD] Decision Title" example.
+//
+// Parameters:
+//   - content: the text to scan
+//
+// Returns:
+//   - line: 1-based line number of the offending line, or 0 if none
+//   - heading: that line, whitespace-trimmed, or "" if none
+func malformedEntryHeading(content string) (line int, heading string) {
+	spans := htmlCommentSpans(content)
+	for i, n := 0, 1; i < len(content); n++ {
+		text, next := lineAt(content, i)
+		if regex.EntryHeading.MatchString(text) &&
+			!regex.EntryHeader.MatchString(text) &&
+			!insideAnySpan(i, spans) {
+			return n, strings.TrimSpace(text)
+		}
+		if next == -1 {
+			break
+		}
+		i = next
+	}
+	return 0, ""
 }
 
 // htmlCommentSpans returns the [start, end) byte ranges of every HTML

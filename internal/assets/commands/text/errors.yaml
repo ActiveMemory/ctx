@@ -160,6 +160,8 @@ err.disclosure.orphan-theme-file:
   short: 'progressive disclosure: a theme file has no matching gist in the root'
 err.disclosure.staging-unparsable:
   short: 'progressive disclosure: the staging zone could not be parsed into discrete entries'
+err.disclosure.malformed-entry-header:
+  short: 'progressive disclosure: line %d: %q is not a full entry header; give it a full timestamp ("## [YYYY-MM-DD-HHMMSS] Title") so it is not folded into the entry above it'
 err.disclosure.apply-not-entry-kind:
   short: 'progressive disclosure: the mover digests only LEARNINGS.md and DECISIONS.md; conventions digestion is a later milestone'
 err.disclosure.empty-assignment:

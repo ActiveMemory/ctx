@@ -112,6 +112,58 @@ const (
 	)
 )
 
+// MalformedEntryHeaderError is returned by Validate when a LEARNINGS or
+// DECISIONS root has a line that opens like an entry ("## [") but is not
+// a full "## [YYYY-MM-DD-HHMMSS] Title" header — e.g. a date-only
+// "## [2026-09-26] Title". The block parser would not start an entry
+// there and would silently fold it into the entry above, so the pass
+// refuses instead. It refines [ErrStagingUnparsable]: callers using
+// errors.Is on that sentinel still match, and callers using
+// `errors.AsType[*MalformedEntryHeaderError]` recover the location.
+type MalformedEntryHeaderError struct {
+	// Line is the 1-based line number of the offending heading.
+	Line int
+	// Heading is the offending line, whitespace-trimmed.
+	Heading string
+}
+
+// Error implements the error interface for MalformedEntryHeaderError.
+//
+// Returns:
+//   - string: message naming the line, the heading, and the fix
+func (e *MalformedEntryHeaderError) Error() string {
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyErrDisclosureMalformedEntryHeader),
+		e.Line, e.Heading,
+	)
+}
+
+// Is reports whether target is [ErrStagingUnparsable], of which a
+// malformed entry header is the located form.
+//
+// Parameters:
+//   - target: error to compare against
+//
+// Returns:
+//   - bool: true when target is [ErrStagingUnparsable]
+func (e *MalformedEntryHeaderError) Is(target error) bool {
+	return target == ErrStagingUnparsable
+}
+
+// MalformedEntryHeader returns a MalformedEntryHeaderError.
+//
+// Parameters:
+//   - line: 1-based line number of the offending heading
+//   - heading: the offending line, whitespace-trimmed
+//
+// Returns:
+//   - *MalformedEntryHeaderError: typed error for errors.AsType matching
+func MalformedEntryHeader(
+	line int, heading string,
+) *MalformedEntryHeaderError {
+	return &MalformedEntryHeaderError{Line: line, Heading: heading}
+}
+
 // NotAKnowledgeFile wraps [ErrNotAKnowledgeFile] with the offending path
 // and the expected filenames.
 //

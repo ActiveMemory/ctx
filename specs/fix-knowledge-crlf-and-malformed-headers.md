@@ -111,6 +111,8 @@ TDD, one failing test per defect before its fix:
   - the real embedded DECISIONS.md template (its commented
     `## [YYYY-MM-DD] Decision Title` example) plus a valid entry
     validates cleanly;
+  - a convention root with a `## [Draft] Naming` section still
+    validates (conventions are exempt);
   - existing `TestValidate` cases, including "unparsable staging",
     are unchanged and pass.
 
