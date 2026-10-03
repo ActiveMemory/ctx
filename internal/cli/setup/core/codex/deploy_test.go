@@ -34,14 +34,24 @@ func testCmd(buf *bytes.Buffer) *cobra.Command {
 // never leaks into the test.
 func withTempProjectDir(t *testing.T) string {
 	t.Helper()
-	tmp := t.TempDir()
+	project, _ := withTempProjectAndHome(t)
+	return project
+}
+
+// withTempProjectAndHome is withTempProjectDir that also returns the
+// temporary $CODEX_HOME, so tests seed it from a t.TempDir path rather
+// than reading the environment back.
+func withTempProjectAndHome(t *testing.T) (project, home string) {
+	t.Helper()
+	project = t.TempDir()
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmp); err != nil {
+	if err := os.Chdir(project); err != nil {
 		t.Fatalf("chdir: %v", err)
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
-	t.Setenv(cfgCodex.EnvHome, t.TempDir())
-	return tmp
+	home = t.TempDir()
+	t.Setenv(cfgCodex.EnvHome, home)
+	return project, home
 }
 
 func readFile(t *testing.T, path string) []byte {
@@ -226,8 +236,7 @@ func seedCodexVariantCache(t *testing.T, home string) {
 }
 
 func TestDeploy_PluginEnabledShortCircuitsToAgentsMd(t *testing.T) {
-	withTempProjectDir(t)
-	home := os.Getenv(cfgCodex.EnvHome)
+	_, home := withTempProjectAndHome(t)
 	seedFile(t, filepath.Join(home, cfgCodex.FileConfigTOML),
 		[]byte(cfgCodex.TOMLHeaderPluginCtx+"\nenabled = true\n"))
 	seedCodexVariantCache(t, home)
@@ -256,8 +265,7 @@ func TestDeploy_PluginEnabledShortCircuitsToAgentsMd(t *testing.T) {
 // delivered the legacy Claude variant: Deploy must not
 // short-circuit; it warns and deploys the project-local route.
 func TestDeploy_PluginWrongVariantDeploysEverything(t *testing.T) {
-	withTempProjectDir(t)
-	home := os.Getenv(cfgCodex.EnvHome)
+	_, home := withTempProjectAndHome(t)
 	seedFile(t, filepath.Join(home, cfgCodex.FileConfigTOML),
 		[]byte(cfgCodex.TOMLHeaderPluginCtx+"\nenabled = true\n"))
 	// Claude-variant cache: manifest dir is .claude-plugin/.
@@ -286,8 +294,7 @@ func TestDeploy_PluginWrongVariantDeploysEverything(t *testing.T) {
 }
 
 func TestDeploy_PluginDisabledDeploysEverything(t *testing.T) {
-	withTempProjectDir(t)
-	home := os.Getenv(cfgCodex.EnvHome)
+	_, home := withTempProjectAndHome(t)
 	seedFile(t, filepath.Join(home, cfgCodex.FileConfigTOML),
 		[]byte(cfgCodex.TOMLHeaderPluginCtx+"\nenabled = false\n"))
 
