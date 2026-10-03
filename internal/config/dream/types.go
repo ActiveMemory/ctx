@@ -74,12 +74,8 @@ type SourceStatus = string
 const (
 	// SourceActive means the idea is live and eligible for triage.
 	SourceActive SourceStatus = "active"
-	// SourceArchived means the idea was moved to ideas/done/.
-	SourceArchived SourceStatus = "archived"
 	// SourcePromoted means the idea was drafted into specs/.
 	SourcePromoted SourceStatus = "promoted"
-	// SourceMerged means the idea was folded into another.
-	SourceMerged SourceStatus = "merged"
 )
 
 // Decision is the human's disposition recorded in the ledger during a
@@ -96,8 +92,6 @@ const (
 	DecisionRejected Decision = "rejected"
 	// DecisionAmended means the human changed the action before applying.
 	DecisionAmended Decision = "amended"
-	// DecisionSkipped means the human deferred; the proposal may re-surface.
-	DecisionSkipped Decision = "skipped"
 )
 
 // Notebook file names within the gitignored dreams/ directory.

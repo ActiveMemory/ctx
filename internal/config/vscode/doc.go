@@ -5,48 +5,25 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package vscode defines constants for generating
-// VS Code workspace configuration files during
-// ctx init.
+// VS Code workspace configuration files.
 //
-// When ctx initializes a project, it can scaffold a
-// .vscode/ directory with extensions.json (to
-// recommend the ctx extension), tasks.json (to
-// expose common ctx commands as VS Code tasks), and
-// mcp.json (to configure MCP server integration).
-// This package provides every directory path, file
-// name, JSON key, and task definition needed.
+// `ctx setup copilot` and the cline deployer write
+// .vscode/mcp.json to configure MCP server
+// integration. This package provides the directory
+// path, file name, and JSON keys they need.
 //
 // # Directory and File Paths
 //
 //   - [Dir] (".vscode"): the workspace config dir.
-//   - [FileExtensionsJSON], [FileTasksJSON],
-//     [FileMCPJSON]: config file names within it.
-//
-// # Extension
-//
-//   - [ExtensionID] ("activememory.ctx-context"):
-//     the VS Code Marketplace identifier for the
-//     ctx extension.
+//   - [FileMCPJSON]: the MCP config file name
+//     within it.
 //
 // # JSON Keys
 //
-//   - [KeyRecommendations]: extensions.json key.
-//   - [KeyCommand]: tasks.json command key.
-//   - [KeyServers], [KeyArgs]: mcp.json keys.
-//
-// # Task Configuration
-//
-//   - [TasksVersion] ("2.0.0"): tasks schema
-//     version.
-//   - [TypeShell], [GroupNone], [RevealAlways],
-//     [PanelShared]: task runner settings.
-//   - [Tasks]: the label/command pairs written
-//     into tasks.json (status, drift, agent,
-//     journal, journal-serve).
+//   - [KeyServers], [KeyCommand], [KeyArgs]:
+//     mcp.json keys.
 //
 // # Concurrency
 //
-// All exports are immutable except [Tasks], which
-// is a package-level var but never mutated after
-// init.
+// All exports are immutable constants.
 package vscode

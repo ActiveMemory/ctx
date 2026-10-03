@@ -600,20 +600,6 @@ func TestParseEntries_SkipsEmpty(t *testing.T) {
 	}
 }
 
-func TestFormatEntries_Empty(t *testing.T) {
-	data := parse.FormatEntries(nil)
-	if data != nil {
-		t.Errorf("core.FormatEntries(nil) = %v, want nil", data)
-	}
-}
-
-func TestFormatEntries_TrailingNewline(t *testing.T) {
-	data := parse.FormatEntries([]string{"a", "b"})
-	if string(data) != "a\nb\n" {
-		t.Errorf("formatEntries = %q, want %q", string(data), "a\nb\n")
-	}
-}
-
 func TestValidateIndex(t *testing.T) {
 	entries := []string{"a", "b", "c"}
 
@@ -718,83 +704,6 @@ func TestEdit_InvalidIndex(t *testing.T) {
 	_, err := runCmd(newPadCmd("edit", "abc", "text"))
 	if err == nil {
 		t.Error("expected error for non-numeric edit argument")
-	}
-}
-
-func TestEnsureGitignore_NewFile(t *testing.T) {
-	tmpDir := t.TempDir()
-	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { _ = os.Chdir(origDir) })
-
-	err := store.EnsureGitignore(".context", ".ctx.key")
-	if err != nil {
-		t.Fatalf("ensureGitignore error: %v", err)
-	}
-
-	data, err := os.ReadFile(".gitignore")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.Contains(string(data), filepath.Join(".context", ".ctx.key")) {
-		t.Errorf(".gitignore = %q, want key entry", string(data))
-	}
-}
-
-func TestEnsureGitignore_AlreadyPresent(t *testing.T) {
-	tmpDir := t.TempDir()
-	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { _ = os.Chdir(origDir) })
-
-	entry := filepath.Join(".context", ".ctx.key")
-	if err := os.WriteFile(".gitignore", []byte(entry+"\n"), 0600); err != nil {
-		t.Fatal(err)
-	}
-
-	err := store.EnsureGitignore(".context", ".ctx.key")
-	if err != nil {
-		t.Fatalf("ensureGitignore error: %v", err)
-	}
-
-	data, _ := os.ReadFile(".gitignore")
-	// Should not duplicate the entry
-	count := strings.Count(string(data), entry)
-	if count != 1 {
-		t.Errorf("expected 1 occurrence of entry, got %d", count)
-	}
-}
-
-func TestEnsureGitignore_AppendToExisting(t *testing.T) {
-	tmpDir := t.TempDir()
-	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { _ = os.Chdir(origDir) })
-
-	// Write file without trailing newline
-	if err := os.WriteFile(
-		".gitignore", []byte("node_modules"), 0600,
-	); err != nil {
-		t.Fatal(err)
-	}
-
-	err := store.EnsureGitignore(".context", ".ctx.key")
-	if err != nil {
-		t.Fatalf("ensureGitignore error: %v", err)
-	}
-
-	data, _ := os.ReadFile(".gitignore")
-	if !strings.Contains(string(data), "node_modules\n") {
-		t.Error("existing content should be preserved with newline")
-	}
-	if !strings.Contains(string(data), filepath.Join(".context", ".ctx.key")) {
-		t.Error("new entry should be present")
 	}
 }
 
@@ -1300,15 +1209,6 @@ func TestMv_Plaintext(t *testing.T) {
 }
 
 // --- Blob helper tests ---
-
-func TestIsBlob(t *testing.T) {
-	if !blob.Contains("my plan:::SGVsbG8=") {
-		t.Error("expected isBlob to return true for blob entry")
-	}
-	if blob.Contains("just a plain entry") {
-		t.Error("expected isBlob to return false for plain entry")
-	}
-}
 
 func TestSplitBlob_Valid(t *testing.T) {
 	data := []byte("hello world")

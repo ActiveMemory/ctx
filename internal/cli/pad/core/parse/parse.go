@@ -32,17 +32,3 @@ func Entries(data []byte) []string {
 	}
 	return entries
 }
-
-// FormatEntries joins entries with newlines and adds a trailing newline.
-//
-// Parameters:
-//   - entries: The scratchpad entries to serialize
-//
-// Returns:
-//   - []byte: Newline-delimited content, or nil if entries is empty
-func FormatEntries(entries []string) []byte {
-	if len(entries) == 0 {
-		return nil
-	}
-	return []byte(strings.Join(entries, token.NewlineLF) + token.NewlineLF)
-}

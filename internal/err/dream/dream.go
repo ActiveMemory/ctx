@@ -324,20 +324,6 @@ func ReadProposals(path string, cause error) error {
 	)
 }
 
-// ReadSource wraps a failure to read a source idea file.
-//
-// Parameters:
-//   - path: the source file path
-//   - cause: the underlying error
-//
-// Returns:
-//   - error: "dream: read source <path>: <cause>"
-func ReadSource(path string, cause error) error {
-	return fmt.Errorf(
-		desc.Text(text.DescKeyErrDreamReadSource), path, cause,
-	)
-}
-
 // ScanIdeas wraps a failure to walk the ideas/ directory.
 //
 // Parameters:

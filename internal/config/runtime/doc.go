@@ -19,8 +19,9 @@
 //     to the agent context packet.
 //   - [DefaultContextWindow] (200 000): assumed
 //     model context window size.
-//   - [DefaultArchiveAfterDays] (7): days before
-//     completed tasks are auto-archived.
+//   - [DefaultArchiveAfterDays] (7): default for the
+//     inert archive_after_days .ctxrc key, retained
+//     for backward compatibility.
 //   - [DefaultEntryCountLearnings] (30) and
 //     [DefaultEntryCountDecisions] (20): entry
 //     count thresholds that trigger consolidation

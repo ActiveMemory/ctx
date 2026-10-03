@@ -74,9 +74,6 @@ const (
 	// DescKeyErrDreamReadProposals is the text key for err dream
 	// proposals read failure messages.
 	DescKeyErrDreamReadProposals = "err.dream.read-proposals"
-	// DescKeyErrDreamReadSource is the text key for err dream source
-	// read failure messages.
-	DescKeyErrDreamReadSource = "err.dream.read-source"
 	// DescKeyErrDreamScanIdeas is the text key for err dream
 	// ideas-scan failure messages.
 	DescKeyErrDreamScanIdeas = "err.dream.scan-ideas"

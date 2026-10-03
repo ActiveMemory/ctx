@@ -84,9 +84,9 @@ These are not style nits — they silently lose or corrupt data:
 | B-data | `internal/hub/replicate.go:121` | `_, _ = store.Append([]Entry{entry})` | store.Append error dropped; replicated entry silently lost — stderr/return |
 | FALSE-POS | `internal/memory/publish.go:170` | `merged, _ := MergePublished(string(existing), formatted)` | 2nd return is a "markers missing" bool, not an error; merged is always valid (verified) |
 | besteffort | `internal/cli/memory/cmd/status/run.go:54` | `state, _ := mem.LoadState(contextDir)` | LoadState returns a State value (no nil-deref); display-only "never synced" on error — annotate |
-| B-marshal | `internal/cli/initialize/core/vscode/extension.go:59` | `data, _ := json.MarshalIndent(content, "", token.Indent2)` | surface: empty/partial data written on failure |
-| B-marshal | `internal/cli/initialize/core/vscode/mcp.go:50` | `data, _ := json.MarshalIndent(file, "", token.Indent2)` | surface: empty/partial data written on failure |
-| B-marshal | `internal/cli/initialize/core/vscode/tasks.go:59` | `data, _ := json.MarshalIndent(file, "", token.Indent2)` | surface: empty/partial data written on failure |
+| B-marshal | `internal/cli/initialize/core/vscode/extension.go:59` | `data, _ := json.MarshalIndent(content, "", token.Indent2)` | surface: empty/partial data written on failure (package since removed as dead code) |
+| B-marshal | `internal/cli/initialize/core/vscode/mcp.go:50` | `data, _ := json.MarshalIndent(file, "", token.Indent2)` | surface: empty/partial data written on failure (package since removed as dead code) |
+| B-marshal | `internal/cli/initialize/core/vscode/tasks.go:59` | `data, _ := json.MarshalIndent(file, "", token.Indent2)` | surface: empty/partial data written on failure (package since removed as dead code) |
 | B-marshal | `internal/cli/setup/core/copilot/vscode.go:57` | `data, _ := json.MarshalIndent(mcpCfg, "", token.Indent2)` | surface: empty/partial data written on failure |
 | B-marshal | `internal/cli/system/cmd/blocknonpathctx/run.go:82` | `data, _ := json.Marshal(resp)` | surface: empty/partial data written on failure |
 | B-marshal | `internal/cli/system/core/session/session.go:91` | `_ = json.Unmarshal(res.data, &input)` | json.Unmarshal of hook stdin; best-effort w/ timeout — annotate, or stderr |

@@ -9,49 +9,12 @@ package vscode
 // Dir is the VS Code workspace configuration directory.
 const Dir = ".vscode"
 
-// Configuration file names within .vscode/.
-const (
-	FileExtensionsJSON = "extensions.json"
-	FileTasksJSON      = "tasks.json"
-	FileMCPJSON        = "mcp.json"
-)
-
-// ExtensionID is the VS Code Marketplace identifier for the ctx extension.
-const ExtensionID = "activememory.ctx-context"
-
-// JSON keys for extensions.json.
-const (
-	KeyRecommendations = "recommendations"
-)
-
-// JSON keys for tasks.json.
-const (
-	KeyCommand = "command"
-)
-
-// Task configuration values.
-const (
-	TasksVersion = "2.0.0"
-	TypeShell    = "shell"
-	GroupNone    = "none"
-	RevealAlways = "always"
-	PanelShared  = "shared"
-)
+// FileMCPJSON is the MCP server configuration file name within .vscode/.
+const FileMCPJSON = "mcp.json"
 
 // JSON keys for mcp.json.
 const (
 	KeyServers = "servers"
+	KeyCommand = "command"
 	KeyArgs    = "args"
 )
-
-// Task definitions: label and command pairs for ctx tasks.
-var Tasks = []struct {
-	Label   string
-	Command string
-}{
-	{"ctx: status", "ctx status"},
-	{"ctx: drift", "ctx drift"},
-	{"ctx: agent", "ctx agent --budget 4000"},
-	{"ctx: journal", "ctx journal import --all && ctx journal site --build"},
-	{"ctx: journal-serve", "ctx journal site --serve"},
-}

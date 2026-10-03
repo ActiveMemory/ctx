@@ -70,7 +70,7 @@ A commented `.ctxrc` showing all options and their defaults:
 #
 # token_budget: 8000
 # auto_archive: true
-# archive_after_days: 7
+# archive_after_days: 7       # inert; kept for backward compatibility
 # scratchpad_encrypt: true
 # event_log: false
 # entry_count_learnings: 30
@@ -136,7 +136,7 @@ A commented `.ctxrc` showing all options and their defaults:
 |-------------------------|------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------|
 | `token_budget`          | `int`      | `8000`        | Default token budget for `ctx agent` and `ctx load`                                                                                       |
 | `auto_archive`          | `bool`     | `true`        | Auto-archive completed tasks during `ctx compact`                                                                                         |
-| `archive_after_days`    | `int`      | `7`           | Days before completed tasks are archived                                                                                                  |
+| `archive_after_days`    | `int`      | `7`           | Inert; retained for backward compatibility (no longer read)                                                                               |
 | `scratchpad_encrypt`    | `bool`     | `true`        | Encrypt scratchpad with AES-256-GCM                                                                                                       |
 | `event_log`             | `bool`     | `false`       | Enable local hook event logging to `.context/state/events.jsonl`                                                                          |
 | `entry_count_learnings` | `int`      | `30`          | Drift warning when `LEARNINGS.md` exceeds this entry count (0 = disable)                                                                  |

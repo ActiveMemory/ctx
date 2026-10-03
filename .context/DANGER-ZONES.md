@@ -58,7 +58,7 @@ Enriched 2026-06-09 via GitNexus (index @ 60d8e823, 27,927 symbols,
    entire codebase (up from 69 in the 2026-04 enrichment):
    entry.Write, index.Reindex, journal state.Save, crypto.SaveKey,
    tidy.WriteArchive, memory (Sync, Publish, Archive, SaveState),
-   initialize/* (templates, vscode, plugin, kb, backup, merge),
+   initialize/* (templates, plugin, kb, backup, merge),
    system/* (persistence, counter, heartbeat, load gate), all
    setup/* deployers (now including opencode and copilotcli), pad
    store/history, trace hooks, task archive/complete/snapshot,

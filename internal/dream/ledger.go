@@ -91,7 +91,7 @@ func ReadLedger(dreamsDir string) ([]LedgerEntry, error) {
 // Seen is the dedup-against-seen signal: it reports whether the ledger
 // already records a disposition for proposalID. A proposal whose source
 // has not changed and that has already been decided (accepted, rejected,
-// amended, or skipped) is not re-surfaced. Rejections count as seen, by
+// or amended) is not re-surfaced. Rejections count as seen, by
 // design — the dream does not re-nag a rejected disposition unless the
 // source content changes.
 //

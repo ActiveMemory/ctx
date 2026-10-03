@@ -155,7 +155,7 @@ priority_order:              # File loading priority
   - DECISIONS.md
   - CONVENTIONS.md
 auto_archive: true           # Auto-archive old items
-archive_after_days: 7        # Days before archiving tasks
+archive_after_days: 7        # Inert; kept for backward compatibility
 scratchpad_encrypt: true     # Encrypt scratchpad (default: true)
 event_log: false             # Enable local hook event logging
 companion_check: true        # Check companion tools at session start
@@ -211,7 +211,7 @@ dream:                       # ctx-dream config (opt-in; off by default)
 | `token_budget`          | `int`      | `8000`         | Default token budget for `ctx agent`                                                                           |
 | `priority_order`        | `[]string` | *(all files)*  | File loading priority for context packets                                                                      |
 | `auto_archive`          | `bool`     | `true`         | Auto-archive completed tasks                                                                                   |
-| `archive_after_days`    | `int`      | `7`            | Days before completed tasks are archived                                                                       |
+| `archive_after_days`    | `int`      | `7`            | Inert; retained for backward compatibility (no longer read)                                                    |
 | `scratchpad_encrypt`    | `bool`     | `true`         | Encrypt scratchpad with AES-256-GCM                                                                            |
 | `event_log`             | `bool`     | `false`        | Enable local hook event logging to `.context/state/events.jsonl`                                               |
 | `companion_check`       | `bool`     | `true`         | Check companion tool availability (canonical: Gemini Search, GitNexus; equivalents work) during `/ctx-remember`|

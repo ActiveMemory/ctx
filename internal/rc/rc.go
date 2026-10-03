@@ -159,14 +159,6 @@ func AutoArchive() bool {
 	return RC().AutoArchive
 }
 
-// ArchiveAfterDays returns the configured days before archiving.
-//
-// Returns:
-//   - int: Number of days after which completed tasks are archived (default 7)
-func ArchiveAfterDays() int {
-	return RC().ArchiveAfterDays
-}
-
 // ScratchpadEncrypt returns whether the scratchpad should be encrypted.
 //
 // Returns true (default) when the field is not set in .ctxrc.

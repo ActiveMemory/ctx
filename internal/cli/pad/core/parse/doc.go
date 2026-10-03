@@ -16,16 +16,20 @@
 //     the `## YYYY-MM-DD HH:MM:SS` entry header;
 //     everything between two headers (or between a
 //     header and EOF) is one entry's body.
-//   - **[FormatEntries](entries)**: the inverse;
-//     serializes a `[]Entry` back to the raw on-disk
-//     shape so writes round-trip cleanly.
+//   - **[EntriesWithIDs](raw)** and
+//     **[FormatEntriesWithIDs](entries)**: the
+//     ID-aware pair; parse lines carrying stable
+//     `[N] ` prefixes into `[]Entry` and serialize
+//     them back to the on-disk shape.
 //
 // # Round-Trip Stability
 //
-// `FormatEntries(Entries(x))` is byte-identical to
-// `x` when `x` is well-formed. This invariant is
-// what makes `ctx pad edit` safe: the user's edits
-// only land where the user typed.
+// `FormatEntriesWithIDs(EntriesWithIDs(x))` is
+// byte-identical to `x` when every line of `x`
+// already carries a unique `[N] ` prefix. Lines
+// without a prefix (or with a duplicate ID) are
+// assigned fresh IDs on parse, so the first write
+// normalizes them.
 //
 // # Concurrency
 //

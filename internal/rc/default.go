@@ -15,7 +15,8 @@ import (
 const (
 	// DefaultTokenBudget is the default agent token budget.
 	DefaultTokenBudget = runtime.DefaultTokenBudget
-	// DefaultArchiveAfterDays is the default task archive age.
+	// DefaultArchiveAfterDays is the default for the inert
+	// archive_after_days key (no longer read; kept for compatibility).
 	DefaultArchiveAfterDays = runtime.DefaultArchiveAfterDays
 	// DefaultEntryCountLearnings is the max learnings shown.
 	DefaultEntryCountLearnings = runtime.DefaultEntryCountLearnings

@@ -55,8 +55,6 @@
 //   - **[core/merge]**: create-or-merge file
 //     operations with marker-bracketed sections so
 //     re-running init never clobbers user edits.
-//   - **[core/vscode]**: `.vscode/` workspace
-//     artifacts (tasks.json, mcp.json, extensions.json).
 //
 // # Idempotency Contract
 //

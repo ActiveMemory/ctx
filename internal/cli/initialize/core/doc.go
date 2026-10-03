@@ -38,14 +38,11 @@
 //     by entry and other sub-packages.
 //   - validate: pre-flight checks (ctx in PATH,
 //     essential files present).
-//   - vscode: generates VS Code workspace files
-//     (extensions.json, tasks.json, mcp.json).
 //
 // # Data Flow
 //
 // The cmd layer's Run function orchestrates the init
 // pipeline by calling into these sub-packages in order:
 // validate, project scaffolding, entry templates, claude
-// handling, pad setup, plugin detection, and vscode
-// configuration.
+// handling, pad setup, and plugin detection.
 package core

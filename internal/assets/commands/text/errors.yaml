@@ -114,8 +114,6 @@ err.dream.proposal-not-found:
   short: 'dream: proposal %q not found in %s'
 err.dream.read-proposals:
   short: 'dream: read proposals %s: %w'
-err.dream.read-source:
-  short: 'dream: read source %s: %w'
 err.dream.scan-ideas:
   short: 'dream: scan ideas %s: %w'
 err.dream.unknown-action:

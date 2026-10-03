@@ -14,7 +14,8 @@ import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 //   - TokenBudget: Default token budget for context assembly (default 8000)
 //   - PriorityOrder: Custom file loading priority order
 //   - AutoArchive: Whether to auto-archive completed tasks (default true)
-//   - ArchiveAfterDays: Days before archiving completed tasks (default 7)
+//   - ArchiveAfterDays: Inert; no longer read by any command. Retained
+//     so existing .ctxrc files that set archive_after_days still parse
 //   - ScratchpadEncrypt: Whether to encrypt the scratchpad (default true)
 //   - InjectionTokenWarn: Token threshold for oversize
 //     injection warning (default 15000, 0 = disabled)

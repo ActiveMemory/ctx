@@ -23,11 +23,12 @@ func TestRegistryCount(t *testing.T) {
 }
 
 func TestRegistryYAMLParses(t *testing.T) {
-	if parseErr := registryError(); parseErr != nil {
-		t.Fatalf("registryError() = %v, want nil", parseErr)
+	entries := Registry()
+	if registryErr != nil {
+		t.Fatalf("Registry() parse error: %v, want nil", registryErr)
 	}
 
-	for i, entry := range Registry() {
+	for i, entry := range entries {
 		if entry.Hook == "" {
 			t.Errorf("entry %d: empty hook", i)
 		}
@@ -69,20 +70,6 @@ func TestLookupUnknown(t *testing.T) {
 	info := Lookup("nonexistent-hook", "nonexistent-variant")
 	if info != nil {
 		t.Errorf("Lookup(nonexistent) = %+v, want nil", info)
-	}
-}
-
-func TestHooksReturnsUniqueNames(t *testing.T) {
-	hooks := hooks()
-	if len(hooks) == 0 {
-		t.Fatal("Hooks() returned empty list")
-	}
-	seen := make(map[string]bool)
-	for _, h := range hooks {
-		if seen[h] {
-			t.Errorf("Hooks() returned duplicate: %q", h)
-		}
-		seen[h] = true
 	}
 }
 

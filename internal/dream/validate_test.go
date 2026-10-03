@@ -83,20 +83,3 @@ func TestProposalValid(t *testing.T) {
 		})
 	}
 }
-
-// TestSourceStatusAndDecisionKnown exercises the lifecycle and decision
-// predicates across known and unknown values.
-func TestSourceStatusAndDecisionKnown(t *testing.T) {
-	if !dream.SourceStatusKnown(cfgDream.SourceMerged) {
-		t.Fatal("SourceMerged must be known")
-	}
-	if dream.SourceStatusKnown("zombie") {
-		t.Fatal("unknown source status must be rejected")
-	}
-	if !dream.DecisionKnown(cfgDream.DecisionAmended) {
-		t.Fatal("DecisionAmended must be known")
-	}
-	if dream.DecisionKnown("maybe") {
-		t.Fatal("unknown decision must be rejected")
-	}
-}

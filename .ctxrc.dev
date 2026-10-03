@@ -9,7 +9,7 @@ profile: dev
 # context_dir: .context
 # token_budget: 8000
 # auto_archive: true
-# archive_after_days: 7
+# archive_after_days: 7  (inert; kept for backward compatibility)
 # scratchpad_encrypt: true
 # entry_count_learnings: 30
 # entry_count_decisions: 20

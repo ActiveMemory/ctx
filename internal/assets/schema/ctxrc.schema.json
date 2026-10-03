@@ -28,7 +28,7 @@
     },
     "archive_after_days": {
       "type": "integer",
-      "description": "Days before archiving completed tasks. Default: 7.",
+      "description": "Inert: no longer read by any command; retained so existing .ctxrc files remain valid. Default: 7.",
       "minimum": 0
     },
     "scratchpad_encrypt": {

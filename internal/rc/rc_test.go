@@ -356,22 +356,6 @@ func TestAutoArchive_Disabled(t *testing.T) {
 	}
 }
 
-func TestArchiveAfterDays(t *testing.T) {
-	declareContext(t, "")
-	days := ArchiveAfterDays()
-	if days != DefaultArchiveAfterDays {
-		t.Errorf("ArchiveAfterDays() = %d, want %d", days, DefaultArchiveAfterDays)
-	}
-}
-
-func TestArchiveAfterDays_Custom(t *testing.T) {
-	declareContext(t, `archive_after_days: 30`)
-	days := ArchiveAfterDays()
-	if days != 30 {
-		t.Errorf("ArchiveAfterDays() = %d, want %d", days, 30)
-	}
-}
-
 func TestScratchpadEncrypt_Default(t *testing.T) {
 	declareContext(t, "")
 	if !ScratchpadEncrypt() {

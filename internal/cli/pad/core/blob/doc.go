@@ -22,20 +22,14 @@
 // The separator token (pad.BlobSep) delimits the
 // human-readable label from the encoded payload.
 //
-// # Detection
-//
-// [Contains] checks whether an entry string contains
-// the blob separator, returning true for blob entries.
-// This is a fast check used before attempting the
-// more expensive Split operation.
-//
 // # Parsing
 //
 // [Split] parses a blob entry into its label and
 // decoded byte data. It locates the separator, extracts
 // the label prefix, and base64-decodes the suffix. If
-// the entry is not a blob or the base64 is malformed,
-// it returns ok=false.
+// the entry is not a blob (no separator) or the
+// base64 is malformed, it returns ok=false, so callers
+// use it as the blob detector too.
 //
 // # Construction
 //

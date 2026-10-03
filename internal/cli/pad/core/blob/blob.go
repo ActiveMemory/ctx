@@ -13,17 +13,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/pad"
 )
 
-// Contains returns true if the entry contains the blob separator.
-//
-// Parameters:
-//   - entry: Scratchpad entry string
-//
-// Returns:
-//   - bool: True if entry is a blob
-func Contains(entry string) bool {
-	return strings.Contains(entry, pad.BlobSep)
-}
-
 // Split parses a blob entry into its label and decoded data.
 //
 // Parameters:

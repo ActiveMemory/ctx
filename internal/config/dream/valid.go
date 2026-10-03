@@ -36,22 +36,3 @@ var KnownConfidences = []Confidence{
 	ConfidenceMed,
 	ConfidenceLow,
 }
-
-// KnownSourceStatuses enumerates every valid SourceStatus lifecycle
-// state a per-source record may hold.
-var KnownSourceStatuses = []SourceStatus{
-	SourceActive,
-	SourceArchived,
-	SourcePromoted,
-	SourceMerged,
-}
-
-// KnownDecisions enumerates every valid review Decision recorded in the
-// ledger, including rejections and skips so dedup-against-seen has the
-// full vocabulary.
-var KnownDecisions = []Decision{
-	DecisionAccepted,
-	DecisionRejected,
-	DecisionAmended,
-	DecisionSkipped,
-}

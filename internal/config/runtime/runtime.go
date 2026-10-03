@@ -10,8 +10,9 @@ package runtime
 const (
 	// DefaultTokenBudget is the default token budget for context assembly.
 	DefaultTokenBudget = 8000
-	// DefaultArchiveAfterDays is the default days before
-	// archiving completed tasks.
+	// DefaultArchiveAfterDays is the default for the inert
+	// archive_after_days .ctxrc key (no longer read; retained
+	// for backward compatibility).
 	DefaultArchiveAfterDays = 7
 	// DefaultEntryCountLearnings is the entry count threshold for LEARNINGS.md.
 	DefaultEntryCountLearnings = 30

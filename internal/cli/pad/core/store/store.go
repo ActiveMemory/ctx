@@ -7,18 +7,14 @@
 package store
 
 import (
-	"errors"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core/parse"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/config/pad"
-	"github.com/ActiveMemory/ctx/internal/config/token"
 	cfgWarn "github.com/ActiveMemory/ctx/internal/config/warn"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	errCrypto "github.com/ActiveMemory/ctx/internal/err/crypto"
@@ -105,37 +101,6 @@ func EnsureKey(cmd *cobra.Command) error {
 
 	writePad.KeyCreated(cmd, kp)
 	return nil
-}
-
-// EnsureGitignore adds an entry to .gitignore if not already present.
-//
-// Parameters:
-//   - contextDir: The .context directory path
-//   - filename: The file to add (joined with contextDir)
-//
-// Returns:
-//   - error: Non-nil on read/write failure
-func EnsureGitignore(contextDir, filename string) error {
-	entry := filepath.Join(contextDir, filename)
-	content, readErr := io.SafeReadUserFile(file.FileGitignore)
-	if readErr != nil && !errors.Is(readErr, os.ErrNotExist) {
-		return readErr
-	}
-
-	for _, line := range strings.Split(string(content), token.NewlineLF) {
-		if strings.TrimSpace(line) == entry {
-			return nil
-		}
-	}
-
-	sep := ""
-	if len(content) > 0 && !strings.HasSuffix(string(content), token.NewlineLF) {
-		sep = token.NewlineLF
-	}
-	return io.SafeWriteFile(
-		file.FileGitignore,
-		[]byte(string(content)+sep+entry+token.NewlineLF), fs.PermFile,
-	)
 }
 
 // ReadEntriesWithIDs reads the scratchpad and returns
