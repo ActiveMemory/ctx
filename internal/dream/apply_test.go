@@ -93,6 +93,46 @@ func TestAcceptArchiveMoves(t *testing.T) {
 	}
 }
 
+// TestAcceptArchiveMarksSourceArchived accepts an archive proposal for
+// a source the dream has already recorded: its state.json record moves
+// to the archived lifecycle state.
+func TestAcceptArchiveMarksSourceArchived(t *testing.T) {
+	root, dreamsDir := fixtureRepo(t)
+	if saveErr := dream.SaveState(dreamsDir, []dream.SourceState{
+		{Path: "ideas/note.md", Hash: "h", Status: cfgDream.SourceActive},
+		{Path: "ideas/other.md", Hash: "h2", Status: cfgDream.SourceActive},
+	}); saveErr != nil {
+		t.Fatalf("seed state: %v", saveErr)
+	}
+	p := dream.Proposal{
+		ID:         "d-002",
+		Targets:    []string{"ideas/note.md"},
+		Status:     cfgDream.StatusImplemented,
+		Action:     cfgDream.ActionArchive,
+		Confidence: cfgDream.ConfidenceHigh,
+	}
+
+	if _, err := dream.Accept(root, dreamsDir, p, ""); err != nil {
+		t.Fatalf("Accept archive: %v", err)
+	}
+	states, loadErr := dream.LoadState(dreamsDir)
+	if loadErr != nil {
+		t.Fatalf("load state: %v", loadErr)
+	}
+	got := map[string]cfgDream.SourceStatus{}
+	for _, s := range states {
+		got[s.Path] = s.Status
+	}
+	if got["ideas/note.md"] != cfgDream.SourceArchived {
+		t.Fatalf("archived source status = %q, want %q",
+			got["ideas/note.md"], cfgDream.SourceArchived)
+	}
+	if got["ideas/other.md"] != cfgDream.SourceActive {
+		t.Fatalf("untouched source status = %q, want %q",
+			got["ideas/other.md"], cfgDream.SourceActive)
+	}
+}
+
 // TestAcceptMarkBlogTagsInPlace accepts a mark-blog proposal: the idea
 // stays in place, gains the blog marker, and the ledger records it.
 func TestAcceptMarkBlogTagsInPlace(t *testing.T) {

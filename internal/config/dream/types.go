@@ -74,6 +74,8 @@ type SourceStatus = string
 const (
 	// SourceActive means the idea is live and eligible for triage.
 	SourceActive SourceStatus = "active"
+	// SourceArchived means the idea was moved to ideas/done/.
+	SourceArchived SourceStatus = "archived"
 	// SourcePromoted means the idea was drafted into specs/.
 	SourcePromoted SourceStatus = "promoted"
 )

@@ -56,6 +56,13 @@ func dispatch(
 	}); appendErr != nil {
 		return ApplyResult{}, appendErr
 	}
+	if action == cfgDream.ActionArchive {
+		if markErr := markArchived(
+			projectRoot, dreamsDir, p,
+		); markErr != nil {
+			return ApplyResult{}, markErr
+		}
+	}
 	return ApplyResult{
 		Performed:  !generative,
 		Generative: generative,
@@ -192,6 +199,44 @@ func markBlog(projectRoot string, p Proposal) error {
 		absSrc, []byte(marker), cfgFs.PermSecret,
 	); appendErr != nil {
 		return errDream.MoveSource(src, appendErr)
+	}
+	return nil
+}
+
+// markArchived records the archived lifecycle state on the per-source
+// record of the proposal's first target, so dreams/state.json reflects
+// the move into ideas/done/. A source with no saved record (never
+// surfaced by a pass) is left untouched.
+//
+// Parameters:
+//   - projectRoot: absolute path to the project root
+//   - dreamsDir: absolute path to the dreams/ notebook directory
+//   - p: the archived proposal
+//
+// Returns:
+//   - error: a missing target, or a state read/write failure
+func markArchived(projectRoot, dreamsDir string, p Proposal) error {
+	src, srcErr := firstTarget(p)
+	if srcErr != nil {
+		return srcErr
+	}
+	if filepath.IsAbs(src) {
+		rel, relErr := filepath.Rel(projectRoot, src)
+		if relErr != nil {
+			return errDream.MoveSource(src, relErr)
+		}
+		src = rel
+	}
+	src = filepath.Clean(src)
+	states, loadErr := LoadState(dreamsDir)
+	if loadErr != nil {
+		return loadErr
+	}
+	for i := range states {
+		if filepath.Clean(states[i].Path) == src {
+			states[i].Status = cfgDream.SourceArchived
+			return SaveState(dreamsDir, states)
+		}
 	}
 	return nil
 }
