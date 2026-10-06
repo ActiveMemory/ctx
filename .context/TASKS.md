@@ -313,6 +313,32 @@ These have priority because other knowledge ingestion projects depend on them.
 
 Important things that agent (or human) yeeted to the future.
 
+- [ ] Private mode: let `ctx` run in a project without committing anything
+  to it. Open-source projects cannot make `ctx` a contributor dependency,
+  and today using `ctx` there leaks into tracked files or breaks for
+  others. Observed in spike-sdk-go (session 28b10323, 2026-09-23):
+  - `ctx init` edits tracked files: appends to `.gitignore` and adds
+    `-include Makefile.ctx` to `Makefile`; writes `CLAUDE.md`.
+  - If `CLAUDE.md` is committed but `.context/` is not, a contributor
+    who has `ctx` installed hits `Error: no .context here` from
+    `ctx system bootstrap`, and CLAUDE.md's "installed but returns an
+    error -> relay and STOP" rule blocks their agent. (Reproduced in a
+    fresh clone with only CLAUDE.md.)
+  - Ignoring `.context/` drops the undo layer the constitution relies on
+    ("persistent memory is dishonest without git reflog"); the
+    LEARNINGS clobber recovery (`git show <sha>:.context/LEARNINGS.md`)
+    would be impossible.
+  Scope: (1) `ctx init --private` (or equivalent) writes ignore rules
+  to `.git/info/exclude` instead of `.gitignore`, and never touches
+  tracked files (no Makefile include; e.g. an untracked `GNUmakefile`
+  or no make targets); (2) the agent instructions live in an untracked
+  file (e.g. `CLAUDE.local.md`) or the CLAUDE.md template treats a
+  missing `.context/` as "not a ctx project", not an error to STOP on;
+  (3) a versioning story for an untracked `.context/` (e.g. its own
+  nested git repo or snapshot) so undo still exists; (4) `ctx drift` /
+  `ctx doctor` flag private-mode leaks into tracked files.
+  Spec (stub): specs/private-mode.md. #priority:high #session:28b10323 #branch:build/go-version-sync #commit:7094924a #added:2026-09-23-111723
+
 - [x] Nav gap: doc pages absent from zensical.toml's nav are silently
   unreachable from the site sidebar. Discovered + fully fixed 2026-07-06
   (session 7f6de29d, UNCOMMITTED). Swept EVERY docs/ tree, not just
