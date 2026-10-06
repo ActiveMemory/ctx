@@ -2,7 +2,7 @@
 node_modules/
 src/
 tsconfig.json
-vitest.config.ts
+vitest.config.mts
 vitest.workspace.ts
 package-lock.json
 test-insiders-sim.js
