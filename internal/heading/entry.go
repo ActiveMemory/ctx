@@ -48,7 +48,9 @@ func ParseEntryBlocks(content string) []EntryBlock {
 				entry: entity.IndexEntry{
 					Timestamp: matches[1] + token.Dash + matches[2],
 					Date:      matches[1],
-					Title:     matches[3],
+					// TrimSpace drops the carriage return a CRLF
+					// line keeps after the LF split.
+					Title: strings.TrimSpace(matches[3]),
 				},
 			})
 		}

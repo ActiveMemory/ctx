@@ -12,7 +12,10 @@ import (
 	"strings"
 	"testing"
 
+	readTpl "github.com/ActiveMemory/ctx/internal/assets/read/template"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	cfgDrift "github.com/ActiveMemory/ctx/internal/config/drift"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/context/load"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	"github.com/ActiveMemory/ctx/internal/io"
@@ -624,6 +627,49 @@ func TestIsTemplateFile(t *testing.T) {
 			result := templateFile(tt.content)
 			if result != tt.expected {
 				t.Errorf("templateFile() = %v, want %v", result, tt.expected)
+			}
+		})
+	}
+}
+
+// A header that matches its template must pass whatever the line
+// endings: a core.autocrlf=true checkout writes CRLF context files, and
+// a binary built from one embeds CRLF templates. Both endings are
+// checked so the test bites on an LF and on a CRLF checkout alike.
+func TestCheckTemplateHeaders_LineEndings(t *testing.T) {
+	tpl, tplErr := readTpl.Template(cfgCtx.Learning)
+	if tplErr != nil {
+		t.Fatalf("read template: %v", tplErr)
+	}
+	lf := strings.ReplaceAll(string(tpl), token.NewlineCRLF, token.NewlineLF)
+	crlf := strings.ReplaceAll(lf, token.NewlineLF, token.NewlineCRLF)
+
+	tests := []struct {
+		name      string
+		content   string
+		wantStale bool
+	}{
+		{"LF file", lf, false},
+		{"CRLF file", crlf, false},
+		{"edited header", strings.Replace(lf, "UPDATE WHEN", "EDITED", 1), true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctx := &entity.Context{Files: []entity.FileInfo{
+				{Name: cfgCtx.Learning, Content: []byte(tt.content)},
+			}}
+			report := &Report{}
+
+			checkTemplateHeaders(ctx, report)
+
+			stale := false
+			for _, w := range report.Warnings {
+				stale = stale || w.Type == cfgDrift.IssueStaleHeader
+			}
+			if stale != tt.wantStale {
+				t.Errorf("stale header = %v, want %v (warnings: %+v)",
+					stale, tt.wantStale, report.Warnings)
 			}
 		})
 	}
