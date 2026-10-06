@@ -6,7 +6,7 @@
 clean all release build-all help \
 test-coverage smoke site site-guard site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall check-tools \
-sync-version check-version-sync check-go-version sync-why check-why sync-copilot-skills check-copilot-skills sync-codex-skills check-codex-skills codex-plugin-install sync-opencode-skills check-opencode-skills sync-steering check-steering gemini-search \
+sync-version check-version-sync check-go-version check-go-work-sum sync-why check-why sync-copilot-skills check-copilot-skills sync-codex-skills check-codex-skills codex-plugin-install sync-opencode-skills check-opencode-skills sync-steering check-steering gemini-search \
 gitnexus-version gitnexus-update gitnexus-index gitnexus-mcp strip-gitnexus install-ctxctl reinstall-ctxctl
 
 # Default binary name and output
@@ -177,6 +177,8 @@ audit:
 	@$(MAKE) --no-print-directory check-version-sync
 	@echo "==> Checking Go toolchain version sync..."
 	@$(MAKE) --no-print-directory check-go-version
+	@echo "==> Checking go.work.sum completeness..."
+	@$(MAKE) --no-print-directory check-go-work-sum
 	@echo "==> Checking why docs freshness..."
 	@$(MAKE) --no-print-directory check-why
 	@echo "==> Checking Copilot skills freshness..."
@@ -403,6 +405,12 @@ check-version-sync:
 ## check-go-version: Verify every Go toolchain pin agrees with the go.mod directive
 check-go-version:
 	@./hack/check-go-version.sh
+
+## check-go-work-sum: Verify go.work.sum already holds every workspace checksum
+# Unlike the skill checks, a failure leaves the refreshed file in place:
+# the regenerated go.work.sum is exactly what needs committing.
+check-go-work-sum:
+	@./hack/check-go-work-sum.sh
 
 ## sync-copilot-skills: Sync Copilot CLI skills from canonical ctx skills
 sync-copilot-skills:
