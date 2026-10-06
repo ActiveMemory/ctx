@@ -70,6 +70,9 @@ jobs:
       - name: Check Go toolchain version sync
         run: make check-go-version
 
+      - name: Check go.work.sum completeness
+        run: make check-go-work-sum
+
       - name: Check steering outputs freshness
         run: make check-steering
 
