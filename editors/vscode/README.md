@@ -192,7 +192,7 @@ The extension is a single-file implementation (`src/extension.ts`) that:
   reaches the binary as literal arguments, with stdin closed so no
   command can wait on a prompt
 - Bundles the skill files with esbuild's text loader
-  (`--loader:.md=text`); `vitest.config.ts` mirrors the loader
+  (`--loader:.md=text`); `vitest.config.mts` mirrors the loader
 
 ### Testing
 
