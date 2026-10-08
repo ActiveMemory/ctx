@@ -233,11 +233,11 @@ auto-downloads the `ctx` CLI if it isn't on PATH. See
 
 !!! tip "VS Code Is a First-Class Citizen"
     The extension carries its own runtime. No `ctx setup` step is
-    needed. It registers a `@ctx` chat participant with 45 slash
-    commands, automatic hooks (file save, git commit, `.context/`
-    change, dependency-file edit), and a reminder status-bar
-    indicator. Unlike embedded harnesses, the extension ships
-    through its own pipeline to the VS Code Marketplace.
+    needed. It registers a `@ctx` chat participant with 36 slash
+    commands (27 CLI-backed, 9 running a canonical `ctx` skill
+    through the chat model) and a reminder status-bar indicator.
+    Unlike embedded harnesses, the extension ships through its own
+    pipeline to the VS Code Marketplace.
 
 #### Cursor
 
