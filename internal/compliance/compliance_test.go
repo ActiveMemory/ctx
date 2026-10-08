@@ -54,7 +54,8 @@ func templateDir(t *testing.T, root string) string {
 	return ""
 }
 
-// allGoFiles returns all .go files under the project root, excluding vendor/.
+// allGoFiles returns all .go files under the project root, excluding
+// vendor/, node_modules/, dist/, site/, and .git/.
 func allGoFiles(t *testing.T, root string) []string {
 	t.Helper()
 	var files []string
@@ -96,7 +97,7 @@ func nonTestGoFiles(t *testing.T, root string) []string {
 }
 
 // ---------------------------------------------------------------------------
-// 1. License Header ╬ô├ç├╢ every .go file must have the SPDX header
+// 1. License Header — every .go file must have the SPDX header
 // ---------------------------------------------------------------------------
 
 // TestLicenseHeader verifies every .go file contains the Apache-2.0 SPDX
@@ -128,7 +129,7 @@ func TestLicenseHeader(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 2. Package doc.go ╬ô├ç├╢ every package under internal/ should have a doc.go
+// 2. Package doc.go — every package under internal/ should have a doc.go
 // ---------------------------------------------------------------------------
 
 // TestDocGoExists verifies every Go package under internal/ has a doc.go.
@@ -194,7 +195,7 @@ func TestDocGoExists(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 3. No literal "\n" ╬ô├ç├╢ use config.NewlineLF instead (lint-drift rule 1)
+// 3. No literal "\n" — use config.NewlineLF instead (lint-drift rule 1)
 // ---------------------------------------------------------------------------
 
 // TestNoLiteralNewline mirrors lint-drift rule 1: literal "\n" strings
@@ -222,7 +223,7 @@ func TestNoLiteralNewline(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 4. No literal ".md" ╬ô├ç├╢ use config.ExtMarkdown instead (lint-drift rule 4)
+// 4. No literal ".md" — use config.ExtMarkdown instead (lint-drift rule 4)
 // ---------------------------------------------------------------------------
 
 // TestNoLiteralMdExtension mirrors lint-drift rule 4: literal ".md" strings
@@ -251,7 +252,7 @@ func TestNoLiteralMdExtension(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 5. No cmd.Printf/cmd.PrintErrf ╬ô├ç├╢ prefer Println (lint-drift rule 2)
+// 5. No cmd.Printf/cmd.PrintErrf — prefer Println (lint-drift rule 2)
 // ---------------------------------------------------------------------------
 
 // TestNoCmdPrintf mirrors lint-drift rule 2: cmd.Printf/cmd.PrintErrf should
@@ -313,7 +314,7 @@ func TestNoMagicDirectoryStrings(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 7. No direct fmt.Print* in Cobra command functions ╬ô├ç├╢ use cmd.Print*
+// 7. No direct fmt.Print* in Cobra command functions — use cmd.Print*
 // ---------------------------------------------------------------------------
 
 // TestNoDirectFmtPrintInCobraHandlers parses CLI source files and verifies
@@ -404,7 +405,7 @@ func TestNoDirectFmtPrintInCobraHandlers(t *testing.T) {
 				if ident.Name == fmtAlias && forbidden[sel.Sel.Name] {
 					pos := fset.Position(call.Pos())
 					rel, _ := filepath.Rel(root, pos.Filename)
-					t.Errorf("%s:%d: fmt.%s in Cobra handler ╬ô├ç├╢ use cmd.Print* instead",
+					t.Errorf("%s:%d: fmt.%s in Cobra handler — use cmd.Print* instead",
 						rel, pos.Line, sel.Sel.Name)
 				}
 				return true
@@ -418,7 +419,7 @@ func TestNoDirectFmtPrintInCobraHandlers(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 8. gofmt compliance ╬ô├ç├╢ all Go files must be properly formatted
+// 8. gofmt compliance — all Go files must be properly formatted
 // ---------------------------------------------------------------------------
 
 // TestGofmt verifies all Go files are properly formatted.
@@ -457,7 +458,7 @@ func TestGofmt(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 9. go vet ╬ô├ç├╢ the entire project must pass go vet
+// 9. go vet — the entire project must pass go vet
 // ---------------------------------------------------------------------------
 
 // TestGoVet runs go vet across the entire project with CGO disabled.
@@ -478,7 +479,7 @@ func TestGoVet(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 9b. golangci-lint ╬ô├ç├╢ the entire project must pass golangci-lint
+// 9b. golangci-lint — the entire project must pass golangci-lint
 // ---------------------------------------------------------------------------
 
 // TestGolangciLint runs golangci-lint across the entire project.
@@ -511,7 +512,7 @@ func TestGolangciLint(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 10. No secrets in .context/ templates ╬ô├ç├╢ no tokens, keys, passwords
+// 10. No secrets in .context/ templates — no tokens, keys, passwords
 // ---------------------------------------------------------------------------
 
 // TestNoSecretsInTemplates scans template files for patterns that look like
@@ -570,7 +571,7 @@ func TestNoSecretsInTemplates(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 11. Required context files ╬ô├ç├╢ ctx init must create all required files
+// 11. Required context files — ctx init must create all required files
 // ---------------------------------------------------------------------------
 
 // TestRequiredContextFilesInTemplate verifies that all required context file
@@ -600,7 +601,7 @@ func TestRequiredContextFilesInTemplate(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 12. VERSION file ╬ô├ç├╢ must exist and contain a valid semver
+// 12. VERSION file — must exist and contain a valid semver
 // ---------------------------------------------------------------------------
 
 // TestVersionFile checks the VERSION file exists and contains valid semver.
@@ -626,7 +627,7 @@ func TestVersionFile(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 13. go.mod ╬ô├ç├╢ module path and Go version check
+// 13. go.mod — module path and Go version check
 // ---------------------------------------------------------------------------
 
 // TestGoMod verifies the module path and Go version in go.mod.
@@ -657,7 +658,7 @@ func TestGoMod(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 14. Makefile ╬ô├ç├╢ required targets exist
+// 14. Makefile — required targets exist
 // ---------------------------------------------------------------------------
 
 // TestMakefileTargets verifies all expected build targets
@@ -693,7 +694,7 @@ func TestMakefileTargets(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 15. CGO_ENABLED=0 ╬ô├ç├╢ build command must not use CGO
+// 15. CGO_ENABLED=0 — build command must not use CGO
 // ---------------------------------------------------------------------------
 
 // TestBuildWithoutCGO verifies that Makefile build and test targets use
@@ -739,7 +740,7 @@ func TestBuildWithoutCGO(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 16. .golangci.yml ╬ô├ç├╢ required linters are configured
+// 16. .golangci.yml — required linters are configured
 // ---------------------------------------------------------------------------
 
 // TestGolangciLintConfig verifies that .golangci.yml enables the required
@@ -814,7 +815,7 @@ func TestNoNetworkImportsInCore(t *testing.T) {
 						impPath := strings.Trim(imp.Path.Value, `"`)
 						if impPath == "net/http" || impPath == "net" {
 							pos := fset.Position(imp.Pos())
-							t.Errorf("%s:%d: %s imports %q ╬ô├ç├╢ ctx core must be local-only",
+							t.Errorf("%s:%d: %s imports %q — ctx core must be local-only",
 								filepath.Base(pos.Filename), pos.Line, pkg, impPath)
 						}
 					}
@@ -825,7 +826,7 @@ func TestNoNetworkImportsInCore(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 18. Security ╬ô├ç├╢ .gitignore protects sensitive files
+// 18. Security — .gitignore protects sensitive files
 // ---------------------------------------------------------------------------
 
 // TestGitignoreProtectsSensitiveFiles ensures .gitignore contains entries for
@@ -856,7 +857,7 @@ func TestGitignoreProtectsSensitiveFiles(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 19. Binary build ╬ô├ç├╢ ensure the project compiles without errors
+// 19. Binary build — ensure the project compiles without errors
 // ---------------------------------------------------------------------------
 
 // TestProjectCompiles builds the entire project with CGO disabled to verify
@@ -878,7 +879,7 @@ func TestProjectCompiles(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// 20. File permissions ╬ô├ç├╢ config.PermSecret must be 0600
+// 20. File permissions — config.PermSecret must be 0600
 // ---------------------------------------------------------------------------
 
 // TestPermissionConstants verifies that config.PermSecret and config.PermFile
@@ -1185,17 +1186,35 @@ func TestNoUTF8BOM(t *testing.T) {
 // 24. No mojibake — detect double-encoded UTF-8 (encoding corruption)
 // ---------------------------------------------------------------------------
 
-// TestNoMojibake catches the classic Windows encoding corruption where UTF-8
-// bytes are misread as Windows-1252/Latin-1 and re-encoded as UTF-8.
-// Example: em dash U+2014 becomes a 6-byte garbled sequence starting with
-// 0xC3 0xA2. We detect that signature to catch double-encoded files.
+// TestNoMojibake catches encoding corruption where UTF-8 bytes are misread
+// in a legacy single-byte code page and re-encoded as UTF-8. Two code pages
+// show up in practice, so both are covered:
+//
+//   - Windows-1252/Latin-1 (GUI editors): em dash U+2014 (0xE2 0x80 0x94)
+//     becomes U+00E2 U+20AC U+201D, which starts 0xC3 0xA2 0xE2.
+//   - CP437 (Windows console, PowerShell pipelines): the same em dash
+//     becomes U+0393 U+00C7 U+00F6, which starts 0xCE 0x93 0xC3. A second
+//     CP437 round turns that into U+256C U+00F4 U+251C U+00E7 U+251C
+//     U+2562, which starts 0xE2 0x95 0xAC 0xC3 0xB4.
+//
+// Every character from U+2000 to U+2FFF (dashes, curly quotes, ellipsis,
+// arrows, box drawing) has UTF-8 lead byte 0xE2, so each signature is the
+// garbled form of that lead byte plus the start of what follows it. None
+// occurs in legitimate text: Greek capital gamma is never followed by a
+// Latin-1 letter, and a box-drawing glyph is never followed by "ô".
+//
+// The examples are spelled as code points on purpose: written literally,
+// they would trip this test on its own source file.
 func TestNoMojibake(t *testing.T) {
 	root := projectRoot(t)
-	// 0xC3 0xA2 is UTF-8 for U+00E2 (Latin small letter a with circumflex).
-	// In mojibake, it always appears followed by 0xE2 as part of a garbled
-	// multi-byte sequence (e.g., em dash becomes 0xC3 0xA2 0xE2 0x82 ...).
-	// We match that three-byte signature: 0xC3 0xA2 0xE2.
-	mojibakePattern := []byte{0xC3, 0xA2, 0xE2}
+	signatures := []struct {
+		codePage string
+		pattern  []byte
+	}{
+		{"Windows-1252", []byte{0xC3, 0xA2, 0xE2}},
+		{"CP437", []byte{0xCE, 0x93, 0xC3}},
+		{"double CP437", []byte{0xE2, 0x95, 0xAC, 0xC3, 0xB4}},
+	}
 
 	for _, p := range allSourceFiles(t, root) {
 		rel, _ := filepath.Rel(root, p)
@@ -1204,20 +1223,18 @@ func TestNoMojibake(t *testing.T) {
 			if readErr != nil {
 				t.Fatalf("read: %v", readErr)
 			}
-			if idx := bytes.Index(data, mojibakePattern); idx >= 0 {
+			for _, sig := range signatures {
+				idx := bytes.Index(data, sig.pattern)
+				if idx < 0 {
+					continue
+				}
 				// Show context around the corruption
-				start := idx
-				if start > 20 {
-					start = idx - 20
-				}
-				end := idx + 30
-				if end > len(data) {
-					end = len(data)
-				}
-				t.Errorf("double-encoded UTF-8 (mojibake) detected at byte %d: %q\n"+
-					"This usually means a Windows editor re-encoded the file.\n"+
+				start := max(0, idx-20)
+				end := min(len(data), idx+30)
+				t.Errorf("double-encoded UTF-8 (%s mojibake) detected at byte %d: %q\n"+
+					"This usually means a Windows tool re-encoded the file.\n"+
 					"Fix: restore from git (git checkout HEAD -- %s) and re-apply changes with a UTF-8-aware editor.",
-					idx, data[start:end], rel)
+					sig.codePage, idx, data[start:end], rel)
 			}
 		})
 	}

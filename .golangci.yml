@@ -22,6 +22,7 @@ linters:
       - vendor
       - dist
       - site
+      - node_modules
     rules:
       # Test files use literal strings for clarity
       - linters: [goconst]

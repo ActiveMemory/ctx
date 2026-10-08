@@ -24,6 +24,10 @@ import (
 //   - no entry heading below "## Themes" (ErrEntryBelowThemes): entries
 //     must stay in the staging zone above it. The heading that opens an
 //     entry is per-kind ([EntryPrefix]).
+//   - for the timestamped kinds, every "## [" line outside an HTML
+//     comment is a full "## [YYYY-MM-DD-HHMMSS] Title" header
+//     (MalformedEntryHeaderError, which matches ErrStagingUnparsable):
+//     the block parser would fold any other one into the entry above.
 //   - a non-empty staging zone must enumerate into discrete entries
 //     (ErrStagingUnparsable), for every kind.
 //   - for conventions, no two staged sections share a title
@@ -37,14 +41,26 @@ import (
 //   - r: a parsed root (from Parse)
 //
 // Returns:
-//   - error: one of the disclosure sentinels, or nil when well-formed
+//   - error: one of the disclosure sentinels, a
+//     *MalformedEntryHeaderError, or nil when well-formed
 func Validate(r Root) error {
-	if len(headingLineOffsets(r.Reconstruct(), cfgDisc.HeadingThemes)) > 1 {
+	content := r.Reconstruct()
+	if len(headingLineOffsets(content, cfgDisc.HeadingThemes)) > 1 {
 		return errDisc.ErrMultipleThemes
 	}
 
 	if r.HasThemes && entryBelowThemes(r.ThemesRaw, r.Kind) {
 		return errDisc.ErrEntryBelowThemes
+	}
+
+	// Conventions carry no timestamp, so "## [" is ordinary title text
+	// there. Scanning the whole root keeps line numbers file-relative;
+	// only staging can hold a hit: staging starts at the first "## ["
+	// line, and entryBelowThemes has cleared the themes region.
+	if r.Kind != KindConvention {
+		if line, h := malformedEntryHeading(content); line > 0 {
+			return errDisc.MalformedEntryHeader(line, h)
+		}
 	}
 
 	blocks := stagedBlocks(r.Staging, r.Kind)

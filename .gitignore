@@ -97,15 +97,19 @@ outbox
 # ideas/'s privacy class; the don't-leak guard double-checks at write
 # time. Must stay gitignored (see specs/ctx-dream.md).
 dreams
+
+# Encryption keys and the encrypted scratchpad. Never commit these
+# (TestGitignoreProtectsSensitiveFiles guards the scratchpad key).
 .context/.ctx.key
 .context/.scratchpad.key
 .context/scratchpad.enc
+
+# macOS Finder metadata
 .DS_Store
-.gitnexus
 
 # Generated skills
 .claude/skills/generated
 .claude/skills/gitnexus
 
 # GitNexus code-graph index (local, do not commit)
-.gitnexus/
+.gitnexus

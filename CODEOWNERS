@@ -1,23 +1,12 @@
 # CODEOWNERS - defines who is responsible for code in this repository
 # See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-# Default owners for everything in the repo
-* @josealekhine
-* @parlakisik
-* @CoderMungan
-* @hamzaerbay
-* @bilersan
-
-# Core CLI implementation
-/cmd/ @josealekhine
-/internal/ @josealekhine
-
-# Documentation
-*.md @josealekhine
-/docs/ @josealekhine
-/specs/ @josealekhine
-
-# Build and CI
-/hack/ @josealekhine
-/.github/ @josealekhine
-Makefile @josealekhine
+# All five maintainers own the whole repository; any one of them can
+# give the code-owner approval the main ruleset requires.
+#
+# Keep them on ONE line. GitHub applies only the last pattern that
+# matches a file, so separate `*` lines override one another (the last
+# one wins), and any narrower pattern added below this line (e.g.
+# `/internal/ @someone`) would replace everyone else's ownership of
+# that path instead of adding to it. See specs/codeowners-full-ownership.md.
+* @josealekhine @parlakisik @CoderMungan @hamzaerbay @bilersan

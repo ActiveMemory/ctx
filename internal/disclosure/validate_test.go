@@ -8,8 +8,11 @@ package disclosure_test
 
 import (
 	"errors"
+	"strings"
 	"testing"
 
+	readTpl "github.com/ActiveMemory/ctx/internal/assets/read/template"
+	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/disclosure"
 	errDisc "github.com/ActiveMemory/ctx/internal/err/disclosure"
 )
@@ -44,6 +47,18 @@ const (
 		"## [2026-07-15-120000] Same Title\n\nfirst.\n\n" +
 		"## [2026-07-16-090000] Same Title\n\nsecond.\n\n" +
 		"## Themes\n\n- a — g → [a](learnings/a.md)\n"
+
+	// A date-only header (legacy or hand-written) is not an entry start
+	// for the block parser, so without the guard it is silently folded
+	// into the entry above it — and moved into that entry's theme. The
+	// offending heading is on line 9.
+	dateOnlyHeader = "# Learnings\n\n<!-- guide -->\n\n" +
+		"## [2026-07-15-120000] a staged entry\n\n**Context**: x.\n\n" +
+		"## [2026-09-26] Legacy\n\n**Context**: y.\n"
+
+	// Conventions carry no timestamp: "## [" is ordinary title text.
+	conventionBracketTitle = "# Conventions\n\n<!-- guide -->\n\n" +
+		"## [Draft] Naming\n\nprose.\n"
 )
 
 // T06: the Validate precondition returns the named sentinel for each
@@ -84,6 +99,15 @@ func TestValidate(t *testing.T) {
 			"convention un-migrated", conventionUnmigrated,
 			disclosure.KindConvention, nil,
 		},
+		// A malformed header is the precise form of unparsable staging.
+		{
+			"date-only header after an entry", dateOnlyHeader,
+			disclosure.KindLearning, errDisc.ErrStagingUnparsable,
+		},
+		{
+			"convention bracketed title", conventionBracketTitle,
+			disclosure.KindConvention, nil,
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -93,6 +117,60 @@ func TestValidate(t *testing.T) {
 				t.Errorf("Validate = %v, want nil (valid shape)", got)
 			case tc.want != nil && !errors.Is(got, tc.want):
 				t.Errorf("Validate = %v, want %v", got, tc.want)
+			}
+		})
+	}
+}
+
+// DECISIONS.md's shipped template carries a "## [YYYY-MM-DD] Decision
+// Title" example inside its <!-- DECISION FORMATS --> comment. That is
+// documentation, not an entry: the malformed-header guard must skip it.
+func TestValidate_DecisionTemplateExampleIgnored(t *testing.T) {
+	tpl, tplErr := readTpl.Template(cfgCtx.Decision)
+	if tplErr != nil {
+		t.Fatalf("read template: %v", tplErr)
+	}
+	if !strings.Contains(string(tpl), "## [YYYY-MM-DD] Decision Title") {
+		t.Fatal("template lost its commented date-only example; " +
+			"this test no longer guards anything")
+	}
+	content := string(tpl) +
+		"\n## [2026-09-26-120000] A real decision\n\n**Status**: Accepted\n"
+
+	err := disclosure.Validate(disclosure.Parse(content, disclosure.KindDecision))
+	if err != nil {
+		t.Errorf("Validate = %v, want nil (commented example is not an entry)", err)
+	}
+}
+
+// The malformed-header refusal names the 1-based line and the heading,
+// on LF and CRLF files alike (the carriage return is not reported), and
+// stays matchable as ErrStagingUnparsable.
+func TestValidate_MalformedEntryHeader(t *testing.T) {
+	const wantLine, wantHeading = 9, "## [2026-09-26] Legacy"
+	for name, content := range map[string]string{
+		"LF":   dateOnlyHeader,
+		"CRLF": strings.ReplaceAll(dateOnlyHeader, "\n", "\r\n"),
+	} {
+		t.Run(name, func(t *testing.T) {
+			err := disclosure.Validate(
+				disclosure.Parse(content, disclosure.KindLearning),
+			)
+			mErr, ok := errors.AsType[*errDisc.MalformedEntryHeaderError](err)
+			if !ok {
+				t.Fatalf("Validate = %v, want *MalformedEntryHeaderError", err)
+			}
+			if mErr.Line != wantLine || mErr.Heading != wantHeading {
+				t.Errorf("got line %d heading %q, want line %d heading %q",
+					mErr.Line, mErr.Heading, wantLine, wantHeading)
+			}
+			if !errors.Is(err, errDisc.ErrStagingUnparsable) {
+				t.Errorf("errors.Is(%v, ErrStagingUnparsable) = false", err)
+			}
+			msg := err.Error()
+			if !strings.Contains(msg, "line 9") ||
+				!strings.Contains(msg, wantHeading) {
+				t.Errorf("message %q must name line 9 and the heading", msg)
 			}
 		})
 	}
