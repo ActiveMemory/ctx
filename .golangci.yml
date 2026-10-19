@@ -31,6 +31,10 @@ linters:
       - linters: [gosec]
         text: "G304"
         path: "_test\\.go"
+      # Test files build paths under t.TempDir(), not from user input
+      - linters: [gosec]
+        text: "G703"
+        path: "_test\\.go"
       # Test files use 0644/0755 for throwaway temp files and dirs
       - linters: [gosec]
         text: "G30[16]"
