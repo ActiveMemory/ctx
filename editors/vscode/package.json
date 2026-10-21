@@ -2,7 +2,7 @@
   "name": "ctx-context",
   "displayName": "ctx — Persistent Context for AI",
   "description": "Chat participant (@ctx) for persistent project context across AI coding sessions",
-  "version": "0.8.1",
+  "version": "0.10.0",
   "publisher": "activememory",
   "license": "Apache-2.0",
   "homepage": "https://github.com/ActiveMemory/ctx",
@@ -53,7 +53,7 @@
         "commands": [
           {
             "name": "init",
-            "description": "Initialize a new .context/ directory with template files"
+            "description": "Initialize a new .context/ directory and Copilot instructions"
           },
           {
             "name": "status",
@@ -69,15 +69,23 @@
           },
           {
             "name": "recall",
-            "description": "Browse and search AI session history"
+            "description": "Browse AI session history (list, show)"
           },
           {
-            "name": "hook",
-            "description": "Generate AI tool integration configs (e.g. copilot, claude)"
+            "name": "setup",
+            "description": "Generate an AI tool integration config (e.g. copilot, claude-code)"
           },
           {
             "name": "add",
-            "description": "Add a new item to a context file (task, decision, learning)"
+            "description": "Add a task, decision, learning, or convention"
+          },
+          {
+            "name": "decision",
+            "description": "List DECISIONS.md entries"
+          },
+          {
+            "name": "learning",
+            "description": "List LEARNINGS.md entries"
           },
           {
             "name": "load",
@@ -109,71 +117,83 @@
           },
           {
             "name": "system",
-            "description": "System diagnostics and bootstrap"
+            "description": "System resources, token usage, bootstrap, hook messages"
           },
           {
             "name": "memory",
-            "description": "Memory bridge operations (sync, status, diff, import, publish)"
+            "description": "Bridge Claude Code auto memory into .context/"
           },
           {
             "name": "journal",
-            "description": "Journal management (site, obsidian)"
+            "description": "Export the session journal (site, obsidian)"
           },
           {
             "name": "doctor",
-            "description": "Context health diagnostics"
+            "description": "Structural health check"
           },
           {
             "name": "config",
-            "description": "Runtime configuration (switch, status, schema)"
-          },
-          {
-            "name": "prompt",
-            "description": "Prompt templates (list, add, show, rm)"
+            "description": "Runtime configuration profiles (switch, status, schema)"
           },
           {
             "name": "why",
-            "description": "Show rationale for context design decisions"
+            "description": "Read the philosophy behind ctx"
           },
           {
             "name": "change",
-            "description": "Show recent codebase changes"
-          },
-          {
-            "name": "dep",
-            "description": "Show project dependencies"
+            "description": "Show what changed since last session"
           },
           {
             "name": "guide",
-            "description": "Quick start guide"
+            "description": "Quick-reference cheat sheet for ctx"
           },
           {
             "name": "permission",
             "description": "Permission snapshot and restore"
           },
           {
-            "name": "site",
-            "description": "Documentation site (feed)"
-          },
-          {
-            "name": "loop",
-            "description": "Generate autonomous iteration scripts"
-          },
-          {
             "name": "pause",
-            "description": "Pause context hooks for current session"
+            "description": "Pause ctx context hooks"
           },
           {
             "name": "resume",
-            "description": "Resume context hooks"
+            "description": "Resume ctx context hooks"
           },
           {
-            "name": "reindex",
-            "description": "Rebuild context file indices"
+            "name": "brainstorm",
+            "description": "Design before implementation (ctx-brainstorm skill)"
           },
           {
-            "name": "diag",
-            "description": "Diagnose extension issues — times each step to find hangs"
+            "name": "spec",
+            "description": "Draft a feature spec (ctx-spec skill)"
+          },
+          {
+            "name": "implement",
+            "description": "Work through a plan step by step; attach it with #file (ctx-implement skill)"
+          },
+          {
+            "name": "next",
+            "description": "Suggest what to work on next (ctx-next skill)"
+          },
+          {
+            "name": "remember",
+            "description": "Structured readback of project context (ctx-remember skill)"
+          },
+          {
+            "name": "reflect",
+            "description": "Surface what is worth persisting (ctx-reflect skill)"
+          },
+          {
+            "name": "wrap-up",
+            "description": "End-of-session review that proposes entries to persist; writes nothing (ctx-wrap-up skill)"
+          },
+          {
+            "name": "blog",
+            "description": "Draft a blog post from project progress (ctx-blog skill)"
+          },
+          {
+            "name": "consolidate",
+            "description": "Propose merges for overlapping LEARNINGS.md or DECISIONS.md entries (ctx-consolidate skill)"
           }
         ],
         "disambiguation": [
@@ -206,8 +226,8 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run build",
-    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
-    "watch": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --loader:.md=text --minify",
+    "watch": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --loader:.md=text --watch",
     "test": "vitest run",
     "lint": "eslint src"
   },
