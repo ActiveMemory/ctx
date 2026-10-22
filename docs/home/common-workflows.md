@@ -259,8 +259,8 @@ ctx system bootstrap
 ```
 
 This prints the resolved context directory, the files in it, and the
-operating rules. The `CLAUDE.md` template instructs the agent to run this
-automatically. See [CLI Reference: bootstrap](../cli/bootstrap.md#ctx-system-bootstrap).
+operating rules. The `AGENTS.md` template (imported by `CLAUDE.md`) instructs
+the agent to run this automatically. See [CLI Reference: bootstrap](../cli/bootstrap.md#ctx-system-bootstrap).
 
 ## The Two Skills You Should Always Use
 
@@ -278,7 +278,7 @@ session end are the **highest-value skills** in the entire catalog:
 Let's provide some **context**, because this is **important**:
 
 Although the agent *will* **eventually** discover your context through
-`CLAUDE.md → AGENT_PLAYBOOK.md`, `/ctx-remember`
+`AGENTS.md → AGENT_PLAYBOOK.md`, `/ctx-remember`
 **hydrates the full context up front** (*tasks, decisions,
 recent sessions*) so the agent **starts informed** rather than
 piecing things together over several turns.

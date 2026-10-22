@@ -61,7 +61,8 @@ This gives you:
 | Component                     | Purpose                |
 |-------------------------------|------------------------|
 | `.context/`                   | All context files      |
-| `CLAUDE.md`                   | Bootstrap instructions |
+| `AGENTS.md`                   | Bootstrap instructions |
+| `CLAUDE.md`                   | `@AGENTS.md` import    |
 | Plugin hooks                  | Lifecycle automation   |
 | Plugin skills                 | Agent Skills           |
 
@@ -69,14 +70,15 @@ This gives you:
 
 ```mermaid
 graph TD
-    A[Session Start] --> B[Claude reads CLAUDE.md]
+    A[Session Start] --> B[Claude reads CLAUDE.md, which imports AGENTS.md]
     B --> C[PreToolUse hook runs]
     C --> D[ctx agent loads context]
     D --> E[Work happens]
     E --> F[Session End]
 ```
 
-1. **Session start**: Claude reads `CLAUDE.md`, which tells it to check `.context/`
+1. **Session start**: Claude reads `CLAUDE.md`, which imports `AGENTS.md`; the
+   instructions there tell it to check `.context/`
 2. **First tool use**: `PreToolUse` hook runs `ctx agent` and emits the context
    packet (*subsequent invocations within the cooldown window are silent*)
 3. **Next session**: Claude reads context files and continues with context
