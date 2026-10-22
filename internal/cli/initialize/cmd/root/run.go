@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/catalog"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
+	coreAgents "github.com/ActiveMemory/ctx/internal/cli/initialize/core/agents"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core/backup"
 	coreClaude "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claude"
 	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claudecheck"
@@ -36,6 +37,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/sync"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	errFs "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -49,7 +51,8 @@ import (
 // Run executes the init command logic.
 //
 // Creates a .context/ directory with template files. Handles existing
-// directories, minimal mode, and CLAUDE.md merge operations.
+// directories, minimal mode, and the AGENTS.md and CLAUDE.md merge
+// operations.
 //
 // Under the cwd-anchored resolution model
 // (spec: specs/cwd-anchored-context.md), init is the command that
@@ -280,7 +283,15 @@ func Run(
 		}
 	}
 
-	// Handle CLAUDE.md creation/merge
+	// Handle AGENTS.md creation/merge: the tool-neutral instruction
+	// file every agent reads; CLAUDE.md below only imports it
+	// (specs/init-agents-md.md).
+	if agentsErr := coreAgents.HandleMd(cmd, reset, merge); agentsErr != nil {
+		// Non-fatal: warn but continue
+		initialize.InfoWarnNonFatal(cmd, cfgHook.FileAgentsMd, agentsErr)
+	}
+
+	// Handle CLAUDE.md creation/merge (the @AGENTS.md bridge)
 	if claudeErr := coreClaude.HandleMd(cmd, reset, merge); claudeErr != nil {
 		// Non-fatal: warn but continue
 		initialize.InfoWarnNonFatal(cmd, claude.Md, claudeErr)

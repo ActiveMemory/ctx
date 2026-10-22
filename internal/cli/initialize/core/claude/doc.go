@@ -9,17 +9,22 @@
 //
 // # Overview
 //
-// CLAUDE.md is the project-level instruction file that
-// tells Claude Code how to work with a project. During
-// init, this package either creates a new CLAUDE.md
-// from a built-in template or merges the ctx section
-// into an existing file using marker-delimited regions.
+// CLAUDE.md is the project-level instruction file Claude
+// Code reads. The ctx instructions themselves live in
+// AGENTS.md (see the sibling agents package), so the
+// ctx-managed section of CLAUDE.md is a bridge: an
+// "@AGENTS.md" import line that Claude Code expands at
+// launch. The bridge keeps Claude Code releases before
+// 2.1.277, sessions that cannot read AGENTS.md directly,
+// and hand-written CLAUDE.md files (which otherwise
+// suppress AGENTS.md) on the same instructions
+// (specs/init-agents-md.md).
 //
 // # Behavior
 //
 // [HandleMd] creates a new CLAUDE.md from the embedded
-// template, or merges the ctx-managed section into an
-// existing file using marker-delimited regions.
+// bridge template, or merges the ctx-managed section into
+// an existing file using marker-delimited regions.
 //
 // # Data Flow
 //

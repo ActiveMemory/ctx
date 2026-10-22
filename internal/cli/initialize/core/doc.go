@@ -17,17 +17,19 @@
 //
 // # Sub-packages
 //
+//   - agents: creates or merges AGENTS.md with the
+//     ctx-managed instructions every agent reads.
 //   - backup: creates timestamped .bak copies before
 //     overwriting existing files.
 //   - claude: creates or merges CLAUDE.md with the
-//     ctx-managed section.
+//     ctx-managed @AGENTS.md import.
 //   - claudecheck: validates CLAUDE.md structure and
 //     renders diagnostic hints.
 //   - entry: creates context file templates (TASKS.md,
 //     DECISIONS.md, etc.) and locates insertion points
 //     in existing files.
 //   - merge: marker-delimited section merging for
-//     CLAUDE.md and prompt files.
+//     AGENTS.md, CLAUDE.md and prompt files.
 //   - pad: sets up the encrypted or plaintext
 //     scratchpad.
 //   - plugin: detects and enables the ctx companion

@@ -78,6 +78,8 @@ const (
 const (
 	// AgentsStart marks the beginning of ctx-managed AGENTS.md content.
 	AgentsStart = "<!-- ctx:agents -->"
+	// AgentsEnd marks the end of ctx-managed AGENTS.md content.
+	AgentsEnd = "<!-- ctx:agents:end -->"
 )
 
 // Index markers for auto-generated table of contents sections.

@@ -41,7 +41,7 @@ ctx init [flags]
 |-------------|-------|-----------------------------------------------------------------------------|
 | `--force`   | `-f`  | Overwrite existing context files                                            |
 | `--minimal` | `-m`  | Only create essential files (`TASKS.md`, `DECISIONS.md`, `CONSTITUTION.md`) |
-| `--merge`   |       | Auto-merge `ctx` content into existing `CLAUDE.md`                          |
+| `--merge`   |       | Auto-merge `ctx` content into existing `AGENTS.md` and `CLAUDE.md`          |
 
 **Creates**:
 
@@ -53,7 +53,11 @@ ctx init [flags]
   ([Phase KB](../recipes/build-a-knowledge-base.md)). Embedded
   templates are copied; existing files are preserved.
 - `.claude/settings.local.json` with pre-approved `ctx` permissions
-- `CLAUDE.md` with bootstrap instructions (or merges into existing)
+- `AGENTS.md` with the agent bootstrap instructions (or merges them into an
+  existing one): the open standard read by Claude Code, Codex, Copilot,
+  Cursor and others
+- `CLAUDE.md` as a bridge whose `ctx` block is an `@AGENTS.md` import, so
+  Claude Code loads the same text (or merges the bridge into an existing one)
 
 Claude Code hooks and skills are provided by the **`ctx` plugin**
 (see [Integrations](../operations/integrations.md#claude-code-full-integration)).

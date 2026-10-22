@@ -87,13 +87,24 @@ func OrCreate(cmd *cobra.Command, p entity.MergeParams) (bool, error) {
 		return false, bkErr
 	}
 
+	// Insert only the marker-bounded ctx block: the template's own
+	// title belongs to a fresh file, not to one that has a title.
+	section, sectionErr := markedSection(
+		p.Filename, string(p.TemplateContent), p.MarkerStart, p.MarkerEnd,
+	)
+	if sectionErr != nil {
+		return false, sectionErr
+	}
+	gap := token.NewlineLF + token.NewlineLF
 	insertPos := entry.FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
-		mergedContent = string(p.TemplateContent) + token.NewlineLF + existingStr
+		mergedContent = section + gap +
+			strings.TrimLeft(existingStr, token.NewlineLF)
 	} else {
-		mergedContent = existingStr[:insertPos] + token.NewlineLF +
-			string(p.TemplateContent) + token.NewlineLF + existingStr[insertPos:]
+		mergedContent = strings.TrimRight(existingStr[:insertPos], token.NewlineLF) +
+			gap + section + gap +
+			strings.TrimLeft(existingStr[insertPos:], token.NewlineLF)
 	}
 
 	if writeErr := io.SafeWriteFile(
@@ -138,14 +149,12 @@ func UpdateMarkedSection(
 		endIdx += len(markerEnd)
 	}
 
-	templateStr := string(newTemplate)
-	templateStart := strings.Index(templateStr, markerStart)
-	templateEnd := strings.Index(templateStr, markerEnd)
-	if templateStart == -1 || templateEnd == -1 {
-		return errPrompt.TemplateMissingMarkers(filename)
+	sectionContent, sectionErr := markedSection(
+		filename, string(newTemplate), markerStart, markerEnd,
+	)
+	if sectionErr != nil {
+		return sectionErr
 	}
-
-	sectionContent := templateStr[templateStart : templateEnd+len(markerEnd)]
 	newContent := existing[:startIdx] + sectionContent + existing[endIdx:]
 
 	if bkErr := backup.File(cmd, filename, []byte(existing)); bkErr != nil {

@@ -27,7 +27,8 @@
 //  8. Merges permissions into settings.local.json.
 //  9. Auto-enables the ctx plugin globally and
 //     locally.
-//  10. Creates or merges CLAUDE.md.
+//  10. Creates or merges AGENTS.md and the CLAUDE.md
+//     bridge that imports it.
 //  11. Deploys Makefile.ctx and amends the user
 //     Makefile.
 //  12. Updates .gitignore with recommended entries.
@@ -39,7 +40,7 @@
 //   - --minimal, -m: Only create essential files
 //     (TASKS, DECISIONS, CONSTITUTION).
 //   - --merge: Auto-merge ctx content into existing
-//     CLAUDE.md without prompting.
+//     AGENTS.md and CLAUDE.md without prompting.
 //   - --no-plugin-enable: Skip auto-enabling the ctx
 //     plugin in Claude settings.
 //   - --no-steering-init: Skip scaffolding foundation

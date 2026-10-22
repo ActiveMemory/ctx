@@ -391,7 +391,7 @@ ctx system bootstrap -q       # just the context directory path
 ctx system bootstrap --json   # structured output for automation
 ```
 
-The `CLAUDE.md` template instructs the agent to run this as its first action.
+The `AGENTS.md` template instructs the agent to run this as its first action.
 Every nudge (*context checkpoint, persistence reminder, etc.*) also includes a
 `Context: <dir>` footer that re-anchors the agent to the correct directory
 throughout the session.
