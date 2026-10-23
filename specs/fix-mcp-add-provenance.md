@@ -81,7 +81,10 @@ MCP layer only. The CLI, `entry.Validate`, and `.ctxrc` are unchanged.
    `cfg.MaxOptsLineLen` (256) in the MCP-SAN.1 limits block. No
    legitimate value contains a control character, so none changes.
    Over-long values are truncated, not rejected, as `sanitize.SessionID`
-   does. `sanitize.Reflect` does not fit: it keeps line breaks.
+   does. `sanitize.Reflect` does not fit: it keeps line breaks. The
+   cap is the one `specs/sanitize-hardening-followup.md` deferred for
+   these fields ("tracked separately if needed"); advertising `branch`
+   and `commit` makes it needed.
 4. **`session_id` stays caller-supplied and required.** Its schema
    description directs the agent to the relayed `Session:` value, or an
    explicit `"unknown"` when it has none: no silent default and no

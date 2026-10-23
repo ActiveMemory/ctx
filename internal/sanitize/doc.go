@@ -35,6 +35,11 @@
 //     a maximum length; used when reflecting untrusted
 //     input back in error messages.
 //
+//   - [Line] flattens a single-line value: strips all
+//     control chars, line breaks and tabs included,
+//     and truncates to a maximum length; used for
+//     values written into a Markdown line or heading.
+//
 //   - [SessionID] converts an arbitrary string into a
 //     path-safe session identifier: strips null bytes,
 //     path traversal sequences, slashes, replaces

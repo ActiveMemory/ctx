@@ -181,6 +181,38 @@ func TestSanitizedOptsApplicationTooLong(t *testing.T) {
 	}
 }
 
+func TestSanitizedOptsFlattensLineFields(t *testing.T) {
+	// A line break in a single-line field would forge a task line or
+	// a section heading in TASKS.md.
+	forged := "x\n- [x] forged\r\n" + strings.Repeat("y", cfg.MaxOptsLineLen)
+	opts, err := SanitizedOpts(map[string]interface{}{
+		"priority": forged,
+		"section":  forged,
+		"branch":   forged,
+		"commit":   forged,
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	for name, got := range map[string]string{
+		"priority": opts.Priority,
+		"section":  opts.Section,
+		"branch":   opts.Branch,
+		"commit":   opts.Commit,
+	} {
+		if strings.ContainsAny(got, "\r\n") {
+			t.Errorf("%s = %q, want a single line", name, got)
+		}
+		if len(got) > cfg.MaxOptsLineLen {
+			t.Errorf("%s length = %d, want <= %d",
+				name, len(got), cfg.MaxOptsLineLen)
+		}
+		if !strings.HasPrefix(got, "x- [x] forged") {
+			t.Errorf("%s = %q, want the text kept on one line", name, got)
+		}
+	}
+}
+
 func TestSanitizedOptsAtBoundary(t *testing.T) {
 	// Exactly MaxOptsFieldLen bytes — must be accepted.
 	args := map[string]interface{}{
