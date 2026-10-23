@@ -150,11 +150,22 @@ Add a task, decision, learning, or convention to the context.
 | `type`        | string | Yes         | Entry type: task, decision, learning, convention |
 | `content`     | string | Yes         | Title or main content                            |
 | `priority`    | string | No          | Priority level (tasks only): high, medium, low   |
+| `section`     | string | Conditional | Target section in TASKS.md (tasks only)          |
 | `context`     | string | Conditional | Context field (decisions and learnings)          |
 | `rationale`   | string | Conditional | Rationale (decisions only)                       |
 | `consequence` | string | Conditional | Consequence (decisions only)                     |
 | `lesson`      | string | Conditional | Lesson learned (learnings only)                  |
 | `application` | string | Conditional | How to apply (learnings only)                    |
+| `session_id`  | string | Conditional | AI session ID (tasks, decisions, learnings)      |
+| `branch`      | string | No          | Git branch (default: resolved from git)          |
+| `commit`      | string | No          | Git commit hash (default: resolved from git)     |
+
+Tasks, decisions, and learnings require `session_id` unless `.ctxrc`
+[`provenance_required`](../home/configuration.md#option-reference)
+relaxes it: pass the `Session` value ctx relays into the agent's
+context, or `unknown` when there is none. When `branch` or `commit` is
+omitted or `unknown`, the server reads it from git; pass it only when
+working in another checkout.
 
 ### `ctx_complete`
 
@@ -192,11 +203,18 @@ Human confirmation is required before calling.
 |---------------|--------|-------------|------------------------------------------------------------|
 | `type`        | string | Yes         | Entry type: task, decision, learning, convention, complete |
 | `content`     | string | Yes         | Main content                                               |
+| `priority`    | string | No          | Priority level (tasks only): high, medium, low             |
+| `section`     | string | Conditional | Target section in TASKS.md (tasks only)                    |
 | `context`     | string | Conditional | Context background (decisions/learnings)                   |
 | `rationale`   | string | Conditional | Rationale (decisions only)                                 |
 | `consequence` | string | Conditional | Consequence (decisions only)                               |
 | `lesson`      | string | Conditional | Lesson learned (learnings only)                            |
 | `application` | string | Conditional | How to apply (learnings only)                              |
+| `session_id`  | string | Conditional | AI session ID (tasks, decisions, learnings)                |
+| `branch`      | string | No          | Git branch (default: resolved from git)                    |
+| `commit`      | string | No          | Git commit hash (default: resolved from git)               |
+
+Provenance works as for [`ctx_add`](#ctx_add).
 
 ### `ctx_compact`
 
