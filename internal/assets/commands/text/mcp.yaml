@@ -103,11 +103,11 @@ mcp.tool-drift-desc:
 mcp.tool-prop-application:
   short: How to apply this lesson (required for learnings)
 mcp.tool-prop-session-id:
-  short: AI session ID for provenance (required for tasks, decisions, and learnings)
+  short: 'AI session ID for provenance (required for tasks, decisions, and learnings): the Session value ctx relays into your context, or "unknown" if you have none'
 mcp.tool-prop-branch:
-  short: Git branch name for provenance (required for tasks, decisions, and learnings)
+  short: 'Git branch for provenance (omit to let the server resolve it from git; pass it only when working in another checkout)'
 mcp.tool-prop-commit:
-  short: Git commit hash for provenance (required for tasks, decisions, and learnings)
+  short: 'Git commit hash for provenance (omit to let the server resolve it from git; pass it only when working in another checkout)'
 mcp.tool-prop-consequence:
   short: Consequence (required for decisions)
 mcp.tool-prop-content:
@@ -180,7 +180,7 @@ mcp.prompt-label-lesson:
 mcp.prompt-label-application:
   short: Application
 mcp.prompt-add-decision-footer:
-  short: Call ctx_add with type="decision" and all fields above.
+  short: Call ctx_add with type="decision", all fields above, and session_id.
 mcp.prompt-add-decision-header:
   short: 'Record this architectural decision using ctx_add:'
 mcp.prompt-add-decision-result-desc:
@@ -190,7 +190,7 @@ mcp.prompt-add-learning-desc:
 mcp.prompt-add-learning-field-format:
   short: "- **%s**: %s\n"
 mcp.prompt-add-learning-footer:
-  short: Call ctx_add with type="learning" and all fields above.
+  short: Call ctx_add with type="learning", all fields above, and session_id.
 mcp.prompt-add-learning-header:
   short: 'Record this learning using ctx_add:'
 mcp.prompt-add-learning-result-desc:
