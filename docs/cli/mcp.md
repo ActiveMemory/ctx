@@ -163,9 +163,10 @@ Add a task, decision, learning, or convention to the context.
 Tasks, decisions, and learnings require `session_id` unless `.ctxrc`
 [`provenance_required`](../home/configuration.md#option-reference)
 relaxes it: pass the `Session` value ctx relays into the agent's
-context, or `unknown` when there is none. When `branch` or `commit` is
-omitted or `unknown`, the server reads it from git; pass it only when
-working in another checkout.
+context, or `unknown` when there is none. When both `branch` and
+`commit` are omitted or `unknown`, the server reads them from git, or
+records `unknown` when git cannot answer. Pass both only when working
+in another checkout: the server never fills one half of the pair.
 
 ### `ctx_complete`
 

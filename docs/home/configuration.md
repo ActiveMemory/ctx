@@ -159,9 +159,9 @@ A commented `.ctxrc` showing all options and their defaults:
 | `hooks.enabled`         | `bool`     | `true`        | Whether hook execution is enabled                                                                                                         |
 | `statusline.enabled`    | `bool`     | `true`        | Whether `ctx init` deploys the Claude Code status line (`ctx system statusline`)                                                          |
 | `statusline.show_cost`  | `bool`     | `true`        | Whether the status line renders the session-cost (`$`) segment                                                                            |
-| `provenance_required.session_id` | `bool` | `true` | Require `--session-id` on `ctx add`, and `session_id` on the MCP entry tools, for tasks, decisions, learnings                  |
-| `provenance_required.branch` | `bool` | `true`     | Require `--branch` on `ctx add` for tasks, decisions, learnings; the MCP entry tools resolve it from git                       |
-| `provenance_required.commit` | `bool` | `true`     | Require `--commit` on `ctx add` for tasks, decisions, learnings; the MCP entry tools resolve it from git                       |
+| `provenance_required.session_id` | `bool` | `true` | Require `--session-id` on `ctx add`, and `session_id` on the MCP entry tools, for tasks, decisions, learnings                                                |
+| `provenance_required.branch` | `bool` | `true`     | Require `--branch` on `ctx add` for tasks, decisions, learnings; the MCP entry tools fill it from git (or `unknown`) when branch and commit are both omitted |
+| `provenance_required.commit` | `bool` | `true`     | Require `--commit` on `ctx add` for tasks, decisions, learnings; the MCP entry tools fill it from git (or `unknown`) when branch and commit are both omitted |
 | `auto_prune_days`        | `int`      | `7`           | Days before stale session-state files are auto-pruned on context load. Non-positive values fall back to the default (never prunes on `0` or negative) |
 | `agent_cooldown_minutes` | `int`      | `10`          | Minutes between repeated `ctx agent` context-packet emissions. An explicit `0` disables the cooldown (matches `--cooldown 0`); unset uses the default |
 | `task_budget_pct`        | `number`   | `0.40`        | Fraction of the `ctx agent` token budget reserved for tasks (clamped to `0`–`1`; explicit `0` allocates none; unset uses the default)                 |

@@ -105,9 +105,9 @@ mcp.tool-prop-application:
 mcp.tool-prop-session-id:
   short: 'AI session ID for provenance (required for tasks, decisions, and learnings): the Session value ctx relays into your context, or "unknown" if you have none'
 mcp.tool-prop-branch:
-  short: 'Git branch for provenance (omit to let the server resolve it from git; pass it only when working in another checkout)'
+  short: 'Git branch for provenance (omit it and commit to let the server resolve both from git; pass both only when working in another checkout)'
 mcp.tool-prop-commit:
-  short: 'Git commit hash for provenance (omit to let the server resolve it from git; pass it only when working in another checkout)'
+  short: 'Git commit hash for provenance (omit it and branch to let the server resolve both from git; pass both only when working in another checkout)'
 mcp.tool-prop-consequence:
   short: Consequence (required for decisions)
 mcp.tool-prop-content:

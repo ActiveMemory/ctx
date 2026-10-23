@@ -176,25 +176,28 @@ func watchUpdate(
 
 // entryOpts builds the sanitized entry options for [add] and
 // [watchUpdate], resolving branch and commit from git when the caller
-// left them empty or "unknown". The values are the ones the hook relay
+// left both empty or "unknown". The values are the ones the hook relay
 // emits ([git.CurrentBranch], [git.ShortHead], "unknown" when git
-// cannot answer), read at write time; an explicit value wins.
+// cannot answer), read at write time. They are resolved as a pair, so
+// one checkout never supplies the branch and another the commit: a
+// caller that passes one passes both, and validation reports the
+// other when it is missing.
 //
 // Parameters:
 //   - args: MCP tool arguments with optional entry fields
 //
 // Returns:
-//   - entity.EntryOpts: sanitized options with branch and commit set
+//   - entity.EntryOpts: sanitized options, branch and commit resolved
+//     when the caller gave neither
 //   - error: non-nil if any field exceeds its length limit
 func entryOpts(args map[string]interface{}) (entity.EntryOpts, error) {
 	opts, sanitizeErr := extract.SanitizedOpts(args)
 	if sanitizeErr != nil {
 		return opts, sanitizeErr
 	}
-	if opts.Branch == "" || opts.Branch == cfgSession.IDUnknown {
+	if (opts.Branch == "" || opts.Branch == cfgSession.IDUnknown) &&
+		(opts.Commit == "" || opts.Commit == cfgSession.IDUnknown) {
 		opts.Branch = cmp.Or(git.CurrentBranch(), cfgSession.IDUnknown)
-	}
-	if opts.Commit == "" || opts.Commit == cfgSession.IDUnknown {
 		opts.Commit = cmp.Or(git.ShortHead(), cfgSession.IDUnknown)
 	}
 	return opts, nil

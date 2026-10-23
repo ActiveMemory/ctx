@@ -63,16 +63,19 @@ MCP layer only. The CLI, `entry.Validate`, and `.ctxrc` are unchanged.
 2. **Resolve the git half server-side.** In the route layer
    (`internal/mcp/server/route/tool/tool.go`), `add` and `watchUpdate`
    build their options through one helper that wraps
-   `extract.SanitizedOpts` and fills `Branch` and `Commit` when they
+   `extract.SanitizedOpts` and fills `Branch` and `Commit` when both
    are empty or `unknown`: `git.CurrentBranch()` and `git.ShortHead()`,
    falling back to `unknown`. These are the values the hook relay
    emits (`provenance.Emit`), so MCP-written provenance matches the
    CLI-plus-relay path, including `unknown` when git cannot answer.
    The fallback is `cmp.Or`; importing `provenance.DefaultVal` would
-   pull cobra into the MCP route for a one-line default. An explicit
-   value wins, for an agent working in another checkout than the
-   server's cwd. No cache: caching would freeze `commit` at first use,
-   the staleness this step removes.
+   pull cobra into the MCP route for a one-line default. Explicit
+   values win, for an agent working in another checkout than the
+   server's cwd, and the pair is resolved as a whole: one checkout
+   never supplies the branch and another the commit, so a caller that
+   passes only one gets the validation error for the other. No cache:
+   caching would freeze `commit` at first use, the staleness this step
+   removes.
 3. **Flatten single-line fields.** A new `sanitize.Line(s, maxLen)`
    strips every control character, including the tab, CR, and LF that
    `StripControl` keeps for multi-line content, and caps the length on
@@ -93,8 +96,9 @@ MCP layer only. The CLI, `entry.Validate`, and `.ctxrc` are unchanged.
    (`docs/recipes/knowledge-capture.md`). `"unknown"` is what the relay
    itself emits without a session ID (`provenance.ShortSessionID`), and
    the CLI already accepts it.
-5. **Describe** `branch` and `commit` as optional over MCP: omit them
-   to let the server resolve them from git.
+5. **Describe** `branch` and `commit` as optional over MCP: omit both
+   to let the server resolve them from git, pass both from another
+   checkout.
 6. **Prompts.** The `ctx-decision-add` and `ctx-learning-add` footers
    say "call ctx_add with … all fields above", and `session_id` is not
    among those fields; the footers name it.
@@ -102,15 +106,16 @@ MCP layer only. The CLI, `entry.Validate`, and `.ctxrc` are unchanged.
    `docs/cli/mcp.md`, and note in `docs/home/configuration.md` that
    `provenance_required` governs the MCP entry tools too.
 
-| Caller sends                     | Task line stores                                   |
-|----------------------------------|----------------------------------------------------|
-| all three values                 | the values as sent, flattened                      |
-| `session_id` only                | that `session_id` plus the server's branch/commit  |
-| `branch: "unknown"`              | the server's branch                                |
-| `branch: "x\n- [x] forged"`      | `#branch:x- [x] forged`, on one line               |
-| no `session_id`                  | nothing: `missing required fields: --session-id`   |
-| git absent, or no commits yet    | `unknown` for whichever git cannot resolve         |
-| detached HEAD                    | `#branch:unknown`, as the relay emits              |
+| Caller sends                          | Task line stores                                  |
+|---------------------------------------|---------------------------------------------------|
+| all three values                      | the values as sent, flattened                     |
+| `session_id` only                     | that `session_id` plus the server's branch/commit |
+| `branch: "unknown"`, no `commit`      | the server's branch and commit                    |
+| `branch` without `commit`             | nothing: `missing required fields: --commit`      |
+| `branch: "x\n- [x] forged"`, `commit` | `#branch:x- [x] forged`, on one line              |
+| no `session_id`                       | nothing: `missing required fields: --session-id`  |
+| git absent, or no commits yet         | `unknown` for whichever git cannot resolve        |
+| detached HEAD                         | `#branch:unknown`, as the relay emits             |
 
 ## Tests
 
@@ -131,6 +136,8 @@ case, which guards the "explicit value wins" rule:
     rather than assumed (the default branch name varies);
   - explicit values are stored verbatim, even in a repository whose
     real branch differs;
+  - a `branch` without a `commit` fails, naming only `--commit`, even
+    in a repository that could supply one;
   - the issue's probe (`type=learning`, no `branch`/`commit`) with
     `session_id: "unknown"` succeeds;
   - without `session_id` the call still fails, naming only

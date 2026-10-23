@@ -29,7 +29,10 @@ func callTool(
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error.Message)
 	}
-	raw, _ := json.Marshal(resp.Result)
+	raw, marshalErr := json.Marshal(resp.Result)
+	if marshalErr != nil {
+		t.Fatalf("marshal: %v", marshalErr)
+	}
 	var result proto.CallToolResult
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
@@ -120,6 +123,26 @@ func TestToolAddKeepsExplicitProvenance(t *testing.T) {
 	tasks := readContext(t, contextDir, ctx.Task)
 	if !strings.Contains(tasks, want) {
 		t.Errorf("want %q in TASKS.md, got:\n%s", want, tasks)
+	}
+}
+
+// Branch and commit come from one checkout: a branch passed from
+// another checkout must not be stored with the server's commit.
+func TestToolAddBranchWithoutCommit(t *testing.T) {
+	srv, contextDir := newTestServer(t)
+	gitInit(t, filepath.Dir(contextDir))
+	result := callTool(t, srv, "ctx_add", map[string]interface{}{
+		"type": "task", "content": "Half pair", "section": "Misc",
+		"session_id": "test1234", "branch": "feature/other",
+	})
+	if !result.IsError {
+		t.Fatalf("expected a missing-field error, got: %s",
+			result.Content[0].Text)
+	}
+	text := result.Content[0].Text
+	if !strings.Contains(text, "--commit") ||
+		strings.Contains(text, "--branch") {
+		t.Errorf("want only --commit reported missing, got: %s", text)
 	}
 }
 
