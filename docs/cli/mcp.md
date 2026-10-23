@@ -150,7 +150,7 @@ Add a task, decision, learning, or convention to the context.
 | `type`        | string | Yes         | Entry type: task, decision, learning, convention |
 | `content`     | string | Yes         | Title or main content                            |
 | `priority`    | string | No          | Priority level (tasks only): high, medium, low   |
-| `section`     | string | Conditional | Target section in TASKS.md (tasks only)          |
+| `section`     | string | Conditional | Target section (required for tasks)              |
 | `context`     | string | Conditional | Context field (decisions and learnings)          |
 | `rationale`   | string | Conditional | Rationale (decisions only)                       |
 | `consequence` | string | Conditional | Consequence (decisions only)                     |
@@ -205,7 +205,7 @@ Human confirmation is required before calling.
 | `type`        | string | Yes         | Entry type: task, decision, learning, convention, complete |
 | `content`     | string | Yes         | Main content                                               |
 | `priority`    | string | No          | Priority level (tasks only): high, medium, low             |
-| `section`     | string | Conditional | Target section in TASKS.md (tasks only)                    |
+| `section`     | string | Conditional | Target section (required for tasks)                        |
 | `context`     | string | Conditional | Context background (decisions/learnings)                   |
 | `rationale`   | string | Conditional | Rationale (decisions only)                                 |
 | `consequence` | string | Conditional | Consequence (decisions only)                               |
