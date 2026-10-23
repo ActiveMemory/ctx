@@ -102,6 +102,12 @@ mcp.tool-drift-desc:
   short: 'Detect stale or invalid context: dead paths, missing files, staleness'
 mcp.tool-prop-application:
   short: How to apply this lesson (required for learnings)
+mcp.tool-prop-session-id:
+  short: AI session ID for provenance (required for tasks, decisions, and learnings)
+mcp.tool-prop-branch:
+  short: Git branch name for provenance (required for tasks, decisions, and learnings)
+mcp.tool-prop-commit:
+  short: Git commit hash for provenance (required for tasks, decisions, and learnings)
 mcp.tool-prop-consequence:
   short: Consequence (required for decisions)
 mcp.tool-prop-content:
