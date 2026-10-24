@@ -7,6 +7,7 @@
 package tool
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -17,8 +18,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/cfg"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
+	cfgSession "github.com/ActiveMemory/ctx/internal/config/session"
 	cfgTime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/entity"
+	"github.com/ActiveMemory/ctx/internal/exec/git"
 	"github.com/ActiveMemory/ctx/internal/mcp/handler"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 	"github.com/ActiveMemory/ctx/internal/mcp/server/extract"
@@ -54,7 +57,7 @@ func add(
 	// MCP-SAN.3: Sanitize content before writing to .context/.
 	content = sanitize.Content(content)
 
-	opts, optsErr := extract.SanitizedOpts(args)
+	opts, optsErr := entryOpts(args)
 	if optsErr != nil {
 		return out.ToolError(id, optsErr.Error())
 	}
@@ -163,12 +166,41 @@ func watchUpdate(
 	// MCP-SAN.3: Sanitize content before writing to .context/.
 	content = sanitize.Content(content)
 
-	opts, optsErr := extract.SanitizedOpts(args)
+	opts, optsErr := entryOpts(args)
 	if optsErr != nil {
 		return out.ToolError(id, optsErr.Error())
 	}
 	t, updateErr := handler.WatchUpdate(d, entryType, content, opts)
 	return out.ToolResult(id, t, updateErr)
+}
+
+// entryOpts builds the sanitized entry options for [add] and
+// [watchUpdate], resolving branch and commit from git when the caller
+// left both empty or "unknown". The values are the ones the hook relay
+// emits ([git.CurrentBranch], [git.ShortHead], "unknown" when git
+// cannot answer), read at write time. They are resolved as a pair, so
+// one checkout never supplies the branch and another the commit: a
+// caller that passes one passes both, and validation reports the
+// other when it is missing.
+//
+// Parameters:
+//   - args: MCP tool arguments with optional entry fields
+//
+// Returns:
+//   - entity.EntryOpts: sanitized options, branch and commit resolved
+//     when the caller gave neither
+//   - error: non-nil if any field exceeds its length limit
+func entryOpts(args map[string]interface{}) (entity.EntryOpts, error) {
+	opts, sanitizeErr := extract.SanitizedOpts(args)
+	if sanitizeErr != nil {
+		return opts, sanitizeErr
+	}
+	if (opts.Branch == "" || opts.Branch == cfgSession.IDUnknown) &&
+		(opts.Commit == "" || opts.Commit == cfgSession.IDUnknown) {
+		opts.Branch = cmp.Or(git.CurrentBranch(), cfgSession.IDUnknown)
+		opts.Commit = cmp.Or(git.ShortHead(), cfgSession.IDUnknown)
+	}
+	return opts, nil
 }
 
 // compact extracts the archive flag and delegates to [handler.Compact].
