@@ -46,6 +46,9 @@ List recent sessions, newest first.
 | `--all-projects` |       | false   | Include all projects                 |
 | `--show`         |       | ""      | Show details of a specific session   |
 | `--latest`       |       | false   | Show the most recent session         |
+| `--turns`        |       | ""      | Turn range to inspect (`start:end`)  |
+| `--grep`         |       | ""      | Search turns matching regex pattern  |
+| `--max-chars`    |       | 6000    | Character budget for selective mode  |
 | `--full`         |       | false   | Full conversation (not preview)      |
 
 Output per session: slug, short ID, project, branch, time,
@@ -56,7 +59,15 @@ full UUID, partial UUID prefix, or slug name. Use `--latest`
 if no ID is given.
 
 Default output shows metadata and the first 5 user messages.
-Use `--full` for the complete conversation.
+Prefer selective reading over `--full` to keep active context
+lean:
+- Use `--grep "<pattern>"` to find matching turn indices and
+  200-character snippets first
+- Use `--turns <start:end>` (1-based, inclusive) to read only
+  the relevant turn window (capped at `--max-chars 6000` by
+  default, with a `next:` continuation command when truncated)
+- Use `--full` only when the user explicitly requests the
+  entire raw conversation
 
 ### `ctx journal import`
 

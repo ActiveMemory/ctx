@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/extract"
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/score"
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/sort"
+	cfgAgent "github.com/ActiveMemory/ctx/internal/config/agent"
 	cfgCtx "github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
@@ -35,6 +36,8 @@ import (
 //   - budget: Token budget to respect
 //   - steeringBodies: Pre-filtered steering file bodies to include
 //   - skillBody: Skill content to include (empty string if none)
+//   - hubBodies: Shared hub entries to include (may be nil)
+//   - handover: Optional latest handover execution brief body
 //
 // Returns:
 //   - *AssembledPacket: Assembled packet within budget
@@ -44,6 +47,7 @@ func AssemblePacket(
 	steeringBodies []string,
 	skillBody string,
 	hubBodies []string,
+	handover ...string,
 ) *AssembledPacket {
 	now := time.Now()
 	pkt := &AssembledPacket{
@@ -65,6 +69,24 @@ func AssemblePacket(
 	if remaining <= 0 {
 		pkt.TokensUsed = tier1Tokens
 		return pkt
+	}
+
+	// Tier 1.5: Latest handover execution brief (up to 15% of budget,
+	// clamped to remaining).
+	var handoverTokens int
+	if len(handover) > 0 && handover[0] != "" {
+		handoverCap := min(
+			int(float64(budget)*cfgAgent.HandoverBudgetPct), remaining,
+		)
+		pkt.Handover = FitHandover(handover[0], handoverCap)
+		if pkt.Handover != "" {
+			handoverTokens = ctxToken.EstimateString(pkt.Handover)
+			remaining -= handoverTokens
+			if remaining <= 0 {
+				pkt.TokensUsed = budget - remaining
+				return pkt
+			}
+		}
 	}
 
 	// Tier 2: Tasks (up to 40% of the original budget, but never more
@@ -115,7 +137,7 @@ func AssemblePacket(
 	pkt.Learnings, learnSummaries = FillSection(scoredLearnings, learnTokens)
 	pkt.Summaries = append(pkt.Summaries, learnSummaries...)
 
-	usedSoFar := tier1Tokens + taskTokens + convTokens +
+	usedSoFar := tier1Tokens + handoverTokens + taskTokens + convTokens +
 		EstimateSliceTokens(pkt.Decisions) +
 		EstimateSliceTokens(pkt.Learnings) +
 		EstimateSliceTokens(pkt.Summaries)

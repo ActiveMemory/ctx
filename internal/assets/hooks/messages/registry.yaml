@@ -45,6 +45,12 @@
   vars: [TokenCount, Threshold]
 
 - hook: check-context-size
+  variant: eocc
+  category: customizable
+  description: End-of-Conversation Compaction (EoCC) token threshold nudge
+  vars: [TokenCount, Threshold]
+
+- hook: check-context-size
   variant: checkpoint
   category: customizable
   description: Context capacity warning

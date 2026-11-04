@@ -58,6 +58,20 @@ For significant decisions:
 
 -->
 
+## [2026-11-04-230927] SSSM Short-Context Semantic State Regime (EoCC, SAC, and Execution Brief Handovers)
+
+**Status**: Accepted
+
+**Context**: Belcak et al. (arXiv:2611.05306, NVIDIA 2026) show that long-context agent traces suffer from attention dilution and O(N^2) KV-cache growth, while End-of-Conversation Compaction (EoCC) into a 5-field execution brief (task summary, established facts, applied changes & verification, dead ends, next steps) at ~16k-20k tokens plus selective reading matches or beats full-context performance. In ctx, handover write only required --summary and --next, ctx agent did not surface the latest handover after compaction, ctx journal source dumped whole sessions without turn-range or grep slicing, and ctx loop had no bounded EoCC/SAC state-reset mode.
+
+**Decision**: SSSM Short-Context Semantic State Regime (EoCC, SAC, and Execution Brief Handovers)
+
+**Rationale**: Enforcing the 5-field execution brief schema on ctx handover write (--summary, --facts, --verified, --dead-ends, --next) prevents lossy prose handovers and stops agents from repeating dead ends after compaction. Surfacing the latest handover as Tier 1.5 in ctx agent (and fixing OpenCode session.compacting to run ctx agent --budget 4000) closes the EoCC loop across harnesses without LLM calls inside ctx. Adding --turns, --grep, and --max-chars to ctx journal source provides selective reading over past transcripts, and adding --regime standard|eocc|sac with --max-turns to ctx loop enables bounded-context autonomous loops.
+
+**Consequence**: All callers of ctx handover write (skills, loop prompts, and tests) must provide --facts, --verified, and --dead-ends in addition to --summary and --next, using descriptive text when a category is empty because validate.RejectPlaceholder rejects bare 'none'. ctx agent includes the latest handover by default (--no-handover opts out). ctx journal source remains unchanged when no selective-reading flags are passed. ctx loop --regime standard remains byte-identical to existing output.
+
+---
+
 ## [2026-09-05-195906] Pi extension deploys as a flat single file (.pi/extensions/ctx.ts) with no package.json
 
 **Status**: Accepted

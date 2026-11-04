@@ -11,6 +11,15 @@ const (
 	// DescKeyHandoverSummary is the description key for the
 	// handover --summary flag.
 	DescKeyHandoverSummary = "handover.summary"
+	// DescKeyHandoverFacts is the description key for the
+	// handover --facts flag.
+	DescKeyHandoverFacts = "handover.facts"
+	// DescKeyHandoverVerified is the description key for the
+	// handover --verified flag.
+	DescKeyHandoverVerified = "handover.verified"
+	// DescKeyHandoverDeadEnds is the description key for the
+	// handover --dead-ends flag.
+	DescKeyHandoverDeadEnds = "handover.dead-ends"
 	// DescKeyHandoverNext is the description key for the
 	// handover --next flag.
 	DescKeyHandoverNext = "handover.next"

@@ -1,6 +1,6 @@
 ---
 name: ctx-handover
-description: Per-session handover artifact writer. Wraps `ctx handover write` with `--summary` and `--next` (both required, both validated non-placeholder by the CLI). Always invoked as the final step of `/ctx-wrap-up`; not the user-facing trigger. When `.context/kb/` exists, also folds postdated closeouts into the handover and archives them.
+description: Per-session handover artifact writer. Wraps `ctx handover write` with the five required SSSM execution-brief fields (`--summary`, `--facts`, `--verified`, `--dead-ends`, `--next`; all validated non-placeholder by the CLI). Always invoked as the final step of `/ctx-wrap-up` or mid-session EoCC checkpoints; not the user-facing trigger. When `.context/kb/` exists, also folds postdated closeouts into the handover and archives them.
 ---
 
 # Write a Handover
@@ -77,16 +77,23 @@ step. Do not advertise this skill as a direct user trigger.
 
 ## Input Contract
 
-The skill wraps `ctx handover write`, which enforces required
-flags via `MarkFlagRequired` and rejects placeholder bodies via
-the Phase SK validation pattern. Empty `TBD`, `see chat`,
-whitespace-only values are rejected by the CLI, not just by the
-skill text.
+The skill wraps `ctx handover write`, which enforces the five
+forward-looking execution-brief flags via `MarkFlagRequired`
+and rejects placeholder bodies (`TBD`, `none`, `n/a`, `pending`,
+`see chat`, whitespace-only values) via the Phase SK validation
+pattern. When a session has no failed approaches or no file
+modifications, supply a concrete descriptive sentence (such as
+`"no failed approaches in this stretch"` or
+`"read-only investigation; no files modified"`) rather than a
+bare placeholder token.
 
 | Flag | Type | Default | Description |
 |------|------|---------|-------------|
-| `--summary` | string | (required) | Past tense; what happened this session. |
-| `--next` | string | (required) | Future tense; what the next agent should do FIRST. Specific, not vague. |
+| `--summary` | string | (required) | Past tense; objective summary of what happened this stretch, retaining the core goal. |
+| `--facts` | string | (required) | Established facts (exact paths, symbols, commands, observed values) separated from assumptions. |
+| `--verified` | string | (required) | Applied file changes and exact verification checks run with outcomes. |
+| `--dead-ends` | string | (required) | Failed approaches and rejected paths that must not be repeated. |
+| `--next` | string | (required) | Future tense; immediate next action/command, ordered subgoals, and completion condition. |
 | `--highlights` | string | "" | Notable artifacts produced this session. |
 | `--open-questions` | string | "" | Things that remain undecided. |
 | `--no-fold` | bool | false | Skip closeout consumption (mid-session checkpoint). |
@@ -127,16 +134,28 @@ conditional on the directory's existence (see §Process).
    - Open questions surfaced but not resolved.
    - The specific first action the next session should take.
 
-3. **Draft `--summary` and `--next`.** Both are required, both
-   are validated non-placeholder by the CLI:
+3. **Draft the five execution-brief fields (`--summary`,
+   `--facts`, `--verified`, `--dead-ends`, `--next`).** All
+   five are required and validated non-placeholder by the CLI:
 
-   - **`--summary`**: past tense. One paragraph. Names what
-     was done, not what was attempted. Concrete: *"drafted six
-     Phase KB skill files; reconciled rev2 spec changes;
-     deferred CLI wiring to next session"*, not *"made
-     progress on KB stuff"*.
-   - **`--next`**: future tense. One paragraph. Names the
-     specific first action the next agent should take.
+   - **`--summary`**: past tense. One paragraph naming what was
+     accomplished in this stretch while retaining the core goal.
+     Concrete: *"drafted six Phase KB skill files; reconciled
+     rev2 spec changes; deferred CLI wiring to next session"*,
+     not *"made progress on KB stuff"*.
+   - **`--facts`**: established observations (exact file paths,
+     symbols, commands, observed values, error messages)
+     explicitly separated from unverified hypotheses.
+   - **`--verified`**: applied changes (each created or modified
+     file and what changed) plus the exact verification checks
+     run and their outcomes (or `"read-only session; no files
+     modified"` when no edits occurred).
+   - **`--dead-ends`**: failed approaches and obstacles that the
+     next stretch must not repeat (or `"no failed approaches in
+     this stretch"` when none occurred — never bare `"none"`).
+   - **`--next`**: future tense. Names the specific first
+     command or edit the next agent should execute, the
+     remaining subgoals in order, and the completion condition.
      Concrete: *"start `internal/cli/handover/cmd/write/cmd.go`
      using Phase SK validation pattern"*, not *"continue
      work" or "look at the kb"*.
@@ -150,6 +169,9 @@ conditional on the directory's existence (see §Process).
    ```bash
    ctx handover write "<title>" \
      --summary "<one-paragraph past tense>" \
+     --facts "<verified facts vs assumptions>" \
+     --verified "<applied changes and verification outcomes>" \
+     --dead-ends "<failed approaches not to repeat>" \
      --next "<one-paragraph future tense>" \
      [--highlights "<bullet list>"] \
      [--open-questions "<bullet list>"] \

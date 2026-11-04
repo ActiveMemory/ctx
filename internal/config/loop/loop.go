@@ -18,6 +18,17 @@ const (
 	ToolAider = "aider"
 	// ToolGeneric is the generic tool identifier for loop scripts.
 	ToolGeneric = "generic"
+
+	// RegimeStandard is the default loop context regime (stateless prompt).
+	RegimeStandard = "standard"
+	// RegimeEoCC is the End-of-Conversation Compaction loop regime.
+	RegimeEoCC = "eocc"
+	// RegimeSAC is the Single-Action Compaction (SSSM cycle) loop regime.
+	RegimeSAC = "sac"
+	// DefaultRegime is the default loop context regime.
+	DefaultRegime = RegimeStandard
+	// DefaultSACMaxTurns is the default per-iteration turn cap for SAC on Claude.
+	DefaultSACMaxTurns = 2
 )
 
 // ValidTools is the set of supported tool identifiers for loop scripts.
@@ -25,4 +36,11 @@ var ValidTools = map[string]bool{
 	DefaultTool: true,
 	ToolAider:   true,
 	ToolGeneric: true,
+}
+
+// ValidRegimes is the set of supported context regimes for loop scripts.
+var ValidRegimes = map[string]bool{
+	RegimeStandard: true,
+	RegimeEoCC:     true,
+	RegimeSAC:      true,
 }

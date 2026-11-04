@@ -35,6 +35,12 @@ const (
 	DefaultKeyRotationDays = runtime.DefaultKeyRotationDays
 	// DefaultStaleAgeDays is the default stale entry age.
 	DefaultStaleAgeDays = runtime.DefaultStaleAgeDays
+	// DefaultEoCCThresholdTokens is the default EoCC compaction token
+	// threshold (0 = disabled).
+	DefaultEoCCThresholdTokens = runtime.DefaultEoCCThresholdTokens
+	// DefaultMinEoCCThresholdTokens is the minimum positive EoCC
+	// compaction token threshold.
+	DefaultMinEoCCThresholdTokens = runtime.DefaultMinEoCCThresholdTokens
 )
 
 // Hooks & Steering defaults.

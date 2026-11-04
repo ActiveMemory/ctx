@@ -41,4 +41,13 @@ const (
 	// DescKeyErrSiteNoSiteConfig is the text key for err site no site config
 	// messages.
 	DescKeyErrSiteNoSiteConfig = "err.site.no-site-config"
+	// DescKeyErrSessionInvalidTurnRange is the text key for invalid --turns
+	// range errors.
+	DescKeyErrSessionInvalidTurnRange = "err.session.invalid-turn-range"
+	// DescKeyErrSessionInvalidGrepPattern is the text key for invalid --grep
+	// regex errors.
+	DescKeyErrSessionInvalidGrepPattern = "err.session.invalid-grep-pattern"
+	// DescKeyErrSessionNegativeMaxChars is the text key for negative
+	// --max-chars errors.
+	DescKeyErrSessionNegativeMaxChars = "err.session.negative-max-chars"
 )

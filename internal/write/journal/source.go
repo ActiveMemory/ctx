@@ -620,3 +620,132 @@ func SyncSummary(cmd *cobra.Command, locked, unlocked int) {
 			unlocked))
 	}
 }
+
+// TurnRangeBanner prints the selective-reading turn range banner and
+// optional next-window continuation command.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - sessionID: short session identifier.
+//   - start: 1-based start turn shown.
+//   - end: 1-based end turn shown.
+//   - total: total turns in the session.
+//   - chars: characters emitted in this slice.
+//   - nextStart: 1-based next window start (0 when at end of session).
+//   - nextEnd: 1-based next window end.
+func TurnRangeBanner(
+	cmd *cobra.Command,
+	sessionID string,
+	start, end, total, chars, nextStart, nextEnd int,
+) {
+	if cmd == nil {
+		return
+	}
+	if nextStart > 0 && nextStart <= total {
+		cmd.Println(fmt.Sprintf(
+			desc.Text(text.DescKeyWriteJournalSourceTurnRangeHeader),
+			sessionID, start, end, total, chars,
+			sessionID, nextStart, nextEnd,
+		))
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSourceTurnRangeEnd),
+		sessionID, start, end, total, chars,
+	))
+}
+
+// TurnRangePastEnd prints a notice when the requested start turn exceeds
+// the session's total turn count.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - sessionID: short session identifier.
+//   - total: total turns in the session.
+//   - start: requested 1-based start turn.
+func TurnRangePastEnd(
+	cmd *cobra.Command, sessionID string, total, start int,
+) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSourceTurnRangePastEnd),
+		sessionID, total, start,
+	))
+}
+
+// GrepMatchesHeader prints the header line for session --grep results.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - sessionID: short session identifier.
+//   - matched: number of matching turns.
+//   - total: total turns searched.
+func GrepMatchesHeader(
+	cmd *cobra.Command, sessionID string, matched, total int,
+) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSourceGrepHeader),
+		sessionID, matched, total,
+	))
+}
+
+// GrepMatchItem prints a single turn match from --grep.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - turn: 1-based turn number.
+//   - role: display role label.
+//   - timestamp: formatted timestamp.
+//   - snippet: matched text snippet.
+func GrepMatchItem(
+	cmd *cobra.Command, turn int, role, timestamp, snippet string,
+) {
+	ListItem(
+		cmd,
+		desc.Text(text.DescKeyWriteJournalSourceGrepLine),
+		turn, role, timestamp, snippet,
+	)
+}
+
+// GrepMatchesHint prints the follow-up --turns command hint after grep matches.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - sessionID: short session identifier.
+//   - start: suggested 1-based start turn.
+//   - end: suggested 1-based end turn.
+func GrepMatchesHint(
+	cmd *cobra.Command, sessionID string, start, end int,
+) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSourceGrepHint),
+		sessionID, start, end,
+	))
+}
+
+// GrepMatchesEmpty prints a notice when --grep matches zero turns.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - pattern: regex pattern searched.
+//   - sessionID: short session identifier.
+//   - searched: number of turns searched.
+func GrepMatchesEmpty(
+	cmd *cobra.Command, pattern, sessionID string, searched int,
+) {
+	if cmd == nil {
+		return
+	}
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteJournalSourceGrepEmpty),
+		pattern, sessionID, searched,
+	))
+}

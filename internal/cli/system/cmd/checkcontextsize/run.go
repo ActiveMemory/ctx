@@ -142,6 +142,33 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	guardFile := filepath.Join(
 		tmpDir, stats.ContextCheckpointNudgedPrefix+sessionID,
 	)
+
+	// EoCC threshold: one-shot compaction nudge in short-context regime.
+	// Takes precedence over the generic 60% checkpoint nudge.
+	eoccThreshold := rc.EoCCThresholdTokens()
+	if eoccThreshold > 0 && tokens >= eoccThreshold {
+		box, eoccErr := nudge.EmitEoCCWarning(
+			logFile, sessionID,
+			count, tokens, eoccThreshold,
+		)
+		if eoccErr != nil {
+			return eoccErr
+		}
+		if box != "" {
+			io.TouchFile(guardFile)
+			writeSetup.NudgeBlock(cmd, box)
+			return coreSession.WriteStats(sessionID, entity.Stats{
+				Timestamp:  time.Now().Format(time.RFC3339),
+				Prompt:     count,
+				Tokens:     tokens,
+				Pct:        pct,
+				WindowSize: windowSize,
+				Model:      info.Model,
+				Event:      event.EoCC,
+			})
+		}
+	}
+
 	_, guardErr := os.Stat(guardFile)
 	checkpointFired := guardErr == nil
 	trigger := nudge.EvaluateTrigger(pct, checkpointFired)

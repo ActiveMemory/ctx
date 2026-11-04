@@ -131,6 +131,7 @@ ctx agent [flags]
 | `--cooldown` | 10m     | Suppress repeated output within this duration (requires `--session`) |
 | `--session`  | (none)  | Session ID for cooldown isolation (e.g., `$PPID`)                    |
 | `--include-hub` | false | Include hub entries from `.context/hub/`             |
+| `--no-handover` | false | Exclude the latest session handover from the context packet |
 
 **How budget works**:
 
@@ -138,7 +139,8 @@ The budget controls how much context is included. Entries are selected
 in priority tiers:
 
 1. **Constitution**: always included in full (*inviolable rules*)
-2. **Tasks**: all active tasks, up to 40% of budget
+2. **Latest Handover (Tier 1.5)**: newest execution brief from `.context/handovers/`, up to 15% of budget (unless `--no-handover` is set)
+3. **Tasks**: all active tasks, up to 40% of budget
 3. **Conventions**: all conventions, up to 20% of budget
 4. **Decisions**: scored by recency and relevance to active tasks
 5. **Learnings**: scored by recency and relevance to active tasks

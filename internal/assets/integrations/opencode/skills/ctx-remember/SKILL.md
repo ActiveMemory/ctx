@@ -45,6 +45,10 @@ feel like a file search rather than genuine recall:
    ```bash
    ctx journal source --limit 3
    ```
+   When deeper inspection of a recent session is needed,
+   use selective reading (`ctx journal source --show <id>
+   --grep "<pattern>"` or `--turns 1:15`) instead of
+   `--full`.
 4. **Read the latest handover.** Look under
    `.context/handovers/`, sort by filename (timestamped
    `<TS>-<slug>.md`; the newest is the lexicographically

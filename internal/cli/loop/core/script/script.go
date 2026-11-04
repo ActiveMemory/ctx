@@ -7,7 +7,6 @@
 package script
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
@@ -20,45 +19,49 @@ import (
 //
 // The generated script runs the specified AI tool repeatedly
 // with the same prompt file until a completion signal is
-// detected in the output.
+// detected in the output. When opts.Regime is "eocc" or "sac",
+// each iteration injects the assembled ctx agent state packet
+// and execution-brief handover contract.
 //
 // Parameters:
-//   - promptFile: Path to the prompt file (absolute path)
-//   - tool: AI tool - "claude", "aider", or "generic"
-//   - maxIterations: Max iterations (0 for unlimited)
-//   - completionMsg: Signal string for completion
+//   - opts: Loop script generation options
 //
 // Returns:
 //   - string: Complete bash script content
 //   - error: non-nil if the prompt path or template rendering fails
-func Generate(
-	promptFile, tool string,
-	maxIterations int,
-	completionMsg string,
-) (string, error) {
-	// Get the absolute path for the prompt file
-	absPrompt, absErr := filepath.Abs(promptFile)
+func Generate(opts Opts) (string, error) {
+	absPrompt, absErr := filepath.Abs(opts.PromptFile)
 	if absErr != nil {
 		return "", absErr
 	}
 
-	var aiCommand string
-	switch tool {
-	case cfgLoop.DefaultTool:
-		aiCommand = fmt.Sprintf(tpl.LoopCmdClaude, absPrompt)
-	case cfgLoop.ToolAider:
-		aiCommand = fmt.Sprintf(tpl.LoopCmdAider, absPrompt)
-	case cfgLoop.ToolGeneric:
-		aiCommand = fmt.Sprintf(
-			tpl.LoopCmdGeneric, absPrompt,
-		)
+	regime := opts.Regime
+	if regime == "" {
+		regime = cfgLoop.DefaultRegime
 	}
+	isEoCC := regime == cfgLoop.RegimeEoCC
+	isSAC := regime == cfgLoop.RegimeSAC
+
+	maxTurns := opts.MaxTurns
+	if isSAC && maxTurns == 0 && opts.Tool == cfgLoop.DefaultTool {
+		maxTurns = cfgLoop.DefaultSACMaxTurns
+	}
+
+	supportsMaxTurns := opts.Tool == cfgLoop.DefaultTool
+	aiCommand := buildAICommand(
+		opts.Tool, absPrompt, isEoCC || isSAC, maxTurns,
+	)
 
 	return tpl.Render(tpl.LoopScript, tpl.LoopData{
 		PromptFile:       absPrompt,
-		CompletionSignal: completionMsg,
-		MaxIter:          maxIterations,
+		CompletionSignal: opts.CompletionMsg,
+		MaxIter:          opts.MaxIterations,
 		AICommand:        aiCommand,
 		LoopComplete:     desc.Text(text.DescKeyLabelLoopComplete),
+		Regime:           regime,
+		IsEoCC:           isEoCC,
+		IsSAC:            isSAC,
+		MaxTurns:         maxTurns,
+		SupportsMaxTurns: supportsMaxTurns,
 	})
 }

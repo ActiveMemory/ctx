@@ -80,7 +80,7 @@ export default (async (ctx) => {
       }
     },
     "experimental.session.compacting": async (_input, output) => {
-      const result = await $`ctx system bootstrap`.nothrow().quiet()
+      const result = await $`ctx agent --budget 4000`.nothrow().quiet()
       if (result.exitCode === 0) {
         const text = result.stdout.toString().trim()
         if (text.length > 0) {

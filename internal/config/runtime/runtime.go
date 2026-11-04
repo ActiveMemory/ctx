@@ -42,4 +42,10 @@ const (
 	DefaultStaleAgeDays = 30
 	// DefaultPruneDays is the default age in days for state file pruning.
 	DefaultPruneDays = 7
+	// DefaultEoCCThresholdTokens is the default EoCC compaction token
+	// threshold (0 = disabled).
+	DefaultEoCCThresholdTokens = 0
+	// DefaultMinEoCCThresholdTokens is the minimum allowed positive
+	// EoCC compaction token threshold.
+	DefaultMinEoCCThresholdTokens = 4000
 )

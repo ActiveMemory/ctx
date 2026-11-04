@@ -163,6 +163,12 @@ const (
 const (
 	// Summary is the --summary flag for `ctx handover write`.
 	Summary = "summary"
+	// Facts is the --facts flag for `ctx handover write`.
+	Facts = "facts"
+	// Verified is the --verified flag for `ctx handover write`.
+	Verified = "verified"
+	// DeadEnds is the --dead-ends flag for `ctx handover write`.
+	DeadEnds = "dead-ends"
 	// Next is the --next flag for `ctx handover write`.
 	Next = "next"
 	// Highlights is the --highlights flag for
@@ -173,4 +179,18 @@ const (
 	OpenQuestions = "open-questions"
 	// NoFold is the --no-fold flag for `ctx handover write`.
 	NoFold = "no-fold"
+	// NoHandover is the --no-handover flag for `ctx agent`.
+	NoHandover = "no-handover"
+	// Turns is the --turns flag for `ctx journal source`.
+	Turns = "turns"
+	// Grep is the --grep flag for `ctx journal source`.
+	Grep = "grep"
+	// MaxChars is the --max-chars flag for `ctx journal source`.
+	MaxChars = "max-chars"
+	// Regime is the --regime flag for `ctx loop`.
+	Regime = "regime"
+	// ShortRegime is the -r shorthand for --regime on `ctx loop`.
+	ShortRegime = "r"
+	// MaxTurns is the --max-turns flag for `ctx loop`.
+	MaxTurns = "max-turns"
 )

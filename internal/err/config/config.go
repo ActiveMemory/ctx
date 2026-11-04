@@ -138,3 +138,26 @@ func MarshalPlugins(cause error) error {
 		desc.Text(text.DescKeyErrConfigMarshalPlugins), cause,
 	)
 }
+
+// InvalidRegime returns an error for an unrecognized loop context regime.
+//
+// Parameters:
+//   - regime: the regime value that was not recognized
+//
+// Returns:
+//   - error: "invalid loop regime <regime>: must be one of standard, eocc, sac"
+func InvalidRegime(regime string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrConfigInvalidRegime), regime,
+	)
+}
+
+// NegativeMaxTurns returns an error when --max-turns is negative.
+//
+// Returns:
+//   - error: "--max-turns must be non-negative"
+func NegativeMaxTurns() error {
+	return errors.New(
+		desc.Text(text.DescKeyErrConfigNegativeMaxTurns),
+	)
+}

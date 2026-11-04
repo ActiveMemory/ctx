@@ -10,6 +10,9 @@ import "time"
 
 // Budget allocation.
 const (
+	// HandoverBudgetPct is the maximum fraction of the token budget
+	// allocated to the latest session handover (Tier 1.5).
+	HandoverBudgetPct = 0.15
 	// TaskBudgetPct is the fraction of the token budget allocated to tasks.
 	TaskBudgetPct = 0.40
 	// ConventionBudgetPct is the fraction of the token budget

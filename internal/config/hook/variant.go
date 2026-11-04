@@ -31,6 +31,8 @@ const (
 	VariantAlert = "alert"
 	// VariantBilling selects the billing threshold variant.
 	VariantBilling = "billing"
+	// VariantEoCC selects the EoCC compaction threshold variant.
+	VariantEoCC = "eocc"
 	// VariantCheckpoint selects the checkpoint variant.
 	VariantCheckpoint = "checkpoint"
 	// VariantGate selects the gate variant.

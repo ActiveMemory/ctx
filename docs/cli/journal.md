@@ -62,13 +62,27 @@ ctx journal source --show [session-id] [flags]
 
 **Flags**:
 
-| Flag             | Description                        |
-|------------------|------------------------------------|
-| `--latest`       | Show the most recent session       |
-| `--full`         | Show full message content          |
-| `--all-projects` | Search across all projects         |
+| Flag             | Description                                                 |
+|------------------|-------------------------------------------------------------|
+| `--latest`       | Show the most recent session                                |
+| `--turns`        | Read a specific 1-based inclusive turn slice (`start:end`)  |
+| `--grep`         | Search session turns matching a regex pattern               |
+| `--max-chars`    | Maximum output characters for selective reading (default 6000; 0 = unlimited) |
+| `--full`         | Show full message content                                   |
+| `--all-projects` | Search across all projects                                  |
 
 The session ID can be a full UUID, partial match, or session slug name.
+
+When `--turns` is passed, output begins and ends with a continuation header:
+
+```text
+[session abc12345 turns 1:8 of 42] next: ctx journal source --show abc12345 --turns 9:23
+```
+
+If `--max-chars` (default `6000` in `--turns` mode) is reached before `<end>`,
+rendering stops on a turn boundary and the `next:` pointer starts at the first
+unrendered turn. When `--grep` and `--turns` are combined, only turns within
+the slice are searched.
 
 **Example**:
 
@@ -76,6 +90,9 @@ The session ID can be a full UUID, partial match, or session slug name.
 ctx journal source --show abc123
 ctx journal source --show gleaming-wobbling-sutherland
 ctx journal source --show --latest
+ctx journal source --show abc123 --grep "EoCC|handover"
+ctx journal source --show abc123 --turns 1:15
+ctx journal source --show abc123 --turns 16:30 --max-chars 8000
 ctx journal source --show --latest --full
 ```
 

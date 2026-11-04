@@ -28,6 +28,10 @@ import (
 //   - cobraCmd: cobra command for output.
 //   - title: handover title (passed as positional arg).
 //   - summary: past-tense summary; validated non-placeholder.
+//   - facts: established facts; validated non-placeholder.
+//   - verified: applied changes and verification; validated
+//     non-placeholder.
+//   - deadEnds: failed approaches; validated non-placeholder.
 //   - next: next-session first action; validated
 //     non-placeholder.
 //   - highlights: notable artifacts.
@@ -39,11 +43,30 @@ import (
 //   - error: rejection or wrapped writer errors.
 func Run(
 	cobraCmd *cobra.Command,
-	title, summary, next, highlights, openQuestions, commit string,
+	title, summary, facts, verified, deadEnds, next string,
+	highlights, openQuestions, commit string,
 	noFold bool,
 ) error {
 	if rejectErr := validate.RejectPlaceholder(
 		cFlag.Summary, summary,
+	); rejectErr != nil {
+		cobraCmd.SilenceUsage = true
+		return rejectErr
+	}
+	if rejectErr := validate.RejectPlaceholder(
+		cFlag.Facts, facts,
+	); rejectErr != nil {
+		cobraCmd.SilenceUsage = true
+		return rejectErr
+	}
+	if rejectErr := validate.RejectPlaceholder(
+		cFlag.Verified, verified,
+	); rejectErr != nil {
+		cobraCmd.SilenceUsage = true
+		return rejectErr
+	}
+	if rejectErr := validate.RejectPlaceholder(
+		cFlag.DeadEnds, deadEnds,
 	); rejectErr != nil {
 		cobraCmd.SilenceUsage = true
 		return rejectErr
@@ -78,6 +101,9 @@ func Run(
 		handover.Entry{
 			Title:          title,
 			Summary:        summary,
+			Facts:          facts,
+			Verified:       verified,
+			DeadEnds:       deadEnds,
 			Next:           next,
 			Highlights:     highlights,
 			OpenQuestions:  openQuestions,

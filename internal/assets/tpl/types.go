@@ -54,6 +54,16 @@ type LoopData struct {
 	AICommand string
 	// LoopComplete is the completion banner line.
 	LoopComplete string
+	// Regime is the context regime ("standard", "eocc", or "sac").
+	Regime string
+	// IsEoCC is true when Regime is "eocc".
+	IsEoCC bool
+	// IsSAC is true when Regime is "sac".
+	IsSAC bool
+	// MaxTurns is the per-iteration turn cap (0 means tool default).
+	MaxTurns int
+	// SupportsMaxTurns is true when the tool CLI supports --max-turns.
+	SupportsMaxTurns bool
 }
 
 // DecisionData is the render data for [Decision].

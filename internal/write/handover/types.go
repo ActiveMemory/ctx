@@ -20,6 +20,18 @@ type Entry struct {
 	// Summary records what happened this session in past tense.
 	// Required and validated non-placeholder at the CLI layer.
 	Summary string
+	// Facts records established observations separated from
+	// unverified assumptions. Required and validated
+	// non-placeholder at the CLI layer.
+	Facts string
+	// Verified records applied changes and verification checks
+	// run with outcomes. Required and validated non-placeholder
+	// at the CLI layer.
+	Verified string
+	// DeadEnds records failed approaches that must not be
+	// repeated. Required and validated non-placeholder at the
+	// CLI layer.
+	DeadEnds string
 	// Next records what the next agent should do FIRST. Future
 	// tense, specific. Required and validated non-placeholder
 	// at the CLI layer.
