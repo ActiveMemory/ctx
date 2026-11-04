@@ -163,6 +163,12 @@ const (
 const (
 	// Summary is the --summary flag for `ctx handover write`.
 	Summary = "summary"
+	// Facts is the --facts flag for `ctx handover write`.
+	Facts = "facts"
+	// Verified is the --verified flag for `ctx handover write`.
+	Verified = "verified"
+	// DeadEnds is the --dead-ends flag for `ctx handover write`.
+	DeadEnds = "dead-ends"
 	// Next is the --next flag for `ctx handover write`.
 	Next = "next"
 	// Highlights is the --highlights flag for

@@ -45,6 +45,15 @@ func Write(
 	if strings.TrimSpace(entry.Summary) == "" {
 		return Result{}, errHandover.ErrSummaryRequired
 	}
+	if strings.TrimSpace(entry.Facts) == "" {
+		return Result{}, errHandover.ErrFactsRequired
+	}
+	if strings.TrimSpace(entry.Verified) == "" {
+		return Result{}, errHandover.ErrVerifiedRequired
+	}
+	if strings.TrimSpace(entry.DeadEnds) == "" {
+		return Result{}, errHandover.ErrDeadEndsRequired
+	}
 	if strings.TrimSpace(entry.Next) == "" {
 		return Result{}, errHandover.ErrNextRequired
 	}

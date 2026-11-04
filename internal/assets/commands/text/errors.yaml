@@ -724,6 +724,12 @@ err.handover.title-required:
   short: 'handover title is required'
 err.handover.summary-required:
   short: 'handover summary is required'
+err.handover.facts-required:
+  short: 'handover facts field is required'
+err.handover.verified-required:
+  short: 'handover verified field is required'
+err.handover.dead-ends-required:
+  short: 'handover dead-ends field is required'
 err.handover.next-required:
   short: 'handover next-session field is required'
 err.handover.missing-frontmatter:

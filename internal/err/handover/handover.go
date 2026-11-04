@@ -25,6 +25,21 @@ const (
 	ErrSummaryRequired = entity.Sentinel(
 		text.DescKeyErrHandoverSummaryRequired,
 	)
+	// ErrFactsRequired signals an empty Facts supplied to
+	// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
+	ErrFactsRequired = entity.Sentinel(
+		text.DescKeyErrHandoverFactsRequired,
+	)
+	// ErrVerifiedRequired signals an empty Verified supplied to
+	// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
+	ErrVerifiedRequired = entity.Sentinel(
+		text.DescKeyErrHandoverVerifiedRequired,
+	)
+	// ErrDeadEndsRequired signals an empty DeadEnds supplied to
+	// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
+	ErrDeadEndsRequired = entity.Sentinel(
+		text.DescKeyErrHandoverDeadEndsRequired,
+	)
 	// ErrNextRequired signals an empty Next supplied to
 	// [github.com/ActiveMemory/ctx/internal/write/handover.Write].
 	ErrNextRequired = entity.Sentinel(

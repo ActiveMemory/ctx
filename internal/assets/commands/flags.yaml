@@ -317,6 +317,12 @@ watch.log:
   short: 'Log file to watch (default: stdin)'
 handover.summary:
   short: 'What happened this session (past tense). Required.'
+handover.facts:
+  short: 'Established facts separated from assumptions. Required.'
+handover.verified:
+  short: 'Applied file changes and verification checks run. Required.'
+handover.dead-ends:
+  short: 'Failed approaches and obstacles not to repeat. Required.'
 handover.next:
   short: 'What the next agent should do FIRST. Required.'
 handover.highlights:

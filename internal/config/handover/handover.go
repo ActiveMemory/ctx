@@ -18,6 +18,15 @@ const Subdir = "handovers"
 const (
 	// SectionSummary headers the past-tense session summary.
 	SectionSummary = "## Summary"
+	// SectionFacts headers the established facts separated
+	// from unverified assumptions.
+	SectionFacts = "## Established facts"
+	// SectionVerified headers the applied changes and
+	// verification outcomes.
+	SectionVerified = "## Applied changes and verification"
+	// SectionDeadEnds headers the failed approaches that must
+	// not be repeated.
+	SectionDeadEnds = "## Dead ends"
 	// SectionNext headers the future-tense first action for
 	// the next session.
 	SectionNext = "## Next session"

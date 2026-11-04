@@ -64,9 +64,12 @@ func TestWrite_HappyPathWithFold(t *testing.T) {
 	res, err := handover.Write(
 		handoversDir, closeoutsDir, archiveDir, root,
 		handover.Entry{
-			Title:   "First Session",
-			Summary: "did the thing",
-			Next:    "do the other thing",
+			Title:    "First Session",
+			Summary:  "did the thing",
+			Facts:    "established fact A",
+			Verified: "modified foo.go; go test passed",
+			DeadEnds: "no failed approaches in this stretch",
+			Next:     "do the other thing",
 		},
 	)
 	if err != nil {
@@ -81,8 +84,26 @@ func TestWrite_HappyPathWithFold(t *testing.T) {
 	if len(res.FoldedCloseouts) != 1 {
 		t.Errorf("folded count: want 1; got %d", len(res.FoldedCloseouts))
 	}
-	if !strings.Contains(res.File.Body, "## Folded closeouts") {
-		t.Errorf("folded section missing from body")
+	for _, sec := range []string{
+		"## Summary",
+		"## Established facts",
+		"## Applied changes and verification",
+		"## Dead ends",
+		"## Next session",
+		"## Folded closeouts",
+	} {
+		if !strings.Contains(res.File.Body, sec) {
+			t.Errorf("section %q missing from body:\n%s", sec, res.File.Body)
+		}
+	}
+	// Verify canonical section ordering.
+	idxSummary := strings.Index(res.File.Body, "## Summary")
+	idxFacts := strings.Index(res.File.Body, "## Established facts")
+	idxVerified := strings.Index(res.File.Body, "## Applied changes and verification")
+	idxDeadEnds := strings.Index(res.File.Body, "## Dead ends")
+	idxNext := strings.Index(res.File.Body, "## Next session")
+	if !(idxSummary < idxFacts && idxFacts < idxVerified && idxVerified < idxDeadEnds && idxDeadEnds < idxNext) {
+		t.Errorf("sections out of order in body:\n%s", res.File.Body)
 	}
 	// Source closeout should have been archived.
 	if _, statErr := os.Stat(res.FoldedCloseouts[0].Path); !errors.Is(statErr, os.ErrNotExist) {
@@ -107,10 +128,13 @@ func TestWrite_NoFoldKeepsCloseouts(t *testing.T) {
 	res, err := handover.Write(
 		handoversDir, closeoutsDir, archiveDir, root,
 		handover.Entry{
-			Title:   "Mid-session checkpoint",
-			Summary: "checkpoint",
-			Next:    "resume",
-			NoFold:  true,
+			Title:    "Mid-session checkpoint",
+			Summary:  "checkpoint",
+			Facts:    "facts recorded",
+			Verified: "verified checks",
+			DeadEnds: "no dead ends",
+			Next:     "resume",
+			NoFold:   true,
 		},
 	)
 	if err != nil {
@@ -133,9 +157,12 @@ func TestWrite_RejectsEmptyFields(t *testing.T) {
 		filepath.Join(root, "archive"),
 	}
 	cases := []handover.Entry{
-		{Title: "", Summary: "s", Next: "n"},
-		{Title: "t", Summary: "", Next: "n"},
-		{Title: "t", Summary: "s", Next: ""},
+		{Title: "", Summary: "s", Facts: "f", Verified: "v", DeadEnds: "d", Next: "n"},
+		{Title: "t", Summary: "", Facts: "f", Verified: "v", DeadEnds: "d", Next: "n"},
+		{Title: "t", Summary: "s", Facts: "", Verified: "v", DeadEnds: "d", Next: "n"},
+		{Title: "t", Summary: "s", Facts: "f", Verified: "", DeadEnds: "d", Next: "n"},
+		{Title: "t", Summary: "s", Facts: "f", Verified: "v", DeadEnds: "", Next: "n"},
+		{Title: "t", Summary: "s", Facts: "f", Verified: "v", DeadEnds: "d", Next: ""},
 	}
 	for i, e := range cases {
 		_, err := handover.Write(dirs.h, dirs.c, dirs.a, root, e)
@@ -170,10 +197,13 @@ func TestLatest_ReturnsMostRecent(t *testing.T) {
 		_, err := handover.Write(
 			handoversDir, closeoutsDir, archiveDir, root,
 			handover.Entry{
-				Title:   title,
-				Summary: "s",
-				Next:    "n",
-				NoFold:  true,
+				Title:    title,
+				Summary:  "s",
+				Facts:    "f",
+				Verified: "v",
+				DeadEnds: "d",
+				Next:     "n",
+				NoFold:   true,
 			},
 		)
 		if err != nil {

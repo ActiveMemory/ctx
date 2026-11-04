@@ -20,10 +20,14 @@ import (
 //
 // Returns:
 //   - *cobra.Command: configured cobra command with required
-//     --summary and --next flags and placeholder rejection.
+//     --summary, --facts, --verified, --dead-ends, and --next
+//     flags and placeholder rejection.
 func Cmd() *cobra.Command {
 	var (
 		summary       string
+		facts         string
+		verified      string
+		deadEnds      string
 		next          string
 		highlights    string
 		openQuestions string
@@ -38,13 +42,25 @@ func Cmd() *cobra.Command {
 		Long:  long,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			return Run(cobraCmd, args[0], summary, next,
-				highlights, openQuestions, commit, noFold)
+			return Run(cobraCmd, args[0], summary, facts,
+				verified, deadEnds, next, highlights,
+				openQuestions, commit, noFold)
 		},
 	}
 
 	flagbind.StringFlag(
 		c, &summary, cFlag.Summary, flag.DescKeyHandoverSummary,
+	)
+	flagbind.StringFlag(
+		c, &facts, cFlag.Facts, flag.DescKeyHandoverFacts,
+	)
+	flagbind.StringFlag(
+		c, &verified, cFlag.Verified,
+		flag.DescKeyHandoverVerified,
+	)
+	flagbind.StringFlag(
+		c, &deadEnds, cFlag.DeadEnds,
+		flag.DescKeyHandoverDeadEnds,
 	)
 	flagbind.StringFlag(
 		c, &next, cFlag.Next, flag.DescKeyHandoverNext,
@@ -65,8 +81,11 @@ func Cmd() *cobra.Command {
 	)
 
 	// Acceptable discard: MarkFlagRequired only errors on an
-	// unregistered flag name; both flags are bound above.
+	// unregistered flag name; all five flags are bound above.
 	_ = c.MarkFlagRequired(cFlag.Summary)
+	_ = c.MarkFlagRequired(cFlag.Facts)
+	_ = c.MarkFlagRequired(cFlag.Verified)
+	_ = c.MarkFlagRequired(cFlag.DeadEnds)
 	_ = c.MarkFlagRequired(cFlag.Next)
 
 	return c

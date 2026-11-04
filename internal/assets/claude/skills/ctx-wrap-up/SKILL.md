@@ -221,16 +221,28 @@ Phase 3:
 2. **`--summary`** (required, past tense): one paragraph
    naming what was done this session, drawn from the approved
    candidates and the git-log scan. Concrete, not vague.
-3. **`--next`** (required, future tense): one paragraph
+3. **`--facts`** (required): established facts (exact file
+   paths, symbols, commands, observed values) explicitly
+   separated from unverified assumptions.
+4. **`--verified`** (required): applied file changes and exact
+   verification commands run with their outcomes (or a
+   concrete sentence such as `"read-only session; no files
+   modified"` — never bare `"none"`).
+5. **`--dead-ends`** (required): failed approaches and
+   rejected paths that the next session must not repeat (or
+   `"no failed approaches in this session"` — never bare
+   `"none"`).
+6. **`--next`** (required, future tense): one paragraph
    naming the specific first action the next agent should
-   take. Pull from the highest-priority pending task in
-   TASKS.md or the open thread the session was on.
-4. **`--highlights`**: draft a bullet list of notable
+   take, ordered remaining subgoals, and completion criteria.
+   Pull from the highest-priority pending task in TASKS.md or
+   the open thread the session was on.
+7. **`--highlights`**: draft a bullet list of notable
    artifacts produced this session (commits, decisions,
    specs, files created). Always present a draft. Pass an
    empty string only after the user has explicitly said
    there is nothing to highlight.
-5. **`--open-questions`**: draft a bullet list of things
+8. **`--open-questions`**: draft a bullet list of things
    that remain undecided. Pull from any candidate the user
    did not turn into a decision, any deferred ingest pass,
    any `TODO` discovered in the session. Always present a
@@ -241,7 +253,9 @@ Surface the drafted values to the user for one final
 confirmation, then delegate:
 
 ```text
-/ctx-handover "<title>" --summary "<...>" --next "<...>" \
+/ctx-handover "<title>" --summary "<...>" \
+  --facts "<...>" --verified "<...>" --dead-ends "<...>" \
+  --next "<...>" \
   [--highlights "<...>"] [--open-questions "<...>"]
 ```
 
