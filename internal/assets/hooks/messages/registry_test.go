@@ -17,8 +17,8 @@ func TestRegistryCount(t *testing.T) {
 	if registryErr != nil {
 		t.Fatalf("Registry() parse error: %v", registryErr)
 	}
-	if len(entries) != 27 {
-		t.Errorf("Registry() returned %d entries, want 27", len(entries))
+	if len(entries) != 28 {
+		t.Errorf("Registry() returned %d entries, want 28", len(entries))
 	}
 }
 
@@ -88,8 +88,8 @@ func TestHooksReturnsUniqueNames(t *testing.T) {
 
 func TestVariantsKnownHook(t *testing.T) {
 	variants := Variants("check-context-size")
-	if len(variants) != 4 {
-		t.Errorf("Variants(check-context-size) = %d entries, want 4", len(variants))
+	if len(variants) != 5 {
+		t.Errorf("Variants(check-context-size) = %d entries, want 5", len(variants))
 	}
 }
 
