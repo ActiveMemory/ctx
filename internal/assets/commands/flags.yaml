@@ -123,6 +123,12 @@ journal.source.tool:
   short: Filter by tool (e.g., claude-code)
 journal.source.until:
   short: Show sessions on or before this date (YYYY-MM-DD)
+journal.source.turns:
+  short: '1-based inclusive turn range START:END (or single TURN) to display'
+journal.source.grep:
+  short: Case-insensitive regex pattern to search across session messages and tool outputs
+journal.source.max-chars:
+  short: Maximum characters to emit in bounded show mode (0 for unlimited)
 journal.schema.check.dir:
   short: Directory to scan for JSONL files
 journal.schema.check.all-projects:

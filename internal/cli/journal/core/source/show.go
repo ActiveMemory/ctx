@@ -140,6 +140,9 @@ func RunShow(
 	}
 
 	// Messages
+	if opts.Turns != "" || opts.Grep != "" {
+		return runSelectiveShow(cmd, session, opts)
+	}
 	if opts.Full {
 		writeRecall.SectionHeader(
 			cmd, 2,

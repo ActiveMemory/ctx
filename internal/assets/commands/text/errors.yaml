@@ -512,6 +512,12 @@ err.session.session-not-found:
   short: 'session not found: %s'
 err.session.event-invalid-type:
   short: "--type must be '%s' or '%s', got %q"
+err.session.invalid-turn-range:
+  short: 'invalid --turns range %q: expected START:END with 1 <= START <= END'
+err.session.invalid-grep-pattern:
+  short: 'invalid --grep regular expression %q: %w'
+err.session.negative-max-chars:
+  short: '--max-chars must be non-negative'
 err.site.marshal-feed:
   short: 'cannot marshal feed: %w'
 err.site.no-site-config:

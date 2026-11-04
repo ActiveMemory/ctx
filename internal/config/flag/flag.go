@@ -181,4 +181,10 @@ const (
 	NoFold = "no-fold"
 	// NoHandover is the --no-handover flag for `ctx agent`.
 	NoHandover = "no-handover"
+	// Turns is the --turns flag for `ctx journal source`.
+	Turns = "turns"
+	// Grep is the --grep flag for `ctx journal source`.
+	Grep = "grep"
+	// MaxChars is the --max-chars flag for `ctx journal source`.
+	MaxChars = "max-chars"
 )

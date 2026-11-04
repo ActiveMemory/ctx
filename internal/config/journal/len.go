@@ -26,4 +26,10 @@ const (
 	// SessionIDHintLen is the prefix length for session IDs in
 	// disambiguation hints (longer than short for uniqueness).
 	SessionIDHintLen = 12
+	// DefaultSelectiveMaxChars is the default character budget for
+	// selective turn reading (--turns / --grep) in journal source.
+	DefaultSelectiveMaxChars = 6000
+	// GrepSnippetMaxChars is the maximum character length of a match
+	// snippet in journal source --grep output.
+	GrepSnippetMaxChars = 200
 )

@@ -997,6 +997,22 @@ write.journal-source-detail-int:
   short: '%s %d'
 write.journal-source-section-heading:
   short: '%s %s'
+write.journal-source-turn-range-header:
+  short: '[session %s turns %d:%d of %d | %d chars] next: ctx journal source --show %s --turns %d:%d'
+write.journal-source-turn-range-end:
+  short: '[session %s turns %d:%d of %d | %d chars] (end of session)'
+write.journal-source-turn-range-past-end:
+  short: 'session %s has %d turns; requested start %d is past the end'
+write.journal-source-truncated-chars:
+  short: "\n... [truncated at %d chars]"
+write.journal-source-grep-header:
+  short: 'Matches in session %s (%d of %d turns):'
+write.journal-source-grep-line:
+  short: 'Turn %d (%s, %s): %s'
+write.journal-source-grep-hint:
+  short: 'Hint: read surrounding turns with: ctx journal source --show %s --turns %d:%d'
+write.journal-source-grep-empty:
+  short: 'No turns matched pattern %q in session %s (%d turns searched).'
 write.unpublish-not-found:
   short: No published block found in %s.
 write.wikilink-list-item:
