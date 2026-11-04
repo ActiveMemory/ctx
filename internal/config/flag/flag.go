@@ -179,4 +179,6 @@ const (
 	OpenQuestions = "open-questions"
 	// NoFold is the --no-fold flag for `ctx handover write`.
 	NoFold = "no-fold"
+	// NoHandover is the --no-handover flag for `ctx agent`.
+	NoHandover = "no-handover"
 )

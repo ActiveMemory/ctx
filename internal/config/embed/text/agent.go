@@ -20,6 +20,12 @@ const (
 	// DescKeyAgentSectionConstitution is the text key for agent section
 	// constitution messages.
 	DescKeyAgentSectionConstitution = "agent.section-constitution"
+	// DescKeyAgentSectionHandover is the text key for agent section
+	// handover messages.
+	DescKeyAgentSectionHandover = "agent.section-handover"
+	// DescKeyAgentHandoverTruncated is the text key for the truncation
+	// notice appended when a handover exceeds its budget cap.
+	DescKeyAgentHandoverTruncated = "agent.handover-truncated"
 	// DescKeyAgentSectionTasks is the text key for agent section tasks messages.
 	DescKeyAgentSectionTasks = "agent.section-tasks"
 	// DescKeyAgentSectionConventions is the text key for agent section

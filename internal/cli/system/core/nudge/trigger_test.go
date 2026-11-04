@@ -7,9 +7,15 @@
 package nudge
 
 import (
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/event"
+	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/testutil/testctx"
 )
 
 func TestEvaluateTrigger(t *testing.T) {
@@ -103,3 +109,51 @@ func TestEvaluateTrigger(t *testing.T) {
 		})
 	}
 }
+
+func TestEmitEoCCWarning_OneShotAndPrecedence(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		rc.Reset()
+	})
+
+	ctxDir := filepath.Join(tmpDir, ".context")
+	for _, sub := range []string{"state", "logs"} {
+		if err := os.MkdirAll(filepath.Join(ctxDir, sub), 0o750); err != nil {
+			t.Fatal(err)
+		}
+	}
+	state.SetDirForTest(filepath.Join(ctxDir, "state"))
+	t.Cleanup(func() { state.SetDirForTest("") })
+	testctx.Declare(t, tmpDir)
+	rc.Reset()
+
+	logFile := filepath.Join(ctxDir, "logs", "check-context-size.log")
+	box, emitErr := EmitEoCCWarning(logFile, "sess-eocc", 5, 32000, 30000)
+	if emitErr != nil {
+		t.Fatalf("EmitEoCCWarning() first call error = %v", emitErr)
+	}
+	if !strings.Contains(box, "EoCC Compaction Threshold") {
+		t.Errorf("expected EoCC box title in %q", box)
+	}
+	if !strings.Contains(box, "ctx handover write") {
+		t.Errorf("expected handover instruction in %q", box)
+	}
+
+	// Second call in the same session should be suppressed by the one-shot guard.
+	secondBox, secondErr := EmitEoCCWarning(logFile, "sess-eocc", 6, 35000, 30000)
+	if secondErr != nil {
+		t.Fatalf("EmitEoCCWarning() second call error = %v", secondErr)
+	}
+	if secondBox != "" {
+		t.Errorf("expected empty box on second call, got %q", secondBox)
+	}
+}
+

@@ -7,6 +7,8 @@
 package root
 
 import (
+	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -18,8 +20,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
 	"github.com/ActiveMemory/ctx/internal/config/fmt"
+	cfgHandover "github.com/ActiveMemory/ctx/internal/config/handover"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write/handover"
 )
 
 // Cmd returns the "ctx agent" command for generating AI-ready context packets.
@@ -45,6 +49,7 @@ func Cmd() *cobra.Command {
 		session      string
 		skillName    string
 		includeShare bool
+		noHandover   bool
 	)
 
 	short, long := desc.Command(cmd.DescKeyAgent)
@@ -88,9 +93,19 @@ func Cmd() *cobra.Command {
 				}
 			}
 
+			var handoverBody string
+			if !noHandover {
+				latest, ok, hErr := handover.LatestFile(
+					filepath.Join(ctxDir, cfgHandover.Subdir),
+				)
+				if hErr == nil && ok {
+					handoverBody = strings.TrimSpace(latest.Body)
+				}
+			}
+
 			return Run(
 				cmd, budget, format, cooldown, session,
-				steeringBodies, skillBody, sharedBodies,
+				steeringBodies, skillBody, sharedBodies, handoverBody,
 			)
 		},
 	}
@@ -122,6 +137,11 @@ func Cmd() *cobra.Command {
 		c, &includeShare,
 		cFlag.IncludeHub,
 		flag.DescKeyAgentIncludeHub,
+	)
+	flagbind.BoolFlag(
+		c, &noHandover,
+		cFlag.NoHandover,
+		flag.DescKeyAgentNoHandover,
 	)
 
 	return c

@@ -434,3 +434,35 @@ func TestAssemblePacket_SkillOmittedWhenBudgetExhausted(t *testing.T) {
 		t.Error("expected skill to be omitted when budget exhausted")
 	}
 }
+
+func TestAssemblePacket_WithHandoverAndCap(t *testing.T) {
+	ctx := &entity.Context{}
+	brief := "### Summary\n\nImplemented EoCC.\n\n### Next session\n\nShip SAC."
+
+	pkt := AssemblePacket(ctx, 8000, nil, "", nil, brief)
+	if pkt.Handover != brief {
+		t.Errorf("Handover = %q, want %q", pkt.Handover, brief)
+	}
+	md := RenderMarkdownPacket(pkt)
+	if !strings.Contains(md, "## Latest Handover") {
+		t.Errorf("expected ## Latest Handover in %q", md)
+	}
+	if !strings.Contains(md, "Implemented EoCC.") {
+		t.Errorf("expected handover body in %q", md)
+	}
+
+	// Huge handover should be truncated on line boundaries to fit the 15% cap.
+	var lines []string
+	for range 120 {
+		lines = append(lines, "- Fact line with several words to consume tokens")
+	}
+	hugeBrief := strings.Join(lines, "\n")
+	cappedPkt := AssemblePacket(ctx, 400, nil, "", nil, hugeBrief)
+	if cappedPkt.Handover == "" {
+		t.Fatal("expected truncated handover, got empty")
+	}
+	if !strings.Contains(cappedPkt.Handover, "truncated to fit handover budget") {
+		t.Errorf("expected truncation suffix in %q", cappedPkt.Handover)
+	}
+}
+

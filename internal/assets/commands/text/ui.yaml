@@ -26,6 +26,10 @@ agent.packet-title:
   short: '# Context Packet'
 agent.section-constitution:
   short: '## Constitution (NEVER VIOLATE)'
+agent.section-handover:
+  short: '## Latest Handover'
+agent.handover-truncated:
+  short: '… (truncated to fit handover budget; read .context/handovers/ for full brief)'
 agent.section-conventions:
   short: '## Key Conventions'
 agent.section-decisions:

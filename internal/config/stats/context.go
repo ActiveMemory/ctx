@@ -30,6 +30,9 @@ const (
 	// ContextSizeBillingWarnedPrefix is the state file prefix
 	// for the one-shot billing warning guard.
 	ContextSizeBillingWarnedPrefix = "billing-warned-"
+	// ContextSizeEoCCNudgedPrefix is the state file prefix
+	// for the one-shot EoCC compaction nudge guard.
+	ContextSizeEoCCNudgedPrefix = "eocc-nudged-"
 	// ContextSizeInjectionOversizeFlag is the state file name
 	// for the injection-oversize one-shot flag.
 	ContextSizeInjectionOversizeFlag = "injection-oversize"

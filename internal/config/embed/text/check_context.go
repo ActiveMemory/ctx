@@ -80,4 +80,25 @@ const (
 	// DescKeyCheckContextSizeWindowRelayFormat is the text key for check context
 	// size window relay format messages.
 	DescKeyCheckContextSizeWindowRelayFormat = "check-context-size.window-relay-format"
+	// DescKeyCheckContextSizeEoCCBoxTitle is the text key for check context
+	// size EoCC box title messages.
+	DescKeyCheckContextSizeEoCCBoxTitle = "check-context-size.eocc-box-title"
+	// DescKeyCheckContextSizeEoCCFallback is the text key for check context
+	// size EoCC fallback messages.
+	DescKeyCheckContextSizeEoCCFallback = "check-context-size.eocc-fallback"
+	// DescKeyCheckContextSizeEoCCLogFormat is the text key for check context
+	// size EoCC log format messages.
+	DescKeyCheckContextSizeEoCCLogFormat = "check-context-size.eocc-log-format"
+	// DescKeyCheckContextSizeEoCCRelayFormat is the text key for check
+	// context size EoCC relay format messages.
+	DescKeyCheckContextSizeEoCCRelayFormat =
+		"check-context-size.eocc-relay-format"
+	// DescKeyCheckContextSizeEoCCRelayPrefix is the text key for check
+	// context size EoCC relay prefix messages.
+	DescKeyCheckContextSizeEoCCRelayPrefix =
+		"check-context-size.eocc-relay-prefix"
+	// DescKeyCheckContextSizeSilencedEoCCLog is the text key for check
+	// context size silenced EoCC log messages.
+	DescKeyCheckContextSizeSilencedEoCCLog =
+		"check-context-size.silenced-eocc-log"
 )

@@ -16,4 +16,6 @@ const (
 	Checkpoint = "checkpoint"
 	// WindowWarning is the event name for context window warning emissions.
 	WindowWarning = "window-warning"
+	// EoCC is the event name for EoCC compaction threshold emissions.
+	EoCC = "eocc"
 )

@@ -240,3 +240,87 @@ func EmitBillingWarning(
 	io.TouchFile(warnedFile) // one-shot: mark as fired only on success
 	return box, nil
 }
+
+// EmitEoCCWarning builds a one-shot compaction nudge when token usage crosses
+// the eocc_threshold_tokens threshold.
+//
+// Parameters:
+//   - logFile: absolute path to the log file
+//   - sessionID: session identifier
+//   - count: current prompt count
+//   - tokens: token usage count
+//   - threshold: EoCC token compaction threshold
+//
+// Returns:
+//   - string: formatted nudge box, or empty string if silenced or already fired
+//   - error: propagated from [EmitAndRelay] so callers can honour the
+//     log-first principle
+func EmitEoCCWarning(
+	logFile, sessionID string,
+	count, tokens, threshold int,
+) (string, error) {
+	stateDir, dirErr := state.Dir()
+	if dirErr != nil {
+		return "", dirErr
+	}
+	nudgedFile := filepath.Join(
+		stateDir, stats.ContextSizeEoCCNudgedPrefix+sessionID,
+	)
+	if _, statErr := os.Stat(nudgedFile); statErr == nil {
+		return "", nil
+	}
+
+	tokStr := coreSession.FormatTokenCount(tokens)
+	threshStr := coreSession.FormatTokenCount(threshold)
+	fallback := fmt.Sprintf(
+		desc.Text(text.DescKeyCheckContextSizeEoCCFallback),
+		tokStr, threshStr,
+	)
+	vars := map[string]any{
+		stats.VarTokenCount: tokStr,
+		stats.VarThreshold:  threshStr,
+	}
+	content := message.Load(
+		hook.CheckContextSize, hook.VariantEoCC, vars, fallback,
+	)
+	if content == "" {
+		log.Message(
+			logFile, sessionID,
+			fmt.Sprintf(
+				desc.Text(text.DescKeyCheckContextSizeSilencedEoCCLog),
+				count, tokens, threshold,
+			),
+		)
+		io.TouchFile(nudgedFile)
+		return "", nil
+	}
+
+	box := message.NudgeBox(
+		desc.Text(text.DescKeyCheckContextSizeEoCCRelayPrefix),
+		desc.Text(text.DescKeyCheckContextSizeEoCCBoxTitle),
+		content,
+	)
+	log.Message(
+		logFile, sessionID,
+		fmt.Sprintf(
+			desc.Text(text.DescKeyCheckContextSizeEoCCLogFormat),
+			count, tokens, threshold,
+		),
+	)
+	ref := entity.NewTemplateRef(
+		hook.CheckContextSize, hook.VariantEoCC, vars,
+	)
+	eoccMsg := fmt.Sprintf(
+		desc.Text(text.DescKeyRelayPrefixFormat),
+		hook.CheckContextSize,
+		fmt.Sprintf(
+			desc.Text(text.DescKeyCheckContextSizeEoCCRelayFormat),
+			tokStr, threshStr,
+		),
+	)
+	if err := EmitAndRelay(eoccMsg, sessionID, ref); err != nil {
+		return "", err
+	}
+	io.TouchFile(nudgedFile)
+	return box, nil
+}

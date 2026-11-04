@@ -840,3 +840,29 @@ func TestConventionBudgetPct_ZeroAllowed(t *testing.T) {
 		t.Errorf("ConventionBudgetPct() = %v, want 0", got)
 	}
 }
+
+func TestEoCCThresholdTokens_DefaultAndClamp(t *testing.T) {
+	declareContext(t, "")
+	if got := EoCCThresholdTokens(); got != 0 {
+		t.Errorf("EoCCThresholdTokens() default = %d, want 0", got)
+	}
+
+	declareContext(t, "eocc_threshold_tokens: 30000")
+	if got := EoCCThresholdTokens(); got != 30000 {
+		t.Errorf("EoCCThresholdTokens() = %d, want 30000", got)
+	}
+
+	declareContext(t, "eocc_threshold_tokens: 1000")
+	if got := EoCCThresholdTokens(); got != DefaultMinEoCCThresholdTokens {
+		t.Errorf(
+			"EoCCThresholdTokens() clamped = %d, want %d",
+			got, DefaultMinEoCCThresholdTokens,
+		)
+	}
+
+	declareContext(t, "eocc_threshold_tokens: -500")
+	if got := EoCCThresholdTokens(); got != 0 {
+		t.Errorf("EoCCThresholdTokens() negative = %d, want 0", got)
+	}
+}
+

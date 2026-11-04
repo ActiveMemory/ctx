@@ -53,6 +53,12 @@ func RenderMarkdownPacket(pkt *AssembledPacket) string {
 		sb.WriteString(nl)
 	}
 
+	// Latest Handover (Tier 1.5)
+	if pkt.Handover != "" {
+		sb.WriteString(desc.Text(text.DescKeyAgentSectionHandover) + nl)
+		sb.WriteString(pkt.Handover + nl + nl)
+	}
+
 	// Tasks
 	if len(pkt.Tasks) > 0 {
 		sb.WriteString(desc.Text(text.DescKeyAgentSectionTasks) + nl)

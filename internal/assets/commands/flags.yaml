@@ -46,6 +46,8 @@ agent.skill:
   short: Include named skill content in context packet
 agent.include-hub:
   short: Include ctx Hub entries in context packet
+agent.no-handover:
+  short: Exclude the latest session handover from the context packet
 changes.since:
   short: 'Time reference: duration (24h) or date (2026-03-01)'
 compact.archive:

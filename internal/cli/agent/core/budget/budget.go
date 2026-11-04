@@ -7,9 +7,15 @@
 package budget
 
 import (
+	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core/score"
 	"github.com/ActiveMemory/ctx/internal/config/agent"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 )
 
 // Split divides a token budget between two scored sections.
@@ -100,4 +106,40 @@ func FillSection(entries []score.Entry, budget int) ([]string, []string) {
 	}
 
 	return full, summaries
+}
+
+// FitHandover trims a handover body on a line boundary to fit within budget.
+//
+// Parameters:
+//   - body: Raw handover markdown body
+//   - budget: Maximum token budget for the handover section
+//
+// Returns:
+//   - string: Handover body that fits within budget, or empty string
+func FitHandover(body string, budget int) string {
+	trimmed := strings.TrimSpace(body)
+	if trimmed == "" || budget <= 0 {
+		return ""
+	}
+	if ctxToken.EstimateString(trimmed) <= budget {
+		return trimmed
+	}
+	lines := strings.Split(trimmed, token.NewlineLF)
+	suffix := desc.Text(text.DescKeyAgentHandoverTruncated)
+	suffixTokens := ctxToken.EstimateString(suffix)
+	var kept []string
+	used := suffixTokens
+	for _, line := range lines {
+		t := ctxToken.EstimateString(line) + 1
+		if used+t > budget {
+			break
+		}
+		kept = append(kept, line)
+		used += t
+	}
+	if len(kept) == 0 {
+		return ""
+	}
+	kept = append(kept, suffix)
+	return strings.Join(kept, token.NewlineLF)
 }
