@@ -17,7 +17,8 @@ ITERATION=0
 echo "Starting Ralph Loop"
 echo "==================="
 echo "Prompt: $PROMPT_FILE"
-echo "Completion signal: $COMPLETION_SIGNAL"
+{{if or .IsEoCC .IsSAC}}echo "Regime: {{.Regime}}"
+{{end}}echo "Completion signal: $COMPLETION_SIGNAL"
 echo ""
 
 # Ensure prompt file exists
@@ -38,6 +39,25 @@ while true; do
         ctx hook notify --event loop "Loop completed after $ITERATION iterations" 2>/dev/null || true
         break
     fi
+{{end}}{{if or .IsEoCC .IsSAC}}    # Assemble semantic state packet (EoCC / SAC)
+    STATE_PACKET=$(ctx agent --budget 4000 2>/dev/null || true)
+    ITER_PROMPT="$(cat "$PROMPT_FILE")
+
+---
+# Semantic State Packet (ctx agent)
+$STATE_PACKET
+
+---
+{{if .IsSAC}}# Single-Action Compaction (SAC) Contract
+1. Review the Semantic State Packet and Latest Session Handover above.
+2. Execute at most ONE environment action (one edit, command, or test run) and observe its outcome.
+3. Immediately persist the updated execution brief before exiting this iteration:
+   ctx handover write --no-fold --summary \"...\" --facts \"...\" --verified \"...\" --dead-ends \"...\" --next \"...\"
+4. Emit $COMPLETION_SIGNAL only when all completion criteria are verified.{{else}}# End-of-Conversation Compaction (EoCC) Contract
+1. Review the Semantic State Packet and Latest Session Handover above and continue from its Next Session step.
+2. Before exiting this iteration, persist the updated execution brief:
+   ctx handover write --no-fold --summary \"...\" --facts \"...\" --verified \"...\" --dead-ends \"...\" --next \"...\"
+3. Emit $COMPLETION_SIGNAL only when all completion criteria are verified.{{end}}"
 {{end}}    # Run the AI tool
     OUTPUT=$({{.AICommand}} 2>&1) || true
 

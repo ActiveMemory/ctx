@@ -8,11 +8,15 @@ package loop
 
 import (
 	"os"
+	"strings"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/assets/read/lookup"
 )
 
 // TestLoopCommand tests the loop command.
 func TestLoopCommand(t *testing.T) {
+	lookup.Init()
 	tmpDir, err := os.MkdirTemp("", "cli-loop-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
@@ -44,5 +48,19 @@ func TestLoopCommand(t *testing.T) {
 	// Verify loop.sh was created
 	if _, err := os.Stat("loop.sh"); os.IsNotExist(err) {
 		t.Error("loop.sh was not created")
+	}
+
+	// Test invalid regime rejection
+	invalidRegimeCmd := Cmd()
+	invalidRegimeCmd.SetArgs([]string{"--regime", "bogus"})
+	if err := invalidRegimeCmd.Execute(); err == nil || !strings.Contains(err.Error(), "invalid loop regime") {
+		t.Fatalf("expected invalid loop regime error, got %v", err)
+	}
+
+	// Test negative --max-turns rejection
+	negTurnsCmd := Cmd()
+	negTurnsCmd.SetArgs([]string{"--max-turns", "-1"})
+	if err := negTurnsCmd.Execute(); err == nil || !strings.Contains(err.Error(), "--max-turns must be non-negative") {
+		t.Fatalf("expected negative max-turns error, got %v", err)
 	}
 }

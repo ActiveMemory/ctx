@@ -187,4 +187,10 @@ const (
 	Grep = "grep"
 	// MaxChars is the --max-chars flag for `ctx journal source`.
 	MaxChars = "max-chars"
+	// Regime is the --regime flag for `ctx loop`.
+	Regime = "regime"
+	// ShortRegime is the -r shorthand for --regime on `ctx loop`.
+	ShortRegime = "r"
+	// MaxTurns is the --max-turns flag for `ctx loop`.
+	MaxTurns = "max-turns"
 )

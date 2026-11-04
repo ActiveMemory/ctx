@@ -92,6 +92,10 @@ err.config.unknown-update-type:
   short: 'unknown update type: %s'
 err.config.unsupported-tool:
   short: 'unsupported tool: %s'
+err.config.invalid-regime:
+  short: 'invalid loop regime %q: must be one of standard, eocc, sac'
+err.config.negative-max-turns:
+  short: '--max-turns must be non-negative'
 err.dream.append-ledger:
   short: 'dream: append ledger %s: %w'
 err.dream.backup-failed:

@@ -149,6 +149,10 @@ loop.prompt:
   short: Prompt file to use
 loop.tool:
   short: 'AI tool: claude, aider, or generic'
+loop.regime:
+  short: 'Context regime: standard, eocc, or sac'
+loop.max-turns:
+  short: Maximum agent turns per loop iteration (0 = tool default; 2 for sac on claude)
 memory.import.dry-run:
   short: Show classification plan without writing
 memory.publish.budget:
