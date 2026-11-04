@@ -52,11 +52,11 @@ $STATE_PACKET
 1. Review the Semantic State Packet and Latest Session Handover above.
 2. Execute at most ONE environment action (one edit, command, or test run) and observe its outcome.
 3. Immediately persist the updated execution brief before exiting this iteration:
-   ctx handover write --no-fold --summary \"...\" --facts \"...\" --verified \"...\" --dead-ends \"...\" --next \"...\"
+   ctx handover write \"<title>\" --no-fold --summary \"...\" --facts \"...\" --verified \"...\" --dead-ends \"...\" --next \"...\"
 4. Emit $COMPLETION_SIGNAL only when all completion criteria are verified.{{else}}# End-of-Conversation Compaction (EoCC) Contract
 1. Review the Semantic State Packet and Latest Session Handover above and continue from its Next Session step.
 2. Before exiting this iteration, persist the updated execution brief:
-   ctx handover write --no-fold --summary \"...\" --facts \"...\" --verified \"...\" --dead-ends \"...\" --next \"...\"
+   ctx handover write \"<title>\" --no-fold --summary \"...\" --facts \"...\" --verified \"...\" --dead-ends \"...\" --next \"...\"
 3. Emit $COMPLETION_SIGNAL only when all completion criteria are verified.{{end}}"
 {{end}}    # Run the AI tool
     OUTPUT=$({{.AICommand}} 2>&1) || true

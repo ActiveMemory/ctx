@@ -138,10 +138,11 @@ func renderTurnSlice(
 			if rem > 0 {
 				truncated := truncateUTF8(turnBlock, rem)
 				out.WriteString(truncated)
-				out.WriteString(fmt.Sprintf(
+				_, _ = fmt.Fprintf(
+					&out,
 					desc.Text(text.DescKeyWriteJournalSourceTruncatedChars),
 					maxChars,
-				))
+				)
 				out.WriteString(token.NewlineLF)
 				actualEnd = idx + 1
 			}
@@ -188,20 +189,22 @@ func formatSingleTurn(turnNum int, msg entity.Message) string {
 	var sb strings.Builder
 	nl := token.NewlineLF
 	role := turnRoleLabel(msg)
-	sb.WriteString(fmt.Sprintf(
+	_, _ = fmt.Fprintf(
+		&sb,
 		desc.Text(text.DescKeyWriteJournalSourceConversationTurn),
 		turnNum, role, msg.Timestamp.Format(time.Format),
-	))
+	)
 	sb.WriteString(nl)
 	if msg.Text != "" {
 		sb.WriteString(msg.Text + nl + nl)
 	}
 	for _, tu := range msg.ToolUses {
-		sb.WriteString(fmt.Sprintf(
+		_, _ = fmt.Fprintf(
+			&sb,
 			desc.Text(text.DescKeyWriteJournalSourceDetailString)+nl,
 			desc.Text(text.DescKeyLabelInlineTool),
 			srcFmt.ToolUse(tu),
-		))
+		)
 	}
 	for _, tr := range msg.ToolResults {
 		if tr.IsError {
@@ -209,10 +212,11 @@ func formatSingleTurn(turnNum int, msg entity.Message) string {
 		}
 		if tr.Content != "" {
 			cleaned := parse.StripLineNumbers(tr.Content)
-			sb.WriteString(fmt.Sprintf(
+			_, _ = fmt.Fprintf(
+				&sb,
 				desc.Text(text.DescKeyWriteJournalSourceCodeBlock),
 				cleaned,
-			))
+			)
 		}
 	}
 	if len(msg.ToolUses) > 0 || len(msg.ToolResults) > 0 {
@@ -264,7 +268,7 @@ func extractMatchSnippet(textBody string, loc []int, maxChars int) string {
 		raw = token.Ellipsis + raw
 	}
 	if e < len(textBody) {
-		raw = raw + token.Ellipsis
+		raw += token.Ellipsis
 	}
 	return raw
 }

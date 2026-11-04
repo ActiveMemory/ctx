@@ -91,14 +91,11 @@ const (
 	DescKeyCheckContextSizeEoCCLogFormat = "check-context-size.eocc-log-format"
 	// DescKeyCheckContextSizeEoCCRelayFormat is the text key for check
 	// context size EoCC relay format messages.
-	DescKeyCheckContextSizeEoCCRelayFormat =
-		"check-context-size.eocc-relay-format"
+	DescKeyCheckContextSizeEoCCRelayFormat = "check-context-size.eocc-relay-format"
 	// DescKeyCheckContextSizeEoCCRelayPrefix is the text key for check
 	// context size EoCC relay prefix messages.
-	DescKeyCheckContextSizeEoCCRelayPrefix =
-		"check-context-size.eocc-relay-prefix"
+	DescKeyCheckContextSizeEoCCRelayPrefix = "check-context-size.eocc-relay-prefix"
 	// DescKeyCheckContextSizeSilencedEoCCLog is the text key for check
 	// context size silenced EoCC log messages.
-	DescKeyCheckContextSizeSilencedEoCCLog =
-		"check-context-size.silenced-eocc-log"
+	DescKeyCheckContextSizeSilencedEoCCLog = "check-context-size.silenced-eocc-log"
 )

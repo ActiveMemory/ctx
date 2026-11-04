@@ -102,7 +102,7 @@ func TestWrite_HappyPathWithFold(t *testing.T) {
 	idxVerified := strings.Index(res.File.Body, "## Applied changes and verification")
 	idxDeadEnds := strings.Index(res.File.Body, "## Dead ends")
 	idxNext := strings.Index(res.File.Body, "## Next session")
-	if !(idxSummary < idxFacts && idxFacts < idxVerified && idxVerified < idxDeadEnds && idxDeadEnds < idxNext) {
+	if idxSummary >= idxFacts || idxFacts >= idxVerified || idxVerified >= idxDeadEnds || idxDeadEnds >= idxNext {
 		t.Errorf("sections out of order in body:\n%s", res.File.Body)
 	}
 	// Source closeout should have been archived.

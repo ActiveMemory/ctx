@@ -465,4 +465,3 @@ func TestAssemblePacket_WithHandoverAndCap(t *testing.T) {
 		t.Errorf("expected truncation suffix in %q", cappedPkt.Handover)
 	}
 }
-

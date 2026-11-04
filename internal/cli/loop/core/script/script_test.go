@@ -78,7 +78,7 @@ func TestGenerate_EoCCAndSACRegimes(t *testing.T) {
 		`echo "Regime: eocc"`,
 		`STATE_PACKET=$(ctx agent --budget 4000 2>/dev/null || true)`,
 		`# End-of-Conversation Compaction (EoCC) Contract`,
-		`ctx handover write --no-fold --summary`,
+		`ctx handover write \"<title>\" --no-fold --summary`,
 		`OUTPUT=$(claude --print "$ITER_PROMPT" 2>&1) || true`,
 	} {
 		if !containsSubstring(eoccOut, wantSub) {
@@ -101,7 +101,7 @@ func TestGenerate_EoCCAndSACRegimes(t *testing.T) {
 		`STATE_PACKET=$(ctx agent --budget 4000 2>/dev/null || true)`,
 		`# Single-Action Compaction (SAC) Contract`,
 		`Execute at most ONE environment action`,
-		`ctx handover write --no-fold --summary`,
+		`ctx handover write \"<title>\" --no-fold --summary`,
 		`OUTPUT=$(claude --print --max-turns 2 "$ITER_PROMPT" 2>&1) || true`,
 	} {
 		if !containsSubstring(sacOut, wantSub) {

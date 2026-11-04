@@ -107,34 +107,26 @@ const (
 	DescKeyWriteJournalSourceSectionHeading = "write.journal-source-section-heading"
 	// DescKeyWriteJournalSourceTurnRangeHeader is the text key for bounded
 	// turn range banners with a next-slice continuation command.
-	DescKeyWriteJournalSourceTurnRangeHeader =
-		"write.journal-source-turn-range-header"
+	DescKeyWriteJournalSourceTurnRangeHeader = "write.journal-source-turn-range-header"
 	// DescKeyWriteJournalSourceTurnRangeEnd is the text key for bounded
 	// turn range banners at the end of a session.
-	DescKeyWriteJournalSourceTurnRangeEnd =
-		"write.journal-source-turn-range-end"
+	DescKeyWriteJournalSourceTurnRangeEnd = "write.journal-source-turn-range-end"
 	// DescKeyWriteJournalSourceTurnRangePastEnd is the text key for an
 	// out-of-bounds turn range start notice.
-	DescKeyWriteJournalSourceTurnRangePastEnd =
-		"write.journal-source-turn-range-past-end"
+	DescKeyWriteJournalSourceTurnRangePastEnd = "write.journal-source-turn-range-past-end"
 	// DescKeyWriteJournalSourceTruncatedChars is the text key for the
 	// character-budget truncation marker.
-	DescKeyWriteJournalSourceTruncatedChars =
-		"write.journal-source-truncated-chars"
+	DescKeyWriteJournalSourceTruncatedChars = "write.journal-source-truncated-chars"
 	// DescKeyWriteJournalSourceGrepHeader is the text key for the grep
 	// match summary header.
-	DescKeyWriteJournalSourceGrepHeader =
-		"write.journal-source-grep-header"
+	DescKeyWriteJournalSourceGrepHeader = "write.journal-source-grep-header"
 	// DescKeyWriteJournalSourceGrepLine is the text key for a single grep
 	// match line.
-	DescKeyWriteJournalSourceGrepLine =
-		"write.journal-source-grep-line"
+	DescKeyWriteJournalSourceGrepLine = "write.journal-source-grep-line"
 	// DescKeyWriteJournalSourceGrepHint is the text key for the grep
 	// follow-up --turns hint.
-	DescKeyWriteJournalSourceGrepHint =
-		"write.journal-source-grep-hint"
+	DescKeyWriteJournalSourceGrepHint = "write.journal-source-grep-hint"
 	// DescKeyWriteJournalSourceGrepEmpty is the text key for a grep query
 	// that matched zero turns.
-	DescKeyWriteJournalSourceGrepEmpty =
-		"write.journal-source-grep-empty"
+	DescKeyWriteJournalSourceGrepEmpty = "write.journal-source-grep-empty"
 )

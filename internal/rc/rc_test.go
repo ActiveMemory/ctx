@@ -865,4 +865,3 @@ func TestEoCCThresholdTokens_DefaultAndClamp(t *testing.T) {
 		t.Errorf("EoCCThresholdTokens() negative = %d, want 0", got)
 	}
 }
-

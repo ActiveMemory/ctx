@@ -156,4 +156,3 @@ func TestEmitEoCCWarning_OneShotAndPrecedence(t *testing.T) {
 		t.Errorf("expected empty box on second call, got %q", secondBox)
 	}
 }
-
