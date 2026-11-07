@@ -69,7 +69,7 @@ Install the extension and the `ctx` binary, then `ctx init` your project:
 | File | Purpose |
 |------|---------|
 | `.context/` | Project-local context directory (created by `ctx init`) |
-| `.github/copilot-instructions.md` | Repository instructions Copilot reads natively; regenerated automatically whenever `.context/` files change |
+| `.github/copilot-instructions.md` | Repository instructions Copilot reads natively; written by `@ctx /init` (`ctx setup copilot --write`) |
 
 The extension itself lives in VS Code's extension storage. No project
 files are added beyond `.context/` and the Copilot instructions.
@@ -79,88 +79,86 @@ files are added beyond `.context/` and the Copilot instructions.
 Type `@ctx` in the Copilot Chat view to invoke the chat participant.
 Then either:
 
-- **Use a slash command:** `@ctx /status`, `@ctx /wrapup`, etc. There
-  are 45 commands; the most common ones live in the [Slash Commands](#slash-commands)
+- **Use a slash command:** `@ctx /status`, `@ctx /wrap-up`, etc. There
+  are 36 commands; the most common ones live in the [Slash Commands](#slash-commands)
   table below.
 - **Use natural language:** `@ctx what should I work on?` routes to
-  `/next`; `@ctx time to wrap up` routes to `/wrapup`. See
+  `/next`; `@ctx time to wrap up` routes to `/wrap-up`. See
   [Natural Language](#natural-language).
 
 The extension shows context-aware follow-up suggestions after each
-command. For example, after `/init` you'll see buttons for "Show
-status" or "Generate copilot integration."
+command. For example, after `/init` you'll see "Show context status"
+or "What should I work on next?"
 
 ## What Happens Automatically
 
-The extension registers several VS Code event handlers that mirror
-Claude Code's hook system. These run in the background; no user action
+The extension does a few things in the background; no user action
 needed.
 
 | Trigger | What fires |
 |---------|------------|
-| **File save** | Task-completion check on non-`.context/` files |
-| **Git commit** | Notification prompting to add a Decision, Learning, run `/verify`, or Skip |
-| **`.context/` file change** | Refreshes pending reminders and regenerates `.github/copilot-instructions.md` |
-| **Dependency file change** | When `go.mod`, `package.json`, etc. change, prompts to refresh the dependency map (`/map`) |
-| **Every 5 minutes** | Updates the reminder status-bar item and writes a heartbeat timestamp |
-| **Extension activate** | Fires `ctx system session-event --type start` |
-| **Extension deactivate** | Fires `ctx system session-event --type end` |
+| **Extension activate** | `ctx system session-event --type start` |
+| **`/init` succeeds** | The same session start (activation found no `.context/` yet) |
+| **`.context/` file change, and every 5 minutes** | Refreshes the reminder status bar from `ctx remind list` (read-only) |
+| **Extension deactivate** | `ctx system session-event --type end` |
 
 ### Status Bar
 
-A `$(bell) ctx` indicator appears in the status bar when you have
-pending reminders. It refreshes every 5 minutes and hides itself when
-nothing is due.
+A `$(bell) ctx` indicator appears in the status bar while `ctx remind
+list` has pending reminders, and hides itself when the list is empty.
 
 ## Slash Commands
 
-The extension surfaces 45 commands across six categories. The most
-commonly used:
+The extension surfaces 36 commands. 27 run the `ctx` CLI and render its
+output; a command that exits non-zero is shown as a failure with the
+CLI's own message. 9 run a canonical `ctx` skill through the chat model.
+The most commonly used:
 
 ### Core Context
 
 | Command | When to use |
 |---------|-------------|
-| `/init` | Initialize a `.context/` directory with template files |
+| `/init` | Initialize a `.context/` directory and the Copilot instructions |
 | `/status` | Token estimate, file count, what's recent |
 | `/agent` | Print AI-ready context packet |
 | `/drift` | Detect stale paths, missing files, dead references |
-| `/recall` | Browse and search prior AI session history |
-| `/add` | Add a task, decision, learning, or convention |
+| `/recall` | Browse prior AI session history (`ctx journal source`) |
+| `/add` | Add a task, decision, learning, or convention (provenance is filled in) |
+| `/decision`, `/learning` | List recorded decisions or learnings |
 
-### Session Lifecycle
+### Skill-Backed Workflows
 
-| Command | When to use |
-|---------|-------------|
-| `/wrapup` | End-of-session ceremony: status, drift, journal audit |
-| `/remember` | Structured readback (trigger: "Do you remember?") from tasks, decisions, learnings, recent journal |
-| `/reflect` | Surface items worth persisting as decisions or learnings |
-| `/pause` / `/resume` | Save and restore session state for later |
-
-### Discovery & Planning
+Each runs the `ctx-<name>` skill, grounded in `ctx agent` output and any
+file you attach with `#file`. The model proposes commands and edits and
+gives you the exact `@ctx` or `ctx` command to run; it never claims to
+have run anything.
 
 | Command | When to use |
 |---------|-------------|
-| `/brainstorm` | Browse and develop ideas from `ideas/` |
-| `/spec` | List or scaffold feature specs from templates |
-| `/verify` | Run verification (doctor + drift) |
-| `/map` | Show dependency map (go.mod, package.json) |
+| `/remember` | Structured readback (trigger: "Do you remember?") |
+| `/next` | Pick what to work on next |
+| `/brainstorm` | Turn a vague idea into a validated design (multi-turn) |
+| `/spec` | Draft a feature spec |
+| `/implement` | Work through a plan step by step (attach it with `#file`) |
+| `/reflect` | Surface what is worth persisting |
+| `/wrap-up` | End-of-session review; proposes entries to persist |
+| `/blog`, `/consolidate` | Draft a post; propose merges of overlapping entries |
 
-Full list (with maintenance, audit, metadata, and system commands) is
-in [editors/vscode/README.md](https://github.com/ActiveMemory/ctx/blob/main/editors/vscode/README.md#slash-commands).
+Full list is in
+[editors/vscode/README.md](https://github.com/ActiveMemory/ctx/blob/main/editors/vscode/README.md#slash-commands).
 
 ## Natural Language
 
-Plain English after `@ctx` is routed to the right command:
+Plain English after `@ctx` is routed to a read-only command:
 
+- "Do you remember?" → `/remember`
 - "What should I work on next?" → `/next`
-- "Time to wrap up" → `/wrapup`
+- "Time to wrap up" → `/wrap-up`
 - "Show me the status" → `/status`
-- "Add a decision" → `/add`
 - "Check for drift" → `/drift`
 
-If the phrase doesn't match a known pattern, the extension surfaces a
-short menu of likely matches.
+A keyword match never changes your context. If the phrase doesn't match,
+the extension lists its commands.
 
 ## Auto-Bootstrap
 
@@ -205,7 +203,7 @@ provide the CLI it shells out to.
 |---------|-------|-----|
 | `@ctx` participant doesn't appear in Copilot Chat | Copilot Chat not installed or not signed in | Install [GitHub Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) and ensure you're signed in to a Copilot-eligible account |
 | `@ctx /status` says `ctx` not found | CLI not on PATH and auto-download disabled | Either add `ctx` to PATH (`brew install activememory/tap/ctx` or download from [Releases](https://github.com/ActiveMemory/ctx/releases)), or unset `ctx.executablePath` to let the extension auto-download |
-| Status-bar reminder never updates | Heartbeat suppressed or `.context/` doesn't exist | Run `ctx init` from your project root; reload VS Code if the indicator still doesn't appear within 5 minutes |
+| Status-bar reminder never appears | `.context/` doesn't exist, or no reminders are pending | Run `ctx init` from your project root, then add one with `@ctx /remind <text>` |
 | Commands run but nothing is captured to `.context/` | Workspace folder missing or `.context/` outside the open folder | Make sure your project root (the one with `.context/`) is the workspace root, not a subdirectory of it |
 
 ## Verify It Works
@@ -219,7 +217,7 @@ Open Copilot Chat and ask:
 You should see a structured readback citing specific tasks, decisions,
 and recent session topics. If you instead see "I don't have memory" or
 "Let me check," something went wrong: confirm the CLI is reachable
-(`@ctx /system doctor`) and `.context/` has files in it.
+(`@ctx /doctor`) and `.context/` has files in it.
 
 ## What's Next
 

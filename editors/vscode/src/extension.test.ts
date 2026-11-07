@@ -1,40 +1,28 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as cp from "child_process";
+import * as vscode from "vscode";
 
-// Mock vscode module (external, not bundled)
-vi.mock("vscode", () => ({
-  workspace: {
-    getConfiguration: vi.fn(() => ({
-      get: vi.fn(() => undefined),
-    })),
-    workspaceFolders: [{ uri: { fsPath: "/test/workspace" } }],
-  },
-  chat: {
-    createChatParticipant: vi.fn(() => ({
-      iconPath: null,
-      followupProvider: null,
-    })),
-  },
-  Uri: { joinPath: vi.fn() },
-}));
-
+vi.mock("vscode", async () => (await import("./vscodeMock")).createVscodeMock());
 vi.mock("child_process");
+
+import type { createVscodeMock } from "./vscodeMock";
+// The mocked module's classes, with constructors the real typings hide.
+const vs = vscode as unknown as ReturnType<typeof createVscodeMock>;
 
 import {
   runCtx,
   getCtxPath,
   getWorkspaceRoot,
   getPlatformInfo,
-  handleTask,
-  handleRemind,
-  handlePad,
-  handleNotify,
-  handleSystem,
+  handler,
+  tokenize,
+  CLI_COMMANDS,
+  SKILLS,
 } from "./extension";
 
-// Helper: create a fake CancellationToken. The listener signature
-// matches VS Code's Event<any> contract `(e: any) => any` — using
-// `(cb: () => void)` here trips strict TS in the test surface.
+type ExecCallback = (e: unknown, out: string, err: string) => void;
+
+// Helper: create a fake CancellationToken
 function fakeToken(cancelled = false) {
   type Listener = (e: unknown) => unknown;
   const listeners: Listener[] = [];
@@ -48,13 +36,59 @@ function fakeToken(cancelled = false) {
   };
 }
 
+function fakeStream() {
+  return {
+    markdown: vi.fn(),
+    progress: vi.fn(),
+  };
+}
+
+/** execFile error for a process that exited with `code`. */
+function exitError(code: number) {
+  return Object.assign(new Error(`exit ${code}`), { code });
+}
+
+/** Every ctx call exits with `code` and prints `stdout`; git answers rev-parse. */
+function mockExec(stdout: string, code = 0, stderr = "") {
+  vi.mocked(cp.execFile).mockImplementation(((
+    cmd: string,
+    args: string[],
+    _opts: unknown,
+    cb: ExecCallback
+  ) => {
+    if (cmd === "git") {
+      cb(null, args.includes("--abbrev-ref") ? "main\n" : "abc1234\n", "");
+    } else {
+      cb(code === 0 ? null : exitError(code), stdout, stderr);
+    }
+    return { kill: vi.fn() };
+  }) as never);
+}
+
+/** argv of every ctx (non-git) call so far. */
+function ctxCalls(): string[][] {
+  return vi
+    .mocked(cp.execFile)
+    .mock.calls.filter((c) => c[0] !== "git")
+    .map((c) => c[1] as unknown as string[]);
+}
+
+function markdownOf(stream: ReturnType<typeof fakeStream>): string {
+  return stream.markdown.mock.calls.map((c) => c[0]).join("\n");
+}
+
+async function run(command: string, prompt: string) {
+  const stream = fakeStream();
+  const res = await CLI_COMMANDS[command](stream as never, prompt, "/test", fakeToken() as never);
+  return { stream, res };
+}
+
 describe("getCtxPath", () => {
   it("returns 'ctx' when no config is set", () => {
     expect(getCtxPath()).toBe("ctx");
   });
 
-  it("returns configured path when set", async () => {
-    const vscode = await import("vscode");
+  it("returns configured path when set", () => {
     vi.mocked(vscode.workspace.getConfiguration).mockReturnValueOnce({
       get: vi.fn(() => "/custom/ctx"),
     } as never);
@@ -67,112 +101,100 @@ describe("getWorkspaceRoot", () => {
     expect(getWorkspaceRoot()).toBe("/test/workspace");
   });
 
-  it("returns undefined when no workspace is open", async () => {
-    const vscode = await import("vscode");
-    const original = vscode.workspace.workspaceFolders;
-    (vscode.workspace as Record<string, unknown>).workspaceFolders = undefined;
+  it("prefers the folder of the active editor in a multi-root window", () => {
+    const win = vscode.window as { activeTextEditor: unknown };
+    win.activeTextEditor = { document: { uri: { fsPath: "/other/file.ts" } } };
+    vi.mocked(vscode.workspace.getWorkspaceFolder).mockReturnValueOnce({
+      uri: { fsPath: "/other" },
+    } as never);
+    expect(getWorkspaceRoot()).toBe("/other");
+    win.activeTextEditor = undefined;
+  });
+
+  it("returns undefined when no workspace is open", () => {
+    const ws = vscode.workspace as { workspaceFolders: unknown };
+    const original = ws.workspaceFolders;
+    ws.workspaceFolders = undefined;
     expect(getWorkspaceRoot()).toBeUndefined();
-    (vscode.workspace as Record<string, unknown>).workspaceFolders = original;
+    ws.workspaceFolders = original;
   });
 });
 
 describe("runCtx", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  beforeEach(() => vi.clearAllMocks());
 
-  it("resolves with stdout and stderr on success", async () => {
-    vi.mocked(cp.execFile).mockImplementation(
-      (_cmd: unknown, _args: unknown, _opts: unknown, cb: unknown) => {
-        (cb as (e: null, out: string, err: string) => void)(
-          null,
-          "output",
-          "errors"
-        );
-        return { kill: vi.fn() } as never;
-      }
-    );
-
+  it("resolves with output and exit code 0 on success", async () => {
+    mockExec("output", 0, "errors");
     const result = await runCtx(["status"]);
-    expect(result.stdout).toBe("output");
-    expect(result.stderr).toBe("errors");
+    expect(result).toEqual({ stdout: "output", stderr: "errors", code: 0 });
   });
 
-  it("resolves on non-zero exit when output is present", async () => {
-    vi.mocked(cp.execFile).mockImplementation(
-      (_cmd: unknown, _args: unknown, _opts: unknown, cb: unknown) => {
-        const err = new Error("exit 1");
-        (cb as (e: Error, out: string, err: string) => void)(
-          err,
-          "",
-          "drift detected"
-        );
-        return { kill: vi.fn() } as never;
-      }
-    );
-
+  it("resolves with the real exit code on a non-zero exit", async () => {
+    mockExec("drift report", 1);
     const result = await runCtx(["drift"]);
-    expect(result.stderr).toBe("drift detected");
+    expect(result.code).toBe(1);
+    expect(result.stdout).toBe("drift report");
   });
 
-  it("rejects on non-zero exit with no output", async () => {
-    vi.mocked(cp.execFile).mockImplementation(
-      (_cmd: unknown, _args: unknown, _opts: unknown, cb: unknown) => {
-        const err = new Error("not found");
-        (cb as (e: Error, out: string, err: string) => void)(err, "", "");
-        return { kill: vi.fn() } as never;
-      }
-    );
+  it("resolves a non-zero exit even without output", async () => {
+    mockExec("", 2);
+    expect((await runCtx(["status"])).code).toBe(2);
+  });
 
-    await expect(runCtx(["missing"])).rejects.toThrow("not found");
+  it("rejects when the binary cannot start", async () => {
+    vi.mocked(cp.execFile).mockImplementation(((_c: unknown, _a: unknown, _o: unknown, cb: ExecCallback) => {
+      cb(Object.assign(new Error("spawn ctx ENOENT"), { code: "ENOENT" }), "", "");
+      return { kill: vi.fn() };
+    }) as never);
+    await expect(runCtx(["status"])).rejects.toThrow("ENOENT");
+  });
+
+  it("rejects on timeout instead of showing partial output", async () => {
+    vi.mocked(cp.execFile).mockImplementation(((_c: unknown, _a: unknown, _o: unknown, cb: ExecCallback) => {
+      cb(Object.assign(new Error("timeout"), { killed: true, signal: "SIGTERM" }), "partial", "");
+      return { kill: vi.fn() };
+    }) as never);
+    await expect(runCtx(["agent"])).rejects.toThrow("cancelled or timed out");
   });
 
   it("rejects immediately when token is already cancelled", async () => {
-    const token = fakeToken(true);
-    await expect(runCtx(["status"], "/test", token)).rejects.toThrow(
-      "Cancelled"
-    );
+    await expect(runCtx(["status"], "/test", fakeToken(true) as never)).rejects.toThrow("Cancelled");
     expect(cp.execFile).not.toHaveBeenCalled();
   });
 
-  it("kills child process when token fires cancellation", async () => {
+  it("kills the child and rejects when the token fires", async () => {
     const killFn = vi.fn();
-    let resolveCallback: (e: Error, out: string, err: string) => void;
-
-    vi.mocked(cp.execFile).mockImplementation(
-      (_cmd: unknown, _args: unknown, _opts: unknown, cb: unknown) => {
-        resolveCallback = cb as typeof resolveCallback;
-        return { kill: killFn } as never;
-      }
-    );
+    let finish: ExecCallback = () => {};
+    vi.mocked(cp.execFile).mockImplementation(((_c: unknown, _a: unknown, _o: unknown, cb: ExecCallback) => {
+      finish = cb;
+      return { kill: killFn };
+    }) as never);
 
     const token = fakeToken();
-    const promise = runCtx(["agent"], "/test", token);
-
-    // Simulate cancellation
+    const promise = runCtx(["agent"], "/test", token as never);
     token._fire();
     expect(killFn).toHaveBeenCalled();
 
-    // Process exits after kill — no output so it rejects
-    resolveCallback!(new Error("killed"), "", "");
-    await expect(promise).rejects.toThrow("killed");
+    finish(Object.assign(new Error("killed"), { killed: true, signal: "SIGTERM" }), "half", "");
+    await expect(promise).rejects.toThrow("cancelled or timed out");
   });
 
-  it("passes cwd to execFile", async () => {
-    vi.mocked(cp.execFile).mockImplementation(
-      (_cmd: unknown, _args: unknown, opts: unknown, cb: unknown) => {
-        (cb as (e: null, out: string, err: string) => void)(null, "", "");
-        return { kill: vi.fn() } as never;
-      }
-    );
-
+  it("passes cwd and never runs through a shell", async () => {
+    mockExec("");
     await runCtx(["status"], "/my/project");
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["status"],
-      expect.objectContaining({ cwd: "/my/project" }),
-      expect.any(Function)
-    );
+    const opts = vi.mocked(cp.execFile).mock.calls[0][2] as { cwd: string; shell?: unknown };
+    expect(opts.cwd).toBe("/my/project");
+    expect(opts.shell).toBeUndefined();
+  });
+
+  it("closes stdin so a prompting command cannot wait for input", async () => {
+    const end = vi.fn();
+    vi.mocked(cp.execFile).mockImplementation(((_c: unknown, _a: unknown, _o: unknown, cb: ExecCallback) => {
+      process.nextTick(() => cb(null, "", ""));
+      return { kill: vi.fn(), stdin: { end } };
+    }) as never);
+    await runCtx(["why"]);
+    expect(end).toHaveBeenCalled();
   });
 
   it("disposes cancellation listener when process completes", async () => {
@@ -181,18 +203,12 @@ describe("runCtx", () => {
       isCancellationRequested: false,
       onCancellationRequested: vi.fn(() => ({ dispose: disposeFn })),
     };
+    vi.mocked(cp.execFile).mockImplementation(((_c: unknown, _a: unknown, _o: unknown, cb: ExecCallback) => {
+      process.nextTick(() => cb(null, "done", ""));
+      return { kill: vi.fn() };
+    }) as never);
 
-    vi.mocked(cp.execFile).mockImplementation(
-      (_cmd: unknown, _args: unknown, _opts: unknown, cb: unknown) => {
-        // Simulate async callback like real execFile
-        process.nextTick(() =>
-          (cb as (e: null, out: string, err: string) => void)(null, "done", "")
-        );
-        return { kill: vi.fn() } as never;
-      }
-    );
-
-    await runCtx(["status"], "/test", token);
+    await runCtx(["status"], "/test", token as never);
     expect(disposeFn).toHaveBeenCalled();
   });
 });
@@ -202,503 +218,366 @@ describe("getPlatformInfo", () => {
     const info = getPlatformInfo();
     expect(["darwin", "linux", "windows"]).toContain(info.goos);
     expect(["amd64", "arm64"]).toContain(info.goarch);
-    if (info.goos === "windows") {
-      expect(info.ext).toBe(".exe");
-    } else {
-      expect(info.ext).toBe("");
-    }
+    expect(info.ext).toBe(info.goos === "windows" ? ".exe" : "");
   });
 });
 
-// Helpers for handler tests
-function fakeStream() {
-  return {
-    markdown: vi.fn(),
-    progress: vi.fn(),
-  };
-}
-
-function mockRunCtxSuccess(stdout: string, stderr = "") {
-  vi.mocked(cp.execFile).mockImplementation(
-    (_cmd: unknown, _args: unknown, _opts: unknown, cb: unknown) => {
-      (cb as (e: null, out: string, err: string) => void)(null, stdout, stderr);
-      return { kill: vi.fn() } as never;
-    }
-  );
-}
-
-function mockRunCtxError(message: string) {
-  vi.mocked(cp.execFile).mockImplementation(
-    (_cmd: unknown, _args: unknown, _opts: unknown, cb: unknown) => {
-      const err = new Error(message);
-      (cb as (e: Error, out: string, err: string) => void)(err, "", "");
-      return { kill: vi.fn() } as never;
-    }
-  );
-}
-
-describe("handleTask complete", () => {
-  beforeEach(() => vi.clearAllMocks());
-
-  it("shows usage when no task reference provided", async () => {
-    const stream = fakeStream();
-    const token = fakeToken();
-    const result = await handleTask(stream as never, "complete", "/test", token);
-    expect(result.metadata.command).toBe("task");
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Usage"));
-  });
-
-  it("runs complete command with task reference", async () => {
-    mockRunCtxSuccess("Task 3 marked as done");
-    const stream = fakeStream();
-    const token = fakeToken();
-    const result = await handleTask(stream as never, "complete 3", "/test", token);
-    expect(result.metadata.command).toBe("task");
-    expect(stream.progress).toHaveBeenCalledWith("Marking task as completed...");
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Task 3 marked as done"));
-  });
-
-  it("runs complete with text reference", async () => {
-    mockRunCtxSuccess("Completed: Fix login bug");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleTask(stream as never, "complete Fix login bug", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["task", "complete", "Fix login bug", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-  });
-
-  it("handles errors gracefully", async () => {
-    mockRunCtxError("task not found");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleTask(stream as never, "complete 99", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Error"));
+describe("tokenize", () => {
+  it("keeps double-quoted phrases together", () => {
+    expect(tokenize('decision Use Postgres --context "need a db" --x y')).toEqual([
+      "decision",
+      "Use",
+      "Postgres",
+      "--context",
+      "need a db",
+      "--x",
+      "y",
+    ]);
   });
 });
 
-describe("handleRemind", () => {
+describe("result rendering", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("lists reminders when no subcommand given", async () => {
-    mockRunCtxSuccess("1. Update docs\n2. Review PR");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleRemind(stream as never, "", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["remind", "list", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
+  it("fences successful output", async () => {
+    mockExec("3 tasks archived");
+    const { stream } = await run("task", "archive");
+    expect(markdownOf(stream)).toBe("```\n3 tasks archived\n```");
   });
 
-  it("adds reminder with 'add' subcommand", async () => {
-    mockRunCtxSuccess("Reminder added");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleRemind(stream as never, "add Check CI status", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["remind", "add", "Check CI status", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
+  it("reports a non-zero exit as such, never as a result", async () => {
+    mockExec("Error: unknown flag: --no-color", 1);
+    const { stream } = await run("status", "");
+    const md = markdownOf(stream);
+    expect(md).toContain("`ctx status` exited with code 1.");
+    expect(md).toContain("unknown flag");
   });
 
-  it("adds reminder when text provided without subcommand", async () => {
-    mockRunCtxSuccess("Reminder added");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleRemind(stream as never, "Check CI status", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["remind", "add", "Check CI status", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
+  it("points at /init when the folder has no .context/", async () => {
+    mockExec("Error: no .context here", 1);
+    const { stream } = await run("status", "");
+    expect(markdownOf(stream)).toContain("@ctx /init");
   });
 
-  it("lists reminders with 'list' subcommand", async () => {
-    mockRunCtxSuccess("No reminders");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleRemind(stream as never, "list", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["remind", "list", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
+  it("renders spawn failures as errors", async () => {
+    vi.mocked(cp.execFile).mockImplementation(((_c: unknown, _a: unknown, _o: unknown, cb: ExecCallback) => {
+      cb(Object.assign(new Error("spawn ctx ENOENT"), { code: "ENOENT" }), "", "");
+      return { kill: vi.fn() };
+    }) as never);
+    const { stream } = await run("drift", "");
+    expect(markdownOf(stream)).toContain("**Error:**");
+  });
+});
+
+describe("/task", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("shows usage when no subcommand given", async () => {
+    mockExec("");
+    const { stream, res } = await run("task", "");
+    expect(res.metadata.command).toBe("task");
+    expect(markdownOf(stream)).toContain("Usage");
+    expect(cp.execFile).not.toHaveBeenCalled();
   });
 
-  it("dismisses reminder by id", async () => {
-    mockRunCtxSuccess("Dismissed reminder 2");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleRemind(stream as never, "dismiss 2", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["remind", "dismiss", "2", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
+  it("shows usage for complete without a reference", async () => {
+    const { stream } = await run("task", "complete");
+    expect(markdownOf(stream)).toContain("Usage");
   });
 
-  it("dismisses all when no id given", async () => {
-    mockRunCtxSuccess("All dismissed");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleRemind(stream as never, "dismiss", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["remind", "dismiss", "--all", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
+  it.each([
+    ["complete Fix login bug", ["task", "complete", "Fix login bug"]],
+    ["archive", ["task", "archive"]],
+    ["snapshot pre-refactor", ["task", "snapshot", "pre-refactor"]],
+    ["snapshot", ["task", "snapshot"]],
+  ])("%s", async (prompt, argv) => {
+    mockExec("ok");
+    await run("task", prompt);
+    expect(ctxCalls()).toEqual([argv]);
+  });
+});
+
+describe("/remind", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it.each([
+    ["", ["remind", "list"]],
+    ["list", ["remind", "list"]],
+    ["add Check CI status", ["remind", "add", "Check CI status"]],
+    ["Check CI status", ["remind", "add", "Check CI status"]],
+    ["dismiss 2", ["remind", "dismiss", "2"]],
+    ["dismiss", ["remind", "dismiss", "--all"]],
+  ])("'%s'", async (prompt, argv) => {
+    mockExec("ok");
+    await run("remind", prompt);
+    expect(ctxCalls()).toEqual([argv]);
   });
 
   it("shows 'No reminders.' when output is empty", async () => {
-    mockRunCtxSuccess("");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleRemind(stream as never, "list", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith("No reminders.");
-  });
-
-  it("handles errors gracefully", async () => {
-    mockRunCtxError("failed");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleRemind(stream as never, "add test", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Error"));
+    mockExec("");
+    const { stream } = await run("remind", "list");
+    expect(markdownOf(stream)).toBe("No reminders.");
   });
 });
 
-describe("handleTask archive/snapshot", () => {
+describe("/pad", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("shows usage when no subcommand given", async () => {
-    const stream = fakeStream();
-    const token = fakeToken();
-    const result = await handleTask(stream as never, "", "/test", token);
-    expect(result.metadata.command).toBe("task");
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Usage"));
+  it.each([
+    ["", ["pad"]],
+    ["add my secret note", ["pad", "add", "my secret note"]],
+    ["show 1", ["pad", "show", "1"]],
+    ["rm 2 3", ["pad", "rm", "2", "3"]],
+    // `ctx pad edit N [TEXT]`: the text must stay one argument
+    ["edit 1 new text", ["pad", "edit", "1", "new text"]],
+    ["mv 1 3", ["pad", "mv", "1", "3"]],
+  ])("'%s'", async (prompt, argv) => {
+    mockExec("ok");
+    await run("pad", prompt);
+    expect(ctxCalls()).toEqual([argv]);
   });
 
-  it("runs archive subcommand", async () => {
-    mockRunCtxSuccess("Archived 3 tasks");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleTask(stream as never, "archive", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["task", "archive", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-    expect(stream.progress).toHaveBeenCalledWith("Archiving completed tasks...");
-  });
-
-  it("runs snapshot subcommand with name", async () => {
-    mockRunCtxSuccess("Snapshot created");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleTask(stream as never, "snapshot pre-refactor", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["task", "snapshot", "pre-refactor", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-  });
-
-  it("runs snapshot without name", async () => {
-    mockRunCtxSuccess("Snapshot created");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleTask(stream as never, "snapshot", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["task", "snapshot", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-  });
-
-  it("shows fallback message when archive output is empty", async () => {
-    mockRunCtxSuccess("");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleTask(stream as never, "archive", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith("Completed tasks archived.");
-  });
-
-  it("handles errors gracefully", async () => {
-    mockRunCtxError("no tasks file");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleTask(stream as never, "archive", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Error"));
-  });
-});
-
-describe("handlePad", () => {
-  beforeEach(() => vi.clearAllMocks());
-
-  it("lists all entries when no subcommand given", async () => {
-    mockRunCtxSuccess("1: secret key\n2: API token");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handlePad(stream as never, "", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["pad", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-  });
-
-  it("adds entry with 'add' subcommand", async () => {
-    mockRunCtxSuccess("Entry added");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handlePad(stream as never, "add my secret note", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["pad", "add", "my secret note", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-  });
-
-  it("shows usage when 'add' has no content", async () => {
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handlePad(stream as never, "add", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Usage"));
-  });
-
-  it("shows entry by number", async () => {
-    mockRunCtxSuccess("secret value");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handlePad(stream as never, "show 1", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["pad", "show", "1", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-  });
-
-  it("removes entry by number", async () => {
-    mockRunCtxSuccess("Entry removed");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handlePad(stream as never, "rm 2", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["pad", "rm", "2", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-  });
-
-  it("shows usage when 'rm' has no number", async () => {
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handlePad(stream as never, "rm", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Usage"));
-  });
-
-  it("edits entry", async () => {
-    mockRunCtxSuccess("Entry updated");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handlePad(stream as never, "edit 1 new text", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["pad", "edit", "1", "new", "text", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-  });
-
-  it("moves entry", async () => {
-    mockRunCtxSuccess("Entry moved");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handlePad(stream as never, "mv 1 3", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["pad", "mv", "1", "3", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
+  it.each(["add", "rm", "edit", "import"])("shows usage for '%s' without arguments", async (sub) => {
+    const { stream } = await run("pad", sub);
+    expect(markdownOf(stream)).toContain("Usage");
+    expect(cp.execFile).not.toHaveBeenCalled();
   });
 
   it("shows 'Scratchpad is empty.' when output is empty", async () => {
-    mockRunCtxSuccess("");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handlePad(stream as never, "", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith("Scratchpad is empty.");
-  });
-
-  it("handles errors gracefully", async () => {
-    mockRunCtxError("no key");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handlePad(stream as never, "add secret", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Error"));
+    mockExec("");
+    const { stream } = await run("pad", "");
+    expect(markdownOf(stream)).toBe("Scratchpad is empty.");
   });
 });
 
-describe("handleNotify", () => {
+describe("/notify", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("shows usage when no subcommand given", async () => {
-    const stream = fakeStream();
-    const token = fakeToken();
-    const result = await handleNotify(stream as never, "", "/test", token);
-    expect(result.metadata.command).toBe("notify");
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Usage"));
+  it("shows usage when no message given", async () => {
+    const { stream } = await run("notify", "");
+    expect(markdownOf(stream)).toContain("Usage");
   });
 
-  it("runs setup subcommand", async () => {
-    mockRunCtxSuccess("Webhook configured");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleNotify(stream as never, "setup", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["notify", "setup", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-    expect(stream.progress).toHaveBeenCalledWith("Setting up webhook...");
+  it("sends setup to the terminal, so the webhook URL never enters the chat", async () => {
+    const { stream } = await run("notify", "setup");
+    expect(markdownOf(stream)).toContain("ctx hook notify setup");
+    expect(cp.execFile).not.toHaveBeenCalled();
   });
 
-  it("runs test subcommand", async () => {
-    mockRunCtxSuccess("Test OK");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleNotify(stream as never, "test", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["notify", "test", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-  });
-
-  it("sends notification with message", async () => {
-    mockRunCtxSuccess("Sent");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleNotify(stream as never, "build done --event build", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["notify", "build", "done", "--event", "build", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
-    );
-  });
-
-  it("shows fallback on empty setup output", async () => {
-    mockRunCtxSuccess("");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleNotify(stream as never, "setup", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith("Webhook configured.");
-  });
-
-  it("shows fallback on empty test output", async () => {
-    mockRunCtxSuccess("");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleNotify(stream as never, "test", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith("Test notification sent.");
-  });
-
-  it("handles errors gracefully", async () => {
-    mockRunCtxError("webhook failed");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleNotify(stream as never, "test", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Error"));
+  it.each([
+    ["test", ["hook", "notify", "test"]],
+    // `ctx hook notify [message]`: the message must stay one argument
+    ["build done --event build", ["hook", "notify", "build done", "--event", "build"]],
+  ])("'%s'", async (prompt, argv) => {
+    mockExec("ok");
+    await run("notify", prompt);
+    expect(ctxCalls()).toEqual([argv]);
   });
 });
 
-describe("handleSystem", () => {
+describe("/system", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("shows usage when no subcommand given", async () => {
-    const stream = fakeStream();
-    const token = fakeToken();
-    const result = await handleSystem(stream as never, "", "/test", token);
-    expect(result.metadata.command).toBe("system");
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Usage"));
+    const { stream } = await run("system", "");
+    expect(markdownOf(stream)).toContain("Usage");
   });
 
-  it("runs resources subcommand", async () => {
-    mockRunCtxSuccess("Memory: 4GB / 16GB\nDisk: 50%");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleSystem(stream as never, "resources", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["system", "resources", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
+  it.each([
+    ["resources", ["sysinfo"]],
+    ["bootstrap", ["system", "bootstrap"]],
+    ["stats", ["usage"]],
+    ["message", ["hook", "message", "list"]],
+    ["message show check-freshness stale", ["hook", "message", "show", "check-freshness", "stale"]],
+  ])("'%s'", async (prompt, argv) => {
+    mockExec("ok");
+    await run("system", prompt);
+    expect(ctxCalls()).toEqual([argv]);
+  });
+});
+
+describe("/why", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("defaults to the manifesto instead of the interactive menu", async () => {
+    mockExec("# The ctx Manifesto");
+    await run("why", "");
+    expect(ctxCalls()).toEqual([["why", "manifesto"]]);
+  });
+});
+
+describe("/add", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("shows usage for an unknown type", async () => {
+    const { stream } = await run("add", "idea something");
+    expect(markdownOf(stream)).toContain("Usage");
+    expect(cp.execFile).not.toHaveBeenCalled();
+  });
+
+  it("adds a task with provenance", async () => {
+    mockExec("✓ Added to TASKS.md");
+    await run("add", 'task Fix login bug --section "Phase 1"');
+    expect(ctxCalls()).toEqual([
+      [
+        "task", "add", "Fix login bug",
+        "--section", "Phase 1",
+        "--session-id", "01234567", "--branch", "main", "--commit", "abc1234",
+      ],
+    ]);
+  });
+
+  it("passes quoted flag values as single arguments and keeps user provenance", async () => {
+    mockExec("✓ Added to DECISIONS.md");
+    await run(
+      "add",
+      'decision Use PostgreSQL --context "Need a reliable DB" --rationale ACID --consequence "Ops training" --branch release'
     );
-    expect(stream.progress).toHaveBeenCalledWith("Checking system resources...");
+    expect(ctxCalls()).toEqual([
+      [
+        "decision", "add", "Use PostgreSQL",
+        "--context", "Need a reliable DB", "--rationale", "ACID",
+        "--consequence", "Ops training", "--branch", "release",
+        "--session-id", "01234567", "--commit", "abc1234",
+      ],
+    ]);
   });
 
-  it("runs bootstrap subcommand", async () => {
-    mockRunCtxSuccess("context_dir: .context");
+  it("adds a convention without provenance", async () => {
+    mockExec("✓ Added to CONVENTIONS.md");
+    await run("add", "convention Use camelCase --section Naming");
+    expect(ctxCalls()).toEqual([["convention", "add", "Use camelCase", "--section", "Naming"]]);
+  });
+
+  it("surfaces the CLI's missing-field error", async () => {
+    mockExec("Error: decision requires --context, --rationale, --consequence", 1);
+    const { stream } = await run("add", "decision Use PostgreSQL");
+    expect(markdownOf(stream)).toContain("exited with code 1");
+  });
+});
+
+describe("skill-backed commands", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  function fakeModel(fragments: string[]) {
+    return {
+      sendRequest: vi.fn(async () => ({
+        text: (async function* () {
+          yield* fragments;
+        })(),
+      })),
+    };
+  }
+
+  function request(command: string | undefined, prompt: string, model: unknown, references: unknown[] = []) {
+    return { command, prompt, model, references } as never;
+  }
+
+  it("grounds the canonical skill in live ctx output and streams the answer", async () => {
+    mockExec("# Context Packet");
+    const model = fakeModel(["Recommended ", "next"]);
     const stream = fakeStream();
-    const token = fakeToken();
-    await handleSystem(stream as never, "bootstrap", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["system", "bootstrap", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
+    const res = await handler(request("next", "", model), { history: [] } as never, stream as never, fakeToken() as never);
+
+    expect(res).toEqual({ metadata: { command: "next" } });
+    expect(ctxCalls()).toContainEqual(["agent"]);
+    expect(ctxCalls()).toContainEqual(["journal", "source", "--limit", "3"]);
+    const [messages] = model.sendRequest.mock.calls[0] as unknown as [Array<{ content: string }>];
+    expect(messages[0].content).toContain(SKILLS.next.text);
+    expect(messages[1].content).toContain("# Context Packet");
+    expect(stream.markdown.mock.calls.map((c) => c[0])).toEqual(["Recommended ", "next"]);
+  });
+
+  it("inlines #file attachments", async () => {
+    mockExec("packet");
+    const model = fakeModel(["ok"]);
+    const ref = { value: new vs.Uri("/test/workspace/specs/plans/m1.md") };
+    await handler(request("implement", "", model, [ref]), { history: [] } as never, fakeStream() as never, fakeToken() as never);
+    const [messages] = model.sendRequest.mock.calls[0] as unknown as [Array<{ content: string }>];
+    expect(messages[1].content).toContain("attached text");
+  });
+
+  it("continues the previous skill when a reply has no slash command", async () => {
+    mockExec("packet");
+    const model = fakeModel(["next question"]);
+    const history = [
+      new vs.ChatRequestTurn("an auth idea", "brainstorm"),
+      new vs.ChatResponseTurn(
+        [new vs.ChatResponseMarkdownPart("What problem does it solve?")],
+        { metadata: { command: "brainstorm" } }
+      ),
+    ];
+    const res = await handler(
+      request(undefined, "logins keep expiring, the status page is wrong", model),
+      { history } as never,
+      fakeStream() as never,
+      fakeToken() as never
     );
-    expect(stream.progress).toHaveBeenCalledWith("Running bootstrap...");
+    expect(res?.metadata?.command).toBe("brainstorm");
+    const [messages] = model.sendRequest.mock.calls[0] as unknown as [Array<{ role: string; content: string }>];
+    expect(messages[0].content).toContain(SKILLS.brainstorm.text);
+    expect(messages).toContainEqual({ role: "user", content: "/brainstorm an auth idea" });
+    expect(messages).toContainEqual({ role: "assistant", content: "What problem does it solve?" });
   });
 
-  it("runs message subcommand with arguments", async () => {
-    mockRunCtxSuccess("Hook messages listed");
+  it("never sends CLI command turns (e.g. /pad) to the model", async () => {
+    mockExec("packet");
+    const model = fakeModel(["ok"]);
+    const history = [
+      new vs.ChatRequestTurn("add api-key=s3cret", "pad"),
+      new vs.ChatResponseTurn([new vs.ChatResponseMarkdownPart("Added entry 1.")], {
+        metadata: { command: "pad" },
+      }),
+    ];
+    await handler(request("reflect", "", model), { history } as never, fakeStream() as never, fakeToken() as never);
+    const [messages] = model.sendRequest.mock.calls[0] as unknown as [Array<{ content: string }>];
+    expect(JSON.stringify(messages)).not.toContain("s3cret");
+  });
+
+  it("reports model failures instead of throwing", async () => {
+    mockExec("packet");
+    const model = { sendRequest: vi.fn(async () => Promise.reject(new Error("quota exceeded"))) };
     const stream = fakeStream();
-    const token = fakeToken();
-    await handleSystem(stream as never, "message list", "/test", token);
-    expect(cp.execFile).toHaveBeenCalledWith(
-      "ctx",
-      ["system", "message", "list", "--no-color"],
-      expect.anything(),
-      expect.any(Function)
+    await handler(request("reflect", "", model), { history: [] } as never, stream as never, fakeToken() as never);
+    expect(markdownOf(stream)).toContain("quota exceeded");
+  });
+});
+
+describe("natural-language routing", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("routes to read-only commands and passes them no arguments", async () => {
+    mockExec("ok");
+    const res = await handler(
+      { command: undefined, prompt: "show me the status of the login task", references: [] } as never,
+      { history: [] } as never,
+      fakeStream() as never,
+      fakeToken() as never
     );
+    expect(res?.metadata?.command).toBe("status");
+    expect(ctxCalls()).toContainEqual(["status"]);
   });
 
-  it("shows 'No output.' when output is empty", async () => {
-    mockRunCtxSuccess("");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleSystem(stream as never, "resources", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith("No output.");
+  it("never mutates context on a keyword match", async () => {
+    mockExec("ok");
+    await handler(
+      { command: undefined, prompt: "is the login task done? remind me to archive it", references: [] } as never,
+      { history: [] } as never,
+      fakeStream() as never,
+      fakeToken() as never
+    );
+    const mutating = ctxCalls().filter((argv) => ["task", "remind", "pad", "add"].includes(argv[0]));
+    expect(mutating).toEqual([]);
   });
 
-  it("handles errors gracefully", async () => {
-    mockRunCtxError("system error");
-    const stream = fakeStream();
-    const token = fakeToken();
-    await handleSystem(stream as never, "resources", "/test", token);
-    expect(stream.markdown).toHaveBeenCalledWith(expect.stringContaining("Error"));
+  it("falls back to help", async () => {
+    mockExec("ok");
+    const res = await handler(
+      { command: undefined, prompt: "hello", references: [] } as never,
+      { history: [] } as never,
+      fakeStream() as never,
+      fakeToken() as never
+    );
+    expect(res?.metadata?.command).toBe("help");
   });
 });
