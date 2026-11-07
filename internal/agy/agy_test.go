@@ -103,6 +103,28 @@ func TestPluginInstalledAndEnabled(t *testing.T) {
 	if PluginEnabled(cfgDir) {
 		t.Fatal("PluginEnabled returned true for disabled plugin.json")
 	}
+
+	// Re-enable plugin.json, disable via config.json (agy plugin disable ctx)
+	if err := os.WriteFile(pluginFile, []byte(`{"name":"ctx"}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	cfgFile := filepath.Join(cfgDir, cfgAgy.FileConfigJSON)
+	if err := os.WriteFile(
+		cfgFile, []byte(`{"plugins":{"ctx":{"enabled":false}}}`), 0o644,
+	); err != nil {
+		t.Fatal(err)
+	}
+	if PluginEnabled(cfgDir) {
+		t.Fatal("PluginEnabled returned true when config.json enabled=false")
+	}
+	if err := os.WriteFile(
+		cfgFile, []byte(`{"plugins":{"ctx":{"enabled":true}}}`), 0o644,
+	); err != nil {
+		t.Fatal(err)
+	}
+	if !PluginEnabled(cfgDir) {
+		t.Fatal("PluginEnabled returned false when config.json enabled=true")
+	}
 }
 
 func mockAgyOnPath(t *testing.T) {

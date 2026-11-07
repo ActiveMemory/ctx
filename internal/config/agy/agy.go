@@ -20,6 +20,12 @@ const (
 	KeyCtx = "ctx"
 	// KeyDisabled is the disabled flag key in plugin.json.
 	KeyDisabled = "disabled"
+	// FileConfigJSON is the Antigravity global config filename under DirConfig.
+	FileConfigJSON = "config.json"
+	// KeyPlugins is the plugins map key in config.json.
+	KeyPlugins = "plugins"
+	// KeyEnabled is the enabled flag key in config.json plugin entries.
+	KeyEnabled = "enabled"
 )
 
 // Antigravity tool names reported in hook payloads.

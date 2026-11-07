@@ -120,5 +120,18 @@ func PluginEnabled(configDir string) bool {
 			return false
 		}
 	}
+	cfgPath := filepath.Join(configDir, cfgAgy.FileConfigJSON)
+	if cfgData, cfgErr := ctxIo.SafeReadUserFile(cfgPath); cfgErr == nil {
+		var root map[string]any
+		if json.Unmarshal(cfgData, &root) == nil {
+			if plugins, ok := root[cfgAgy.KeyPlugins].(map[string]any); ok {
+				if entry, ok := plugins[cfgAgy.PluginName].(map[string]any); ok {
+					if enabled, ok := entry[cfgAgy.KeyEnabled].(bool); ok && !enabled {
+						return false
+					}
+				}
+			}
+		}
+	}
 	return true
 }
