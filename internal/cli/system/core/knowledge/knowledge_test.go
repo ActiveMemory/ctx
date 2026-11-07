@@ -85,7 +85,8 @@ func TestHealth_HeavyThemeFile(t *testing.T) {
 	got := Health(dir, Thresholds{Conventions: 12, PageBytes: 65536})
 	var heavyFile string
 	for _, f := range got {
-		if f.Kind == heavy && strings.Contains(f.File, "conventions/x.md") {
+		if f.Kind == heavy &&
+			strings.Contains(filepath.ToSlash(f.File), "conventions/x.md") {
 			heavyFile = f.File
 		}
 	}

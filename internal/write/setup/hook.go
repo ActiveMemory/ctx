@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/config/agy"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 )
 
@@ -27,6 +29,10 @@ func Nudge(cmd *cobra.Command, nudgeBox string) {
 	if cmd == nil {
 		return
 	}
+	if coreSession.Agy() {
+		coreSession.AddAgyStep(nudgeBox)
+		return
+	}
 	cmd.Println(nudgeBox)
 }
 
@@ -38,6 +44,10 @@ func Nudge(cmd *cobra.Command, nudgeBox string) {
 //   - nudgeBox: fully formatted nudge box string.
 func NudgeBlock(cmd *cobra.Command, nudgeBox string) {
 	if cmd == nil || nudgeBox == "" {
+		return
+	}
+	if coreSession.Agy() {
+		coreSession.AddAgyStep(nudgeBox)
 		return
 	}
 	cmd.Println(nudgeBox)
@@ -53,6 +63,10 @@ func Context(cmd *cobra.Command, response string) {
 	if cmd == nil {
 		return
 	}
+	if coreSession.Agy() {
+		coreSession.AddAgyStep(response)
+		return
+	}
 	cmd.Println(response)
 }
 
@@ -65,7 +79,75 @@ func BlockResponse(cmd *cobra.Command, response string) {
 	if cmd == nil {
 		return
 	}
+	if coreSession.Agy() {
+		EmitAgyEmpty(cmd)
+		return
+	}
 	cmd.Println(response)
+}
+
+// EmitAgyDecision writes an Antigravity decision to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - decision: decision value (e.g. agy.DecisionAllow or agy.DecisionDeny).
+//   - reason: explanation if decision is deny.
+func EmitAgyDecision(cmd *cobra.Command, decision, reason string) {
+	if cmd == nil || !coreSession.Agy() {
+		return
+	}
+	cmd.Println(coreSession.FormatAgyDecision(decision, reason))
+	coreSession.SetAgyOutputWritten(true)
+}
+
+// EmitAgyAllow writes an Antigravity allow decision to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func EmitAgyAllow(cmd *cobra.Command) {
+	if cmd == nil || !coreSession.Agy() || coreSession.AgyOutputWritten() {
+		return
+	}
+	cmd.Println(coreSession.FormatAgyDecision(agy.DecisionAllow, ""))
+	coreSession.SetAgyOutputWritten(true)
+}
+
+// EmitAgyEmpty writes an empty JSON object to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func EmitAgyEmpty(cmd *cobra.Command) {
+	if cmd == nil || !coreSession.Agy() || coreSession.AgyOutputWritten() {
+		return
+	}
+	cmd.Println(agy.EmptyJSON)
+	coreSession.SetAgyOutputWritten(true)
+}
+
+// FlushAgySteps drains and emits any accumulated Antigravity steps.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+func FlushAgySteps(cmd *cobra.Command) {
+	if cmd == nil || !coreSession.Agy() || coreSession.AgyOutputWritten() {
+		return
+	}
+	steps := coreSession.DrainAgySteps()
+	cmd.Println(coreSession.FormatAgyInjectSteps(steps))
+	coreSession.SetAgyOutputWritten(true)
+}
+
+// EmitAgyInjectSteps writes Antigravity injectSteps to stdout.
+//
+// Parameters:
+//   - cmd: Cobra command for output. Nil is a no-op.
+//   - steps: list of message bodies to inject.
+func EmitAgyInjectSteps(cmd *cobra.Command, steps []string) {
+	if cmd == nil || !coreSession.Agy() {
+		return
+	}
+	cmd.Println(coreSession.FormatAgyInjectSteps(steps))
+	coreSession.SetAgyOutputWritten(true)
 }
 
 // InfoTool prints a tool integration section to stdout.
@@ -222,6 +304,104 @@ func InfoOpenCodeSkipped(cmd *cobra.Command, targetFile string) {
 func InfoOpenCodeSummary(cmd *cobra.Command) {
 	cmd.Println()
 	cmd.Println(desc.Text(text.DescKeyWriteHookOpenCodeSummary))
+}
+
+// InfoAgyCreated reports that an Antigravity integration file was created.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the created file
+func InfoAgyCreated(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookAgyCreated),
+		targetFile))
+}
+
+// InfoAgyMerged reports that ctx content was merged into an
+// existing Antigravity integration file.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the merged file
+func InfoAgyMerged(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookAgyMerged),
+		targetFile))
+}
+
+// InfoAgySkipped reports that an Antigravity integration file was
+// skipped because it is already up to date.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the existing file
+func InfoAgySkipped(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookAgySkipped),
+		targetFile))
+}
+
+// InfoAgyRejected reports that a foreign (not ctx-managed) file
+// occupies an Antigravity integration path and was left untouched.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - targetFile: Path to the foreign file
+func InfoAgyRejected(cmd *cobra.Command, targetFile string) {
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookAgyRejected),
+		targetFile))
+}
+
+// InfoAgyPluginActive reports that the ctx Antigravity plugin is
+// enabled, so hooks, MCP, and skills are not deployed per project.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoAgyPluginActive(cmd *cobra.Command) {
+	cmd.Println(desc.Text(text.DescKeyWriteHookAgyPluginActive))
+}
+
+// InfoAgyProjectAlso warns that a project-local .agents/hooks.json
+// coexists with the enabled plugin, which would run every hook
+// twice; names the file to remove.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoAgyProjectAlso(cmd *cobra.Command) {
+	cmd.Println(desc.Text(text.DescKeyWriteHookAgyProjectAlso))
+}
+
+// InfoAgySummary prints the post-write summary for Antigravity.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoAgySummary(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(desc.Text(text.DescKeyWriteHookAgySummary))
+}
+
+// InfoAgySummaryPlugin prints the post-write summary for the
+// plugin-enabled short-circuit: hooks, MCP, and skills come from
+// the installed plugin, so only AGENTS.md was deployed.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoAgySummaryPlugin(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(desc.Text(text.DescKeyWriteHookAgySummaryPlugin))
+}
+
+// InfoAgyState prints the detection state line for
+// `ctx setup agy`.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - stateLabel: human-readable detection state
+func InfoAgyState(cmd *cobra.Command, stateLabel string) {
+	cmd.Println()
+	cmd.Println(fmt.Sprintf(
+		desc.Text(text.DescKeyWriteHookAgyState), stateLabel))
 }
 
 // InfoCodexCreated reports that a Codex integration file was created.

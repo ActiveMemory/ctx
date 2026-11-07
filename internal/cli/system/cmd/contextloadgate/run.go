@@ -15,6 +15,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreBudget "github.com/ActiveMemory/ctx/internal/cli/agent/core/budget"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/detect"
 	"github.com/ActiveMemory/ctx/internal/cli/change/core/render"
 	changeCore "github.com/ActiveMemory/ctx/internal/cli/change/core/scan"
@@ -29,6 +30,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/loadgate"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
+	ctxLoad "github.com/ActiveMemory/ctx/internal/context/load"
 	ctxToken "github.com/ActiveMemory/ctx/internal/context/token"
 	"github.com/ActiveMemory/ctx/internal/entity"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
@@ -53,6 +55,11 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
+	input := coreSession.ReadInput(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.EmitAgyEmpty(cmd)
+	}
+
 	initialized, initErr := state.Initialized()
 	if initErr != nil {
 		logWarn.Warn(warn.StateInitializedProbe, initErr)
@@ -62,7 +69,6 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	input := coreSession.ReadInput(stdin)
 	if input.SessionID == "" {
 		return nil
 	}
@@ -103,10 +109,27 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var filesLoaded int
 	var perFile []entity.FileTokenEntry
 
+	if coreSession.Agy() {
+		if ctxObj, ctxLoadErr := ctxLoad.Do(""); ctxLoadErr == nil {
+			budgetTokens := rc.TokenBudget()
+			pkt := coreBudget.AssemblePacket(
+				ctxObj, budgetTokens, nil, "", nil,
+			)
+			if pkt != nil {
+				agentText := coreBudget.RenderMarkdownPacket(pkt)
+				if agentText != "" {
+					content.WriteString(agentText)
+					content.WriteString(token.NewlineLF + token.NewlineLF)
+				}
+			}
+		}
+	}
+
 	content.WriteString(
 		desc.Text(text.DescKeyContextLoadGateHeader) +
 			strings.Repeat(
-				loadgate.ContextLoadSeparatorChar, loadgate.ContextLoadSeparatorWidth,
+				loadgate.ContextLoadSeparatorChar,
+				loadgate.ContextLoadSeparatorWidth,
 			) +
 			token.NewlineLF + token.NewlineLF,
 	)
@@ -147,9 +170,16 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	internalIo.SafeFprintf(&content, desc.Text(text.DescKeyContextLoadGateFooter),
 		filesLoaded, totalTokens)
 
-	writeSetup.Context(
-		cmd, coreSession.FormatContext(hook.EventPreToolUse, content.String()),
-	)
+	if coreSession.Agy() {
+		writeSetup.EmitAgyInjectSteps(cmd, []string{content.String()})
+	} else {
+		writeSetup.Context(
+			cmd,
+			coreSession.FormatContext(
+				hook.EventPreToolUse, content.String(),
+			),
+		)
+	}
 
 	// Webhook: metadata only - never send file content externally.
 	// Log-first: Relay writes the event log then sends the webhook;

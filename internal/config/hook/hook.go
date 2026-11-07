@@ -61,19 +61,22 @@ const (
 
 // Supported integration tool names for ctx setup command.
 const (
-	ToolAgents     = "agents"
-	ToolAider      = "aider"
-	ToolClaude     = "claude"
-	ToolClaudeCode = "claude-code"
-	ToolCopilot    = "copilot"
-	ToolCopilotCLI = "copilot-cli"
-	ToolCursor     = "cursor"
-	ToolKiro       = "kiro"
-	ToolCline      = "cline"
-	ToolCodex      = "codex"
-	ToolOpenCode   = "opencode"
-	ToolPi         = "pi"
-	ToolWindsurf   = "windsurf"
+	ToolAgents      = "agents"
+	ToolAgy         = "agy"
+	ToolAider       = "aider"
+	ToolAntigravity = "antigravity"
+	ToolBash        = "Bash"
+	ToolClaude      = "claude"
+	ToolClaudeCode  = "claude-code"
+	ToolCopilot     = "copilot"
+	ToolCopilotCLI  = "copilot-cli"
+	ToolCursor      = "cursor"
+	ToolKiro        = "kiro"
+	ToolCline       = "cline"
+	ToolCodex       = "codex"
+	ToolOpenCode    = "opencode"
+	ToolPi          = "pi"
+	ToolWindsurf    = "windsurf"
 )
 
 // Copilot integration paths.

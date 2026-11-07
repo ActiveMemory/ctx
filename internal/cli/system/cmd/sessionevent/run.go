@@ -8,10 +8,15 @@ package sessionevent
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
+	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	coreState "github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgEvent "github.com/ActiveMemory/ctx/internal/config/event"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
@@ -21,9 +26,7 @@ import (
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	wSession "github.com/ActiveMemory/ctx/internal/write/session"
-
-	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
-	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the session-event command logic.
@@ -40,6 +43,16 @@ import (
 // Returns:
 //   - error: Non-nil if eventType is invalid
 func Run(cmd *cobra.Command, eventType, caller string) error {
+	isAgy := caller == cfgHook.ToolAgy ||
+		caller == cfgHook.ToolAntigravity ||
+		coreSession.Agy()
+	if isAgy {
+		_ = coreCheck.ReadInput(os.Stdin)
+	}
+	if coreSession.Agy() {
+		defer writeSetup.EmitAgyEmpty(cmd)
+	}
+
 	initialized, initErr := coreState.Initialized()
 	if initErr != nil {
 		logWarn.Warn(warn.StateInitializedProbe, initErr)
@@ -54,7 +67,9 @@ func Run(cmd *cobra.Command, eventType, caller string) error {
 			cfgEvent.TypeStart, cfgEvent.TypeEnd, eventType)
 	}
 
-	msg := fmt.Sprintf(desc.Text(text.DescKeyWriteSessionEvent), eventType, caller)
+	msg := fmt.Sprintf(
+		desc.Text(text.DescKeyWriteSessionEvent), eventType, caller,
+	)
 	ref := entity.NewTemplateRef(cfgHook.SessionEvent, eventType,
 		map[string]any{cfgEvent.VarCaller: caller})
 
@@ -72,6 +87,10 @@ func Run(cmd *cobra.Command, eventType, caller string) error {
 		cfgEvent.CategorySession, msg, "", ref,
 	); sendErr != nil {
 		return sendErr
+	}
+
+	if isAgy || coreSession.Agy() {
+		return nil
 	}
 
 	wSession.Event(cmd, eventType, caller)

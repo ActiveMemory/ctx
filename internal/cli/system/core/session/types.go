@@ -19,6 +19,27 @@ type responseOutput struct {
 	AdditionalContext string `json:"additionalContext,omitempty"`
 }
 
+// agyInjectStep represents a single step in injectSteps.
+type agyInjectStep struct {
+	SystemMessage agySystemMsg `json:"systemMessage"`
+}
+
+// agySystemMsg represents the inner system message container.
+type agySystemMsg struct {
+	SystemMessage string `json:"systemMessage"`
+}
+
+// agyInjectStepsResponse is the Antigravity injectSteps envelope.
+type agyInjectStepsResponse struct {
+	InjectSteps []agyInjectStep `json:"injectSteps"`
+}
+
+// agyDecisionResponse is the Antigravity PreToolUse decision envelope.
+type agyDecisionResponse struct {
+	Decision string `json:"decision"`
+	Reason   string `json:"reason,omitempty"`
+}
+
 // usageData represents the minimal usage fields from a Claude Code JSONL
 // assistant message. Only the fields needed for token counting are included.
 type usageData struct {
@@ -27,11 +48,13 @@ type usageData struct {
 	CacheReadInputTokens     int `json:"cache_read_input_tokens"`
 }
 
-// jsonlMessage represents the minimal structure of a Claude Code JSONL line
-// needed to extract usage and model data from assistant messages.
+// jsonlMessage represents the structure of a Claude Code or Antigravity
+// JSONL line needed to extract usage and model data from assistant messages.
 type jsonlMessage struct {
-	Type    string `json:"type"`
-	Message struct {
+	Type            string `json:"type"`
+	InputTokens     int    `json:"input_tokens"`
+	CacheReadTokens int    `json:"cache_read_tokens"`
+	Message         struct {
 		Role  string    `json:"role"`
 		Model string    `json:"model"`
 		Usage usageData `json:"usage"`

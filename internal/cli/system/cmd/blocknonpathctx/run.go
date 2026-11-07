@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/config/agy"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
@@ -41,6 +42,9 @@ import (
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	input := coreSession.ReadInput(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.EmitAgyAllow(cmd)
+	}
 	command := input.ToolInput.Command
 
 	if command == "" {
@@ -74,10 +78,27 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	if reason != "" {
+		fullReason := reason + token.NewlineLF + token.NewlineLF +
+			desc.Text(text.DescKeyBlockConstitutionSuffix)
+		if coreSession.Agy() {
+			writeSetup.EmitAgyDecision(
+				cmd, agy.DecisionDeny, fullReason,
+			)
+			blockRef := notify.NewTemplateRef(
+				hook.BlockNonPathCtx, variant, nil,
+			)
+			return nudge.Relay(
+				fmt.Sprintf(
+					desc.Text(text.DescKeyRelayPrefixFormat),
+					hook.BlockNonPathCtx,
+					desc.Text(text.DescKeyBlockNonPathRelayMessage),
+				),
+				input.SessionID, blockRef,
+			)
+		}
 		resp := entity.BlockResponse{
 			Decision: hook.DecisionBlock,
-			Reason: reason + token.NewlineLF + token.NewlineLF +
-				desc.Text(text.DescKeyBlockConstitutionSuffix),
+			Reason:   fullReason,
 		}
 		data, marshalErr := json.Marshal(resp)
 		if marshalErr != nil {

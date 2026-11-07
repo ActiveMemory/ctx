@@ -38,6 +38,9 @@ import (
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	input, _, _, _, ok := coreCheck.FullPreamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.EmitAgyAllow(cmd)
+	}
 	bailSilently := !ok
 	if bailSilently {
 		return nil
@@ -52,6 +55,18 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	msg, appendErr := ctxContext.AppendDir(msg)
 	if appendErr != nil {
 		return appendErr
+	}
+	if coreSession.Agy() {
+		coreSession.QueuePendingAgy(msg)
+		nudgeMsg := desc.Text(text.DescKeySpecsNudgeNudgeMessage)
+		ref := notify.NewTemplateRef(hook.SpecsNudge, hook.VariantNudge, nil)
+		return nudge.Relay(
+			fmt.Sprintf(
+				desc.Text(text.DescKeyRelayPrefixFormat),
+				hook.SpecsNudge, nudgeMsg,
+			),
+			input.SessionID, ref,
+		)
 	}
 	writeSetup.Context(cmd, coreSession.FormatContext(hook.EventPreToolUse, msg))
 	nudgeMsg := desc.Text(text.DescKeySpecsNudgeNudgeMessage)
