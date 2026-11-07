@@ -62,13 +62,14 @@ func manifestVersion(t *testing.T, embeddedPath string) string {
 }
 
 // TestPluginVersion asserts that every embedded plugin manifest
-// (Claude Code and Codex) carries a semver version equal to the
+// (Claude Code, Codex, and Antigravity) carries a semver version equal to the
 // project-root VERSION file.
 func TestPluginVersion(t *testing.T) {
 	want := repoVersion(t)
 	for _, manifestPath := range []string{
 		asset.PathPluginJSON,
 		asset.PathCodexPluginJSON,
+		asset.PathAgyPluginJSON,
 	} {
 		t.Run(manifestPath, func(t *testing.T) {
 			ver := manifestVersion(t, manifestPath)

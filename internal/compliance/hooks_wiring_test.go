@@ -53,6 +53,7 @@ type shippedHookFile struct {
 var shippedHookManifests = []struct {
 	segments []string
 	anchor   string
+	isAgy    bool
 }{
 	{
 		segments: []string{
@@ -65,12 +66,18 @@ var shippedHookManifests = []struct {
 		},
 		anchor: cfgCodex.HookPrologue,
 	},
+	{
+		segments: []string{
+			"internal", "assets", "agy", "hooks.json",
+		},
+		isAgy: true,
+	},
 }
 
 // TestShippedHooksResolveToRegisteredCommands asserts that every
 // `ctx <…>` invocation wired into each shipped hooks.json (Claude
-// Code and Codex) resolves to a registered subcommand on the
-// assembled command tree.
+// Code, Codex, and Antigravity) resolves to a registered subcommand
+// on the assembled command tree.
 //
 // This is the recurrence guard for the version-skew bug recorded
 // in specs/hooks-wiring-guard.md: a published plugin whose
@@ -92,25 +99,40 @@ func TestShippedHooksResolveToRegisteredCommands(t *testing.T) {
 				t.Fatalf("read shipped hooks.json: %v", err)
 			}
 
-			var hf shippedHookFile
-			if err := json.Unmarshal(data, &hf); err != nil {
-				t.Fatalf("decode shipped hooks.json: %v", err)
-			}
-
 			checked := 0
-			for event, groups := range hf.Hooks {
-				for _, group := range groups {
-					for _, h := range group.Hooks {
-						command := h.Command
-						if manifest.anchor != "" {
-							if !strings.HasPrefix(command, manifest.anchor) {
-								t.Errorf(
-									"%s hook %q does not start with anchor %q",
-									event, command, manifest.anchor,
-								)
+			if manifest.isAgy {
+				var am struct {
+					Ctx map[string]json.RawMessage `json:"ctx"`
+				}
+				if err := json.Unmarshal(data, &am); err != nil {
+					t.Fatalf("decode shipped agy hooks.json: %v", err)
+				}
+				if am.Ctx == nil {
+					t.Fatal("missing top-level \"ctx\" in agy hooks.json")
+				}
+				for event, raw := range am.Ctx {
+					var commands []string
+					var matchers []struct {
+						Hooks []struct {
+							Command string `json:"command"`
+						} `json:"hooks"`
+					}
+					var flat []struct {
+						Command string `json:"command"`
+					}
+					if err := json.Unmarshal(raw, &matchers); err == nil &&
+						len(matchers) > 0 && len(matchers[0].Hooks) > 0 {
+						for _, g := range matchers {
+							for _, h := range g.Hooks {
+								commands = append(commands, h.Command)
 							}
-							command = strings.TrimPrefix(command, manifest.anchor)
 						}
+					} else if err := json.Unmarshal(raw, &flat); err == nil {
+						for _, h := range flat {
+							commands = append(commands, h.Command)
+						}
+					}
+					for _, command := range commands {
 						for _, path := range ctxInvocationPaths(command) {
 							checked++
 							if token, ok := pathResolved(tree, path); !ok {
@@ -119,9 +141,44 @@ func TestShippedHooksResolveToRegisteredCommands(t *testing.T) {
 										"registered subcommand; shipped hooks must "+
 										"match the binary's command tree "+
 										"(see specs/hooks-wiring-guard.md)",
-									event, h.Command,
+									event, command,
 									strings.Join(path, " "), token,
 								)
+							}
+						}
+					}
+				}
+			} else {
+				var hf shippedHookFile
+				if err := json.Unmarshal(data, &hf); err != nil {
+					t.Fatalf("decode shipped hooks.json: %v", err)
+				}
+
+				for event, groups := range hf.Hooks {
+					for _, group := range groups {
+						for _, h := range group.Hooks {
+							command := h.Command
+							if manifest.anchor != "" {
+								if !strings.HasPrefix(command, manifest.anchor) {
+									t.Errorf(
+										"%s hook %q does not start with anchor %q",
+										event, command, manifest.anchor,
+									)
+								}
+								command = strings.TrimPrefix(command, manifest.anchor)
+							}
+							for _, path := range ctxInvocationPaths(command) {
+								checked++
+								if token, ok := pathResolved(tree, path); !ok {
+									t.Errorf(
+										"%s hook %q wires `ctx %s`, but %q is not a "+
+											"registered subcommand; shipped hooks must "+
+											"match the binary's command tree "+
+											"(see specs/hooks-wiring-guard.md)",
+										event, h.Command,
+										strings.Join(path, " "), token,
+									)
+								}
 							}
 						}
 					}

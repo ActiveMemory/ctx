@@ -15,6 +15,9 @@ import (
 //go:embed codex/.codex-plugin/plugin.json codex/.mcp.json
 //go:embed codex/hooks/hooks.json codex/skills/*/SKILL.md
 //go:embed codex/skills/*/references/*
+//go:embed agy/plugin.json agy/hooks.json agy/mcp_config.json
+//go:embed agy/rules/AGENTS.md agy/assets/logo.svg
+//go:embed agy/skills/*/SKILL.md agy/skills/*/references/*
 //go:embed context/*.md project/* entry-templates/*.md integrations/agents.md
 //go:embed integrations/copilot/*.md
 //go:embed integrations/copilot-cli/*.json integrations/copilot-cli/*.md
