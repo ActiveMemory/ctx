@@ -10,6 +10,9 @@ import "path"
 
 // Embedded asset directory names.
 const (
+	DirAgy                        = "agy"
+	DirAgyRules                   = "agy/rules"
+	DirAgySkills                  = "agy/skills"
 	DirClaude                     = "claude"
 	DirClaudePlugin               = "claude/.claude-plugin"
 	DirClaudeSkills               = "claude/skills"
@@ -53,6 +56,7 @@ const (
 
 // Embedded asset file names (leaf names only).
 const (
+	FileAGENTSUpperMd         = "AGENTS.md"
 	FileAllowTxt              = "allow.txt"
 	FileCLAUDEMd              = "CLAUDE.md"
 	FileCommandsYAML          = "commands.yaml"
@@ -68,6 +72,7 @@ const (
 	FileFlagsYAML             = "flags.yaml"
 	FileHooksJSON             = "hooks.json"
 	FileMakefileCtx           = "Makefile.ctx"
+	FileMCPConfigJSON         = "mcp_config.json"
 	FilePluginJSON            = "plugin.json"
 	FileRegistryYAML          = "registry.yaml"
 	FileSKILLMd               = "SKILL.md"
@@ -89,6 +94,10 @@ const (
 
 // Full embedded paths for files accessed directly.
 var (
+	PathAgyHooksJSON        = path.Join(DirAgy, FileHooksJSON)
+	PathAgyMCPJSON          = path.Join(DirAgy, FileMCPConfigJSON)
+	PathAgyPluginJSON       = path.Join(DirAgy, FilePluginJSON)
+	PathAgyRulesAgentsMd    = path.Join(DirAgyRules, FileAGENTSUpperMd)
 	PathCLAUDEMd            = path.Join(DirClaude, FileCLAUDEMd)
 	PathPluginJSON          = path.Join(DirClaudePlugin, FilePluginJSON)
 	PathCodexPluginJSON     = path.Join(DirCodexPlugin, FilePluginJSON)

@@ -13,8 +13,8 @@ icon: lucide/history
 
 ### `ctx journal`
 
-Browse and search AI session history from Claude Code, Codex, and other
-tools.
+Browse and search AI session history from Claude Code, Codex, Antigravity, and
+other tools.
 
 ```bash
 ctx journal <subcommand>
@@ -50,6 +50,7 @@ ctx journal source --limit 5
 ctx journal source --project ctx
 ctx journal source --tool claude-code
 ctx journal source --tool codex
+ctx journal source --tool agy
 ```
 
 #### `ctx journal source --show`
@@ -141,6 +142,7 @@ parser:
 | `codex`       | `$CODEX_HOME/sessions/YYYY/MM/DD/rollout-*.jsonl` (default `~/.codex/sessions`) |
 | `copilot`     | VS Code Copilot Chat `workspaceStorage/<hash>/chatSessions/*.jsonl` (Code and Code Insiders) |
 | `copilot-cli` | `~/.copilot/sessions/*.jsonl` (or `$COPILOT_HOME/sessions/`)              |
+| `agy`         | `~/.gemini/antigravity-cli/brain/<id>/.system_generated/logs/transcript.jsonl` (or `$AGY_HOME`) |
 | `markdown`    | `.context/sessions/*.md` (hand-written or tool-exported Markdown)         |
 
 Codex rollouts are matched to the current project by the session's
@@ -150,6 +152,11 @@ a rollout with no real user message is skipped. The Codex `SessionEnd`
 hook runs `ctx journal import --all -y` with a 3-second cap (Codex's
 limit); because the sweep is incremental, a timeout only defers the
 import to the next sweep.
+
+Antigravity transcripts are matched to the project working directory via
+`~/.gemini/antigravity-cli/history.jsonl`. `<USER_REQUEST>` blocks are extracted,
+internal system notifications are dropped, and `PLANNER_RESPONSE` text,
+reasoning, and tool calls are parsed.
 
 The `journal/` directory should be gitignored (like `sessions/`) since it
 contains raw conversation data.

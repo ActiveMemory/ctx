@@ -15,9 +15,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/memory"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-memory-drift hook logic.
@@ -30,6 +32,9 @@ import (
 //   - error: Non-nil if the drift check encounters an unrecoverable error
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	input, sessionID, contextDir, stateDir, ok := coreCheck.FullPreamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.FlushAgySteps(cmd)
+	}
 	bailSilently := !ok
 	if bailSilently {
 		return nil

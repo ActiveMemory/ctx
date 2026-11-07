@@ -14,6 +14,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/hubsync"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	cfgHub "github.com/ActiveMemory/ctx/internal/config/hub"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
@@ -35,6 +36,9 @@ import (
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	_, sessionID, ctxDir, stateDir, ok := check.FullPreamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.FlushAgySteps(cmd)
+	}
 	bailSilently := !ok
 	if bailSilently {
 		return nil

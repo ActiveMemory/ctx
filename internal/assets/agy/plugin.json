@@ -1,0 +1,18 @@
+{
+  "name": "ctx",
+  "displayName": "ctx",
+  "version": "0.8.1",
+  "description": "Persistent context and project memory for AI coding assistants",
+  "logo": "assets/logo.svg",
+  "author": {
+    "name": "Context contributors",
+    "url": "https://ctx.ist"
+  },
+  "homepage": "https://ctx.ist",
+  "repository": "https://github.com/ActiveMemory/ctx",
+  "suggestedPrompts": [
+    "Do you remember what we were working on?",
+    "Let's wrap up: persist what we learned",
+    "What should we work on next?"
+  ]
+}

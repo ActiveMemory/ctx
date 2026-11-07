@@ -16,6 +16,27 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 )
 
+// FormatLine formats a single provenance line with an optional
+// context-free percentage suffix.
+//
+// Parameters:
+//   - session: Short session ID
+//   - branch: Git branch name
+//   - commit: Short commit hash
+//   - contextSuffix: Pre-formatted suffix (e.g. " | Context: 45% free")
+//     or empty when token data is unavailable
+//
+// Returns:
+//   - string: Formatted provenance line
+func FormatLine(
+	session, branch, commit, contextSuffix string,
+) string {
+	return fmt.Sprintf(
+		desc.Text(text.DescKeyWriteProvenanceLine),
+		session, branch, commit, contextSuffix,
+	)
+}
+
 // Line prints a single provenance line to cmd output with an
 // optional context-free percentage suffix.
 //
@@ -30,10 +51,7 @@ func Line(
 	cmd *cobra.Command,
 	session, branch, commit, contextSuffix string,
 ) {
-	cmd.Println(fmt.Sprintf(
-		desc.Text(text.DescKeyWriteProvenanceLine),
-		session, branch, commit, contextSuffix,
-	))
+	cmd.Println(FormatLine(session, branch, commit, contextSuffix))
 }
 
 // ContextSuffix formats the context-free percentage suffix.

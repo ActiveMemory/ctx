@@ -246,6 +246,8 @@ func TestConsumesDirectly(t *testing.T) {
 		tool string
 		want bool
 	}{
+		{"agy", true},
+		{"antigravity", true},
 		{"claude", true},
 		{"claude-code", true},
 		{"codex", true},
@@ -281,7 +283,7 @@ func TestSyncTool_DirectConsumerStillErrors(t *testing.T) {
 	steeringDir := filepath.Join(root, ".context", "steering")
 	writeSteering(t, steeringDir, "api-rules", steeringAlways)
 
-	for _, tool := range []string{"claude", "codex"} {
+	for _, tool := range []string{"claude", "codex", "agy", "antigravity"} {
 		if _, err := SyncTool(steeringDir, root, tool); err == nil {
 			t.Errorf("SyncTool(%q) = nil error; want unsupported", tool)
 		}

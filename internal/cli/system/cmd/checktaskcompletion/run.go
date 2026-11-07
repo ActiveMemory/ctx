@@ -40,13 +40,19 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
+	input, sessionID, _, stateDir, ok := coreCheck.FullPreamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.EmitAgyEmpty(cmd)
+	}
 	interval := rc.TaskNudgeInterval()
 	if interval <= 0 {
 		return nil
 	}
-	input, sessionID, _, stateDir, ok := coreCheck.FullPreamble(stdin)
 	bailSilently := !ok
 	if bailSilently {
+		return nil
+	}
+	if input.ToolError != "" {
 		return nil
 	}
 	counterPath := filepath.Join(stateDir, nudge.PrefixTask+sessionID)
@@ -68,6 +74,18 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
+	if coreSession.Agy() {
+		coreSession.QueuePendingAgy(msg)
+		nudgeMsg := desc.Text(text.DescKeyCheckTaskCompletionNudgeMessage)
+		ref := notify.NewTemplateRef(
+			hook.CheckTaskCompletion, hook.VariantNudge, nil,
+		)
+		return coreNudge.Relay(
+			fmt.Sprintf(desc.Text(text.DescKeyRelayPrefixFormat),
+				hook.CheckTaskCompletion, nudgeMsg), input.SessionID, ref,
+		)
+	}
+
 	writeSetup.Context(
 		cmd, coreSession.FormatContext(hook.EventPostToolUse, msg),
 	)

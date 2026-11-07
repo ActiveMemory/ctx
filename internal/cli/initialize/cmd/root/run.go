@@ -14,6 +14,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/agy"
 	"github.com/ActiveMemory/ctx/internal/assets/read/catalog"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/assets/read/template"
@@ -318,6 +319,13 @@ func Run(
 	// Codex plugin is wired up.
 	if codex.Unwired() {
 		initialize.CodexHint(cmd)
+	}
+
+	// Post-script: one-line Antigravity nudge when the binary is on
+	// PATH but neither the project hooks manifest nor the ctx
+	// Antigravity plugin is wired up.
+	if agy.Unwired() {
+		initialize.AgyHint(cmd)
 	}
 
 	return nil

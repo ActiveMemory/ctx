@@ -20,7 +20,13 @@
 //   - [ToolClaudeCode]: Claude Code JSONL sessions.
 //   - [ToolCopilot]: VS Code Copilot Chat.
 //   - [ToolCopilotCLI]: GitHub Copilot CLI.
+//   - [ToolCodex]: OpenAI Codex rollout sessions.
+//   - [ToolAgy]: Antigravity JSONL sessions.
 //   - [ToolMarkdown]: plain Markdown transcripts.
+//
+// # Roles
+//
+//   - [RoleUser], [RoleAssistant]: normalized message roles.
 //
 // # Claude Code Tool Names
 //

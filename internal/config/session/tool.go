@@ -16,6 +16,8 @@ const (
 	ToolCopilotCLI = "copilot-cli"
 	// ToolCodex is the tool identifier for OpenAI Codex sessions.
 	ToolCodex = "codex"
+	// ToolAgy is the tool identifier for Antigravity sessions.
+	ToolAgy = "agy"
 	// ToolMarkdown is the tool identifier for Markdown session files.
 	ToolMarkdown = "markdown"
 )

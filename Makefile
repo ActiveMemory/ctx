@@ -6,7 +6,7 @@
 clean all release build-all help \
 test-coverage smoke site site-guard site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan gpg-fix gpg-test register-mcp reinstall check-tools \
-sync-version check-version-sync check-go-version check-go-work-sum sync-why check-why sync-copilot-skills check-copilot-skills sync-codex-skills check-codex-skills codex-plugin-install sync-opencode-skills check-opencode-skills sync-steering check-steering gemini-search \
+sync-version check-version-sync check-go-version check-go-work-sum sync-why check-why sync-copilot-skills check-copilot-skills sync-codex-skills check-codex-skills codex-plugin-install sync-opencode-skills check-opencode-skills sync-pi-skills check-pi-skills sync-agy-skills check-agy-skills sync-steering check-steering gemini-search \
 gitnexus-version gitnexus-update gitnexus-index gitnexus-mcp strip-gitnexus install-ctxctl reinstall-ctxctl
 
 # Default binary name and output
@@ -39,10 +39,12 @@ sync-version:
 	mv internal/assets/claude/.codex-plugin/plugin.json.tmp internal/assets/claude/.codex-plugin/plugin.json; \
 	jq --arg v "$$V" '.metadata.version = $$v' .agents/plugins/marketplace.json > .agents/plugins/marketplace.json.tmp && \
 	mv .agents/plugins/marketplace.json.tmp .agents/plugins/marketplace.json; \
+	jq --arg v "$$V" '.version = $$v' internal/assets/agy/plugin.json > internal/assets/agy/plugin.json.tmp && \
+	mv internal/assets/agy/plugin.json.tmp internal/assets/agy/plugin.json; \
 	echo "Plugin version synced to $$V"
 
 ## build: Build for current platform (syncs version + embedded docs + copilot/codex/opencode skills first)
-build: sync-version sync-why sync-copilot-skills sync-codex-skills sync-opencode-skills sync-pi-skills
+build: sync-version sync-why sync-copilot-skills sync-codex-skills sync-opencode-skills sync-pi-skills sync-agy-skills
 	CGO_ENABLED=0 go build -ldflags="-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$$(cat VERSION | tr -d '[:space:]')" -o $(OUTPUT) ./cmd/ctx
 
 ## ctxctl: Build the maintainer-only ctxctl binary (audit channel) into dist/
@@ -189,6 +191,8 @@ audit:
 	@$(MAKE) --no-print-directory check-opencode-skills
 	@echo "==> Checking Pi skills freshness..."
 	@$(MAKE) --no-print-directory check-pi-skills
+	@echo "==> Checking Antigravity skills freshness..."
+	@$(MAKE) --no-print-directory check-agy-skills
 	@echo "==> Checking steering outputs freshness..."
 	@$(MAKE) --no-print-directory check-steering
 	@echo "==> Running tests..."
@@ -400,6 +404,11 @@ check-version-sync:
 		echo "FAIL: VERSION ($$V) != .agents/plugins/marketplace.json ($$MV) — run 'make sync-version'"; \
 		exit 1; \
 	fi; \
+	AV=$$(jq -r '.version' internal/assets/agy/plugin.json); \
+	if [ "$$V" != "$$AV" ]; then \
+		echo "FAIL: VERSION ($$V) != agy plugin.json ($$AV) — run 'make sync-version'"; \
+		exit 1; \
+	fi; \
 	echo "Version sync OK ($$V)."
 
 ## check-go-version: Verify every Go toolchain pin agrees with the go.mod directive
@@ -440,6 +449,29 @@ check-pi-skills:
 	fi && \
 	rm -rf "$$TMPDIR" && \
 	echo "Pi skills are in sync."
+
+## sync-agy-skills: Sync Antigravity plugin skills from canonical ctx skills
+sync-agy-skills:
+	@./hack/sync-agy-skills.sh
+
+## check-agy-skills: Verify Antigravity plugin skills match ctx source skills
+check-agy-skills:
+	@TMPDIR=$$(mktemp -d) && \
+	cp -r internal/assets/agy/skills/ "$$TMPDIR/before" && \
+	cp internal/assets/agy/rules/AGENTS.md "$$TMPDIR/AGENTS.md" && \
+	./hack/sync-agy-skills.sh > /dev/null && \
+	if ! diff -rq "$$TMPDIR/before" internal/assets/agy/skills/ > /dev/null 2>&1 || \
+	   ! diff -q "$$TMPDIR/AGENTS.md" internal/assets/agy/rules/AGENTS.md > /dev/null 2>&1; then \
+		echo "FAIL: Antigravity skills or rules are stale — run 'make sync-agy-skills'"; \
+		diff -rq "$$TMPDIR/before" internal/assets/agy/skills/ || true; \
+		diff -q "$$TMPDIR/AGENTS.md" internal/assets/agy/rules/AGENTS.md || true; \
+		rm -rf internal/assets/agy/skills && cp -r "$$TMPDIR/before" internal/assets/agy/skills; \
+		cp "$$TMPDIR/AGENTS.md" internal/assets/agy/rules/AGENTS.md; \
+		rm -rf "$$TMPDIR"; \
+		exit 1; \
+	fi && \
+	rm -rf "$$TMPDIR" && \
+	echo "Antigravity skills are in sync."
 
 ## sync-steering: Regenerate tool-native steering outputs from .context/steering
 sync-steering:

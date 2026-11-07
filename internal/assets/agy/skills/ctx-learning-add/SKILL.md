@@ -1,0 +1,125 @@
+---
+name: ctx-learning-add
+description: "Record a learning. Use when discovering gotchas, bugs, or unexpected behavior that future sessions should know about."
+---
+
+Record a learning in LEARNINGS.md.
+
+## Before Recording
+
+Three questions: if any answer is "no", don't record:
+
+1. **"Could someone Google this in 5 minutes?"** → If yes, skip it
+2. **"Is this specific to this codebase?"** → If no, skip it
+3. **"Did it take real effort to discover?"** → If no, skip it
+
+Learnings should capture **principles and heuristics**, not code snippets.
+
+## When to Use
+
+- After discovering a gotcha or unexpected behavior
+- When a debugging session reveals root cause
+- When finding a pattern that will help future work
+
+## When NOT to Use
+
+- General programming knowledge (not specific to this project)
+- One-off workarounds that won't recur
+- Things already documented in the codebase
+
+## Gathering Information
+
+If the user provides only a title, ask:
+
+1. "What were you doing when you discovered this?" → Context
+2. "What's the key insight?" → Lesson
+3. "How should we handle this going forward?" → Application
+
+## Execution
+
+Provenance flags (`--session-id`, `--branch`, `--commit`) are **required**.
+Get these values from the hook-relayed provenance line in your context
+(e.g., `Session: abc12345 | Branch: main @ 68fbc00a`).
+
+**Prefer this skill over raw `ctx learning add`**: the conversational
+approach lets you automatically pick up session ID, branch, and commit
+from the provenance line already in your context window.
+
+```bash
+ctx learning add "Title" \
+  --session-id SESSION --branch BRANCH --commit HASH \
+  --context "..." --lesson "..." --application "..."
+```
+
+**Example: behavioral pattern:**
+```bash
+ctx learning add "Agent ignores repeated hook output (repetition fatigue)" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
+  --context "PreToolUse hook ran ctx agent on every tool use, injecting the same context packet repeatedly. Agent tuned it out and didn't follow conventions." \
+  --lesson "Repeated injection causes the agent to ignore the output. A cooldown tombstone emits once per window. A readback instruction creates a behavioral gate harder to skip than silent injection." \
+  --application "Use --session \$PPID in hook commands to enable cooldown. Pair context injection with a readback instruction."
+```
+
+**Example: technical gotcha:**
+```bash
+ctx learning add "go:embed only works with files in same or child directories" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
+  --context "Tried to embed files from parent directory, got compile error" \
+  --lesson "go:embed paths are relative to the source file and cannot use .. to escape the package" \
+  --application "Keep embedded files in internal/assets/ or child directories, not project root"
+```
+
+**Example: workflow insight:**
+```bash
+ctx learning add "ctx init overwrites user content without guard" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
+  --context "Commit a9df9dd wiped 18 decisions from DECISIONS.md, replacing with empty template" \
+  --lesson "Init treats all context files as templates, but after first use they contain user data" \
+  --application "Skip existing files by default, only overwrite with --force"
+```
+
+**When a flag value would be denied:** if a `--context`/`--lesson`/
+`--application` value contains a substring that trips a `permissions.deny`
+rule on the literal command string (e.g. a path like ` /usr/local/bin`),
+put the fields in a JSON file and pass `--json-file` instead — the values
+never reach the command line, and the schema gates still apply:
+
+```bash
+cat > /tmp/learning.json <<'EOF'
+{
+  "title": "Hooks run in a subprocess",
+  "context": "env vars set in a hook did not persist to the session",
+  "lesson": "hook stdout is the only channel back to the agent",
+  "application": "relay via stdout, never the environment",
+  "provenance": {"session_id": "abc12345", "branch": "main", "commit": "68fbc00a"}
+}
+EOF
+ctx learning add --json-file /tmp/learning.json
+```
+
+## Authority boundary (vs other skills)
+
+This skill records principle-level lessons discovered through real
+work. It does not unilaterally promote material from adjacent skills:
+
+- **Do not promote a learning into a convention.** A learning is
+  "this gotcha cost us time" — generalizing it into "we always do
+  X" is `/ctx-convention-add`'s job and requires explicit user ask.
+- **Do not promote a learning into a decision.** Even when the
+  lesson clarifies a trade-off, the trade-off itself belongs in
+  `/ctx-decision-add` if the user wants it elevated.
+- **Do not record general programming knowledge.** Anything
+  Googleable in five minutes is not a learning for this codebase
+  (the "Before Recording" check enforces this).
+
+Light compression for clarity is allowed; new facts are not.
+
+## Quality Checklist
+
+Before recording, verify:
+- [ ] Context explains what happened (not just what you learned)
+- [ ] Lesson is a principle, not a code snippet
+- [ ] Application gives actionable guidance for next time
+- [ ] Not already in LEARNINGS.md (check first)
+
+Confirm the learning was added.

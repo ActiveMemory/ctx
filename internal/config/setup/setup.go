@@ -71,3 +71,11 @@ const (
 	// SkillsPathCodex is the deployed skills directory.
 	SkillsPathCodex = ".agents/skills/"
 )
+
+// Antigravity configuration paths (project-local route).
+const (
+	// HooksPathAgy is the deployed hooks manifest path.
+	HooksPathAgy = ".agents/hooks.json"
+	// SkillsPathAgy is the deployed skills directory.
+	SkillsPathAgy = ".agents/skills/"
+)

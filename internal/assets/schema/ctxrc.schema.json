@@ -210,7 +210,7 @@
     },
     "tool": {
       "type": "string",
-      "description": "Active AI tool identifier (e.g., claude, cursor, cline, kiro, codex)."
+      "description": "Active AI tool identifier (e.g., claude, cursor, cline, kiro, codex, agy)."
     },
     "steering": {
       "type": "object",

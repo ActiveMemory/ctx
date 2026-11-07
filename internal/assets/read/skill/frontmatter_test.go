@@ -24,6 +24,7 @@ import (
 var skillTrees = []string{
 	asset.DirClaudeSkills,
 	asset.DirCodexSkills,
+	asset.DirAgySkills,
 	asset.DirIntegrationsOpenCodeSkill,
 	asset.DirIntegrationsCopilotSkill,
 	asset.DirIntegrationsPiSkill,

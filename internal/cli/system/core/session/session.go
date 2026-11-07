@@ -25,6 +25,7 @@ import (
 	internalIo "github.com/ActiveMemory/ctx/internal/io"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/parse"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // FormatContext builds a JSON Response with additionalContext for the
@@ -94,6 +95,47 @@ func ReadInput(r io.Reader) entity.HookInput {
 			_ = json.Unmarshal(res.data, &input)
 		}
 	case <-time.After(hook.StdinReadTimeout * time.Second):
+	}
+
+	if input.Agy() {
+		if input.SessionID == "" && input.ConversationID != "" {
+			input.SessionID = input.ConversationID
+		}
+		if input.Prompt == "" && input.LastUserInput != "" {
+			input.Prompt = input.LastUserInput
+		}
+		if input.ToolName == "" && input.ToolCall.Name != "" {
+			input.ToolName = input.ToolCall.Name
+		}
+		if input.ToolInput.Command == "" &&
+			input.ToolCall.Args.CommandLine != "" {
+			input.ToolInput.Command = input.ToolCall.Args.CommandLine
+		}
+		if input.ToolInput.Command == "" &&
+			input.ToolCall.Args.Command != "" {
+			input.ToolInput.Command = input.ToolCall.Args.Command
+		}
+		if input.ToolInput.FilePath == "" &&
+			input.ToolCall.Args.Path != "" {
+			input.ToolInput.FilePath = input.ToolCall.Args.Path
+		}
+		if input.ToolInput.FilePath == "" &&
+			input.ToolCall.Args.FilePath != "" {
+			input.ToolInput.FilePath = input.ToolCall.Args.FilePath
+		}
+		if input.CWD == "" && len(input.WorkspacePaths) > 0 {
+			input.CWD = input.WorkspacePaths[0]
+		}
+		SetAgyMode(
+			true, input.SessionID,
+			input.TranscriptPath, input.ModelName,
+		)
+		if input.CWD != "" {
+			_ = os.Chdir(input.CWD)
+			rc.Reset()
+		}
+	} else {
+		SetAgyMode(false, "", "", "")
 	}
 	return input
 }

@@ -24,6 +24,7 @@ var registeredParsers = []Session{
 	NewCopilot(),
 	NewCopilotCLI(),
 	NewCodex(),
+	NewAgy(),
 	NewMarkdownSession(),
 }
 
