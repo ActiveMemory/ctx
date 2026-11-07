@@ -37,6 +37,8 @@ import (
 //     disable cooldown)
 //   - steeringBodies: pre-loaded steering file bodies (may be nil)
 //   - skillBody: pre-loaded skill content (empty to omit)
+//   - hubBodies: pre-loaded hub entry bodies (may be nil)
+//   - handoverBody: latest handover execution brief body (empty to omit)
 //
 // Returns:
 //   - error: Non-nil if context loading fails or .context/ is not found
@@ -49,6 +51,7 @@ func Run(
 	steeringBodies []string,
 	skillBody string,
 	hubBodies []string,
+	handoverBody string,
 ) error {
 	active, cooldownErr := coreCooldown.Active(session, cooldown)
 	if cooldownErr != nil {
@@ -71,13 +74,13 @@ func Run(
 		outputErr = coreBudget.OutputAgentJSON(
 			cmd, ctx, budget,
 			steeringBodies, skillBody,
-			hubBodies,
+			hubBodies, handoverBody,
 		)
 	} else {
 		outputErr = coreBudget.OutputAgentMarkdown(
 			cmd, ctx, budget,
 			steeringBodies, skillBody,
-			hubBodies,
+			hubBodies, handoverBody,
 		)
 	}
 	if outputErr != nil {

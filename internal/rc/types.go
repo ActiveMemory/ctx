@@ -28,6 +28,9 @@ import cfgMemory "github.com/ActiveMemory/ctx/internal/config/memory"
 //     session tokens exceed this value. Useful for Claude
 //     Pro users with 1M context where tokens beyond the
 //     included allowance incur extra cost.
+//   - EoCCThresholdTokens: Token threshold for End-of-Conversation
+//     Compaction (EoCC) nudge (default 0 = disabled; positive values
+//     below 4000 clamp to 4000)
 //   - EventLog: Whether to log hook events locally
 //     (default false)
 //   - KeyRotationDays: Days before encryption key
@@ -102,6 +105,7 @@ type CtxRC struct {
 	InjectionTokenWarn   int                      `yaml:"injection_token_warn"`
 	ContextWindow        int                      `yaml:"context_window"`
 	BillingTokenWarn     int                      `yaml:"billing_token_warn"`
+	EoCCThresholdTokens  int                      `yaml:"eocc_threshold_tokens"`
 	EventLog             bool                     `yaml:"event_log"`
 	KeyRotationDays      int                      `yaml:"key_rotation_days"`
 	TaskNudgeInterval    int                      `yaml:"task_nudge_interval"`

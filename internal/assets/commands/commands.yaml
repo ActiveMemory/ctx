@@ -1927,32 +1927,44 @@ handover:
   long: |-
     Manage per-session handover artifacts under .context/handovers/.
 
-    The handover is the former-agent-to-next-agent note created at
-    session end by /ctx-wrap-up and read at session start by
-    /ctx-remember. Filenames are timestamped (<TS>-<slug>.md) so
-    concurrent agent runs never overwrite each other. Subcommands:
+    The handover is the former-agent-to-next-agent execution brief created
+    at session end by /ctx-wrap-up (or mid-session EoCC checkpoints) and
+    read at session start by /ctx-remember and ctx agent. Filenames are
+    timestamped (<TS>-<slug>.md) so concurrent agent runs never overwrite
+    each other. Subcommands:
       write    Write a per-session handover artifact
 
     Examples:
       ctx handover write "Cursor Hooks deep dive" \
         --summary "Drafted topic-page; minted EV-018..EV-024." \
+        --facts "Hook events fire synchronously; verified in v1.0 schema." \
+        --verified "Updated topics/cursor-hooks/index.md; site-review clean." \
+        --dead-ends "No failed approaches in this stretch." \
         --next "Re-ingest the v1.1 release-notes URL."
   short: Per-session handover artifact writer
 handover.write:
   long: |-
     Write a handover under .context/handovers/<TS>-<slug>.md.
 
-    By default, folds closeouts that postdate the latest handover and
-    archives them under .context/archive/closeouts/. --no-fold skips
-    the fold (mid-session checkpoint).
+    Requires all five forward-looking execution-brief fields (--summary,
+    --facts, --verified, --dead-ends, --next), rejecting empty and
+    placeholder values. By default, folds closeouts that postdate the
+    latest handover and archives them under .context/archive/closeouts/.
+    --no-fold skips the fold (mid-session checkpoint).
 
     Examples:
       ctx handover write "Cursor Hooks deep dive" \
         --summary "Drafted topic-page; minted EV-018..EV-024." \
+        --facts "Hook events fire synchronously; verified in v1.0 schema." \
+        --verified "Updated topics/cursor-hooks/index.md; site-review clean." \
+        --dead-ends "No failed approaches in this stretch." \
         --next "Re-ingest the v1.1 release-notes URL."
 
       ctx handover write "Mid-day checkpoint" \
         --summary "Working through evidence-index reconciliation." \
+        --facts "Rows EV-018..EV-022 verified; EV-023 locator pending." \
+        --verified "Edited evidence-index.md; cold-reader check passed." \
+        --dead-ends "Regex batch-replace broke table pipes; reverted." \
         --next "Resolve C-007 contradiction next." --no-fold
   short: Write a per-session handover artifact
 kb:

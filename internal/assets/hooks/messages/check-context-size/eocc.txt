@@ -1,0 +1,4 @@
+⚠ Session tokens (~{{.TokenCount}}) reached your eocc_threshold_tokens ({{.Threshold}}).
+Short-context regime active: stop calling tools, persist the execution brief via
+ctx handover write "<title>" --no-fold --summary ... --facts ... --verified ... --dead-ends ... --next ...,
+then reset or start a fresh session.

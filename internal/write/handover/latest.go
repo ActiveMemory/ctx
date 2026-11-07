@@ -34,3 +34,25 @@ func Latest(handoversDir string) (time.Time, string, error) {
 	latest := files[len(files)-1]
 	return latest.Frontmatter.GeneratedAt, latest.Path, nil
 }
+
+// LatestFile returns the parsed File of the most recent handover
+// under handoversDir, or (File{}, false, nil) when no handover
+// exists yet.
+//
+// Parameters:
+//   - handoversDir: absolute path to .context/handovers/.
+//
+// Returns:
+//   - File: parsed latest handover file.
+//   - bool: true when a handover was found.
+//   - error: non-nil on directory-walk failures.
+func LatestFile(handoversDir string) (File, bool, error) {
+	files, err := listHandovers(handoversDir)
+	if err != nil {
+		return File{}, false, err
+	}
+	if len(files) == 0 {
+		return File{}, false, nil
+	}
+	return files[len(files)-1], true, nil
+}

@@ -79,6 +79,7 @@ A commented `.ctxrc` showing all options and their defaults:
 # injection_token_warn: 15000
 # context_window: 200000      # auto-detected for Claude Code; override for other tools
 # billing_token_warn: 0       # one-shot warning at this token count (0 = disabled)
+# eocc_threshold_tokens: 0    # EoCC compaction nudge threshold in tokens (0 = disabled)
 #
 # stale_age_days: 30      # days before drift flags a context file as stale (0 = disabled)
 # key_rotation_days: 90
@@ -145,6 +146,7 @@ A commented `.ctxrc` showing all options and their defaults:
 | `injection_token_warn`  | `int`      | `15000`       | Warn when auto-injected context exceeds this token count (0 = disable)                                                                    |
 | `context_window`        | `int`      | `200000`      | Context window size in tokens. Auto-detected for Claude Code (200k/1M); override for other AI tools                                       |
 | `billing_token_warn`    | `int`      | `0` *(off)*   | One-shot warning when session tokens exceed this threshold (0 = disabled). For plans where tokens beyond an included allowance cost extra |
+| `eocc_threshold_tokens` | `int`      | `0` *(off)*   | Token threshold for End-of-Conversation Compaction (EoCC) nudge (0 = disabled; positive values below 4000 clamp to 4000)                  |
 | `stale_age_days`        | `int`      | `30`          | Days before `ctx drift` flags a context file as stale (0 = disable)                                                                       |
 | `key_rotation_days`     | `int`      | `90`          | Days before encryption key rotation nudge                                                                                                 |
 | `task_nudge_interval`   | `int`      | `5`           | Edit/Write calls between task completion nudges                                                                                           |

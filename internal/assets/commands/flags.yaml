@@ -46,6 +46,8 @@ agent.skill:
   short: Include named skill content in context packet
 agent.include-hub:
   short: Include ctx Hub entries in context packet
+agent.no-handover:
+  short: Exclude the latest session handover from the context packet
 changes.since:
   short: 'Time reference: duration (24h) or date (2026-03-01)'
 compact.archive:
@@ -121,6 +123,12 @@ journal.source.tool:
   short: Filter by tool (e.g., claude-code)
 journal.source.until:
   short: Show sessions on or before this date (YYYY-MM-DD)
+journal.source.turns:
+  short: '1-based inclusive turn range START:END (or single TURN) to display'
+journal.source.grep:
+  short: Case-insensitive regex pattern to search across session messages and tool outputs
+journal.source.max-chars:
+  short: Maximum characters to emit in bounded show mode (0 for unlimited)
 journal.schema.check.dir:
   short: Directory to scan for JSONL files
 journal.schema.check.all-projects:
@@ -141,6 +149,10 @@ loop.prompt:
   short: Prompt file to use
 loop.tool:
   short: 'AI tool: claude, aider, or generic'
+loop.regime:
+  short: 'Context regime: standard, eocc, or sac'
+loop.max-turns:
+  short: Maximum agent turns per loop iteration (0 = tool default; 2 for sac on claude)
 memory.import.dry-run:
   short: Show classification plan without writing
 memory.publish.budget:
@@ -317,6 +329,12 @@ watch.log:
   short: 'Log file to watch (default: stdin)'
 handover.summary:
   short: 'What happened this session (past tense). Required.'
+handover.facts:
+  short: 'Established facts separated from assumptions. Required.'
+handover.verified:
+  short: 'Applied file changes and verification checks run. Required.'
+handover.dead-ends:
+  short: 'Failed approaches and obstacles not to repeat. Required.'
 handover.next:
   short: 'What the next agent should do FIRST. Required.'
 handover.highlights:

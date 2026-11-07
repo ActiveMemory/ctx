@@ -26,6 +26,9 @@ import (
 // Flags:
 //   - --prompt, -p: Prompt file to use (default ".context/loop.md")
 //   - --tool, -t: AI tool - claude, aider, or generic (default "claude")
+//   - --regime, -r: Context regime - standard, eocc, or sac
+//     (default "standard")
+//   - --max-turns: Max turns per iteration (default 0; 2 for sac on claude)
 //   - --max-iterations, -n: Maximum iterations, 0 for unlimited (default 0)
 //   - --completion, -c: Completion signal to detect
 //     (default "SYSTEM_CONVERGED")
@@ -37,6 +40,8 @@ func Cmd() *cobra.Command {
 	var (
 		promptFile    string
 		tool          string
+		regime        string
+		maxTurns      int
 		maxIterations int
 		completionMsg string
 		outputFile    string
@@ -50,32 +55,34 @@ func Cmd() *cobra.Command {
 		Example: desc.Example(cmd.DescKeyLoop),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(
-				cmd, promptFile, tool, maxIterations, completionMsg, outputFile,
+				cmd, promptFile, tool, regime, maxTurns,
+				maxIterations, completionMsg, outputFile,
 			)
 		},
 	}
 
 	flagbind.BindStringFlagsPDefault(c,
 		[]*string{
-			&promptFile, &tool,
+			&promptFile, &tool, &regime,
 			&completionMsg, &outputFile,
 		},
 		[]string{
-			cFlag.Prompt, cFlag.Tool,
+			cFlag.Prompt, cFlag.Tool, cFlag.Regime,
 			cFlag.Completion, cFlag.Output,
 		},
 		[]string{
-			cFlag.ShortPrompt, cFlag.ShortTool,
+			cFlag.ShortPrompt, cFlag.ShortTool, cFlag.ShortRegime,
 			cFlag.ShortCompletion, cFlag.ShortOutput,
 		},
 		[]string{
-			loop.PromptMd, loop.DefaultTool,
+			loop.PromptMd, loop.DefaultTool, loop.DefaultRegime,
 			loop.DefaultCompletionSignal,
 			loop.DefaultOutput,
 		},
 		[]string{
 			flag.DescKeyLoopPrompt,
 			flag.DescKeyLoopTool,
+			flag.DescKeyLoopRegime,
 			flag.DescKeyLoopCompletion,
 			flag.DescKeyLoopOutput,
 		},
@@ -84,6 +91,10 @@ func Cmd() *cobra.Command {
 		c, &maxIterations,
 		cFlag.MaxIterations, cFlag.ShortMaxIterations,
 		0, flag.DescKeyLoopMaxIterations,
+	)
+	flagbind.IntFlag(
+		c, &maxTurns,
+		cFlag.MaxTurns, 0, flag.DescKeyLoopMaxTurns,
 	)
 
 	return c

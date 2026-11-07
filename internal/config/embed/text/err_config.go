@@ -38,4 +38,10 @@ const (
 	// DescKeyErrConfigUnsupportedTool is the text key for err config unsupported
 	// tool messages.
 	DescKeyErrConfigUnsupportedTool = "err.config.unsupported-tool"
+	// DescKeyErrConfigInvalidRegime is the text key for invalid loop regime
+	// errors.
+	DescKeyErrConfigInvalidRegime = "err.config.invalid-regime"
+	// DescKeyErrConfigNegativeMaxTurns is the text key for negative --max-turns
+	// errors.
+	DescKeyErrConfigNegativeMaxTurns = "err.config.negative-max-turns"
 )

@@ -51,4 +51,13 @@ const (
 	// DescKeyJournalSourceUntil is the description key for the journal source
 	// until flag.
 	DescKeyJournalSourceUntil = "journal.source.until"
+	// DescKeyJournalSourceTurns is the description key for the journal source
+	// turns flag.
+	DescKeyJournalSourceTurns = "journal.source.turns"
+	// DescKeyJournalSourceGrep is the description key for the journal source
+	// grep flag.
+	DescKeyJournalSourceGrep = "journal.source.grep"
+	// DescKeyJournalSourceMaxChars is the description key for the journal
+	// source max-chars flag.
+	DescKeyJournalSourceMaxChars = "journal.source.max-chars"
 )

@@ -28,7 +28,11 @@ func Run(
 	cmd *cobra.Command, args []string, opts coreSrc.Opts,
 ) error {
 	if opts.ShowID != "" || opts.Latest ||
+		opts.Turns != "" || opts.Grep != "" ||
 		len(args) > 0 {
+		if opts.ShowID == "" && len(args) == 0 {
+			opts.Latest = true
+		}
 		return coreSrc.RunShow(cmd, args, opts)
 	}
 

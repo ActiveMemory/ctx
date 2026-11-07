@@ -13,6 +13,7 @@ type packet struct {
 	TokensUsed   int      `json:"tokens_used"`
 	ReadOrder    []string `json:"read_order"`
 	Constitution []string `json:"constitution"`
+	Handover     string   `json:"handover,omitempty"`
 	Tasks        []string `json:"tasks"`
 	Conventions  []string `json:"conventions"`
 	Decisions    []string `json:"decisions"`
@@ -29,6 +30,7 @@ type packet struct {
 // Fields:
 //   - ReadOrder: Files in priority order
 //   - Constitution: Inviolable rules
+//   - Handover: Latest session handover execution brief
 //   - Tasks: Active task items
 //   - Conventions: Code conventions
 //   - Decisions: Architectural decisions (scored)
@@ -43,6 +45,7 @@ type packet struct {
 type AssembledPacket struct {
 	ReadOrder    []string
 	Constitution []string
+	Handover     string
 	Tasks        []string
 	Conventions  []string
 	Decisions    []string

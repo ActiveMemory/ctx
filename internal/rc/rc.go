@@ -247,6 +247,22 @@ func BillingTokenWarn() int {
 	return RC().BillingTokenWarn
 }
 
+// EoCCThresholdTokens returns the configured EoCC compaction token
+// threshold, or 0 when disabled. Positive values below 4000 clamp to 4000.
+//
+// Returns:
+//   - int: Token threshold, or 0 if disabled
+func EoCCThresholdTokens() int {
+	val := RC().EoCCThresholdTokens
+	if val <= 0 {
+		return DefaultEoCCThresholdTokens
+	}
+	if val < DefaultMinEoCCThresholdTokens {
+		return DefaultMinEoCCThresholdTokens
+	}
+	return val
+}
+
 // ContextWindow returns the configured context window size in tokens.
 //
 // Returns 200000 (default). For Claude Code users this value is a no-op:

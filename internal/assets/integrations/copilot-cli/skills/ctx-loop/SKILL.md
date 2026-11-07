@@ -38,19 +38,39 @@ Generate a ready-to-use autonomous loop shell script.
 ```text
 /ctx-loop
 /ctx-loop --tool aider
+/ctx-loop --regime eocc --max-iterations 10
+/ctx-loop --regime sac --max-iterations 25
 /ctx-loop --prompt TASKS.md --max-iterations 10
 /ctx-loop --completion SYSTEM_BLOCKED --output my-loop.sh
 ```
 
 ## Flags
 
-| Flag               | Short | Default            | Purpose                         |
-|--------------------|-------|--------------------|---------------------------------|
-| `--prompt`         | `-p`  | `PROMPT.md`        | Prompt file the loop reads      |
-| `--tool`           | `-t`  | `claude`           | AI tool: claude, aider, generic |
-| `--max-iterations` | `-n`  | `0` (unlimited)    | Stop after N iterations         |
-| `--completion`     | `-c`  | `SYSTEM_CONVERGED` | Signal that ends the loop       |
-| `--output`         | `-o`  | `loop.sh`          | Output script filename          |
+| Flag               | Short | Default            | Purpose                                         |
+|--------------------|-------|--------------------|-------------------------------------------------|
+| `--prompt`         | `-p`  | `PROMPT.md`        | Prompt file the loop reads                      |
+| `--tool`           | `-t`  | `claude`           | AI tool: claude, aider, generic                 |
+| `--regime`         | `-r`  | `standard`         | Context regime: `standard`, `eocc`, or `sac`    |
+| `--max-turns`      |       | `0` (`2` for `sac`)| Maximum turns per iteration (`0` = tool default)|
+| `--max-iterations` | `-n`  | `0` (unlimited)    | Stop after N iterations                         |
+| `--completion`     | `-c`  | `SYSTEM_CONVERGED` | Signal that ends the loop                       |
+| `--output`         | `-o`  | `loop.sh`          | Output script filename                          |
+
+## Context Regimes
+
+- **`standard`** (default): Runs the tool with `PROMPT.md` on each
+  iteration without automatic state-packet injection.
+- **`eocc`** (End-of-Conversation Compaction): On each iteration,
+  captures `ctx agent --budget 4000` (including the latest handover)
+  and instructs the agent to persist an updated execution brief via
+  `ctx handover write --no-fold` before exiting the iteration. Best
+  for multi-step coding stretches that compact state between passes.
+- **`sac`** (Single-Action Compaction / SSSM cycle): On each
+  iteration, injects the `ctx agent --budget 4000` state packet,
+  restricts the agent to at most one environment action (and sets
+  `--max-turns 2` on `claude` when `--max-turns` is omitted), and
+  requires an immediate `ctx handover write --no-fold` state update.
+  Keeps peak context around 7-9K tokens across long task horizons.
 
 ## Supported Tools
 

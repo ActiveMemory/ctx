@@ -93,6 +93,22 @@ check-context-size.billing-relay-format:
   short: Billing threshold exceeded (%s tokens > %s)
 check-context-size.billing-relay-prefix:
   short: 'IMPORTANT: Relay this billing warning to the user VERBATIM before answering their question.'
+check-context-size.eocc-box-title:
+  short: EoCC Compaction Threshold
+check-context-size.eocc-fallback:
+  short: |-
+    ⚠ Session tokens (~%s) reached your eocc_threshold_tokens (%s).
+    Short-context regime active: stop calling tools, persist the execution brief via
+    ctx handover write "<title>" --no-fold --summary ... --facts ... --verified ... --dead-ends ... --next ...,
+    then reset or start a fresh session.
+check-context-size.eocc-log-format:
+  short: prompt#%d EOCC-COMPACT tokens=%d threshold=%d
+check-context-size.eocc-relay-format:
+  short: EoCC threshold reached (%s tokens >= %s)
+check-context-size.eocc-relay-prefix:
+  short: 'IMPORTANT: Relay this EoCC compaction notice to the user VERBATIM and write a handover execution brief before continuing.'
+check-context-size.silenced-eocc-log:
+  short: prompt#%d eocc-silenced tokens=%d threshold=%d
 check-context-size.checkpoint-box-title:
   short: 'Context Checkpoint (prompt #%d)'
 check-context-size.checkpoint-fallback:

@@ -19,4 +19,8 @@ const (
 	DescKeyLoopPrompt = "loop.prompt"
 	// DescKeyLoopTool is the description key for the loop tool flag.
 	DescKeyLoopTool = "loop.tool"
+	// DescKeyLoopRegime is the description key for the loop regime flag.
+	DescKeyLoopRegime = "loop.regime"
+	// DescKeyLoopMaxTurns is the description key for the loop max-turns flag.
+	DescKeyLoopMaxTurns = "loop.max-turns"
 )

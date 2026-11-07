@@ -27,6 +27,8 @@ import (
 //   - budget: Token budget for content selection
 //   - steeringBodies: Pre-filtered steering file bodies
 //   - skillBody: Skill content (empty if none)
+//   - hubBodies: Shared hub entries (may be nil)
+//   - handoverBody: Latest handover execution brief (empty if none)
 //
 // Returns:
 //   - error: Non-nil if JSON encoding fails
@@ -37,10 +39,11 @@ func OutputAgentJSON(
 	steeringBodies []string,
 	skillBody string,
 	hubBodies []string,
+	handoverBody string,
 ) error {
 	pkt := AssemblePacket(
 		ctx, budget, steeringBodies,
-		skillBody, hubBodies,
+		skillBody, hubBodies, handoverBody,
 	)
 
 	packet := packet{
@@ -49,6 +52,7 @@ func OutputAgentJSON(
 		TokensUsed:   pkt.TokensUsed,
 		ReadOrder:    pkt.ReadOrder,
 		Constitution: pkt.Constitution,
+		Handover:     pkt.Handover,
 		Tasks:        pkt.Tasks,
 		Conventions:  pkt.Conventions,
 		Decisions:    pkt.Decisions,
@@ -78,6 +82,8 @@ func OutputAgentJSON(
 //   - budget: Token budget for content selection
 //   - steeringBodies: Pre-filtered steering file bodies
 //   - skillBody: Skill content (empty if none)
+//   - hubBodies: Shared hub entries (may be nil)
+//   - handoverBody: Latest handover execution brief (empty if none)
 //
 // Returns:
 //   - error: Always nil (included for interface consistency)
@@ -88,10 +94,11 @@ func OutputAgentMarkdown(
 	steeringBodies []string,
 	skillBody string,
 	hubBodies []string,
+	handoverBody string,
 ) error {
 	pkt := AssemblePacket(
 		ctx, budget, steeringBodies,
-		skillBody, hubBodies,
+		skillBody, hubBodies, handoverBody,
 	)
 	writeAgent.Packet(cmd, RenderMarkdownPacket(pkt))
 	return nil

@@ -19,15 +19,21 @@ handover's `## Folded Closeouts` section and archives them.
 ```bash
 ctx handover write "Cursor Hooks deep dive" \
   --summary "Drafted topic-page; minted EV-018..EV-024; cold-reader passed." \
+  --facts "Hook events fire synchronously; verified in v1.0 schema." \
+  --verified "Updated topics/cursor-hooks/index.md; site-review clean." \
+  --dead-ends "No failed approaches in this stretch." \
   --next "Re-ingest the v1.1 release notes URL once you have it."
 ```
 
 **Required flags**:
 
-| Flag        | Description                                                                                              |
-|-------------|----------------------------------------------------------------------------------------------------------|
-| `--summary` | What happened this session (past tense). Placeholder values (`TBD`, `see chat`, `n/a`) are rejected.     |
-| `--next`    | What the next agent should do FIRST (future tense, specific). Same placeholder rejection.                |
+| Flag          | Description                                                                                                              |
+|---------------|--------------------------------------------------------------------------------------------------------------------------|
+| `--summary`   | What happened this session (past tense, retaining core goal). Placeholder values (`TBD`, `see chat`, `n/a`, `none`) are rejected. |
+| `--facts`     | Established facts (exact paths, symbols, observed values) separated from unverified assumptions. Same placeholder rejection.      |
+| `--verified`  | Applied file changes and exact verification checks run with outcomes. Same placeholder rejection.                                 |
+| `--dead-ends` | Failed approaches and obstacles that must not be repeated. Same placeholder rejection.                                            |
+| `--next`      | What the next agent should do FIRST (future tense, specific, with completion criteria). Same placeholder rejection.               |
 
 **Optional flags**:
 
@@ -40,8 +46,10 @@ ctx handover write "Cursor Hooks deep dive" \
 
 **Writes**: `.context/handovers/<TS>-<slug>.md` with frontmatter
 (`sha`, `branch`, `generated-at`, `title`) and body sections
-(`## Summary`, `## Next Session`, optionally `## Highlights`,
-`## Open Questions`, `## Folded Closeouts`). The
+(`## Summary`, `## Established facts`,
+`## Applied changes and verification`, `## Dead ends`,
+`## Next session`, optionally `## Highlights`,
+`## Open questions`, `## Folded closeouts`). The
 `<TS>-<slug>.md` filename is timestamped so multiple concurrent
 agent runs never overwrite one another's handover.
 

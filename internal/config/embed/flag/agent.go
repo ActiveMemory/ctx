@@ -20,4 +20,6 @@ const (
 	DescKeyAgentSkill = "agent.skill"
 	// DescKeyAgentIncludeHub is the description key for --include-hub.
 	DescKeyAgentIncludeHub = "agent.include-hub"
+	// DescKeyAgentNoHandover is the description key for --no-handover.
+	DescKeyAgentNoHandover = "agent.no-handover"
 )

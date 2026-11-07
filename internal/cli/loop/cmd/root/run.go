@@ -30,25 +30,41 @@ import (
 //   - cmd: Cobra command for output stream
 //   - promptFile: Path to the prompt file for the AI
 //   - tool: AI tool to use (claude, aider, or generic)
+//   - regime: Context regime (standard, eocc, or sac)
+//   - maxTurns: Per-iteration turn cap (0=tool default)
 //   - maxIterations: Maximum loop iterations (0=unlimited)
 //   - completionMsg: Signal string for loop completion
 //   - outputFile: Path for the generated script
 //
 // Returns:
-//   - error: Non-nil if tool invalid or file write fails
+//   - error: Non-nil if tool/regime invalid or file write fails
 func Run(
 	cmd *cobra.Command,
-	promptFile, tool string,
-	maxIterations int,
+	promptFile, tool, regime string,
+	maxTurns, maxIterations int,
 	completionMsg, outputFile string,
 ) error {
 	if !cfgLoop.ValidTools[tool] {
 		return config.InvalidTool(tool)
 	}
+	if regime == "" {
+		regime = cfgLoop.DefaultRegime
+	}
+	if !cfgLoop.ValidRegimes[regime] {
+		return config.InvalidRegime(regime)
+	}
+	if maxTurns < 0 {
+		return config.NegativeMaxTurns()
+	}
 
-	s, genErr := script.Generate(
-		promptFile, tool, maxIterations, completionMsg,
-	)
+	s, genErr := script.Generate(script.Opts{
+		PromptFile:    promptFile,
+		Tool:          tool,
+		Regime:        regime,
+		MaxTurns:      maxTurns,
+		MaxIterations: maxIterations,
+		CompletionMsg: completionMsg,
+	})
 	if genErr != nil {
 		return genErr
 	}

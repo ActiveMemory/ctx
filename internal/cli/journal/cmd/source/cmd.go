@@ -14,6 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/embed/cmd"
 	"github.com/ActiveMemory/ctx/internal/config/embed/flag"
 	cFlag "github.com/ActiveMemory/ctx/internal/config/flag"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/flagbind"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -38,6 +39,9 @@ func Cmd() *cobra.Command {
 		since       string
 		until       string
 		allProjects bool
+		turns       string
+		grep        string
+		maxChars    int
 	)
 
 	short, long := desc.Command(cmd.DescKeyJournalSource)
@@ -60,6 +64,9 @@ func Cmd() *cobra.Command {
 				Since:       since,
 				Until:       until,
 				AllProjects: allProjects,
+				Turns:       turns,
+				Grep:        grep,
+				MaxChars:    maxChars,
 			})
 		},
 	}
@@ -75,11 +82,13 @@ func Cmd() *cobra.Command {
 		},
 	)
 	flagbind.BindStringFlags(c,
-		[]*string{&since, &until},
-		[]string{cFlag.Since, cFlag.Until},
+		[]*string{&since, &until, &turns, &grep},
+		[]string{cFlag.Since, cFlag.Until, cFlag.Turns, cFlag.Grep},
 		[]string{
 			flag.DescKeyJournalSourceSince,
 			flag.DescKeyJournalSourceUntil,
+			flag.DescKeyJournalSourceTurns,
+			flag.DescKeyJournalSourceGrep,
 		},
 	)
 	flagbind.BindBoolFlags(c,
@@ -96,6 +105,12 @@ func Cmd() *cobra.Command {
 		cFlag.Limit, cFlag.ShortMaxIterations,
 		rc.RecallListLimit(),
 		flag.DescKeyJournalSourceLimit,
+	)
+	flagbind.IntFlag(
+		c, &maxChars,
+		cFlag.MaxChars,
+		journal.DefaultSelectiveMaxChars,
+		flag.DescKeyJournalSourceMaxChars,
 	)
 
 	return c

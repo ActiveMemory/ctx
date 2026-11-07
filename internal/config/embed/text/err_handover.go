@@ -47,6 +47,15 @@ const (
 	// DescKeyErrHandoverSummaryRequired is the text key for the
 	// empty-summary sentinel.
 	DescKeyErrHandoverSummaryRequired = "err.handover.summary-required"
+	// DescKeyErrHandoverFactsRequired is the text key for the
+	// empty-facts sentinel.
+	DescKeyErrHandoverFactsRequired = "err.handover.facts-required"
+	// DescKeyErrHandoverVerifiedRequired is the text key for the
+	// empty-verified sentinel.
+	DescKeyErrHandoverVerifiedRequired = "err.handover.verified-required"
+	// DescKeyErrHandoverDeadEndsRequired is the text key for the
+	// empty-dead-ends sentinel.
+	DescKeyErrHandoverDeadEndsRequired = "err.handover.dead-ends-required"
 	// DescKeyErrHandoverNextRequired is the text key for the
 	// empty-next-session sentinel.
 	DescKeyErrHandoverNextRequired = "err.handover.next-required"

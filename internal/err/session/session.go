@@ -112,3 +112,41 @@ func AllWithPattern() error {
 		desc.Text(text.DescKeyErrSessionAllWithPattern),
 	)
 }
+
+// InvalidTurnRange returns a validation error for a malformed --turns flag.
+//
+// Parameters:
+//   - spec: the raw --turns flag value provided by the caller.
+//
+// Returns:
+//   - error: formatted invalid turn range error
+func InvalidTurnRange(spec string) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrSessionInvalidTurnRange), spec,
+	)
+}
+
+// InvalidGrepPattern returns a validation error when --grep fails to compile.
+//
+// Parameters:
+//   - pattern: the raw --grep pattern provided by the caller.
+//   - cause: underlying regexp compilation error.
+//
+// Returns:
+//   - error: formatted invalid grep regex error
+func InvalidGrepPattern(pattern string, cause error) error {
+	return fmt.Errorf(
+		desc.Text(text.DescKeyErrSessionInvalidGrepPattern),
+		pattern, cause,
+	)
+}
+
+// NegativeMaxChars returns a validation error when --max-chars is negative.
+//
+// Returns:
+//   - error: "--max-chars must be non-negative"
+func NegativeMaxChars() error {
+	return errors.New(
+		desc.Text(text.DescKeyErrSessionNegativeMaxChars),
+	)
+}

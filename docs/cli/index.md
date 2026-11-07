@@ -165,6 +165,7 @@ convention_line_count: 200   # Line count warning for CONVENTIONS.md (0 = disabl
 injection_token_warn: 15000  # Oversize injection warning (0 = disable)
 context_window: 200000       # Auto-detected for Claude Code; override for other tools
 billing_token_warn: 0        # One-shot billing warning at this token count (0 = disabled)
+eocc_threshold_tokens: 0     # EoCC compaction nudge threshold in tokens (0 = disabled)
 key_rotation_days: 90        # Days before key rotation nudge
 auto_prune_days: 7           # Days before stale session-state files are pruned on load (0/neg = default)
 agent_cooldown_minutes: 10   # Minutes between repeated `ctx agent` emissions (0 = disable)
@@ -221,6 +222,7 @@ dream:                       # ctx-dream config (opt-in; off by default)
 | `injection_token_warn`  | `int`      | `15000`        | Warn when auto-injected context exceeds this token count (0 = disable)                                         |
 | `context_window`        | `int`      | `200000`       | Context window size in tokens. Auto-detected for Claude Code (200k/1M); override for other AI tools            |
 | `billing_token_warn`    | `int`      | `0` *(off)*    | One-shot warning when session tokens exceed this threshold (0 = disabled)                                      |
+| `eocc_threshold_tokens` | `int`      | `0` *(off)*    | Token threshold for End-of-Conversation Compaction (EoCC) nudge (0 = disabled; positive values below 4000 clamp to 4000) |
 | `key_rotation_days`     | `int`      | `90`           | Days before encryption key rotation nudge                                                                      |
 | `session_prefixes`      | `[]string` | `["Session:"]` | Recognized Markdown session header prefixes. Extend to parse sessions written in other languages               |
 | `freshness_files`       | `[]object` | *(none)*       | Files to track for staleness (path, desc, optional review_url). Hook warns after 6 months without modification |

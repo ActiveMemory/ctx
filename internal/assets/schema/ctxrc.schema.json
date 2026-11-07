@@ -88,6 +88,11 @@
       "description": "Absolute token threshold for billing nudge. One-shot warning when session tokens exceed this value. Default: 0 (disabled).",
       "minimum": 0
     },
+    "eocc_threshold_tokens": {
+      "type": "integer",
+      "description": "Token threshold for End-of-Conversation Compaction (EoCC) nudge. Positive values below 4000 clamp to 4000. Default: 0 (disabled).",
+      "minimum": 0
+    },
     "task_nudge_interval": {
       "type": "integer",
       "description": "Edit/Write calls between task completion nudges. Default: 5. 0 disables.",

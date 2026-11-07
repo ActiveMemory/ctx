@@ -92,6 +92,10 @@ err.config.unknown-update-type:
   short: 'unknown update type: %s'
 err.config.unsupported-tool:
   short: 'unsupported tool: %s'
+err.config.invalid-regime:
+  short: 'invalid loop regime %q: must be one of standard, eocc, sac'
+err.config.negative-max-turns:
+  short: '--max-turns must be non-negative'
 err.dream.append-ledger:
   short: 'dream: append ledger %s: %w'
 err.dream.backup-failed:
@@ -512,6 +516,12 @@ err.session.session-not-found:
   short: 'session not found: %s'
 err.session.event-invalid-type:
   short: "--type must be '%s' or '%s', got %q"
+err.session.invalid-turn-range:
+  short: 'invalid --turns range %q: expected START:END with 1 <= START <= END'
+err.session.invalid-grep-pattern:
+  short: 'invalid --grep regular expression %q: %w'
+err.session.negative-max-chars:
+  short: '--max-chars must be non-negative'
 err.site.marshal-feed:
   short: 'cannot marshal feed: %w'
 err.site.no-site-config:
@@ -724,6 +734,12 @@ err.handover.title-required:
   short: 'handover title is required'
 err.handover.summary-required:
   short: 'handover summary is required'
+err.handover.facts-required:
+  short: 'handover facts field is required'
+err.handover.verified-required:
+  short: 'handover verified field is required'
+err.handover.dead-ends-required:
+  short: 'handover dead-ends field is required'
 err.handover.next-required:
   short: 'handover next-session field is required'
 err.handover.missing-frontmatter:
