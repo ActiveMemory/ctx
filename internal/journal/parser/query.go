@@ -78,6 +78,11 @@ func findSessionsWithFilter(
 		scanOnce(sessionDir)
 	}
 
+	// Check Antigravity session directory ($AGY_HOME or ~/.gemini)
+	for _, sessionDir := range AgySessionDirs() {
+		scanOnce(sessionDir)
+	}
+
 	// Check .context/sessions/ in the current working directory
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
 		scanOnce(filepath.Join(cwd, dir.Context, dir.Sessions))

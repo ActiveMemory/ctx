@@ -346,3 +346,61 @@ type codexRawTokenUsage struct {
 	CachedInputTokens int `json:"cached_input_tokens"`
 	OutputTokens      int `json:"output_tokens"`
 }
+
+// Agy parses Antigravity session transcript JSONL files.
+//
+// Antigravity stores sessions as JSONL files in
+// ~/.gemini/antigravity-cli/brain/<conversation-id>/
+// .system_generated/logs/transcript.jsonl
+// with workspace mapping in history.jsonl.
+type Agy struct{}
+
+// agyRawStep represents a single step in an Antigravity transcript JSONL.
+//
+// Fields:
+//   - StepIndex: ordinal step index in the session
+//   - Source: step origin (USER_EXPLICIT, MODEL, SYSTEM)
+//   - Type: step discriminator (USER_INPUT, PLANNER_RESPONSE, GENERIC)
+//   - Status: step execution status
+//   - CreatedAt: when the step occurred
+//   - Content: step prose or textual content
+//   - Thinking: model chain-of-thought reasoning text
+//   - ToolCalls: tool invocations executed in this step
+//   - InputTokens: prompt tokens for this step
+//   - CacheReadTokens: cached prompt tokens read
+//   - OutputTokens: generated tokens for this step
+type agyRawStep struct {
+	StepIndex       int              `json:"step_index"`
+	Source          string           `json:"source"`
+	Type            string           `json:"type"`
+	Status          string           `json:"status"`
+	CreatedAt       time.Time        `json:"created_at"`
+	Content         string           `json:"content"`
+	Thinking        string           `json:"thinking"`
+	ToolCalls       []agyRawToolCall `json:"tool_calls"`
+	InputTokens     int              `json:"input_tokens"`
+	CacheReadTokens int              `json:"cache_read_tokens"`
+	OutputTokens    int              `json:"output_tokens"`
+}
+
+// agyRawToolCall represents a tool invocation inside an Antigravity step.
+//
+// Fields:
+//   - Name: tool name (e.g. "run_command", "edit_file", "read_file")
+//   - Args: raw JSON parameters passed to the tool
+type agyRawToolCall struct {
+	Name string          `json:"name"`
+	Args json.RawMessage `json:"args"`
+}
+
+// agyRawHistory represents an entry in Antigravity's history.jsonl.
+//
+// Fields:
+//   - ConversationID: conversation identifier matching session ID
+//   - Workspace: workspace root directory
+//   - Workspaces: optional workspace list or raw workspace object
+type agyRawHistory struct {
+	ConversationID string          `json:"conversationId"`
+	Workspace      string          `json:"workspace"`
+	Workspaces     json.RawMessage `json:"workspaces"`
+}

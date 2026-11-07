@@ -58,6 +58,20 @@ For significant decisions:
 
 -->
 
+## [2026-11-07-032121] Antigravity integration uses dual-route delivery (internal/assets/agy plugin + ctx setup agy deployer)
+
+**Status**: Accepted
+
+**Context**: Google Antigravity (agy CLI and Antigravity IDE) supports both global native plugins (plugin.json, hooks.json, mcp_config.json, rules/AGENTS.md, skills/) and workspace-local customization (.agents/hooks.json, .agents/skills/, AGENTS.md).
+
+**Decision**: Antigravity integration uses dual-route delivery (internal/assets/agy plugin + ctx setup agy deployer)
+
+**Rationale**: Shipping an embedded plugin in internal/assets/agy plus a project-local ctx setup agy deployer mirrors the Claude Code dual-route architecture while respecting Antigravity's 4 hook events (PreInvocation, PostInvocation, PreToolUse, PostToolUse), workspacePaths[0] working-directory resolution, pending nudge queue for tool hooks, and 24,000-byte skill body limit.
+
+**Consequence**: All ctx system hooks auto-detect Antigravity stdin payloads via workspacePaths/conversationId, emit Antigravity JSON protocol responses, and ctx journal import parses Antigravity brain transcript.jsonl sessions.
+
+---
+
 ## [2026-09-05-195906] Pi extension deploys as a flat single file (.pi/extensions/ctx.ts) with no package.json
 
 **Status**: Accepted

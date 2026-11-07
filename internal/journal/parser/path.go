@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // getPathRelativeToHome returns the path relative to the user's home directory.
@@ -32,13 +33,14 @@ func getPathRelativeToHome(path string) string {
 	// Handle common home directory patterns
 	// /home/username/... -> strip /home/username
 	// /Users/username/... -> strip /Users/username (macOS)
-	parts := strings.Split(path, string(filepath.Separator))
+	clean := filepath.ToSlash(path)
+	parts := strings.Split(clean, token.Slash)
 
 	for i, part := range parts {
 		if part == dir.HomeLinux || part == dir.HomeMacOS {
 			// Next part is username, rest is relative path
 			if i+2 < len(parts) {
-				return filepath.Join(parts[i+2:]...)
+				return strings.Join(parts[i+2:], token.Slash)
 			}
 			return ""
 		}
