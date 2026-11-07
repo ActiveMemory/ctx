@@ -47,13 +47,13 @@ Or use the `/_ctx-command-audit` skill after the rename.
 # Install the new binary
 make build && sudo make install
 
-# Regenerate CLAUDE.md and permissions
+# Regenerate AGENTS.md, CLAUDE.md and permissions
 ctx init --reset --merge
 ```
 
 `--merge` preserves your knowledge files (TASKS.md, DECISIONS.md,
-etc.) while regenerating infrastructure (permissions, CLAUDE.md
-managed sections).
+etc.) while regenerating infrastructure (permissions, AGENTS.md and
+CLAUDE.md managed sections).
 
 ## Step 3: Update the Plugin
 
@@ -114,7 +114,7 @@ in the release notes using this template:
 The old name is removed (no deprecation alias).
 
 **Action required**:
-1. Run `ctx init --reset --merge` to update CLAUDE.md
+1. Run `ctx init --reset --merge` to update AGENTS.md and CLAUDE.md
 2. Update any scripts referencing `ctx old-command`
 3. Update hook configs if applicable
 

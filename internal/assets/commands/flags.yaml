@@ -88,7 +88,7 @@ setup.write:
 initialize.reset:
   short: Reset an existing context (interactive only; backs up existing files to .context/.backup-init-<ISO>/ before overwriting)
 initialize.merge:
-  short: Auto-merge ctx content into existing CLAUDE.md
+  short: Auto-merge ctx content into existing AGENTS.md and CLAUDE.md
 initialize.minimal:
   short: Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)
 initialize.no-plugin-enable:

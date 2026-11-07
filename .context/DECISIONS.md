@@ -58,6 +58,20 @@ For significant decisions:
 
 -->
 
+## [2026-10-22-205524] ctx init writes the agent instructions to AGENTS.md; CLAUDE.md becomes an @AGENTS.md import
+
+**Status**: Accepted
+
+**Context**: AGENTS.md (agents.md, stewarded by the Agentic AI Foundation under the Linux Foundation since 2025-12-09) is read natively by Codex, Copilot, Cursor, Gemini CLI, OpenCode, Pi and, since Claude Code 2.1.277 (2026-09-18), by Claude Code when no CLAUDE.md is present in the tree. ctx init wrote the bootstrap instructions only to CLAUDE.md, while ctx setup codex/opencode/pi deployed a second, older AGENTS.md template; mixed-tool teams got two diverging texts and non-Claude users got nothing from ctx init. Upstream issue ActiveMemory/ctx#197.
+
+**Decision**: ctx init writes the agent instructions to AGENTS.md; CLAUDE.md becomes an @AGENTS.md import
+
+**Rationale**: One tool-neutral template (internal/assets/integrations/agents.md), loaded once by every agent. ctx init creates or merges AGENTS.md with the same merge.OrCreate semantics CLAUDE.md had, between the ctx:agents markers the setup deployers already recognise. CLAUDE.md keeps a ctx block that is only an @AGENTS.md import: the Claude Code fallback needs 2.1.277, is unavailable in some sessions, and any hand-written CLAUDE.md in the tree switches it off, which is exactly the --merge case. Alternatives rejected: AGENTS.md only (silent loss on older Claude Code or once a CLAUDE.md appears), full content in both files (two copies, loaded twice), a symlink (not portable to Windows checkouts; agents.Deploy rejects symlinks).
+
+**Consequence**: ctx init writes AGENTS.md (ctx:agents ... ctx:agents:end) and a CLAUDE.md whose ctx:context block is the bridge; existing projects migrate with ctx init --reset --merge, which turns the old full block into the bridge and creates AGENTS.md. ctx setup agents|codex|opencode|pi now ship the richer shared template. Supersedes the 2026-01-25 decision 'Removed AGENTS.md from project root' (archive/decisions-consolidated-2026-02-26.md), whose premise that no tool auto-loads AGENTS.md no longer holds. Spec: specs/init-agents-md.md.
+
+---
+
 ## [2026-09-05-195906] Pi extension deploys as a flat single file (.pi/extensions/ctx.ts) with no package.json
 
 **Status**: Accepted

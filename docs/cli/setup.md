@@ -29,7 +29,7 @@ ctx setup <tool> [flags]
 
 | Tool          | Description                                                        |
 |---------------|--------------------------------------------------------------------|
-| `agents`      | Generic `AGENTS.md` (read natively by Codex, OpenCode, and others) |
+| `agents`      | Generic `AGENTS.md`, the file `ctx init` also writes (read natively by Claude Code, Codex, OpenCode, and others) |
 | `claude-code` | Redirects to plugin install instructions                           |
 | `codex`       | OpenAI Codex CLI (hooks, MCP, skills, `AGENTS.md`)                 |
 | `cursor`      | Cursor IDE                                                         |

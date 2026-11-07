@@ -99,7 +99,7 @@ subtree. Moving assets out of this tree without also moving
 
 | Path                                         | Language(s)            | Consumer                      | Deployed to                               |
 |----------------------------------------------|------------------------|-------------------------------|-------------------------------------------|
-| `claude/CLAUDE.md`                           | Markdown               | Claude Code plugin host       | user project root                         |
+| `claude/CLAUDE.md`                           | Markdown               | Claude Code, imports AGENTS.md | user project root                        |
 | `claude/.claude-plugin/plugin.json`          | JSON                   | Claude Code                   | plugin manifest                           |
 | `claude/skills/*/SKILL.md`                   | Markdown + frontmatter | Claude Code skills            | skill registry                            |
 | `claude/skills/*/references/*.md`            | Markdown               | Claude Code skill body        | referenced from SKILL.md                  |
@@ -114,7 +114,7 @@ subtree. Moving assets out of this tree without also moving
 | `hooks/messages/*/*.txt`                     | Plain text             | ctx hooks                     | rendered to stdout/stderr in-process      |
 | `hooks/messages/registry.yaml`               | YAML                   | ctx hook router               | parsed in-process                         |
 | `hooks/trace/*.sh`                           | Bash                   | git tracing                   | written to `.git/hooks/`                  |
-| `integrations/agents.md`                     | Markdown               | ctx (`ctx setup` flows)       | written to consumer-tool paths            |
+| `integrations/agents.md`                     | Markdown               | ctx (`ctx init`, `ctx setup`) | AGENTS.md in the user project root        |
 | `integrations/copilot/*.md`                  | Markdown               | GitHub Copilot                | repo instructions                         |
 | `integrations/copilot-cli/*.{json,md}`       | JSON + Markdown        | Copilot CLI                   | hook config + instructions                |
 | `integrations/copilot-cli/skills/*/SKILL.md` | Markdown + frontmatter | Copilot CLI skills            | skill registry                            |

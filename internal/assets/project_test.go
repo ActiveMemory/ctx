@@ -12,15 +12,48 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/asset"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 )
 
+// TestClaudeMd verifies the CLAUDE.md template is the bridge that
+// imports AGENTS.md: ctx markers around an @AGENTS.md line and none of
+// the instructions themselves, which live in the AGENTS.md template.
 func TestClaudeMd(t *testing.T) {
 	content, err := FS.ReadFile(asset.PathCLAUDEMd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(string(content), "Context") {
+	text := string(content)
+	if !strings.Contains(text, "Context") {
 		t.Error("CLAUDE.md does not contain 'Context'")
+	}
+	for _, want := range []string{
+		marker.CtxStart, marker.CtxEnd, "\n@AGENTS.md\n",
+	} {
+		if !strings.Contains(text, want) {
+			t.Errorf("CLAUDE.md template missing %q", want)
+		}
+	}
+	if strings.Contains(text, "ctx system bootstrap") {
+		t.Error("CLAUDE.md template should import AGENTS.md, not repeat it")
+	}
+}
+
+// TestAgentsMd verifies the AGENTS.md template carries the ctx block
+// markers the init merge and the setup deployers key on, plus the
+// bootstrap instruction every agent must follow.
+func TestAgentsMd(t *testing.T) {
+	content, err := FS.ReadFile(asset.PathAgentsMd)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	text := string(content)
+	for _, want := range []string{
+		marker.AgentsStart, marker.AgentsEnd, "ctx system bootstrap",
+	} {
+		if !strings.Contains(text, want) {
+			t.Errorf("AGENTS.md template missing %q", want)
+		}
 	}
 }
 

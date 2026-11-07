@@ -9,10 +9,11 @@
 //
 // # CLAUDE.md Template
 //
-// Md returns the embedded CLAUDE.md template for
-// project-level Claude Code instructions. This file
-// is deployed to the project root during ctx init,
-// separate from the .context/ template files.
+// Md returns the embedded CLAUDE.md template: the
+// bridge whose ctx-managed block imports AGENTS.md,
+// where the project-level instructions live. This
+// file is deployed to the project root during ctx
+// init, separate from the .context/ template files.
 //
 //	content, err := claude.Md()
 //

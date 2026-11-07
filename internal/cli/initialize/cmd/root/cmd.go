@@ -37,7 +37,7 @@ import (
 //     overwriting. Refuses when --caller is set.
 //   - --minimal, -m: Only create essential files
 //     (TASKS, DECISIONS, CONSTITUTION)
-//   - --merge: Auto-merge ctx content into existing CLAUDE.md
+//   - --merge: Auto-merge ctx content into existing AGENTS.md and CLAUDE.md
 //   - --no-plugin-enable: Skip auto-enabling the ctx plugin in
 //     ~/.claude/settings.json
 //   - --no-steering-init: Skip scaffolding foundation steering

@@ -507,7 +507,8 @@ initialize:
       - AGENT_PLAYBOOK.md: How AI agents should use this system
 
     Additionally, in the project root:
-      - CLAUDE.md              : Claude Code configuration
+      - AGENTS.md              : Agent instructions (open standard, read by every agent)
+      - CLAUDE.md              : Claude Code bridge that imports AGENTS.md
 
     Use --minimal to only create essential files
     (TASKS.md, DECISIONS.md, CONSTITUTION.md).

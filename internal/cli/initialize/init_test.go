@@ -18,6 +18,7 @@ import (
 	cfgClaude "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/env"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 	errInit "github.com/ActiveMemory/ctx/internal/err/initialize"
 )
 
@@ -201,6 +202,9 @@ func TestInitMergeInsertsAfterH1(t *testing.T) {
 	}
 	if !strings.Contains(contentStr, "Run make build") {
 		t.Error("original content was lost")
+	}
+	if strings.Contains(contentStr, "# Project Context") {
+		t.Error("merge should insert only the ctx block, not the template heading")
 	}
 }
 
@@ -822,3 +826,166 @@ func TestInitNoSteeringInitFlagSkipsScaffold(t *testing.T) {
 // `$PWD/.context/`; the env-vs-cwd mismatch class can no longer
 // occur. The mismatch guard (envmatch package and ErrEnvCwdMismatch
 // sentinel) was deleted in the same change.
+
+// TestInitCreatesAgentsMdAndClaudeBridge verifies that a fresh init
+// writes the ctx instructions into AGENTS.md and leaves CLAUDE.md as
+// an @AGENTS.md import, so the text is loaded once by every agent.
+func TestInitCreatesAgentsMdAndClaudeBridge(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-init-agents-md-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.SkipPathCheck, env.True)
+
+	initCmd := Cmd()
+	initCmd.SetArgs([]string{})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	agents, err := os.ReadFile("AGENTS.md")
+	if err != nil {
+		t.Fatalf("AGENTS.md not created: %v", err)
+	}
+	agentsStr := string(agents)
+	for _, want := range []string{
+		marker.AgentsStart, marker.AgentsEnd, "ctx system bootstrap",
+	} {
+		if !strings.Contains(agentsStr, want) {
+			t.Errorf("AGENTS.md missing %q", want)
+		}
+	}
+
+	claudeMd, err := os.ReadFile("CLAUDE.md")
+	if err != nil {
+		t.Fatalf("CLAUDE.md not created: %v", err)
+	}
+	claudeStr := string(claudeMd)
+	for _, want := range []string{
+		marker.CtxStart, marker.CtxEnd, "\n@AGENTS.md\n",
+	} {
+		if !strings.Contains(claudeStr, want) {
+			t.Errorf("CLAUDE.md missing %q", want)
+		}
+	}
+	if strings.Contains(claudeStr, "ctx system bootstrap") {
+		t.Error("CLAUDE.md should import AGENTS.md, not repeat its instructions")
+	}
+}
+
+// TestInitMergeAgentsMdInsertsAfterH1 verifies that --merge inserts
+// the ctx block into an existing AGENTS.md right after its H1 and
+// keeps the rest of the file intact, mirroring the CLAUDE.md merge.
+func TestInitMergeAgentsMdInsertsAfterH1(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-init-agents-merge-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.SkipPathCheck, env.True)
+
+	existingContent := "# My Amazing Project\n\n" +
+		"This is the project description.\n\n" +
+		"## Build Instructions\n\nRun make build.\n"
+	if err = os.WriteFile("AGENTS.md", []byte(existingContent), 0600); err != nil {
+		t.Fatalf("failed to create AGENTS.md: %v", err)
+	}
+
+	initCmd := Cmd()
+	initCmd.SetArgs([]string{"--merge"})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	content, err := os.ReadFile("AGENTS.md")
+	if err != nil {
+		t.Fatalf("failed to read AGENTS.md: %v", err)
+	}
+	contentStr := string(content)
+
+	if !strings.HasPrefix(contentStr, "# My Amazing Project") {
+		t.Error("H1 heading should remain at the start")
+	}
+	ctxIdx := strings.Index(contentStr, marker.AgentsStart)
+	buildIdx := strings.Index(contentStr, "## Build Instructions")
+	if ctxIdx == -1 {
+		t.Fatal("ctx:agents marker not found")
+	}
+	if buildIdx == -1 {
+		t.Fatal("Build Instructions section not found")
+	}
+	if ctxIdx > buildIdx {
+		t.Error("ctx content should appear before Build Instructions, not after")
+	}
+	if !strings.Contains(contentStr, "Run make build") {
+		t.Error("original content was lost")
+	}
+	if strings.Contains(contentStr, "# Project Context") {
+		t.Error("merge should insert only the ctx block, not the template heading")
+	}
+	if _, statErr := os.Stat("CLAUDE.md"); statErr != nil {
+		t.Errorf("CLAUDE.md bridge not created alongside AGENTS.md: %v", statErr)
+	}
+}
+
+// TestInitExistingAgentsMdWithMarkersUntouched verifies that an
+// AGENTS.md already carrying a ctx block (for example one deployed by
+// ctx setup codex) is left alone unless --reset is given.
+func TestInitExistingAgentsMdWithMarkersUntouched(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "cli-init-agents-existing-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(env.SkipPathCheck, env.True)
+
+	existingContent := "# My Project\n\n" +
+		marker.AgentsStart + "\nOld agents block\n" + marker.AgentsEnd +
+		"\n\n## Custom Section\n\nSome custom content here.\n"
+	if err = os.WriteFile("AGENTS.md", []byte(existingContent), 0600); err != nil {
+		t.Fatalf("failed to create AGENTS.md: %v", err)
+	}
+
+	initCmd := Cmd()
+	initCmd.SetArgs([]string{})
+	if err = initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	content, err := os.ReadFile("AGENTS.md")
+	if err != nil {
+		t.Fatalf("failed to read AGENTS.md: %v", err)
+	}
+	contentStr := string(content)
+	if !strings.Contains(contentStr, "Old agents block") {
+		t.Error("existing ctx block was replaced without --reset")
+	}
+	if !strings.Contains(contentStr, "Custom Section") {
+		t.Error("AGENTS.md lost custom section")
+	}
+	if strings.Contains(contentStr, "ctx system bootstrap") {
+		t.Error("template merged into a file that already has ctx markers")
+	}
+}

@@ -29,30 +29,41 @@ which tools your team uses.
 
 | You have...                          | Command                                           | What happens                                         |
 |--------------------------------------|---------------------------------------------------|------------------------------------------------------|
-| Nothing (*greenfield*)               | `ctx init`                                        | Creates `.context/`, `CLAUDE.md`, permissions        |
-| Existing `CLAUDE.md`                 | `ctx init --merge`                                | Backs up your file, inserts `ctx` block after the H1 |
-| Existing `CLAUDE.md` + `ctx` markers | `ctx init --reset`                                | Replaces the `ctx` block, leaves your content intact |
+| Nothing (*greenfield*)               | `ctx init`                                        | Creates `.context/`, `AGENTS.md`, `CLAUDE.md`, permissions |
+| Existing `AGENTS.md` or `CLAUDE.md`  | `ctx init --merge`                                | Backs up the file, inserts the `ctx` block after its H1 |
+| Existing file + `ctx` markers        | `ctx init --reset`                                | Replaces the `ctx` block, leaves your content intact |
 | `.cursorrules` / `.aider.conf.yml`   | `ctx init`                                        | `ctx` ignores those files: they coexist cleanly      |
-| Team repo, first adopter             | `ctx init --merge && git add .context/ CLAUDE.md` | Initialize and commit for the team                   |
+| Team repo, first adopter             | `ctx init --merge && git add .context/ AGENTS.md CLAUDE.md` | Initialize and commit for the team         |
 
 ---
 
-## Existing `CLAUDE.md`
+## Existing `AGENTS.md` or `CLAUDE.md`
 
 This is the most common scenario:
 
-You have a `CLAUDE.md` with project-specific instructions and don't want to 
+You have an `AGENTS.md` or `CLAUDE.md` with project-specific instructions and
+don't want to 
 lose them.
 
-!!! tip "You Own `CLAUDE.md`"
-    **After initialization, `CLAUDE.md` is yours: edit it freely**.
+`ctx` writes its instructions to `AGENTS.md`, the file Claude Code, Codex,
+Copilot, Cursor and other agents read, between `<!-- ctx:agents -->` and
+`<!-- ctx:agents:end -->`. `CLAUDE.md` gets a much smaller block between
+`<!-- ctx:context -->` and `<!-- ctx:end -->`: an `@AGENTS.md` import that
+makes Claude Code load the same text (a `CLAUDE.md` without it would make
+Claude Code ignore `AGENTS.md` altogether). Both files are handled the same
+way below.
+
+!!! tip "You Own Both Files"
+    **After initialization, `AGENTS.md` and `CLAUDE.md` are yours: edit them
+    freely**.
 
     Add project instructions, remove sections you don't need, reorganize as 
     you see fit.
 
-    The only part `ctx` manages is the block between the `<!-- ctx:context -->`
-    and `<!-- ctx:end -->` markers; everything outside those markers is yours
-    to change at any time.
+    The only parts `ctx` manages are the blocks between the markers
+    (`<!-- ctx:agents -->` ... `<!-- ctx:agents:end -->` in `AGENTS.md`,
+    `<!-- ctx:context -->` ... `<!-- ctx:end -->` in `CLAUDE.md`); everything
+    outside those markers is yours to change at any time.
 
     If you remove the markers, nothing breaks: `ctx` simply treats the file 
     as having no `ctx` content and will offer to merge again on the next 
@@ -61,12 +72,12 @@ lose them.
 
 ### What `ctx init` Does
 
-When `ctx init` detects an existing `CLAUDE.md`, it checks for `ctx` markers
-(`<!-- ctx:context -->` ... `<!-- ctx:end -->`):
+When `ctx init` detects an existing `AGENTS.md` or `CLAUDE.md`, it checks the
+file for its `ctx` markers:
 
 | State                      | Default behavior         | With `--merge`            | With `--force`                  |
 |----------------------------|--------------------------|---------------------------|---------------------------------|
-| No `CLAUDE.md`             | Creates from template    | Creates from template     | Creates from template           |
+| No file                    | Creates from template    | Creates from template     | Creates from template           |
 | Exists, no `ctx` markers   | **Prompts** to merge     | Auto-merges (*no prompt*) | Auto-merges (*no prompt*)       |
 | Exists, has `ctx` markers  | Skips (*already set up*) | Skips                     | Replaces the `ctx` block only   |
 
@@ -74,7 +85,7 @@ When `ctx init` detects an existing `CLAUDE.md`, it checks for `ctx` markers
 
 `--merge` auto-merges without prompting. The merge process:
 
-1. **Backs up** your existing `CLAUDE.md` to `CLAUDE.md.<timestamp>.bak`;
+1. **Backs up** the existing file to `<file>.<timestamp>.bak`;
 2. **Finds the H1 heading** (e.g., `# My Project`) in your file;
 3. **Inserts** the `ctx` block immediately after it;
 4. **Preserves** everything else untouched.
@@ -83,7 +94,7 @@ Your content before and after the `ctx` block remains exactly as it was.
 
 ### Before / After Example
 
-**Before**: your existing `CLAUDE.md`:
+**Before**: your existing `AGENTS.md`:
 
 ```markdown
 # My Project
@@ -104,7 +115,7 @@ Your content before and after the `ctx` block remains exactly as it was.
 ```markdown
 # My Project
 
-<!-- ctx:context -->
+<!-- ctx:agents -->
 <!-- DO NOT REMOVE: This marker indicates ctx-managed content -->
 
 ## IMPORTANT: You Have Persistent Memory
@@ -112,7 +123,7 @@ Your content before and after the `ctx` block remains exactly as it was.
 This project uses Context (`ctx`) for context persistence across sessions.
 ...
 
-<!-- ctx:end -->
+<!-- ctx:agents:end -->
 
 ## Build Commands
 
@@ -128,39 +139,61 @@ This project uses Context (`ctx`) for context persistence across sessions.
 Your build commands and code style sections are untouched. The `ctx` block sits
 between markers and can be updated independently.
 
+Your `CLAUDE.md`, if you have one, receives only the bridge:
+
+```markdown
+# My Project
+
+<!-- ctx:context -->
+<!-- DO NOT REMOVE: This marker indicates ctx-managed content -->
+<!-- ctx keeps the agent instructions in AGENTS.md, the open standard
+     read by Claude Code, Codex, Copilot, Cursor and others; the line
+     below imports them into Claude Code. -->
+@AGENTS.md
+<!-- ctx:end -->
+
+## Build Commands
+...
+```
+
 ### The `--force` Flag
 
-If your `CLAUDE.md` already has `ctx` markers (from a previous `ctx init`), the
-default behavior is to skip it. Use `--force` to replace the `ctx` block with the
+If your `AGENTS.md` or `CLAUDE.md` already has `ctx` markers (from a previous
+`ctx init`), the default behavior is to skip it. Use `--force` to replace the `ctx` block with the
 latest template: This is useful after **upgrading** `ctx`:
 
 ```bash
 ctx init --reset
 ```
 
-This only replaces content between `<!-- ctx:context -->` and `<!-- ctx:end -->`.
-Your own content outside the markers is preserved. A timestamped backup is
-created before any changes.
+This only replaces the content between the markers. Your own content outside
+them is preserved. A timestamped backup is created before any changes.
+
+Upgrading from a `ctx` release that wrote the full instructions into
+`CLAUDE.md`? The same command moves them: the old `CLAUDE.md` block becomes
+the `@AGENTS.md` import and `AGENTS.md` is created with the instructions.
 
 ### Undoing a Merge
 
 Every merge creates a backup:
 
 ```bash
-$ ls CLAUDE.md*.bak
+$ ls AGENTS.md*.bak CLAUDE.md*.bak
+AGENTS.md.1738000000.bak
 CLAUDE.md.1738000000.bak
 ```
 
 To restore:
 
 ```bash
+cp AGENTS.md.1738000000.bak AGENTS.md
 cp CLAUDE.md.1738000000.bak CLAUDE.md
 ```
 
 Or if you are using `git`, simply:
 
 ```bash
-git checkout CLAUDE.md
+git checkout AGENTS.md CLAUDE.md
 ```
 
 ---
@@ -168,7 +201,8 @@ git checkout CLAUDE.md
 ## Existing `.cursorrules` / Aider / Copilot
 
 `ctx` doesn't touch tool-specific config files. It creates its own files
-(`.context/`, `CLAUDE.md`) and coexists with whatever you already have.
+(`.context/`, `AGENTS.md`, `CLAUDE.md`) and coexists with whatever you already
+have.
 
 ### What Does `ctx` Create?
 
@@ -177,7 +211,7 @@ git checkout CLAUDE.md
 | `.context/` directory                                                                       | `.cursorrules`                    |
 | `CLAUDE.md` (*or merges into*)                                                              | `.aider.conf.yml`                 |
 | `.claude/settings.local.json` (*seeded by `ctx init`; the plugin manages hooks and skills*) | `.github/copilot-instructions.md` |
-|                                                                                             | `.windsurfrules`                  |
+| `AGENTS.md` (*or merges into*)                                                              | `.windsurfrules`                  |
 |                                                                                             | Any other tool-specific config    |
 
 Claude Code hooks and skills are provided by the **`ctx` plugin**,
@@ -254,7 +288,7 @@ With those in place, committing is straightforward:
 ctx init --merge
 
 # Commit context files (journals and keys are already gitignored)
-git add .context/ CLAUDE.md
+git add .context/ AGENTS.md CLAUDE.md
 git commit -m "Add ctx context management"
 git push
 ```
@@ -295,7 +329,8 @@ Common conflict scenarios:
 You don't need the whole team to switch at once:
 
 1. One person runs `ctx init --merge` and commits;
-2. `CLAUDE.md` instructions work immediately for Claude Code users;
+2. `AGENTS.md` works immediately for Claude Code, Codex, Copilot, Cursor and
+   every other agent that reads it (`CLAUDE.md` imports it for Claude Code);
 3. Other tool users can adopt at their own pace using `ctx setup <tool>`;
 4. Context files benefit everyone who reads them, even without tool integration.
 
@@ -334,11 +369,12 @@ If you used `--merge`, check that your original content is intact:
 
 ```bash
 # Your original content should still be there
-cat CLAUDE.md
+cat AGENTS.md
 
-# The ctx block should be between markers
-grep -c "ctx:context" CLAUDE.md  # Should print 1
-grep -c "ctx:end" CLAUDE.md      # Should print 1
+# The ctx block should be between markers, and CLAUDE.md should import it
+grep -c "<!-- ctx:agents -->" AGENTS.md  # Should print 1
+grep -c "ctx:agents:end" AGENTS.md       # Should print 1
+grep -c "@AGENTS.md" CLAUDE.md            # Should print 1
 ```
 
 ---

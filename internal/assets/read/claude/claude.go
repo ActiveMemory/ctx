@@ -13,8 +13,9 @@ import (
 
 // Md reads the CLAUDE.md template from the embedded filesystem.
 //
-// CLAUDE.md is deployed to the project root by a dedicated handler
-// during initialization, separate from the .context/ templates.
+// CLAUDE.md, the @AGENTS.md bridge, is deployed to the project root by
+// a dedicated handler during initialization, separate from the
+// .context/ templates.
 //
 // Returns:
 //   - []byte: CLAUDE.md content
