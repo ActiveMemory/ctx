@@ -92,7 +92,9 @@ func Opts(args map[string]interface{}) entity.EntryOpts {
 // SanitizedOpts builds EntryOpts with content sanitization applied
 // to all text fields. Returns an error if any secondary field
 // exceeds [cfg.MaxOptsFieldLen]; length is checked on raw input
-// before sanitization to prevent abuse via large payloads.
+// before sanitization to prevent abuse via large payloads. The
+// single-line fields (priority, section, branch, commit) are
+// flattened to one line and truncated to [cfg.MaxOptsLineLen].
 //
 // Parameters:
 //   - args: MCP tool arguments with optional entry fields
@@ -138,5 +140,11 @@ func SanitizedOpts(
 	opts.Lesson = sanitize.Content(opts.Lesson)
 	opts.Application = sanitize.Content(opts.Application)
 	opts.SessionID = sanitize.SessionID(opts.SessionID)
+	// These land inside a task line or a section heading, where a
+	// line break would forge a new task or heading.
+	opts.Priority = sanitize.Line(opts.Priority, cfg.MaxOptsLineLen)
+	opts.Section = sanitize.Line(opts.Section, cfg.MaxOptsLineLen)
+	opts.Branch = sanitize.Line(opts.Branch, cfg.MaxOptsLineLen)
+	opts.Commit = sanitize.Line(opts.Commit, cfg.MaxOptsLineLen)
 	return opts, nil
 }

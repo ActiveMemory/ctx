@@ -10,6 +10,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	"github.com/ActiveMemory/ctx/internal/config/mcp/schema"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
@@ -29,17 +31,21 @@ func MergeProps(dst, src map[string]proto.Property) map[string]proto.Property {
 	return dst
 }
 
-// EntryAttrProps returns the five entry-attribute properties shared by
+// EntryAttrProps returns the entry-attribute properties shared by
 // tools that accept structured context entries (add, watch-update).
 // contextKey selects the DescKey for the "context" field since
-// each tool describes it differently.
+// each tool describes it differently. The task placement and
+// provenance fields are declared here because entry validation
+// requires them, and a client can only send what the schema
+// advertises.
 //
 // Parameters:
 //   - contextKey: DescKey selecting the description for the context field
 //
 // Returns:
 //   - map[string]proto.Property: property map with context, rationale,
-//     consequence, lesson, and application fields
+//     consequence, lesson, application, section, priority,
+//     session_id, branch, and commit fields
 func EntryAttrProps(contextKey string) map[string]proto.Property {
 	return map[string]proto.Property{
 		cli.AttrContext: {
@@ -65,6 +71,32 @@ func EntryAttrProps(contextKey string) map[string]proto.Property {
 			Type: schema.String,
 			Description: desc.Text(
 				text.DescKeyMCPToolPropApplication),
+		},
+		field.Section: {
+			Type: schema.String,
+			Description: desc.Text(
+				text.DescKeyMCPToolPropSection),
+		},
+		field.Priority: {
+			Type: schema.String,
+			Description: desc.Text(
+				text.DescKeyMCPToolPropPriority),
+			Enum: entry.Priorities,
+		},
+		field.SessionID: {
+			Type: schema.String,
+			Description: desc.Text(
+				text.DescKeyMCPToolPropSessionID),
+		},
+		field.Branch: {
+			Type: schema.String,
+			Description: desc.Text(
+				text.DescKeyMCPToolPropBranch),
+		},
+		field.Commit: {
+			Type: schema.String,
+			Description: desc.Text(
+				text.DescKeyMCPToolPropCommit),
 		},
 	}
 }

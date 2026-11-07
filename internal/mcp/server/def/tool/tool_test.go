@@ -9,6 +9,8 @@ package tool
 import (
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/mcp/field"
 	cfgMcpTool "github.com/ActiveMemory/ctx/internal/config/mcp/tool"
 	"github.com/ActiveMemory/ctx/internal/mcp/proto"
 )
@@ -105,6 +107,35 @@ func TestDefsAddRequiredFields(t *testing.T) {
 		return
 	}
 	t.Error("add tool not found in Defs")
+}
+
+// Entry validation (internal/entry/validate.go) can require each of
+// these fields, and the handlers read priority alongside them. A
+// client can only send what a schema advertises, so both entry tools
+// must declare every one.
+func TestDefsEntryToolsAdvertiseEntryFields(t *testing.T) {
+	missing := map[string]bool{
+		cfgMcpTool.Add: true, cfgMcpTool.WatchUpdate: true,
+	}
+	for _, d := range Defs() {
+		if !missing[d.Name] {
+			continue
+		}
+		delete(missing, d.Name)
+		for _, key := range []string{
+			field.Section, field.Priority,
+			field.SessionID, field.Branch, field.Commit,
+			cli.AttrContext, cli.AttrRationale, cli.AttrConsequence,
+			cli.AttrLesson, cli.AttrApplication,
+		} {
+			if _, ok := d.InputSchema.Properties[key]; !ok {
+				t.Errorf("%s schema missing prop: %s", d.Name, key)
+			}
+		}
+	}
+	for name := range missing {
+		t.Errorf("entry tool %s not found in Defs", name)
+	}
 }
 
 func TestDefsMergeProps(t *testing.T) {

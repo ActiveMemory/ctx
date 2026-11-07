@@ -60,6 +60,13 @@ const (
 	// DescKeyMCPToolPropApplication is the text key for mcp tool prop application
 	// messages.
 	DescKeyMCPToolPropApplication = "mcp.tool-prop-application"
+	// DescKeyMCPToolPropSessionID is the text key for mcp tool prop session id
+	// messages.
+	DescKeyMCPToolPropSessionID = "mcp.tool-prop-session-id"
+	// DescKeyMCPToolPropBranch is the text key for mcp tool prop branch messages.
+	DescKeyMCPToolPropBranch = "mcp.tool-prop-branch"
+	// DescKeyMCPToolPropCommit is the text key for mcp tool prop commit messages.
+	DescKeyMCPToolPropCommit = "mcp.tool-prop-commit"
 	// DescKeyMCPToolPropQuery is the text key for mcp tool prop query messages.
 	DescKeyMCPToolPropQuery = "mcp.tool-prop-query"
 	// DescKeyMCPToolPropLimit is the text key for mcp tool prop limit messages.

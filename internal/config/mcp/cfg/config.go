@@ -37,4 +37,8 @@ const (
 	// application). Tighter than MaxContentLen because these are
 	// qualifiers, not primary content.
 	MaxOptsFieldLen = 4_000
+	// MaxOptsLineLen is the maximum byte length for single-line entry
+	// option fields (priority, section, branch, commit). Longer values
+	// are truncated, not rejected.
+	MaxOptsLineLen = 256
 )
