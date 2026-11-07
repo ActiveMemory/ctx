@@ -128,6 +128,52 @@ write.hook-agents-summary:
     AGENTS.md is now available for all AI coding tools.
     Tools that read AGENTS.md natively: Codex, Gemini CLI, OpenCode,
     Claude Code, GitHub Copilot CLI.
+write.hook-agy-created:
+  short: '  ✓ %s'
+write.hook-agy-merged:
+  short: '  ✓ %s (merged)'
+write.hook-agy-skipped:
+  short: '  ○ %s (up to date, skipped)'
+write.hook-agy-rejected:
+  short: '  ✗ %s (not ctx-managed, skipped)'
+write.hook-agy-plugin-active:
+  short: |-
+    The ctx Antigravity plugin is enabled in ~/.gemini/config/plugins/ctx, so
+    hooks, MCP, and skills already reach every project. Skipping
+    .agents/hooks.json and .agents/skills/ (Antigravity would run each hook
+    twice); deploying AGENTS.md only.
+write.hook-agy-project-also:
+  short: |-
+    warning: this project also has a deployed .agents/hooks.json with a "ctx"
+    group, so Antigravity will run every ctx hook twice (plugin + project
+    layers). Keep one route: delete the "ctx" group in .agents/hooks.json and
+    .agents/skills/ to rely on the plugin, or disable the plugin to keep the
+    project files.
+write.hook-agy-summary:
+  short: |-
+    Antigravity will now:
+      1. Load the ctx context packet on session start
+      2. Nudge persistence before/after tool use and on invocations
+      3. Gate tool use until context is loaded; block non-PATH ctx binaries
+      4. Serve the ctx MCP server across sessions
+write.hook-agy-summary-plugin:
+  short: |-
+    The ctx Antigravity plugin is enabled, so hooks, the MCP server, and
+    skills come from the installed plugin. Deployed here:
+
+      ✓ AGENTS.md
+write.hook-agy-state:
+  short: 'Antigravity: %s'
+write.hook-agy-state-configured:
+  short: 'project-local integration configured (.agents/hooks.json present)'
+write.hook-agy-state-absent:
+  short: agy binary not found on PATH (install from https://github.com/google/antigravity)
+write.hook-agy-state-not-installed:
+  short: agy detected; ctx plugin not installed
+write.hook-agy-state-not-enabled:
+  short: agy detected; ctx plugin installed but disabled in plugin.json
+write.hook-agy-state-ready:
+  short: agy detected; ctx plugin installed and enabled
 write.hook-codex-created:
   short: '  ✓ %s'
 write.hook-codex-merged:
@@ -452,6 +498,10 @@ write.init-claude-absent:
     If you don't use Claude Code, ignore this. ctx works
     with Cursor, Kiro, Cline, Aider, Copilot, and Windsurf
     as well (see `ctx setup --help`).
+write.init-agy-hint:
+  short: |
+
+    Antigravity detected: run 'ctx setup agy --write' to wire hooks, MCP, and skills.
 write.init-codex-hint:
   short: |
 

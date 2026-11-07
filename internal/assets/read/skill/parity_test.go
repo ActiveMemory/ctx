@@ -216,9 +216,9 @@ func TestAllowedToolsConfinedToFrontmatter(t *testing.T) {
 		}
 		lines := bytes.Split(src, []byte("\n"))
 		fmEnd := -1
-		if len(lines) > 0 && bytes.Equal(lines[0], fence) {
+		if len(lines) > 0 && bytes.Equal(bytes.TrimSpace(lines[0]), fence) {
 			for i := 1; i < len(lines); i++ {
-				if bytes.Equal(lines[i], fence) {
+				if bytes.Equal(bytes.TrimSpace(lines[i]), fence) {
 					fmEnd = i
 					break
 				}

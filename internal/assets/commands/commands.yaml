@@ -473,6 +473,7 @@ setup:
 
     Supported tools:
       agents       - AGENTS.md (universal agent instructions)
+      agy          - Google Antigravity CLI (hooks, MCP, skills)
       claude-code  - Anthropic's Claude Code CLI (use plugin instead)
       codex        - OpenAI Codex CLI (hooks, MCP, skills)
       cursor       - Cursor IDE
@@ -485,6 +486,7 @@ setup:
       windsurf     - Windsurf IDE
 
     Use --write to generate the configuration file directly:
+      ctx setup agy --write        # Creates .agents/hooks.json, .agents/skills/, AGENTS.md
       ctx setup copilot --write    # Creates .github/copilot-instructions.md
       ctx setup codex --write      # Creates .codex/, .agents/skills/, AGENTS.md
 

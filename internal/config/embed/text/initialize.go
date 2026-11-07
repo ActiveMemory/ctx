@@ -198,6 +198,10 @@ const (
 	// through the dev-symlink install flow with user-scope
 	// guidance to avoid the local-install enablement gotcha.
 	DescKeyWriteInitClaudePluginMissing = "write.init-claude-plugin-missing"
+	// DescKeyWriteInitAgyHint is the one-line post-init hint shown
+	// when the agy binary is on PATH but neither the project-local
+	// hooks manifest nor the ctx Antigravity plugin is present.
+	DescKeyWriteInitAgyHint = "write.init-agy-hint"
 	// DescKeyWriteInitCodexHint is the one-line post-init hint shown
 	// when the codex binary is on PATH but neither the project-local
 	// hooks manifest nor the ctx Codex plugin is present.

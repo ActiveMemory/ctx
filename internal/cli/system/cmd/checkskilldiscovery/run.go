@@ -16,6 +16,7 @@ import (
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	cfgHook "github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
@@ -37,6 +38,9 @@ import (
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	_, sessionID, _, tmpDir, ok := coreCheck.FullPreamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.FlushAgySteps(cmd)
+	}
 	bailSilently := !ok
 	if bailSilently {
 		return nil

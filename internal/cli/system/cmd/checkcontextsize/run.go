@@ -48,6 +48,11 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
+	input := coreSession.ReadInput(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.FlushAgySteps(cmd)
+	}
+
 	initialized, initErr := state.Initialized()
 	if initErr != nil {
 		logWarn.Warn(warn.StateInitializedProbe, initErr)
@@ -56,10 +61,17 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if !initialized {
 		return nil
 	}
-	input := coreSession.ReadInput(stdin)
+
 	sessionID := input.SessionID
 	if sessionID == "" {
 		sessionID = session.IDUnknown
+	}
+
+	if coreSession.Agy() {
+		pending := coreSession.DrainPendingAgy()
+		for _, p := range pending {
+			coreSession.AddAgyStep(p)
+		}
 	}
 
 	// Pause check: this hook is the designated single emitter

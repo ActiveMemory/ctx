@@ -70,6 +70,8 @@ import (
 func FullPreamble(
 	stdin *os.File,
 ) (entity.HookInput, string, string, string, bool) {
+	input, sessionID, paused := Preamble(stdin)
+
 	initialized, initErr := state.Initialized()
 	if initErr != nil {
 		logWarn.Warn(warn.StateInitializedProbe, initErr)
@@ -79,14 +81,13 @@ func FullPreamble(
 		return entity.HookInput{}, "", "", "", false
 	}
 
-	ctxDir, ctxErr := rc.ContextDir()
-	if ctxErr != nil {
-		logWarn.Warn(warn.ContextDirResolve, ctxErr)
+	if paused {
 		return entity.HookInput{}, "", "", "", false
 	}
 
-	input, sessionID, paused := Preamble(stdin)
-	if paused {
+	ctxDir, ctxErr := rc.ContextDir()
+	if ctxErr != nil {
+		logWarn.Warn(warn.ContextDirResolve, ctxErr)
 		return entity.HookInput{}, "", "", "", false
 	}
 

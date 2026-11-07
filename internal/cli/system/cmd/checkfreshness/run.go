@@ -17,6 +17,7 @@ import (
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/freshness"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -25,6 +26,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 	ctxLog "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-freshness hook logic.
@@ -42,14 +44,16 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	files := rc.FreshnessFiles()
-	if len(files) == 0 {
-		return nil
-	}
-
 	input, _, _, tmpDir, ok := coreCheck.FullPreamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.FlushAgySteps(cmd)
+	}
 	bailSilently := !ok
 	if bailSilently {
+		return nil
+	}
+	files := rc.FreshnessFiles()
+	if len(files) == 0 {
 		return nil
 	}
 	throttleFile := filepath.Join(tmpDir, freshness.ThrottleID)

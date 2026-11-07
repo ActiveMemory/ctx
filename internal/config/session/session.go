@@ -18,4 +18,8 @@ const (
 	PreviewMaxLen = 100
 	// TemplateName is the name used for Go text/template instances.
 	TemplateName = "msg"
+	// RoleUser is the user message role.
+	RoleUser = "user"
+	// RoleAssistant is the assistant message role.
+	RoleAssistant = "assistant"
 )

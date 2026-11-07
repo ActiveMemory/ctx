@@ -18,6 +18,7 @@ import (
 	coreJournal "github.com/ActiveMemory/ctx/internal/cli/system/core/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/message"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/env"
@@ -43,6 +44,9 @@ import (
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	input, _, ctxDir, tmpDir, ok := coreCheck.FullPreamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.FlushAgySteps(cmd)
+	}
 	bailSilently := !ok
 	if bailSilently {
 		return nil

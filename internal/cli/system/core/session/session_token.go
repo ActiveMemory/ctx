@@ -17,6 +17,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
+	"github.com/ActiveMemory/ctx/internal/config/agy"
 	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
@@ -110,17 +111,43 @@ func FindJSONLPath(sessionID string) (string, error) {
 		return "", globErr
 	}
 
-	if len(matches) == 0 {
-		return "", nil
+	if len(matches) > 0 {
+		// Cache the result for subsequent calls this session.
+		if writeErr := internalIo.SafeWriteFile(
+			cacheFile, []byte(matches[0]), fs.PermSecret,
+		); writeErr != nil {
+			ctxLog.Warn(warn.Write, cacheFile, writeErr)
+		}
+		return matches[0], nil
 	}
 
-	// Cache the result for subsequent calls this session.
-	if writeErr := internalIo.SafeWriteFile(
-		cacheFile, []byte(matches[0]), fs.PermSecret,
-	); writeErr != nil {
-		ctxLog.Warn(warn.Write, cacheFile, writeErr)
+	agyPath := AgyTranscriptPath()
+	if agyPath != "" {
+		if _, statErr := os.Stat(agyPath); statErr == nil {
+			if writeErr := internalIo.SafeWriteFile(
+				cacheFile, []byte(agyPath), fs.PermSecret,
+			); writeErr != nil {
+				ctxLog.Warn(warn.Write, cacheFile, writeErr)
+			}
+			return agyPath, nil
+		}
 	}
-	return matches[0], nil
+
+	agyDefault := filepath.Join(
+		home, agy.DirGemini, agy.DirAntigravityCLI,
+		agy.DirBrain, sessionID, agy.DirSystemGenerated,
+		agy.DirLogs, agy.FileTranscriptJSONL,
+	)
+	if _, statErr := os.Stat(agyDefault); statErr == nil {
+		if writeErr := internalIo.SafeWriteFile(
+			cacheFile, []byte(agyDefault), fs.PermSecret,
+		); writeErr != nil {
+			ctxLog.Warn(warn.Write, cacheFile, writeErr)
+		}
+		return agyDefault, nil
+	}
+
+	return "", nil
 }
 
 // ParseLastUsageAndModel reads the tail of a JSONL file and extracts the
@@ -173,10 +200,9 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 		}
 
 		// Quick check: skip lines that can't contain usage data
-		if !bytes.Contains(line, []byte(claude.FieldUsage)) {
-			continue
-		}
-		if !bytes.Contains(line, []byte(claude.FieldInputTokens)) {
+		hasUsage := bytes.Contains(line, []byte(claude.FieldUsage))
+		hasInputTokens := bytes.Contains(line, []byte(claude.FieldInputTokens))
+		if !hasInputTokens {
 			continue
 		}
 
@@ -185,18 +211,33 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 			continue
 		}
 
-		if msg.Message.Role != claude.RoleAssistant {
-			continue
+		if hasUsage && msg.Message.Role == claude.RoleAssistant {
+			u := msg.Message.Usage
+			total := u.InputTokens + u.CacheCreationInputTokens +
+				u.CacheReadInputTokens
+			if total > 0 {
+				return entity.TokenInfo{
+					Tokens: total,
+					Model:  msg.Message.Model,
+				}, nil
+			}
 		}
 
-		u := msg.Message.Usage
-		total := u.InputTokens + u.CacheCreationInputTokens + u.CacheReadInputTokens
-		if total > 0 {
-			return entity.TokenInfo{
-				Tokens: total,
-				Model:  msg.Message.Model,
-			}, nil
+		if msg.Type == agy.StepTypePlannerResponse || msg.InputTokens > 0 {
+			total := msg.InputTokens + msg.CacheReadTokens
+			if total > 0 {
+				return entity.TokenInfo{
+					Tokens: total,
+					Model:  AgyModelName(),
+				}, nil
+			}
 		}
+	}
+
+	if agyModel := AgyModelName(); agyModel != "" {
+		return entity.TokenInfo{
+			Model: agyModel,
+		}, nil
 	}
 
 	return entity.TokenInfo{}, nil

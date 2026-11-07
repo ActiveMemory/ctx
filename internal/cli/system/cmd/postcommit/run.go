@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	corePC "github.com/ActiveMemory/ctx/internal/cli/system/core/postcommit"
 	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	"github.com/ActiveMemory/ctx/internal/config/agy"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/regex"
@@ -42,8 +43,19 @@ import (
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	input, sessionID, _, _, ok := coreCheck.FullPreamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.EmitAgyEmpty(cmd)
+	}
 	bailSilently := !ok
 	if bailSilently {
+		return nil
+	}
+	if input.ToolError != "" {
+		return nil
+	}
+	if input.ToolName != "" &&
+		input.ToolName != hook.ToolBash &&
+		input.ToolName != agy.ToolRunCommand {
 		return nil
 	}
 
@@ -69,10 +81,14 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if appendErr != nil {
 		return appendErr
 	}
-	writeSetup.Context(
-		cmd,
-		coreSession.FormatContext(hook.EventPostToolUse, msg),
-	)
+	if coreSession.Agy() {
+		coreSession.QueuePendingAgy(msg)
+	} else {
+		writeSetup.Context(
+			cmd,
+			coreSession.FormatContext(hook.EventPostToolUse, msg),
+		)
+	}
 
 	ref := notify.NewTemplateRef(hookName, variant, nil)
 	if relayErr := nudge.Relay(
@@ -91,11 +107,19 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return driftErr
 	}
 	if driftResponse != "" {
-		writeSetup.Context(cmd, driftResponse)
+		if coreSession.Agy() {
+			coreSession.QueuePendingAgy(driftResponse)
+		} else {
+			writeSetup.Context(cmd, driftResponse)
+		}
 	}
 
 	if violations := corePC.ScoreCommitViolations(); violations != "" {
-		writeSetup.NudgeBlock(cmd, violations)
+		if coreSession.Agy() {
+			coreSession.QueuePendingAgy(violations)
+		} else {
+			writeSetup.NudgeBlock(cmd, violations)
+		}
 	}
 
 	return nil

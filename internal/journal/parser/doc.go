@@ -28,6 +28,12 @@
 //     outputs), `event_msg` lines (token counts, UI mirrors), and
 //     `turn_context` lines (model). Codex-injected developer and
 //     `<environment_context>`-style user items are filtered out.
+//   - **Antigravity** writes session transcripts under
+//     `~/.gemini/antigravity-cli/brain/<id>/`
+//     `.system_generated/logs/transcript.jsonl`
+//     (overridable via `$AGY_HOME`) with workspace mapping resolved
+//     from `history.jsonl`. `<USER_REQUEST>` blocks are extracted and
+//     system notification messages are skipped.
 //   - **MarkdownSession** is the round-trip format ctx itself
 //     produces when an enriched journal entry is *re-imported*; it
 //     parses the YAML frontmatter + body that
@@ -53,8 +59,8 @@
 //     so callers can surface them to the user.
 //
 // Tool-specific constructors ([NewClaudeCode], [NewCopilot],
-// [NewCopilotCLI], [NewCodex], [NewMarkdownSession]) are exported for callers
-// that need to operate on a known format directly (tests, format
+// [NewCopilotCLI], [NewCodex], [NewAgy], [NewMarkdownSession]) are exported
+// for callers that need to operate on a known format directly (tests, format
 // converters, the schema validator).
 //
 // # Dispatch Mechanism
@@ -66,16 +72,17 @@
 // parser whether it `Matches(path)`. Implementations may check
 // extension, directory shape, or peek at the first line; order in
 // the slice matters when a file could plausibly match more than one
-// (in practice, the five formats are disjoint: Codex rollouts are
+// (in practice, the formats are disjoint: Codex rollouts are
 // claimed by the `rollout-` basename prefix or a leading
-// `session_meta` line, which no other format produces).
+// `session_meta` line, and Antigravity transcripts are claimed by
+// the step types/sources and history layout).
 //
 // **Adding a new tool**: implement the four interface methods on a
 // new type, then append a constructor call to `registeredParsers`
 // in `parser.go`. If the tool keeps sessions in its own home tree,
 // also add a `<Tool>SessionDirs()` helper and scan it in
-// `findSessionsWithFilter` (query.go), as [CodexSessionDirs] and
-// [CopilotCLISessionDirs] do.
+// `findSessionsWithFilter` (query.go), as [CodexSessionDirs],
+// [AgySessionDirs], and [CopilotCLISessionDirs] do.
 //
 // # Output Shape
 //

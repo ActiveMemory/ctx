@@ -9,10 +9,12 @@ package root
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/agy"
 	"github.com/ActiveMemory/ctx/internal/assets/read/agent"
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreCC "github.com/ActiveMemory/ctx/internal/cli/initialize/core/claudecheck"
 	coreAgents "github.com/ActiveMemory/ctx/internal/cli/setup/core/agents"
+	coreAgy "github.com/ActiveMemory/ctx/internal/cli/setup/core/agy"
 	coreCline "github.com/ActiveMemory/ctx/internal/cli/setup/core/cline"
 	coreCodex "github.com/ActiveMemory/ctx/internal/cli/setup/core/codex"
 	coreCopilot "github.com/ActiveMemory/ctx/internal/cli/setup/core/copilot"
@@ -57,6 +59,21 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 			return readErr
 		}
 		writeSetup.Content(cmd, string(content))
+
+	case cfgHook.ToolAgy, cfgHook.ToolAntigravity:
+		if writeFile {
+			return coreAgy.Deploy(cmd)
+		}
+		writeSetup.InfoTool(cmd, desc.Text(text.DescKeyHookAgy))
+		switch {
+		case agy.ProjectConfigured():
+			writeSetup.InfoAgyState(
+				cmd,
+				desc.Text(text.DescKeyWriteHookAgyStateConfigured),
+			)
+		default:
+			writeSetup.InfoAgyState(cmd, agy.Detect().String())
+		}
 
 	case cfgHook.ToolClaudeCode, cfgHook.ToolClaude:
 		coreCC.SetupHint(cmd)

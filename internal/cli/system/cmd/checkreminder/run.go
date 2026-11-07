@@ -18,6 +18,7 @@ import (
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
 	coreProv "github.com/ActiveMemory/ctx/internal/cli/system/core/provenance"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
@@ -26,6 +27,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/config/warn"
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-reminders hook logic.
@@ -43,6 +45,9 @@ import (
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	input, _, paused := coreCheck.Preamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.FlushAgySteps(cmd)
+	}
 
 	// Provenance is unconditional: always print first,
 	// regardless of initialized/paused state.

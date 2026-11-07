@@ -30,6 +30,7 @@ ctx setup <tool> [flags]
 | Tool          | Description                                                        |
 |---------------|--------------------------------------------------------------------|
 | `agents`      | Generic `AGENTS.md` (read natively by Codex, OpenCode, and others) |
+| `agy`         | Google Antigravity CLI (hooks, MCP, skills, `AGENTS.md`)           |
 | `claude-code` | Redirects to plugin install instructions                           |
 | `codex`       | OpenAI Codex CLI (hooks, MCP, skills, `AGENTS.md`)                 |
 | `cursor`      | Cursor IDE                                                         |
@@ -45,6 +46,21 @@ ctx setup <tool> [flags]
 !!! note "Claude Code Uses the Plugin System"
     Claude Code integration is now provided via the `ctx` plugin.
     Running `ctx setup claude-code` prints plugin install instructions.
+
+**`ctx setup agy`** without `--write` prints the integration overview
+and what it detected (Antigravity binary on PATH, plugin installed, plugin
+enabled). With `--write` it deploys the project-local integration:
+
+| File | Behavior |
+|------|----------|
+| `.agents/hooks.json` | Create, or merge named group `"ctx"`, foreign hook groups preserved |
+| `~/.gemini/config/mcp_config.json` | Merge-safe `mcpServers.ctx` registration |
+| `AGENTS.md` | Marker-merged (same deployer as `ctx setup agents --write`) |
+| `.agents/skills/ctx-*/SKILL.md` | Create, refresh when stale, skip with a warning when not `ctx`-managed |
+
+When the `ctx` Antigravity plugin is installed and enabled in
+`~/.gemini/config/plugins/ctx/`, the deployer skips hooks, MCP, and
+skills and deploys `AGENTS.md` only.
 
 **`ctx setup codex`** without `--write` prints the integration overview
 and what it detected (Codex binary on PATH, plugin installed, plugin
@@ -85,6 +101,11 @@ ctx setup opencode --write
 # .codex/config.toml, AGENTS.md, and .agents/skills/
 ctx setup codex
 ctx setup codex --write
+
+# Show Antigravity integration state; then deploy .agents/hooks.json,
+# mcp_config.json, AGENTS.md, and .agents/skills/
+ctx setup agy
+ctx setup agy --write
 
 # Generate Pi extension, skills, and AGENTS.md
 ctx setup pi --write

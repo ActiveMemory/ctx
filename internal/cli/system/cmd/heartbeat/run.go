@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/counter"
 	coreHeartbeat "github.com/ActiveMemory/ctx/internal/cli/system/core/heartbeat"
 	coreLog "github.com/ActiveMemory/ctx/internal/cli/system/core/log"
-	"github.com/ActiveMemory/ctx/internal/cli/system/core/session"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/state"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/time"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
@@ -31,6 +31,7 @@ import (
 	logWarn "github.com/ActiveMemory/ctx/internal/log/warn"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the heartbeat hook logic.
@@ -38,15 +39,20 @@ import (
 // Increments a per-session prompt counter, detects context file
 // modifications since the last heartbeat, reads token usage, and
 // emits a notification plus event log entry. Produces no stdout
-// output; the agent never sees this hook.
+// output in Claude mode; in Antigravity mode drains pending nudges.
 //
 // Parameters:
-//   - cmd: Cobra command (unused, heartbeat produces no output)
+//   - cmd: Cobra command for output
 //   - stdin: standard input for hook JSON
 //
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
-func Run(_ *cobra.Command, stdin *os.File) error {
+func Run(cmd *cobra.Command, stdin *os.File) error {
+	_, sessionID, paused := coreCheck.Preamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.FlushAgySteps(cmd)
+	}
+
 	initialized, initErr := state.Initialized()
 	if initErr != nil {
 		logWarn.Warn(warn.StateInitializedProbe, initErr)
@@ -55,9 +61,15 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	if !initialized {
 		return nil
 	}
-	_, sessionID, paused := coreCheck.Preamble(stdin)
 	if paused {
 		return nil
+	}
+
+	if coreSession.Agy() {
+		pending := coreSession.DrainPendingAgy()
+		for _, p := range pending {
+			coreSession.AddAgyStep(p)
+		}
 	}
 
 	tmpDir, dirErr := state.Dir()
@@ -92,9 +104,9 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	coreHeartbeat.WriteMtime(mtimeFile, currentMtime)
 
 	// Read token usage for this session.
-	info, _ := session.ReadTokenInfo(sessionID)
+	info, _ := coreSession.ReadTokenInfo(sessionID)
 	tokens := info.Tokens
-	window := session.EffectiveContextWindow(info.Model)
+	window := coreSession.EffectiveContextWindow(info.Model)
 
 	// Build and send notification.
 	vars := map[string]any{
@@ -114,7 +126,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	if tokens > 0 {
 		pct := tokens * stats.PercentMultiplier / window
 		msg = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatNotifyTokens),
-			count, contextModified, session.FormatTokenCount(tokens), pct)
+			count, contextModified, coreSession.FormatTokenCount(tokens), pct)
 	} else {
 		msg = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatNotifyPlain),
 			count, contextModified)
@@ -140,7 +152,7 @@ func Run(_ *cobra.Command, stdin *os.File) error {
 	if tokens > 0 {
 		pct := tokens * stats.PercentMultiplier / window
 		logLine = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatLogTokens),
-			count, contextModified, session.FormatTokenCount(tokens), pct)
+			count, contextModified, coreSession.FormatTokenCount(tokens), pct)
 	} else {
 		logLine = fmt.Sprintf(desc.Text(text.DescKeyHeartbeatLogPlain),
 			count, contextModified)

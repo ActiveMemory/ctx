@@ -8,6 +8,8 @@ package text
 
 // DescKeys for hook messages.
 const (
+	// DescKeyHookAgy is the text key for hook agy messages.
+	DescKeyHookAgy = "hook.agy"
 	// DescKeyHookAider is the text key for hook aider messages.
 	DescKeyHookAider = "hook.aider"
 	// DescKeyHookAgents is the text key for hook agents messages.
@@ -30,6 +32,49 @@ const (
 
 // DescKeys for hook write output.
 const (
+	// DescKeyWriteHookAgyCreated is the text key for write hook agy
+	// created messages.
+	DescKeyWriteHookAgyCreated = "write.hook-agy-created"
+	// DescKeyWriteHookAgyMerged is the text key for write hook agy
+	// merged messages.
+	DescKeyWriteHookAgyMerged = "write.hook-agy-merged"
+	// DescKeyWriteHookAgySkipped is the text key for write hook agy
+	// skipped messages.
+	DescKeyWriteHookAgySkipped = "write.hook-agy-skipped"
+	// DescKeyWriteHookAgyRejected is the text key for write hook agy
+	// rejected (foreign file) messages.
+	DescKeyWriteHookAgyRejected = "write.hook-agy-rejected"
+	// DescKeyWriteHookAgyPluginActive is the text key for the notice
+	// printed when the ctx Antigravity plugin is already enabled.
+	DescKeyWriteHookAgyPluginActive = "write.hook-agy-plugin-active"
+	// DescKeyWriteHookAgyProjectAlso is the text key for the warning
+	// that project-local hooks coexist with the enabled plugin.
+	DescKeyWriteHookAgyProjectAlso = "write.hook-agy-project-also"
+	// DescKeyWriteHookAgySummary is the text key for write hook agy
+	// summary messages.
+	DescKeyWriteHookAgySummary = "write.hook-agy-summary"
+	// DescKeyWriteHookAgySummaryPlugin is the text key for the
+	// summary printed when the ctx Antigravity plugin provides
+	// hooks/MCP/skills and only AGENTS.md was deployed.
+	DescKeyWriteHookAgySummaryPlugin = "write.hook-agy-summary-plugin"
+	// DescKeyWriteHookAgyState is the text key for the detection state
+	// line printed by `ctx setup agy`.
+	DescKeyWriteHookAgyState = "write.hook-agy-state"
+	// DescKeyWriteHookAgyStateConfigured is the state label used when
+	// the project-local Antigravity integration is already deployed.
+	DescKeyWriteHookAgyStateConfigured = "write.hook-agy-state-configured"
+	// DescKeyWriteHookAgyStateAbsent labels the state where the agy
+	// binary is not on PATH.
+	DescKeyWriteHookAgyStateAbsent = "write.hook-agy-state-absent"
+	// DescKeyWriteHookAgyStateNotInstalled labels the state where agy
+	// is present but the ctx plugin is not installed.
+	DescKeyWriteHookAgyStateNotInstalled = "write.hook-agy-state-not-installed"
+	// DescKeyWriteHookAgyStateNotEnabled labels the state where the ctx
+	// plugin is installed but disabled in plugin.json.
+	DescKeyWriteHookAgyStateNotEnabled = "write.hook-agy-state-not-enabled"
+	// DescKeyWriteHookAgyStateReady labels the state where agy and the
+	// ctx plugin are both present and enabled.
+	DescKeyWriteHookAgyStateReady = "write.hook-agy-state-ready"
 	// DescKeyWriteHookAgentsCreated is the text key for write hook agents created
 	// messages.
 	DescKeyWriteHookAgentsCreated = "write.hook-agents-created"

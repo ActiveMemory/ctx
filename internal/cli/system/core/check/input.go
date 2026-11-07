@@ -15,6 +15,17 @@ import (
 	"github.com/ActiveMemory/ctx/internal/entity"
 )
 
+// ReadInput reads hook input from stdin and normalizes it.
+//
+// Parameters:
+//   - stdin: standard input for hook JSON
+//
+// Returns:
+//   - entity.HookInput: parsed hook input
+func ReadInput(stdin *os.File) entity.HookInput {
+	return coreSession.ReadInput(stdin)
+}
+
 // Preamble reads hook input, resolves the session ID, and checks the
 // pause state. Most hooks share this exact preamble sequence.
 //

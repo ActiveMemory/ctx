@@ -31,6 +31,8 @@ var syncableTools = []string{
 // no-op, not an error; see
 // specs/steering-sync-drift-respects-configured-tools.md.
 var directConsumers = []string{
+	cfgHook.ToolAgy,
+	cfgHook.ToolAntigravity,
 	cfgHook.ToolClaude,
 	cfgHook.ToolClaudeCode,
 	cfgHook.ToolCodex,

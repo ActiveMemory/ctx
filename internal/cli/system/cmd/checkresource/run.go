@@ -14,11 +14,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets/read/desc"
 	coreCheck "github.com/ActiveMemory/ctx/internal/cli/system/core/check"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core/nudge"
+	coreSession "github.com/ActiveMemory/ctx/internal/cli/system/core/session"
 	"github.com/ActiveMemory/ctx/internal/config/embed/text"
 	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
+	writeSetup "github.com/ActiveMemory/ctx/internal/write/setup"
 )
 
 // Run executes the check-resources hook logic.
@@ -35,6 +37,9 @@ import (
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
 	input, _, _, _, ok := coreCheck.FullPreamble(stdin)
+	if coreSession.Agy() {
+		defer writeSetup.FlushAgySteps(cmd)
+	}
 	bailSilently := !ok
 	if bailSilently {
 		return nil

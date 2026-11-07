@@ -49,6 +49,12 @@ func Emit(cmd *cobra.Command, sessionID string) {
 	commit := DefaultVal(git.ShortHead())
 	contextSuffix := writeProv.ContextSuffix(ContextFreePct(sessionID))
 
+	if coreSession.Agy() {
+		line := writeProv.FormatLine(short, branch, commit, contextSuffix)
+		coreSession.SetAgyProvenance(line)
+		return
+	}
+
 	writeProv.Line(cmd, short, branch, commit, contextSuffix)
 }
 

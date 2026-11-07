@@ -1,0 +1,142 @@
+---
+name: ctx-decision-add
+description: "Record architectural decision. Use when a trade-off is resolved or a non-obvious design choice is made that future sessions need to know."
+---
+
+Record an architectural decision in DECISIONS.md.
+
+## When to Use
+
+- After resolving a trade-off between alternatives
+- When making a non-obvious design choice
+- When the "why" behind a choice needs to be preserved
+- When future sessions need to understand why something is the way it is
+
+## When NOT to Use
+
+- Minor implementation details (use code comments instead)
+- Routine maintenance or bug fixes
+- Configuration changes that don't affect architecture
+- When there was no real alternative to consider
+
+## Decision Formats
+
+### Quick Format (Y-Statement)
+
+For lightweight decisions, use a single statement:
+
+> "In the context of **[situation]**, facing **[constraint]**, we decided for 
+> **[choice]** and against **[alternatives]**, to achieve **[benefit]**, 
+> accepting that **[trade-off]**."
+
+Example:
+> "In the context of needing a CLI framework, facing Go ecosystem options, 
+> we decided for Cobra and against urfave/cli, to achieve better subcommand 
+> support, accepting that it has more boilerplate."
+
+### Full Format
+
+For significant decisions, gather:
+
+1. **Context**: What situation prompted this decision? What constraints exist?
+2. **Alternatives**: What options were considered? (At least 2)
+3. **Decision**: What was chosen?
+4. **Rationale**: Why this choice over the alternatives?
+5. **Consequence**: What changes as a result? (Both positive and negative)
+
+## Gathering Information
+
+If the user provides only a title, ask:
+
+1. "What prompted this decision?" → Context
+2. "What alternatives did you consider?" → Options
+3. "Why this choice over the alternatives?" → Rationale
+4. "What are the consequences (good and bad)?" → Consequence
+
+For quick decisions, offer the Y-statement format instead.
+
+## Cross-Referencing
+
+When a decision **supersedes** an earlier one:
+- Mark the old decision as "Superseded by [new decision]"
+- Reference the old decision in the new one
+- Capture lessons learned from the original decision
+
+When decisions are **related**:
+- Note "See also: [related decision]" in consequences
+
+## Execution
+
+Provenance flags (`--session-id`, `--branch`, `--commit`) are **required**.
+Get these values from the hook-relayed provenance line in your context
+(e.g., `Session: abc12345 | Branch: main @ 68fbc00a`).
+
+**Prefer this skill over raw `ctx decision add`**: the conversational
+approach lets you automatically pick up session ID, branch, and commit
+from the provenance line already in your context window.
+
+**Quick format:**
+```bash
+ctx decision add "Use Cobra for CLI framework" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
+  --context "Need CLI framework for Go project" \
+  --rationale "Better subcommand support than urfave/cli, team familiarity" \
+  --consequence "More boilerplate, but clearer command structure"
+```
+
+**Full format with alternatives:**
+```bash
+ctx decision add "Use PostgreSQL for primary database" \
+  --session-id abc12345 --branch main --commit 68fbc00a \
+  --context "Need ACID-compliant database for e-commerce transactions" \
+  --rationale "PostgreSQL offers JSONB, full-text search, and team has experience. Chose over MySQL (weaker JSON) and MongoDB (no multi-doc ACID)." \
+  --consequence "Single database handles transactions and search. Team needs PostgreSQL-specific training."
+```
+
+**When a flag value would be denied:** if a `--rationale`/`--context`/
+`--consequence` value contains a substring that trips a `permissions.deny`
+rule on the literal command string (e.g. a path like ` /usr/local/bin`),
+move the fields into a JSON file and pass `--json-file` instead — the
+values never appear on the command line. The schema gates (placeholder
+rejection, required fields, index maintenance) still apply.
+
+```bash
+cat > /tmp/decision.json <<'EOF'
+{
+  "title": "Install ctx into the system PATH",
+  "context": "agents invoke ctx by bare name",
+  "rationale": "the binary belongs at /usr/local/bin so it is on PATH",
+  "consequence": "ctx resolves from any working directory",
+  "provenance": {"session_id": "abc12345", "branch": "main", "commit": "68fbc00a"}
+}
+EOF
+ctx decision add --json-file /tmp/decision.json
+```
+
+## Authority boundary (vs other skills)
+
+This skill records architectural decisions — moments where a
+trade-off between alternatives was deliberately resolved. It does
+not unilaterally promote material from adjacent skills:
+
+- **Do not promote a learning into a decision.** A gotcha or
+  debugging insight is a learning; if the user wants it elevated
+  to a decision, they must say so. Pattern-cross-promotion drifts
+  the file's authority over time.
+- **Do not promote a handover or wrap-up note into a decision.**
+  Session-end summaries can mention decisions, but those decisions
+  must have been captured at the time they were made. Backfilling
+  silently rewrites the trade-off record.
+- **Do not invent alternatives.** If the user did not consider an
+  alternative, do not fabricate one to fill the section. Ask, or
+  use the Y-statement format that does not require alternatives.
+
+Light compression for clarity is allowed; new facts are not.
+
+## Quality Checklist
+
+Before recording, verify:
+- [ ] Context explains the problem clearly
+- [ ] At least one alternative was considered
+- [ ] Rationale addresses why alternatives were rejected
+- [ ] Consequence includes both benefits and trade-offs
