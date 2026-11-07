@@ -201,9 +201,7 @@ func ParseLastUsageAndModel(path string) (entity.TokenInfo, error) {
 
 		// Quick check: skip lines that can't contain usage data
 		hasUsage := bytes.Contains(line, []byte(claude.FieldUsage))
-		hasInputTokens := bytes.Contains(
-			line, []byte(claude.FieldInputTokens),
-		) || bytes.Contains(line, []byte(agy.FieldInputTokens))
+		hasInputTokens := bytes.Contains(line, []byte(claude.FieldInputTokens))
 		if !hasInputTokens {
 			continue
 		}

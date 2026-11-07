@@ -68,7 +68,7 @@ func TestRun_AgyHeartbeatDrainsPending(t *testing.T) {
 		"workspacePaths": ["` + filepath.ToSlash(workspaceDir) + `"]
 	}`
 	stdinFile := writeTempFile(t, stdinJSON)
-	defer stdinFile.Close()
+	defer func() { _ = stdinFile.Close() }()
 
 	// Pretend a previous PreToolUse/PostToolUse queued a pending nudge
 	_ = os.Chdir(workspaceDir)
@@ -105,7 +105,7 @@ func TestRun_AgyHeartbeatDrainsPending(t *testing.T) {
 
 	// Second run: pending queue was drained, should emit "{}"
 	stdinFile2 := writeTempFile(t, stdinJSON)
-	defer stdinFile2.Close()
+	defer func() { _ = stdinFile2.Close() }()
 	buf.Reset()
 	cmd.SetOut(&buf)
 
@@ -132,7 +132,7 @@ func TestRun_ClaudeProducesNoStdout(t *testing.T) {
 
 	stdinJSON := `{"session_id": "sess-claude-hb"}`
 	stdinFile := writeTempFile(t, stdinJSON)
-	defer stdinFile.Close()
+	defer func() { _ = stdinFile.Close() }()
 
 	_ = os.Chdir(workspaceDir)
 	rc.Reset()

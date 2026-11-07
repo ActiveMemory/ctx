@@ -131,6 +131,4 @@ const (
 	TagAdditionalMetadataClose = "</ADDITIONAL_METADATA>"
 	// TagSystemMessageOpen is the opening tag for internal system messages.
 	TagSystemMessageOpen = "<SYSTEM_MESSAGE>"
-	// FieldInputTokens is the JSON field name for input token counts.
-	FieldInputTokens = "\"input_tokens\""
 )

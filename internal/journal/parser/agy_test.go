@@ -329,7 +329,7 @@ func TestAgy_ParseLine(t *testing.T) {
 		`"status":"DONE","created_at":"2026-11-06T23:31:00Z",` +
 		`"input_tokens":100,"output_tokens":50,"content":"done","thinking":"thought",` +
 		`"tool_calls":[{"name":"run_command","args":{"CommandLine":"go test"}}]}`)
-	msg, id, err = p.ParseLine(plannerLine)
+	msg, _, err = p.ParseLine(plannerLine)
 	if err != nil {
 		t.Fatalf("ParseLine(planner): %v", err)
 	}

@@ -75,7 +75,7 @@ func TestRun_AgyToolErrorSuppression(t *testing.T) {
 		}
 	}`
 	errorFile := writeTempFile(t, errorJSON)
-	defer errorFile.Close()
+	defer func() { _ = errorFile.Close() }()
 
 	cmd := &cobra.Command{}
 	var buf bytes.Buffer
@@ -122,7 +122,7 @@ func TestRun_AgySuccessQueuesNudge(t *testing.T) {
 		}
 	}`
 	successFile := writeTempFile(t, successJSON)
-	defer successFile.Close()
+	defer func() { _ = successFile.Close() }()
 
 	cmd := &cobra.Command{}
 	var buf bytes.Buffer

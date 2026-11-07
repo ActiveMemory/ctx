@@ -143,7 +143,8 @@ func TestQueueAndDrainPendingAgy(t *testing.T) {
 		t.Errorf("expected empty drain, got: %v", drained)
 	}
 
-	// Queue two nudges
+	// Queue two nudges (plus a duplicate of the first)
+	QueuePendingAgy("first nudge")
 	QueuePendingAgy("first nudge")
 	QueuePendingAgy("second nudge\nmultiline")
 

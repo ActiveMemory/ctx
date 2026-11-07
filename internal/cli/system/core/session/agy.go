@@ -227,11 +227,17 @@ func DrainPendingAgy() []string {
 	raw := string(data)
 	parts := strings.Split(raw, agy.PendingDelimiter)
 	var steps []string
+	seen := make(map[string]struct{})
 	for _, part := range parts {
 		trimmed := strings.TrimSpace(part)
-		if trimmed != "" {
-			steps = append(steps, trimmed)
+		if trimmed == "" {
+			continue
 		}
+		if _, dup := seen[trimmed]; dup {
+			continue
+		}
+		seen[trimmed] = struct{}{}
+		steps = append(steps, trimmed)
 	}
 	return steps
 }

@@ -39,8 +39,8 @@ func TestAgyPluginManifest(t *testing.T) {
 		t.Fatalf("read %s: %v", asset.PathAgyPluginJSON, err)
 	}
 	var m agyPluginManifest
-	if err := json.Unmarshal(data, &m); err != nil {
-		t.Fatalf("parse %s: %v", asset.PathAgyPluginJSON, err)
+	if unmarshalErr := json.Unmarshal(data, &m); unmarshalErr != nil {
+		t.Fatalf("parse %s: %v", asset.PathAgyPluginJSON, unmarshalErr)
 	}
 	if m.Name != "ctx" {
 		t.Errorf("name = %q, want %q", m.Name, "ctx")

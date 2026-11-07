@@ -96,8 +96,8 @@ func TestDeploy_FreshProjectCreatesAllArtifacts(t *testing.T) {
 			Args    []string `json:"args"`
 		} `json:"mcpServers"`
 	}
-	if err := json.Unmarshal(mcpData, &mcpCfg); err != nil {
-		t.Fatalf("unmarshal mcp_config.json: %v", err)
+	if unmarshalErr := json.Unmarshal(mcpData, &mcpCfg); unmarshalErr != nil {
+		t.Fatalf("unmarshal mcp_config.json: %v", unmarshalErr)
 	}
 	server, ok := mcpCfg.MCPServers["ctx"]
 	if !ok || server.Command != "ctx" {

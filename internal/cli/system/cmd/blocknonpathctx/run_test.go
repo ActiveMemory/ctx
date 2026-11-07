@@ -48,7 +48,7 @@ func TestRun_AgyAllowAndDeny(t *testing.T) {
 		}
 	}`
 	denyFile := writeTempFile(t, denyJSON)
-	defer denyFile.Close()
+	defer func() { _ = denyFile.Close() }()
 
 	cmd := &cobra.Command{}
 	var buf bytes.Buffer
@@ -86,7 +86,7 @@ func TestRun_AgyAllowAndDeny(t *testing.T) {
 		}
 	}`
 	allowFile := writeTempFile(t, allowJSON)
-	defer allowFile.Close()
+	defer func() { _ = allowFile.Close() }()
 
 	buf.Reset()
 	cmd.SetOut(&buf)
@@ -113,7 +113,7 @@ func TestRun_AgyAllowAndDeny(t *testing.T) {
 		}
 	}`
 	emptyFile := writeTempFile(t, emptyJSON)
-	defer emptyFile.Close()
+	defer func() { _ = emptyFile.Close() }()
 
 	buf.Reset()
 	cmd.SetOut(&buf)

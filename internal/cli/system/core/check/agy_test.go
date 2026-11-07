@@ -82,7 +82,7 @@ func TestAgyPreambleAndCWDAnchor(t *testing.T) {
 	}`
 
 	stdinFile := writeTempFile(t, stdinPayload)
-	defer stdinFile.Close()
+	defer func() { _ = stdinFile.Close() }()
 
 	input, sessionID, ctxDir, stateDir, ok := FullPreamble(stdinFile)
 	if !ok {
