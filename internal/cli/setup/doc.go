@@ -16,6 +16,7 @@
 //
 // # Supported Tools
 //
+//	Antigravity: .agents/hooks.json, MCP server, and skills
 //	Claude Code: CLAUDE.md generation and hook config
 //	Cursor: .cursor/rules and settings.json snippets
 //	Aider: .aider.conf.yml and conventions file

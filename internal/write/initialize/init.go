@@ -250,6 +250,16 @@ func ClaudePluginMissing(cmd *cobra.Command) {
 		text.DescKeyWriteInitClaudePluginMissing))
 }
 
+// AgyHint prints the one-line post-init nudge shown when
+// the `agy` binary is on PATH but the project has no
+// `.agents/hooks.json` and the ctx Antigravity plugin is not enabled.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func AgyHint(cmd *cobra.Command) {
+	cmd.Println(desc.Text(text.DescKeyWriteInitAgyHint))
+}
+
 // CodexHint prints the one-line post-init nudge shown when
 // the `codex` binary is on PATH but the project has no
 // `.codex/hooks.json` and the ctx Codex plugin is not enabled.

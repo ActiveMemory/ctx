@@ -360,6 +360,28 @@ hook.agents:
     Run with --write to generate:
 
       ctx setup agents --write
+hook.agy:
+  short: |
+    Google Antigravity Integration
+    ==============================
+
+    Antigravity runs the ctx lifecycle hooks (context packet on session
+    start, persistence nudges, tool gates, heartbeat, journal capture)
+    and reads AGENTS.md natively. Two delivery routes:
+
+    Plugin route (once per machine, every project):
+
+      agy plugin install ./internal/assets/agy
+
+    Project-local route (this repository only):
+
+      ctx setup agy --write
+
+    This creates:
+      .agents/hooks.json                   Lifecycle hooks (named group "ctx")
+      ~/.gemini/config/mcp_config.json     mcpServers.ctx MCP server
+      .agents/skills/ctx-*/SKILL.md        ctx skills
+      AGENTS.md                            Agent instructions
 hook.aider:
   short: |
     Aider Integration

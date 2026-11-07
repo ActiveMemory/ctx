@@ -339,6 +339,43 @@ Skills support partial matching where applicable (e.g., session slugs).
 
 ---
 
+## Google Antigravity (`agy`)
+
+Google Antigravity (`agy` CLI and Antigravity IDE/2.0) provides a native
+customization surface with plugins, lifecycle hooks, MCP servers, skills, and
+session transcripts.
+
+### Setup
+
+Install the native plugin once (available to every project):
+
+```bash
+# From a local clone of the ctx repository
+agy plugin install ./internal/assets/agy
+```
+
+Or deploy project-local files instead:
+
+```bash
+ctx setup agy --write
+ctx init
+```
+
+This creates:
+
+| File | Purpose |
+|------|---------|
+| `.agents/hooks.json` | Lifecycle hooks (named group `"ctx"`) |
+| `~/.gemini/config/mcp_config.json` | Registers `mcpServers.ctx` (`ctx mcp serve`) |
+| `AGENTS.md` | Universal agent instructions (marker-merged) |
+| `.agents/skills/ctx-*/SKILL.md` | `ctx` skills and references |
+
+When the `ctx` plugin is installed and enabled in
+`~/.gemini/config/plugins/ctx/`, `ctx setup agy --write` skips hooks, MCP, and
+skills (preventing duplicate hook execution) and deploys `AGENTS.md` only.
+
+---
+
 ## OpenAI Codex
 
 Codex CLI ships lifecycle hooks and plugins whose contract is a near
